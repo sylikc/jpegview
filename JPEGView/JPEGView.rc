@@ -1,0 +1,218 @@
+// Microsoft Visual C++ generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#include "atlres.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// English (U.S.) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+#ifdef _WIN32
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+#pragma code_page(1252)
+#endif //_WIN32
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE 
+BEGIN
+    "#include ""atlres.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE 
+BEGIN
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDR_MAINFRAME           ICON                    "res\\JPEGView.ico"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_MAINDLG DIALOG  0, 0, 187, 98
+FONT 8, "MS Sans Serif"
+BEGIN
+	//CONTROL "",IDC_RENAME_FILE,"EDIT", ES_AUTOHSCROLL,10,10,200,16
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO 
+BEGIN
+    IDD_ABOUTBOX, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 180
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 95
+    END
+
+    IDD_MAINDLG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 180
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 91
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Accelerator
+//
+
+// Cannot be used in modal dialog apps as we have no message loop on own control
+IDR_MAINFRAME ACCELERATORS 
+BEGIN
+END
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Menu
+//
+
+PopupMenu MENU 
+BEGIN 
+  POPUP "PopupMenu" 
+    BEGIN 
+	  MENUITEM "Open image...\tCtrl-O",			IDM_OPEN
+	  MENUITEM "Save processed image...\tCtrl-S",	IDM_SAVE
+	  MENUITEM "Copy to clipboard\tCtrl-C",		IDM_COPY
+      MENUITEM "Copy original size image\tCtrl-X",	IDM_COPY_FULL
+      MENUITEM "Show filename\tF2",				IDM_SHOW_FILENAME
+	  MENUITEM SEPARATOR
+	  MENUITEM "Next image\tPgDn",				IDM_NEXT
+	  MENUITEM "Previous image\tPgUp",			IDM_PREV
+      POPUP "Navigation" 
+        BEGIN
+          MENUITEM "Loop folder\tF7",			IDM_LOOP_FOLDER
+		  MENUITEM "Loop recursively\tF8",		IDM_LOOP_RECURSIVELY
+		  MENUITEM "Loop siblings\tF9",			IDM_LOOP_SIBLINGS
+        END
+      POPUP "Display order" 
+        BEGIN
+		  MENUITEM "Modification date\tM",		IDM_SORT_MOD_DATE
+		  MENUITEM "Creation date\tC",			IDM_SORT_CREATION_DATE
+		  MENUITEM "File name\tN",				IDM_SORT_NAME
+        END
+	  MENUITEM SEPARATOR
+	  MENUITEM "Rotate +90\tUp",				IDM_ROTATE_90
+      MENUITEM "Rotate -90\tDown",				IDM_ROTATE_270
+      MENUITEM "Auto correction\tF5",			IDM_AUTO_CORRECTION
+	  MENUITEM "Local density correction\tF6",	IDM_LDC
+	  MENUITEM "Keep parameters\tF4",			IDM_KEEP_PARAMETERS
+      MENUITEM "Save parameters to INI...",		IDM_SAVE_PARAMETERS
+	  MENUITEM SEPARATOR
+	  MENUITEM "Save parameters to DB\tS",		IDM_SAVE_PARAM_DB
+	  MENUITEM "Clear parameters from DB\tD",	IDM_CLEAR_PARAM_DB
+	  MENUITEM SEPARATOR
+      POPUP "Zoom" 
+        BEGIN 
+          MENUITEM "Fit to screen\tReturn",		IDM_FIT_TO_SCREEN
+		  MENUITEM "Span all screens\tF12",		IDM_SPAN_SCREENS
+		  MENUITEM SEPARATOR
+		  MENUITEM "400 %",				IDM_ZOOM_400
+		  MENUITEM "200 %",				IDM_ZOOM_200
+          MENUITEM "100 %\tSpace",		IDM_ZOOM_100
+          MENUITEM "50 %",				IDM_ZOOM_50
+          MENUITEM "25 %",				IDM_ZOOM_25
+        END 
+	  MENUITEM SEPARATOR
+	  MENUITEM "Exit\tEsc",				IDM_EXIT
+    END 
+ 
+END 
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Version
+//
+
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION 1,0,12,0
+ PRODUCTVERSION 1,0,12,0
+ FILEFLAGSMASK 0x3fL
+#ifdef _DEBUG
+ FILEFLAGS 0x1L
+#else
+ FILEFLAGS 0x0L
+#endif
+ FILEOS 0x4L
+ FILETYPE 0x2L
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040904B0"
+        BEGIN
+            VALUE "CompanyName", "\0"
+            VALUE "FileDescription", "High quality resampling JPEG viewer\0"
+            VALUE "FileVersion", "1, 0, 12, 0\0"
+            VALUE "InternalName", "JPEGView\0"
+            VALUE "LegalCopyright", "Copyright 2006-2007 David Kleiner\0"
+            VALUE "OriginalFilename", "JPEGView.exe\0"
+            VALUE "ProductName", "JPEGView Application\0"
+            VALUE "ProductVersion", "1, 0, 12, 0\0"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x0409, 0x04B0
+    END
+END
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE 
+BEGIN
+    IDR_MAINFRAME	"JPEGView"
+END
+
+
+#endif    // English (U.S.) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+#ifndef APSTUDIO_INVOKED
+#endif    // not APSTUDIO_INVOKED
