@@ -1,0 +1,135 @@
+﻿// This file must be encoded with UTF-8 (e.g. with Windows Notepad)
+// Filename is 'strings_%languagecode%.txt' where %languagecode% is the ISO 639 language code e.g. 'fr' for French
+// Format is: English string<tab>Translated string<newline>
+Contrast	Kontrast
+Brightness	Helligkeit
+Sharpen	Schärfen
+Lighten Shadows	Schatten aufhellen
+Darken Highlights	Lichter abdunkeln
+Deep Shadows	Tiefschatten
+Color Correction	Farbkorrektur
+Contrast Correction	Kontrastkorrektur
+Parameter DB:	Parameter DB:
+Save to	Speichern
+Remove from	Entfernen
+Rename:	Umbenennen:
+No file or folder name was provided as command line parameter!	Es wurde kein Datei- oder Ordnername als Kommandozeilenparameter angegeben!
+To use JPEGView, associate JPG, JPEG and BMP files with JPEGView.	Um JPEGView zu verwenden, müssen die Dateitypen JPG, JPEG und BMP mit JPEGView verknüpft werden.
+Press ESC to exit...	ESC drücken zum Beenden...
+The file '%s' could not be read!	Die Datei '%s' kann nicht gelesen werden!
+The file '%s' does not contain a list of file names!	Die Datei '%s' enhält keine Liste von Dateinamen!
+The directory '%s' does not contain any image files!	Der Ordner '%s' enthält keine Bilddateien!
+Press any key to search the subdirectories for image files.	Bitte eine Taste drücken, um in Unterordnern nach Bilddateien zu suchen.
+JPEGView Help	JPEGView Hilfe
+Current image	Aktuelles Bild
+Close help text display / Close JPEGView	Hilfetextanzeige schliessen / JPEGView beenden
+Show/hide this help text	Hilfetext anzeigen / schliessen
+Show/hide file name	Dateiname anzeigen / nicht anzeigen
+Enable/disable high quality resampling	Hochwertiges Resampling einschalten/ausschalten
+Enable/disable keeping of geometry related (zoom/pan/rotation)	Geometrieparameter (Zoom/Pan/Rotation) und Bildbearbeitungsparameter
+and image processing (brightness/contrast/sharpen) parameters between images	(Helligkeit/Kontrast/usw) beim Bildwechsel beibehalten/zurücksetzen.
+Enable/disable automatic contrast correction (histogram equalization)	Automatische Kontrastkorrektur einschalten / ausschalten (Histogrammequalisierung)
+Apply auto contrast correction using only visible section of image	Auto-Kontrastkorrektur nur auf sichtbaren Bildausschnitt anwenden
+Enable/disable automatic density correction (local brightness correction)	Automatische Helligkeitskorrektur ein- / ausschalten (LDC)
+Increase/decrease lightening of shadows (LDC must be on)	Schatten stärker/schwächer aufhellen (LDC muss eingeschaltet sein)
+Increase/decrease darkening of highlights (LDC must be on)	Lichter stärker/schwächer abdunkeln (LDC muss eingeschaltet sein)
+Loop through files in current folder	Alle Dateien im aktuellen Ordner anzeigen
+Loop through files in current directory and all subfolders	Alle Dateien im aktuellen Ordner und allen Unterordnern anzeigen
+Loop through files in current directory and all sibling folders (folders on same level)	Alle Dateien im aktuellen Ordner und in Ordnern auf derselben Ebene anzeigen
+Maximize/restore to/from virtual desktop (only for multi-monitor systems)	Anzeige auf alle Bildschirme ausdehnen / Ursprungsgrösse wiederherstellen
+Copy screen to clipboard/ Copy processed full size image to clipboard	Bildschirmbild in Zwischenablage kopieren/ Bearbeitetes Bild in Originalgrösse kopieren
+Open new image or slideshow file	Neues Bild, Ordner oder Bildliste für Diaschau öffnen
+Save processed image to JPEG file (original size)	Bearbeitetes Bild als JPEG Datei speichern (Originalgrösse)
+Save (s)/ delete (d) image processing parameters in/from parameter DB	Speichern (s) der Bildparameter in die Parameter DB, bzw. Löschen (d) der Parameter
+Sort images by creation date, resp. modification date, resp. file name	Bilder nach Erstellungsdatum (c), Änderungsdatum (m) oder Dateinamen (n) sortieren
+Goto previous image	Voriges Bild anzeigen
+Goto next image	Nächstes Bild anzeigen
+PgUp or Left	PgUp oder Pfeil links
+PgDn or Right	PgDn oder Pfeil rechts
+Goto first/last image of current folder (using sort order as defined)	Gehe zum ersten/letzten Bild im aktuellen Ordner (gemäss definierter Sortierreihenfolge)
+Increase/decrease brightness	Helligkeit erhöhen/verringern
+Increase/decrease contrast	Kontrast erhöhen/verringern
+Increase/decrease sharpness	Schärfe erhöhen/verringern
+Increase/decrease auto color cast correction amount	Farbkorrekturstärke erhöhen/verringern
+Increase/decrease auto contrast correction amount	Kontrastkorrekturstärke erhöhen/verringern
+Slide show with timeout of n seconds (any other key to stop)	Diaschau mit Intervall von n Sekunden (beliebige andere Taste stoppt Diaschau)
+Set timeout to n/10 sec, respectively n/100 sec (Ctrl+Shift)	Intervall auf n/10 Sekunden, bzw. n/100 Sekunden (Ctrl+Shift) verkürzen
+Rotate image and fit to screen	Bild rotieren und an Bildschirm anpassen
+Fit image to screen	Bildgrösse an Bildschirm anpassen
+Zoom 1:1 (100 %)	Zoom 1:1 (100 %)
+Zoom in/Zoom out (also Ctrl+up/down)	Bild vergössern/verkleinern (auch mit Ctrl+Pfeil nach oben/unten)
+Zoom in/out image	Bild vergössern/verkleinern (Zoom)
+Pan image	Bildausschnitt verschieben (Pan)
+Next image	Nächstes Bild anzeigen
+Previous image	Voriges Bild anzeigen
+up/down	Pfeil oben/unten
+Mouse wheel	Mausrad
+Left mouse & drag	L Maustaste & ziehen
+Fwd mouse button	Vorwärts Maustaste
+Back mouse button	Zurück Maustaste
+Delete current file on disk permanently	Aktuelle Bilddatei permanent löschen
+Rotate current file on disk lossless by 90 deg (W/H must be multiple of 16)	Aktuelle Bilddatei verlustfrei um 90 Grad rotieren (B/H muss durch 16 teilbar sein)
+Rotate current file on disk lossless by 270 deg (W/H must be multiple of 16)	Aktuelle Bilddatei verlustfrei um 270 Grad rotieren (B/H muss durch 16 teilbar sein)
+The file is read-only!	Die Datei ist schreibgeschützt!
+Can't rename file	Datei kann nicht umbenannt werden
+New name contains backslash character!	Der neue Dateiname darf kein Backslashzeichen (\) enthalten!
+Renaming file failed!	Datei umbenennen fehlgeschlagen!
+Reason: 	Ursache: 
+on	ein
+off	aus
+Do you really want to save the following parameters as default to the INI file	Sollen diese Parameter wirklich als Standardparameter in der INI Datei gespeichert werden
+Auto contrast and color correction: 	Automatische Kontrast- und Farbkorrektur: 
+Local density correction: 	Lokale Helligkeitskorrektur: 
+Order files by: 	Dateien sortieren nach: 
+Creation date/time	Erstellungsdatum
+Last modification date/time	Änderungsdatum
+File name	Dateiname
+These values will override the values from the INI file located in the program folder of JPEGView!	Diese Werte überschreiben die Werte aus der INI Datei im Programmordner von JPEGView!
+Confirm save default parameters	Standardparameter wirklich speichern?
+Images	Bilddateien
+All Files	Alle Dateien
+Parameter DB file '%s' could not be opened!	Parameter DB Datei '%s' kann nicht geöffnet werden!
+Parameter DB file '%s' is not valid (invalid header)!	Parameter DB Datei '%s' ist ungültig (ungültiger Header)!
+Cannot write to parameter DB file '%s'!	In die Parameter DB Datei '%s' kann nicht geschrieben werden!
+Cannot read from parameter DB file '%s'!	Von der Parameter DB Datei '%s' kann nicht gelesen werden!
+Cannot read parameter DB file '%s' because it is too large!	Die Parameter DB Datei '%s' kann nicht gelesen werden weil sie zu gross ist!
+The parameter DB file '%s' has been created by a newer version of JPEGView!	Die Parameter DB Datei '%s' wurde von einer neueren Version von JPEGView erzeugt!
+The old parameter DB file '%s' could not be renamed during conversion to new format!	Die alte Parameter DB Datei '%s' konnte während der Konvertierung ins neue Format nicht umbenannt werden!
+Parameter DB error	Parameter DB Fehler
+Error saving file	Fehler beim Speichern
+Error writing JPEG file to disk!	Die JPEG Datei kann nicht geschrieben werden!
+Confirm	Bestätigung
+Do you really want to permanently delete the file %filename%?	Soll die Datei %filename% wirklich permanent gelöscht werden?
+Rotate the following file lossless by 90 deg?\n%filename%	Folgende Datei verlustfrei um 90 Grad rotieren?\n%filename%
+Rotate the following file lossless by 270 deg?\n%filename%	Folgende Datei verlustfrei um 270 Grad rotieren?\n%filename%
+Open image...	Bilddatei öffnen...
+Save processed image...	Bearbeitetes Bild speichern...
+Copy to clipboard	In Zwischenablage kopieren
+Copy original size image	Bild in Originalgrösse kopieren
+Show filename	Dateiname anzeigen
+Navigation	Navigation
+Loop folder	Ordner anzeigen
+Loop recursively	Ordner mit Unterordnern anzeigen
+Loop siblings	Ordner gleicher Tiefe anzeigen
+Display order	Bilder anzeigen sortiert nach
+Modification date	Änderungsdatum
+Creation date	Erstellungsdatum
+Rotate +90	Rotieren +90
+Rotate -90	Rotieren -90
+Auto correction	Auto-Korrektur
+Local density correction	Lokale Helligkeitskorrektur
+Keep parameters	Parameter beibehalten
+Save parameters to INI...	Parameter in INI Datei speichern...
+Save parameters to DB	In Parameter DB speichern
+Clear parameters from DB	Aus Parameter DB löschen
+Zoom	Zoom
+Fit to screen	Bildschirmgrösse
+Span all screens	Alle Bildschirme
+Exit	Beenden
+Cyan-Red	Cyan-Rot
+Magenta-Green	Magenta-Grün
+Yellow-Blue	Gelb-Blau
+C - R	C - R
+M - G	M - G
+Y - B	Y - B
+

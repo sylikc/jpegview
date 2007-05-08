@@ -1,0 +1,8 @@
+LIBRARY ijl15.dll
+EXPORTS
+ijlErrorStr@4
+ijlFree@4
+ijlGetLibVersion@0
+ijlInit@4
+ijlRead@8
+ijlWrite@8
