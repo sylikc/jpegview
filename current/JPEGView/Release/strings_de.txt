@@ -52,7 +52,7 @@ Increase/decrease contrast	Kontrast erhöhen/verringern
 Increase/decrease sharpness	Schärfe erhöhen/verringern
 Increase/decrease auto color cast correction amount	Farbkorrekturstärke erhöhen/verringern
 Increase/decrease auto contrast correction amount	Kontrastkorrekturstärke erhöhen/verringern
-Slide show with timeout of n seconds (any other key to stop)	Diaschau mit Intervall von n Sekunden (beliebige andere Taste stoppt Diaschau)
+Slide show with timeout of n seconds (ESC to stop)	Diaschau mit Intervall von n Sekunden (ESC Taste stoppt Diaschau)
 Set timeout to n/10 sec, respectively n/100 sec (Ctrl+Shift)	Intervall auf n/10 Sekunden, bzw. n/100 Sekunden (Ctrl+Shift) verkürzen
 Rotate image and fit to screen	Bild rotieren und an Bildschirm anpassen
 Fit image to screen	Bildgrösse an Bildschirm anpassen
@@ -114,6 +114,8 @@ Loop siblings	Ordner gleicher Tiefe anzeigen
 Display order	Bilder anzeigen sortiert nach
 Modification date	Änderungsdatum
 Creation date	Erstellungsdatum
+Play folder as movie	Ordner als Film abspielen
+Stop slide show/movie	Diaschau/Film stoppen
 Rotate +90	Rotieren +90
 Rotate -90	Rotieren -90
 Auto correction	Auto-Korrektur

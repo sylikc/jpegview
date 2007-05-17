@@ -112,7 +112,9 @@ END
 PopupMenu MENU 
 BEGIN 
   POPUP "PopupMenu" 
-    BEGIN 
+    BEGIN
+	  MENUITEM "Stop slide show/movie\tEsc",		IDM_STOP_MOVIE
+	  MENUITEM SEPARATOR
 	  MENUITEM "Open image...\tCtrl-O",			IDM_OPEN
 	  MENUITEM "Save processed image...\tCtrl-S",	IDM_SAVE
 	  MENUITEM "Copy to clipboard\tCtrl-C",		IDM_COPY
@@ -133,6 +135,15 @@ BEGIN
 		  MENUITEM "Creation date\tC",			IDM_SORT_CREATION_DATE
 		  MENUITEM "File name\tN",				IDM_SORT_NAME
         END
+      POPUP "Play folder as movie" 
+        BEGIN
+		  MENUITEM "5 fps",						IDM_MOVIE_5_FPS
+		  MENUITEM "10 fps",					IDM_MOVIE_10_FPS
+		  MENUITEM "25 fps",					IDM_MOVIE_25_FPS
+		  MENUITEM "30 fps",					IDM_MOVIE_30_FPS
+		  MENUITEM "50 fps",					IDM_MOVIE_50_FPS
+		  MENUITEM "100 fps",					IDM_MOVIE_100_FPS
+		END
 	  MENUITEM SEPARATOR
 	  MENUITEM "Rotate +90\tUp",				IDM_ROTATE_90
       MENUITEM "Rotate -90\tDown",				IDM_ROTATE_270
