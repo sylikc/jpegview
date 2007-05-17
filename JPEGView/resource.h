@@ -10,7 +10,8 @@
 #define IDD_MAINDLG				129
 
 #define IDM_FIRST			1000
-#define IDM_OPEN			1000
+#define IDM_STOP_MOVIE		1000
+#define IDM_OPEN			1100
 #define IDM_SAVE			1500
 #define IDM_COPY			2000
 #define IDM_COPY_FULL		2500
@@ -23,6 +24,13 @@
 #define IDM_SORT_MOD_DATE	7000
 #define IDM_SORT_CREATION_DATE 7010
 #define IDM_SORT_NAME		7020
+#define IDM_MOVIE_START_FPS 7500 // Pseudo entry
+#define IDM_MOVIE_5_FPS		7505
+#define IDM_MOVIE_10_FPS	7510
+#define IDM_MOVIE_25_FPS	7525
+#define IDM_MOVIE_30_FPS	7530
+#define IDM_MOVIE_50_FPS	7550
+#define IDM_MOVIE_100_FPS	7600
 #define IDM_ROTATE_90		8000
 #define IDM_ROTATE_270		9000
 #define IDM_AUTO_CORRECTION	10000
@@ -42,9 +50,10 @@
 #define IDM_LAST			13000
 
 // these position must be changed if menu items are inserted
-#define SUBMENU_POS_NAVIGATION 8
-#define SUBMENU_POS_DISPLAY_ORDER 9
-#define SUBMENU_POS_ZOOM 21
+#define SUBMENU_POS_NAVIGATION 10
+#define SUBMENU_POS_DISPLAY_ORDER 11
+#define SUBMENU_POS_MOVIE 12
+#define SUBMENU_POS_ZOOM 24
 
 // Next default values for new objects
 // 

@@ -126,6 +126,10 @@ private:
 	double m_dCurrentInitialLightenShadows;
 
 	bool m_bDragging;
+	bool m_bMovieMode;
+	bool m_bProcFlagsTouched;
+	EProcessingFlags m_eProcFlagsBeforeMovie;
+	bool m_bInTrackPopupMenu;
 	int m_nOffsetX;
 	int m_nOffsetY;
 	int m_nCapturedX, m_nCapturedY;
@@ -150,6 +154,8 @@ private:
 	CButtonCtrl* m_btnSaveToDB;
 	CButtonCtrl* m_btnRemoveFromDB;
 	CTextCtrl* m_txtFileName;
+	CTextCtrl* m_txtParamDB;
+	CTextCtrl* m_txtRename;
 	CString m_sSaveDirectory;
 
 	bool OpenFile(bool bAtStartup);
@@ -173,6 +179,8 @@ private:
 	void ResetParamsToDefault();
 	void StartTimer(int nMilliSeconds);
 	void StopTimer(void);
+	void StartMovieMode(double dFPS);
+	void StopMovieMode();
 	void StartLowQTimer(int nTimeout);
 	void MouseOff();
 	void MouseOn();

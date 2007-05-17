@@ -32,7 +32,7 @@
 <td>
 <a name="Top"></a>
 <h1>JPEGView Readme</h1>
-Revision: 08-May-2007
+Revision: 15-May-2007
 <a name="Introduction"></a>
 <h2>Introduction</h2>
 JPEGView is a viewer/editor for JPEG, BMP, PNG, GIF and TIFF images. It is designed to view images from digital cameras
@@ -230,11 +230,12 @@ using the 'Open image' command. The following text file formats are supported:
   <li>Unicode (UTF16) text file</li>
   <li>UTF8 coded text file</li>
   </ul>
-All text formats must contain one file name per line. The file names must use absolute paths and must be
-terminated either with a hyphen ("), with a newline character or with a &lt; character.<br/>
+All text formats must contain one file name per line. The file names must use paths relative to the folder of the slide show
+text file or absolute paths and must be terminated either with a hyphen ("), with a newline character or with a &lt; character.<br/>
 The following examples show possible line formats:<br/>
 <code>
 d:\Images\test.jpg<br/>
+test.jpg<br/>
 "d:\My Documents\test.jpg"<br/>
 &lt;image&gt;d:\My Documents\test2.jpg&lt;/image&gt;<br/>
 </code>
@@ -248,7 +249,7 @@ The following commands can be used to control a slide show:
   <li><kbd>PgDn/PgUp/Home/End</kbd> : Navigates to next/previous/first/last image of slide show</li>
   <li><kbd>1 .. 9</kbd> : Starts the slide show with a delay of n seconds between the images</li>
   <li><kbd>Ctrl + [Shift] + 1 .. 9</kbd> : Uses a delay of n/10 of a second, respectively n/100 of a second</li>
-  <li><kbd>0</kbd> : Stops the slide show</li>
+  <li><kbd>Esc</kbd> : Stops the slide show</li>
   </ul>
 If the current context is a folder and not a slide show list, the slideshow is performed with the images
 in the folder. The folder navigation mode and the sorting order are taken into account in this case - with
@@ -259,13 +260,13 @@ The slide show feature can be used to play a series of images in a folder or giv
   <li>First set the display order for the files. The order is either given by a text file or by choosing the
   <a href="#DisplayOrder">display order mode</a> for folders accordingly.</li>
   <li>Press the <kbd>Home</kbd> key to go to the first frame of the movie.</li>
-  <li>Start the movie. E.g. pressing <kbd>Ctrl+Shift+5</kbd> plays one frame every 5/100 second, resulting in 20
-  frames per second. Of course the number of frames per seconds is limited by the computing power available to
-  decode and process the frames. When zoom is used, pressing <kbd>F3</kbd> speeds up processing considerably as it
-  disables high quality resampling.</li>
-  <li>Use the <kbd>F4</kbd> key (keep parameters) to keep changes (e.g. zoom, color balance) for all images of
-  the movie.</li>
-  <li>To stop the movie, press any key.</li>
+  <li>Start the movie using the context menu 'Play folder as movie' or the <kbd>Ctrl+[Shift]+Number</kbd> keys.
+  Of course the number of frames per seconds is limited by the computing power available to decode and process the frames.
+  JPEGView will never skip frames - if more
+  frames are requested than possible, the frames are displayed as fast as possible. During movie playing, high quality
+  resampling, contrast correction and local brightness correction are disabled to speed up processing.</li>
+  <li>Keeping parameters between the frames is enabled during movie playing - corrections apply to the whole movie.</li>
+  <li>To stop the movie, press the <kbd>Esc</kbd> key.</li>
   </ul>
 <br/><br/><b><a href="#Top">Top of Page</a></b><br/>
 

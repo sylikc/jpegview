@@ -128,7 +128,7 @@ CMainDlg::CMainDlg() {
 	m_pImageProcParams = new CImageProcessingParams(GetDefaultProcessingParams());
 	InitFromProcessingFlags(GetDefaultProcessingFlags(), m_bHQResampling, m_bAutoContrast, m_bAutoContrastSection, m_bLDC);
 
-	// Initialize second paramter set using hard coded values, turning off all corrections except sharpening
+	// Initialize second parameter set using hard coded values, turning off all corrections except sharpening
 	m_pImageProcParams2 = new CImageProcessingParams(GetNoProcessingParams()); 
 	m_eProcessingFlags2 = PFLAG_HighQualityResampling;
 
@@ -151,9 +151,13 @@ CMainDlg::CMainDlg() {
 	m_pJPEGProvider = NULL;
 	m_pCurrentImage = NULL;
 
+	m_eProcFlagsBeforeMovie = PFLAG_None;
 	m_nRotation = 0;
 	m_bUserZoom = false;
 	m_bUserPan = false;
+	m_bMovieMode = false;
+	m_bProcFlagsTouched = false;
+	m_bInTrackPopupMenu = false;
 	m_dZoom = -1.0;
 	m_dZoomMult = -1.0;
 	m_bDragging = false;
@@ -202,10 +206,10 @@ LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam
 	m_pSliderMgr->AddSlider(CNLS::GetString(_T("Deep Shadows")), &(m_pImageProcParams->LightenShadowSteepness), &m_bLDC, 0.0, 1.0, false, false);
 	m_pSliderMgr->AddSlider(CNLS::GetString(_T("Color Correction")), &(m_pImageProcParams->ColorCorrectionFactor), &m_bAutoContrast, -0.5, 0.5, false, false);
 	m_pSliderMgr->AddSlider(CNLS::GetString(_T("Contrast Correction")), &(m_pImageProcParams->ContrastCorrectionFactor), &m_bAutoContrast, 0.0, 1.0, false, false);
-	m_pSliderMgr->AddText(CNLS::GetString(_T("Parameter DB:")), false, NULL);
+	m_txtParamDB = m_pSliderMgr->AddText(CNLS::GetString(_T("Parameter DB:")), false, NULL);
 	m_btnSaveToDB = m_pSliderMgr->AddButton(CNLS::GetString(_T("Save to")), &OnSaveToDB);
 	m_btnRemoveFromDB = m_pSliderMgr->AddButton(CNLS::GetString(_T("Remove from")), &OnRemoveFromDB);
-	m_pSliderMgr->AddText(CNLS::GetString(_T("Rename:")), false, NULL);
+	m_txtRename = m_pSliderMgr->AddText(CNLS::GetString(_T("Rename:")), false, NULL);
 	m_txtFileName = m_pSliderMgr->AddText(NULL, true, &OnRenameFile);
 
 	// place window on monitor as requested in INI file
@@ -476,7 +480,7 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 		helpDisplay.AddLineInfo(_T("Alt+Ctrl +/-"), buff3, CNLS::GetString(_T("Increase/decrease auto color cast correction amount")));
 		TCHAR buff4[16]; _stprintf_s(buff4, 16, _T("%.2f"), m_pImageProcParams->ContrastCorrectionFactor);
 		helpDisplay.AddLineInfo(_T("Ctrl+Shift +/-"), buff4, CNLS::GetString(_T("Increase/decrease auto contrast correction amount")));
-		helpDisplay.AddLine(_T("1 .. 9"), CNLS::GetString(_T("Slide show with timeout of n seconds (any other key to stop)")));
+		helpDisplay.AddLine(_T("1 .. 9"), CNLS::GetString(_T("Slide show with timeout of n seconds (ESC to stop)")));
 		helpDisplay.AddLineInfo(_T("Ctrl[+Shift] 1 .. 9"),  LPCTSTR(NULL), CNLS::GetString(_T("Set timeout to n/10 sec, respectively n/100 sec (Ctrl+Shift)")));
 		helpDisplay.AddLine(CNLS::GetString(_T("up/down")), CNLS::GetString(_T("Rotate image and fit to screen")));
 		helpDisplay.AddLine(_T("Return"), CNLS::GetString(_T("Fit image to screen")));
@@ -591,11 +595,12 @@ LRESULT CMainDlg::OnKeyDown(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOO
 	bool bCtrl = (::GetKeyState(VK_CONTROL) & 0x8000) != 0;
 	bool bShift = (::GetKeyState(VK_SHIFT) & 0x8000) != 0;
 	bool bAlt = (::GetKeyState(VK_MENU) & 0x8000) != 0;
-	StopTimer(); // stop any running slideshow
 	if (wParam == VK_ESCAPE) {
 		if (m_bShowHelp) {
 			m_bShowHelp = false;
 			this->Invalidate(FALSE);
+		} else if (m_bMovieMode) {
+			StopMovieMode(); // stop any running movie/slideshow
 		} else {
 			this->EndDialog(0);
 		}
@@ -684,7 +689,7 @@ LRESULT CMainDlg::OnKeyDown(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOO
 		} else {
 			nValue *= 1000; // seconds
 		}
-		StartTimer(nValue);
+		StartMovieMode(1000.0/nValue);
 	} else if (wParam == VK_SPACE) {
 		if (fabs(m_dZoom - 1) < 0.01) {
 			ResetZoomToFitScreen();
@@ -863,6 +868,8 @@ LRESULT CMainDlg::OnContextMenu(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam,
 	::CheckMenuItem(hMenuNavigation,  m_pFileList->GetNavigationMode()*10 + IDM_LOOP_FOLDER, MF_CHECKED);
 	HMENU hMenuOrdering = ::GetSubMenu(hMenuTrackPopup, SUBMENU_POS_DISPLAY_ORDER);
 	::CheckMenuItem(hMenuOrdering,  m_pFileList->GetSorting()*10 + IDM_SORT_MOD_DATE, MF_CHECKED);
+	HMENU hMenuMovie = ::GetSubMenu(hMenuTrackPopup, SUBMENU_POS_MOVIE);
+	if (!m_bMovieMode) ::EnableMenuItem(hMenuMovie, IDM_STOP_MOVIE, MF_BYCOMMAND | MF_GRAYED);
 	HMENU hMenuZoom = ::GetSubMenu(hMenuTrackPopup, SUBMENU_POS_ZOOM);
 	if (m_bSpanVirtualDesktop) ::CheckMenuItem(hMenuZoom,  IDM_SPAN_SCREENS, MF_CHECKED);
 
@@ -878,9 +885,21 @@ LRESULT CMainDlg::OnContextMenu(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam,
 	} else if (CParameterDB::This().FindEntry(m_pCurrentImage->GetPixelHash()) == NULL) {
 		::EnableMenuItem(hMenuTrackPopup, IDM_CLEAR_PARAM_DB, MF_BYCOMMAND | MF_GRAYED);
 	}
+	if (m_bMovieMode) {
+		::EnableMenuItem(hMenuTrackPopup, IDM_SAVE, MF_BYCOMMAND | MF_GRAYED);
+		::EnableMenuItem(hMenuTrackPopup, IDM_SAVE_PARAMETERS, MF_BYCOMMAND | MF_GRAYED);
+		::EnableMenuItem(hMenuTrackPopup, IDM_SAVE_PARAM_DB, MF_BYCOMMAND | MF_GRAYED);
+		::EnableMenuItem(hMenuTrackPopup, IDM_CLEAR_PARAM_DB, MF_BYCOMMAND | MF_GRAYED);
+	} else {
+		// Delete the 'Stop movie' menu entry if no movie is playing
+		::DeleteMenu(hMenuTrackPopup, 0, MF_BYPOSITION);
+		::DeleteMenu(hMenuTrackPopup, 0, MF_BYPOSITION);
+	}
 
+	m_bInTrackPopupMenu = true;
 	int nMenuCmd = ::TrackPopupMenu(hMenuTrackPopup, TPM_LEFTALIGN | TPM_RIGHTBUTTON | TPM_NONOTIFY | TPM_RETURNCMD, 
-		nX, nY, 0, this->m_hWnd, NULL); 
+		nX, nY, 0, this->m_hWnd, NULL);
+	m_bInTrackPopupMenu = false;
 
 	ExecuteCommand(nMenuCmd);
 
@@ -981,8 +1000,19 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 				this->Invalidate(FALSE);
 			}
 			break;
+		case IDM_STOP_MOVIE:
+			StopMovieMode();
+			break;
+		case IDM_MOVIE_5_FPS:
+		case IDM_MOVIE_10_FPS:
+		case IDM_MOVIE_25_FPS:
+		case IDM_MOVIE_30_FPS:
+		case IDM_MOVIE_50_FPS:
+		case IDM_MOVIE_100_FPS:
+			StartMovieMode(nCommand - IDM_MOVIE_START_FPS);
+			break;
 		case IDM_SAVE_PARAM_DB:
-			if (m_pCurrentImage != NULL) {
+			if (m_pCurrentImage != NULL && !m_bMovieMode) {
 				CParameterDBEntry newEntry;
 				EProcessingFlags procFlags = CreateProcessingFlags(m_bHQResampling, m_bAutoContrast, false, m_bLDC, false);
 				newEntry.InitFromProcessParams(*m_pImageProcParams, procFlags, m_nRotation);
@@ -999,7 +1029,7 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 			}
 			break;
 		case IDM_CLEAR_PARAM_DB:
-			if (m_pCurrentImage != NULL) {
+			if (m_pCurrentImage != NULL && !m_bMovieMode) {
 				if (CParameterDB::This().DeleteEntry(m_pCurrentImage->GetPixelHash())) {
 					// restore initial parameters and realize the parameters
 					EProcessingFlags procFlags = GetDefaultProcessingFlags();
@@ -1107,6 +1137,7 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 }
 
 bool CMainDlg::OpenFile(bool bAtStartup) {
+	StopMovieMode();
 	MouseOn();
 	CFileOpenDialog dlgOpen(this->m_hWnd, m_pFileList->Current(), CFileList::GetSupportedFileEndings());
 	if (IDOK == dlgOpen.DoModal(this->m_hWnd)) {
@@ -1133,6 +1164,10 @@ bool CMainDlg::OpenFile(bool bAtStartup) {
 }
 
 bool CMainDlg::SaveImage() {
+	if (m_bMovieMode) {
+		return false;
+	}
+
 	MouseOn();
 
 	CString sCurrentFile;
@@ -1252,7 +1287,7 @@ void CMainDlg::GotoImage(EImagePosition ePos, int nFlags) {
 			StartTimer(m_nCurrentTimeout);
 		}
 	} else {
-		StopTimer();
+		StopMovieMode();
 	}
 
 	MouseOff();
@@ -1526,6 +1561,53 @@ void CMainDlg::StopTimer(void) {
 	}
 }
 
+void CMainDlg::StartMovieMode(double dFPS) {
+	// Save processing flags at the time movie mode starts
+	if (!m_bMovieMode) {
+		m_eProcFlagsBeforeMovie = CreateProcessingFlags(m_bHQResampling, m_bAutoContrast, m_bAutoContrastSection, m_bLDC, m_bKeepParams);
+	}
+	// Keep parameters during movie mode
+	if (!m_bKeepParams) {
+		ExecuteCommand(IDM_KEEP_PARAMETERS);
+	}
+	// Turn off high quality resamping and auto corrections when requested to play many frames per second
+	if (dFPS > 4.9) {
+		m_bProcFlagsTouched = true;
+		m_bHQResampling = false;
+		m_bAutoContrastSection = false;
+		m_bAutoContrast = false;
+		m_bLDC = false;
+	}
+	m_bMovieMode = true;
+	StartTimer(Helpers::RoundToInt(1000.0/dFPS));
+	AfterNewImageLoaded(false);
+}
+
+void CMainDlg::StopMovieMode() {
+	if (m_bMovieMode) {
+		// undo changes done on processing paramters due to movie mode
+		if (!GetProcessingFlag(m_eProcFlagsBeforeMovie, PFLAG_KeepParams)) {
+			m_bKeepParams = false;
+		}
+		if (m_bProcFlagsTouched) {
+			if (GetProcessingFlag(m_eProcFlagsBeforeMovie, PFLAG_AutoContrast)) {
+				m_bAutoContrast = true;
+			}
+			if (GetProcessingFlag(m_eProcFlagsBeforeMovie, PFLAG_LDC)) {
+				m_bLDC = true;
+			}
+			if (GetProcessingFlag(m_eProcFlagsBeforeMovie, PFLAG_HighQualityResampling)) {
+				m_bHQResampling = true;
+			}
+		}
+		m_bMovieMode = false;
+		m_bProcFlagsTouched = false;
+		StopTimer();
+		AfterNewImageLoaded(false);
+		this->Invalidate(FALSE);
+	}
+}
+
 void CMainDlg::StartLowQTimer(int nTimeout) {
 	m_bTemporaryLowQ = true;
 	::KillTimer(this->m_hWnd, ZOOM_TIMER_EVENT_ID);
@@ -1533,7 +1615,7 @@ void CMainDlg::StartLowQTimer(int nTimeout) {
 }
 
 void CMainDlg::MouseOff() {
-	if (m_nCursorCnt >= 0 && m_nMouseY < m_clientRect.bottom - m_pSliderMgr->SliderAreaHeight()) {
+	if (m_nCursorCnt >= 0 && m_nMouseY < m_clientRect.bottom - m_pSliderMgr->SliderAreaHeight() && !m_bInTrackPopupMenu) {
 		m_nCursorCnt = ::ShowCursor(FALSE);
 		m_startMouse.x = m_startMouse.y = -1;
 	}
@@ -1594,8 +1676,10 @@ void CMainDlg::ExchangeProcessingParams() {
 }
 
 void CMainDlg::AfterNewImageLoaded(bool bSynchronize) {
-	if (m_pCurrentImage != NULL) {
+	if (m_pCurrentImage != NULL && !m_bMovieMode) {
 		m_btnSaveToDB->SetShow(true);
+		m_txtParamDB->SetShow(true);
+		m_txtRename->SetShow(true);
 		m_btnRemoveFromDB->SetShow(m_pCurrentImage->IsInParamDB());
 		LPCTSTR sCurrentFileTitle = m_pFileList->CurrentFileTitle();
 		if (sCurrentFileTitle != NULL) {
@@ -1605,10 +1689,12 @@ void CMainDlg::AfterNewImageLoaded(bool bSynchronize) {
 		}
 		m_txtFileName->SetEditable(!m_pFileList->IsSlideShowList());
 	} else {
-		m_btnSaveToDB->SetShow(false);
-		m_btnRemoveFromDB->SetShow(false);
 		m_txtFileName->SetText(_T(""));
 		m_txtFileName->SetEditable(false);
+		m_txtParamDB->SetShow(false);
+		m_txtRename->SetShow(false);
+		m_btnSaveToDB->SetShow(false);
+		m_btnRemoveFromDB->SetShow(false);
 	}
 	if (bSynchronize) {
 		// after loading an image, the per image processing parameters must be synchronized with
@@ -1722,6 +1808,10 @@ static void AddFlagText(CString& sText, LPCTSTR sFlagText, bool bFlag) {
 }
 
 void CMainDlg::SaveParameters() {
+	if (m_bMovieMode) {
+		return;
+	}
+
 	const int BUFF_SIZE = 128;
 	TCHAR buff[BUFF_SIZE];
 	CString sText = CString(CNLS::GetString(_T("Do you really want to save the following parameters as default to the INI file"))) + _T('\n') +
@@ -1758,7 +1848,7 @@ void CMainDlg::SaveParameters() {
 	}
 	sText += _T("\n\n");
 	sText += CNLS::GetString(_T("These values will override the values from the INI file located in the program folder of JPEGView!"));
-	
+
 	if (IDYES == this->MessageBox(sText, CNLS::GetString(_T("Confirm save default parameters")), MB_YESNO | MB_ICONQUESTION)) {
 		CSettingsProvider::This().SaveSettings(*m_pImageProcParams, 
 			CreateProcessingFlags(m_bHQResampling, m_bAutoContrast, 

@@ -59,6 +59,13 @@ CJPEGImage* CJPEGProvider::RequestJPEG(CFileList* pFileList, EReadAheadDirection
 		::WaitForSingleObject(pRequest->EventFinished, INFINITE);
 		GetLoadedImageFromWorkThread(pRequest);
 	} else {
+		CJPEGImage* pImage = pRequest->Image;
+		if (pImage != NULL && !pImage->IsInParamDB()) {
+			// make sure the intitial parameters are reset as when keep params was on before they are wrong
+			EProcessingFlags procFlags = processParams.ProcFlags;
+			pImage->RestoreInitialParameters(strFileName, processParams.ImageProcParams, procFlags, 
+				processParams.Rotation, processParams.Zoom, processParams.Offsets);
+		}
 		::OutputDebugStr(_T("Found in cache: ")); ::OutputDebugStr(pRequest->FileName); ::OutputDebugStr(_T("\n"));
 	}
 

@@ -730,11 +730,26 @@ bool CFileList::TryReadingSlideShowList(const CString & sSlideShowFile) {
 			return false;
 		}
 		// one line in lineBuff, check if there is a valid file name
+		bool bRelativePath = false;
 		lineBuff[nNumChars] = _T('\n'); // force end
 		TCHAR* pStart = _tcsstr(lineBuff, _T("\\\\"));
 		if (pStart == NULL) {
 			pStart = _tcsstr(lineBuff+1, _T(":\\"));
-			if (pStart != NULL) pStart--;
+			if (pStart != NULL) {
+				pStart--;
+			} else {
+				// try to find file name with relative path
+				for (int i = 0; i < cnNumEndings; i++) {
+					pStart = _tcsstr(lineBuff, CString(_T(".")) + csFileEndings[i]);
+					if (pStart != NULL) {
+						while (pStart >= lineBuff && *pStart != _T('"') && *pStart != _T('>')) pStart--;
+						pStart++;
+						bRelativePath = true;
+						break;
+					}
+				}
+			}
+			
 		}
 		if (pStart != NULL) {
 			// extract file name and add to list of files to show
@@ -744,7 +759,7 @@ bool CFileList::TryReadingSlideShowList(const CString & sSlideShowFile) {
 			}
 			*pEnd = 0;
 			CFindFile fileFind;
-			if (fileFind.FindFile(pStart)) {
+			if (fileFind.FindFile(bRelativePath ? (m_sDirectory + _T('\\') + pStart) : pStart)) {
 				AddToFileList(m_fileList, fileFind);
 			}
 		}
