@@ -211,7 +211,7 @@ void CParameterDBEntry::InitGeometricParams(CSize sourceSize, double fZoom, CPoi
 }
 
 void CParameterDBEntry::WriteToGeometricParams(double & fZoom, CPoint & offsets, CSize imageSize, CSize windowSize) {
-	if (zoomRectRigth == zoomRectLeft || zoomRectBottom == zoomRectTop) {
+	if (!HasZoomOffsetStored()) {
 		return; // no zoom is stored
 	}
 
@@ -287,6 +287,13 @@ float CParameterDBEntry::Convert(uint8 value, float lowerLimit, float upperLimit
 		fValue = pow(fValue, 10);
 	}
 	return fValue;
+}
+
+bool CParameterDBEntry::HasZoomOffsetStored() const {
+	if (zoomRectRigth == zoomRectLeft || zoomRectBottom == zoomRectTop) {
+		return false; // no zoom is stored
+	}
+	return true;
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////

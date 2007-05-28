@@ -130,6 +130,9 @@ public:
 	// Sets if the image is in the paramter DB (called after the user saves/deletes the image from param DB)
 	void SetIsInParamDB(bool bSet) { m_bInParamDB = bSet; }
 
+	// Gets if zoom and offset values are stored for this image in the parameter DB
+	bool HasZoomStoredInParamDB() const { return m_bHasZoomStoredInParamDB; }
+
 	// Gets the factor to lighten shadows based on sunset and nightshot detection
 	float GetLightenShadowFactor() { return m_fLightenShadowFactor; }
 
@@ -197,6 +200,7 @@ private:
 	CPoint m_TargetOffset;
 
 	bool m_bInParamDB; // true if image found in param DB
+	bool m_bHasZoomStoredInParamDB; // true if image in param DB and entry contains zoom and offset values
 	bool m_bFirstReprocessing; // true if never reprocessed before, some optimizations may be not done initially
 	int m_nDimRegion;
 
