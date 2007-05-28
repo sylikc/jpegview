@@ -30,6 +30,9 @@ public:
 	// Copies the color corrections from the DB entry to the given array of floats
 	void GetColorCorrectionAmounts(float corrections[6]) const;
 
+	// Gets if zoom and offset values are stored with this entry
+	bool HasZoomOffsetStored() const;
+
 private:
 	__int64 hash;
 	uint8 contrast;

@@ -69,6 +69,7 @@ CJPEGImage::CJPEGImage(int nWidth, int nHeight, void* pIJLPixels, void* pEXIFDat
 	m_initialOffsets = CPoint(0, 0);
 	m_nDimRegion = 0;
 	m_bInParamDB = false;
+	m_bHasZoomStoredInParamDB = false;
 
 	m_bFlipped = false;
 	m_nRotation = 0;
@@ -301,18 +302,23 @@ void CJPEGImage::SetInitialParameters(const CImageProcessingParams& imageProcPar
 void CJPEGImage::RestoreInitialParameters(LPCTSTR sFileName, const CImageProcessingParams& imageProcParams, 
 										  EProcessingFlags & procFlags, int nRotation, double dZoom, 
 										  CPoint offsets, CSize targetSize) {
+	// zoom and offsets must be initialized in all cases as they may be not in param DB even when
+	// other parameters are
+	m_dInitialZoom = dZoom;
+	m_initialOffsets = offsets;
+
 	CParameterDBEntry* dbEntry = CParameterDB::This().FindEntry(GetPixelHash());
 	m_bInParamDB = dbEntry != NULL;
+	m_bHasZoomStoredInParamDB = m_bInParamDB && dbEntry->HasZoomOffsetStored();
 	bool bKeepParams = ::GetProcessingFlag(procFlags, PFLAG_KeepParams);
 	if (m_bInParamDB && !bKeepParams) {
 		dbEntry->WriteToProcessParams(m_imageProcParamsInitial, m_eProcFlagsInitial, m_nInitialRotation);
 		dbEntry->GetColorCorrectionAmounts(m_fColorCorrectionFactors);
+
 		dbEntry->WriteToGeometricParams(m_dInitialZoom, m_initialOffsets, SizeAfterRotation(m_nInitialRotation),
 			targetSize);
 	} else {
 		m_nInitialRotation = nRotation;
-		m_dInitialZoom = dZoom;
-		m_initialOffsets = offsets;
 		m_eProcFlagsInitial = bKeepParams ? procFlags : GetProcFlagsIncludeExcludeFolders(sFileName, procFlags);
 		procFlags = m_eProcFlagsInitial;
 		m_imageProcParamsInitial = imageProcParams;
@@ -323,6 +329,7 @@ void CJPEGImage::RestoreInitialParameters(LPCTSTR sFileName, const CImageProcess
 void CJPEGImage::SetFileDependentProcessParams(LPCTSTR sFileName, CProcessParams* pParams) {
 	CParameterDBEntry* dbEntry = CParameterDB::This().FindEntry(GetPixelHash());
 	m_bInParamDB = dbEntry != NULL;
+	m_bHasZoomStoredInParamDB = m_bInParamDB && dbEntry->HasZoomOffsetStored();
 	if (m_bInParamDB) {
 		if (!::GetProcessingFlag(pParams->ProcFlags, PFLAG_KeepParams)) {
 			dbEntry->WriteToProcessParams(pParams->ImageProcParams, pParams->ProcFlags, pParams->Rotation);

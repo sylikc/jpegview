@@ -1737,6 +1737,10 @@ void CMainDlg::AfterNewImageLoaded(bool bSynchronize) {
 				m_nOffsetX = offsets.x;
 				m_nOffsetY = offsets.y;
 
+				if (m_pCurrentImage->HasZoomStoredInParamDB()) {
+					m_bUserZoom = m_bUserPan = true;
+				}
+
 				*m_pImageProcParams = m_pCurrentImage->GetInitialProcessParams();
 			} else if (m_bCurrentImageIsSpecialProcessing && m_bKeepParams) {
 				// set this factor, no matter if we keep parameters
