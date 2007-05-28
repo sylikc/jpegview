@@ -316,9 +316,6 @@ void CWorkThread::ProcessImageAfterLoad(CRequest * request) {
 	int nWidth = request->Image->OrigWidth();
 	int nHeight = request->Image->OrigHeight();
 
-	// set this after VerifyRotation() as zoom/pan depends on correct rotation
-	request->Image->SetZoomPanFromParamDB(&(request->ProcessParams));
-
 	double dZoom = request->ProcessParams.Zoom;
 	CSize newSize;
 	if (dZoom < 0.0) {

@@ -32,7 +32,7 @@
 <td>
 <a name="Top"></a>
 <h1>JPEGView Readme</h1>
-Revision: 15-May-2007
+Revision: 28-May-2007
 <a name="Introduction"></a>
 <h2>Introduction</h2>
 JPEGView is a viewer/editor for JPEG, BMP, PNG, GIF and TIFF images. It is designed to view images from digital cameras
@@ -59,7 +59,7 @@ images. JPEGView does not replace a full blown image editor - such an editor wil
 </li>
 <li>Small and fast
   <ul style="margin-top:0in;margin-bottom:0in">
-  <li>Executable is only 300 KB</li>
+  <li>Executable is only 350 KB</li>
   <li>C++/MMX/SSE code</li>
   <li>Minimal dependencies on external libraries</li>
   </ul>
@@ -84,6 +84,20 @@ images. JPEGView does not replace a full blown image editor - such an editor wil
   <ul style="margin-top:0in;margin-bottom:0in">
   <li>Image file remains untouched</li>
   <li>Database entries remain valid when image file is moved</li>
+  </ul>
+</li>
+<li>Slide shows and movie playing
+  <ul style="margin-top:0in;margin-bottom:0in">
+  <li>Plays slide shows given by text file</li>
+  <li>Plays all images in folder as movie with configurable frame rate.<br/>
+  All image processing remains functional while playing.</li>
+  </ul>
+</li>
+<li>Batch rename and copy
+  <ul style="margin-top:0in;margin-bottom:0in">
+  <li>Copies and renames files from digicam to target folders</li>
+  <li>Creates target folders as needed</li>
+  <li>Supports various placeholders for renaming files</li>
   </ul>
 </li>
 </ul>
@@ -319,8 +333,8 @@ Default settings for most of the image processing parameters can be given in the
 By default, all image processing parameters (including zoom and pan) are reset to the default values given in the INI file
 when the next image is displayed. Using the <kbd>F4</kbd> key, the behavior can be changed to keeping the parameters between
 images. Pressing <kbd>F4</kbd> again will toggle back to not-keeping the parameters.<br/>
-<b>Note:</b> Keeping the parameters has no effect on images in the <a href="#ParameterDB">Parameter DB.</a> In this case
-the parameters from the DB have precedence.
+<b>Note:</b> While keeping parameters mode is active, the parameter DB cannot be used. Parameter DB values are ignored while
+this mode is active.
 <h4>Comparing processed image with original image</h4>
 When JPEGView displays a new image, it creates a second set of image processing parameters and initializes it with zero,
 meaning that the original, unprocessed image will be displayed when this set is applied.
@@ -346,6 +360,27 @@ is not touched - neither rotation nor image processing will be applied to the th
 On the processing panel, images can be renamed by clicking on the file name with the mouse. To
 confirm the new name, press <kbd>Enter</kbd> or click outside of the edit control. To cancel renaming, press <kbd>Esc</kbd>.
 Note that renaming images is not possible when a slide show file is loaded because this would invalidate the slide show file.
+
+<h4>Batch rename/copy</h4>
+Using the context menu entry 'Batch rename/copy' a series of files from the current folder can be renamed and/or copied to
+another folder:
+<ol start="1" type="1">
+<li>First select the files to be renamed. Use the <kbd>Ctrl</kbd> and <kbd>Shift</kbd> keys to select multiple files and click the checkboxes.</li>
+<li>Enter the target file name pattern. When not using a backslash in the pattern, the files are renamed in the current
+folder, else they are copied to the target folder as given. Target folders not yet existing are created as needed.<br/>
+Several placeholders are supported. See some examples below. A template pattern can be saved when needed.</li>
+<li>Before really renaming the files, always verify the new names by pressing the 'Preview' button.</li>
+<li>To rename the selected files, press the 'Rename' button. Renaming/copying can take a while, especially when
+the source or target is a slow USB device.</li>
+</ol>
+<b>Examples</b><br/><br/>
+<b>%pictures%\Digicam\%2y-%m-%M\%f</b></br>
+Source image: IMG00244.JPG, created June 12, 2007</br>
+Target: 'My pictures'\Digicam\07-06-June\IMG00244.JPG</br>
+The folder 'Digicam\07-06-June\' is created when needed.</br></br>
+<b>%pictures%\Digicam\%M %y\Trip to Barcelona %x.%e</b></br>
+Source image: IMG00244.JPG, created June 12, 2007</br>
+Target: 'My pictures'\Digicam\June 2007\Trip to Barcelona 1.JPG</br>
 <br/><br/><b><a href="#Top">Top of Page</a></b><br/>
 
 <a name="Clipboard"></a>
@@ -489,8 +524,8 @@ This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation, version 2.
 The full text of the GPL can be found <a href="http://opensource.org/osi3.0/licenses/gpl-license.php">here.</a><br/>
-JPEGView is hosted by <a href="http://www.sourceforge.net">SourceForge.</a> You can get the source code, report
-a bug or contact me, using the following URL:<br/>
+JPEGView is hosted by <a href="http://www.sourceforge.net">SourceForge.</a> You can check for the latest version,
+get the source code, report a bug or contact me, using the following URL:<br/>
 <a href="https://sourceforge.net/projects/jpegview/">https://sourceforge.net/projects/jpegview/</a>
 <br/><br/>
 JPEGView contains the following binary libraries or external applications:<br/>

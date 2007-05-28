@@ -2,6 +2,8 @@
 
 #include "ProcessParams.h"
 
+#pragma pack(push)
+
 #pragma pack(1)
 class CParameterDBEntry {
 public:
@@ -62,6 +64,8 @@ struct ParameterDBHeader {
 	uint32 nVersion;
 	uint32 nFill[5];
 };
+
+#pragma pack(pop)
 
 // Parameter database class, holding image processing parameters for images identified by a 64 bit
 // pixel hash value

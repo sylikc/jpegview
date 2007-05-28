@@ -23,6 +23,7 @@
 #include "ParameterDB.h"
 #include "SaveImage.h"
 #include "NLS.h"
+#include "BatchCopyDlg.h"
 
 //////////////////////////////////////////////////////////////////////////////////////////////
 // Constants
@@ -193,6 +194,11 @@ LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam
 {	
 	this->SetWindowText(_T("JPEGView")); // only relevant for toolbar
 
+	// get the scaling of the screen (DPI) compared to 96 DPI (design value)
+	CPaintDC dc(this->m_hWnd);
+	m_fScaling = ::GetDeviceCaps(dc, LOGPIXELSX)/96.0f;
+	Helpers::ScreenScaling = m_fScaling;
+
 	// Configure the image processing area at bottom of screen
 	m_pSliderMgr = new CSliderMgr(this->m_hWnd);
 	m_pSliderMgr->AddSlider(CNLS::GetString(_T("Contrast")), &(m_pImageProcParams->Contrast), NULL, -0.5, 0.5, false, false);
@@ -239,10 +245,6 @@ LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam
 
 	// turn off mouse coursor
 	m_nCursorCnt = ::ShowCursor(FALSE);
-
-	// get the scaling of the screen (DPI) compared to 96 DPI (design value)
-	CPaintDC dc(this->m_hWnd);
-	m_fScaling = ::GetDeviceCaps(dc, LOGPIXELSX)/96.0f;
 
 	// intitialize navigation with startup file (and folder)
 	m_pFileList = new CFileList(m_sStartupFile, CSettingsProvider::This().Sorting());
@@ -882,11 +884,15 @@ LRESULT CMainDlg::OnContextMenu(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam,
 		::EnableMenuItem(hMenuTrackPopup, IDM_SAVE_PARAM_DB, MF_BYCOMMAND | MF_GRAYED);
 		::EnableMenuItem(hMenuTrackPopup, IDM_CLEAR_PARAM_DB, MF_BYCOMMAND | MF_GRAYED);
 		::EnableMenuItem(hMenuTrackPopup, SUBMENU_POS_ZOOM, MF_BYPOSITION  | MF_GRAYED);
-	} else if (CParameterDB::This().FindEntry(m_pCurrentImage->GetPixelHash()) == NULL) {
-		::EnableMenuItem(hMenuTrackPopup, IDM_CLEAR_PARAM_DB, MF_BYCOMMAND | MF_GRAYED);
+	} else {
+		if (m_bKeepParams || CParameterDB::This().FindEntry(m_pCurrentImage->GetPixelHash()) == NULL)
+			::EnableMenuItem(hMenuTrackPopup, IDM_CLEAR_PARAM_DB, MF_BYCOMMAND | MF_GRAYED);
+		if (m_bKeepParams)
+			::EnableMenuItem(hMenuTrackPopup, IDM_SAVE_PARAM_DB, MF_BYCOMMAND | MF_GRAYED);
 	}
 	if (m_bMovieMode) {
 		::EnableMenuItem(hMenuTrackPopup, IDM_SAVE, MF_BYCOMMAND | MF_GRAYED);
+		::EnableMenuItem(hMenuTrackPopup, IDM_BATCH_COPY, MF_BYCOMMAND | MF_GRAYED);
 		::EnableMenuItem(hMenuTrackPopup, IDM_SAVE_PARAMETERS, MF_BYCOMMAND | MF_GRAYED);
 		::EnableMenuItem(hMenuTrackPopup, IDM_SAVE_PARAM_DB, MF_BYCOMMAND | MF_GRAYED);
 		::EnableMenuItem(hMenuTrackPopup, IDM_CLEAR_PARAM_DB, MF_BYCOMMAND | MF_GRAYED);
@@ -970,6 +976,11 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 				this->Invalidate(FALSE);
 			}
 			break;
+		case IDM_BATCH_COPY:
+			if (m_pCurrentImage != NULL) {
+				BatchCopy();
+			}
+			break;
 		case IDM_SHOW_FILENAME:
 			m_bShowFileName = !m_bShowFileName;
 			this->Invalidate(FALSE);
@@ -1012,7 +1023,7 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 			StartMovieMode(nCommand - IDM_MOVIE_START_FPS);
 			break;
 		case IDM_SAVE_PARAM_DB:
-			if (m_pCurrentImage != NULL && !m_bMovieMode) {
+			if (m_pCurrentImage != NULL && !m_bMovieMode && !m_bKeepParams) {
 				CParameterDBEntry newEntry;
 				EProcessingFlags procFlags = CreateProcessingFlags(m_bHQResampling, m_bAutoContrast, false, m_bLDC, false);
 				newEntry.InitFromProcessParams(*m_pImageProcParams, procFlags, m_nRotation);
@@ -1024,34 +1035,26 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 				if (CParameterDB::This().AddEntry(newEntry)) {
 					// these parameters need to be updated when image is reused from cache
 					m_pCurrentImage->SetInitialParameters(*m_pImageProcParams, procFlags, m_nRotation, m_dZoom, CPoint(m_nOffsetX, m_nOffsetY));
-					m_btnRemoveFromDB->SetShow(true);
+					m_pCurrentImage->SetIsInParamDB(true);
+					ShowHideSaveDBButtons();
 				}
 			}
 			break;
 		case IDM_CLEAR_PARAM_DB:
-			if (m_pCurrentImage != NULL && !m_bMovieMode) {
+			if (m_pCurrentImage != NULL && !m_bMovieMode && !m_bKeepParams) {
 				if (CParameterDB::This().DeleteEntry(m_pCurrentImage->GetPixelHash())) {
 					// restore initial parameters and realize the parameters
 					EProcessingFlags procFlags = GetDefaultProcessingFlags();
 					m_pCurrentImage->RestoreInitialParameters(m_pFileList->Current(), 
-						GetDefaultProcessingParams(), procFlags, 0, -1, CPoint(0, 0));
-					if (!m_bKeepParams) {
-						*m_pImageProcParams = GetDefaultProcessingParams();
-						// Sunset and night shot detection may has changed this
-						m_pImageProcParams->LightenShadows = m_pCurrentImage->GetInitialProcessParams().LightenShadows;
-						InitFromProcessingFlags(procFlags, m_bHQResampling, m_bAutoContrast, m_bAutoContrastSection, m_bLDC);
-						m_nRotation = 0;
-						m_dZoom = -1;
-					} else {
-						*m_pImageProcParams = *m_pImageProcParamsKept;
-						m_pImageProcParams->LightenShadows = m_pCurrentImage->GetInitialProcessParams().LightenShadows;
-						InitFromProcessingFlags(m_eProcessingFlagsKept, m_bHQResampling, m_bAutoContrast, m_bAutoContrastSection, m_bLDC);
-						m_nRotation = m_nRotationKept;
-						m_dZoom = m_dZoomKept;
-						m_nOffsetX = m_offsetKept.x;
-						m_nOffsetY = m_offsetKept.y;
-					}
-					m_btnRemoveFromDB->SetShow(false);
+						GetDefaultProcessingParams(), procFlags, 0, -1, CPoint(0, 0), CSize(0, 0));
+					*m_pImageProcParams = GetDefaultProcessingParams();
+					// Sunset and night shot detection may has changed this
+					m_pImageProcParams->LightenShadows = m_pCurrentImage->GetInitialProcessParams().LightenShadows;
+					InitFromProcessingFlags(procFlags, m_bHQResampling, m_bAutoContrast, m_bAutoContrastSection, m_bLDC);
+					m_nRotation = 0;
+					m_dZoom = -1;
+					m_pCurrentImage->SetIsInParamDB(false);
+					ShowHideSaveDBButtons();
 					this->Invalidate(FALSE);
 				}
 			}
@@ -1086,7 +1089,8 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 				m_dZoomKept = m_bUserZoom ? m_dZoom : -1;
 				m_offsetKept = m_bUserPan ? CPoint(m_nOffsetX, m_nOffsetY) : CPoint(0, 0);
 			}
-			if (m_bShowHelp) {
+			ShowHideSaveDBButtons();
+			if (m_bShowHelp || m_bShowIPTools) {
 				this->Invalidate(FALSE);
 			}
 			break;
@@ -1202,6 +1206,18 @@ bool CMainDlg::SaveImage() {
 	}
 	return false;
 }
+
+void CMainDlg::BatchCopy() {
+	if (m_bMovieMode) {
+		return;
+	}
+	MouseOn();
+
+	CBatchCopyDlg dlgBatchCopy(*m_pFileList);
+	dlgBatchCopy.DoModal();
+	this->Invalidate(FALSE);
+}
+
 
 void CMainDlg::HandleUserCommands(uint32 virtualKeyCode) {
 	// iterate over user command list
@@ -1511,19 +1527,17 @@ void CMainDlg::ResetZoomTo100Percents() {
 
 CProcessParams CMainDlg::CreateProcessParams() {
 	if (m_bKeepParams) {
-		// when the last image was in image DB, we do not take over these values for future images
-		if (!m_bCurrentImageInParamDB) {
-			double dOldLightenShadows = m_pImageProcParamsKept->LightenShadows;
-			*m_pImageProcParamsKept = *m_pImageProcParams;
-			// when last image was detected as sunset or nightshot, do not take this value for next image
-			if (m_bCurrentImageIsSpecialProcessing && m_pImageProcParams->LightenShadows == m_dCurrentInitialLightenShadows) {
-				m_pImageProcParamsKept->LightenShadows = dOldLightenShadows;
-			}
-			m_eProcessingFlagsKept = CreateProcessingFlags(m_bHQResampling, m_bAutoContrast, false, m_bLDC, m_bKeepParams);
-			m_nRotationKept = m_nRotation;
-			m_dZoomKept = m_bUserZoom ? m_dZoom : -1;
-			m_offsetKept = m_bUserPan ? CPoint(m_nOffsetX, m_nOffsetY) : CPoint(0, 0);
+		double dOldLightenShadows = m_pImageProcParamsKept->LightenShadows;
+		*m_pImageProcParamsKept = *m_pImageProcParams;
+		// when last image was detected as sunset or nightshot, do not take this value for next image
+		if (m_bCurrentImageIsSpecialProcessing && m_pImageProcParams->LightenShadows == m_dCurrentInitialLightenShadows) {
+			m_pImageProcParamsKept->LightenShadows = dOldLightenShadows;
 		}
+		m_eProcessingFlagsKept = CreateProcessingFlags(m_bHQResampling, m_bAutoContrast, false, m_bLDC, m_bKeepParams);
+		m_nRotationKept = m_nRotation;
+		m_dZoomKept = m_bUserZoom ? m_dZoom : -1;
+		m_offsetKept = m_bUserPan ? CPoint(m_nOffsetX, m_nOffsetY) : CPoint(0, 0);
+
 		return CProcessParams(m_clientRect.Width(), m_clientRect.Height(), m_nRotationKept, 
 			m_dZoomKept, 
 			m_offsetKept,
@@ -1585,9 +1599,11 @@ void CMainDlg::StartMovieMode(double dFPS) {
 
 void CMainDlg::StopMovieMode() {
 	if (m_bMovieMode) {
-		// undo changes done on processing paramters due to movie mode
+		// undo changes done on processing parameters due to movie mode
 		if (!GetProcessingFlag(m_eProcFlagsBeforeMovie, PFLAG_KeepParams)) {
-			m_bKeepParams = false;
+			if (m_bKeepParams) {
+				ExecuteCommand(IDM_KEEP_PARAMETERS);
+			}
 		}
 		if (m_bProcFlagsTouched) {
 			if (GetProcessingFlag(m_eProcFlagsBeforeMovie, PFLAG_AutoContrast)) {
@@ -1675,12 +1691,17 @@ void CMainDlg::ExchangeProcessingParams() {
 	this->Invalidate(FALSE);
 }
 
+void CMainDlg::ShowHideSaveDBButtons() {
+	m_btnSaveToDB->SetShow(m_pCurrentImage != NULL && !m_bMovieMode && !m_bKeepParams);
+	m_btnRemoveFromDB->SetShow(m_pCurrentImage != NULL && !m_bMovieMode && !m_bKeepParams && 
+		m_pCurrentImage->IsInParamDB());
+}
+
 void CMainDlg::AfterNewImageLoaded(bool bSynchronize) {
+	ShowHideSaveDBButtons();
 	if (m_pCurrentImage != NULL && !m_bMovieMode) {
-		m_btnSaveToDB->SetShow(true);
 		m_txtParamDB->SetShow(true);
 		m_txtRename->SetShow(true);
-		m_btnRemoveFromDB->SetShow(m_pCurrentImage->IsInParamDB());
 		LPCTSTR sCurrentFileTitle = m_pFileList->CurrentFileTitle();
 		if (sCurrentFileTitle != NULL) {
 			m_txtFileName->SetText(sCurrentFileTitle);
@@ -1693,8 +1714,6 @@ void CMainDlg::AfterNewImageLoaded(bool bSynchronize) {
 		m_txtFileName->SetEditable(false);
 		m_txtParamDB->SetShow(false);
 		m_txtRename->SetShow(false);
-		m_btnSaveToDB->SetShow(false);
-		m_btnRemoveFromDB->SetShow(false);
 	}
 	if (bSynchronize) {
 		// after loading an image, the per image processing parameters must be synchronized with
@@ -1707,7 +1726,7 @@ void CMainDlg::AfterNewImageLoaded(bool bSynchronize) {
 			m_dCurrentInitialLightenShadows = m_pCurrentImage->GetInitialProcessParams().LightenShadows;
 			m_bCurrentImageInParamDB = m_pCurrentImage->IsInParamDB();
 			m_bCurrentImageIsSpecialProcessing = m_pCurrentImage->GetLightenShadowFactor() != 1.0f;
-			if (!m_bKeepParams || m_bCurrentImageInParamDB) {
+			if (!m_bKeepParams) {
 				m_bHQResampling = GetProcessingFlag(m_pCurrentImage->GetInitialProcessFlags(), PFLAG_HighQualityResampling);
 				m_bAutoContrast = GetProcessingFlag(m_pCurrentImage->GetInitialProcessFlags(), PFLAG_AutoContrast);
 				m_bLDC = GetProcessingFlag(m_pCurrentImage->GetInitialProcessFlags(), PFLAG_LDC);
@@ -1719,14 +1738,6 @@ void CMainDlg::AfterNewImageLoaded(bool bSynchronize) {
 				m_nOffsetY = offsets.y;
 
 				*m_pImageProcParams = m_pCurrentImage->GetInitialProcessParams();
-			} else if (bLastWasInParamDB && m_bKeepParams) {
-				// last image was in param DB, these are not usable for next image so take the kept values
-				*m_pImageProcParams = *m_pImageProcParamsKept;
-				InitFromProcessingFlags(m_eProcessingFlagsKept, m_bHQResampling, m_bAutoContrast, m_bAutoContrastSection, m_bLDC);
-				m_nRotation = m_nRotationKept;
-				m_dZoom = m_dZoomKept;
-				m_nOffsetX = m_offsetKept.x;
-				m_nOffsetY = m_offsetKept.y;
 			} else if (m_bCurrentImageIsSpecialProcessing && m_bKeepParams) {
 				// set this factor, no matter if we keep parameters
 				m_pImageProcParams->LightenShadows = m_pCurrentImage->GetInitialProcessParams().LightenShadows;

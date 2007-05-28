@@ -299,23 +299,37 @@ void CJPEGImage::SetInitialParameters(const CImageProcessingParams& imageProcPar
 }
 
 void CJPEGImage::RestoreInitialParameters(LPCTSTR sFileName, const CImageProcessingParams& imageProcParams, 
-										  EProcessingFlags & procFlags, int nRotation, double dZoom, CPoint offsets) {
-	m_nInitialRotation = nRotation;
-	m_dInitialZoom = dZoom;
-	m_initialOffsets = offsets;
-	m_eProcFlagsInitial = GetProcFlagsIncludeExcludeFolders(sFileName, procFlags);
-	procFlags = m_eProcFlagsInitial;
-	m_imageProcParamsInitial = imageProcParams;
-	m_bInParamDB = false;
-	m_imageProcParamsInitial.LightenShadows *= m_fLightenShadowFactor;
+										  EProcessingFlags & procFlags, int nRotation, double dZoom, 
+										  CPoint offsets, CSize targetSize) {
+	CParameterDBEntry* dbEntry = CParameterDB::This().FindEntry(GetPixelHash());
+	m_bInParamDB = dbEntry != NULL;
+	bool bKeepParams = ::GetProcessingFlag(procFlags, PFLAG_KeepParams);
+	if (m_bInParamDB && !bKeepParams) {
+		dbEntry->WriteToProcessParams(m_imageProcParamsInitial, m_eProcFlagsInitial, m_nInitialRotation);
+		dbEntry->GetColorCorrectionAmounts(m_fColorCorrectionFactors);
+		dbEntry->WriteToGeometricParams(m_dInitialZoom, m_initialOffsets, SizeAfterRotation(m_nInitialRotation),
+			targetSize);
+	} else {
+		m_nInitialRotation = nRotation;
+		m_dInitialZoom = dZoom;
+		m_initialOffsets = offsets;
+		m_eProcFlagsInitial = bKeepParams ? procFlags : GetProcFlagsIncludeExcludeFolders(sFileName, procFlags);
+		procFlags = m_eProcFlagsInitial;
+		m_imageProcParamsInitial = imageProcParams;
+		m_imageProcParamsInitial.LightenShadows *= m_fLightenShadowFactor;
+	}
 }
 
 void CJPEGImage::SetFileDependentProcessParams(LPCTSTR sFileName, CProcessParams* pParams) {
 	CParameterDBEntry* dbEntry = CParameterDB::This().FindEntry(GetPixelHash());
-	if (dbEntry != NULL) {
-		dbEntry->WriteToProcessParams(pParams->ImageProcParams, pParams->ProcFlags, pParams->Rotation);
-		dbEntry->GetColorCorrectionAmounts(m_fColorCorrectionFactors);
-		m_bInParamDB = true;
+	m_bInParamDB = dbEntry != NULL;
+	if (m_bInParamDB) {
+		if (!::GetProcessingFlag(pParams->ProcFlags, PFLAG_KeepParams)) {
+			dbEntry->WriteToProcessParams(pParams->ImageProcParams, pParams->ProcFlags, pParams->Rotation);
+			dbEntry->GetColorCorrectionAmounts(m_fColorCorrectionFactors);
+			dbEntry->WriteToGeometricParams(pParams->Zoom, pParams->Offsets, SizeAfterRotation(pParams->Rotation),
+				CSize(pParams->TargetWidth, pParams->TargetHeight));
+		}
 	} else {
 		pParams->ImageProcParams.LightenShadows *= m_fLightenShadowFactor;
 		if (!::GetProcessingFlag(pParams->ProcFlags, PFLAG_KeepParams)) {
@@ -324,25 +338,15 @@ void CJPEGImage::SetFileDependentProcessParams(LPCTSTR sFileName, CProcessParams
 	}
 
 	m_nInitialRotation = pParams->Rotation;
-	m_eProcFlagsInitial = pParams->ProcFlags;
-	m_imageProcParamsInitial = pParams->ImageProcParams;
-}
-
-void CJPEGImage::SetZoomPanFromParamDB(CProcessParams* pParams) {
-	CParameterDBEntry* dbEntry = CParameterDB::This().FindEntry(GetPixelHash());
-	if (dbEntry != NULL) {
-		dbEntry->WriteToGeometricParams(pParams->Zoom, pParams->Offsets, CSize(m_nOrigWidth, m_nOrigHeight), 
-			CSize(pParams->TargetWidth, pParams->TargetHeight));
-	}
-
 	m_dInitialZoom = pParams->Zoom;
 	m_initialOffsets = pParams->Offsets;
+	m_eProcFlagsInitial = pParams->ProcFlags;
+	m_imageProcParamsInitial = pParams->ImageProcParams;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////
 // Private
 ///////////////////////////////////////////////////////////////////////////////////
-
 
 void* CJPEGImage::ApplyCorrectionLUTandLDC(const CImageProcessingParams & imageProcParams, EProcessingFlags eProcFlags,
 										   CSize fullTargetSize, CPoint targetOffset, CSize dibSize, bool bGeometryChanged) {
@@ -482,4 +486,13 @@ EProcessingFlags CJPEGImage::GetProcFlagsIncludeExcludeFolders(LPCTSTR sFileName
 		eFlags = SetProcessingFlag(eFlags, PFLAG_LDC, false);
 	}
 	return eFlags;
+}
+
+CSize CJPEGImage::SizeAfterRotation(int nRotation) {
+	int nDiff = ((nRotation - m_nRotation) + 360) % 360;
+	if (nDiff == 90 || nDiff == 270) {
+		return CSize(m_nOrigHeight, m_nOrigWidth);
+	} else {
+		return CSize(m_nOrigWidth, m_nOrigHeight);
+	}
 }

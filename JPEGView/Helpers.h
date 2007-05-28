@@ -24,6 +24,9 @@ namespace Helpers {
 		NM_LoopSameDirectoryLevel
 	};
 
+	// Scaling factor from screen DPI, 96 dpi -> 1.0, 120 dpi -> 1.2
+	extern float ScreenScaling;
+
 	// Round to integer
 	inline int RoundToInt(double d) {
 		return (d < 0) ? (int)(d - 0.5) : (int)(d + 0.5);

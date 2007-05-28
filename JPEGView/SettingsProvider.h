@@ -42,12 +42,16 @@ public:
 	LPCTSTR ACCInclude() { return m_sACCInclude; }
 	LPCTSTR LDCExclude() { return m_sLDCExclude; }
 	LPCTSTR LDCInclude() { return m_sLDCInclude; }
+	LPCTSTR CopyRenamePattern() { return m_sCopyRenamePattern; }
 
 	std::list<CUserCommand*> & UserCommandList() { return m_userCommands; }
 
 	// This will only save a subset of settings to the inifile located in AppData\JPEGView\JPEGView.ini.
 	// Note that this INI file has precedence over the ini file at the program directory
 	void SaveSettings(const CImageProcessingParams& procParams, EProcessingFlags eProcFlags, Helpers::ESorting eFileSorting);
+
+	// Saves the pattern used in the copy/rename dialog to rename files
+	void SaveCopyRenamePattern(const CString& sPattern);
 
 	// Gets the path where the global INI file and the EXE is located
 	LPCTSTR GetEXEPath() { return m_sEXEPath; }
@@ -86,9 +90,11 @@ private:
 	CString m_sACCInclude;
 	CString m_sLDCExclude;
 	CString m_sLDCInclude;
+	CString m_sCopyRenamePattern;
 
 	std::list<CUserCommand*> m_userCommands;
 
+	void ReadWriteableINISettings();
 	CString GetString(LPCTSTR sKey, LPCTSTR sDefault);
 	int GetInt(LPCTSTR sKey, int nDefault, int nMin, int nMax);
 	double GetDouble(LPCTSTR sKey, double dDefault, double dMin, double dMax);

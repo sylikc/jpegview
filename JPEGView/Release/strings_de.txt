@@ -106,6 +106,7 @@ Open image...	Bilddatei öffnen...
 Save processed image...	Bearbeitetes Bild speichern...
 Copy to clipboard	In Zwischenablage kopieren
 Copy original size image	Bild in Originalgrösse kopieren
+Batch rename/copy...	Bildserie umbenennen/kopieren...
 Show filename	Dateiname anzeigen
 Navigation	Navigation
 Loop folder	Ordner anzeigen
@@ -134,4 +135,33 @@ Yellow-Blue	Gelb-Blau
 C - R	C - R
 M - G	M - G
 Y - B	Y - B
-
+Batch rename/copy of files	Bildserie umbenennen/kopieren
+Image files in folder	Bilddateien im Ordner
+Placeholders:	Platzhalter:
+Number (consecutively numbered)	Zahl (fortlaufend nummeriert)
+Number with N digits	Zahl mit N Stellen
+Original file name (with extension)	Originaldateiname (mit Erweiterung)
+Original file name (without extension)	Originaldateiname (ohne Erweiterung)
+Original file extension	Originaldateierweiterung
+'My Pictures' folder	Ordner 'Eigene Bilder'
+Day / Month / Year (as numbers)	Tag / Monat / Jahr (als Zahl)
+Year short form (2 digits)	Jahr Kurzform (2 Ziffern)
+Month / Short form (text)	Monat / Kurzform (Text)
+Target folders that are not yet existing are created as needed.	Zielordner werden erstellt falls sie noch nicht existieren.
+Date placeholders use the modification date of the image.	Datumsplatzhalter verwenden das Änderungsdatum der Bilder.
+Rename/copy images to:	Bilder umbenennen/kopieren nach:
+Rename	Umbenennen
+Preview	Vorschau
+Save as template	Als Vorlage speichern
+Close	Schliessen
+Old name	Alter Name
+Date	Datum
+New name (>> : file gets copied)	Neuer Name (>> : Datei wird kopiert)
+Select all	Alle auswählen
+Select none	Auswahl löschen
+The file '%s' could not be %s.	Die Datei '%s' konnte nicht %s werden.
+copied	kopiert
+renamed	umbenannt
+Continue rename/copy?	Umbenennen/Kopieren fortsetzen?
+Error during rename/copy	Fehler beim Umbenennen/Kopieren
+%d file(s) renamed, %d file(s) copied, %d folder(s) created	%d Datei(en) umbenannt, %d Datei(en) kopiert, %d Ordner erstellt
