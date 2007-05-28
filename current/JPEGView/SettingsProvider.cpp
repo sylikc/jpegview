@@ -66,6 +66,53 @@ CSettingsProvider::CSettingsProvider(void) {
 	::SHGetFolderPath(NULL, CSIDL_MYPICTURES, NULL, SHGFP_TYPE_CURRENT, lpPicturesBuffer);
 	sMyPicturesFolder.ReleaseBuffer();
 
+	// Read settings that can be written with SaveSettings()
+	ReadWriteableINISettings();
+
+	m_sACCExclude = GetString(_T("ACCExclude"), _T("")); 
+	m_sACCExclude.Replace(_T("%mydocuments%"), sMyDocumentsFolder);
+	m_sACCExclude.Replace(_T("%mypictures%"), sMyPicturesFolder);
+	m_sACCInclude = GetString(_T("ACCInclude"), _T("")); 
+	m_sACCInclude.Replace(_T("%mydocuments%"), sMyDocumentsFolder);
+	m_sACCInclude.Replace(_T("%mypictures%"), sMyPicturesFolder);
+	m_sLDCExclude = GetString(_T("LDCExclude"), _T(""));
+	m_sLDCExclude.Replace(_T("%mydocuments%"), sMyDocumentsFolder);
+	m_sLDCExclude.Replace(_T("%mypictures%"), sMyPicturesFolder);
+	m_sLDCInclude = GetString(_T("LDCInclude"), _T(""));
+	m_sLDCInclude.Replace(_T("%mydocuments%"), sMyDocumentsFolder);
+	m_sLDCInclude.Replace(_T("%mypictures%"), sMyPicturesFolder);
+
+	CString sColorCorrections = GetString(_T("ColorCorrection"), _T(""));
+	if (sColorCorrections.GetLength() > 0 &&
+		_stscanf(sColorCorrections, _T("R: %f G: %f B: %f C: %f M: %f Y: %f"), 
+		&m_fColorCorrections[0], &m_fColorCorrections[1], &m_fColorCorrections[2],
+		&m_fColorCorrections[3], &m_fColorCorrections[4], &m_fColorCorrections[5]) == 6) {
+		for (int i = 0; i < 6; i++) {
+			m_fColorCorrections[i] = min(1.0f, max(0.0f, m_fColorCorrections[i]));
+		}
+	} else {
+		for (int i = 0; i < 6; i++) {
+			m_fColorCorrections[i] = -1;
+		}
+	}
+
+	// read all user commands
+	CString sCmd;
+	int nIndex = 0;
+	do {
+		CString sKey;
+		sKey.Format(_T("UserCmd%d"), nIndex++);
+		sCmd = GetString(sKey, _T(""));
+		if (sCmd.GetLength() > 0) {
+			CUserCommand* pUserCmd = new CUserCommand(sCmd);
+			if (pUserCmd->IsValid()) {
+				m_userCommands.push_back(pUserCmd);
+			}
+		}
+	} while (sCmd.GetLength() > 0);
+}
+
+void CSettingsProvider::ReadWriteableINISettings() {
 	m_dContrast = GetDouble(_T("Contrast"), 0.0, -0.5, 0.5);
 	m_dGamma = GetDouble(_T("Gamma"), 1.0, 0.1, 10.0);
 	m_dSharpen = GetDouble(_T("Sharpen"), 0.3, 0.0, 0.5);
@@ -123,47 +170,7 @@ CSettingsProvider::CSettingsProvider(void) {
 	m_dBrightenShadows = GetDouble(_T("LDCBrightenShadows"), 0.5, 0.0, 1.0);
 	m_dDarkenHighlights = GetDouble(_T("LDCDarkenHighlights"), 0.25, 0.0, 1.0);
 	m_dBrightenShadowsSteepness = GetDouble(_T("LDCBrightenShadowsSteepness"), 0.5, 0.0, 1.0);
-	m_sACCExclude = GetString(_T("ACCExclude"), _T("")); 
-	m_sACCExclude.Replace(_T("%mydocuments%"), sMyDocumentsFolder);
-	m_sACCExclude.Replace(_T("%mypictures%"), sMyPicturesFolder);
-	m_sACCInclude = GetString(_T("ACCInclude"), _T("")); 
-	m_sACCInclude.Replace(_T("%mydocuments%"), sMyDocumentsFolder);
-	m_sACCInclude.Replace(_T("%mypictures%"), sMyPicturesFolder);
-	m_sLDCExclude = GetString(_T("LDCExclude"), _T(""));
-	m_sLDCExclude.Replace(_T("%mydocuments%"), sMyDocumentsFolder);
-	m_sLDCExclude.Replace(_T("%mypictures%"), sMyPicturesFolder);
-	m_sLDCInclude = GetString(_T("LDCInclude"), _T(""));
-	m_sLDCInclude.Replace(_T("%mydocuments%"), sMyDocumentsFolder);
-	m_sLDCInclude.Replace(_T("%mypictures%"), sMyPicturesFolder);
-
-	CString sColorCorrections = GetString(_T("ColorCorrection"), _T(""));
-	if (sColorCorrections.GetLength() > 0 &&
-		_stscanf(sColorCorrections, _T("R: %f G: %f B: %f C: %f M: %f Y: %f"), 
-		&m_fColorCorrections[0], &m_fColorCorrections[1], &m_fColorCorrections[2],
-		&m_fColorCorrections[3], &m_fColorCorrections[4], &m_fColorCorrections[5]) == 6) {
-		for (int i = 0; i < 6; i++) {
-			m_fColorCorrections[i] = min(1.0f, max(0.0f, m_fColorCorrections[i]));
-		}
-	} else {
-		for (int i = 0; i < 6; i++) {
-			m_fColorCorrections[i] = -1;
-		}
-	}
-
-	// read all user commands
-	CString sCmd;
-	int nIndex = 0;
-	do {
-		CString sKey;
-		sKey.Format(_T("UserCmd%d"), nIndex++);
-		sCmd = GetString(sKey, _T(""));
-		if (sCmd.GetLength() > 0) {
-			CUserCommand* pUserCmd = new CUserCommand(sCmd);
-			if (pUserCmd->IsValid()) {
-				m_userCommands.push_back(pUserCmd);
-			}
-		}
-	} while (sCmd.GetLength() > 0);
+	m_sCopyRenamePattern = GetString(_T("CopyRenamePattern"), _T(""));
 }
 
 void CSettingsProvider::SaveSettings(const CImageProcessingParams& procParams, 
@@ -190,6 +197,16 @@ void CSettingsProvider::SaveSettings(const CImageProcessingParams& procParams,
 		sSorting = _T("LastModDate");
 	}
 	WriteString(_T("FileDisplayOrder"), sSorting);
+
+	m_bUserINIExists = true;
+	ReadWriteableINISettings();
+}
+
+void CSettingsProvider::SaveCopyRenamePattern(const CString& sPattern) {
+	SHCreateDirectoryEx(NULL, Helpers::JPEGViewAppDataPath(), NULL);
+
+	m_sCopyRenamePattern = sPattern;
+	WriteString(_T("CopyRenamePattern"), sPattern);
 }
 
 CString CSettingsProvider::GetString(LPCTSTR sKey, LPCTSTR sDefault) {

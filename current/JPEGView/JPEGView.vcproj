@@ -207,6 +207,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\BatchCopyDlg.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\Clipboard.cpp"
 				>
 			</File>
@@ -325,6 +329,10 @@
 			>
 			<File
 				RelativePath=".\BasicProcessing.h"
+				>
+			</File>
+			<File
+				RelativePath=".\BatchCopyDlg.h"
 				>
 			</File>
 			<File

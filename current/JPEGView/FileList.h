@@ -2,7 +2,42 @@
 
 #include "Helpers.h"
 
-class CFileDesc;
+// Entry in the file list, allowing to sort by name, creation date and modification date
+class CFileDesc 
+{
+public:
+	CFileDesc(const CString & sName, const FILETIME* lastModTime, const FILETIME* creationTime);
+
+	// STL sort only needs this operator to order CFileDesc objects
+	bool operator < (const CFileDesc& other) const;
+
+	// Get and set the sorting method - the sorting method is global
+	static Helpers::ESorting GetSorting() { return sm_eSorting; }
+	static void SetSorting(Helpers::ESorting eSorting) { sm_eSorting = eSorting; }
+
+	// Full name of file
+	const CString& GetName() const { return m_sName; }
+	// Only use after a rename of a file
+	void SetName(LPCTSTR sNewName);
+
+	// File title (without path)
+	LPCTSTR GetTitle() const { return m_sTitle; }
+
+	// Gets last modification time
+	const FILETIME& GetLastModTime() const { return m_lastModTime; }
+
+	// Gets creation time
+	const FILETIME& GetCreationTime() const { return m_creationTime; }
+
+private:
+	static Helpers::ESorting sm_eSorting;
+
+	CString m_sName;
+	LPCTSTR m_sTitle;
+	FILETIME m_lastModTime;
+	FILETIME m_creationTime;
+};
+
 
 // Manages list of files to display and navigation between image files
 class CFileList
@@ -58,6 +93,9 @@ public:
 
 	// Returns if the current file list is based on a slide show text file
 	bool IsSlideShowList() const { return m_bIsSlideShowList; }
+
+	// Returns the raw file list of the current folder
+	std::list<CFileDesc> & GetFileList() { return m_fileList; }
 
 private:
 	static Helpers::ENavigationMode sm_eMode;

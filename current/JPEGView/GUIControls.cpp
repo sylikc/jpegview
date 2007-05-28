@@ -1,5 +1,6 @@
 #include "StdAfx.h"
 #include "GUIControls.h"
+#include "Helpers.h"
 #include <math.h>
 
 #define SLIDER_WIDTH 130
@@ -46,8 +47,7 @@ static CSize GetScreenSize(int nX, int nY) {
 
 CSliderMgr::CSliderMgr(HWND hWnd) {
 	m_hWnd = hWnd;
-	CPaintDC dc(hWnd);
-	m_fDPIScale = ::GetDeviceCaps(dc, LOGPIXELSX)/96.0f;
+	m_fDPIScale = Helpers::ScreenScaling;
 	m_nSliderWidth = (int)(SLIDER_WIDTH*m_fDPIScale);
 	m_nNoLabelWidth = m_nSliderWidth + (int)(WIDTH_ADD_PIXELS*m_fDPIScale);
 	m_nSliderHeight = (int)(SLIDER_HEIGHT*m_fDPIScale);

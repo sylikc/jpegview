@@ -1,5 +1,6 @@
 #include "StdAfx.h"
 #include "HelpDisplay.h"
+#include "Helpers.h"
 #include "NLS.h"
 
 static const COLORREF colorTitle = RGB(0, 255, 255);
@@ -8,7 +9,7 @@ static const COLORREF colorInfo = RGB(160, 255, 160);
 static const COLORREF colorInfoLight = RGB(255, 255, 255);
 
 CHelpDisplay::CHelpDisplay(CPaintDC & dc) : m_dc(dc) {
-	m_fScaling = ::GetDeviceCaps(m_dc, LOGPIXELSX)/96.0f;
+	m_fScaling = Helpers::ScreenScaling;
 	CSize size;
 	dc.SelectStockFont(SYSTEM_FONT);
 	dc.GetTextExtent(_T("teststring"), 10, &size);

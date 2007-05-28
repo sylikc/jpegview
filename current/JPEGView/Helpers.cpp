@@ -4,6 +4,8 @@
 
 namespace Helpers {
 
+float ScreenScaling = -1.0f;
+
 TCHAR CReplacePipe::sm_buffer[MAX_SIZE_REPLACE_PIPE];
 
 CReplacePipe::CReplacePipe(LPCTSTR sText) {

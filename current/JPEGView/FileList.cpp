@@ -2,146 +2,6 @@
 #include "FileList.h"
 
 ///////////////////////////////////////////////////////////////////////////////////
-// Private class used for sorting files by different criteria
-///////////////////////////////////////////////////////////////////////////////////
-
-class CFileDesc 
-{
-public:
-	CFileDesc(const CString & sName, const FILETIME* lastModTime, const FILETIME* creationTime) {
-		m_sName = sName;
-		m_sTitle = (LPCTSTR)m_sName + sName.ReverseFind(_T('\\')) + 1;
-		memcpy(&m_lastModTime, lastModTime, sizeof(FILETIME));
-		memcpy(&m_creationTime, creationTime, sizeof(FILETIME));
-	}
-
-	// Replace all numbers in string with 0 and return numbers separated with \0
-	static void ReplaceNumbers(LPCTSTR sFileName, TCHAR sNewFileName[MAX_PATH], TCHAR sNumberString[MAX_PATH]) {
-		LPCTSTR source = sFileName;
-		LPTSTR target = sNewFileName;
-		LPTSTR numberString = sNumberString;
-		numberString[1] = 0;
-		int i = 0, j = 0;
-		while (*source != 0 && i < MAX_PATH-1 && j < MAX_PATH-1) {
-			while (*source != 0 && !(*source >= _T('0') && *source <= _T('9'))) {
-				*target = *source;
-				source++;
-				if (i < MAX_PATH-1) {
-					target++;
-					i++;
-				}
-			}
-			if (*source >= _T('0') && *source <= _T('9') && i < MAX_PATH-1) {
-				*target++ = _T('0');
-				i++;
-				bool bTrailingZero = true;
-				while (*source >= _T('0') && *source <= _T('9') && j < MAX_PATH-2) {
-					if (*source != _T('0') || !bTrailingZero) {
-						bTrailingZero = false;
-						*numberString = *source;
-						if (j < MAX_PATH-2) {
-							numberString++;
-							j++;
-						}
-					}
-					source++;
-				}
-				if (j < MAX_PATH-1) {
-					*numberString++ = 0;
-					j++;
-				}
-			}
-
-		}
-		*target = 0;
-		*numberString = 0;
-	}
-
-	// STL sort only needs this operator
-	bool operator < (const CFileDesc& other) const {
-		if (sm_eSorting == Helpers::FS_CreationTime || sm_eSorting == Helpers::FS_LastModTime) {
-			const FILETIME* pTime = (sm_eSorting == Helpers::FS_LastModTime) ? &m_lastModTime : &m_creationTime;
-			const FILETIME* pTimeOther = (sm_eSorting == Helpers::FS_LastModTime) ? &(other.m_lastModTime) : &(other.m_creationTime);
-			if (pTime->dwHighDateTime < pTimeOther->dwHighDateTime) {
-				return true;
-			} else if (pTime->dwHighDateTime > pTimeOther->dwHighDateTime) {
-				return false;
-			} else {
-				return pTime->dwLowDateTime < pTimeOther->dwLowDateTime;
-			}
-		} else {
-			// If the filename (without extension) ends with a number, we want to sort the files
-			// according to the numbers to place 'File9' before 'File10'
-			// That's why sorting is this complicated
-			TCHAR sNewFileNameThis[MAX_PATH];
-			TCHAR sNewFileNameOther[MAX_PATH];
-			TCHAR sNumberStringThis[MAX_PATH];
-			TCHAR sNumberStringOther[MAX_PATH];
-			ReplaceNumbers(m_sTitle, sNewFileNameThis, sNumberStringThis);
-			ReplaceNumbers(other.m_sTitle, sNewFileNameOther, sNumberStringOther);
-			int nCmp = _tcsicoll(sNewFileNameThis, sNewFileNameOther);
-			if (nCmp == 0) {
-				// Strings are equal if numbers are stripped, compare numbers from left to right
-				// Then count of numbers is equal in both strings
-				LPCTSTR sNumberThis = sNumberStringThis;
-				LPCTSTR sNumberOther = sNumberStringOther;
-				while (*sNumberThis != 0 && *sNumberOther != 0) {
-					// a longer number string is always bigger than a shorter (as trailing zeros are removed)
-					int nLenThis = _tcslen(sNumberThis);
-					int nLenOther = _tcslen(sNumberOther);
-					int nLenCmp =  nLenThis - nLenOther;
-					if (nLenCmp != 0) {
-						return nLenCmp < 0;
-					}
-					// both strings have same length and contain only numbers, do ordinal string compare
-					int nStrCmp = _tcscmp(sNumberThis, sNumberOther);
-					if (nStrCmp != 0) {
-						return nStrCmp < 0;
-					}
-					// both number strings are equal, check next pair
-					sNumberThis += nLenThis + 1;
-					sNumberOther += nLenOther + 1;
-				}
-				return _tcsicoll(m_sTitle, other.m_sTitle) < 0; // compare original ones
-			} else {
-				// Strings are different if numbers are stripped
-				return nCmp < 0;
-			}
-		}
-	}
-
-	static Helpers::ESorting GetSorting() {
-		return sm_eSorting;
-	}
-
-	static void SetSorting(Helpers::ESorting eSorting) {
-		sm_eSorting = eSorting;
-	}
-
-	const CString& GetName() const {
-		return m_sName;
-	}
-
-	// Only use after a rename of a file
-	void SetName(LPCTSTR sNewName) {
-		m_sName = sNewName;
-		m_sTitle = (LPCTSTR)m_sName + m_sName.ReverseFind(_T('\\')) + 1;
-	}
-
-	LPCTSTR GetTitle() const {
-		return m_sTitle;
-	}
-
-private:
-	static Helpers::ESorting sm_eSorting;
-
-	CString m_sName;
-	LPCTSTR m_sTitle;
-	FILETIME m_lastModTime;
-	FILETIME m_creationTime;
-};
-
-///////////////////////////////////////////////////////////////////////////////////
 // Helpers
 ///////////////////////////////////////////////////////////////////////////////////
 
@@ -156,6 +16,139 @@ static void AddToFileList(std::list<CFileDesc> & fileList, CFindFile & fileFind)
 	fileFind.GetCreationTime(&creationTime);
 	CFileDesc thisFile(fileFind.GetFilePath(), &lastWriteTime, &creationTime);
 	fileList.push_back(thisFile);
+}
+
+// Replace all numbers in string with asterix and return numbers separated with \0
+static void ReplaceNumbers(LPCTSTR sFileName, TCHAR sNewFileName[MAX_PATH], TCHAR sNumberString[MAX_PATH]) {
+	LPCTSTR source = sFileName;
+	LPTSTR target = sNewFileName;
+	LPTSTR numberString = sNumberString;
+	numberString[1] = 0;
+	int i = 0, j = 0;
+	while (*source != 0 && i < MAX_PATH-1 && j < MAX_PATH-1) {
+		while (*source != 0 && !(*source >= _T('0') && *source <= _T('9'))) {
+			*target = *source;
+			source++;
+			if (i < MAX_PATH-1) {
+				target++;
+				i++;
+			}
+		}
+		if (*source >= _T('0') && *source <= _T('9') && i < MAX_PATH-1) {
+			*target++ = _T('*');
+			i++;
+			bool bTrailingZero = true;
+			while (*source >= _T('0') && *source <= _T('9') && j < MAX_PATH-2) {
+				if (*source != _T('0') || !bTrailingZero) {
+					bTrailingZero = false;
+					*numberString = *source;
+					if (j < MAX_PATH-2) {
+						numberString++;
+						j++;
+					}
+				}
+				source++;
+			}
+			if (j < MAX_PATH-1) {
+				*numberString++ = 0;
+				j++;
+			}
+		}
+
+	}
+	*target = 0;
+	*numberString = 0;
+}
+
+///////////////////////////////////////////////////////////////////////////////////
+// CFileDesc
+///////////////////////////////////////////////////////////////////////////////////
+
+CFileDesc::CFileDesc(const CString & sName, const FILETIME* lastModTime, const FILETIME* creationTime) {
+	m_sName = sName;
+	m_sTitle = (LPCTSTR)m_sName + sName.ReverseFind(_T('\\')) + 1;
+	memcpy(&m_lastModTime, lastModTime, sizeof(FILETIME));
+	memcpy(&m_creationTime, creationTime, sizeof(FILETIME));
+}
+
+bool CFileDesc::operator < (const CFileDesc& other) const {
+	if (sm_eSorting == Helpers::FS_CreationTime || sm_eSorting == Helpers::FS_LastModTime) {
+		const FILETIME* pTime = (sm_eSorting == Helpers::FS_LastModTime) ? &m_lastModTime : &m_creationTime;
+		const FILETIME* pTimeOther = (sm_eSorting == Helpers::FS_LastModTime) ? &(other.m_lastModTime) : &(other.m_creationTime);
+		if (pTime->dwHighDateTime < pTimeOther->dwHighDateTime) {
+			return true;
+		} else if (pTime->dwHighDateTime > pTimeOther->dwHighDateTime) {
+			return false;
+		} else {
+			return pTime->dwLowDateTime < pTimeOther->dwLowDateTime;
+		}
+	} else {
+		// If the filename contains numbers, we want to sort the files
+		// according to the numbers to place 'File9' before 'File10'
+		// That's why sorting is this complicated
+		TCHAR sNewFileNameThis[MAX_PATH];
+		TCHAR sNewFileNameOther[MAX_PATH];
+		TCHAR sNumberStringThis[MAX_PATH];
+		TCHAR sNumberStringOther[MAX_PATH];
+		ReplaceNumbers(m_sTitle, sNewFileNameThis, sNumberStringThis);
+		ReplaceNumbers(other.m_sTitle, sNewFileNameOther, sNumberStringOther);
+		LPCTSTR sNewNameThis = sNewFileNameThis;
+		LPCTSTR sNewNameOther = sNewFileNameOther;
+		LPCTSTR sNumberThis = sNumberStringThis;
+		LPCTSTR sNumberOther = sNumberStringOther;
+		int nCharCount = 0;
+
+		while (*sNewNameThis != 0 && *sNewNameOther != 0) {
+			if (*sNewNameThis == _T('*') || *sNewNameOther == _T('*')) {
+				// One of the involved characters is an asterix and thus represents a number
+				
+				// compare substrings having no numbers involved
+				if (nCharCount > 0) {
+					int nCmp = _tcsnicoll(sNewNameThis - nCharCount, sNewNameOther - nCharCount, nCharCount);
+					if (nCmp != 0) {
+						return nCmp < 0;
+					}
+					nCharCount = 0;
+				}
+
+				if (*sNewNameThis == _T('*') && *sNewNameOther == _T('*')) {
+					// both have a number at the same position, compare numbers
+					if (*sNumberThis != 0 && *sNumberOther != 0) {
+						// a longer number string is always bigger than a shorter (as trailing zeros are removed)
+						int nLenThis = _tcslen(sNumberThis);
+						int nLenOther = _tcslen(sNumberOther);
+						int nLenCmp =  nLenThis - nLenOther;
+						if (nLenCmp != 0) {
+							return nLenCmp < 0;
+						}
+						// both strings have same length and contain only numbers, do ordinal string compare
+						int nStrCmp = _tcscmp(sNumberThis, sNumberOther);
+						if (nStrCmp != 0) {
+							return nStrCmp < 0;
+						}
+						// both number strings are equal, goto next pair
+						sNumberThis += nLenThis + 1;
+						sNumberOther += nLenOther + 1;
+					}
+				} else if (*sNewNameThis == _T('*')) {
+					return ((int)_T('0') - *sNewNameOther) < 0;
+				} else if (*sNewNameOther == _T('*')) {
+					return ((int)*sNewNameThis - _T('0')) < 0;
+				}
+			} else {
+				nCharCount++;
+			}
+			sNewNameThis++;
+			sNewNameOther++;
+		}
+		return _tcsicoll(m_sTitle, other.m_sTitle) < 0; // compare original ones if new strings are equal
+	}
+}
+
+
+void CFileDesc::SetName(LPCTSTR sNewName) {
+	m_sName = sNewName;
+	m_sTitle = (LPCTSTR)m_sName + m_sName.ReverseFind(_T('\\')) + 1;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////

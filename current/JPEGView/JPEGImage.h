@@ -112,15 +112,13 @@ public:
 
 	// Restores the initial parameters to the parameters dependent from the directory (not file)
 	// Outputs the processing flags set for this directory
-	void RestoreInitialParameters(LPCTSTR sFileName, const CImageProcessingParams& imageProcParams, EProcessingFlags & procFlags, int nRotation, double dZoom, CPoint offsets);
+	void RestoreInitialParameters(LPCTSTR sFileName, const CImageProcessingParams& imageProcParams, 
+		EProcessingFlags & procFlags, int nRotation, double dZoom, CPoint offsets, CSize targetSize);
 
 	// To be called after creation of the object to intialize the initial processing parameters.
 	// Input are the global defaults for the processing parameters, output (in pParams) are the
 	// processing parameters for this file (maybe different from the global ones)
 	void SetFileDependentProcessParams(LPCTSTR sFileName, CProcessParams* pParams);
-
-	// Sets zoom/pan when set in parameter DB. Must be called after any pending rotation has been realized.
-	void SetZoomPanFromParamDB(CProcessParams* pParams);
 
 	// Sets the region at the bottom of the returned DIB that is dimmed out (0 for no dimming)
 	void SetDimBitmapRegion(int nRegion);
@@ -128,6 +126,9 @@ public:
 
 	// Gets if the image was found in parameter DB
 	bool IsInParamDB() const { return m_bInParamDB; }
+
+	// Sets if the image is in the paramter DB (called after the user saves/deletes the image from param DB)
+	void SetIsInParamDB(bool bSet) { m_bInParamDB = bSet; }
 
 	// Gets the factor to lighten shadows based on sunset and nightshot detection
 	float GetLightenShadowFactor() { return m_fLightenShadowFactor; }
@@ -218,4 +219,7 @@ private:
 
 	// Gets the processing flags according to the inclusion/exclusion list in INI file
 	EProcessingFlags GetProcFlagsIncludeExcludeFolders(LPCTSTR sFileName, EProcessingFlags procFlags);
+
+	// Return size of original image if the image would be rotated the given amount
+	CSize SizeAfterRotation(int nRotation);
 };

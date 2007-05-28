@@ -160,6 +160,7 @@ private:
 
 	bool OpenFile(bool bAtStartup);
 	bool SaveImage();
+	void BatchCopy();
 	void HandleUserCommands(uint32 virtualKeyCode);
 	void StartDragging(int nX, int nY);
 	void DoDragging(int nX, int nY);
@@ -189,6 +190,7 @@ private:
 	void DrawTextBordered(CPaintDC& dc, LPCTSTR sText, const CRect& rect, UINT nFormat);
 	void ExchangeProcessingParams();
 	void SaveParameters();
+	void ShowHideSaveDBButtons();
 	void AfterNewImageLoaded(bool bSynchronize);
 	bool RenameCurrentFile(LPCTSTR sNewFileTitle);
 	int Scale(int nValue) { return (int)(m_fScaling*nValue); }
