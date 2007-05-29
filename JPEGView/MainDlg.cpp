@@ -1576,16 +1576,19 @@ void CMainDlg::StopTimer(void) {
 }
 
 void CMainDlg::StartMovieMode(double dFPS) {
+	// if more than this number of frames are requested per seconds, it is considered to be a movie
+	const double cdFPSMovie = 4.9;
+
 	// Save processing flags at the time movie mode starts
 	if (!m_bMovieMode) {
 		m_eProcFlagsBeforeMovie = CreateProcessingFlags(m_bHQResampling, m_bAutoContrast, m_bAutoContrastSection, m_bLDC, m_bKeepParams);
 	}
 	// Keep parameters during movie mode
-	if (!m_bKeepParams) {
+	if (!m_bKeepParams && dFPS > cdFPSMovie) {
 		ExecuteCommand(IDM_KEEP_PARAMETERS);
 	}
 	// Turn off high quality resamping and auto corrections when requested to play many frames per second
-	if (dFPS > 4.9) {
+	if (dFPS > cdFPSMovie) {
 		m_bProcFlagsTouched = true;
 		m_bHQResampling = false;
 		m_bAutoContrastSection = false;
