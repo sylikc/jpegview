@@ -200,7 +200,12 @@ void* CJPEGImage::GetDIB(CSize fullTargetSize, CSize clippingSize, CPoint target
 	}
 
 	// set these parameters after ApplyCorrectionLUT() - else it cannot be detected that the parameters changed
+	double dOldSharpen = m_imageProcParams.Sharpen;
 	m_imageProcParams = imageProcParams;
+	// do not touch sharpen parameter if no resampling done - avoids cummulative error propagation
+	if (!bMustResampleProcessings) {
+		m_imageProcParams.Sharpen = dOldSharpen;
+	}
 	m_eProcFlags = eProcFlags;
 
 	m_pLastDIB = pDIB;
