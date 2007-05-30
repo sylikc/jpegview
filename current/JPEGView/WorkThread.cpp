@@ -245,8 +245,6 @@ static CJPEGImage::EImageFormat GetBitmapFormat(Gdiplus::Bitmap * pBitmap) {
 		return CJPEGImage::IF_GIF;
 	} else if (guid == Gdiplus::ImageFormatTIFF) {
 		return CJPEGImage::IF_TIFF;
-	} else if (guid == Gdiplus::ImageFormatIcon) {
-		return CJPEGImage::IF_ICON;
 	} else if (guid == Gdiplus::ImageFormatJPEG || guid == Gdiplus::ImageFormatEXIF) {
 		return CJPEGImage::IF_JPEG;
 	} else {
