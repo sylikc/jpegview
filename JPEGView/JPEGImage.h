@@ -17,7 +17,6 @@ public:
 		IF_PNG,
 		IF_GIF,
 		IF_TIFF,
-		IF_ICON,
 		IF_Unknown
 	};
 
