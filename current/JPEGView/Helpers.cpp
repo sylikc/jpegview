@@ -27,19 +27,32 @@ LPCTSTR JPEGViewAppDataPath() {
 	return buff;
 }
 
-CSize GetImageRectSampledDown(int nWidth, int nHeight, int nScreenWidth, int nScreenHeight, 
-							  double dARTolerance, bool bAllowZoomIn) {
+CSize GetImageRect(int nWidth, int nHeight, int nScreenWidth, int nScreenHeight, 
+					bool bAllowZoomIn, bool bFillCrop, bool bLimitAR) {
 	double dAR1 = (double)nWidth/nScreenWidth;
 	double dAR2 = (double)nHeight/nScreenHeight;
+	double dARMin = min(dAR1, dAR2);
 	double dARMax = max(dAR1, dAR2);
-	if (dARMax <= 1.0 && !bAllowZoomIn) {
+	double dAR = bFillCrop ? dARMin : dARMax;
+	if (dAR <= 1.0 && !bAllowZoomIn) {
 		return CSize(nWidth, nHeight);
 	}
-	if (fabs(1.0 - dAR2/dAR1) < dARTolerance) {
-		return CSize(nScreenWidth, nScreenHeight);
+	if (bFillCrop && bLimitAR) {
+		if (((nWidth/dAR * nHeight/dAR) / (nScreenWidth * nScreenHeight)) > 1.5) {
+			dAR = dARMax; // use fit to screen
+		}
 	}
+	return CSize((int)(nWidth/dAR + 0.5), (int)(nHeight/dAR + 0.5));
+}
 
-	return CSize((int)(nWidth/dARMax + 0.5), (int)(nHeight/dARMax + 0.5));
+CSize GetImageRect(int nWidth, int nHeight, int nScreenWidth, int nScreenHeight, EAutoZoomMode eAutoZoomMode) {
+	CSize newSize = GetImageRect(nWidth, nHeight, nScreenWidth, nScreenHeight,
+		eAutoZoomMode == ZM_FitToScreen || eAutoZoomMode == ZM_FillScreen,
+		eAutoZoomMode == ZM_FillScreenNoZoom || eAutoZoomMode == ZM_FillScreen,
+		eAutoZoomMode == ZM_FillScreenNoZoom);
+	double dZoom = (double)newSize.cx/nWidth;
+	dZoom = min(ZoomMax, dZoom);
+	return CSize((int)(nWidth*dZoom + 0.5), (int)(nHeight*dZoom + 0.5));
 }
 
 CPUType ProbeCPU(void) {

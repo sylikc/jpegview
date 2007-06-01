@@ -161,6 +161,17 @@ void CSettingsProvider::ReadWriteableINISettings() {
 		m_eNavigation = Helpers::NM_LoopDirectory;
 	}
 
+	CString sAutoZoomMode = GetString(_T("AutoZoomMode"), _T("FitNoZoom"));
+	if (sAutoZoomMode.CompareNoCase(_T("Fit")) == 0) {
+		m_eAutoZoomMode = Helpers::ZM_FitToScreen;
+	} else if (sAutoZoomMode.CompareNoCase(_T("Fill")) == 0) {
+		m_eAutoZoomMode = Helpers::ZM_FillScreen;
+	} else if (sAutoZoomMode.CompareNoCase(_T("FillNoZoom")) == 0) {
+		m_eAutoZoomMode = Helpers::ZM_FillScreenNoZoom;
+	} else {
+		m_eAutoZoomMode = Helpers::ZM_FitToScreenNoZoom;
+	}
+
 	m_nJPEGSaveQuality = GetInt(_T("JPEGSaveQuality"), 85, 0, 100);
 	m_nDisplayMonitor = GetInt(_T("DisplayMonitor"), -1, -1, 16);
 	m_bAutoContrastCorrection = GetBool(_T("AutoContrastCorrection"), false);
@@ -174,7 +185,8 @@ void CSettingsProvider::ReadWriteableINISettings() {
 }
 
 void CSettingsProvider::SaveSettings(const CImageProcessingParams& procParams, 
-									 EProcessingFlags eProcFlags, Helpers::ESorting eFileSorting) {
+									 EProcessingFlags eProcFlags, Helpers::ESorting eFileSorting,
+									 Helpers::EAutoZoomMode eAutoZoomMode) {
 	SHCreateDirectoryEx(NULL, Helpers::JPEGViewAppDataPath(), NULL);
 
 	WriteDouble(_T("Contrast"), procParams.Contrast);
@@ -197,6 +209,16 @@ void CSettingsProvider::SaveSettings(const CImageProcessingParams& procParams,
 		sSorting = _T("LastModDate");
 	}
 	WriteString(_T("FileDisplayOrder"), sSorting);
+
+	LPCTSTR sAutoZoomMode = _T("FitNoZoom");
+	if (eAutoZoomMode == Helpers::ZM_FillScreen) {
+		sAutoZoomMode = _T("Fill");
+	} else if (eAutoZoomMode == Helpers::ZM_FitToScreen) {
+		sAutoZoomMode = _T("Fit");
+	} else if (eAutoZoomMode == Helpers::ZM_FillScreenNoZoom) {
+		sAutoZoomMode = _T("FillNoZoom");
+	}
+	WriteString(_T("AutoZoomMode"), sAutoZoomMode);
 
 	m_bUserINIExists = true;
 	ReadWriteableINISettings();

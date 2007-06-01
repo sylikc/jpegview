@@ -10,7 +10,6 @@
 #include "FileList.h"
 #include "JPEGProvider.h"
 #include "JPEGImage.h"
-#include "Helpers.h"
 #include "SettingsProvider.h"
 #include "BasicProcessing.h"
 #include "MultiMonitorSupport.h"
@@ -144,6 +143,7 @@ CMainDlg::CMainDlg() {
 
 	m_bShowFileName = sp.ShowFileName();
 	m_bKeepParams = sp.KeepParams();
+	m_eAutoZoomMode = sp.AutoZoomMode();
 
 	CHistogramCorr::SetContrastCorrectionStrength((float)sp.AutoContrastAmount());
 	CHistogramCorr::SetBrightnessCorrectionStrength((float)sp.AutoBrightnessAmount());
@@ -286,8 +286,8 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 
 		// Find out zoom multiplier if not yet known
 		if (m_dZoomMult < 0.0) {
-			CSize fittedSize = Helpers::GetImageRectSampledDown(m_pCurrentImage->OrigWidth(), m_pCurrentImage->OrigHeight(), 
-				m_clientRect.Width(), m_clientRect.Height(), 0.0, true);
+			CSize fittedSize = Helpers::GetImageRect(m_pCurrentImage->OrigWidth(), m_pCurrentImage->OrigHeight(), 
+				m_clientRect.Width(), m_clientRect.Height(), true, false, false);
 			double dZoomToFit = (double)fittedSize.cx/m_pCurrentImage->OrigWidth();
 			// Zoom multiplier (zoom step) should be around 1.1 but reach the value 1.0 after an integral number
 			// of zooming steps
@@ -300,8 +300,8 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 		if (m_dZoom < 0.0) {
 			// zoom not set, interpret as 'fit to screen'
 			// ---------------------------------------------
-			newSize = Helpers::GetImageRectSampledDown(m_pCurrentImage->OrigWidth(), m_pCurrentImage->OrigHeight(), 
-				m_clientRect.Width(), m_clientRect.Height(), 0.0, false);
+			newSize = Helpers::GetImageRect(m_pCurrentImage->OrigWidth(), m_pCurrentImage->OrigHeight(), 
+				m_clientRect.Width(), m_clientRect.Height(), m_eAutoZoomMode);
 			m_dZoom = (double)newSize.cx/m_pCurrentImage->OrigWidth();
 		} else {
 			// zoom set, use this value for the new size
@@ -694,12 +694,12 @@ LRESULT CMainDlg::OnKeyDown(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOO
 		StartMovieMode(1000.0/nValue);
 	} else if (wParam == VK_SPACE) {
 		if (fabs(m_dZoom - 1) < 0.01) {
-			ResetZoomToFitScreen();
+			ResetZoomToFitScreen(false);
 		} else {
 			ResetZoomTo100Percents();
 		}
 	} else if (wParam == VK_RETURN) {
-		ResetZoomToFitScreen();
+		ResetZoomToFitScreen(bCtrl);
 	} else if ((wParam == VK_DOWN || wParam == VK_UP) && !bCtrl && !bShift) {
 		ExecuteCommand((wParam == VK_DOWN) ? IDM_ROTATE_90 : IDM_ROTATE_270);
 	} else if ((wParam == VK_DOWN || wParam == VK_UP) && bCtrl) {
@@ -874,6 +874,8 @@ LRESULT CMainDlg::OnContextMenu(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam,
 	if (!m_bMovieMode) ::EnableMenuItem(hMenuMovie, IDM_STOP_MOVIE, MF_BYCOMMAND | MF_GRAYED);
 	HMENU hMenuZoom = ::GetSubMenu(hMenuTrackPopup, SUBMENU_POS_ZOOM);
 	if (m_bSpanVirtualDesktop) ::CheckMenuItem(hMenuZoom,  IDM_SPAN_SCREENS, MF_CHECKED);
+	HMENU hMenuAutoZoomMode = ::GetSubMenu(hMenuTrackPopup, SUBMENU_POS_AUTOZOOMMODE);
+	::CheckMenuItem(hMenuAutoZoomMode,  m_eAutoZoomMode*10 + IDM_AUTO_ZOOM_FIT_NO_ZOOM, MF_CHECKED);
 
 	if (m_pCurrentImage == NULL) {
 		::EnableMenuItem(hMenuTrackPopup, IDM_SAVE, MF_BYCOMMAND | MF_GRAYED);
@@ -1098,7 +1100,10 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 			SaveParameters();
 			break;
 		case IDM_FIT_TO_SCREEN:
-			ResetZoomToFitScreen();
+			ResetZoomToFitScreen(false);
+			break;
+		case IDM_FILL_WITH_CROP:
+			ResetZoomToFitScreen(true);
 			break;
 		case IDM_SPAN_SCREENS:
 			if (CMultiMonitorSupport::IsMultiMonitorSystem()) {
@@ -1133,6 +1138,14 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 			break;
 		case IDM_ZOOM_25:
 			PerformZoom(0.25, false);
+			break;
+		case IDM_AUTO_ZOOM_FIT_NO_ZOOM:
+		case IDM_AUTO_ZOOM_FILL_NO_ZOOM:
+		case IDM_AUTO_ZOOM_FIT:
+		case IDM_AUTO_ZOOM_FILL: 
+			m_eAutoZoomMode = (Helpers::EAutoZoomMode)((nCommand - IDM_AUTO_ZOOM_FIT_NO_ZOOM)/10);
+			m_dZoom = -1.0;
+			this->Invalidate(FALSE);
 			break;
 		case IDM_EXIT:
 			this->EndDialog(0);
@@ -1384,7 +1397,7 @@ void CMainDlg::PerformZoom(double dValue, bool bExponent) {
 	} else {
 		m_dZoom = dValue;
 	}
-	m_dZoom = max(0.1, min(16.0, m_dZoom));
+	m_dZoom = max(Helpers::ZoomMin, min(Helpers::ZoomMax, m_dZoom));
 
 	if (m_pCurrentImage == NULL) {
 		return;
@@ -1487,13 +1500,13 @@ void CMainDlg::LimitOffsets(const CRect & rect, const CSize & size) {
 	m_nOffsetY = max(-nMaxOffsetY, min(+nMaxOffsetY, m_nOffsetY));
 }
 
-void CMainDlg::ResetZoomToFitScreen() {
+void CMainDlg::ResetZoomToFitScreen(bool bFillWithCrop) {
 	if (m_pCurrentImage != NULL) {
-		CSize newSize = Helpers::GetImageRectSampledDown(m_pCurrentImage->OrigWidth(), m_pCurrentImage->OrigHeight(), 
-			m_clientRect.Width(), m_clientRect.Height(), 0.0, true);
+		CSize newSize = Helpers::GetImageRect(m_pCurrentImage->OrigWidth(), m_pCurrentImage->OrigHeight(), 
+			m_clientRect.Width(), m_clientRect.Height(), true, bFillWithCrop, false);
 		double dOldZoom = m_dZoom;
 		m_dZoom = (double)newSize.cx/m_pCurrentImage->OrigWidth();
-		m_dZoom = max(0.1, min(16.0, m_dZoom));
+		m_dZoom = max(Helpers::ZoomMin, min(Helpers::ZoomMax, m_dZoom));
 		m_bUserZoom = m_dZoom > 1.0;
 		m_bUserPan = false;
 		if (fabs(dOldZoom - m_dZoom) > 0.01) {
@@ -1539,14 +1552,15 @@ CProcessParams CMainDlg::CreateProcessParams() {
 		m_offsetKept = m_bUserPan ? CPoint(m_nOffsetX, m_nOffsetY) : CPoint(0, 0);
 
 		return CProcessParams(m_clientRect.Width(), m_clientRect.Height(), m_nRotationKept, 
-			m_dZoomKept, 
+			m_dZoomKept,
+			m_eAutoZoomMode,
 			m_offsetKept,
 			*m_pImageProcParamsKept, 
 			m_eProcessingFlagsKept);
 	} else {
 		CSettingsProvider& sp = CSettingsProvider::This();
 		return CProcessParams(m_clientRect.Width(), m_clientRect.Height(), 0,
-			-1, CPoint(0, 0), 
+			-1, m_eAutoZoomMode, CPoint(0, 0), 
 			GetDefaultProcessingParams(),
 			GetDefaultProcessingFlags());
 	}
@@ -1864,12 +1878,23 @@ void CMainDlg::SaveParameters() {
 	} else {
 		sText += CNLS::GetString(_T("File name"));
 	}
+	sText += _T("\n");
+	sText += CNLS::GetString(_T("Auto zoom mode")); sText += _T(": ");
+	if (m_eAutoZoomMode == Helpers::ZM_FillScreen) {
+		sText += CNLS::GetString(_T("Fill with crop"));
+	} else if (m_eAutoZoomMode == Helpers::ZM_FillScreenNoZoom) {
+		sText += CNLS::GetString(_T("Fill with crop (no zoom)"));
+	} else if (m_eAutoZoomMode == Helpers::ZM_FitToScreen) {
+		sText += CNLS::GetString(_T("Fit to screen"));
+	} else {
+		sText += CNLS::GetString(_T("Fit to screen (no zoom)"));
+	}
 	sText += _T("\n\n");
 	sText += CNLS::GetString(_T("These values will override the values from the INI file located in the program folder of JPEGView!"));
 
 	if (IDYES == this->MessageBox(sText, CNLS::GetString(_T("Confirm save default parameters")), MB_YESNO | MB_ICONQUESTION)) {
 		CSettingsProvider::This().SaveSettings(*m_pImageProcParams, 
 			CreateProcessingFlags(m_bHQResampling, m_bAutoContrast, 
-			m_bAutoContrastSection, m_bLDC, m_bKeepParams), m_pFileList->GetSorting());
+			m_bAutoContrastSection, m_bLDC, m_bKeepParams), m_pFileList->GetSorting(), m_eAutoZoomMode);
 	}
 }

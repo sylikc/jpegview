@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Helpers.h"
+
 // Processing flags for image processing
 enum EProcessingFlags {
 	PFLAG_None = 0,
@@ -71,13 +73,15 @@ public:
 	// nRotation must be 0, 90, 270 degrees
 	// dZoom is the zoom factor compared to intial image size (1.0 means no zoom)
 	// offsets are relative to center of image and refer to original image size (not zoomed)
-	CProcessParams(int nTargetWidth, int nTargetHeight, int nRotation, double dZoom, CPoint offsets,
+	CProcessParams(int nTargetWidth, int nTargetHeight, int nRotation, double dZoom, 
+		Helpers::EAutoZoomMode eAutoZoomMode, CPoint offsets,
 		const CImageProcessingParams& imageProcParams,
 		EProcessingFlags eProcFlags) : ImageProcParams(imageProcParams) {
 		TargetWidth = nTargetWidth;
 		TargetHeight = nTargetHeight;
 		Rotation = nRotation;
 		Zoom = dZoom;
+		AutoZoomMode = eAutoZoomMode;
 		Offsets = offsets;
 		ProcFlags = eProcFlags;
 	}
@@ -89,4 +93,5 @@ public:
 	CPoint Offsets;
 	CImageProcessingParams ImageProcParams;
 	EProcessingFlags ProcFlags;
+	Helpers::EAutoZoomMode AutoZoomMode;
 };

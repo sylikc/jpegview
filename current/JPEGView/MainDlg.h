@@ -6,6 +6,7 @@
 
 #include "MessageDef.h"
 #include "ProcessParams.h"
+#include "Helpers.h"
 
 class CFileList;
 class CJPEGProvider;
@@ -103,6 +104,7 @@ private:
 	bool m_bUserPan;
 	double m_dZoom;
 	double m_dZoomMult;
+	Helpers::EAutoZoomMode m_eAutoZoomMode;
 
 	CImageProcessingParams* m_pImageProcParams;
 	bool m_bHQResampling;
@@ -174,7 +176,7 @@ private:
 	void PerformZoom(double dValue, bool bExponent);
 	bool PerformPan(int dx, int dy);
 	void LimitOffsets(const CRect & rect, const CSize & size);
-	void ResetZoomToFitScreen();
+	void ResetZoomToFitScreen(bool bFillWithCrop);
 	void ResetZoomTo100Percents();
 	CProcessParams CreateProcessParams();
 	void ResetParamsToDefault();
