@@ -317,8 +317,8 @@ void CWorkThread::ProcessImageAfterLoad(CRequest * request) {
 	double dZoom = request->ProcessParams.Zoom;
 	CSize newSize;
 	if (dZoom < 0.0) {
-		newSize = Helpers::GetImageRectSampledDown(nWidth, nHeight, 
-			request->ProcessParams.TargetWidth, request->ProcessParams.TargetHeight, 0.0, false);
+		newSize = Helpers::GetImageRect(nWidth, nHeight, 
+			request->ProcessParams.TargetWidth, request->ProcessParams.TargetHeight, request->ProcessParams.AutoZoomMode);
 	} else {
 		newSize = CSize((int)(nWidth*dZoom + 0.5), (int)(nHeight*dZoom + 0.5));
 	}

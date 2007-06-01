@@ -179,6 +179,7 @@ BEGIN
       POPUP "Zoom" 
         BEGIN 
           MENUITEM "Fit to screen\tReturn",		IDM_FIT_TO_SCREEN
+		  MENUITEM "Fill with crop\tCtrl-Return", IDM_FILL_WITH_CROP
 		  MENUITEM "Span all screens\tF12",		IDM_SPAN_SCREENS
 		  MENUITEM SEPARATOR
 		  MENUITEM "400 %",				IDM_ZOOM_400
@@ -186,6 +187,13 @@ BEGIN
           MENUITEM "100 %\tSpace",		IDM_ZOOM_100
           MENUITEM "50 %",				IDM_ZOOM_50
           MENUITEM "25 %",				IDM_ZOOM_25
+        END 
+      POPUP "Auto zoom mode" 
+        BEGIN 
+          MENUITEM "Fit to screen (no zoom)",	IDM_AUTO_ZOOM_FIT_NO_ZOOM
+          MENUITEM "Fill with crop (no zoom)",	IDM_AUTO_ZOOM_FILL_NO_ZOOM
+          MENUITEM "Fit to screen",		IDM_AUTO_ZOOM_FIT
+          MENUITEM "Fill with crop",	IDM_AUTO_ZOOM_FILL
         END 
 	  MENUITEM SEPARATOR
 	  MENUITEM "Exit\tEsc",				IDM_EXIT

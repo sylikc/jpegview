@@ -32,7 +32,7 @@
 <td>
 <a name="Top"></a>
 <h1>JPEGView Readme</h1>
-Revision: 30-May-2007
+Revision: 01-June-2007
 <a name="Introduction"></a>
 <h2>Introduction</h2>
 JPEGView is a viewer/editor for JPEG, BMP, PNG, GIF and TIFF images. It is designed to view images from digital cameras
@@ -208,6 +208,8 @@ are not scaled by default. Use the following commands to change the zoom factor:
   <ul style="margin-top:0in;margin-bottom:0in">
   <li>Fit image to screen<br/>
   Keyboard: <kbd>Enter</kbd></li>
+  <li>Fill screen with crop (no black borders)<br/>
+  Keyboard: <kbd>Ctrl-Enter</kbd></li>
   <li>Zoom to 100 % (One image pixel corresponds to one screen pixel)<br/>
   Keyboard: <kbd>Space</kbd><br/>
   Toggles back to 'Fit to screen' when zoom is already 100 %<br/>
@@ -229,6 +231,26 @@ has been choosen carefully to provide an optimal image quality. The downsampling
 (depending on resize-factor) Lanczos-like filter kernel. This kernel produces only a small amout of aliasing while
 preserving or even slightly enhancing the sharpness of the image. You can see the difference to simple point sampling when
 pressing <kbd>F3</kbd> what toggles between point sampling and filter based sampling.
+<h4>Auto Scale Mode</h4>
+The auto scale mode determines how images are fitted to the screen. The default auto scale mode is read from the
+INI file, however the mode can also be changed during runtime with the context menu, submenu 'Auto scale mode'.<br/>
+The following modes are supported:
+  <ul style="margin-top:0in;margin-bottom:0in">
+  <li>Fit to screen (no zoom)<br/>
+  Images that are larger than the screen are scaled down to fit. No image areas are cropped but black borders
+  will be visible when the image aspect ratio and the screen aspect ratio do not match. Images that are smaller
+  than the screen are not enlarged.</li>
+  <li>Fill with crop (no zoom)<br/>
+  Images that are larger than the screen are scaled down to fill the entire screen. Cropping occurs if necessary to
+  avoid black borders. Images that are smaller than the screen are not enlarged.<br/>
+  Note: Cropping is limited to approximately 30 % of the image in this mode. If more would be cropped, fit to screen is used instead.
+  As a result, portrait images will not be cropped on the screen.</li>
+  <li>Fit to screen<br/>
+  Images are scaled (up or down) to fit the screen. No image areas are cropped but black borders can be visible.</li>
+  <li>Fill with crop<br/>
+  Images are scaled (up or down) to fill the entire screen. Unlimited cropping may occurs if necessary to avoid
+  black borders.</li>
+  </ul>
 <h4>Rotate</h4>
 With the <kbd>'Arrow down'</kbd> and <kbd>'Arrow up'</kbd> keys, the current image can be rotated clockwise, respectively
 counter-clockwise.
@@ -463,6 +485,7 @@ context menu.
   <li>Local brighness correction on/off by default</li>
   <li>Color and contrast correction on/off by default</li>
   <li>Default sorting order</li>
+  <li>Default auto zoom mode</li>
   </ul>
 The values set for the current image are written to the INI file when using this command. Be
 aware that these values are then used as default values for all images!
@@ -477,6 +500,7 @@ Only an overview on the available settings is given here:
   <li>Used filter kernel for downsampling images</li>
   <li>Default sorting order</li>
   <li>Default navigation mode</li>
+  <li>Default auto zoom mode</li>
   <li>Quality (and file size) of saved JPEG images</li>
   <li>Monitor to use (for multi monitor systems)</li>
   <li>Color and contrast correction settings</li>
@@ -523,7 +547,7 @@ This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation, version 2.
 The full text of the GPL can be found <a href="http://opensource.org/osi3.0/licenses/gpl-license.php">here.</a><br/>
-JPEGView is hosted by <a href="http://www.sourceforge.net">SourceForge.</a> You can check for the latest version,
+JPEGView is hosted by <a href="http://www.sourceforge.net">SourceForge.</a> You can check for a new version,
 get the source code, report a bug or contact me, using the following URL:<br/>
 <a href="https://sourceforge.net/projects/jpegview/">https://sourceforge.net/projects/jpegview/</a>
 <br/><br/>

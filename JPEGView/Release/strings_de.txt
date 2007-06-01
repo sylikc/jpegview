@@ -127,7 +127,11 @@ Save parameters to DB	In Parameter DB speichern
 Clear parameters from DB	Aus Parameter DB löschen
 Zoom	Zoom
 Fit to screen	Bildschirmgrösse
+Fill with crop	Bildschirmgrösse (randlos)
 Span all screens	Alle Bildschirme
+Auto zoom mode	Auto-zoom Modus
+Fit to screen (no zoom)	Bildschirmgrösse (nie zoomen)
+Fill with crop (no zoom)	Bildschirmgrösse (randlos, nie zoomen)
 Exit	Beenden
 Cyan-Red	Cyan-Rot
 Magenta-Green	Magenta-Grün

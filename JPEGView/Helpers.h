@@ -24,17 +24,34 @@ namespace Helpers {
 		NM_LoopSameDirectoryLevel
 	};
 
+	// Auto zoom modes
+	enum EAutoZoomMode {
+		ZM_FitToScreenNoZoom,
+		ZM_FillScreenNoZoom,
+		ZM_FitToScreen,
+		ZM_FillScreen
+	};
+
 	// Scaling factor from screen DPI, 96 dpi -> 1.0, 120 dpi -> 1.2
 	extern float ScreenScaling;
+
+	// Maximum and minimum allowed zoom factors for images
+	const double ZoomMax = 16.0;
+	const double ZoomMin = 0.1;
 
 	// Round to integer
 	inline int RoundToInt(double d) {
 		return (d < 0) ? (int)(d - 0.5) : (int)(d + 0.5);
 	}
 
-	// Gets the image size to be used when sampling down to screen
-	CSize GetImageRectSampledDown(int nWidth, int nHeight, int nScreenWidth, int nScreenHeight, 
-		double dARTolerance, bool bAllowZoomIn);
+	// Gets the image size to be used when fitting the image to screen, either using 'fit to screen'
+	// or 'fill with crop' method. If 'fill with crop' is used, the bLimitAR can be set to avoid
+	// filling when to less pixels remain visible
+	CSize GetImageRect(int nWidth, int nHeight, int nScreenWidth, int nScreenHeight, 
+		bool bAllowZoomIn, bool bFillCrop, bool bLimitAR);
+
+	// Gets the image size to be used when fitting the image to screen according to the auto zoom mode given
+	CSize GetImageRect(int nWidth, int nHeight, int nScreenWidth, int nScreenHeight, EAutoZoomMode eAutoZoomMode);
 
 	// Tests if the CPU supports SSE or MMX(2)
 	CPUType ProbeCPU(void);

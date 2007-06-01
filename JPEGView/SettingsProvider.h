@@ -28,6 +28,7 @@ public:
 	EFilterType DownsamplingFilter() { return m_eDownsamplingFilter; }
 	Helpers::ESorting Sorting() { return m_eSorting; }
 	Helpers::ENavigationMode Navigation() { return m_eNavigation; }
+	Helpers::EAutoZoomMode AutoZoomMode() { return m_eAutoZoomMode; }
 	int DisplayMonitor() { return m_nDisplayMonitor; }
 	bool AutoContrastCorrection() { return m_bAutoContrastCorrection; }
 	double AutoContrastAmount() { return m_dAutoContrastAmount; }
@@ -48,7 +49,8 @@ public:
 
 	// This will only save a subset of settings to the inifile located in AppData\JPEGView\JPEGView.ini.
 	// Note that this INI file has precedence over the ini file at the program directory
-	void SaveSettings(const CImageProcessingParams& procParams, EProcessingFlags eProcFlags, Helpers::ESorting eFileSorting);
+	void SaveSettings(const CImageProcessingParams& procParams, EProcessingFlags eProcFlags, 
+		Helpers::ESorting eFileSorting, Helpers::EAutoZoomMode eAutoZoomMode);
 
 	// Saves the pattern used in the copy/rename dialog to rename files
 	void SaveCopyRenamePattern(const CString& sPattern);
@@ -76,6 +78,7 @@ private:
 	EFilterType m_eDownsamplingFilter;
 	Helpers::ESorting m_eSorting;
 	Helpers::ENavigationMode m_eNavigation;
+	Helpers::EAutoZoomMode m_eAutoZoomMode;
 	int m_nDisplayMonitor;
 	bool m_bAutoContrastCorrection;
 	double m_dAutoContrastAmount;
