@@ -31,6 +31,7 @@ New features:
 - Movie mode enhanced and improved, now accessible using the context menu and automatically using fastest processing modes
 - Batch rename/copy, allowing to copy and rename a series of files, e.g. from the digicam to the harddisk. Several placeholders are
   supported, e.g. file dates and consecutive numbers.
+- Possibility to set the auto zoom mode, enabling to zoom images to fit the screen with or without border
 Other changes:
 - Keeping parameters between images (F4) will now override any values from the parameter DB while active.
   Note that while keeping parameters is on, storing to parameter DB is disabled.
