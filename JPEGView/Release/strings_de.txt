@@ -144,6 +144,7 @@ Image files in folder	Bilddateien im Ordner
 Placeholders:	Platzhalter:
 Number (consecutively numbered)	Zahl (fortlaufend nummeriert)
 Number with N digits	Zahl mit N Stellen
+Extracted number from original file name	Zahl aus Originaldateiname
 Original file name (with extension)	Originaldateiname (mit Erweiterung)
 Original file name (without extension)	Originaldateiname (ohne Erweiterung)
 Original file extension	Originaldateierweiterung

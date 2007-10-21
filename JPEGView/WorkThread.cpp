@@ -215,6 +215,10 @@ void CWorkThread::ProcessReadJPEGRequest(CRequest * request) {
 				request->Image = new CJPEGImage(nWidth, nHeight, pPixelData, 
 					SearchEXIFAPP1Block((unsigned char*)pBuffer), nBPP, 
 					Helpers::CalculateJPEGFileHash(pBuffer, nFileSize), CJPEGImage::IF_JPEG);
+			} else {
+				// failed, try GDI+
+				delete[] pPixelData;
+				ProcessReadGDIPlusRequest(request);
 			}
 		}
 	} catch (...) {

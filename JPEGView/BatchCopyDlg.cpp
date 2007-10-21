@@ -42,6 +42,20 @@ static CString MakeAbsolutePath(LPCTSTR strFileName, LPCTSTR strDirectory) {
 	return CString(buffFullPathName) + _T('\\') + ((LPCTSTR)strFullName + nIndexFileTitle + 1);
 }
 
+// Finds the first number string in the given string, including leading zeros
+static CString FindNumber(LPCTSTR strFileName) {
+	int nStartIdx = -1;
+	int nLen = _tcslen(strFileName);
+	for (int i = 0; i < nLen; i++) {
+		if (strFileName[i] >= _T('0') && strFileName[i] <= _T('9')) {
+			if (nStartIdx < 0) nStartIdx = i;
+		} else {
+			if (nStartIdx >= 0) return CString(&(strFileName[nStartIdx]), i - nStartIdx);
+		}
+	}
+	return CString("");
+}
+
 ///////////////////////////////////////////////////////////////////////////////////
 // Class implementation
 ///////////////////////////////////////////////////////////////////////////////////
@@ -89,6 +103,7 @@ LRESULT CBatchCopyDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*l
 	m_lblTitlePlaceHolders.SetWindowText(CNLS::GetString(_T("Placeholders:")));
 	m_lblPlaceHolders1.SetWindowText(CString(_T("%x : ")) + CNLS::GetString(_T("Number (consecutively numbered)")) + _T("\n") +
 		CString(_T("%Nx : ")) + CNLS::GetString(_T("Number with N digits")) + _T("\n") +
+		CString(_T("%n : ")) + CNLS::GetString(_T("Extracted number from original file name")) + _T("\n") +
 		CString(_T("%f : ")) + CNLS::GetString(_T("Original file name (with extension)")) + _T("\n") +
 		CString(_T("%F : ")) + CNLS::GetString(_T("Original file name (without extension)")) + _T("\n") +
 		CString(_T("%e : ")) + CNLS::GetString(_T("Original file extension")) + _T("\n") +
@@ -172,6 +187,8 @@ LRESULT CBatchCopyDlg::OnRename(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*/
 	CString strPattern = GetPatternText();
 	if (strPattern.IsEmpty()) return 0;
 
+	HCURSOR hOldCursor = ::SetCursor(::LoadCursor(NULL, IDC_WAIT));
+
 	int nFilesCopied = 0;
 	int nFilesRenamed = 0;
 	int nDirsCreated = 0;
@@ -231,6 +248,8 @@ LRESULT CBatchCopyDlg::OnRename(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*/
 		}
 		nIndex++;
 	}
+
+	::SetCursor(hOldCursor);
 
 	CString strResult;
 	strResult.Format(CNLS::GetString(_T("%d file(s) renamed, %d file(s) copied, %d folder(s) created")),
@@ -333,6 +352,9 @@ CString CBatchCopyDlg::ReplacePlaceholders(LPCTSTR strPattern, int nIndex, const
 		CString strNumber;
 		strNumber.Format(_T("%d"), nIndex + 1);
 		strNewName.Replace(_T("%x"), strNumber);
+	}
+	if (strNewName.Find(_T("%n")) != -1) {
+		strNewName.Replace(_T("%n"), FindNumber(fileDesc.GetTitle()));
 	}
 	int nIndexPrc = FindNumberFormat(strNewName);
 	if (nIndexPrc != -1) {

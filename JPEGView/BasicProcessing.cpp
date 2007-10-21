@@ -380,6 +380,33 @@ void* CBasicProcessing::ConvertGdiplus32bppRGB(int nWidth, int nHeight, int nStr
 	return pNewDIB;
 }
 
+void* CBasicProcessing::CopyRect32bpp(void* pTarget, void* pSource,  CSize targetSize, CRect targetRect,
+									  CSize sourceSize, CRect sourceRect) {
+	if (pSource == NULL || sourceRect.Size() != targetRect.Size() || 
+		sourceRect.left < 0 || sourceRect.right > sourceSize.cx ||
+		sourceRect.top < 0 || sourceRect.bottom > sourceSize.cy ||
+		targetRect.left < 0 || targetRect.right > targetSize.cx ||
+		targetRect.top < 0 || targetRect.bottom > targetSize.cy) {
+		return NULL;
+	}
+	uint32* pSourceDIB = (uint32*)pSource;
+	uint32* pTargetDIB = (uint32*)pTarget;
+	if (pTargetDIB == NULL) {
+		pTargetDIB = new uint32[targetSize.cx * targetSize.cy];
+		pTarget = pTargetDIB;
+	}
+
+	pTargetDIB += (targetRect.top * targetSize.cx) + targetRect.left;
+	pSourceDIB += (sourceRect.top * sourceSize.cx) + sourceRect.left;
+	for (int y = 0; y < sourceRect.Height(); y++) {
+		memcpy(pTargetDIB, pSourceDIB, sourceRect.Width()*sizeof(uint32));
+		pTargetDIB += targetSize.cx;
+		pSourceDIB += sourceSize.cx;
+	}
+
+	return pTarget;
+}
+
 /////////////////////////////////////////////////////////////////////////////////////////////
 // Simple point sampling resize methods
 /////////////////////////////////////////////////////////////////////////////////////////////

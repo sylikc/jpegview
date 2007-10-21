@@ -5,8 +5,9 @@
 
 #pragma once
 
-// fully useless
+// disable these useless warnings
 #pragma warning(disable:4018)
+#pragma warning(disable:4800)
 
 // Change these values to use different versions
 #define WINVER		0x0500

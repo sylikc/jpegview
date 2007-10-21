@@ -21,6 +21,16 @@ to JPEGView\Debug
 Changelog
 *********
 
+[1.0.14]
+
+Bugs removed:
+- If a JPEG cannot be read with the IJL library, GDI+ is tried as a second chance
+- Copy/rename dialog: Replacement text can now be longer than text input field (auto scroll enabled)
+New features:
+- File open... always uses tumbnail view (not only in my picture directory)
+- Copy/rename dialog: New placeholder %n for number from original file name
+- Panning is faster and uses high quality resampling mode during pan
+
 [1.0.13]
 
 Bugs removed:

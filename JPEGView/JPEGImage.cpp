@@ -118,9 +118,9 @@ void* CJPEGImage::GetDIB(CSize fullTargetSize, CSize clippingSize, CPoint target
 
 	// Check if resampling due to bHighQualityResampling parameter change is needed
 	bool bMustResampleQuality = GetProcessingFlag(eProcFlags, PFLAG_HighQualityResampling) != GetProcessingFlag(m_eProcFlags, PFLAG_HighQualityResampling);
+	bool bTargetSizeChanged = fullTargetSize != m_FullTargetSize;
 	// Check if resampling due to change of geometric parameters is needed
-	bool bMustResampleGeometry = fullTargetSize != m_FullTargetSize || clippingSize != m_ClippingSize ||
-		targetOffset != m_TargetOffset;
+	bool bMustResampleGeometry = bTargetSizeChanged || clippingSize != m_ClippingSize || targetOffset != m_TargetOffset;
 	// Check if resampling due to change of processing parameters is needed
 	bool bMustResampleProcessings = fabs(imageProcParams.Sharpen - m_imageProcParams.Sharpen) > 1e-2;
 
@@ -134,6 +134,7 @@ void* CJPEGImage::GetDIB(CSize fullTargetSize, CSize clippingSize, CPoint target
 	}
 
 	// the geometrical parameters must be set before calling ApplyCorrectionLUT()
+	CRect oldClippingRect = CRect(m_TargetOffset, m_ClippingSize);
 	m_FullTargetSize = fullTargetSize;
 	m_ClippingSize = clippingSize;
 	m_TargetOffset = targetOffset;
@@ -147,6 +148,9 @@ void* CJPEGImage::GetDIB(CSize fullTargetSize, CSize clippingSize, CPoint target
 		pDIB = ApplyCorrectionLUTandLDC(imageProcParams, eProcFlags,
 			fullTargetSize, targetOffset, clippingSize, bMustResampleGeometry);
 	} else {
+		// Check if we can save time by re-using parts of existing bitmaps (panning)
+		bool bPanning = !m_bFirstReprocessing && !bMustResampleProcessings && !bTargetSizeChanged && !bMustResampleQuality;
+
 		// if the image is reprocessed more than once, it is worth to convert the original to 4 channels
 		// as this is faster for further processing
 		if (!m_bFirstReprocessing) {
@@ -154,40 +158,62 @@ void* CJPEGImage::GetDIB(CSize fullTargetSize, CSize clippingSize, CPoint target
 		}
 		m_bFirstReprocessing = false;
 
+		void* pPannedPixels = NULL;
+		if (bPanning) {
+			CPoint oldOffset = oldClippingRect.TopLeft();
+			CSize oldSize = oldClippingRect.Size();
+			CRect newClippingRect = CRect(targetOffset, clippingSize);
+			if (m_pDIBPixels != NULL && oldClippingRect.IntersectRect(oldClippingRect, newClippingRect)) {
+				// there is an intersection, reuse this
+				oldClippingRect.OffsetRect(-oldOffset.x, -oldOffset.y);
+				CRect targetRect = CRect(CPoint(max(0, oldOffset.x - newClippingRect.left), max(0, oldOffset.y - newClippingRect.top)), 
+					CSize(oldClippingRect.Width(), oldClippingRect.Height()));
+				pPannedPixels = CBasicProcessing::CopyRect32bpp(NULL, m_pDIBPixels, 
+					clippingSize, targetRect,
+					oldSize, oldClippingRect);
+				if (targetRect.top > 0) {
+					CSize clipSize(clippingSize.cx, targetRect.top);
+					void* pTop = Resample(fullTargetSize, clipSize, targetOffset, eProcFlags, m_imageProcParams.Sharpen, eResizeType);
+					CBasicProcessing::CopyRect32bpp(pPannedPixels, pTop,
+						clippingSize, CRect(CPoint(0, 0), clipSize),
+						clipSize, CRect(CPoint(0, 0), clipSize));
+					delete[] pTop;
+				}
+				if (targetRect.bottom < clippingSize.cy) {
+					CSize clipSize(clippingSize.cx, clippingSize.cy -  targetRect.bottom);
+					void* pBottom = Resample(fullTargetSize, clipSize, CPoint(targetOffset.x, targetOffset.y + targetRect.bottom), eProcFlags, m_imageProcParams.Sharpen, eResizeType);
+					CBasicProcessing::CopyRect32bpp(pPannedPixels, pBottom,
+						clippingSize, CRect(CPoint(0, targetRect.bottom), clipSize),
+						clipSize, CRect(CPoint(0, 0), clipSize));
+					delete[] pBottom;
+				}
+				if (targetRect.left > 0) {
+					CSize clipSize(targetRect.left, clippingSize.cy);
+					void* pLeft = Resample(fullTargetSize, clipSize, targetOffset, eProcFlags, m_imageProcParams.Sharpen, eResizeType);
+					CBasicProcessing::CopyRect32bpp(pPannedPixels, pLeft,
+						clippingSize, CRect(CPoint(0, 0), clipSize),
+						clipSize, CRect(CPoint(0, 0), clipSize));
+					delete[] pLeft;
+				}
+				if (targetRect.right < clippingSize.cx) {
+					CSize clipSize(clippingSize.cx -  targetRect.right, clippingSize.cy);
+					void* pRight = Resample(fullTargetSize, clipSize, CPoint(targetOffset.x + targetRect.right, targetOffset.y), eProcFlags, m_imageProcParams.Sharpen, eResizeType);
+					CBasicProcessing::CopyRect32bpp(pPannedPixels, pRight,
+						clippingSize, CRect(CPoint(targetRect.right, 0), clipSize),
+						clipSize, CRect(CPoint(0, 0), clipSize));
+					delete[] pRight;
+				}
+			}
+		}
+
 		// needs to recalculate whole image, get rid of old DIBs
 		delete[] m_pDIBPixels; m_pDIBPixels = NULL;
 		delete[] m_pDIBPixelsLUTProcessed; m_pDIBPixelsLUTProcessed = NULL;
 
-		Helpers::CPUType cpu = CSettingsProvider::This().AlgorithmImplementation();
-		EFilterType filter = CSettingsProvider::This().DownsamplingFilter();
-
-		if (GetProcessingFlag(eProcFlags, PFLAG_HighQualityResampling) && 
-			!(eResizeType == NoResize && filter == Filter_Downsampling_Best_Quality)) {
-			if (cpu == Helpers::CPU_SSE || cpu == Helpers::CPU_MMX) {
-				if (eResizeType == UpSample) {
-					m_pDIBPixels = CBasicProcessing::SampleUp_HQ_SSE_MMX(fullTargetSize, targetOffset, clippingSize, 
-						CSize(m_nOrigWidth, m_nOrigHeight), m_pIJLPixels, m_nIJLChannels, cpu == Helpers::CPU_SSE);
-				} else {
-					m_pDIBPixels = CBasicProcessing::SampleDown_HQ_SSE_MMX(fullTargetSize, targetOffset, clippingSize,
-						CSize(m_nOrigWidth, m_nOrigHeight), m_pIJLPixels, m_nIJLChannels, imageProcParams.Sharpen, filter, cpu == Helpers::CPU_SSE);
-				}
-			} else {
-				if (eResizeType == UpSample) {
-					m_pDIBPixels = CBasicProcessing::SampleUp_HQ(fullTargetSize, targetOffset, clippingSize, 
-						CSize(m_nOrigWidth, m_nOrigHeight), m_pIJLPixels, m_nIJLChannels);
-				} else {
-					m_pDIBPixels = CBasicProcessing::SampleDown_HQ(fullTargetSize, targetOffset, clippingSize, 
-						CSize(m_nOrigWidth, m_nOrigHeight), m_pIJLPixels, m_nIJLChannels, imageProcParams.Sharpen, filter);
-				}
-			}
+		if (pPannedPixels) {
+			m_pDIBPixels = pPannedPixels;
 		} else {
-			if (eResizeType == UpSample) {
-				m_pDIBPixels = CBasicProcessing::SampleUpFast(fullTargetSize, targetOffset, clippingSize, 
-					CSize(m_nOrigWidth, m_nOrigHeight), m_pIJLPixels, m_nIJLChannels);
-			} else {
-				m_pDIBPixels = CBasicProcessing::SampleDownFast(fullTargetSize, targetOffset, clippingSize, 
-					CSize(m_nOrigWidth, m_nOrigHeight), m_pIJLPixels, m_nIJLChannels);
-			}
+			m_pDIBPixels = Resample(fullTargetSize, clippingSize, targetOffset, eProcFlags, m_imageProcParams.Sharpen, eResizeType);
 		}
 
 		pDIB = ApplyCorrectionLUTandLDC(imageProcParams, eProcFlags, fullTargetSize, 
@@ -211,6 +237,41 @@ void* CJPEGImage::GetDIB(CSize fullTargetSize, CSize clippingSize, CPoint target
 	m_pLastDIB = pDIB;
 
 	return pDIB;
+}
+
+void* CJPEGImage::Resample(CSize fullTargetSize, CSize clippingSize, CPoint targetOffset, 
+						  EProcessingFlags eProcFlags, double dSharpen, EResizeType eResizeType) {
+	Helpers::CPUType cpu = CSettingsProvider::This().AlgorithmImplementation();
+	EFilterType filter = CSettingsProvider::This().DownsamplingFilter();
+
+	if (GetProcessingFlag(eProcFlags, PFLAG_HighQualityResampling) && 
+		!(eResizeType == NoResize && filter == Filter_Downsampling_Best_Quality)) {
+		if (cpu == Helpers::CPU_SSE || cpu == Helpers::CPU_MMX) {
+			if (eResizeType == UpSample) {
+				return CBasicProcessing::SampleUp_HQ_SSE_MMX(fullTargetSize, targetOffset, clippingSize, 
+					CSize(m_nOrigWidth, m_nOrigHeight), m_pIJLPixels, m_nIJLChannels, cpu == Helpers::CPU_SSE);
+			} else {
+				return CBasicProcessing::SampleDown_HQ_SSE_MMX(fullTargetSize, targetOffset, clippingSize,
+					CSize(m_nOrigWidth, m_nOrigHeight), m_pIJLPixels, m_nIJLChannels, dSharpen, filter, cpu == Helpers::CPU_SSE);
+			}
+		} else {
+			if (eResizeType == UpSample) {
+				return CBasicProcessing::SampleUp_HQ(fullTargetSize, targetOffset, clippingSize, 
+					CSize(m_nOrigWidth, m_nOrigHeight), m_pIJLPixels, m_nIJLChannels);
+			} else {
+				return CBasicProcessing::SampleDown_HQ(fullTargetSize, targetOffset, clippingSize, 
+					CSize(m_nOrigWidth, m_nOrigHeight), m_pIJLPixels, m_nIJLChannels, dSharpen, filter);
+			}
+		}
+	} else {
+		if (eResizeType == UpSample) {
+			return CBasicProcessing::SampleUpFast(fullTargetSize, targetOffset, clippingSize, 
+				CSize(m_nOrigWidth, m_nOrigHeight), m_pIJLPixels, m_nIJLChannels);
+		} else {
+			return CBasicProcessing::SampleDownFast(fullTargetSize, targetOffset, clippingSize, 
+				CSize(m_nOrigWidth, m_nOrigHeight), m_pIJLPixels, m_nIJLChannels);
+		}
+	}
 }
 
 CPoint CJPEGImage::ConvertOffset(CSize fullTargetSize, CSize clippingSize, CPoint targetOffset) const {

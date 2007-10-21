@@ -213,6 +213,10 @@ private:
 	float m_fColorCorrectionFactors[6];
 	float m_fColorCorrectionFactorsNull[6];
 
+	// Resample to given target size. Returns resampled DIB
+	void* Resample(CSize fullTargetSize, CSize clippingSize, CPoint targetOffset, 
+		EProcessingFlags eProcFlags, double dSharpen, EResizeType eResizeType);
+
 	// returns a pointer to DIB to be used (either m_pDIBPixelsLUTProcessed or m_pDIBPixels)
 	void* ApplyCorrectionLUTandLDC(const CImageProcessingParams & imageProcParams, EProcessingFlags eProcFlags,
 		CSize fullTargetSize, CPoint targetOffset, CSize dibSize, bool bGeometryChanged);
