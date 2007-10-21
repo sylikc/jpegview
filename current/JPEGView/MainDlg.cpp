@@ -1450,8 +1450,6 @@ bool CMainDlg::PerformPan(int dx, int dy) {
 		m_nOffsetY += dy;
 
 		m_bUserPan = true;
-		m_bInZooming = true; 
-		StartLowQTimer(ZOOM_TIMEOUT);
 
 		this->Invalidate(FALSE);
 		return true;

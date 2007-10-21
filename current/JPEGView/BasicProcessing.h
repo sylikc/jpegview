@@ -32,6 +32,11 @@ public:
 	// Convert from GDI+ 32 bpp RGBA format to 32 bpp BGRA format
 	static void* ConvertGdiplus32bppRGB(int nWidth, int nHeight, int nStride, const void* pGdiplusPixels);
 
+	// Copy rectangular pixel block from source to target 32 bpp bitmap. The target bitmap is allocated
+	// if the parameter is NULL. Note that size of source and target rect must match.
+	static void* CopyRect32bpp(void* pTarget, void* pSource,  CSize targetSize, CRect targetRect,
+		CSize sourceSize, CRect sourceRect);
+
 	// Clockwise rotation of a 32 bit DIB. The rotation angle must be 90, 180 or 270 degrees, in all other
 	// cases the return value is NULL
 	static void* Rotate32bpp(int nWidth, int nHeight, const void* pDIBPixels, int nRotationAngleCW);
