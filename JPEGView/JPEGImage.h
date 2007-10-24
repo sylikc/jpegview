@@ -85,8 +85,12 @@ public:
 	int IJLChannels() const { return m_nIJLChannels; }
 
 	// raw access to DIB pixels with no LUT applied - do not delete or store the pointer returned
+	// note that this DIB can be NULL due to optimization if currently only the processed DIB is maintained
 	void* DIBPixels() { return m_pDIBPixels; }
 	const void* DIBPixels() const { return m_pDIBPixels; }
+
+	// Verifies that the original DIB pixels (in m_pDIBPixels) are available
+	void VerifyDIBPixelsCreated();
 
 	// Gets the DIB last processed. If none, the last used parameters are taken to generate the DIB
 	void* DIBPixelsLastProcessed();
@@ -213,13 +217,22 @@ private:
 	float m_fColorCorrectionFactors[6];
 	float m_fColorCorrectionFactorsNull[6];
 
+	// Resample when panning was done, using existing data in DIBs. Old clipping rectangle is given in oldClippingRect
+	void CJPEGImage::ResampleWithPan(void* & pDIBPixels, void* & pDIBPixelsLUTProcessed, CSize fullTargetSize, 
+		CSize clippingSize, CPoint targetOffset, CRect oldClippingRect,
+		EProcessingFlags eProcFlags, const CImageProcessingParams & imageProcParams, EResizeType eResizeType);
+
 	// Resample to given target size. Returns resampled DIB
 	void* Resample(CSize fullTargetSize, CSize clippingSize, CPoint targetOffset, 
 		EProcessingFlags eProcFlags, double dSharpen, EResizeType eResizeType);
 
-	// returns a pointer to DIB to be used (either m_pDIBPixelsLUTProcessed or m_pDIBPixels)
+	// pCachedTargetDIB is a pointer at the caller side holding the old processed DIB.
+	// Returns a pointer to DIB to be used (either pCachedTargetDIB or pSourceDIB)
+	// If bOnlyCheck is set to true, the method does nothing but only checks if the existing processed DIB
+	// can be used (return != NULL) or not (return == NULL)
 	void* ApplyCorrectionLUTandLDC(const CImageProcessingParams & imageProcParams, EProcessingFlags eProcFlags,
-		CSize fullTargetSize, CPoint targetOffset, CSize dibSize, bool bGeometryChanged);
+		void * & pCachedTargetDIB, CSize fullTargetSize, CPoint targetOffset, 
+		void * pSourceDIB, CSize dibSize, bool bGeometryChanged, bool bOnlyCheck);
 
 	// makes sure that the input image (m_pIJLPixels) is a 4 channel BGRA image (converts if necessary)
 	void ConvertSrcTo4Channels();
@@ -229,4 +242,7 @@ private:
 
 	// Return size of original image if the image would be rotated the given amount
 	CSize SizeAfterRotation(int nRotation);
+
+	// Get if from source to target size it is down or upsampling
+	EResizeType GetResizeType(CSize targetSize, CSize sourceSize);
 };

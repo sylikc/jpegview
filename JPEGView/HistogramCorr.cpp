@@ -33,7 +33,7 @@ CHistogram::CHistogram(const CJPEGImage & image, bool bUseOrigPixels) {
 
 	int nWidth, nHeight, nChannels;
 	const uint8* pSourcePixels;
-	if (bUseOrigPixels) {
+	if (bUseOrigPixels || image.DIBPixels() == NULL) {
 		nWidth = image.OrigWidth();
 		nHeight = image.OrigHeight();
 		nChannels = image.IJLChannels();
