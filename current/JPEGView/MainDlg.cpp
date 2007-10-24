@@ -1303,6 +1303,9 @@ void CMainDlg::DoDragging(int nX, int nY) {
 
 void CMainDlg::EndDragging() {
 	m_bDragging = false;
+	if (m_pCurrentImage != NULL) {
+		m_pCurrentImage->VerifyDIBPixelsCreated();
+	}
 }
 
 void CMainDlg::GotoImage(EImagePosition ePos) {

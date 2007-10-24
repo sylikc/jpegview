@@ -124,14 +124,7 @@ void* CJPEGImage::GetDIB(CSize fullTargetSize, CSize clippingSize, CPoint target
 	// Check if resampling due to change of processing parameters is needed
 	bool bMustResampleProcessings = fabs(imageProcParams.Sharpen - m_imageProcParams.Sharpen) > 1e-2;
 
-	EResizeType eResizeType;
-	if (fullTargetSize.cx == m_nOrigWidth && fullTargetSize.cy == m_nOrigHeight) {
-		eResizeType = NoResize;
-	} else if (fullTargetSize.cx <= m_nOrigWidth && fullTargetSize.cy <= m_nOrigHeight) {
-		eResizeType = DownSample;
-	} else {
-		eResizeType = UpSample;
-	}
+	EResizeType eResizeType = GetResizeType(fullTargetSize, CSize(m_nOrigWidth, m_nOrigHeight));
 
 	// the geometrical parameters must be set before calling ApplyCorrectionLUT()
 	CRect oldClippingRect = CRect(m_TargetOffset, m_ClippingSize);
@@ -143,81 +136,42 @@ void* CJPEGImage::GetDIB(CSize fullTargetSize, CSize clippingSize, CPoint target
 
 	// Check if only the LUT must be reapplied but no resampling (resampling is much slower than the LUTs)
 	void * pDIB = NULL;
-	if (!bMustResampleQuality && !bMustResampleGeometry && !bMustResampleProcessings && m_pDIBPixels != NULL) {
+	if (!bMustResampleQuality && !bMustResampleGeometry && !bMustResampleProcessings) {
 		// only LUT must be reapplied (or even nothing must be done)
-		pDIB = ApplyCorrectionLUTandLDC(imageProcParams, eProcFlags,
-			fullTargetSize, targetOffset, clippingSize, bMustResampleGeometry);
-	} else {
-		// Check if we can save time by re-using parts of existing bitmaps (panning)
-		bool bPanning = !m_bFirstReprocessing && !bMustResampleProcessings && !bTargetSizeChanged && !bMustResampleQuality;
-
+		pDIB = ApplyCorrectionLUTandLDC(imageProcParams, eProcFlags, m_pDIBPixelsLUTProcessed, 
+			fullTargetSize, targetOffset, m_pDIBPixels, clippingSize, bMustResampleGeometry, false);
+	}
+	// ApplyCorrectionLUTandLDC() could have failed, then recreate the DIBs
+	if (pDIB == NULL) {
 		// if the image is reprocessed more than once, it is worth to convert the original to 4 channels
 		// as this is faster for further processing
 		if (!m_bFirstReprocessing) {
 			ConvertSrcTo4Channels();
 		}
+
+		// If we only pan, we can resample far more efficiently by only calculating the newly visible areas
+		bool bPanningOnly = !m_bFirstReprocessing && !bMustResampleProcessings && !bTargetSizeChanged && !bMustResampleQuality;
 		m_bFirstReprocessing = false;
-
-		void* pPannedPixels = NULL;
-		if (bPanning) {
-			CPoint oldOffset = oldClippingRect.TopLeft();
-			CSize oldSize = oldClippingRect.Size();
-			CRect newClippingRect = CRect(targetOffset, clippingSize);
-			if (m_pDIBPixels != NULL && oldClippingRect.IntersectRect(oldClippingRect, newClippingRect)) {
-				// there is an intersection, reuse this
-				oldClippingRect.OffsetRect(-oldOffset.x, -oldOffset.y);
-				CRect targetRect = CRect(CPoint(max(0, oldOffset.x - newClippingRect.left), max(0, oldOffset.y - newClippingRect.top)), 
-					CSize(oldClippingRect.Width(), oldClippingRect.Height()));
-				pPannedPixels = CBasicProcessing::CopyRect32bpp(NULL, m_pDIBPixels, 
-					clippingSize, targetRect,
-					oldSize, oldClippingRect);
-				if (targetRect.top > 0) {
-					CSize clipSize(clippingSize.cx, targetRect.top);
-					void* pTop = Resample(fullTargetSize, clipSize, targetOffset, eProcFlags, m_imageProcParams.Sharpen, eResizeType);
-					CBasicProcessing::CopyRect32bpp(pPannedPixels, pTop,
-						clippingSize, CRect(CPoint(0, 0), clipSize),
-						clipSize, CRect(CPoint(0, 0), clipSize));
-					delete[] pTop;
-				}
-				if (targetRect.bottom < clippingSize.cy) {
-					CSize clipSize(clippingSize.cx, clippingSize.cy -  targetRect.bottom);
-					void* pBottom = Resample(fullTargetSize, clipSize, CPoint(targetOffset.x, targetOffset.y + targetRect.bottom), eProcFlags, m_imageProcParams.Sharpen, eResizeType);
-					CBasicProcessing::CopyRect32bpp(pPannedPixels, pBottom,
-						clippingSize, CRect(CPoint(0, targetRect.bottom), clipSize),
-						clipSize, CRect(CPoint(0, 0), clipSize));
-					delete[] pBottom;
-				}
-				if (targetRect.left > 0) {
-					CSize clipSize(targetRect.left, clippingSize.cy);
-					void* pLeft = Resample(fullTargetSize, clipSize, targetOffset, eProcFlags, m_imageProcParams.Sharpen, eResizeType);
-					CBasicProcessing::CopyRect32bpp(pPannedPixels, pLeft,
-						clippingSize, CRect(CPoint(0, 0), clipSize),
-						clipSize, CRect(CPoint(0, 0), clipSize));
-					delete[] pLeft;
-				}
-				if (targetRect.right < clippingSize.cx) {
-					CSize clipSize(clippingSize.cx -  targetRect.right, clippingSize.cy);
-					void* pRight = Resample(fullTargetSize, clipSize, CPoint(targetOffset.x + targetRect.right, targetOffset.y), eProcFlags, m_imageProcParams.Sharpen, eResizeType);
-					CBasicProcessing::CopyRect32bpp(pPannedPixels, pRight,
-						clippingSize, CRect(CPoint(targetRect.right, 0), clipSize),
-						clipSize, CRect(CPoint(0, 0), clipSize));
-					delete[] pRight;
-				}
-			}
-		}
-
-		// needs to recalculate whole image, get rid of old DIBs
-		delete[] m_pDIBPixels; m_pDIBPixels = NULL;
-		delete[] m_pDIBPixelsLUTProcessed; m_pDIBPixelsLUTProcessed = NULL;
-
-		if (pPannedPixels) {
-			m_pDIBPixels = pPannedPixels;
+		if (bPanningOnly) {
+			ResampleWithPan(m_pDIBPixels, m_pDIBPixelsLUTProcessed, fullTargetSize, clippingSize, targetOffset, 
+				oldClippingRect, eProcFlags, imageProcParams, eResizeType);
 		} else {
-			m_pDIBPixels = Resample(fullTargetSize, clippingSize, targetOffset, eProcFlags, m_imageProcParams.Sharpen, eResizeType);
+			delete[] m_pDIBPixelsLUTProcessed; m_pDIBPixelsLUTProcessed = NULL;
+			delete[] m_pDIBPixels; m_pDIBPixels = NULL;
 		}
 
-		pDIB = ApplyCorrectionLUTandLDC(imageProcParams, eProcFlags, fullTargetSize, 
-			targetOffset, clippingSize, bMustResampleGeometry);
+		// both DIBs are NULL, do normal resampling
+		if (m_pDIBPixels == NULL && m_pDIBPixelsLUTProcessed == NULL) {
+			m_pDIBPixels = Resample(fullTargetSize, clippingSize, targetOffset, eProcFlags, imageProcParams.Sharpen, eResizeType);
+		}
+
+		// if ResampleWithPan() has preseved this DIB, we can reuse it
+		if (m_pDIBPixelsLUTProcessed == NULL) {
+			pDIB = ApplyCorrectionLUTandLDC(imageProcParams, eProcFlags, m_pDIBPixelsLUTProcessed, fullTargetSize, 
+				targetOffset, m_pDIBPixels, clippingSize, bMustResampleGeometry, false);
+		} else {
+			pDIB = m_pDIBPixelsLUTProcessed;
+		}
 	}
 
 	int nLastOpTickCount = ::GetTickCount() - nStartTickCount; 
@@ -237,6 +191,132 @@ void* CJPEGImage::GetDIB(CSize fullTargetSize, CSize clippingSize, CPoint target
 	m_pLastDIB = pDIB;
 
 	return pDIB;
+}
+
+void CJPEGImage::ResampleWithPan(void* & pDIBPixels, void* & pDIBPixelsLUTProcessed, CSize fullTargetSize, 
+								 CSize clippingSize, CPoint targetOffset, CRect oldClippingRect,
+								 EProcessingFlags eProcFlags, const CImageProcessingParams & imageProcParams, EResizeType eResizeType) {
+	CPoint oldOffset = oldClippingRect.TopLeft();
+	CSize oldSize = oldClippingRect.Size();
+	CRect newClippingRect = CRect(targetOffset, clippingSize);
+	CRect sourceRect;
+	if (sourceRect.IntersectRect(oldClippingRect, newClippingRect)) {
+		// there is an intersection, reuse the non LUT processed DIB
+		sourceRect.OffsetRect(-oldOffset.x, -oldOffset.y);
+		CRect targetRect = CRect(CPoint(max(0, oldOffset.x - newClippingRect.left), max(0, oldOffset.y - newClippingRect.top)), 
+			CSize(sourceRect.Width(), sourceRect.Height()));
+
+		bool bCanUseLUTProcDIB = ApplyCorrectionLUTandLDC(imageProcParams, eProcFlags, pDIBPixelsLUTProcessed, fullTargetSize, 
+			targetOffset, pDIBPixels, clippingSize, false, true) != NULL && m_nDimRegion == 0;
+
+		// the LUT processed pixels cannot be used and the original pixels are not available -
+		// full recreation of DIBs is needed
+		if (!bCanUseLUTProcDIB && pDIBPixels == NULL) {
+			delete[] pDIBPixelsLUTProcessed; pDIBPixelsLUTProcessed = NULL;
+			return;
+		}
+
+		// Copy the reusable part of original DIB pixels
+		void* pPannedPixels = (bCanUseLUTProcDIB == false) ? 
+			CBasicProcessing::CopyRect32bpp(NULL, pDIBPixels, clippingSize, targetRect, oldSize, sourceRect) :
+			NULL;
+
+		// get rid of original DIB, will we recreated automatically when needed
+		delete[] pDIBPixels; pDIBPixels = NULL;
+
+		// Copy the reusable part of processed DIB pixels
+		void* pPannedPixelsLUTProcessed = bCanUseLUTProcDIB ? 
+			CBasicProcessing::CopyRect32bpp(NULL, pDIBPixelsLUTProcessed, clippingSize, targetRect, oldSize, sourceRect) :
+			NULL;
+
+		// Delete old LUT processed DIB, we copied the part that can be reused to a new DIB (pPannedPixelsLUTProcessed)
+		delete[] pDIBPixelsLUTProcessed; pDIBPixelsLUTProcessed = NULL;
+
+		if (targetRect.top > 0) {
+			CSize clipSize(clippingSize.cx, targetRect.top);
+			void* pTop = Resample(fullTargetSize, clipSize, targetOffset, eProcFlags, imageProcParams.Sharpen, eResizeType);
+			
+			if (!bCanUseLUTProcDIB) {
+				CBasicProcessing::CopyRect32bpp(pPannedPixels, pTop,
+					clippingSize, CRect(CPoint(0, 0), clipSize),
+					clipSize, CRect(CPoint(0, 0), clipSize));
+			} else {
+				void* pTopProc = NULL;
+				ApplyCorrectionLUTandLDC(imageProcParams, eProcFlags, pTopProc, fullTargetSize, targetOffset, pTop, clipSize, false, false);
+				CBasicProcessing::CopyRect32bpp(pPannedPixelsLUTProcessed, pTopProc,
+					clippingSize, CRect(CPoint(0, 0), clipSize),
+					clipSize, CRect(CPoint(0, 0), clipSize));
+				delete[] pTopProc;
+			}
+
+			delete[] pTop;
+		}
+		if (targetRect.bottom < clippingSize.cy) {
+			CSize clipSize(clippingSize.cx, clippingSize.cy -  targetRect.bottom);
+			CPoint offset(targetOffset.x, targetOffset.y + targetRect.bottom);
+			void* pBottom = Resample(fullTargetSize, clipSize, offset, eProcFlags, imageProcParams.Sharpen, eResizeType);
+			
+			if (!bCanUseLUTProcDIB) {
+				CBasicProcessing::CopyRect32bpp(pPannedPixels, pBottom,
+					clippingSize, CRect(CPoint(0, targetRect.bottom), clipSize),
+					clipSize, CRect(CPoint(0, 0), clipSize));
+			} else {
+				void* pBottomProc = NULL;
+				ApplyCorrectionLUTandLDC(imageProcParams, eProcFlags, pBottomProc, fullTargetSize, offset, pBottom, clipSize, false, false);
+				CBasicProcessing::CopyRect32bpp(pPannedPixelsLUTProcessed, pBottomProc,
+					clippingSize, CRect(CPoint(0, targetRect.bottom), clipSize),
+					clipSize, CRect(CPoint(0, 0), clipSize));
+				delete[] pBottomProc;
+			}
+
+			delete[] pBottom;
+		}
+		if (targetRect.left > 0) {
+			CSize clipSize(targetRect.left, clippingSize.cy);
+			void* pLeft = Resample(fullTargetSize, clipSize, targetOffset, eProcFlags, imageProcParams.Sharpen, eResizeType);
+			
+			if (!bCanUseLUTProcDIB) {
+				CBasicProcessing::CopyRect32bpp(pPannedPixels, pLeft,
+					clippingSize, CRect(CPoint(0, 0), clipSize),
+					clipSize, CRect(CPoint(0, 0), clipSize));
+			} else {
+				void* pLeftProc = NULL;
+				ApplyCorrectionLUTandLDC(imageProcParams, eProcFlags, pLeftProc, fullTargetSize, targetOffset, pLeft, clipSize, false, false);
+				CBasicProcessing::CopyRect32bpp(pPannedPixelsLUTProcessed, pLeftProc,
+					clippingSize, CRect(CPoint(0, 0), clipSize),
+					clipSize, CRect(CPoint(0, 0), clipSize));
+				delete[] pLeftProc;
+			}
+
+			delete[] pLeft;
+		}
+		if (targetRect.right < clippingSize.cx) {
+			CSize clipSize(clippingSize.cx -  targetRect.right, clippingSize.cy);
+			CPoint offset(targetOffset.x + targetRect.right, targetOffset.y);
+			void* pRight = Resample(fullTargetSize, clipSize, offset, eProcFlags, imageProcParams.Sharpen, eResizeType);
+			
+			if (!bCanUseLUTProcDIB) {
+				CBasicProcessing::CopyRect32bpp(pPannedPixels, pRight,
+					clippingSize, CRect(CPoint(targetRect.right, 0), clipSize),
+					clipSize, CRect(CPoint(0, 0), clipSize));
+			} else {
+				void* pRigthProc = NULL;
+				ApplyCorrectionLUTandLDC(imageProcParams, eProcFlags, pRigthProc, fullTargetSize, offset, pRight, clipSize, false, false);
+				CBasicProcessing::CopyRect32bpp(pPannedPixelsLUTProcessed, pRigthProc,
+					clippingSize, CRect(CPoint(targetRect.right, 0), clipSize),
+					clipSize, CRect(CPoint(0, 0), clipSize));
+				delete[] pRigthProc;
+			}
+
+			delete[] pRight;
+		}
+		pDIBPixels = pPannedPixels;
+		pDIBPixelsLUTProcessed = pPannedPixelsLUTProcessed;
+		return;
+	}
+
+	delete[] pDIBPixels; pDIBPixels = NULL;
+	delete[] pDIBPixelsLUTProcessed; pDIBPixelsLUTProcessed = NULL;
 }
 
 void* CJPEGImage::Resample(CSize fullTargetSize, CSize clippingSize, CPoint targetOffset, 
@@ -340,6 +420,13 @@ void* CJPEGImage::DIBPixelsLastProcessed() {
 	return m_pLastDIB;
 }
 
+void CJPEGImage::VerifyDIBPixelsCreated() {
+	if (m_pDIBPixels == NULL) {
+		EResizeType eResizeType = GetResizeType(m_FullTargetSize, CSize(m_nOrigWidth, m_nOrigHeight));
+		m_pDIBPixels = Resample(m_FullTargetSize, m_ClippingSize, m_TargetOffset, m_eProcFlags, m_imageProcParams.Sharpen, eResizeType);
+	}
+}
+
 float CJPEGImage::IsNightShot() const {
 	if (m_pHistogram != NULL) {
 		return m_pHistogram->IsNightShot();
@@ -422,7 +509,9 @@ void CJPEGImage::SetFileDependentProcessParams(LPCTSTR sFileName, CProcessParams
 ///////////////////////////////////////////////////////////////////////////////////
 
 void* CJPEGImage::ApplyCorrectionLUTandLDC(const CImageProcessingParams & imageProcParams, EProcessingFlags eProcFlags,
-										   CSize fullTargetSize, CPoint targetOffset, CSize dibSize, bool bGeometryChanged) {
+										   void * & pCachedTargetDIB, CSize fullTargetSize, CPoint targetOffset, 
+										   void * pSourceDIB, CSize dibSize,
+										   bool bGeometryChanged, bool bOnlyCheck) {
 	bool bAutoContrast = GetProcessingFlag(eProcFlags, PFLAG_AutoContrast);
 	bool bAutoContrastOld = GetProcessingFlag(m_eProcFlags, PFLAG_AutoContrast);
 	bool bAutoContrastSection = GetProcessingFlag(eProcFlags, PFLAG_AutoContrastSection) && bAutoContrast;
@@ -449,16 +538,21 @@ void* CJPEGImage::ApplyCorrectionLUTandLDC(const CImageProcessingParams & imageP
 	bool bMustReapplyLDC = bLDC && (!bLDCOld || bGeometryChanged || bLDCParametersChanged);
 	bool bMustUse3ChannelLUT = bAutoContrast || !bNoColorCastCorrection;
 
-	if (m_pDIBPixels == NULL) {
+	if (!bMustReapplyLUT && !bMustReapplyLDC && pCachedTargetDIB != NULL) {
+		// consider special case that dim area is set to zero and no LUT and LDC is applied but
+		// processed pixel is here, we do not want to use it - in this case we just continue.
+		if (!(bNoLUTApplied && m_nDimRegion == 0 && !bLDC)) {
+			return pCachedTargetDIB;
+		}
+	}
+
+	// If it shall only be checked if this method would be able to reuse the existing pCachedTargetDIB, return
+	if (bOnlyCheck) {
 		return NULL;
 	}
 
-	if (!bMustReapplyLUT && !bMustReapplyLDC && m_pDIBPixelsLUTProcessed != NULL) {
-		// consider special case that dim area is set to zero and no LUT is applied but
-		// processed pixel is here, we do not want to use it - in this case we just continue.
-		if (!(bNoLUTApplied && m_nDimRegion == 0)) {
-			return m_pDIBPixelsLUTProcessed;
-		}
+	if (pSourceDIB == NULL) {
+		return NULL;
 	}
 
 	// Recalculate LUTs if needed
@@ -506,34 +600,34 @@ void* CJPEGImage::ApplyCorrectionLUTandLDC(const CImageProcessingParams & imageP
 		m_pLUTRGB = NULL;
 	}
 	
-	delete[] m_pDIBPixelsLUTProcessed;
-	m_pDIBPixelsLUTProcessed = NULL;
+	delete[] pCachedTargetDIB;
+	pCachedTargetDIB = NULL;
 
 	if (!bNoLUTApplied || bLDC) {
 		// LUT or/and LDC --> apply correction
 		uint8* pLUT = CHistogramCorr::CombineLUTs(m_pLUTAllChannels, m_pLUTRGB);
 		if (bLDC && m_pLDC != NULL) {
-			m_pDIBPixelsLUTProcessed = CBasicProcessing::ApplyLDC32bpp(fullTargetSize, targetOffset, dibSize, m_pLDC->GetLDCMapSize(),
-				m_pDIBPixels, pLUT, m_pLDC->GetLDCMap(), m_pLDC->GetBlackPt(), m_pLDC->GetWhitePt(), (float)imageProcParams.LightenShadowSteepness);
+			pCachedTargetDIB = CBasicProcessing::ApplyLDC32bpp(fullTargetSize, targetOffset, dibSize, m_pLDC->GetLDCMapSize(),
+				pSourceDIB, pLUT, m_pLDC->GetLDCMap(), m_pLDC->GetBlackPt(), m_pLDC->GetWhitePt(), (float)imageProcParams.LightenShadowSteepness);
 		} else {
-			m_pDIBPixelsLUTProcessed = CBasicProcessing::Apply3ChannelLUT32bpp(dibSize.cx, dibSize.cy, m_pDIBPixels, pLUT);
+			pCachedTargetDIB = CBasicProcessing::Apply3ChannelLUT32bpp(dibSize.cx, dibSize.cy, pSourceDIB, pLUT);
 		}
 		delete[] pLUT;
 	} else if (m_nDimRegion == 0) {
 		// no LUT, no LDC, no dimming --> return original pixels
-		return m_pDIBPixels;
+		return pSourceDIB;
 	} else {
 		// no LUT, no LDC but dimming --> make copy of original pixels
-		m_pDIBPixelsLUTProcessed = new uint32[dibSize.cx*dibSize.cy];
-		memcpy(m_pDIBPixelsLUTProcessed, m_pDIBPixels, dibSize.cx*dibSize.cy*4);
+		pCachedTargetDIB = new uint32[dibSize.cx*dibSize.cy];
+		memcpy(pCachedTargetDIB, pSourceDIB, dibSize.cx*dibSize.cy*4);
 	}
 
 	if (m_nDimRegion > 0) {
-		CBasicProcessing::DimRectangle32bpp(dibSize.cx, dibSize.cy, m_pDIBPixelsLUTProcessed, 
+		CBasicProcessing::DimRectangle32bpp(dibSize.cx, dibSize.cy, pCachedTargetDIB, 
 			GetDimRect(m_bFlipped, dibSize.cy, CRect(0, dibSize.cy - m_nDimRegion, dibSize.cx, dibSize.cy)), cfDimFactor);
 	}
 
-	return m_pDIBPixelsLUTProcessed;
+	return pCachedTargetDIB;
 }
 
 void CJPEGImage::ConvertSrcTo4Channels() {
@@ -567,5 +661,15 @@ CSize CJPEGImage::SizeAfterRotation(int nRotation) {
 		return CSize(m_nOrigHeight, m_nOrigWidth);
 	} else {
 		return CSize(m_nOrigWidth, m_nOrigHeight);
+	}
+}
+
+CJPEGImage::EResizeType CJPEGImage::GetResizeType(CSize targetSize, CSize sourceSize) {
+	if (targetSize.cx == sourceSize.cx && targetSize.cy == sourceSize.cy) {
+		return NoResize;
+	} else if (targetSize.cx <= sourceSize.cx && targetSize.cy <= sourceSize.cy) {
+		return DownSample;
+	} else {
+		return UpSample;
 	}
 }
