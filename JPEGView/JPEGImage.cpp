@@ -504,6 +504,20 @@ void CJPEGImage::SetFileDependentProcessParams(LPCTSTR sFileName, CProcessParams
 	m_imageProcParamsInitial = pParams->ImageProcParams;
 }
 
+void CJPEGImage::DIBToOrig(float & fX, float & fY) {
+	float fXo = m_TargetOffset.x + fX;
+	float fYo = m_TargetOffset.y + (m_bFlipped ? (m_ClippingSize.cy - fY) : fY);
+	fX = fXo/m_FullTargetSize.cx*m_nOrigWidth;
+	fY = fYo/m_FullTargetSize.cy*m_nOrigHeight;
+}
+
+void CJPEGImage::OrigToDIB(float & fX, float & fY) {
+	float fXo = fX/m_nOrigWidth*m_FullTargetSize.cx;
+	float fYo = fY/m_nOrigHeight*m_FullTargetSize.cy;
+	fX = fXo - m_TargetOffset.x;
+	fY = m_bFlipped ? (m_TargetOffset.y + m_ClippingSize.cy - fYo) : fYo - m_TargetOffset.y;
+}
+
 ///////////////////////////////////////////////////////////////////////////////////
 // Private
 ///////////////////////////////////////////////////////////////////////////////////

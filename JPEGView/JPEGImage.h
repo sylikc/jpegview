@@ -62,6 +62,10 @@ public:
 	int DIBWidth() const { return m_ClippingSize.cx; }
 	int DIBHeight() const { return m_ClippingSize.cy; }
 
+	// Convert DIB coordinates into original image coordinates and vice versa
+	void DIBToOrig(float & fX, float & fY);
+	void OrigToDIB(float & fX, float & fY);
+
 	// Flag if the original image (and the DIB) is flipped vertically or not.
 	// BMP images are sometimes stored flipped and due to performance reasons, this is kept until display
 	void SetFlagFlipped(bool bFlipped) { m_bFlipped = bFlipped; }

@@ -124,6 +124,9 @@ void CJPEGProvider::FileHasRenamed(LPCTSTR sOldFileName, LPCTSTR sNewFileName) {
 }
 
 bool CJPEGProvider::ClearRequest(CJPEGImage* pImage) {
+	if (pImage == NULL) {
+		return false;
+	}
 	bool bErased = false;
 	std::list<CImageRequest*>::iterator iter;
 	for (iter = m_requestList.begin( ); iter != m_requestList.end( ); iter++ ) {

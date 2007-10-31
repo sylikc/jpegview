@@ -137,6 +137,7 @@ BEGIN
 	  MENUITEM SEPARATOR
 	  MENUITEM "Open image...\tCtrl-O",			IDM_OPEN
 	  MENUITEM "Save processed image...\tCtrl-S",	IDM_SAVE
+	  MENUITEM "Reload image\tCtrl-R",			IDM_RELOAD
 	  MENUITEM "Batch rename/copy...",			IDM_BATCH_COPY
 	  MENUITEM "Copy to clipboard\tCtrl-C",		IDM_COPY
       MENUITEM "Copy original size image\tCtrl-X",	IDM_COPY_FULL
