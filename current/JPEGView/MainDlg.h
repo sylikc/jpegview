@@ -85,7 +85,8 @@ private:
 		POS_First,
 		POS_Last,
 		POS_Next,
-		POS_Previous
+		POS_Previous,
+		POS_Current
 	};
 
 	static CMainDlg* sm_instance; // single instance of the main dialog
@@ -127,7 +128,12 @@ private:
 	bool m_bCurrentImageIsSpecialProcessing;
 	double m_dCurrentInitialLightenShadows;
 
+	// cropping
+	CPoint m_cropStart;
+	CPoint m_cropEnd;
+
 	bool m_bDragging;
+	bool m_bCropping;
 	bool m_bMovieMode;
 	bool m_bProcFlagsTouched;
 	EProcessingFlags m_eProcFlagsBeforeMovie;
@@ -167,6 +173,10 @@ private:
 	void StartDragging(int nX, int nY);
 	void DoDragging(int nX, int nY);
 	void EndDragging();
+	void StartCropping(int nX, int nY);
+	void ShowCroppingRect(int nX, int nY);
+	void EndCropping();
+	void PaintCropRect(HDC hPaintDC);
 	void GotoImage(EImagePosition ePos);
 	void GotoImage(EImagePosition ePos, int nFlags);
 	void AdjustLDC(int nMode, double dInc);
@@ -196,6 +206,8 @@ private:
 	void AfterNewImageLoaded(bool bSynchronize);
 	bool RenameCurrentFile(LPCTSTR sNewFileTitle);
 	int Scale(int nValue) { return (int)(m_fScaling*nValue); }
+	bool ScreenToImage(float & fX, float & fY); 
+	bool ImageToScreen(float & fX, float & fY);
 
 	static void OnSaveToDB(CButtonCtrl & sender);
 	static void OnRemoveFromDB(CButtonCtrl & sender);

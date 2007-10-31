@@ -5,6 +5,7 @@
 #include "stdafx.h"
 #include "resource.h"
 #include <math.h>
+#include <limits.h>
 
 #include "MainDlg.h"
 #include "FileList.h"
@@ -23,6 +24,7 @@
 #include "SaveImage.h"
 #include "NLS.h"
 #include "BatchCopyDlg.h"
+#include "ResizeFilter.h"
 
 //////////////////////////////////////////////////////////////////////////////////////////////
 // Constants
@@ -52,6 +54,7 @@ static const bool SHOW_TIMING_INFO = false; // Set to true for debugging
 
 static const int NO_REQUEST = 1; // used in GotoImage() method
 static const int NO_REMOVE_KEY_MSG = 2; // used in GotoImage() method
+static const int KEEP_PARAMETERS = 4; // used in GotoImage() method
 
 CMainDlg * CMainDlg::sm_instance = NULL;
 
@@ -118,6 +121,8 @@ static void InitFromProcessingFlags(EProcessingFlags eFlags, bool& bHQResampling
 CMainDlg::CMainDlg() {
 	CSettingsProvider& sp = CSettingsProvider::This();
 
+	CResizeFilterCache::This(); // Access before multiple threads are created
+
 	// Read the string table for the current thread language if any is present
 	TCHAR buff[16];
 	LCID threadLocale = ::GetThreadLocale();
@@ -162,6 +167,7 @@ CMainDlg::CMainDlg() {
 	m_dZoom = -1.0;
 	m_dZoomMult = -1.0;
 	m_bDragging = false;
+	m_bCropping = false;
 	m_nOffsetX = 0;
 	m_nOffsetY = 0;
 	m_nCapturedX = m_nCapturedY = 0;
@@ -180,6 +186,9 @@ CMainDlg::CMainDlg() {
 	m_bShowIPTools = false;
 	m_storedWindowPlacement.length = sizeof(WINDOWPLACEMENT);
 	m_pSliderMgr = NULL;
+
+	m_cropStart = CPoint(INT_MIN, INT_MIN);
+	m_cropEnd = CPoint(INT_MIN, INT_MIN);
 }
 
 CMainDlg::~CMainDlg() {
@@ -501,6 +510,8 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 			}
 		}
 		helpDisplay.Show(CRect(CPoint(0, 0), CSize(m_monitorRect.Width(), m_monitorRect.Height())));
+	} else if (m_bCropping) {
+		PaintCropRect(dc.m_hDC);
 	}
 
 	return 0;
@@ -518,7 +529,12 @@ LRESULT CMainDlg::OnLButtonDown(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam,
 	this->SetCapture();
 	// If the image processing area does not eat up the event, start dragging
 	if (!m_bShowIPTools || !m_pSliderMgr->OnMouseLButton(MouseEvent_BtnDown, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam))) {
-		StartDragging(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+		bool bCtrl = (::GetKeyState(VK_CONTROL) & 0x8000) != 0;
+		if (bCtrl) {
+			StartCropping(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+		} else {
+			StartDragging(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+		}
 	}
 	return 0;
 }
@@ -530,8 +546,12 @@ LRESULT CMainDlg::OnMButtonDown(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam,
 }
 
 LRESULT CMainDlg::OnLButtonUp(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, BOOL& /*bHandled*/) {
-	if (!m_bShowIPTools || m_bDragging || !m_pSliderMgr->OnMouseLButton(MouseEvent_BtnUp, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam))) {
-		EndDragging();
+	if (!m_bShowIPTools || m_bDragging || m_bCropping || !m_pSliderMgr->OnMouseLButton(MouseEvent_BtnUp, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam))) {
+		if (m_bDragging) {
+			EndDragging();
+		} else if (m_bCropping) {
+			EndCropping();
+		}
 	}
 	::ReleaseCapture();
 	return 0;
@@ -569,6 +589,8 @@ LRESULT CMainDlg::OnMouseMove(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, B
 	// Do dragging if needed or turn on/off image processing controls if in lower area of screen
 	if (m_bDragging) {
 		DoDragging(m_nMouseX, m_nMouseY);
+	} else if (m_bCropping) {
+		ShowCroppingRect(m_nMouseX, m_nMouseY);
 	} else if (!m_bShowIPTools) {
 		if (m_nMouseY > m_clientRect.bottom - m_pSliderMgr->SliderAreaHeight()) {
 			m_bShowIPTools = true;
@@ -728,6 +750,10 @@ LRESULT CMainDlg::OnKeyDown(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOO
 		if (bCtrl) {
 			OpenFile(false);
 		}
+	}  else if (wParam == 'R') {
+		if (bCtrl) {
+			ExecuteCommand(IDM_RELOAD);
+		}
 	} else if (wParam == 'X') {
 		if (bCtrl) {
 			ExecuteCommand(IDM_COPY_FULL);
@@ -879,6 +905,7 @@ LRESULT CMainDlg::OnContextMenu(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam,
 
 	if (m_pCurrentImage == NULL) {
 		::EnableMenuItem(hMenuTrackPopup, IDM_SAVE, MF_BYCOMMAND | MF_GRAYED);
+		::EnableMenuItem(hMenuTrackPopup, IDM_RELOAD, MF_BYCOMMAND | MF_GRAYED);
 		::EnableMenuItem(hMenuTrackPopup, IDM_COPY, MF_BYCOMMAND | MF_GRAYED);
 		::EnableMenuItem(hMenuTrackPopup, IDM_COPY_FULL, MF_BYCOMMAND | MF_GRAYED);
 		::EnableMenuItem(hMenuTrackPopup, IDM_ROTATE_90, MF_BYCOMMAND | MF_GRAYED);
@@ -894,6 +921,7 @@ LRESULT CMainDlg::OnContextMenu(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam,
 	}
 	if (m_bMovieMode) {
 		::EnableMenuItem(hMenuTrackPopup, IDM_SAVE, MF_BYCOMMAND | MF_GRAYED);
+		::EnableMenuItem(hMenuTrackPopup, IDM_RELOAD, MF_BYCOMMAND | MF_GRAYED);
 		::EnableMenuItem(hMenuTrackPopup, IDM_BATCH_COPY, MF_BYCOMMAND | MF_GRAYED);
 		::EnableMenuItem(hMenuTrackPopup, IDM_SAVE_PARAMETERS, MF_BYCOMMAND | MF_GRAYED);
 		::EnableMenuItem(hMenuTrackPopup, IDM_SAVE_PARAM_DB, MF_BYCOMMAND | MF_GRAYED);
@@ -964,6 +992,11 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 		case IDM_SAVE:
 			if (m_pCurrentImage != NULL) {
 				SaveImage();
+			}
+			break;
+		case IDM_RELOAD:
+			if (m_pCurrentImage != NULL) {
+				GotoImage(POS_Current);
 			}
 			break;
 		case IDM_COPY:
@@ -1258,23 +1291,12 @@ void CMainDlg::HandleUserCommands(uint32 virtualKeyCode) {
 						bReloadCurrent = m_pFileList->Current() == NULL; // needs "reload" in this case
 					}
 					if ((*iter)->NeedsReloadCurrent() && !(*iter)->MoveToNextAfterCommand()) {
-						m_pJPEGProvider->NotifyNotUsed(m_pCurrentImage);
-						m_pJPEGProvider->ClearRequest(m_pCurrentImage);
-						m_pCurrentImage = NULL;
 						bReloadCurrent = true;
 					}
 				}
 				if (bReloadCurrent) {
 					// Keep parameters when reloading
-					CProcessParams procParams = CreateProcessParams();
-					procParams.ProcFlags = SetProcessingFlag(procParams.ProcFlags, PFLAG_KeepParams, true);
-					m_pCurrentImage = m_pJPEGProvider->RequestJPEG(m_pFileList, CJPEGProvider::FORWARD, 
-						m_pFileList->Current(), procParams);
-					AfterNewImageLoaded(false);
-					if (!m_bUserZoom) {
-						m_dZoom = -1;
-					}
-					this->Invalidate(FALSE);
+					GotoImage(POS_Current, KEEP_PARAMETERS);
 				}
 			}
 			break;
@@ -1308,6 +1330,55 @@ void CMainDlg::EndDragging() {
 	}
 }
 
+void CMainDlg::StartCropping(int nX, int nY) {
+	float fX = (float)nX, fY = (float)nY;
+	ScreenToImage(fX, fY);
+	m_cropStart = CPoint((int)fX, (int) fY);
+	m_cropEnd = CPoint(INT_MIN, INT_MIN);
+	m_bCropping = true;
+}
+
+void CMainDlg::ShowCroppingRect(int nX, int nY) {
+	PaintCropRect(NULL);
+	float fX = (float)nX, fY = (float)nY;
+	ScreenToImage(fX, fY);
+	m_cropEnd = CPoint((int)fX, (int) fY);
+	PaintCropRect(NULL);
+}
+
+void CMainDlg::PaintCropRect(HDC hPaintDC) {
+	if (m_cropEnd != CPoint(INT_MIN, INT_MIN) && m_pCurrentImage != NULL) {
+		HDC hDC = (hPaintDC == NULL) ? this->GetDC() : hPaintDC;
+		HPEN hPen = ::CreatePen(PS_DOT, 1, RGB(255, 255, 255));
+		HGDIOBJ hOldPen = ::SelectObject(hDC, hPen);
+		::SelectObject(hDC, ::GetStockObject(HOLLOW_BRUSH));
+		::SetBkMode(hDC, TRANSPARENT);
+		int oldROP = ::SetROP2(hDC, R2_XORPEN);
+
+		float fXStart = (float)m_cropStart.x;
+		float fYStart = (float)m_cropStart.y + (m_pCurrentImage->GetFlagFlipped() ? 0.999f : 0);;
+		ImageToScreen(fXStart, fYStart);
+		float fXEnd = m_cropEnd.x + 0.999f;
+		float fYEnd = m_cropEnd.y + (m_pCurrentImage->GetFlagFlipped() ? 0 : 0.999f);
+		ImageToScreen(fXEnd, fYEnd);
+		::Rectangle(hDC, (int)fXStart, (int)fYStart, (int)fXEnd, (int)fYEnd);
+
+		::SelectObject(hDC, hOldPen);
+		::SetROP2(hDC, oldROP);
+		::DeleteObject(hPen);
+		if (hPaintDC == NULL) {
+			this->ReleaseDC(hDC);
+		}
+	}
+}
+
+void CMainDlg::EndCropping() {
+	if (m_bCropping) {
+		PaintCropRect(NULL);
+	}
+	m_bCropping = false;
+}
+
 void CMainDlg::GotoImage(EImagePosition ePos) {
 	GotoImage(ePos, 0);
 }
@@ -1322,11 +1393,23 @@ void CMainDlg::GotoImage(EImagePosition ePos, int nFlags) {
 		StopMovieMode();
 	}
 
-	MouseOff();
+	if (ePos != POS_Current) {
+		MouseOff();
+	}
 
-	InitParametersForNewImage();
+	if (nFlags & KEEP_PARAMETERS) {
+		if (!m_bUserZoom) {
+			m_dZoom = -1;
+		}
+	} else {
+		InitParametersForNewImage();
+	}
 	m_pJPEGProvider->NotifyNotUsed(m_pCurrentImage);
+	if (ePos == POS_Current) {
+		m_pJPEGProvider->ClearRequest(m_pCurrentImage);
+	}
 	m_pCurrentImage = NULL;
+	m_bCropping = false; // cancel any running crop
 	
 	CJPEGProvider::EReadAheadDirection eDirection = CJPEGProvider::FORWARD;
 	switch (ePos) {
@@ -1343,6 +1426,8 @@ void CMainDlg::GotoImage(EImagePosition ePos, int nFlags) {
 			m_pFileList = m_pFileList->Prev();
 			eDirection = CJPEGProvider::BACKWARD;
 			break;
+		case POS_Current:
+			break;
 	}
 
 	// do not perform a new image request if flagged
@@ -1350,9 +1435,13 @@ void CMainDlg::GotoImage(EImagePosition ePos, int nFlags) {
 		return;
 	}
 
+	CProcessParams procParams = CreateProcessParams();
+	if (nFlags & KEEP_PARAMETERS) {
+		procParams.ProcFlags = SetProcessingFlag(procParams.ProcFlags, PFLAG_KeepParams, true);
+	}
 	m_pCurrentImage = m_pJPEGProvider->RequestJPEG(m_pFileList, eDirection,  
-		m_pFileList->Current(), CreateProcessParams());
-	AfterNewImageLoaded(true);
+		m_pFileList->Current(), procParams);
+	AfterNewImageLoaded((nFlags & KEEP_PARAMETERS) == 0);
 
 	this->Invalidate(FALSE);
 	// this will force to wait until really redrawn, preventing to process images but do not show them
@@ -1898,4 +1987,35 @@ void CMainDlg::SaveParameters() {
 			CreateProcessingFlags(m_bHQResampling, m_bAutoContrast, 
 			m_bAutoContrastSection, m_bLDC, m_bKeepParams), m_pFileList->GetSorting(), m_eAutoZoomMode);
 	}
+}
+
+bool CMainDlg::ScreenToImage(float & fX, float & fY) {
+	if (m_pCurrentImage == NULL) {
+		return false;
+	}
+	int nOffsetX = (m_pCurrentImage->DIBWidth() - m_clientRect.Width())/2;
+	int nOffsetY = (m_pCurrentImage->DIBHeight() - m_clientRect.Height())/2;
+
+	fX += nOffsetX;
+	fY += nOffsetY;
+
+	m_pCurrentImage->DIBToOrig(fX, fY);
+
+	return true;
+}
+
+bool CMainDlg::ImageToScreen(float & fX, float & fY) {
+	if (m_pCurrentImage == NULL) {
+		return false;
+	}
+
+	m_pCurrentImage->OrigToDIB(fX, fY);
+
+	int nOffsetX = (m_pCurrentImage->DIBWidth() - m_clientRect.Width())/2;
+	int nOffsetY = (m_pCurrentImage->DIBHeight() - m_clientRect.Height())/2;
+
+	fX -= nOffsetX;
+	fY -= nOffsetY;
+
+	return true;
 }

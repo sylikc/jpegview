@@ -30,6 +30,7 @@
 #define IDM_STOP_MOVIE		1000
 #define IDM_OPEN			1100
 #define IDM_SAVE			1500
+#define IDM_RELOAD			1600
 #define IDM_COPY			2000
 #define IDM_COPY_FULL		2500
 #define IDM_BATCH_COPY		2600
@@ -73,11 +74,11 @@
 #define IDM_LAST			13000
 
 // these position must be changed if menu items are inserted
-#define SUBMENU_POS_NAVIGATION 11
-#define SUBMENU_POS_DISPLAY_ORDER 12
-#define SUBMENU_POS_MOVIE 13
-#define SUBMENU_POS_ZOOM 25
-#define SUBMENU_POS_AUTOZOOMMODE 26
+#define SUBMENU_POS_NAVIGATION 12
+#define SUBMENU_POS_DISPLAY_ORDER 13
+#define SUBMENU_POS_MOVIE 14
+#define SUBMENU_POS_ZOOM 26
+#define SUBMENU_POS_AUTOZOOMMODE 27
 
 // Next default values for new objects
 // 
