@@ -1,6 +1,7 @@
 #include "StdAfx.h"
 #include "ResizeFilter.h"
 #include <math.h>
+#include <stdlib.h>
 
 // We cannot enlarge to a factor above the number of kernels without artefacts
 #define NUM_KERNELS_RESIZE 32
@@ -35,14 +36,22 @@ static void NormalizeFilter(int16* pFilter, int nLen) {
 // Public
 //////////////////////////////////////////////////////////////////////////////////////
 
-CResizeFilter::CResizeFilter(int nSourceSize, int nTargetSize, double dSharpen) {
+CResizeFilter::CResizeFilter(int nSourceSize, int nTargetSize, double dSharpen, EFilterType eFilter, bool bXMM) {
 	m_nSourceSize = nSourceSize;
 	m_nTargetSize = nTargetSize;
 	m_dSharpen = min(0.5, max(0.0, dSharpen));
+	m_eFilter = eFilter;
 	m_bCalculated = false;
 	m_bXMMCalculated = false;
+	m_nRefCnt = 0;
 	memset(&m_kernels, 0, sizeof(m_kernels));
 	memset(&m_kernelsXMM, 0, sizeof(m_kernelsXMM));
+
+	if (bXMM) {
+		CalculateXMMFilterKernels();
+	} else {
+		CalculateFilterKernels();
+	}
 }
 
 CResizeFilter::~CResizeFilter(void) {
@@ -56,18 +65,26 @@ CResizeFilter::~CResizeFilter(void) {
 	}
 }
 
-ResizeFilterKernels CResizeFilter::CalculateFilterKernels(EFilterType eFilter) {
-	if (m_bCalculated) {
-		return m_kernels;
+bool CResizeFilter::ParametersMatch(int nSourceSize, int nTargetSize, double dSharpen, EFilterType eFilter, bool bXMM) {
+	if (nSourceSize == m_nSourceSize && nTargetSize == m_nTargetSize && abs(dSharpen - m_dSharpen) < 1e-6 &&
+		eFilter == m_eFilter && ((bXMM && m_bXMMCalculated) || !bXMM)) {
+			return true;
+	} else {
+		return false;
 	}
+}
 
-	CalculateFilterParams(eFilter);
+//////////////////////////////////////////////////////////////////////////////////////
+// Private
+//////////////////////////////////////////////////////////////////////////////////////
+
+void CResizeFilter::CalculateFilterKernels() {
+	CalculateFilterParams(m_eFilter);
 
 	m_bCalculated = true;
-	memset(&m_kernels, 0, sizeof(m_kernels));
-	if ((m_nTargetSize > m_nSourceSize && eFilter != Filter_Upsampling_Bicubic) || 
+	if ((m_nTargetSize > m_nSourceSize && m_eFilter != Filter_Upsampling_Bicubic) || 
 		m_nTargetSize == 0 || m_nSourceSize > 65535 || m_nTargetSize > 65535) {
-		return m_kernels;
+		return;
 	}
 
 	// Calculate the increment here as the number of increments in one pixel
@@ -75,7 +92,7 @@ ResizeFilterKernels CResizeFilter::CalculateFilterKernels(EFilterType eFilter) {
 	// The exact increment depends on the filter
 	uint32 nIncrementX;
 	uint32 nX;
-	if (eFilter == Filter_Upsampling_Bicubic) {
+	if (m_eFilter == Filter_Upsampling_Bicubic) {
 		nIncrementX = (uint32)((m_nSourceSize - 1) << 16)/(m_nTargetSize - 1);
 		nIncrementX = max(1, nIncrementX);
 		nX = 0;
@@ -97,7 +114,7 @@ ResizeFilterKernels CResizeFilter::CalculateFilterKernels(EFilterType eFilter) {
 		FilterKernel* pThisKernel = &(m_kernels.Kernels[i]);
 		pThisKernel->FilterLen = m_nFilterLen;
 		pThisKernel->FilterOffset = m_nFilterOffset;
-		int16* pKernel = GetFilter((uint16)nKFrac, eFilter);
+		int16* pKernel = GetFilter((uint16)nKFrac, m_eFilter);
 		memcpy(&(pThisKernel->Kernel), pKernel, m_nFilterLen*sizeof(int16));
 		nKFrac += nIncFrac;
 	}
@@ -108,7 +125,7 @@ ResizeFilterKernels CResizeFilter::CalculateFilterKernels(EFilterType eFilter) {
 		uint32 nXFrac = nX & 0xFFFF;
 		if ((int)nXInt < m_nFilterOffset) {
 			// left border handling, the (m_nFilterOffset - nXInt) left elements are cut from the filter
-			int16* pBorderFilter = GetFilter((uint16)nXFrac, eFilter) + (m_nFilterOffset - nXInt);
+			int16* pBorderFilter = GetFilter((uint16)nXFrac, m_eFilter) + (m_nFilterOffset - nXInt);
 			int nFilterLen = min(m_nTargetSize, m_nFilterLen - (m_nFilterOffset - nXInt));
 			NormalizeFilter(pBorderFilter, nFilterLen);
 			FilterKernel* pThisKernel = &(m_kernels.Kernels[nIdxBorderKernel]);
@@ -119,7 +136,7 @@ ResizeFilterKernels CResizeFilter::CalculateFilterKernels(EFilterType eFilter) {
 			nIdxBorderKernel++;
 		} else if ((int)nXInt - m_nFilterOffset + m_nFilterLen > m_nSourceSize) {
 			// right border handling
-			int16* pBorderFilter = GetFilter((uint16)nXFrac, eFilter);
+			int16* pBorderFilter = GetFilter((uint16)nXFrac, m_eFilter);
 			int nFilterLen =  min(m_nTargetSize, m_nSourceSize - nXInt + m_nFilterOffset);
 			NormalizeFilter(pBorderFilter, nFilterLen);
 			FilterKernel* pThisKernel = &(m_kernels.Kernels[nIdxBorderKernel]);
@@ -136,20 +153,13 @@ ResizeFilterKernels CResizeFilter::CalculateFilterKernels(EFilterType eFilter) {
 		nX += nIncrementX;
 	}
 	m_kernels.NumKernels = nIdxBorderKernel;
-
-	return m_kernels;
 }
 
-XMMResizeFilterKernels CResizeFilter::CalculateXMMFilterKernels(EFilterType eFilter) {
-	if (m_bXMMCalculated) {
-		return m_kernelsXMM;
-	}
-
+void CResizeFilter::CalculateXMMFilterKernels() {
 	m_bXMMCalculated = true;
-	CalculateFilterKernels(eFilter);
-	memset(&m_kernelsXMM, 0, sizeof(m_kernelsXMM));
+	CalculateFilterKernels();
 	if (m_nTargetSize == 0) {
-		return m_kernelsXMM;
+		return;
 	}
 
 	// Get size of kernel array - this is not trivial as the kernels have different sizes and
@@ -189,11 +199,7 @@ XMMResizeFilterKernels CResizeFilter::CalculateXMMFilterKernels(EFilterType eFil
 	}
 
 	delete[] pKernelStartAddress;
-
-	return m_kernelsXMM;
 }
-
-/////////////////////////////////////////////////////////////////////////////////////////////////
 
 void CResizeFilter::CalculateFilterParams(EFilterType eFilter) {
 	if (eFilter == Filter_Downsampling_Best_Quality) {
@@ -352,4 +358,86 @@ int16* CResizeFilter::GetFilter(uint16 nFrac, EFilterType eFilter) {
 		m_Filter[j] = 0;
 	}
 	return m_Filter;
+}
+
+//////////////////////////////////////////////////////////////////////////////////////
+// CResizeFilterCache
+//////////////////////////////////////////////////////////////////////////////////////
+
+CResizeFilterCache* CResizeFilterCache::sm_instance;
+
+CResizeFilterCache& CResizeFilterCache::This() {
+	if (sm_instance == NULL) {
+		sm_instance = new CResizeFilterCache();
+		atexit(&Delete);
+	}
+	return *sm_instance;
+}
+
+CResizeFilterCache::CResizeFilterCache() {
+	memset(&m_csList, 0, sizeof(CRITICAL_SECTION));
+	::InitializeCriticalSection(&m_csList);
+}
+
+CResizeFilterCache::~CResizeFilterCache() {
+	::DeleteCriticalSection(&m_csList);
+	std::list<CResizeFilter*>::iterator iter;
+	for (iter = m_filterList.begin( ); iter != m_filterList.end( ); iter++ ) {
+		delete (*iter);
+	}
+}
+
+const CResizeFilter& CResizeFilterCache::GetFilter(int nSourceSize, int nTargetSize, double dSharpen, EFilterType eFilter, bool bXMM) {
+	CResizeFilter* pMatchingFilter = NULL;
+
+	::EnterCriticalSection(&m_csList);
+	std::list<CResizeFilter*>::iterator iter;
+	for (iter = m_filterList.begin( ); iter != m_filterList.end( ); iter++ ) {
+		if ((*iter)->ParametersMatch(nSourceSize, nTargetSize, dSharpen, eFilter, bXMM)) {
+			pMatchingFilter = *iter;
+			break;
+		}
+	}
+
+	if (pMatchingFilter != NULL) {
+		// found matching filter, return it
+		pMatchingFilter->m_nRefCnt++;
+		m_filterList.remove(pMatchingFilter);
+		m_filterList.push_front(pMatchingFilter); // move to top in list
+		::LeaveCriticalSection(&m_csList);
+		return *pMatchingFilter;
+	}
+
+	// no matching filter found, create a new one
+	CResizeFilter* pNewFilter = new CResizeFilter(nSourceSize, nTargetSize, dSharpen, eFilter, bXMM);
+	pNewFilter->m_nRefCnt++;
+	m_filterList.push_front(pNewFilter);
+
+	::LeaveCriticalSection(&m_csList);
+
+	return *pNewFilter;
+}
+
+void CResizeFilterCache::ReleaseFilter(const CResizeFilter& filter) {
+	
+	const int MAX_SIZE = 4;
+
+	::EnterCriticalSection(&m_csList);
+	const_cast<CResizeFilter&>(filter).m_nRefCnt--;
+	if (m_filterList.size() > MAX_SIZE) {
+		// cache too large - try to free one entry
+		CResizeFilter* pElementTBRemoved = NULL;
+		std::list<CResizeFilter*>::reverse_iterator iter;
+		for (iter = m_filterList.rbegin( ); iter != m_filterList.rend( ); iter++ ) {
+			if ((*iter)->m_nRefCnt <= 0) {
+				pElementTBRemoved = *iter;
+				break;
+			}
+		}
+		if (pElementTBRemoved != NULL) {
+			m_filterList.remove(pElementTBRemoved);
+			delete pElementTBRemoved;
+		}
+	}
+	::LeaveCriticalSection(&m_csList);
 }

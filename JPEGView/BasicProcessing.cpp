@@ -576,15 +576,15 @@ void* CBasicProcessing::SampleUp_HQ(CSize fullTargetSize, CPoint fullTargetOffse
 	int nStartX = nIncrementX*fullTargetOffset.x;
 	int nStartY = nIncrementY*fullTargetOffset.y - 65536*nFirstY;
 
-	CResizeFilter filterX(nSourceWidth, fullTargetSize.cx, 0.0);
-	ResizeFilterKernels kernelsX = filterX.CalculateFilterKernels(Filter_Upsampling_Bicubic);
+	CResizeFilter filterX(nSourceWidth, fullTargetSize.cx, 0.0, Filter_Upsampling_Bicubic, false);
+	const ResizeFilterKernels& kernelsX = filterX.GetFilterKernels();
 
 	uint8* pTemp = ApplyFilter(nSourceWidth, nTempTargetHeight, nTempTargetWidth,
 		nChannels, nStartX, nFirstY, nIncrementX,
 		kernelsX, nFilterOffsetX, (const uint8*) pIJLPixels);
 
-	CResizeFilter filterY(nSourceHeight, fullTargetSize.cy, 0.0);
-	ResizeFilterKernels kernelsY = filterY.CalculateFilterKernels(Filter_Upsampling_Bicubic);
+	CResizeFilter filterY(nSourceHeight, fullTargetSize.cy, 0.0, Filter_Upsampling_Bicubic, false);
+	const ResizeFilterKernels& kernelsY = filterY.GetFilterKernels();
 
 	uint8* pDIB = ApplyFilter(nTempTargetWidth, nTargetHeight, nTargetWidth,
 			4, nStartY, 0, nIncrementY,
@@ -611,10 +611,10 @@ void* CBasicProcessing::SampleDown_HQ(CSize fullTargetSize, CPoint fullTargetOff
 	if (pIJLPixels == NULL) {
 		return NULL;
 	}
-	CResizeFilter filterX(sourceSize.cx, fullTargetSize.cx, dSharpen);
-	ResizeFilterKernels kernelsX = filterX.CalculateFilterKernels(eFilter);
-	CResizeFilter filterY(sourceSize.cy, fullTargetSize.cy, dSharpen);
-	ResizeFilterKernels kernelsY = filterY.CalculateFilterKernels(eFilter);
+	CResizeFilter filterX(sourceSize.cx, fullTargetSize.cx, dSharpen, eFilter, false);
+	const ResizeFilterKernels& kernelsX = filterX.GetFilterKernels();
+	CResizeFilter filterY(sourceSize.cy, fullTargetSize.cy, dSharpen, eFilter, false);
+	const ResizeFilterKernels& kernelsY = filterY.GetFilterKernels();
 
 	uint32 nIncrementX = (uint32)(sourceSize.cx << 16)/fullTargetSize.cx + 1;
 	uint32 nIncrementY = (uint32)(sourceSize.cy << 16)/fullTargetSize.cy + 1;
@@ -1111,10 +1111,10 @@ void* CBasicProcessing::SampleDown_HQ_SSE_MMX(CSize fullTargetSize, CPoint fullT
 	if (pIJLPixels == NULL) {
 		return NULL;
 	}
- 	CResizeFilter filterY(sourceSize.cy, fullTargetSize.cy, dSharpen);
-	XMMResizeFilterKernels kernelsY = filterY.CalculateXMMFilterKernels(eFilter);
-	CResizeFilter filterX(sourceSize.cx, fullTargetSize.cx, dSharpen);
-	XMMResizeFilterKernels kernelsX = filterX.CalculateXMMFilterKernels(eFilter);
+ 	CAutoXMMFilter filterY(sourceSize.cy, fullTargetSize.cy, dSharpen, eFilter);
+	const XMMResizeFilterKernels& kernelsY = filterY.Kernels();
+	CAutoXMMFilter filterX(sourceSize.cx, fullTargetSize.cx, dSharpen, eFilter);
+	const XMMResizeFilterKernels& kernelsX = filterX.Kernels();
 
 	uint32 nIncrementX = (uint32)(sourceSize.cx << 16)/fullTargetSize.cx + 1;
 	uint32 nIncrementY = (uint32)(sourceSize.cy << 16)/fullTargetSize.cy + 1;
@@ -1189,11 +1189,11 @@ void* CBasicProcessing::SampleUp_HQ_SSE_MMX(CSize fullTargetSize, CPoint fullTar
 	int nStartX = nIncrementX*fullTargetOffset.x - 65536*nFirstX;
 	int nStartY = nIncrementY*fullTargetOffset.y - 65536*nFirstY;
 
-	CResizeFilter filterY(nSourceHeight, fullTargetSize.cy, 0.0);
-	XMMResizeFilterKernels kernelsY = filterY.CalculateXMMFilterKernels(Filter_Upsampling_Bicubic);
+	CAutoXMMFilter filterY(nSourceHeight, fullTargetSize.cy, 0.0, Filter_Upsampling_Bicubic);
+	const XMMResizeFilterKernels& kernelsY = filterY.Kernels();
 
-	CResizeFilter filterX(nSourceWidth, fullTargetSize.cx, 0.0);
-	XMMResizeFilterKernels kernelsX = filterX.CalculateXMMFilterKernels(Filter_Upsampling_Bicubic);
+	CAutoXMMFilter filterX(nSourceWidth, fullTargetSize.cx, 0.0, Filter_Upsampling_Bicubic);
+	const XMMResizeFilterKernels& kernelsX = filterX.Kernels();
 
 	// Resize Y
 	CXMMImage* pImage1 = new CXMMImage(nSourceWidth, nSourceHeight, nFirstX, nLastX, nFirstY, nLastY, pIJLPixels, nChannels);
