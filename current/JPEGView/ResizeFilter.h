@@ -44,21 +44,24 @@ public:
 	};
 
 	// dSharpen must be in [0..0.5]. It is ignored for upsampling kernels.
-	CResizeFilter(int nSourceSize, int nTargetSize, double dSharpen);
-	~CResizeFilter(void);
+	CResizeFilter(int nSourceSize, int nTargetSize, double dSharpen, EFilterType eFilter, bool bXMM);
+	~CResizeFilter();
 
-	// Calulates a set of kernels for resizing from the source size to the target size.
+	// Gets a set of kernels for resizing from the source size to the target size.
 	// The returned filter must not be deleted by the caller and is only valid during the
 	// lifetime of the CResizeFilter object that generated it.
-	ResizeFilterKernels CalculateFilterKernels(EFilterType eFilter);
+	const ResizeFilterKernels& GetFilterKernels() const { return m_kernels; }
 
 	// As above, returns the structure suitable for XMM processing with aligned memory.
-	// Lifetime: see above
-	XMMResizeFilterKernels CalculateXMMFilterKernels(EFilterType eFilter);
+	// Object must have been created with XMM support
+	const XMMResizeFilterKernels& GetXMMFilterKernels() const { assert(m_bXMMCalculated); return m_kernelsXMM; }
 
 private:
+	friend class CResizeFilterCache;
+
 	int m_nSourceSize, m_nTargetSize;
 	double m_dSharpen;
+	EFilterType m_eFilter;
 	double m_dMultX;
 	int m_nFilterLen;
 	int m_nFilterOffset;
@@ -67,9 +70,65 @@ private:
 	XMMResizeFilterKernels m_kernelsXMM;
 	bool m_bCalculated;
 	bool m_bXMMCalculated;
+	int m_nRefCnt;
+
+	void CalculateFilterKernels();
+	void CalculateXMMFilterKernels();
+
+	// Checks if this filter matches the given parameters
+	bool ParametersMatch(int nSourceSize, int nTargetSize, double dSharpen, EFilterType eFilter, bool bXMM);
 
 	void CalculateFilterParams(EFilterType eFilter);
 	double EvaluateKernel(double dX, EFilterType eFilter);
 	double EvaluateCubicFilterKernel(double dFrac, int nKernelElement);
 	int16* GetFilter(uint16 nFrac, EFilterType eFilter);
+};
+
+// Caches the last used resize filters (LRU cache)
+class CResizeFilterCache
+{
+public:
+	// Singleton instance
+	static CResizeFilterCache& This();
+
+	// Gets filter
+	const CResizeFilter& GetFilter(int nSourceSize, int nTargetSize, double dSharpen, EFilterType eFilter, bool bXMM);
+	// Release filter
+	void ReleaseFilter(const CResizeFilter& filter);
+
+private:
+	static CResizeFilterCache* sm_instance;
+
+	CRITICAL_SECTION m_csList; // access to list must be MT save
+	std::list<CResizeFilter*> m_filterList;
+
+	CResizeFilterCache();
+	~CResizeFilterCache();
+	static void Delete() { delete sm_instance; }
+};
+
+// Helper class for accessing filters from filter cache, automatically releasing the filter when object goes out of scope
+class CAutoFilter {
+public:
+	CAutoFilter(int nSourceSize, int nTargetSize, double dSharpen, EFilterType eFilter) 
+		: m_filter(CResizeFilterCache::This().GetFilter(nSourceSize, nTargetSize, dSharpen, eFilter, false)) {}
+	
+	const ResizeFilterKernels& Kernels() { return m_filter.GetFilterKernels(); }
+	
+	~CAutoFilter() { CResizeFilterCache::This().ReleaseFilter(m_filter); }
+private:
+	const CResizeFilter& m_filter;
+};
+
+// Helper class for accessing filters from filter cache, automatically releasing the filter when object goes out of scope
+class CAutoXMMFilter {
+public:
+	CAutoXMMFilter(int nSourceSize, int nTargetSize, double dSharpen, EFilterType eFilter) 
+		: m_filter(CResizeFilterCache::This().GetFilter(nSourceSize, nTargetSize, dSharpen, eFilter, true)) {}
+	
+	const XMMResizeFilterKernels& Kernels() { return m_filter.GetXMMFilterKernels(); }
+	
+	~CAutoXMMFilter() { CResizeFilterCache::This().ReleaseFilter(m_filter); }
+private:
+	const CResizeFilter& m_filter;
 };
