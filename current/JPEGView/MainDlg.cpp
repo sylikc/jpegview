@@ -39,8 +39,10 @@ static const int READ_AHEAD_BUFFERS = 2; // number of readahead buffers to use (
 static const int SLIDESHOW_TIMER_EVENT_ID = 1; // Slideshow timer ID
 static const int ZOOM_TIMER_EVENT_ID = 2; // Zoom refinement timer ID
 static const int ZOOM_TEXT_TIMER_EVENT_ID = 3; // Zoom label timer ID
+static const int AUTOSCROLL_TIMER_EVENT_ID = 4; // when cropping, auto scroll timer ID
 static const int ZOOM_TIMEOUT = 200; // refinement done after this many milliseconds
 static const int ZOOM_TEXT_TIMEOUT = 1000; // zoom label disappears after this many milliseconds
+static const int AUTOSCROLL_TIMEOUT = 20; // autoscroll time in ms
 
 static const int DARKEN_HIGHLIGHTS = 0; // used in AdjustLDC() call
 static const int BRIGHTEN_SHADOWS = 1; // used in AdjustLDC() call
@@ -500,6 +502,7 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 		helpDisplay.AddLineInfo(_T("+/-"), buff5, CNLS::GetString(_T("Zoom in/Zoom out (also Ctrl+up/down)")));
 		helpDisplay.AddLine(CNLS::GetString(_T("Mouse wheel")), CNLS::GetString(_T("Zoom in/out image")));
 		helpDisplay.AddLine(CNLS::GetString(_T("Left mouse & drag")), CNLS::GetString(_T("Pan image")));
+		helpDisplay.AddLine(CNLS::GetString(_T("Ctrl + L mouse")), CNLS::GetString(_T("Crop image")));
 		helpDisplay.AddLine(CNLS::GetString(_T("Fwd mouse button")), CNLS::GetString(_T("Next image")));
 		helpDisplay.AddLine(CNLS::GetString(_T("Back mouse button")), CNLS::GetString(_T("Previous image")));
 		std::list<CUserCommand*>::iterator iter;
@@ -512,6 +515,7 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 		helpDisplay.Show(CRect(CPoint(0, 0), CSize(m_monitorRect.Width(), m_monitorRect.Height())));
 	} else if (m_bCropping) {
 		PaintCropRect(dc.m_hDC);
+		ShowCroppingRect(m_nMouseX, m_nMouseY, dc.m_hDC);
 	}
 
 	return 0;
@@ -590,7 +594,10 @@ LRESULT CMainDlg::OnMouseMove(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, B
 	if (m_bDragging) {
 		DoDragging(m_nMouseX, m_nMouseY);
 	} else if (m_bCropping) {
-		ShowCroppingRect(m_nMouseX, m_nMouseY);
+		ShowCroppingRect(m_nMouseX, m_nMouseY, NULL);
+		if (m_nMouseX >= m_clientRect.Width() - 1 || m_nMouseX <= 0 || m_nMouseY >= m_clientRect.Height() - 1 || m_nMouseY <= 0 ) {
+			::SetTimer(this->m_hWnd, AUTOSCROLL_TIMER_EVENT_ID, AUTOSCROLL_TIMEOUT, NULL);
+		}
 	} else if (!m_bShowIPTools) {
 		if (m_nMouseY > m_clientRect.bottom - m_pSliderMgr->SliderAreaHeight()) {
 			m_bShowIPTools = true;
@@ -838,6 +845,27 @@ LRESULT CMainDlg::OnTimer(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOOL&
 		this->InvalidateRect(CRect(m_clientRect.right - Scale(ZOOM_TEXT_RECT_WIDTH + ZOOM_TEXT_RECT_OFFSET), 
 			m_clientRect.bottom - Scale(ZOOM_TEXT_RECT_HEIGHT + ZOOM_TEXT_RECT_OFFSET), 
 			m_clientRect.right - Scale(ZOOM_TEXT_RECT_OFFSET), m_clientRect.bottom - Scale(ZOOM_TEXT_RECT_OFFSET)), FALSE);
+	} else if (wParam == AUTOSCROLL_TIMER_EVENT_ID) {
+		if (m_nMouseX < m_clientRect.Width() - 1 && m_nMouseX > 0 && m_nMouseY < m_clientRect.Height() - 1 && m_nMouseY > 0 ) {
+			::KillTimer(this->m_hWnd, AUTOSCROLL_TIMER_EVENT_ID);
+		}
+		const int PAN_DIST = 25;
+		int nPanX = 0, nPanY = 0;
+		if (m_nMouseX == 0) {
+			nPanX = PAN_DIST;
+		}
+		if (m_nMouseY == 0) {
+			nPanY = PAN_DIST;
+		}
+		if (m_nMouseX == m_clientRect.Width() - 1) {
+			nPanX = -PAN_DIST;
+		}
+		if (m_nMouseY == m_clientRect.Height() - 1) {
+			nPanY = -PAN_DIST;
+		}
+		if (m_bCropping) {
+			this->PerformPan(nPanX, nPanY);
+		}
 	}
 	return 0;
 }
@@ -1338,12 +1366,12 @@ void CMainDlg::StartCropping(int nX, int nY) {
 	m_bCropping = true;
 }
 
-void CMainDlg::ShowCroppingRect(int nX, int nY) {
-	PaintCropRect(NULL);
+void CMainDlg::ShowCroppingRect(int nX, int nY, HDC hPaintDC) {
+	PaintCropRect(hPaintDC);
 	float fX = (float)nX, fY = (float)nY;
 	ScreenToImage(fX, fY);
 	m_cropEnd = CPoint((int)fX, (int) fY);
-	PaintCropRect(NULL);
+	PaintCropRect(hPaintDC);
 }
 
 void CMainDlg::PaintCropRect(HDC hPaintDC) {
@@ -1373,6 +1401,20 @@ void CMainDlg::PaintCropRect(HDC hPaintDC) {
 }
 
 void CMainDlg::EndCropping() {
+	// Display the crop menu
+	HMENU hMenu = ::LoadMenu(_Module.m_hInst, _T("CropMenu"));
+	if (hMenu != NULL) {
+		HMENU hMenuTrackPopup = ::GetSubMenu(hMenu, 0);
+		TranslateMenu(hMenuTrackPopup);
+
+		m_bInTrackPopupMenu = true;
+		int nMenuCmd = ::TrackPopupMenu(hMenuTrackPopup, TPM_LEFTALIGN | TPM_RIGHTBUTTON | TPM_NONOTIFY | TPM_RETURNCMD, 
+			m_nMouseX, m_nMouseY, 0, this->m_hWnd, NULL);
+		m_bInTrackPopupMenu = false;
+
+		::DestroyMenu(hMenu);
+	}
+
 	if (m_bCropping) {
 		PaintCropRect(NULL);
 	}

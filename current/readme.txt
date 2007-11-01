@@ -30,6 +30,8 @@ New features:
 - File open... always uses tumbnail view (not only in my picture directory)
 - Copy/rename dialog: New placeholder %n for number from original file name
 - Panning is faster and uses high quality resampling mode during pan
+- New command to reload current image
+- Crop image section or zoom to image section with CTRL-Left mouse and dragging
 
 [1.0.13]
 

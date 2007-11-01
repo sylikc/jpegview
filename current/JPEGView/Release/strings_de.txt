@@ -60,11 +60,13 @@ Zoom 1:1 (100 %)	Zoom 1:1 (100 %)
 Zoom in/Zoom out (also Ctrl+up/down)	Bild vergössern/verkleinern (auch mit Ctrl+Pfeil nach oben/unten)
 Zoom in/out image	Bild vergössern/verkleinern (Zoom)
 Pan image	Bildausschnitt verschieben (Pan)
+Crop image	Bildausschnitt freistellen (Crop)
 Next image	Nächstes Bild anzeigen
 Previous image	Voriges Bild anzeigen
 up/down	Pfeil oben/unten
 Mouse wheel	Mausrad
 Left mouse & drag	L Maustaste & ziehen
+Ctrl + L mouse	Ctrl + L Maustaste
 Fwd mouse button	Vorwärts Maustaste
 Back mouse button	Zurück Maustaste
 Delete current file on disk permanently	Aktuelle Bilddatei permanent löschen
@@ -171,3 +173,6 @@ renamed	umbenannt
 Continue rename/copy?	Umbenennen/Kopieren fortsetzen?
 Error during rename/copy	Fehler beim Umbenennen/Kopieren
 %d file(s) renamed, %d file(s) copied, %d folder(s) created	%d Datei(en) umbenannt, %d Datei(en) kopiert, %d Ordner erstellt
+Crop Selection	Selektion freistellen
+Copy Selection to Clipboard	Selektion in Zwischenablage kopieren
+Zoom to Selection	Auf Selektion einzoomen
