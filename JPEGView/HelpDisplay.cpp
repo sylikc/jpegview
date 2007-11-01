@@ -3,10 +3,10 @@
 #include "Helpers.h"
 #include "NLS.h"
 
-static const COLORREF colorTitle = RGB(0, 255, 255);
-static const COLORREF colorLines = RGB(0, 255, 0);
-static const COLORREF colorInfo = RGB(160, 255, 160);
-static const COLORREF colorInfoLight = RGB(255, 255, 255);
+static const COLORREF colorTitle = RGB(0, 0, 255);
+static const COLORREF colorLines = RGB(0, 0, 0);
+static const COLORREF colorInfo = RGB(0, 128, 0);
+static const COLORREF colorInfoLight = RGB(160, 0, 0);
 
 CHelpDisplay::CHelpDisplay(CPaintDC & dc) : m_dc(dc) {
 	m_fScaling = Helpers::ScreenScaling;
@@ -59,14 +59,19 @@ void CHelpDisplay::Show(const CRect & screenRect) {
 		}
 	}
 	// Paint
+	CBrush brushBk1; brushBk1.CreateSolidBrush(::GetSysColor(COLOR_3DFACE) - 0x00060606);
 	CRect fullRect(CPoint(screenRect.Width()/2 - nMaxSizeX/2 - 5, screenRect.Height()/2 - nSizeY/2 - 5),
 		CSize(nMaxSizeX + 10, nSizeY + 10));
-	m_dc.FillRect(&fullRect, (HBRUSH)::GetStockObject(BLACK_BRUSH));
-	m_dc.FrameRect(&fullRect, (HBRUSH)::GetStockObject(GRAY_BRUSH));
+	m_dc.FillRect(&fullRect, ::GetSysColorBrush(COLOR_3DFACE));
+	m_dc.FrameRect(&fullRect, ::GetSysColorBrush(COLOR_3DSHADOW));
 	m_dc.SetBkMode(TRANSPARENT);
 	int nStartX = fullRect.left + 5;
 	int nStartY = fullRect.top + 5;
+	int nI = 0;
 	for (iter = m_lines.begin( ); iter != m_lines.end( ); iter++ ) {
+		if ((nI++ & 1) == 0 && nI > 2) {
+			m_dc.FillRect(CRect(fullRect.left + 1, nStartY, fullRect.right - 1, nStartY + nIncY), brushBk1);
+		}
 		m_dc.SetTextColor(iter->Color);
 		m_dc.TextOut(nStartX, nStartY, iter->Key, _tcslen(iter->Key));
 		if (iter->Info != NULL) {

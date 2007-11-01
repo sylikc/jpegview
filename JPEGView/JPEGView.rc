@@ -202,6 +202,17 @@ BEGIN
  
 END 
 
+CropMenu MENU 
+BEGIN 
+  POPUP "CropMenu" 
+    BEGIN
+	  MENUITEM "Crop Selection",				IDM_CROP_SEL
+	  MENUITEM "Copy Selection to Clipboard",	IDM_COPY_SEL
+	  MENUITEM SEPARATOR
+	  MENUITEM "Zoom to Selection",				IDM_ZOOM_SEL
+    END 
+END 
+
 /////////////////////////////////////////////////////////////////////////////
 //
 // Version

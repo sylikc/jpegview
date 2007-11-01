@@ -174,7 +174,7 @@ private:
 	void DoDragging(int nX, int nY);
 	void EndDragging();
 	void StartCropping(int nX, int nY);
-	void ShowCroppingRect(int nX, int nY);
+	void ShowCroppingRect(int nX, int nY, HDC hPaintDC);
 	void EndCropping();
 	void PaintCropRect(HDC hPaintDC);
 	void GotoImage(EImagePosition ePos);

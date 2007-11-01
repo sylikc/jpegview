@@ -73,6 +73,10 @@
 #define IDM_EXIT			13000
 #define IDM_LAST			13000
 
+#define IDM_CROP_SEL		1000
+#define IDM_COPY_SEL		2000
+#define IDM_ZOOM_SEL		3000
+
 // these position must be changed if menu items are inserted
 #define SUBMENU_POS_NAVIGATION 12
 #define SUBMENU_POS_DISPLAY_ORDER 13
