@@ -53,6 +53,9 @@ namespace Helpers {
 	// Gets the image size to be used when fitting the image to screen according to the auto zoom mode given
 	CSize GetImageRect(int nWidth, int nHeight, int nScreenWidth, int nScreenHeight, EAutoZoomMode eAutoZoomMode);
 
+	// Gets the parameters for zooming the given zoom rectangle in an image of given size to a given window size.
+	void GetZoomParameters(float & fZoom, CPoint & offsets, CSize imageSize, CSize windowSize, CRect zoomRect);
+
 	// Tests if the CPU supports SSE or MMX(2)
 	CPUType ProbeCPU(void);
 

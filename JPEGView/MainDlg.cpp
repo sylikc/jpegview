@@ -188,6 +188,7 @@ CMainDlg::CMainDlg() {
 	m_bShowIPTools = false;
 	m_storedWindowPlacement.length = sizeof(WINDOWPLACEMENT);
 	m_pSliderMgr = NULL;
+	m_bPasteFromClipboardFailed = false;
 
 	m_cropStart = CPoint(INT_MIN, INT_MIN);
 	m_cropEnd = CPoint(INT_MIN, INT_MIN);
@@ -371,9 +372,13 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 	dc.SetBkColor(RGB(0, 0, 0));
 
 	// Display file name if enabled
-	if (m_bShowFileName && m_pFileList->Current() != NULL) {
+	if (m_bShowFileName) {
 		CString sFileName;
-		sFileName.Format(_T("[%d/%d]  %s"), m_pFileList->CurrentIndex() + 1, m_pFileList->Size(), m_pFileList->Current());
+		if (m_pCurrentImage != NULL && m_pCurrentImage->IsClipboardImage()) {
+			sFileName = CurrentFileName(false);
+		} else if (m_pFileList->Current() != NULL) {
+			sFileName.Format(_T("[%d/%d]  %s"), m_pFileList->CurrentIndex() + 1, m_pFileList->Size(), m_pFileList->Current());
+		}
 		DrawTextBordered(dc, sFileName, CRect(Scale(2), Scale(2), m_clientRect.right, Scale(30)), DT_LEFT); 
 	}
 
@@ -388,9 +393,13 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 		const int BUF_LEN = 512;
 		TCHAR buff[BUF_LEN];
 		CRect rectText(0, m_clientRect.Height()/2 - Scale(40), m_clientRect.Width(), m_clientRect.Height());
-		LPCTSTR sCurrentFile = m_pFileList->Current();
+		LPCTSTR sCurrentFile = CurrentFileName(false);
 		if (sCurrentFile != NULL) {
-			_stprintf_s(buff, BUF_LEN, CNLS::GetString(_T("The file '%s' could not be read!")), sCurrentFile);
+			if (m_bPasteFromClipboardFailed) {
+				_tcsncpy(buff, CNLS::GetString(_T("Pasting image from clipboard failed!")), BUF_LEN);
+			} else {
+				_stprintf_s(buff, BUF_LEN, CNLS::GetString(_T("The file '%s' could not be read!")), sCurrentFile);
+			}
 			dc.DrawText(buff, -1, &rectText, DT_CENTER | DT_WORDBREAK);
 		} else {
 			if (m_pFileList->IsSlideShowList()) {
@@ -447,9 +456,8 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 	if (m_bShowHelp) {
 		CHelpDisplay helpDisplay(dc);
 		helpDisplay.AddTitle(CNLS::GetString(_T("JPEGView Help")));
-		if (m_pFileList->Current() != NULL && m_pCurrentImage != NULL) {
-			LPCTSTR sCurrent = m_pFileList->Current();
-			LPCTSTR sTitle = m_pFileList->CurrentFileTitle();
+		LPCTSTR sTitle = CurrentFileName(true);
+		if (sTitle != NULL && m_pCurrentImage != NULL) {
 			double fMPix = double(m_pCurrentImage->OrigWidth() * m_pCurrentImage->OrigHeight())/(1000000);
 			TCHAR buff[256];
 			_stprintf_s(buff, 256, _T("%s (%d x %d   %.1f MPixel)"), sTitle, m_pCurrentImage->OrigWidth(), m_pCurrentImage->OrigHeight(), fMPix);
@@ -765,15 +773,20 @@ LRESULT CMainDlg::OnKeyDown(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOO
 		if (bCtrl) {
 			ExecuteCommand(IDM_COPY_FULL);
 		}
-	} else if ((wParam == VK_DOWN || wParam == VK_UP || wParam == VK_RIGHT || wParam == VK_LEFT) && bShift) {
+	} else if (wParam == 'V') {
+		if (bCtrl) {
+			ExecuteCommand(IDM_PASTE);
+		}
+	}
+	else if ((wParam == VK_DOWN || wParam == VK_UP || wParam == VK_RIGHT || wParam == VK_LEFT) && bShift) {
 		if (wParam == VK_DOWN) {
-			PerformPan(0, -PAN_STEP);
+			PerformPan(0, -PAN_STEP, false);
 		} else if (wParam == VK_UP) {
-			PerformPan(0, PAN_STEP);
+			PerformPan(0, PAN_STEP, false);
 		} else if (wParam == VK_RIGHT) {
-			PerformPan(-PAN_STEP, 0);
+			PerformPan(-PAN_STEP, 0, false);
 		} else {
-			PerformPan(PAN_STEP, 0);
+			PerformPan(PAN_STEP, 0, false);
 		}
 	} else {
 		// look if any of the user commands wants to handle this key
@@ -851,20 +864,20 @@ LRESULT CMainDlg::OnTimer(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOOL&
 		}
 		const int PAN_DIST = 25;
 		int nPanX = 0, nPanY = 0;
-		if (m_nMouseX == 0) {
+		if (m_nMouseX <= 0) {
 			nPanX = PAN_DIST;
 		}
-		if (m_nMouseY == 0) {
+		if (m_nMouseY <= 0) {
 			nPanY = PAN_DIST;
 		}
-		if (m_nMouseX == m_clientRect.Width() - 1) {
+		if (m_nMouseX >= m_clientRect.Width() - 1) {
 			nPanX = -PAN_DIST;
 		}
-		if (m_nMouseY == m_clientRect.Height() - 1) {
+		if (m_nMouseY >= m_clientRect.Height() - 1) {
 			nPanY = -PAN_DIST;
 		}
 		if (m_bCropping) {
-			this->PerformPan(nPanX, nPanY);
+			this->PerformPan(nPanX, nPanY, false);
 		}
 	}
 	return 0;
@@ -931,6 +944,9 @@ LRESULT CMainDlg::OnContextMenu(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam,
 	HMENU hMenuAutoZoomMode = ::GetSubMenu(hMenuTrackPopup, SUBMENU_POS_AUTOZOOMMODE);
 	::CheckMenuItem(hMenuAutoZoomMode,  m_eAutoZoomMode*10 + IDM_AUTO_ZOOM_FIT_NO_ZOOM, MF_CHECKED);
 
+	bool bCanPaste = ::IsClipboardFormatAvailable(CF_DIB);
+	if (!bCanPaste) ::EnableMenuItem(hMenuTrackPopup, IDM_PASTE, MF_BYCOMMAND | MF_GRAYED);
+
 	if (m_pCurrentImage == NULL) {
 		::EnableMenuItem(hMenuTrackPopup, IDM_SAVE, MF_BYCOMMAND | MF_GRAYED);
 		::EnableMenuItem(hMenuTrackPopup, IDM_RELOAD, MF_BYCOMMAND | MF_GRAYED);
@@ -942,9 +958,10 @@ LRESULT CMainDlg::OnContextMenu(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam,
 		::EnableMenuItem(hMenuTrackPopup, IDM_CLEAR_PARAM_DB, MF_BYCOMMAND | MF_GRAYED);
 		::EnableMenuItem(hMenuTrackPopup, SUBMENU_POS_ZOOM, MF_BYPOSITION  | MF_GRAYED);
 	} else {
-		if (m_bKeepParams || CParameterDB::This().FindEntry(m_pCurrentImage->GetPixelHash()) == NULL)
+		if (m_bKeepParams || m_pCurrentImage->IsClipboardImage() ||
+			CParameterDB::This().FindEntry(m_pCurrentImage->GetPixelHash()) == NULL)
 			::EnableMenuItem(hMenuTrackPopup, IDM_CLEAR_PARAM_DB, MF_BYCOMMAND | MF_GRAYED);
-		if (m_bKeepParams)
+		if (m_bKeepParams || m_pCurrentImage->IsClipboardImage())
 			::EnableMenuItem(hMenuTrackPopup, IDM_SAVE_PARAM_DB, MF_BYCOMMAND | MF_GRAYED);
 	}
 	if (m_bMovieMode) {
@@ -1023,9 +1040,7 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 			}
 			break;
 		case IDM_RELOAD:
-			if (m_pCurrentImage != NULL) {
-				GotoImage(POS_Current);
-			}
+			GotoImage(POS_Current);
 			break;
 		case IDM_COPY:
 			if (m_pCurrentImage != NULL) {
@@ -1037,6 +1052,11 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 				CClipboard::CopyFullImageToClipboard(this->m_hWnd, m_pCurrentImage, *m_pImageProcParams, 
 					CreateProcessingFlags(m_bHQResampling, m_bAutoContrast, m_bAutoContrastSection, m_bLDC, false));
 				this->Invalidate(FALSE);
+			}
+			break;
+		case IDM_PASTE:
+			if (::IsClipboardFormatAvailable(CF_DIB)) {
+				GotoImage(POS_Clipboard);
 			}
 			break;
 		case IDM_BATCH_COPY:
@@ -1090,7 +1110,7 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 				CParameterDBEntry newEntry;
 				EProcessingFlags procFlags = CreateProcessingFlags(m_bHQResampling, m_bAutoContrast, false, m_bLDC, false);
 				newEntry.InitFromProcessParams(*m_pImageProcParams, procFlags, m_nRotation);
-				if (m_bUserZoom || m_bUserPan) {
+				if ((m_bUserZoom || m_bUserPan) && !m_pCurrentImage->IsCropped()) {
 					newEntry.InitGeometricParams(CSize(m_pCurrentImage->OrigWidth(), m_pCurrentImage->OrigHeight()),
 						m_dZoom, CPoint(m_nOffsetX, m_nOffsetY), CSize(m_clientRect.Width(), m_clientRect.Height()));
 				}
@@ -1211,6 +1231,28 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 		case IDM_EXIT:
 			this->EndDialog(0);
 			break;
+		case IDM_ZOOM_SEL:
+			ZoomToSelection();
+			break;
+		case IDM_CROP_SEL:
+			if (m_pCurrentImage != NULL) {
+				CRect cropRect(max(0, min(m_cropStart.x, m_cropEnd.x)), max(0, min(m_cropStart.y, m_cropEnd.y)),
+					min(m_pCurrentImage->OrigWidth(), max(m_cropStart.x, m_cropEnd.x) + 1), min(m_pCurrentImage->OrigHeight(), max(m_cropStart.y, m_cropEnd.y) + 1));
+				m_pCurrentImage->Crop(cropRect);
+				this->Invalidate(FALSE);
+			}
+			break;
+		case IDM_COPY_SEL:
+			if (m_pCurrentImage != NULL) {
+				CRect cropRect(min(m_cropStart.x, m_cropEnd.x), min(m_cropStart.y, m_cropEnd.y),
+					max(m_cropStart.x, m_cropEnd.x) + 1, max(m_cropStart.y, m_cropEnd.y) + 1);
+
+				CClipboard::CopyFullImageToClipboard(this->m_hWnd, m_pCurrentImage, *m_pImageProcParams, 
+					CreateProcessingFlags(m_bHQResampling, m_bAutoContrast, m_bAutoContrastSection, m_bLDC, false),
+					cropRect);
+				this->Invalidate(FALSE);
+			}
+			break;
 	}
 }
 
@@ -1233,6 +1275,7 @@ bool CMainDlg::OpenFile(bool bAtStartup) {
 		AfterNewImageLoaded(true);
 		m_startMouse.x = m_startMouse.y = -1;
 		m_bSearchSubDirsOnEnter = false;
+		m_bPasteFromClipboardFailed = false;
 		m_sSaveDirectory = _T("");
 		MouseOff();
 		this->Invalidate(FALSE);
@@ -1250,9 +1293,9 @@ bool CMainDlg::SaveImage() {
 
 	CString sCurrentFile;
 	if (m_sSaveDirectory.GetLength() == 0) {
-		sCurrentFile = m_pFileList->Current();
+		sCurrentFile = CurrentFileName(false);
 	} else {
-		sCurrentFile = m_sSaveDirectory + m_pFileList->CurrentFileTitle();
+		sCurrentFile = m_sSaveDirectory + CurrentFileName(true);
 	}
 	int nIndexPoint = sCurrentFile.ReverseFind(_T('.'));
 	if (nIndexPoint > 0) {
@@ -1260,7 +1303,11 @@ bool CMainDlg::SaveImage() {
 	}
 	if (sCurrentFile.Right(4).CompareNoCase(_T(".jpg")) != 0 && sCurrentFile.Right(5).CompareNoCase(_T(".jpeg")) != 0) {
 		int nIdxPoint = sCurrentFile.ReverseFind(_T('.'));
-		sCurrentFile = sCurrentFile.Left(nIdxPoint + 1) + _T("jpg");
+		if (nIdxPoint == -1) {
+			sCurrentFile += _T(".jpg");
+		} else {
+			sCurrentFile = sCurrentFile.Left(nIdxPoint + 1) + _T("jpg");
+		}
 	}
 	CFileDialog fileDlg(FALSE, _T("jpg"), sCurrentFile, 
 			OFN_EXPLORER | OFN_ENABLESIZING | OFN_HIDEREADONLY | OFN_NOREADONLYRETURN | OFN_OVERWRITEPROMPT,
@@ -1294,13 +1341,17 @@ void CMainDlg::BatchCopy() {
 
 
 void CMainDlg::HandleUserCommands(uint32 virtualKeyCode) {
+	if (::GetFileAttributes(CurrentFileName(false)) == INVALID_FILE_ATTRIBUTES) {
+		return; // file does not exist
+	}
+
 	// iterate over user command list
 	std::list<CUserCommand*>::iterator iter;
 	std::list<CUserCommand*> & userCmdList = CSettingsProvider::This().UserCommandList();
 	for (iter = userCmdList.begin( ); iter != userCmdList.end( ); iter++ ) {
 		if ((*iter)->GetKeyCode() == virtualKeyCode) {
 			MouseOn();
-			if ((*iter)->Execute(this->m_hWnd, m_pFileList->Current())) {
+			if ((*iter)->Execute(this->m_hWnd, CurrentFileName(false))) {
 				bool bReloadCurrent = false;
 				// First go to next, then reload (else we get into troubles when the current image was deleted or moved)
 				if ((*iter)->MoveToNextAfterCommand()) {
@@ -1343,7 +1394,7 @@ void CMainDlg::DoDragging(int nX, int nY) {
 	if (m_bDragging && m_pCurrentImage != NULL) {
 		int nXDelta = m_nMouseX - m_nCapturedX;
 		int nYDelta = m_nMouseY - m_nCapturedY;
-		if (PerformPan(nXDelta, nYDelta)) {
+		if (PerformPan(nXDelta, nYDelta, false)) {
 			m_nCapturedX = m_nMouseX;
 			m_nCapturedY = m_nMouseY;
 			return;
@@ -1383,11 +1434,14 @@ void CMainDlg::PaintCropRect(HDC hPaintDC) {
 		::SetBkMode(hDC, TRANSPARENT);
 		int oldROP = ::SetROP2(hDC, R2_XORPEN);
 
-		float fXStart = (float)m_cropStart.x;
-		float fYStart = (float)m_cropStart.y + (m_pCurrentImage->GetFlagFlipped() ? 0.999f : 0);;
+		CPoint cropStart(min(m_cropStart.x, m_cropEnd.x), min(m_cropStart.y, m_cropEnd.y));
+		CPoint cropEnd(max(m_cropStart.x, m_cropEnd.x), max(m_cropStart.y, m_cropEnd.y));
+
+		float fXStart = (float)cropStart.x;
+		float fYStart = (float)cropStart.y;
 		ImageToScreen(fXStart, fYStart);
-		float fXEnd = m_cropEnd.x + 0.999f;
-		float fYEnd = m_cropEnd.y + (m_pCurrentImage->GetFlagFlipped() ? 0 : 0.999f);
+		float fXEnd = cropEnd.x + 0.999f;
+		float fYEnd = cropEnd.y + 0.999f;
 		ImageToScreen(fXEnd, fYEnd);
 		::Rectangle(hDC, (int)fXStart, (int)fYStart, (int)fXEnd, (int)fYEnd);
 
@@ -1403,19 +1457,24 @@ void CMainDlg::PaintCropRect(HDC hPaintDC) {
 void CMainDlg::EndCropping() {
 	// Display the crop menu
 	HMENU hMenu = ::LoadMenu(_Module.m_hInst, _T("CropMenu"));
+	int nMenuCmd = 0;
 	if (hMenu != NULL) {
 		HMENU hMenuTrackPopup = ::GetSubMenu(hMenu, 0);
 		TranslateMenu(hMenuTrackPopup);
 
 		m_bInTrackPopupMenu = true;
-		int nMenuCmd = ::TrackPopupMenu(hMenuTrackPopup, TPM_LEFTALIGN | TPM_RIGHTBUTTON | TPM_NONOTIFY | TPM_RETURNCMD, 
+		nMenuCmd = ::TrackPopupMenu(hMenuTrackPopup, TPM_LEFTALIGN | TPM_RIGHTBUTTON | TPM_NONOTIFY | TPM_RETURNCMD, 
 			m_nMouseX, m_nMouseY, 0, this->m_hWnd, NULL);
 		m_bInTrackPopupMenu = false;
+
+		if (m_bCropping) {
+			ExecuteCommand(nMenuCmd);
+		}
 
 		::DestroyMenu(hMenu);
 	}
 
-	if (m_bCropping) {
+	if (m_bCropping && nMenuCmd != IDM_COPY_SEL && nMenuCmd != IDM_CROP_SEL) {
 		PaintCropRect(NULL);
 	}
 	m_bCropping = false;
@@ -1435,7 +1494,7 @@ void CMainDlg::GotoImage(EImagePosition ePos, int nFlags) {
 		StopMovieMode();
 	}
 
-	if (ePos != POS_Current) {
+	if (ePos != POS_Current && ePos != POS_Clipboard) {
 		MouseOff();
 	}
 
@@ -1469,6 +1528,7 @@ void CMainDlg::GotoImage(EImagePosition ePos, int nFlags) {
 			eDirection = CJPEGProvider::BACKWARD;
 			break;
 		case POS_Current:
+		case POS_Clipboard:
 			break;
 	}
 
@@ -1481,8 +1541,18 @@ void CMainDlg::GotoImage(EImagePosition ePos, int nFlags) {
 	if (nFlags & KEEP_PARAMETERS) {
 		procParams.ProcFlags = SetProcessingFlag(procParams.ProcFlags, PFLAG_KeepParams, true);
 	}
-	m_pCurrentImage = m_pJPEGProvider->RequestJPEG(m_pFileList, eDirection,  
-		m_pFileList->Current(), procParams);
+	if (ePos == POS_Clipboard) {
+		m_pCurrentImage = CClipboard::PasteImageFromClipboard(m_hWnd, procParams.ImageProcParams, procParams.ProcFlags);
+		if (m_pCurrentImage != NULL) {
+			m_pCurrentImage->SetFileDependentProcessParams(_T("_cbrd_"), &procParams);
+		} else {
+			m_bPasteFromClipboardFailed = true;
+		}
+	} else {
+		m_pCurrentImage = m_pJPEGProvider->RequestJPEG(m_pFileList, eDirection,  
+			m_pFileList->Current(), procParams);
+		m_bPasteFromClipboardFailed = false;
+	}
 	AfterNewImageLoaded((nFlags & KEEP_PARAMETERS) == 0);
 
 	this->Invalidate(FALSE);
@@ -1577,18 +1647,39 @@ void CMainDlg::PerformZoom(double dValue, bool bExponent) {
 	}
 }
 
-bool CMainDlg::PerformPan(int dx, int dy) {
+bool CMainDlg::PerformPan(int dx, int dy, bool bAbsolute) {
 	if ((m_virtualImageSize.cx > 0 && m_virtualImageSize.cx > m_clientRect.Width()) ||
 		(m_virtualImageSize.cy > 0 && m_virtualImageSize.cy > m_clientRect.Height())) {
-		m_nOffsetX += dx;
-		m_nOffsetY += dy;
-
+		if (bAbsolute) {
+			m_nOffsetX = dx;
+			m_nOffsetY = dy;
+		} else {
+			m_nOffsetX += dx;
+			m_nOffsetY += dy;
+		}
 		m_bUserPan = true;
 
 		this->Invalidate(FALSE);
 		return true;
 	}
 	return false;
+}
+
+void CMainDlg::ZoomToSelection() {
+	CRect zoomRect(max(0, min(m_cropStart.x, m_cropEnd.x)), max(0, min(m_cropStart.y, m_cropEnd.y)),
+		min(m_pCurrentImage->OrigWidth(), max(m_cropStart.x, m_cropEnd.x)), min(m_pCurrentImage->OrigHeight(), max(m_cropStart.y, m_cropEnd.y)));
+	if (zoomRect.Width() > 0 && zoomRect.Height() > 0 && m_pCurrentImage != NULL) {
+		float fZoom;
+		CPoint offsets;
+		Helpers::GetZoomParameters(fZoom, offsets, CSize(m_pCurrentImage->OrigWidth(), m_pCurrentImage->OrigHeight()), 
+			m_clientRect.Size(), zoomRect);
+		if (fZoom > 0) {
+			PerformZoom(fZoom, false);
+			m_nOffsetX = offsets.x;
+			m_nOffsetY = m_pCurrentImage->GetFlagFlipped() ? -offsets.y : offsets.y;
+			m_bUserPan = true;
+		}
+	}
 }
 
 void CMainDlg::SetStartupFile(LPCTSTR sStartupFile) { 
@@ -1841,14 +1932,14 @@ void CMainDlg::ExchangeProcessingParams() {
 }
 
 void CMainDlg::ShowHideSaveDBButtons() {
-	m_btnSaveToDB->SetShow(m_pCurrentImage != NULL && !m_bMovieMode && !m_bKeepParams);
+	m_btnSaveToDB->SetShow(m_pCurrentImage != NULL && !m_pCurrentImage->IsClipboardImage() && !m_bMovieMode && !m_bKeepParams);
 	m_btnRemoveFromDB->SetShow(m_pCurrentImage != NULL && !m_bMovieMode && !m_bKeepParams && 
 		m_pCurrentImage->IsInParamDB());
 }
 
 void CMainDlg::AfterNewImageLoaded(bool bSynchronize) {
 	ShowHideSaveDBButtons();
-	if (m_pCurrentImage != NULL && !m_bMovieMode) {
+	if (m_pCurrentImage != NULL && !m_pCurrentImage->IsClipboardImage() && !m_bMovieMode) {
 		m_txtParamDB->SetShow(true);
 		m_txtRename->SetShow(true);
 		LPCTSTR sCurrentFileTitle = m_pFileList->CurrentFileTitle();
@@ -2060,4 +2151,15 @@ bool CMainDlg::ImageToScreen(float & fX, float & fY) {
 	fY -= nOffsetY;
 
 	return true;
+}
+
+LPCTSTR CMainDlg::CurrentFileName(bool bFileTitle) {
+	if (m_pCurrentImage != NULL && m_pCurrentImage->IsClipboardImage()) {
+		return _T("Clipboard Image");
+	}
+	if (bFileTitle) {
+		return m_pFileList->CurrentFileTitle();
+	} else {
+		return m_pFileList->Current();
+	}
 }

@@ -72,6 +72,7 @@ CJPEGImage::CJPEGImage(int nWidth, int nHeight, void* pIJLPixels, void* pEXIFDat
 	m_bHasZoomStoredInParamDB = false;
 
 	m_bFlipped = false;
+	m_bCropped = false;
 	m_nRotation = 0;
 	m_bFirstReprocessing = true;
 	m_nLastOpTickCount = 0;
@@ -394,6 +395,28 @@ void CJPEGImage::Rotate(int nRotation) {
 	m_nRotation = (m_nRotation + nRotation) % 360;
 
 	m_nLastOpTickCount = ::GetTickCount() - nStartTickCount; 
+}
+
+void CJPEGImage::Crop(CRect cropRect) {
+	// Cropping can only be done in 32 bpp
+	ConvertSrcTo4Channels();
+
+	m_pLastDIB = NULL;
+	delete m_pLDC; // LDC mask must be recalculated!
+	m_pLDC = NULL;
+	delete m_pHistogram;
+	m_pHistogram = NULL; // histogram must be recalculated!
+	delete[] m_pDIBPixels; 
+	m_pDIBPixels = NULL;
+	delete[] m_pDIBPixelsLUTProcessed; 
+	m_pDIBPixelsLUTProcessed = NULL;
+	void* pNewIJL = CBasicProcessing::Crop32bpp(m_nOrigWidth, m_nOrigHeight, m_pIJLPixels, cropRect);
+	delete[] m_pIJLPixels;
+	m_pIJLPixels = pNewIJL;
+	m_ClippingSize = CSize(0, 0);
+	m_nOrigWidth = cropRect.Width();
+	m_nOrigHeight = cropRect.Height();
+	m_bCropped = true;
 }
 
 void CJPEGImage::SetDimBitmapRegion(int nRegion) {

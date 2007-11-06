@@ -17,6 +17,7 @@ public:
 		IF_PNG,
 		IF_GIF,
 		IF_TIFF,
+		IF_CLIPBOARD,
 		IF_Unknown
 	};
 
@@ -80,6 +81,12 @@ public:
 	// Rotate the image clockwise by 90, 180 or 270 degrees. All other angles are invalid.
 	// Applies to original image!
 	void Rotate(int nRotation);
+
+	// Crops the image
+	void Crop(CRect cropRect);
+
+	// Returns if this image has been cropped or not
+	bool IsCropped() { return m_bCropped; }
 
 	// raw access to input pixels - do not delete or store the pointer returned
 	void* IJLPixels() { return  m_pIJLPixels; }
@@ -152,6 +159,9 @@ public:
 	// Gets the image format this image was originally created from
 	EImageFormat GetImageFormat() { return m_eImageFormat; }
 
+	// Gets if this image was created from the clipboard
+	bool IsClipboardImage() { return m_eImageFormat == IF_CLIPBOARD; }
+
 	// Debug: Ticks (millseconds) of the last operation
 	LONG LastOpTickCount() const { return m_nLastOpTickCount; }
 
@@ -170,7 +180,7 @@ private:
 		UpSample
 	};
 
-	// Original pixel data - only rotations are done directly on this data because this is non-destructive
+	// Original pixel data - only rotations and crop are done directly on this data because this is non-destructive
 	// The data is not modified in all other cases
 	void* m_pIJLPixels;
 	void* m_pEXIFData;
@@ -199,6 +209,7 @@ private:
 	float m_fLightenShadowFactor;
 
 	bool m_bFlipped; // Bitmap flipped vertically
+	bool m_bCropped; // Image has been cropped
 	uint32 m_nRotation; // current rotation angle
 
 	// This is the geometry that was requested during last GetDIB() call

@@ -55,6 +55,32 @@ CSize GetImageRect(int nWidth, int nHeight, int nScreenWidth, int nScreenHeight,
 	return CSize((int)(nWidth*dZoom + 0.5), (int)(nHeight*dZoom + 0.5));
 }
 
+void GetZoomParameters(float & fZoom, CPoint & offsets, CSize imageSize, CSize windowSize, CRect zoomRect) {
+	int nZoomWidth = zoomRect.Width();
+	int nZoomHeight = zoomRect.Height();
+
+	bool bTakeW = ((float)windowSize.cx/windowSize.cy < (float)nZoomWidth/nZoomHeight);
+	if (bTakeW) {
+		// Width is dominating
+		fZoom = (float)windowSize.cx/nZoomWidth;
+	} else {
+		// Height is dominating
+		fZoom = (float)windowSize.cy/nZoomHeight;
+	}
+	if (fZoom < Helpers::ZoomMin || fZoom > Helpers::ZoomMax) {
+		fZoom = -1.0f;
+		return;
+	}
+
+	int nZoomRectMiddleX = (zoomRect.right + zoomRect.left)/2;
+	int nOffsetX = Helpers::RoundToInt(fZoom*imageSize.cx*0.5 - fZoom*nZoomRectMiddleX);
+
+	int nZoomRectMiddleY = (zoomRect.bottom + zoomRect.top)/2;
+	int nOffsetY = Helpers::RoundToInt(fZoom*imageSize.cy*0.5 - fZoom*nZoomRectMiddleY);
+
+	offsets = CPoint(nOffsetX, nOffsetY);
+}
+
 CPUType ProbeCPU(void) {
 	static CPUType cpuType = CPU_Unknown;
 	if (cpuType != CPU_Unknown) {

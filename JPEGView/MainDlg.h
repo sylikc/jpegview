@@ -86,7 +86,8 @@ private:
 		POS_Last,
 		POS_Next,
 		POS_Previous,
-		POS_Current
+		POS_Current,
+		POS_Clipboard
 	};
 
 	static CMainDlg* sm_instance; // single instance of the main dialog
@@ -132,6 +133,7 @@ private:
 	CPoint m_cropStart;
 	CPoint m_cropEnd;
 
+	bool m_bPasteFromClipboardFailed;
 	bool m_bDragging;
 	bool m_bCropping;
 	bool m_bMovieMode;
@@ -184,7 +186,8 @@ private:
 	void AdjustContrast(double dInc);
 	void AdjustSharpen(double dInc);
 	void PerformZoom(double dValue, bool bExponent);
-	bool PerformPan(int dx, int dy);
+	bool PerformPan(int dx, int dy, bool bAbsolute);
+	void ZoomToSelection();
 	void LimitOffsets(const CRect & rect, const CSize & size);
 	void ResetZoomToFitScreen(bool bFillWithCrop);
 	void ResetZoomTo100Percents();
@@ -208,6 +211,7 @@ private:
 	int Scale(int nValue) { return (int)(m_fScaling*nValue); }
 	bool ScreenToImage(float & fX, float & fY); 
 	bool ImageToScreen(float & fX, float & fY);
+	LPCTSTR CurrentFileName(bool bFileTitle);
 
 	static void OnSaveToDB(CButtonCtrl & sender);
 	static void OnRemoveFromDB(CButtonCtrl & sender);

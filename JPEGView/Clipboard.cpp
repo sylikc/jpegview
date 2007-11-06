@@ -3,6 +3,7 @@
 #include "JPEGImage.h"
 #include "Helpers.h"
 #include "BasicProcessing.h"
+#include <gdiplus.h>
 
 void CClipboard::CopyImageToClipboard(HWND hWnd, CJPEGImage * pImage) {
 	if (pImage == NULL || pImage->DIBPixelsLastProcessed() == NULL) {
@@ -17,17 +18,71 @@ void CClipboard::CopyImageToClipboard(HWND hWnd, CJPEGImage * pImage) {
 
 void CClipboard::CopyFullImageToClipboard(HWND hWnd, CJPEGImage * pImage, const CImageProcessingParams& procParams,
 										  EProcessingFlags eFlags) {
+	CopyFullImageToClipboard(hWnd, pImage, procParams, eFlags, CRect(0, 0, pImage->OrigWidth(), pImage->OrigHeight()));
+}
+
+void CClipboard::CopyFullImageToClipboard(HWND hWnd, CJPEGImage * pImage, const CImageProcessingParams& procParams,
+										  EProcessingFlags eFlags, CRect clipRect) {
 	if (pImage == NULL) {
 		return;
 	}
 
+	clipRect.left = max(0, clipRect.left);
+	clipRect.top = max(0, clipRect.top);
+	clipRect.right = min(pImage->OrigWidth(), clipRect.right);
+	clipRect.bottom = min(pImage->OrigHeight(), clipRect.bottom);
+
 	int nOldRegion = pImage->GetDimBitmapRegion();
 	pImage->SetDimBitmapRegion(0);
 	CSize fullImageSize = CSize(pImage->OrigWidth(), pImage->OrigHeight());
-	void* pDIB = pImage->GetDIB(fullImageSize, fullImageSize, CPoint(0, 0), procParams, eFlags);
-	DoCopy(hWnd, pImage->OrigWidth(), pImage->OrigHeight(), !pImage->GetFlagFlipped(), pDIB);
+	void* pDIB = pImage->GetDIB(fullImageSize, clipRect.Size(), clipRect.TopLeft(), procParams, eFlags);
+	DoCopy(hWnd, clipRect.Width(), clipRect.Height(), !pImage->GetFlagFlipped(), pDIB);
 	pImage->SetDimBitmapRegion(nOldRegion);
 }
+
+CJPEGImage* CClipboard::PasteImageFromClipboard(HWND hWnd, const CImageProcessingParams& procParams, 
+												EProcessingFlags eFlags) {
+	if (!::OpenClipboard(hWnd)) {
+        return NULL;
+	}
+
+	CJPEGImage* pImage = NULL;
+	HANDLE handle = ::GetClipboardData(CF_DIB);
+	if (handle != NULL) {
+		BITMAPINFO* pbmInfo = (BITMAPINFO*)::GlobalLock(handle);
+		if (pbmInfo != NULL) {
+			int nNumColors = pbmInfo->bmiHeader.biClrUsed;
+			if (nNumColors == 0 && pbmInfo->bmiHeader.biBitCount <= 8) {
+				nNumColors = 1 << pbmInfo->bmiHeader.biBitCount;
+			}
+			if (pbmInfo->bmiHeader.biCompression == BI_BITFIELDS) {
+				nNumColors = 3;
+			}
+			char* pDIBBits = (char*)pbmInfo + pbmInfo->bmiHeader.biSize + nNumColors*sizeof(RGBQUAD);
+
+			Gdiplus::Bitmap* pBitmap = new Gdiplus::Bitmap(pbmInfo, pDIBBits);
+			if (pBitmap->GetLastStatus() == Gdiplus::Ok) {
+				Gdiplus::Rect bmRect(0, 0, pBitmap->GetWidth(), pBitmap->GetHeight());
+				Gdiplus::BitmapData bmData;
+				if (pBitmap->LockBits(&bmRect, Gdiplus::ImageLockModeRead, PixelFormat32bppRGB, &bmData) == Gdiplus::Ok) {
+					assert(bmData.PixelFormat == PixelFormat32bppRGB);
+					pImage = new CJPEGImage(bmRect.Width, bmRect.Height, 
+						CBasicProcessing::ConvertGdiplus32bppRGB(bmRect.Width, bmRect.Height, bmData.Stride, bmData.Scan0), 
+						NULL, 4, 0, CJPEGImage::IF_CLIPBOARD);
+					pBitmap->UnlockBits(&bmData);
+				}
+			}
+			delete pBitmap;
+
+			::GlobalUnlock(handle);
+		}
+	}
+
+	::CloseClipboard();
+
+	return pImage;
+}
+
 
 void CClipboard::DoCopy(HWND hWnd, int nWidth, int nHeight, bool bFlip, const void* pSourceImageDIB32) {
 	if (!::OpenClipboard(hWnd)) {
