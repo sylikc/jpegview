@@ -26,12 +26,18 @@ Changelog
 Bugs removed:
 - If a JPEG cannot be read with the IJL library, GDI+ is tried as a second chance
 - Copy/rename dialog: Replacement text can now be longer than text input field (auto scroll enabled)
+- Reader no longer crashes when stripe is negative for images read with GDI+
 New features:
-- File open... always uses tumbnail view (not only in my picture directory)
+- File open... always uses tumbnail view (not only in 'my picture' directory)
 - Copy/rename dialog: New placeholder %n for number from original file name
 - Panning is faster and uses high quality resampling mode during pan
-- New command to reload current image
-- Crop image section or zoom to image section with CTRL-Left mouse and dragging
+- New command to reload current image (Ctrl-R)
+- Crop image section or zoom to image section with CTRL-Left mouse and dragging the mouse
+- Paste image from clipboard (Ctrl-V)
+Other changes:
+- Color and contrast correction switched off in default INI file.
+  It is recommended to switch it on for dedicated folders only, e.g. folders with digicam photos.
+  Of course any user INI file remains untouched by this change.
 
 [1.0.13]
 

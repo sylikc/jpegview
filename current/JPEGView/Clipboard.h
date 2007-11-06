@@ -14,6 +14,13 @@ public:
 	static void CopyFullImageToClipboard(HWND hWnd, CJPEGImage * pImage, const CImageProcessingParams& procParams,
 		EProcessingFlags eFlags);
 
+	// Copy section of full size image to clipboard
+	static void CopyFullImageToClipboard(HWND hWnd, CJPEGImage * pImage, const CImageProcessingParams& procParams,
+		EProcessingFlags eFlags, CRect clipRect);
+
+	// Paste image from clipboard
+	static CJPEGImage* PasteImageFromClipboard(HWND hWnd, const CImageProcessingParams& procParams, EProcessingFlags eFlags);
+
 private:
 	CClipboard(void);
 

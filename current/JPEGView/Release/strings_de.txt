@@ -109,6 +109,7 @@ Save processed image...	Bearbeitetes Bild speichern...
 Reload image	Bild neu laden
 Copy to clipboard	In Zwischenablage kopieren
 Copy original size image	Bild in Originalgrösse kopieren
+Paste from clipboard	Aus Zwischenablage einfügen
 Batch rename/copy...	Bildserie umbenennen/kopieren...
 Show filename	Dateiname anzeigen
 Navigation	Navigation
@@ -176,3 +177,4 @@ Error during rename/copy	Fehler beim Umbenennen/Kopieren
 Crop Selection	Selektion freistellen
 Copy Selection to Clipboard	Selektion in Zwischenablage kopieren
 Zoom to Selection	Auf Selektion einzoomen
+Pasting image from clipboard failed!	Bild aus Zwischenablage kann nicht eingefügt werden!

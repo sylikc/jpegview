@@ -141,6 +141,7 @@ BEGIN
 	  MENUITEM "Batch rename/copy...",			IDM_BATCH_COPY
 	  MENUITEM "Copy to clipboard\tCtrl-C",		IDM_COPY
       MENUITEM "Copy original size image\tCtrl-X",	IDM_COPY_FULL
+	  MENUITEM "Paste from clipboard\tCtrl-V",	IDM_PASTE
       MENUITEM "Show filename\tF2",				IDM_SHOW_FILENAME
 	  MENUITEM SEPARATOR
 	  MENUITEM "Next image\tPgDn",				IDM_NEXT

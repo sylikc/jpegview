@@ -270,13 +270,12 @@ void CWorkThread::ProcessReadGDIPlusRequest(CRequest * request) {
 	Bitmap* pBitmap = new Gdiplus::Bitmap(sFileName);
 	if (pBitmap->GetLastStatus() == Gdiplus::Ok) {
 		Gdiplus::Rect bmRect(0, 0, pBitmap->GetWidth(), pBitmap->GetHeight());
-		BitmapData bmData;
+		Gdiplus::BitmapData bmData;
 		if (pBitmap->LockBits(&bmRect, Gdiplus::ImageLockModeRead, PixelFormat32bppRGB, &bmData) == Gdiplus::Ok) {
 			assert(bmData.PixelFormat == PixelFormat32bppRGB);
 			request->Image = new CJPEGImage(bmRect.Width, bmRect.Height, 
-				CBasicProcessing::ConvertGdiplus32bppRGB(bmRect.Width, bmRect.Height, abs(bmData.Stride), bmData.Scan0), 
+				CBasicProcessing::ConvertGdiplus32bppRGB(bmRect.Width, bmRect.Height, bmData.Stride, bmData.Scan0), 
 				NULL, 4, 0, GetBitmapFormat(pBitmap));
-			request->Image->SetFlagFlipped(bmData.Stride < 0);
 			pBitmap->UnlockBits(&bmData);
 		}
 	}

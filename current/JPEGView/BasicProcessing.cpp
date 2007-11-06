@@ -366,7 +366,7 @@ void* CBasicProcessing::Convert3To4Channels(int nWidth, int nHeight, const void*
 }
 
 void* CBasicProcessing::ConvertGdiplus32bppRGB(int nWidth, int nHeight, int nStride, const void* pGdiplusPixels) {
-	if (pGdiplusPixels == NULL || nWidth*4 > nStride) {
+	if (pGdiplusPixels == NULL || nWidth*4 > abs(nStride)) {
 		return NULL;
 	}
 	uint32* pNewDIB = new uint32[nWidth * nHeight];
@@ -380,7 +380,7 @@ void* CBasicProcessing::ConvertGdiplus32bppRGB(int nWidth, int nHeight, int nStr
 	return pNewDIB;
 }
 
-void* CBasicProcessing::CopyRect32bpp(void* pTarget, void* pSource,  CSize targetSize, CRect targetRect,
+void* CBasicProcessing::CopyRect32bpp(void* pTarget, const void* pSource,  CSize targetSize, CRect targetRect,
 									  CSize sourceSize, CRect sourceRect) {
 	if (pSource == NULL || sourceRect.Size() != targetRect.Size() || 
 		sourceRect.left < 0 || sourceRect.right > sourceSize.cx ||
@@ -405,6 +405,15 @@ void* CBasicProcessing::CopyRect32bpp(void* pTarget, void* pSource,  CSize targe
 	}
 
 	return pTarget;
+}
+
+void* CBasicProcessing::Crop32bpp(int nWidth, int nHeight, const void* pDIBPixels, CRect cropRect) {
+	if (pDIBPixels == NULL || cropRect.Width() == 0 || cropRect.Height() == 0) {
+		return NULL;
+	}
+
+	return CopyRect32bpp(NULL, pDIBPixels, cropRect.Size(), CRect(0, 0, cropRect.Width(), cropRect.Height()),
+		CSize(nWidth, nHeight), cropRect);
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////
