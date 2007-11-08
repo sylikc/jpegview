@@ -12,7 +12,7 @@ void CClipboard::CopyImageToClipboard(HWND hWnd, CJPEGImage * pImage) {
 
 	int nOldRegion = pImage->GetDimBitmapRegion();
 	pImage->SetDimBitmapRegion(0);
-	DoCopy(hWnd, pImage->DIBWidth(), pImage->DIBHeight(), !pImage->GetFlagFlipped(), pImage->DIBPixelsLastProcessed());
+	DoCopy(hWnd, pImage->DIBWidth(), pImage->DIBHeight(), pImage->DIBPixelsLastProcessed());
 	pImage->SetDimBitmapRegion(nOldRegion);
 }
 
@@ -36,7 +36,7 @@ void CClipboard::CopyFullImageToClipboard(HWND hWnd, CJPEGImage * pImage, const 
 	pImage->SetDimBitmapRegion(0);
 	CSize fullImageSize = CSize(pImage->OrigWidth(), pImage->OrigHeight());
 	void* pDIB = pImage->GetDIB(fullImageSize, clipRect.Size(), clipRect.TopLeft(), procParams, eFlags);
-	DoCopy(hWnd, clipRect.Width(), clipRect.Height(), !pImage->GetFlagFlipped(), pDIB);
+	DoCopy(hWnd, clipRect.Width(), clipRect.Height(), pDIB);
 	pImage->SetDimBitmapRegion(nOldRegion);
 }
 
@@ -84,7 +84,7 @@ CJPEGImage* CClipboard::PasteImageFromClipboard(HWND hWnd, const CImageProcessin
 }
 
 
-void CClipboard::DoCopy(HWND hWnd, int nWidth, int nHeight, bool bFlip, const void* pSourceImageDIB32) {
+void CClipboard::DoCopy(HWND hWnd, int nWidth, int nHeight, const void* pSourceImageDIB32) {
 	if (!::OpenClipboard(hWnd)) {
         return;
 	}
@@ -116,7 +116,7 @@ void CClipboard::DoCopy(HWND hWnd, int nWidth, int nHeight, bool bFlip, const vo
 	pBMInfo->bmiHeader.biClrUsed = 0;
 
 	uint8* pDIBPixelsTarget = (uint8*)pMemory + sizeof(BITMAPINFO) - sizeof(RGBQUAD);
-	CBasicProcessing::Convert32bppTo24bppDIB(nWidth, nHeight, pDIBPixelsTarget, pSourceImageDIB32, bFlip);
+	CBasicProcessing::Convert32bppTo24bppDIB(nWidth, nHeight, pDIBPixelsTarget, pSourceImageDIB32, true);
 
 	::GlobalUnlock(hMem); 
 	::SetClipboardData(CF_DIB, hMem); 

@@ -583,7 +583,8 @@ void CFileList::FindFiles() {
 	if (!m_sDirectory.IsEmpty()) {
 		CFindFile fileFind;
 		for (int i = 0; i < cnNumEndings; i++) {
-			if (fileFind.FindFile(m_sDirectory + _T("\\*.") + csFileEndings[i])) {
+			// Windows bug: *.tif also finds *.tiff, so only search for *.tif else we have duplicated files...
+			if (_tcsicmp(csFileEndings[i], _T("tiff")) != 0 && fileFind.FindFile(m_sDirectory + _T("\\*.") + csFileEndings[i])) {
 				AddToFileList(m_fileList, fileFind);
 				while (fileFind.FindNextFile()) {
 					AddToFileList(m_fileList, fileFind);

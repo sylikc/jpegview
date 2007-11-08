@@ -32,7 +32,7 @@
 <td>
 <a name="Top"></a>
 <h1>JPEGView Readme</h1>
-Revision: 06-November-2007
+Revision: 08-November-2007
 <a name="Introduction"></a>
 <h2>Introduction</h2>
 JPEGView is a viewer/editor for JPEG, BMP, PNG, GIF and TIFF images. It is designed to view images from digital cameras
@@ -43,7 +43,7 @@ images. JPEGView does not replace a full blown image editor - such an editor wil
 <ul style="margin-top:0in;margin-bottom:0in">
 <li>Supported image formats
   <ul style="margin-top:0in;margin-bottom:0in">
-  <li>JPEG (also save, including EXIF)</li>
+  <li>JPEG (including EXIF)</li>
   <li>BMP (Windows Bitmap)</li>
   <li>PNG</li>
   <li>GIF</li>
@@ -384,14 +384,14 @@ a new image is displayed.
 <a name="Saving"></a>
 <h3>Saving and renaming Images</h3>
 <h4>Saving images</h4>
-Processed images can be saved as JPEG files using the 'Save image' (<kbd>Ctrl-S</kbd>) command.
+Processed images can be saved as JPEG, BMP, PNG or TIFF files using the 'Save image' (<kbd>Ctrl-S</kbd>) command.
 The image is always saved in its original size: Performed rotations are taken into account, zoom and pan are not.<br/>
 <b>Note:</b> The quality of the saved JPEG file can be set in the <a href="#INIFile">INI file</a>.<br/>
 JPEGView will automatically create a <a href="#ParameterDB">parameter DB</a> entry for the saved image having
 all image processing disabled.
 This prevents that JPEGView will double-apply automatic image improvements next time the image is displayed.<br/>
 <b>EXIF information</b><br/>
-EXIF information is copied to the target image if it was present in the source image. An embedded thumbnail image
+EXIF information is copied to the target JPEG image if it was present in the source JPEG image. An embedded thumbnail image
 is not touched - neither rotation nor image processing will be applied to the thumbnail image.<br/>
 
 <h4>Renaming images</h4>

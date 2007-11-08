@@ -73,7 +73,6 @@ CLocalDensityCorr::CLocalDensityCorr(const CJPEGImage & image, bool bFullConstru
 	m_pLDCMap = NULL;
 	m_pLDCMapMultiplied = NULL;
 	m_fIsSunset = m_fMiddleGrey = m_fSunsetPixels = -1.0f;
-	m_bFlipped = image.GetFlagFlipped();
 
 	// LDC also needs the histogram of the image
 	int channelR[256], channelG[256], channelB[256];
@@ -369,8 +368,8 @@ void CLocalDensityCorr::SmoothLDCMask() {
 
 float CLocalDensityCorr::CheckIfSunset(uint32* pRowBGR, int nHeight) {
 	int nStart15 = nHeight/5;
-	uint32* pSrc = m_bFlipped ? pRowBGR : pRowBGR + (nHeight-1)*3;
-	int nSign = m_bFlipped ? +1 : -1;
+	uint32* pSrc = pRowBGR + (nHeight-1)*3;
+	int nSign = -1;
 	int nLower = 0, nUpper = 0;
 	int nLR = 0, nLG = 0, nLB = 0;
 	int nUR = 0, nUG = 0, nUB = 0;
