@@ -24,5 +24,5 @@ public:
 private:
 	CClipboard(void);
 
-	static void DoCopy(HWND hWnd, int nWidth, int nHeight, bool bFlip, const void* pSourceImageDIB32);
+	static void DoCopy(HWND hWnd, int nWidth, int nHeight, const void* pSourceImageDIB32);
 };

@@ -13,15 +13,6 @@
 // Dim factor (0..1) for SetDimBitmapRegion(), 0 means black, 1 means no dimming
 static const float cfDimFactor = 0.6f;
 
-// Gets rectangle in DIB to be dimmed out, taking the flipped flag into account
-static CRect GetDimRect(bool bFlipped, int nDIBHeight, const CRect& rect) {
-	if (bFlipped) {
-		return CRect(rect.left, nDIBHeight - rect.bottom, rect.right, nDIBHeight - rect.top);
-	} else {
-		return rect;
-	}
-}
-
 ///////////////////////////////////////////////////////////////////////////////////
 // Public interface
 ///////////////////////////////////////////////////////////////////////////////////
@@ -71,7 +62,6 @@ CJPEGImage::CJPEGImage(int nWidth, int nHeight, void* pIJLPixels, void* pEXIFDat
 	m_bInParamDB = false;
 	m_bHasZoomStoredInParamDB = false;
 
-	m_bFlipped = false;
 	m_bCropped = false;
 	m_nRotation = 0;
 	m_bFirstReprocessing = true;
@@ -356,9 +346,8 @@ void* CJPEGImage::Resample(CSize fullTargetSize, CSize clippingSize, CPoint targ
 }
 
 CPoint CJPEGImage::ConvertOffset(CSize fullTargetSize, CSize clippingSize, CPoint targetOffset) const {
-	int nSign = m_bFlipped ? -1 : +1;
 	int nStartX = (fullTargetSize.cx - clippingSize.cx)/2 - targetOffset.x;
-	int nStartY = (fullTargetSize.cy - clippingSize.cy)/2 - nSign*targetOffset.y;
+	int nStartY = (fullTargetSize.cy - clippingSize.cy)/2 - targetOffset.y;
 	return CSize(nStartX, nStartY);
 }
 
@@ -425,7 +414,7 @@ void CJPEGImage::SetDimBitmapRegion(int nRegion) {
 			// only dim delta area
 			int nDelta = nRegion - m_nDimRegion;
 			CBasicProcessing::DimRectangle32bpp(DIBWidth(), DIBHeight(), m_pDIBPixelsLUTProcessed, 
-				GetDimRect(m_bFlipped, DIBHeight(), CRect(0, DIBHeight() - nRegion, DIBWidth(), DIBHeight() - nRegion + nDelta)), cfDimFactor);
+				CRect(0, DIBHeight() - nRegion, DIBWidth(), DIBHeight() - nRegion + nDelta), cfDimFactor);
 		} else if (nRegion < m_nDimRegion) {
 			// can't undim - force to recreate processed DIB on next access
 			delete[] m_pDIBPixelsLUTProcessed;
@@ -529,7 +518,7 @@ void CJPEGImage::SetFileDependentProcessParams(LPCTSTR sFileName, CProcessParams
 
 void CJPEGImage::DIBToOrig(float & fX, float & fY) {
 	float fXo = m_TargetOffset.x + fX;
-	float fYo = m_TargetOffset.y + (m_bFlipped ? (m_ClippingSize.cy - fY) : fY);
+	float fYo = m_TargetOffset.y + fY;
 	fX = fXo/m_FullTargetSize.cx*m_nOrigWidth;
 	fY = fYo/m_FullTargetSize.cy*m_nOrigHeight;
 }
@@ -538,7 +527,11 @@ void CJPEGImage::OrigToDIB(float & fX, float & fY) {
 	float fXo = fX/m_nOrigWidth*m_FullTargetSize.cx;
 	float fYo = fY/m_nOrigHeight*m_FullTargetSize.cy;
 	fX = fXo - m_TargetOffset.x;
-	fY = m_bFlipped ? (m_TargetOffset.y + m_ClippingSize.cy - fYo) : fYo - m_TargetOffset.y;
+	fY = fYo - m_TargetOffset.y;
+}
+
+__int64 CJPEGImage::GetUncompressedPixelHash() const { 
+	return m_pLDC->GetPixelHash(); 
 }
 
 ///////////////////////////////////////////////////////////////////////////////////
@@ -661,7 +654,7 @@ void* CJPEGImage::ApplyCorrectionLUTandLDC(const CImageProcessingParams & imageP
 
 	if (m_nDimRegion > 0) {
 		CBasicProcessing::DimRectangle32bpp(dibSize.cx, dibSize.cy, pCachedTargetDIB, 
-			GetDimRect(m_bFlipped, dibSize.cy, CRect(0, dibSize.cy - m_nDimRegion, dibSize.cx, dibSize.cy)), cfDimFactor);
+			CRect(0, dibSize.cy - m_nDimRegion, dibSize.cx, dibSize.cy), cfDimFactor);
 	}
 
 	return pCachedTargetDIB;

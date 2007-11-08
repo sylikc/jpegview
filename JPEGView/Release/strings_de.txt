@@ -99,7 +99,7 @@ The parameter DB file '%s' has been created by a newer version of JPEGView!	Die 
 The old parameter DB file '%s' could not be renamed during conversion to new format!	Die alte Parameter DB Datei '%s' konnte während der Konvertierung ins neue Format nicht umbenannt werden!
 Parameter DB error	Parameter DB Fehler
 Error saving file	Fehler beim Speichern
-Error writing JPEG file to disk!	Die JPEG Datei kann nicht geschrieben werden!
+Error writing file to disk!	Die Datei kann nicht geschrieben werden!
 Confirm	Bestätigung
 Do you really want to permanently delete the file %filename%?	Soll die Datei %filename% wirklich permanent gelöscht werden?
 Rotate the following file lossless by 90 deg?\n%filename%	Folgende Datei verlustfrei um 90 Grad rotieren?\n%filename%

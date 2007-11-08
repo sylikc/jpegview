@@ -342,7 +342,7 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 			memset(&bmInfo, 0, sizeof(BITMAPINFO));
 			bmInfo.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
 			bmInfo.bmiHeader.biWidth = clippedSize.cx;
-			bmInfo.bmiHeader.biHeight = m_pCurrentImage->GetFlagFlipped() ? clippedSize.cy : -clippedSize.cy;
+			bmInfo.bmiHeader.biHeight = -clippedSize.cy;
 			bmInfo.bmiHeader.biPlanes = 1;
 			bmInfo.bmiHeader.biBitCount = 32;
 			bmInfo.bmiHeader.biCompression = BI_RGB;
@@ -586,6 +586,7 @@ LRESULT CMainDlg::OnXButtonDown(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/,
 
 LRESULT CMainDlg::OnMouseMove(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, BOOL& /*bHandled*/) {
 	// Turn mouse pointer on when mouse has moved some distance
+	int nOldMouseY = m_nMouseY;
 	m_nMouseX = GET_X_LPARAM(lParam);
 	m_nMouseY = GET_Y_LPARAM(lParam);
 	if (!m_bDragging) {
@@ -607,7 +608,8 @@ LRESULT CMainDlg::OnMouseMove(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, B
 			::SetTimer(this->m_hWnd, AUTOSCROLL_TIMER_EVENT_ID, AUTOSCROLL_TIMEOUT, NULL);
 		}
 	} else if (!m_bShowIPTools) {
-		if (m_nMouseY > m_clientRect.bottom - m_pSliderMgr->SliderAreaHeight()) {
+		int nIPAreaStart= m_clientRect.bottom - m_pSliderMgr->SliderAreaHeight();
+		if (nOldMouseY != 0 && nOldMouseY <= nIPAreaStart && m_nMouseY > nIPAreaStart) {
 			m_bShowIPTools = true;
 			this->Invalidate(FALSE);
 		}
@@ -1299,19 +1301,13 @@ bool CMainDlg::SaveImage() {
 	}
 	int nIndexPoint = sCurrentFile.ReverseFind(_T('.'));
 	if (nIndexPoint > 0) {
-		sCurrentFile.Insert(nIndexPoint, _T("_proc"));
+		sCurrentFile = sCurrentFile.Left(nIndexPoint);
+		sCurrentFile += _T("_proc");
 	}
-	if (sCurrentFile.Right(4).CompareNoCase(_T(".jpg")) != 0 && sCurrentFile.Right(5).CompareNoCase(_T(".jpeg")) != 0) {
-		int nIdxPoint = sCurrentFile.ReverseFind(_T('.'));
-		if (nIdxPoint == -1) {
-			sCurrentFile += _T(".jpg");
-		} else {
-			sCurrentFile = sCurrentFile.Left(nIdxPoint + 1) + _T("jpg");
-		}
-	}
+
 	CFileDialog fileDlg(FALSE, _T("jpg"), sCurrentFile, 
 			OFN_EXPLORER | OFN_ENABLESIZING | OFN_HIDEREADONLY | OFN_NOREADONLYRETURN | OFN_OVERWRITEPROMPT,
-			Helpers::CReplacePipe(CString(CNLS::GetString(_T("Images"))) + _T(" (*.jpg;*.jpeg)|*.jpg;*.jpeg|") +
+			Helpers::CReplacePipe(CString(_T("JPEG (*.jpg;*.jpeg)|*.jpg;*.jpeg|BMP (*.bmp)|*.bmp|PNG (*.png)|*.png|TIFF (*.tiff;*.tif)|*.tiff;*.tif|")) +
 			CNLS::GetString(_T("All Files")) + _T("|*.*|")), m_hWnd);
 	if (IDOK == fileDlg.DoModal(m_hWnd)) {
 		m_sSaveDirectory = fileDlg.m_szFileName;
@@ -1322,7 +1318,7 @@ bool CMainDlg::SaveImage() {
 			return true;
 		} else {
 			::MessageBox(m_hWnd, CNLS::GetString(_T("Error saving file")), 
-				CNLS::GetString(_T("Error writing JPEG file to disk!")), MB_ICONSTOP | MB_OK); 
+				CNLS::GetString(_T("Error writing file to disk!")), MB_ICONSTOP | MB_OK); 
 		}
 	}
 	return false;
@@ -1676,7 +1672,7 @@ void CMainDlg::ZoomToSelection() {
 		if (fZoom > 0) {
 			PerformZoom(fZoom, false);
 			m_nOffsetX = offsets.x;
-			m_nOffsetY = m_pCurrentImage->GetFlagFlipped() ? -offsets.y : offsets.y;
+			m_nOffsetY = offsets.y;
 			m_bUserPan = true;
 		}
 	}

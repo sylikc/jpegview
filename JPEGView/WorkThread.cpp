@@ -267,7 +267,7 @@ void CWorkThread::ProcessReadGDIPlusRequest(CRequest * request) {
 	sFileName = (const wchar_t*)buff;
 #endif
 
-	Bitmap* pBitmap = new Gdiplus::Bitmap(sFileName);
+	Gdiplus::Bitmap* pBitmap = new Gdiplus::Bitmap(sFileName);
 	if (pBitmap->GetLastStatus() == Gdiplus::Ok) {
 		Gdiplus::Rect bmRect(0, 0, pBitmap->GetWidth(), pBitmap->GetHeight());
 		Gdiplus::BitmapData bmData;

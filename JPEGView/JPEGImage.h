@@ -52,8 +52,11 @@ public:
 	void* GetDIB(CSize fullTargetSize, CSize clippingSize, CPoint targetOffset,
 		const CImageProcessingParams & imageProcParams, EProcessingFlags eProcFlags);
 
-	// Gets the hash value of the pixels
+	// Gets the hash value of the pixels, for JPEGs it on the compressed pixels
 	__int64 GetPixelHash() const { return m_nPixelHash; }
+
+	// Gets the pixel hash over the de-compressed pixels
+	__int64 GetUncompressedPixelHash() const;
 
 	// Original image size (of the unprocessed raw image)
 	int OrigWidth() const { return m_nOrigWidth; }
@@ -66,11 +69,6 @@ public:
 	// Convert DIB coordinates into original image coordinates and vice versa
 	void DIBToOrig(float & fX, float & fY);
 	void OrigToDIB(float & fX, float & fY);
-
-	// Flag if the original image (and the DIB) is flipped vertically or not.
-	// BMP images are sometimes stored flipped and due to performance reasons, this is kept until display
-	void SetFlagFlipped(bool bFlipped) { m_bFlipped = bFlipped; }
-	bool GetFlagFlipped() const { return m_bFlipped; }
 
 	// Declare the generated DIB as invalid - forcing it to be regenerated on next access
 	void SetDIBInvalid() { m_ClippingSize = CSize(0, 0); }
@@ -91,6 +89,8 @@ public:
 	// raw access to input pixels - do not delete or store the pointer returned
 	void* IJLPixels() { return  m_pIJLPixels; }
 	const void* IJLPixels() const { return m_pIJLPixels; }
+	// remove IJL pixels form class - will be NULL afterwards
+	void DetachIJLPixels() { m_pIJLPixels = NULL; }
 
 	// returns the number of channels in the IJLPixels (3 or 4, corresponding to 24 bpp and 32 bpp)
 	int IJLChannels() const { return m_nIJLChannels; }
@@ -208,7 +208,6 @@ private:
 	CPoint m_initialOffsets;
 	float m_fLightenShadowFactor;
 
-	bool m_bFlipped; // Bitmap flipped vertically
 	bool m_bCropped; // Image has been cropped
 	uint32 m_nRotation; // current rotation angle
 

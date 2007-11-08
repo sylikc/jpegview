@@ -53,7 +53,6 @@ private:
 	float m_fIsSunset;
 	float m_fMiddleGrey;
 	float m_fSunsetPixels;
-	bool m_bFlipped;
 	__int64 m_nPixelHash;
 
 	uint16* m_pPointSampledImage;
