@@ -4,6 +4,7 @@
 
 class CHistogram;
 class CLocalDensityCorr;
+class CEXIFReader;
 
 // Class holding a decoded image and allowing to get a processed section of the raw
 // image as DIB.
@@ -156,6 +157,8 @@ public:
 	// Gets the size of the EXIF data block in bytes, including the APP1 marker (2 bytes)
 	int GetEXIFDataLength() { return m_nEXIFSize; }
 
+	CEXIFReader* GetEXIFReader() { return m_pEXIFReader; }
+
 	// Gets the image format this image was originally created from
 	EImageFormat GetImageFormat() { return m_eImageFormat; }
 
@@ -185,6 +188,7 @@ private:
 	void* m_pIJLPixels;
 	void* m_pEXIFData;
 	int m_nEXIFSize;
+	CEXIFReader* m_pEXIFReader;
 	int m_nOrigWidth, m_nOrigHeight;
 	int m_nIJLChannels;
 	__int64 m_nPixelHash;
