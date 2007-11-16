@@ -7,6 +7,7 @@
 #include "HistogramCorr.h"
 #include "LocalDensityCorr.h"
 #include "ParameterDB.h"
+#include "EXIFReader.h"
 #include <math.h>
 #include <assert.h>
 
@@ -37,9 +38,11 @@ CJPEGImage::CJPEGImage(int nWidth, int nHeight, void* pIJLPixels, void* pEXIFDat
 		m_nEXIFSize = pEXIF[2]*256 + pEXIF[3] + 2;
 		m_pEXIFData = new char[m_nEXIFSize];
 		memcpy(m_pEXIFData, pEXIFData, m_nEXIFSize);
+		m_pEXIFReader = new CEXIFReader(m_pEXIFData);
 	} else {
 		m_nEXIFSize = 0;
 		m_pEXIFData = NULL;
+		m_pEXIFReader = NULL;
 	}
 
 	m_nPixelHash = nJPEGHash;
@@ -102,6 +105,8 @@ CJPEGImage::~CJPEGImage(void) {
 	m_pLastDIB = NULL;
 	delete[] m_pEXIFData;
 	m_pEXIFData = NULL;
+	delete m_pEXIFReader;
+	m_pEXIFReader = NULL;
 }
 
 void* CJPEGImage::GetDIB(CSize fullTargetSize, CSize clippingSize, CPoint targetOffset,
