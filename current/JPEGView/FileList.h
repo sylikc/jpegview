@@ -74,6 +74,8 @@ public:
 	LPCTSTR CurrentFileTitle() const;
 	// Current directory without file name, NULL if none
 	LPCTSTR CurrentDirectory() const;
+	// Modification time of current file
+	const FILETIME* CurrentModificationTime() const;
 	// Get the n-next file, does not change the internal state
 	LPCTSTR PeekNextPrev(int nIndex, bool bForward);
 	// Number of files in file list (for current directory)

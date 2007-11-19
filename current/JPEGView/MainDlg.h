@@ -14,6 +14,7 @@ class CJPEGImage;
 class CSliderMgr;
 class CButtonCtrl;
 class CTextCtrl;
+class CEXIFDisplay;
 
 // The main dialog is a full screen modal dialog with no border and no window title
 class CMainDlg : public CDialogImpl<CMainDlg>
@@ -144,6 +145,7 @@ private:
 	int m_nOffsetY;
 	int m_nCapturedX, m_nCapturedY;
 	int m_nMouseX, m_nMouseY;
+	bool m_bShowFileInfo;
 	bool m_bShowFileName;
 	bool m_bShowHelp;
 	bool m_bLockPaint;
@@ -166,6 +168,7 @@ private:
 	CTextCtrl* m_txtFileName;
 	CTextCtrl* m_txtParamDB;
 	CTextCtrl* m_txtRename;
+	CTextCtrl* m_txtAcqDate;
 	CString m_sSaveDirectory;
 
 	bool OpenFile(bool bAtStartup);
@@ -209,9 +212,11 @@ private:
 	void AfterNewImageLoaded(bool bSynchronize);
 	bool RenameCurrentFile(LPCTSTR sNewFileTitle);
 	int Scale(int nValue) { return (int)(m_fScaling*nValue); }
+	CRect ScreenToDIB(const CSize& sizeDIB, const CRect& rect);
 	bool ScreenToImage(float & fX, float & fY); 
 	bool ImageToScreen(float & fX, float & fY);
 	LPCTSTR CurrentFileName(bool bFileTitle);
+	void FillEXIFDataDisplay(CEXIFDisplay* pEXIFDisplay);
 
 	static void OnSaveToDB(CButtonCtrl & sender);
 	static void OnRemoveFromDB(CButtonCtrl & sender);

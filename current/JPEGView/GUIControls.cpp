@@ -176,6 +176,8 @@ void CSliderMgr::RepositionAll() {
 	int nX = nXStart, nY = 0;
 	int nSliderIdx = 0;
 	int nTotalSliderIdx = 0;
+	int nSliderEndX = 0;
+	int nNumRightAligned = 0;
 	CSliderDouble* pSliderColumn[3];
 	CTextCtrl* pLastTextCtrl = NULL;
 	std::list<CUICtrl*>::iterator iter;
@@ -195,6 +197,7 @@ void CSliderMgr::RepositionAll() {
 					for (int i = 0; i < nSliderIdx; i++) {
 						pSliderColumn[i]->SetPosition(CRect(nX, nYStart + i*m_nSliderHeight, nX + nTotalWidth - m_nSliderGap, nYStart + (i+1)*m_nSliderHeight));
 					}
+					nSliderEndX = nX + nTotalWidth;
 					if (nSliderIdx == 3) {
 						nX += nTotalWidth;
 						nSliderIdx = 0;
@@ -207,6 +210,13 @@ void CSliderMgr::RepositionAll() {
 			CTextCtrl* pTextCtrl = dynamic_cast<CTextCtrl*>(*iter);
 			if (pTextCtrl != NULL) {
 				int nTextWidth = pTextCtrl->GetTextLabelWidth() + 16;
+
+				if (pTextCtrl->IsRightAligned()) {
+					nX = nSliderEndX;
+					nY = nYStart + nNumRightAligned*m_nSliderHeight;
+					nNumRightAligned++;
+				}
+
 				// Special behaviour if not enough room - remove labels for editable texts
 				if (pTextCtrl->IsEditable() && pLastTextCtrl != NULL && !pLastTextCtrl->IsEditable()) {
 					if (nX + nTextWidth > nXLimitScreen) {
@@ -216,13 +226,19 @@ void CSliderMgr::RepositionAll() {
 						pLastTextCtrl->SetShow(true);
 					}
 				}
-				// limit text on screen boundary
-				if (nX + nTextWidth >= nXLimitScreen) {
-					nTextWidth = nXLimitScreen - nX - 1;
+				if (pTextCtrl->IsRightAligned()) {
+					nTextWidth = nXLimitScreen - nX - 10;
+				} else {
+					// limit text on screen boundary
+					if (nX + nTextWidth >= nXLimitScreen) {
+						nTextWidth = nXLimitScreen - nX - 1;
+					}
 				}
 				// only show editable control if large enough
 				if (pTextCtrl->IsEditable()) {
 					pTextCtrl->SetShow(nTextWidth > 40);
+				} else {
+					pTextCtrl->SetShow(nTextWidth > 0);
 				}
 				pTextCtrl->SetPosition(CRect(nX, nY, nX + nTextWidth, nY + m_nSliderHeight));
 				pTextCtrl->SetMaxTextWidth(nXLimitScreen - nX);
@@ -296,6 +312,7 @@ void CUICtrl::SetShow(bool bShow) {
 CTextCtrl::CTextCtrl(CSliderMgr* pSliderMgr, LPCTSTR sTextInit, bool bEditable, 
 					 TextChangedHandler textChangedHandler) : CUICtrl(pSliderMgr) {
 	 m_bEditable = bEditable;
+	 m_bRightAligned = false;
 	 m_textChangedHandler = textChangedHandler;
 	 m_nTextWidth = 0;
 	 m_nMaxTextWidth = 200;
@@ -379,11 +396,13 @@ bool CTextCtrl::OnMouseMove(int nX, int nY) {
 		if (m_position.PtInRect(mousePos)) {
 			if (!m_bHighlight) {
 				m_bHighlight = true;
-				DrawGetDC(false);
+				::InvalidateRect(m_pMgr->GetHWND(), &m_position, FALSE);
+				//DrawGetDC(false);
 			}
 		} else if (m_bHighlight) {
 			m_bHighlight = false;
-			DrawGetDC(false);
+			::InvalidateRect(m_pMgr->GetHWND(), &m_position, FALSE);
+			//DrawGetDC(false);
 		}
 	}
 
@@ -394,7 +413,8 @@ void CTextCtrl::Draw(CDC & dc, CRect position, bool bBlack) {
 	dc.SelectStockFont(DEFAULT_GUI_FONT);
 	dc.SetBkMode(TRANSPARENT);
 	dc.SetTextColor(bBlack ? 0 : m_bHighlight ? RGB(255, 255, 255) : RGB(0, 255, 0));
-	dc.DrawText(m_sText, m_sText.GetLength(), &position, DT_LEFT | DT_VCENTER | DT_SINGLELINE | DT_WORD_ELLIPSIS);
+	unsigned int nAlignment = m_bRightAligned ? DT_RIGHT : DT_LEFT;
+	dc.DrawText(m_sText, m_sText.GetLength(), &position, nAlignment | DT_VCENTER | DT_SINGLELINE | DT_WORD_ELLIPSIS);
 }
 
 // Subclass procedure 
@@ -436,7 +456,8 @@ bool CButtonCtrl::OnMouseLButton(EMouseEvent eMouseEvent, int nX, int nY) {
 		if (eMouseEvent == MouseEvent_BtnDown) {
 			m_pMgr->CaptureMouse(this);
 			m_bDragging = true;
-			DrawGetDC(false);
+			::InvalidateRect(m_pMgr->GetHWND(), &m_position, FALSE);
+			//DrawGetDC(false);
 			return true;
 		}
 		if (eMouseEvent == MouseEvent_BtnUp && m_buttonPressedHandler != NULL) {
@@ -448,7 +469,8 @@ bool CButtonCtrl::OnMouseLButton(EMouseEvent eMouseEvent, int nX, int nY) {
 	if (m_bDragging) {
 		m_pMgr->ReleaseMouse(this);
 		m_bDragging = false;
-		DrawGetDC(false);
+		::InvalidateRect(m_pMgr->GetHWND(), &m_position, FALSE);
+		//DrawGetDC(false);
 	}
 	return bRetVal;
 }
@@ -458,11 +480,13 @@ bool CButtonCtrl::OnMouseMove(int nX, int nY) {
 	if (m_position.PtInRect(mousePos)) {
 		if (!m_bHighlight) {
 			m_bHighlight = true;
-			DrawGetDC(false);
+			::InvalidateRect(m_pMgr->GetHWND(), &m_position, FALSE);
+			//DrawGetDC(false);
 		}
 	} else if (m_bHighlight) {
 		m_bHighlight = false;
-		DrawGetDC(false);
+		::InvalidateRect(m_pMgr->GetHWND(), &m_position, FALSE);
+		//DrawGetDC(false);
 	}
 
 	return false;

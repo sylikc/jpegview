@@ -213,7 +213,7 @@ void CWorkThread::ProcessReadJPEGRequest(CRequest * request) {
 			// Color and b/w JPEG is supported
 			if (pPixelData != NULL && (nBPP == 3 || nBPP == 1)) {
 				request->Image = new CJPEGImage(nWidth, nHeight, pPixelData, 
-					SearchEXIFAPP1Block((unsigned char*)pBuffer), nBPP, 
+					Helpers::FindJPEGMarker(pBuffer, nFileSize, 0xE1), nBPP, 
 					Helpers::CalculateJPEGFileHash(pBuffer, nFileSize), CJPEGImage::IF_JPEG);
 			} else {
 				// failed, try GDI+
@@ -296,16 +296,6 @@ void CWorkThread::DeleteMarkedRequests(CWorkThread* thisPtr) {
 	if (bDeleted) {
 		DeleteMarkedRequests(thisPtr);
 	}
-}
-
-unsigned char* CWorkThread::SearchEXIFAPP1Block(unsigned char* pJPEGStream) {
-	if (pJPEGStream[0] == 0xFF && pJPEGStream[1] == 0xD8 && 
-		pJPEGStream[2] == 0xFF && pJPEGStream[3] == 0xE1 &&
-		strncmp((char*)(pJPEGStream + 6), "Exif", 4) == 0) {
-
-		return pJPEGStream + 2;
-	}
-	return NULL;
 }
 
 void CWorkThread::ProcessImageAfterLoad(CRequest * request) {

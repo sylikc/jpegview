@@ -143,8 +143,7 @@ static bool SaveGDIPlus(LPCTSTR sFileName, CJPEGImage::EImageFormat eFileFormat,
 
 bool CSaveImage::SaveImage(LPCTSTR sFileName, CJPEGImage * pImage, const CImageProcessingParams& procParams,
 						   EProcessingFlags eFlags) {
-	int nOldRegion = pImage->GetDimBitmapRegion();
-	pImage->SetDimBitmapRegion(0);
+    pImage->EnableDimming(false);
 
 	CSize fullImageSize = CSize(pImage->OrigWidth(), pImage->OrigHeight());
 	void* pDIB32bpp = pImage->GetDIB(fullImageSize, fullImageSize, CPoint(0, 0), procParams, eFlags);
@@ -190,7 +189,7 @@ bool CSaveImage::SaveImage(LPCTSTR sFileName, CJPEGImage * pImage, const CImageP
 			CParameterDB::This().AddEntry(newEntry);
 		}
 	}
-	pImage->SetDimBitmapRegion(nOldRegion);
+	pImage->EnableDimming(true);
 
 	return bSuccess;
 }

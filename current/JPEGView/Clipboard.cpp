@@ -10,10 +10,9 @@ void CClipboard::CopyImageToClipboard(HWND hWnd, CJPEGImage * pImage) {
 		return;
 	}
 
-	int nOldRegion = pImage->GetDimBitmapRegion();
-	pImage->SetDimBitmapRegion(0);
+	pImage->EnableDimming(false);
 	DoCopy(hWnd, pImage->DIBWidth(), pImage->DIBHeight(), pImage->DIBPixelsLastProcessed());
-	pImage->SetDimBitmapRegion(nOldRegion);
+	pImage->EnableDimming(true);
 }
 
 void CClipboard::CopyFullImageToClipboard(HWND hWnd, CJPEGImage * pImage, const CImageProcessingParams& procParams,
@@ -32,12 +31,11 @@ void CClipboard::CopyFullImageToClipboard(HWND hWnd, CJPEGImage * pImage, const 
 	clipRect.right = min(pImage->OrigWidth(), clipRect.right);
 	clipRect.bottom = min(pImage->OrigHeight(), clipRect.bottom);
 
-	int nOldRegion = pImage->GetDimBitmapRegion();
-	pImage->SetDimBitmapRegion(0);
+	pImage->EnableDimming(false);
 	CSize fullImageSize = CSize(pImage->OrigWidth(), pImage->OrigHeight());
 	void* pDIB = pImage->GetDIB(fullImageSize, clipRect.Size(), clipRect.TopLeft(), procParams, eFlags);
 	DoCopy(hWnd, clipRect.Width(), clipRect.Height(), pDIB);
-	pImage->SetDimBitmapRegion(nOldRegion);
+	pImage->EnableDimming(true);
 }
 
 CJPEGImage* CClipboard::PasteImageFromClipboard(HWND hWnd, const CImageProcessingParams& procParams, 

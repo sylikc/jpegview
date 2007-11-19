@@ -44,6 +44,9 @@ namespace Helpers {
 		return (d < 0) ? (int)(d - 0.5) : (int)(d + 0.5);
 	}
 
+	// Converts the system time to a string
+	CString SystemTimeToString(const SYSTEMTIME &time);
+
 	// Gets the image size to be used when fitting the image to screen, either using 'fit to screen'
 	// or 'fill with crop' method. If 'fill with crop' is used, the bLimitAR can be set to avoid
 	// filling when to less pixels remain visible
@@ -80,6 +83,10 @@ namespace Helpers {
 
 	// calculate CRT table
 	void CalcCRCTable(unsigned int crc_table[256]);
+
+	// Finds a JPEG marker (beginning with 0xFF) in a JPEG stream. 
+	// To find the first non-marker block, set nMarker to zero.
+	void* FindJPEGMarker(void* pJPEGStream, int nStreamLength, unsigned char nMarker);
 
 	// Calculates a hash value over the given JPEG stream having the given length (in bytes).
 	// All blocks and tables in the JPEG stream are not included into the hash to allow

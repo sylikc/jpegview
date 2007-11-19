@@ -68,6 +68,5 @@ private:
 	static void ProcessReadGDIPlusRequest(CRequest * request);
 	static void SetFileDependentProcessParams(CRequest * request);
 	static void DeleteMarkedRequests(CWorkThread* thisPtr);
-	static unsigned char* SearchEXIFAPP1Block(unsigned char* pJPEGStream);
 	static void ProcessImageAfterLoad(CRequest * request);
 };
