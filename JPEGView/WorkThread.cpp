@@ -212,8 +212,12 @@ void CWorkThread::ProcessReadJPEGRequest(CRequest * request) {
 			void* pPixelData = Jpeg::ReadImage(nWidth, nHeight, nBPP, pBuffer, nFileSize);
 			// Color and b/w JPEG is supported
 			if (pPixelData != NULL && (nBPP == 3 || nBPP == 1)) {
+				uint8* pEXIFBlock = (uint8*)Helpers::FindJPEGMarker(pBuffer, nFileSize, 0xE1);
+				if (pEXIFBlock != NULL && strncmp((const char*)(pEXIFBlock + 4), "Exif", 4) != 0) {
+					pEXIFBlock = NULL;
+				}
 				request->Image = new CJPEGImage(nWidth, nHeight, pPixelData, 
-					Helpers::FindJPEGMarker(pBuffer, nFileSize, 0xE1), nBPP, 
+					pEXIFBlock, nBPP, 
 					Helpers::CalculateJPEGFileHash(pBuffer, nFileSize), CJPEGImage::IF_JPEG);
 			} else {
 				// failed, try GDI+
