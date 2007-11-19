@@ -2234,6 +2234,11 @@ void CMainDlg::FillEXIFDataDisplay(CEXIFDisplay* pEXIFDisplay) {
 		if (pEXIFReader != NULL) {
 			if (pEXIFReader->GetAcquisitionTimePresent()) {
 				pEXIFDisplay->AddLine(CNLS::GetString(_T("Acquisition date:")), pEXIFReader->GetAcquisitionTime());
+			} else {
+				const FILETIME* pFileTime = m_pFileList->CurrentModificationTime();
+				if (pFileTime != NULL) {
+					pEXIFDisplay->AddLine(CNLS::GetString(_T("Modification date:")), *pFileTime);
+				}
 			}
 			if (pEXIFReader->GetCameraModelPresent()) {
 				pEXIFDisplay->AddLine(CNLS::GetString(_T("Camera model:")), pEXIFReader->GetCameraModel());
