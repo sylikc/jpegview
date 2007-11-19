@@ -24,6 +24,7 @@ JPEGView Help	JPEGView Hilfe
 Current image	Aktuelles Bild
 Close help text display / Close JPEGView	Hilfetextanzeige schliessen / JPEGView beenden
 Show/hide this help text	Hilfetext anzeigen / schliessen
+Show/hide picture information (EXIF data)	Bild-Informationen anzeigen (EXIF Daten)
 Show/hide file name	Dateiname anzeigen / nicht anzeigen
 Enable/disable high quality resampling	Hochwertiges Resampling einschalten/ausschalten
 Enable/disable keeping of geometry related (zoom/pan/rotation)	Geometrieparameter (Zoom/Pan/Rotation) und Bildbearbeitungsparameter
@@ -111,6 +112,7 @@ Copy to clipboard	In Zwischenablage kopieren
 Copy original size image	Bild in Originalgrösse kopieren
 Paste from clipboard	Aus Zwischenablage einfügen
 Batch rename/copy...	Bildserie umbenennen/kopieren...
+Show picture info (EXIF)	Bild-Info (EXIF) anzeigen
 Show filename	Dateiname anzeigen
 Navigation	Navigation
 Loop folder	Ordner anzeigen
@@ -178,3 +180,16 @@ Crop Selection	Selektion freistellen
 Copy Selection to Clipboard	Selektion in Zwischenablage kopieren
 Zoom to Selection	Auf Selektion einzoomen
 Pasting image from clipboard failed!	Bild aus Zwischenablage kann nicht eingefügt werden!
+Image width:	Bildbreite:
+Image height:	Bildhöhe:
+Acquisition date:	Aufnahmedatum:
+Camera model:	Kameramodell:
+Exposure time (s):	Belichtungszeit (s):
+Exposure bias (EV):	Belichtungskorrektur (EV):
+Flash fired:	Blitz:
+Focal length (mm):	Brennweite (mm):
+F-Number:	F-Nummer:
+ISO Speed:	ISO-Wert:
+Modification date:	Änderungsdatum:
+yes	ja
+no	nein

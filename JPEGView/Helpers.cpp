@@ -45,6 +45,16 @@ CSize GetImageRect(int nWidth, int nHeight, int nScreenWidth, int nScreenHeight,
 	return CSize((int)(nWidth/dAR + 0.5), (int)(nHeight/dAR + 0.5));
 }
 
+CString SystemTimeToString(const SYSTEMTIME &time) {
+	TCHAR sBufferDate[64];
+	TCHAR sBufferDay[8];
+	TCHAR sBufferTime[64];
+	::GetDateFormat(LOCALE_USER_DEFAULT, 0, &time, _T("ddd"), sBufferDay, 8);
+	::GetDateFormat(LOCALE_USER_DEFAULT, DATE_SHORTDATE, &time, NULL, sBufferDate, 64);
+	::GetTimeFormat(LOCALE_USER_DEFAULT, TIME_NOSECONDS, &time, NULL, sBufferTime, 64);
+	return CString(sBufferDay) + _T(" ") + sBufferDate + _T(" ") + sBufferTime;
+}
+
 CSize GetImageRect(int nWidth, int nHeight, int nScreenWidth, int nScreenHeight, EAutoZoomMode eAutoZoomMode) {
 	CSize newSize = GetImageRect(nWidth, nHeight, nScreenWidth, nScreenHeight,
 		eAutoZoomMode == ZM_FitToScreen || eAutoZoomMode == ZM_FillScreen,
@@ -183,17 +193,17 @@ void CalcCRCTable(unsigned int crc_table[256]) {
      }
 }
 
-__int64 CalculateJPEGFileHash(void* pJPEGStream, int nStreamLength) {
+void* FindJPEGMarker(void* pJPEGStream, int nStreamLength, unsigned char nMarker) {
 	uint8* pStream = (uint8*) pJPEGStream;
 	if (pStream == NULL || nStreamLength < 3 || pStream[0] != 0xFF || pStream[1] != 0xD8) {
-		return 0;
+		return NULL; // not a JPEG
 	}
 	int nIndex = 2;
 	do {
 		if (pStream[nIndex] == 0xFF) {
 			// block header found, skip padding bytes
 			while (pStream[nIndex] == 0xFF && nIndex < nStreamLength) nIndex++;
-			if (pStream[nIndex] == 0) {
+			if (pStream[nIndex] == 0 || pStream[nIndex] == nMarker) {
 				break; // 0xFF 0x00 is part of pixel block, break
 			} else {
 				// it's a block marker, read length of block and skip the block
@@ -208,6 +218,21 @@ __int64 CalculateJPEGFileHash(void* pJPEGStream, int nStreamLength) {
 			break; // block with pixel data found, start hashing from here
 		}
 	} while (nIndex < nStreamLength);
+
+	if (nMarker == 0 || pStream[nIndex] == nMarker) {
+		return &(pStream[nIndex-1]); // place on marker start
+	} else {
+		return NULL;
+	}
+}
+
+__int64 CalculateJPEGFileHash(void* pJPEGStream, int nStreamLength) {
+	uint8* pStream = (uint8*) pJPEGStream;
+	void* pPixelStart = FindJPEGMarker(pJPEGStream, nStreamLength, 0);
+	if (pPixelStart == NULL) {
+		return 0;
+	}
+	int nIndex = (uint8*)pPixelStart - (uint8*)pJPEGStream + 1;
 	
 	// take whole stream in case of inconsistency or if remaining part is too small
 	if (nStreamLength - nIndex < 4) {

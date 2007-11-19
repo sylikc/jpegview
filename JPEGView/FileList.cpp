@@ -345,6 +345,14 @@ int CFileList::CurrentIndex() const {
 	return -1;
 }
 
+const FILETIME* CFileList::CurrentModificationTime() const {
+	if (m_iter != m_fileList.end()) {
+		return &(m_iter->GetLastModTime());
+	} else {
+		return NULL;
+	}
+}
+
 LPCTSTR CFileList::PeekNextPrev(int nIndex, bool bForward) {
 	std::list<CFileDesc>::iterator thisIter = m_iter;
 	LPCTSTR sFileName;

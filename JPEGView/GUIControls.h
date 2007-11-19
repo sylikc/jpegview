@@ -59,11 +59,14 @@ public:
 	int GetTextLabelWidth() const { return m_nTextWidth; }
 	// gets if the text is editable
 	bool IsEditable() const { return m_bEditable; }
+	// gets if the text is right aligned to the screen
+	bool IsRightAligned() const { return m_bRightAligned; }
 	// sets if the text is editable
 	void SetEditable(bool bEditable);
 	// sets the maximal text width in pixels
 	void SetMaxTextWidth(int nMaxWidth) { m_nMaxTextWidth = nMaxWidth; }
-
+	// Sets this text as right aligned on the right border of the screen (true) or left aligned (default, false)
+	void SetRightAligned(bool bValue) { m_bRightAligned = bValue; }
 	// terminates the edit mode and accept the text change if the flag is true. If false, the text change
 	// is undone.
 	void TerminateEditMode(bool bAcceptNewName);
@@ -85,6 +88,7 @@ private:
 	int m_nTextWidth;
 	int m_nMaxTextWidth;
 	bool m_bEditable;
+	bool m_bRightAligned;
 	CEdit* m_pEdit;
 	TextChangedHandler* m_textChangedHandler;
 };

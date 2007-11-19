@@ -6,6 +6,14 @@ class CHistogram;
 class CLocalDensityCorr;
 class CEXIFReader;
 
+// Represents a rectangle to dim out in the image
+struct CDimRect {
+	CDimRect() {}
+	CDimRect(float fFactor, const CRect& rect) { Factor = fFactor; Rect = rect; }
+	float Factor; // between 0.0 and 1.0
+	CRect Rect;
+};
+
 // Class holding a decoded image and allowing to get a processed section of the raw
 // image as DIB.
 class CJPEGImage
@@ -135,9 +143,10 @@ public:
 	// processing parameters for this file (maybe different from the global ones)
 	void SetFileDependentProcessParams(LPCTSTR sFileName, CProcessParams* pParams);
 
-	// Sets the region at the bottom of the returned DIB that is dimmed out (0 for no dimming)
-	void SetDimBitmapRegion(int nRegion);
-	int GetDimBitmapRegion() const { return m_nDimRegion; }
+	// Sets the regions of the returned DIB that are dimmed out (NULL for no dimming)
+	void SetDimRects(const CDimRect* dimRects, int nSize);
+	// Allows to disable/enable dimming (default is enabled)
+	void EnableDimming(bool bEnable);
 
 	// Gets if the image was found in parameter DB
 	bool IsInParamDB() const { return m_bInParamDB; }
@@ -223,7 +232,9 @@ private:
 	bool m_bInParamDB; // true if image found in param DB
 	bool m_bHasZoomStoredInParamDB; // true if image in param DB and entry contains zoom and offset values
 	bool m_bFirstReprocessing; // true if never reprocessed before, some optimizations may be not done initially
-	int m_nDimRegion;
+	CDimRect* m_pDimRects;
+	int m_nNumDimRects;
+	bool m_bEnableDimming;
 
 	LONG m_nLastOpTickCount;
 

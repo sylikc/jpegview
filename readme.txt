@@ -21,6 +21,14 @@ to JPEGView\Debug
 Changelog
 *********
 
+[1.0.15]
+
+Bugs removed:
+- If using ClearType fonts, the button text on the image processing area is now rendered correctly
+- EXIF information is now also found if not placed directly after SOI in JPEG image (e.g. after an APP0 block)
+New features:
+- Display of EXIF information from digicam JPEG files (F2)
+
 [1.0.14]
 
 Bugs removed:

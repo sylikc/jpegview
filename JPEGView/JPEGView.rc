@@ -142,7 +142,8 @@ BEGIN
 	  MENUITEM "Copy to clipboard\tCtrl-C",		IDM_COPY
       MENUITEM "Copy original size image\tCtrl-X",	IDM_COPY_FULL
 	  MENUITEM "Paste from clipboard\tCtrl-V",	IDM_PASTE
-      MENUITEM "Show filename\tF2",				IDM_SHOW_FILENAME
+	  MENUITEM "Show picture info (EXIF)\tF2",	IDM_SHOW_FILEINFO
+      MENUITEM "Show filename\tCtrl-F2",		IDM_SHOW_FILENAME
 	  MENUITEM SEPARATOR
 	  MENUITEM "Next image\tPgDn",				IDM_NEXT
 	  MENUITEM "Previous image\tPgUp",			IDM_PREV

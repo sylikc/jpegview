@@ -11,9 +11,6 @@
 #include <math.h>
 #include <assert.h>
 
-// Dim factor (0..1) for SetDimBitmapRegion(), 0 means black, 1 means no dimming
-static const float cfDimFactor = 0.6f;
-
 ///////////////////////////////////////////////////////////////////////////////////
 // Public interface
 ///////////////////////////////////////////////////////////////////////////////////
@@ -61,7 +58,9 @@ CJPEGImage::CJPEGImage(int nWidth, int nHeight, void* pIJLPixels, void* pEXIFDat
 	m_nInitialRotation = 0;
 	m_dInitialZoom = -1;
 	m_initialOffsets = CPoint(0, 0);
-	m_nDimRegion = 0;
+	m_pDimRects = 0;
+	m_nNumDimRects = 0;
+	m_bEnableDimming = true;
 	m_bInParamDB = false;
 	m_bHasZoomStoredInParamDB = false;
 
@@ -107,6 +106,8 @@ CJPEGImage::~CJPEGImage(void) {
 	m_pEXIFData = NULL;
 	delete m_pEXIFReader;
 	m_pEXIFReader = NULL;
+	delete[] m_pDimRects;
+	m_pDimRects = NULL;
 }
 
 void* CJPEGImage::GetDIB(CSize fullTargetSize, CSize clippingSize, CPoint targetOffset,
@@ -203,7 +204,7 @@ void CJPEGImage::ResampleWithPan(void* & pDIBPixels, void* & pDIBPixelsLUTProces
 			CSize(sourceRect.Width(), sourceRect.Height()));
 
 		bool bCanUseLUTProcDIB = ApplyCorrectionLUTandLDC(imageProcParams, eProcFlags, pDIBPixelsLUTProcessed, fullTargetSize, 
-			targetOffset, pDIBPixels, clippingSize, false, true) != NULL && m_nDimRegion == 0;
+			targetOffset, pDIBPixels, clippingSize, false, true) != NULL && (m_pDimRects == NULL || !m_bEnableDimming);
 
 		// the LUT processed pixels cannot be used and the original pixels are not available -
 		// full recreation of DIBs is needed
@@ -413,21 +414,51 @@ void CJPEGImage::Crop(CRect cropRect) {
 	m_bCropped = true;
 }
 
-void CJPEGImage::SetDimBitmapRegion(int nRegion) {
+void CJPEGImage::SetDimRects(const CDimRect* dimRects, int nSize) {
+	bool bIdentical = false;
 	if (m_pDIBPixelsLUTProcessed) {
-		if (nRegion > m_nDimRegion) {
-			// only dim delta area
-			int nDelta = nRegion - m_nDimRegion;
-			CBasicProcessing::DimRectangle32bpp(DIBWidth(), DIBHeight(), m_pDIBPixelsLUTProcessed, 
-				CRect(0, DIBHeight() - nRegion, DIBWidth(), DIBHeight() - nRegion + nDelta), cfDimFactor);
-		} else if (nRegion < m_nDimRegion) {
-			// can't undim - force to recreate processed DIB on next access
+		bool bCanReuseDIB = false;
+		if (nSize >= m_nNumDimRects) {
+			bCanReuseDIB = true;
+			for (int i = 0; i < m_nNumDimRects; i++) {
+				if (dimRects[i].Rect != m_pDimRects[i].Rect || dimRects[i].Factor != m_pDimRects[i].Factor) {
+					bCanReuseDIB = false;
+					break;
+				}
+			}
+		}
+		if (bCanReuseDIB) {
+			bIdentical = nSize == m_nNumDimRects;
+			// only dim the new rectangles
+			for (int i = m_nNumDimRects; i < nSize; i++) {
+				CBasicProcessing::DimRectangle32bpp(DIBWidth(), DIBHeight(), m_pDIBPixelsLUTProcessed,
+					dimRects[i].Rect, dimRects[i].Factor);
+			}
+		} else {
+			// force to recreate processed DIB on next access
 			delete[] m_pDIBPixelsLUTProcessed;
 			m_pDIBPixelsLUTProcessed = NULL;
 			m_pLastDIB = NULL;
 		}
 	}
-	m_nDimRegion = nRegion; 
+	if (!bIdentical) {
+		delete[] m_pDimRects;
+		m_pDimRects = NULL;
+		m_nNumDimRects = nSize;
+		if (nSize > 0) {
+			m_pDimRects = new CDimRect[nSize];
+			memcpy(m_pDimRects, dimRects, nSize*sizeof(CDimRect));
+		}
+	}
+}
+
+void CJPEGImage::EnableDimming(bool bEnable) {
+	if (bEnable != m_bEnableDimming && m_pDimRects != NULL) {
+		m_bEnableDimming = bEnable;
+		delete[] m_pDIBPixelsLUTProcessed;
+		m_pDIBPixelsLUTProcessed = NULL;
+		m_pLastDIB = NULL;
+	}
 }
 
 void* CJPEGImage::DIBPixelsLastProcessed() {
@@ -572,11 +603,12 @@ void* CJPEGImage::ApplyCorrectionLUTandLDC(const CImageProcessingParams & imageP
 		fabs(imageProcParams.LightenShadowSteepness - m_imageProcParams.LightenShadowSteepness) > 1e-4 ;
 	bool bMustReapplyLDC = bLDC && (!bLDCOld || bGeometryChanged || bLDCParametersChanged);
 	bool bMustUse3ChannelLUT = bAutoContrast || !bNoColorCastCorrection;
+	bool bUseDimming = m_pDimRects != NULL && m_bEnableDimming;
 
 	if (!bMustReapplyLUT && !bMustReapplyLDC && pCachedTargetDIB != NULL) {
-		// consider special case that dim area is set to zero and no LUT and LDC is applied but
+		// consider special case that nothing is dimmed and no LUT and LDC is applied but
 		// processed pixel is here, we do not want to use it - in this case we just continue.
-		if (!(bNoLUTApplied && m_nDimRegion == 0 && !bLDC)) {
+		if (!(bNoLUTApplied && !bUseDimming && !bLDC)) {
 			return pCachedTargetDIB;
 		}
 	}
@@ -648,7 +680,7 @@ void* CJPEGImage::ApplyCorrectionLUTandLDC(const CImageProcessingParams & imageP
 			pCachedTargetDIB = CBasicProcessing::Apply3ChannelLUT32bpp(dibSize.cx, dibSize.cy, pSourceDIB, pLUT);
 		}
 		delete[] pLUT;
-	} else if (m_nDimRegion == 0) {
+	} else if (!bUseDimming) {
 		// no LUT, no LDC, no dimming --> return original pixels
 		return pSourceDIB;
 	} else {
@@ -657,9 +689,11 @@ void* CJPEGImage::ApplyCorrectionLUTandLDC(const CImageProcessingParams & imageP
 		memcpy(pCachedTargetDIB, pSourceDIB, dibSize.cx*dibSize.cy*4);
 	}
 
-	if (m_nDimRegion > 0) {
-		CBasicProcessing::DimRectangle32bpp(dibSize.cx, dibSize.cy, pCachedTargetDIB, 
-			CRect(0, dibSize.cy - m_nDimRegion, dibSize.cx, dibSize.cy), cfDimFactor);
+	if (bUseDimming) {
+		for (int i = 0; i < m_nNumDimRects; i++) {
+			CBasicProcessing::DimRectangle32bpp(dibSize.cx, dibSize.cy, pCachedTargetDIB, 
+				m_pDimRects[i].Rect, m_pDimRects[i].Factor);
+		}
 	}
 
 	return pCachedTargetDIB;

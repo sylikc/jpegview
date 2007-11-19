@@ -25,6 +25,8 @@
 #include "NLS.h"
 #include "BatchCopyDlg.h"
 #include "ResizeFilter.h"
+#include "EXIFReader.h"
+#include "EXIFDisplay.h"
 
 //////////////////////////////////////////////////////////////////////////////////////////////
 // Constants
@@ -57,6 +59,10 @@ static const bool SHOW_TIMING_INFO = false; // Set to true for debugging
 static const int NO_REQUEST = 1; // used in GotoImage() method
 static const int NO_REMOVE_KEY_MSG = 2; // used in GotoImage() method
 static const int KEEP_PARAMETERS = 4; // used in GotoImage() method
+
+// Dim factor (0..1) for image processing area, 0 means black, 1 means no dimming
+static const float cfDimFactorIPA = 0.6f;
+static const float cfDimFactorEXIF = 0.5f;
 
 CMainDlg * CMainDlg::sm_instance = NULL;
 
@@ -149,6 +155,7 @@ CMainDlg::CMainDlg() {
 	m_dCurrentInitialLightenShadows = -1;
 
 	m_bShowFileName = sp.ShowFileName();
+	m_bShowFileInfo = false;
 	m_bKeepParams = sp.KeepParams();
 	m_eAutoZoomMode = sp.AutoZoomMode();
 
@@ -229,6 +236,8 @@ LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam
 	m_btnRemoveFromDB = m_pSliderMgr->AddButton(CNLS::GetString(_T("Remove from")), &OnRemoveFromDB);
 	m_txtRename = m_pSliderMgr->AddText(CNLS::GetString(_T("Rename:")), false, NULL);
 	m_txtFileName = m_pSliderMgr->AddText(NULL, true, &OnRenameFile);
+	m_txtAcqDate = m_pSliderMgr->AddText(NULL, false, NULL);
+	m_txtAcqDate->SetRightAligned(true);
 
 	// place window on monitor as requested in INI file
 	int nMonitor = CSettingsProvider::This().DisplayMonitor();
@@ -290,6 +299,13 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 
 	this->GetClientRect(&m_clientRect);
 
+	CEXIFDisplay* pEXIFDisplay = m_bShowFileInfo ? new CEXIFDisplay(dc) : NULL;
+	CRect rectEXIFInfo = CRect(0, 0, 0, 0);
+	if (pEXIFDisplay != NULL && m_pCurrentImage != NULL) {
+		FillEXIFDataDisplay(pEXIFDisplay);
+		rectEXIFInfo = CRect(0, 32, pEXIFDisplay->GetSize().cx, pEXIFDisplay->GetSize().cy + 32);
+	}
+
 	if (m_pCurrentImage == NULL) {
 		dc.FillRect(&m_clientRect, (HBRUSH)::GetStockObject(BLACK_BRUSH));
 	} else {
@@ -329,8 +345,20 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 		CSize clippedSize(min(m_clientRect.Width(), newSize.cx), min(m_clientRect.Height(), newSize.cy));
 		CPoint offsets(m_nOffsetX, m_nOffsetY);
 		CPoint offsetsInImage = m_pCurrentImage->ConvertOffset(newSize, clippedSize, offsets);
+		
+		// Configure areas dimmed out in bitmap
 		int nDimRegion = m_bShowIPTools ? m_pSliderMgr->SliderAreaHeight() - (m_clientRect.Height() - clippedSize.cy)/2 : 0;
-		m_pCurrentImage->SetDimBitmapRegion(max(0, nDimRegion));
+		CDimRect dimRects[2];
+		dimRects[0] = CDimRect(cfDimFactorIPA, CRect(0, clippedSize.cy - nDimRegion, clippedSize.cx, clippedSize.cy));
+		int nNumDimRects = (nDimRegion <= 0) ? 0 : 1;
+		if (rectEXIFInfo.Width() > 0) {
+			dimRects[nNumDimRects] = CDimRect(cfDimFactorEXIF, ScreenToDIB(clippedSize, rectEXIFInfo));
+			if (dimRects[nNumDimRects].Rect.Width() > 0 && dimRects[nNumDimRects].Rect.Height() > 0) {
+				nNumDimRects++;
+			}
+		}
+		m_pCurrentImage->SetDimRects(dimRects, nNumDimRects);
+
 		void* pDIBData = m_pCurrentImage->GetDIB(newSize, clippedSize, offsetsInImage, 
 			    *m_pImageProcParams, 
 				CreateProcessingFlags(m_bHQResampling && !m_bTemporaryLowQ, 
@@ -439,10 +467,10 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 		dc.SetBkMode(OPAQUE);
 		TCHAR sNS[32];
 		_stprintf_s(sNS, 32, _T("Nightshot: %.2f"), m_pCurrentImage->IsNightShot());
-		dc.TextOut(5, 35, sNS);
+		dc.TextOut(500, 5, sNS);
 
 		_stprintf_s(sNS, 32, _T("Sunset: %.2f"), m_pCurrentImage->IsSunset());
-		dc.TextOut(120, 35, sNS);
+		dc.TextOut(620, 5, sNS);
 		dc.SetBkMode(TRANSPARENT);
 	}
 #endif
@@ -450,6 +478,11 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 	// Paint the image processing area at bottom of screen
 	if (m_bShowIPTools) {
 		m_pSliderMgr->OnPaint(dc);
+	}
+
+	// Display file and EXIF information
+	if (pEXIFDisplay != NULL && m_pCurrentImage != NULL) {
+		pEXIFDisplay->Show(rectEXIFInfo.left, rectEXIFInfo.top);
 	}
 
 	// Display the help screen
@@ -465,7 +498,8 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 		}
 		helpDisplay.AddLine(_T("Esc"), CNLS::GetString(_T("Close help text display / Close JPEGView")));
 		helpDisplay.AddLine(_T("F1"), CNLS::GetString(_T("Show/hide this help text")));
-		helpDisplay.AddLineInfo(_T("F2"), m_bShowFileName, CNLS::GetString(_T("Show/hide file name")));
+		helpDisplay.AddLineInfo(_T("F2"), m_bShowFileInfo, CNLS::GetString(_T("Show/hide picture information (EXIF data)")));
+		helpDisplay.AddLineInfo(_T("Ctrl+F2"), m_bShowFileName, CNLS::GetString(_T("Show/hide file name")));
 		helpDisplay.AddLineInfo(_T("F3"), m_bHQResampling, CNLS::GetString(_T("Enable/disable high quality resampling")));
 		helpDisplay.AddLineInfo(_T("F4"), m_bKeepParams, CNLS::GetString(_T("Enable/disable keeping of geometry related (zoom/pan/rotation)")));
 		helpDisplay.AddLineInfo(_T(""),  LPCTSTR(NULL), CNLS::GetString(_T("and image processing (brightness/contrast/sharpen) parameters between images")));
@@ -525,6 +559,8 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 		PaintCropRect(dc.m_hDC);
 		ShowCroppingRect(m_nMouseX, m_nMouseY, dc.m_hDC);
 	}
+
+	delete pEXIFDisplay;
 
 	return 0;
 }
@@ -690,7 +726,7 @@ LRESULT CMainDlg::OnKeyDown(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOO
 			PerformZoom(-1, true);
 		}
 	} else if (wParam == VK_F2) {
-		ExecuteCommand(IDM_SHOW_FILENAME);
+		ExecuteCommand(bCtrl ? IDM_SHOW_FILENAME : IDM_SHOW_FILEINFO);
 	} else if (wParam == VK_F3) {
 		m_bHQResampling = !m_bHQResampling;
 		this->Invalidate(FALSE);
@@ -931,6 +967,7 @@ LRESULT CMainDlg::OnContextMenu(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam,
 	HMENU hMenuTrackPopup = ::GetSubMenu(hMenu, 0);
 	TranslateMenu(hMenuTrackPopup);
 	
+	if (m_bShowFileInfo) ::CheckMenuItem(hMenuTrackPopup, IDM_SHOW_FILEINFO, MF_CHECKED);
 	if (m_bShowFileName) ::CheckMenuItem(hMenuTrackPopup, IDM_SHOW_FILENAME, MF_CHECKED);
 	if (m_bAutoContrast) ::CheckMenuItem(hMenuTrackPopup, IDM_AUTO_CORRECTION, MF_CHECKED);
 	if (m_bLDC) ::CheckMenuItem(hMenuTrackPopup, IDM_LDC, MF_CHECKED);
@@ -1065,6 +1102,10 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 			if (m_pCurrentImage != NULL) {
 				BatchCopy();
 			}
+			break;
+		case IDM_SHOW_FILEINFO:
+			m_bShowFileInfo = !m_bShowFileInfo;
+			this->Invalidate(FALSE);
 			break;
 		case IDM_SHOW_FILENAME:
 			m_bShowFileName = !m_bShowFileName;
@@ -1945,7 +1986,14 @@ void CMainDlg::AfterNewImageLoaded(bool bSynchronize) {
 			m_txtFileName->SetText(_T(""));
 		}
 		m_txtFileName->SetEditable(!m_pFileList->IsSlideShowList());
+		CEXIFReader* pEXIF = m_pCurrentImage->GetEXIFReader();
+		if (pEXIF != NULL && pEXIF->GetAcquisitionTime().wYear > 1600) {
+			m_txtAcqDate->SetText(CString(_T("* ")) + Helpers::SystemTimeToString(pEXIF->GetAcquisitionTime()));
+		} else {
+			m_txtAcqDate->SetText(_T(""));
+		}
 	} else {
+		m_txtAcqDate->SetText(_T(""));
 		m_txtFileName->SetText(_T(""));
 		m_txtFileName->SetEditable(false);
 		m_txtParamDB->SetShow(false);
@@ -2042,7 +2090,7 @@ bool CMainDlg::RenameCurrentFile(LPCTSTR sNewFileTitle) {
 	m_pJPEGProvider->FileHasRenamed(sCurFileName, sNewFileName);
 
 	// Needs to update filename
-	if (m_bShowFileName || m_bShowHelp) {
+	if (m_bShowFileInfo || m_bShowFileName || m_bShowHelp) {
 		this->Invalidate(FALSE);
 	}
 	return false;
@@ -2118,6 +2166,17 @@ void CMainDlg::SaveParameters() {
 	}
 }
 
+CRect CMainDlg::ScreenToDIB(const CSize& sizeDIB, const CRect& rect) {
+	int nOffsetX = (sizeDIB.cx - m_clientRect.Width())/2;
+	int nOffsetY = (sizeDIB.cy - m_clientRect.Height())/2;
+
+	CRect rectDIB = CRect(rect.left + nOffsetX, rect.top + nOffsetY, rect.right + nOffsetX, rect.bottom + nOffsetY);
+	
+	CRect rectClipped;
+	rectClipped.IntersectRect(rectDIB, CRect(0, 0, sizeDIB.cx, sizeDIB.cy));
+	return rectClipped;
+}
+
 bool CMainDlg::ScreenToImage(float & fX, float & fY) {
 	if (m_pCurrentImage == NULL) {
 		return false;
@@ -2157,5 +2216,51 @@ LPCTSTR CMainDlg::CurrentFileName(bool bFileTitle) {
 		return m_pFileList->CurrentFileTitle();
 	} else {
 		return m_pFileList->Current();
+	}
+}
+
+void CMainDlg::FillEXIFDataDisplay(CEXIFDisplay* pEXIFDisplay) {
+	CString sFileTitle;
+	if (m_pCurrentImage->IsClipboardImage()) {
+		sFileTitle = CurrentFileName(true);
+	} else if (m_pFileList->Current() != NULL) {
+		sFileTitle.Format(_T("[%d/%d]  %s"), m_pFileList->CurrentIndex() + 1, m_pFileList->Size(), CurrentFileName(true));
+	}
+	pEXIFDisplay->AddTitle(sFileTitle);
+	pEXIFDisplay->AddLine(CNLS::GetString(_T("Image width:")), m_pCurrentImage->OrigWidth());
+	pEXIFDisplay->AddLine(CNLS::GetString(_T("Image height:")), m_pCurrentImage->OrigHeight());
+	if (!m_pCurrentImage->IsClipboardImage()) {
+		CEXIFReader* pEXIFReader = m_pCurrentImage->GetEXIFReader();
+		if (pEXIFReader != NULL) {
+			if (pEXIFReader->GetAcquisitionTimePresent()) {
+				pEXIFDisplay->AddLine(CNLS::GetString(_T("Acquisition date:")), pEXIFReader->GetAcquisitionTime());
+			}
+			if (pEXIFReader->GetCameraModelPresent()) {
+				pEXIFDisplay->AddLine(CNLS::GetString(_T("Camera model:")), pEXIFReader->GetCameraModel());
+			}
+			if (pEXIFReader->GetExposureTimePresent()) {
+				pEXIFDisplay->AddLine(CNLS::GetString(_T("Exposure time (s):")), pEXIFReader->GetExposureTime());
+			}
+			if (pEXIFReader->GetExposureBiasPresent()) {
+				pEXIFDisplay->AddLine(CNLS::GetString(_T("Exposure bias (EV):")), pEXIFReader->GetExposureBias(), 2);
+			}
+			if (pEXIFReader->GetFlashFiredPresent()) {
+				pEXIFDisplay->AddLine(CNLS::GetString(_T("Flash fired:")), pEXIFReader->GetFlashFired() ? CNLS::GetString(_T("yes")) : CNLS::GetString(_T("no")));
+			}
+			if (pEXIFReader->GetFocalLengthPresent()) {
+				pEXIFDisplay->AddLine(CNLS::GetString(_T("Focal length (mm):")), pEXIFReader->GetFocalLength(), 1);
+			}
+			if (pEXIFReader->GetFNumberPresent()) {
+				pEXIFDisplay->AddLine(CNLS::GetString(_T("F-Number:")), pEXIFReader->GetFNumber(), 1);
+			}
+			if (pEXIFReader->GetISOSpeedPresent()) {
+				pEXIFDisplay->AddLine(CNLS::GetString(_T("ISO Speed:")), (int)pEXIFReader->GetISOSpeed());
+			}
+		} else {
+			const FILETIME* pFileTime = m_pFileList->CurrentModificationTime();
+			if (pFileTime != NULL) {
+				pEXIFDisplay->AddLine(CNLS::GetString(_T("Modification date:")), *pFileTime);
+			}
+		}
 	}
 }
