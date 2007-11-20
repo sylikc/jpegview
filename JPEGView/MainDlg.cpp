@@ -298,12 +298,13 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 	CPaintDC dc(m_hWnd);
 
 	this->GetClientRect(&m_clientRect);
+	CRect imageProcessingArea = m_pSliderMgr->SliderAreaRect();
 
 	CEXIFDisplay* pEXIFDisplay = m_bShowFileInfo ? new CEXIFDisplay(dc) : NULL;
 	CRect rectEXIFInfo = CRect(0, 0, 0, 0);
 	if (pEXIFDisplay != NULL && m_pCurrentImage != NULL) {
 		FillEXIFDataDisplay(pEXIFDisplay);
-		rectEXIFInfo = CRect(0, 32, pEXIFDisplay->GetSize().cx, pEXIFDisplay->GetSize().cy + 32);
+		rectEXIFInfo = CRect(imageProcessingArea.left, 32, pEXIFDisplay->GetSize().cx, pEXIFDisplay->GetSize().cy + 32);
 	}
 
 	if (m_pCurrentImage == NULL) {
@@ -407,7 +408,7 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 		} else if (m_pFileList->Current() != NULL) {
 			sFileName.Format(_T("[%d/%d]  %s"), m_pFileList->CurrentIndex() + 1, m_pFileList->Size(), m_pFileList->Current());
 		}
-		DrawTextBordered(dc, sFileName, CRect(Scale(2), Scale(2), m_clientRect.right, Scale(30)), DT_LEFT); 
+		DrawTextBordered(dc, sFileName, CRect(Scale(2), imageProcessingArea.left, imageProcessingArea.right, Scale(30)), DT_LEFT); 
 	}
 
 	// Display errors and warnings

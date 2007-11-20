@@ -181,6 +181,8 @@ public:
 	void ShowHideSlider(bool bShow, double* pdValue);
 	// height of slider area
 	int SliderAreaHeight() const { return m_nTotalAreaHeight; }
+	// rectangle used by the image processing area
+	CRect SliderAreaRect();
 
 	// Adds a text control to the slider area. The text can be editable or static. The handler
 	// procedure gets called for editable texts when the text has been changed. It must be null when
@@ -219,6 +221,7 @@ private:
 	std::list<CUICtrl*> m_ctrlList;
 	CUICtrl* m_pCtrlCaptureMouse;
 	CRect m_clientRect;
+	CRect m_sliderAreaRect;
 
 	void RepositionAll();
 };

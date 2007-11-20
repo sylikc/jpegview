@@ -54,6 +54,7 @@ CSliderMgr::CSliderMgr(HWND hWnd) {
 	m_nSliderGap = (int) (SLIDER_GAP*m_fDPIScale);
 	m_nTotalAreaHeight = m_nSliderHeight*3 + SCREEN_Y_OFFSET;
 	m_clientRect = CRect(0, 0, 0, 0);
+	m_sliderAreaRect = CRect(0, 0, 0, 0);
 
 	m_pCtrlCaptureMouse = NULL;
 	m_nTotalSliders = 0;
@@ -141,22 +142,20 @@ void CSliderMgr::OnPaint(CPaintDC & dc) {
 	}
 }
 
-void CSliderMgr::RepositionAll() {
-	const int X_OFFSET = 5;
-
+CRect CSliderMgr::SliderAreaRect() {
 	CRect clientRect;
 	::GetClientRect(m_hWnd, &clientRect);
 
 	// Check if client rectangle unchanged - no repositioning needed
 	if (m_clientRect == clientRect) {
-		return;
+		return m_sliderAreaRect;
 	}
 	m_clientRect = clientRect;
 
 	CRect wndRect;
 	::GetWindowRect(m_hWnd, &wndRect);
 	int nYStart = clientRect.Height() - m_nTotalAreaHeight;
-	int nXStart = X_OFFSET;
+	int nXStart = 0;
 
 	// Place on second monitor if its height is larger
 	CSize sizeScreen = GetScreenSize(wndRect.left + 10, wndRect.top + nYStart);
@@ -168,11 +167,22 @@ void CSliderMgr::RepositionAll() {
 		}
 	}
 
+	m_sliderAreaRect = CRect(nXStart, nYStart, sizeScreen.cx + nXStart, nYStart + m_nTotalAreaHeight);
+	return m_sliderAreaRect;
+}
+
+void CSliderMgr::RepositionAll() {
+	const int X_OFFSET = 5;
+
+	CRect sliderAreaRect = SliderAreaRect();
+	int nXStart = sliderAreaRect.left + X_OFFSET;
+	int nYStart = sliderAreaRect.top;
+
 	// Place at bottom of window, grouping sliders in three rows and n-columns,
 	// add remaining controls afterwards
 	
 	m_nYStart = nYStart;
-	int nXLimitScreen = sizeScreen.cx + nXStart - X_OFFSET;
+	int nXLimitScreen = sliderAreaRect.right;
 	int nX = nXStart, nY = 0;
 	int nSliderIdx = 0;
 	int nTotalSliderIdx = 0;
