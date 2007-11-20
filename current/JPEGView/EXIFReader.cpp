@@ -68,16 +68,21 @@ static int ReadRationalTag(Rational & rational, uint8* ptr, uint8* pTIFFHeader, 
 			if (rational.Numerator != 0 && rational.Denumerator != 0) {
 				// Calculate the ggT
 				uint32 nModulo;
-				uint32 nA = rational.Numerator;
-				uint32 nB = rational.Denumerator;
+				uint32 nA = (nType == 10) ? abs((int)rational.Numerator) : rational.Numerator;
+				uint32 nB = (nType == 10) ? abs((int)rational.Denumerator) : rational.Denumerator;
 				do {
 				  nModulo = nA % nB;
 				  nA = nB;
 				  nB = nModulo;
 				} while (nB != 0);
 				// normalize
-				rational.Numerator /= nA;
-				rational.Denumerator /= nA;
+				if (nType == 10) {
+					rational.Numerator = (int)rational.Numerator/(int)nA;
+					rational.Denumerator = (int)rational.Denumerator/(int)nA;
+				} else {
+					rational.Numerator /= nA;
+					rational.Denumerator /= nA;
+				}
 			}
 		}
 		return nType;
@@ -96,7 +101,9 @@ static double ReadDoubleTag(uint8* ptr, uint8* pTIFFHeader, bool bLittleEndian) 
 		if (nType == 5) {
 			return (double)rational.Numerator/rational.Denumerator;
 		} else {
-			return (double)(int)rational.Numerator/(int)rational.Denumerator;
+			int nNum = rational.Numerator;
+			int nDenum = rational.Denumerator;
+			return (double)nNum/nDenum;
 		}
 	}
 	return CEXIFReader::UNKNOWN_DOUBLE_VALUE;
