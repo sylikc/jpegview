@@ -304,7 +304,7 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 	CRect rectEXIFInfo = CRect(0, 0, 0, 0);
 	if (pEXIFDisplay != NULL && m_pCurrentImage != NULL) {
 		FillEXIFDataDisplay(pEXIFDisplay);
-		rectEXIFInfo = CRect(imageProcessingArea.left, 32, pEXIFDisplay->GetSize().cx, pEXIFDisplay->GetSize().cy + 32);
+		rectEXIFInfo = CRect(imageProcessingArea.left, 32, imageProcessingArea.left + pEXIFDisplay->GetSize().cx, pEXIFDisplay->GetSize().cy + 32);
 	}
 
 	if (m_pCurrentImage == NULL) {
@@ -408,7 +408,7 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 		} else if (m_pFileList->Current() != NULL) {
 			sFileName.Format(_T("[%d/%d]  %s"), m_pFileList->CurrentIndex() + 1, m_pFileList->Size(), m_pFileList->Current());
 		}
-		DrawTextBordered(dc, sFileName, CRect(Scale(2), imageProcessingArea.left, imageProcessingArea.right, Scale(30)), DT_LEFT); 
+		DrawTextBordered(dc, sFileName, CRect(Scale(2) + imageProcessingArea.left, 0, imageProcessingArea.right, Scale(30)), DT_LEFT); 
 	}
 
 	// Display errors and warnings
