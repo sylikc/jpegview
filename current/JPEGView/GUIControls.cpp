@@ -230,10 +230,10 @@ void CSliderMgr::RepositionAll() {
 				// Special behaviour if not enough room - remove labels for editable texts
 				if (pTextCtrl->IsEditable() && pLastTextCtrl != NULL && !pLastTextCtrl->IsEditable()) {
 					if (nX + nTextWidth > nXLimitScreen) {
-						pLastTextCtrl->SetShow(false);
+						pLastTextCtrl->m_bShow = false;
 						nX -= pLastTextCtrl->GetPosition().Width();
 					} else {
-						pLastTextCtrl->SetShow(true);
+						pLastTextCtrl->m_bShow = true;
 					}
 				}
 				if (pTextCtrl->IsRightAligned()) {
@@ -246,9 +246,9 @@ void CSliderMgr::RepositionAll() {
 				}
 				// only show editable control if large enough
 				if (pTextCtrl->IsEditable()) {
-					pTextCtrl->SetShow(nTextWidth > 40);
+					pTextCtrl->m_bShow = (nTextWidth > 40);
 				} else {
-					pTextCtrl->SetShow(nTextWidth > 0);
+					pTextCtrl->m_bShow = (nTextWidth > 0);
 				}
 				pTextCtrl->SetPosition(CRect(nX, nY, nX + nTextWidth, nY + m_nSliderHeight));
 				pTextCtrl->SetMaxTextWidth(nXLimitScreen - nX);

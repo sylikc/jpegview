@@ -36,6 +36,7 @@ public:
 	virtual void OnPaint(CDC & dc);
 	
 protected:
+	friend class CSliderMgr;
 
 	void DrawGetDC(bool bBlack);
 	virtual void Draw(CDC & dc, CRect position, bool bBlack) = 0;
