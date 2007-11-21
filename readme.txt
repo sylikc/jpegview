@@ -26,6 +26,7 @@ Changelog
 Bugs removed:
 - If using ClearType fonts, the button text on the image processing area is now rendered correctly
 - EXIF information is now also found if not placed directly after SOI in JPEG image (e.g. after an APP0 block)
+- File name flickering eliminated in image processing area when file name is long
 New features:
 - Display of EXIF information from digicam JPEG files (F2)
 
