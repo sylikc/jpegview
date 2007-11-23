@@ -132,12 +132,12 @@ bool CSliderMgr::OnMouseMove(int nX, int nY) {
 	return bHandled;
 }
 
-void CSliderMgr::OnPaint(CPaintDC & dc) {
+void CSliderMgr::OnPaint(CDC & dc, const CPoint& offset) {
 	RepositionAll();
 	std::list<CUICtrl*>::iterator iter;
 	for (iter = m_ctrlList.begin( ); iter != m_ctrlList.end( ); iter++ ) {
 		if ((*iter)->IsShown()) {
-			(*iter)->OnPaint(dc);
+			(*iter)->OnPaint(dc, offset);
 		}
 	}
 }
@@ -285,22 +285,27 @@ CUICtrl::CUICtrl(CSliderMgr* pSliderMgr) {
 	m_pMgr = pSliderMgr; 
 	m_bShow = true; 
 	m_bHighlight = false; 
-	m_position = CRect(0, 0, 0, 0); 
+	m_position = CRect(0, 0, 0, 0);
+	m_pos2Screen = CPoint(0, 0);
 }
 
-void CUICtrl::OnPaint(CDC & dc) {
+void CUICtrl::OnPaint(CDC & dc, const CPoint& offset) {
 	dc.SelectStockFont(DEFAULT_GUI_FONT);
 	dc.SetBkMode(TRANSPARENT);
 
+	m_pos2Screen = CPoint(-offset.x, -offset.y);
+
 	CRect pos(m_position);
+	pos.OffsetRect(offset);
 	pos.OffsetRect(-1, 0); Draw(dc, pos, true);
 	pos.OffsetRect(2, 0); Draw(dc, pos, true);
 	pos.OffsetRect(-1, -1); Draw(dc, pos, true);
 	pos.OffsetRect(0, 2); Draw(dc, pos, true);
-	Draw(dc, m_position, false);
+	pos.OffsetRect(0, -1); Draw(dc, pos, false);
 }
 
 void CUICtrl::DrawGetDC(bool bBlack) {
+	m_pos2Screen = CPoint(0, 0);
 	HDC hDC = ::GetDC(m_pMgr->GetHWND());
 	CDC dc(hDC);
 	Draw(dc, m_position, bBlack);
@@ -580,11 +585,11 @@ bool CSliderDouble::OnMouseMove(int nX, int nY) {
 		if (m_checkRectFull.PtInRect(mousePos)) {
 			if (!m_bHighlightCheck) {
 				m_bHighlightCheck = true;
-				DrawCheckGetDC(true);
+				::InvalidateRect(m_pMgr->GetHWND(), &m_checkRectFull, FALSE);
 			}
 		} else if (m_bHighlightCheck) {
 			m_bHighlightCheck = false;
-			DrawCheckGetDC(false);
+			::InvalidateRect(m_pMgr->GetHWND(), &m_checkRectFull, FALSE);
 		}
 	}
 
@@ -600,19 +605,23 @@ bool CSliderDouble::OnMouseMove(int nX, int nY) {
 	} else if (m_sliderRect.PtInRect(mousePos)) {
 		if (!m_bHighlight) {
 			m_bHighlight = true;
-			DrawRulerGetDC(true);
+			CRect invRect(&m_sliderRect);
+			invRect.OffsetRect(0, -8);
+			::InvalidateRect(m_pMgr->GetHWND(), &invRect, FALSE);
 		}
 	} else if (m_bHighlight) {
 		m_bHighlight = false;
-		DrawRulerGetDC(false);
+		CRect invRect(&m_sliderRect);
+		invRect.OffsetRect(0, -8);
+		::InvalidateRect(m_pMgr->GetHWND(), &invRect, FALSE);
 	}
 
 	return false;
 }
 
-void CSliderDouble::OnPaint(CDC & dc)  {
+void CSliderDouble::OnPaint(CDC & dc, const CPoint& offset)  {
 	if (m_pEnable && !*m_pEnable) m_bHighlight = false;
-	CUICtrl::OnPaint(dc);
+	CUICtrl::OnPaint(dc, offset);
 }
 
 void CSliderDouble::Draw(CDC & dc, CRect position, bool bBlack) {
@@ -625,6 +634,7 @@ void CSliderDouble::Draw(CDC & dc, CRect position, bool bBlack) {
 			CSize(m_nCheckHeight, m_nCheckHeight));
 		m_checkRectFull = CRect(m_checkRect.left, m_checkRect.top, 
 			m_checkRect.right + m_nCheckHeight/2 + m_nNameWidth, m_checkRect.bottom);
+		m_checkRectFull.OffsetRect(m_pos2Screen.x, m_pos2Screen.y);
 		DrawCheck(dc, m_checkRect, bBlack, m_bHighlightCheck);
 		position.left += m_nCheckHeight + m_nCheckHeight/2;
 	}
@@ -635,15 +645,7 @@ void CSliderDouble::Draw(CDC & dc, CRect position, bool bBlack) {
 	m_nSliderStart = nXPos - m_nSliderLen;
 	DrawRuler(dc, m_nSliderStart, nXPos, nYMid, bBlack, m_bHighlight);
 	m_sliderRect = CRect(m_nSliderStart - m_nSliderHeight, nYMid - 2, nXPos + m_nSliderHeight, nYMid + m_nSliderHeight + 8);
-}
-
-void CSliderDouble::DrawRulerGetDC(bool bHighlight) {
-	HDC hDC = ::GetDC(m_pMgr->GetHWND());
-	CDC dc(hDC);
-	int nYMid = m_position.top + ((m_position.bottom - m_position.top) >> 1);
-	DrawRuler(dc, m_nSliderStart, m_nSliderStart + m_nSliderLen, nYMid, false, bHighlight);
-	dc.Detach();
-	::ReleaseDC(m_pMgr->GetHWND(), hDC);
+	m_sliderRect.OffsetRect(m_pos2Screen.x, m_pos2Screen.y);
 }
 
 void CSliderDouble::DrawRuler(CDC & dc, int nXStart, int nXEnd, int nY, bool bBlack, bool bHighlight) {
@@ -685,14 +687,6 @@ void CSliderDouble::DrawRuler(CDC & dc, int nXStart, int nXEnd, int nY, bool bBl
 		::DeleteObject(hPen);
 		::DeleteObject(hPenRed);
 	}
-}
-
-void CSliderDouble::DrawCheckGetDC(bool bHighlight) {
-	HDC hDC = ::GetDC(m_pMgr->GetHWND());
-	CDC dc(hDC);
-	DrawCheck(dc, m_checkRect, false, bHighlight);
-	dc.Detach();
-	::ReleaseDC(m_pMgr->GetHWND(), hDC);
 }
 
 void CSliderDouble::DrawCheck(CDC & dc, CRect position, bool bBlack, bool bHighlight) {
