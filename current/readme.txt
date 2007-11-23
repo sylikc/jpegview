@@ -29,6 +29,9 @@ Bugs removed:
 - File name flickering eliminated in image processing area when file name is long
 New features:
 - Display of EXIF information from digicam JPEG files (F2)
+- Smoother screen update with less flickering by using back buffering of transparent areas
+Other changes:
+- Using smaller font for help display (F1)
 
 [1.0.14]
 

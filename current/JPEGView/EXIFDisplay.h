@@ -6,7 +6,7 @@
 class CEXIFDisplay
 {
 public:
-	CEXIFDisplay(CPaintDC & dc);
+	CEXIFDisplay();
 	~CEXIFDisplay();
 
 	// Methods to create the information lines
@@ -19,10 +19,10 @@ public:
 	void AddLine(LPCTSTR sDescription, const Rational &number);
 
 	// Gets the size needed to display the information
-	CSize GetSize();
+	CSize GetSize(CDC & dc);
 
-	// Call Show() to render the EXIF info on the given screen position
-	void Show(int nX, int nY);
+	// Call Show() to render the EXIF info on the given DC and position
+	void Show(CDC & dc, int nX, int nY);
 
 private:
 
@@ -42,7 +42,6 @@ private:
 	int m_nLineHeight;
 	int m_nTitleHeight;
 	CSize m_size;
-	CPaintDC & m_dc;
 	HFONT m_hTitleFont;
 	TCHAR* m_sTitle;
 	std::list<TextLine> m_lines;

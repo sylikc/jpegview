@@ -15,6 +15,7 @@ class CSliderMgr;
 class CButtonCtrl;
 class CTextCtrl;
 class CEXIFDisplay;
+class CHelpDisplay;
 
 // The main dialog is a full screen modal dialog with no border and no window title
 class CMainDlg : public CDialogImpl<CMainDlg>
@@ -217,6 +218,8 @@ private:
 	bool ImageToScreen(float & fX, float & fY);
 	LPCTSTR CurrentFileName(bool bFileTitle);
 	void FillEXIFDataDisplay(CEXIFDisplay* pEXIFDisplay);
+	void GenerateHelpDisplay(CHelpDisplay & helpDisplay);
+	HBITMAP PrepareRectForMemDCPainting(CDC & memDC, CDC & paintDC, const CRect& rect);
 
 	static void OnSaveToDB(CButtonCtrl & sender);
 	static void OnRemoveFromDB(CButtonCtrl & sender);

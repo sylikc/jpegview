@@ -12,7 +12,7 @@ static LPTSTR CopyStrAlloc(LPCTSTR str) {
 	return pNewStr;
 }
 
-CEXIFDisplay::CEXIFDisplay(CPaintDC & dc) : m_dc(dc) {
+CEXIFDisplay::CEXIFDisplay() {
 	m_fScaling = Helpers::ScreenScaling;
 	m_nGap = (int)(m_fScaling * 10);
 	m_nTab1 = 0;
@@ -79,13 +79,13 @@ void CEXIFDisplay::AddLine(LPCTSTR sDescription, const Rational &number) {
 	}
 }
 
-CSize CEXIFDisplay::GetSize() {
+CSize CEXIFDisplay::GetSize(CDC & dc) {
 	if (m_nLineHeight == 0) {
 		TCHAR buff[32];
-		::SelectObject(m_dc, ::GetStockObject(DEFAULT_GUI_FONT));
-		if (::GetTextFace(m_dc, 64, buff) != 0) {
+		::SelectObject(dc, ::GetStockObject(DEFAULT_GUI_FONT));
+		if (::GetTextFace(dc, 64, buff) != 0) {
 			TEXTMETRIC textMetrics;
-			::GetTextMetrics(m_dc, &textMetrics);
+			::GetTextMetrics(dc, &textMetrics);
 			LOGFONT logFont;
 			memset(&logFont, 0, sizeof(LOGFONT));
 			logFont.lfHeight = textMetrics.tmHeight;
@@ -95,29 +95,29 @@ CSize CEXIFDisplay::GetSize() {
 		}
 
 		if (m_hTitleFont != 0) {
-			::SelectObject(m_dc, m_hTitleFont);
+			::SelectObject(dc, m_hTitleFont);
 		}
 
 		int nTitleLength = 0;
 		int nMaxLenght1 = 0, nMaxLength2 = 0;
 		CSize size;
 		if (m_sTitle != NULL) {
-			::GetTextExtentPoint32(m_dc, m_sTitle, _tcslen(m_sTitle), &size);
+			::GetTextExtentPoint32(dc, m_sTitle, _tcslen(m_sTitle), &size);
 			nTitleLength = size.cx;
 			m_nTitleHeight = size.cy + 2;
 		}
 
-		::SelectObject(m_dc, ::GetStockObject(DEFAULT_GUI_FONT));
+		::SelectObject(dc, ::GetStockObject(DEFAULT_GUI_FONT));
 
 		std::list<TextLine>::iterator iter;
 		for (iter = m_lines.begin( ); iter != m_lines.end( ); iter++ ) {
 			if (iter->Desc != NULL) {
-				::GetTextExtentPoint32(m_dc, iter->Desc, _tcslen(iter->Desc), &size);
+				::GetTextExtentPoint32(dc, iter->Desc, _tcslen(iter->Desc), &size);
 				m_nLineHeight = max(m_nLineHeight, size.cy);
 				nMaxLenght1 = max(nMaxLenght1, size.cx);
 			}
 			if (iter->Value != NULL) {
-				::GetTextExtentPoint32(m_dc, iter->Value, _tcslen(iter->Value), &size);
+				::GetTextExtentPoint32(dc, iter->Value, _tcslen(iter->Value), &size);
 				m_nLineHeight = max(m_nLineHeight, size.cy);
 				nMaxLength2 = max(nMaxLength2, size.cx);
 			}
@@ -130,39 +130,39 @@ CSize CEXIFDisplay::GetSize() {
 	return m_size;
 }
 
-void CEXIFDisplay::Show(int nX, int nY) {
+void CEXIFDisplay::Show(CDC & dc, int nX, int nY) {
 	if (m_nLineHeight == 0) {
-		m_size = GetSize();
+		m_size = GetSize(dc);
 	}
 
 	if (m_hTitleFont != 0) {
-		::SelectObject(m_dc, m_hTitleFont);
+		::SelectObject(dc, m_hTitleFont);
 	}
-	::SetBkMode(m_dc, TRANSPARENT);
-	::SetTextColor(m_dc, RGB(255, 255, 255));
+	::SetBkMode(dc, TRANSPARENT);
+	::SetTextColor(dc, RGB(255, 255, 255));
 	if (m_sTitle != NULL) {
-		::TextOut(m_dc, nX + m_nGap, nY + m_nGap, m_sTitle, _tcslen(m_sTitle));
+		::TextOut(dc, nX + m_nGap, nY + m_nGap, m_sTitle, _tcslen(m_sTitle));
 	}
 
-	::SetTextColor(m_dc, RGB(243, 242, 231));
-	::SelectObject(m_dc, ::GetStockObject(DEFAULT_GUI_FONT));
+	::SetTextColor(dc, RGB(243, 242, 231));
+	::SelectObject(dc, ::GetStockObject(DEFAULT_GUI_FONT));
 
 	int nRunningY = nY + m_nTitleHeight + m_nGap;
 	std::list<TextLine>::iterator iter;
 	for (iter = m_lines.begin( ); iter != m_lines.end( ); iter++ ) {
 		if (iter->Desc != NULL) {
-			::TextOut(m_dc, nX + m_nGap, nRunningY, iter->Desc, _tcslen(iter->Desc));
+			::TextOut(dc, nX + m_nGap, nRunningY, iter->Desc, _tcslen(iter->Desc));
 		}
 		if (iter->Value != NULL) {
-			::TextOut(m_dc, nX + m_nGap + m_nTab1, nRunningY, iter->Value, _tcslen(iter->Value));
+			::TextOut(dc, nX + m_nGap + m_nTab1, nRunningY, iter->Value, _tcslen(iter->Value));
 		}
 		nRunningY += m_nLineHeight;
 	}
 
 	HPEN hPen = ::CreatePen(PS_SOLID, 1, RGB(255, 255, 255));
-	HGDIOBJ hOldPen = ::SelectObject(m_dc, hPen);
-	::SelectObject(m_dc, ::GetStockObject(HOLLOW_BRUSH));
-	::Rectangle(m_dc, nX, nY, nX + m_size.cx, nY + m_size.cy);
-	::SelectObject(m_dc, hOldPen);
+	HGDIOBJ hOldPen = ::SelectObject(dc, hPen);
+	::SelectObject(dc, ::GetStockObject(HOLLOW_BRUSH));
+	::Rectangle(dc, nX, nY, nX + m_size.cx, nY + m_size.cy);
+	::SelectObject(dc, hOldPen);
 	::DeleteObject(hPen);
 }

@@ -60,8 +60,8 @@ static const int NO_REQUEST = 1; // used in GotoImage() method
 static const int NO_REMOVE_KEY_MSG = 2; // used in GotoImage() method
 static const int KEEP_PARAMETERS = 4; // used in GotoImage() method
 
-// Dim factor (0..1) for image processing area, 0 means black, 1 means no dimming
-static const float cfDimFactorIPA = 0.6f;
+// Dim factor (0..1) for image processing area, 1 means black, 0 means no dimming
+static const float cfDimFactorIPA = 0.5f;
 static const float cfDimFactorEXIF = 0.5f;
 
 CMainDlg * CMainDlg::sm_instance = NULL;
@@ -120,6 +120,29 @@ static void InitFromProcessingFlags(EProcessingFlags eFlags, bool& bHQResampling
 	bAutoContrast = GetProcessingFlag(eFlags, PFLAG_AutoContrast);
 	bAutoContrastSection = GetProcessingFlag(eFlags, PFLAG_AutoContrastSection);
 	bLDC = GetProcessingFlag(eFlags, PFLAG_LDC);
+}
+
+// Blits the DIB data section to target DC using dimming
+static void BitBltBlended(CDC & dc, const CSize& dcSize, void* pDIBData, BITMAPINFO* pbmInfo, 
+						  const CPoint& dibStart, const CSize& dibSize, float fDimFactor) {
+	int nW = dcSize.cx;
+	int nH = dcSize.cy;
+	CDC memDCblack;
+	memDCblack.CreateCompatibleDC(dc);
+	CBitmap bitmapBlack;
+	bitmapBlack.CreateCompatibleBitmap(dc, nW, nH);
+	memDCblack.SelectBitmap(bitmapBlack);
+	memDCblack.FillRect(CRect(0, 0, nW, nH), (HBRUSH)::GetStockObject(BLACK_BRUSH));
+	
+	dc.SetDIBitsToDevice(dibStart.x, dibStart.y, 
+		dibSize.cx, dibSize.cy, 0, 0, 0, dibSize.cy, pDIBData, pbmInfo, DIB_RGB_COLORS);
+	
+	BLENDFUNCTION blendFunc;
+	memset(&blendFunc, 0, sizeof(blendFunc));
+	blendFunc.BlendOp = AC_SRC_OVER;
+	blendFunc.SourceConstantAlpha = (unsigned char)(fDimFactor*255 + 0.5f);
+	blendFunc.AlphaFormat = 0;
+	dc.AlphaBlend(0, 0, nW, nH, memDCblack, 0, 0, nW, nH, blendFunc);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////
@@ -300,11 +323,45 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 	this->GetClientRect(&m_clientRect);
 	CRect imageProcessingArea = m_pSliderMgr->SliderAreaRect();
 
-	CEXIFDisplay* pEXIFDisplay = m_bShowFileInfo ? new CEXIFDisplay(dc) : NULL;
+	// Save old clipping region
+	CRgn rgnOldClipRgn;
+	rgnOldClipRgn.CreateRectRgn(0, 0, 1, 1);
+	::GetRandomRgn(dc.m_hDC, rgnOldClipRgn.m_hRgn, SYSRGN);
+
+	// Exclude the help display from clipping area to reduce flickering
+	CHelpDisplay* pHelpDisplay = NULL;
+	bool bRestoreClipping = false;
+	if (m_bShowHelp) {
+		pHelpDisplay = new CHelpDisplay(dc);
+		GenerateHelpDisplay(*pHelpDisplay);
+		CSize helpRectSize = pHelpDisplay->GetSize();
+		CRect rectHelpDisplay = CRect(CPoint(m_monitorRect.Width()/2 - helpRectSize.cx/2, 
+			m_monitorRect.Height()/2 - helpRectSize.cy/2), helpRectSize);
+		dc.ExcludeClipRect(&rectHelpDisplay);
+		bRestoreClipping = true;
+	}
+
+	// Create a memory DC for the EXIF area (to prevent flickering, this part of the screen
+	// is excluded from the clipping area and drawn into this memory DC)
+	CDC memDCexif = CDC();
+	HBITMAP hOffScreenBitmapEXIF = NULL;
+
+	CEXIFDisplay* pEXIFDisplay = m_bShowFileInfo ? new CEXIFDisplay() : NULL;
 	CRect rectEXIFInfo = CRect(0, 0, 0, 0);
 	if (pEXIFDisplay != NULL && m_pCurrentImage != NULL) {
 		FillEXIFDataDisplay(pEXIFDisplay);
-		rectEXIFInfo = CRect(imageProcessingArea.left, 32, imageProcessingArea.left + pEXIFDisplay->GetSize().cx, pEXIFDisplay->GetSize().cy + 32);
+		rectEXIFInfo = CRect(imageProcessingArea.left, 32, imageProcessingArea.left + pEXIFDisplay->GetSize(dc).cx, pEXIFDisplay->GetSize(dc).cy + 32);
+		hOffScreenBitmapEXIF = PrepareRectForMemDCPainting(memDCexif, dc, rectEXIFInfo);
+		bRestoreClipping = true;
+	}
+
+	// Create a memory DC for the image processing area (also excluded from clipping)
+	CDC memDCipa = CDC();
+	HBITMAP hOffScreenBitmapIPA = NULL;
+
+	if (m_bShowIPTools) {
+		hOffScreenBitmapIPA = PrepareRectForMemDCPainting(memDCipa, dc, imageProcessingArea);
+		bRestoreClipping = true;
 	}
 
 	if (m_pCurrentImage == NULL) {
@@ -346,19 +403,6 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 		CSize clippedSize(min(m_clientRect.Width(), newSize.cx), min(m_clientRect.Height(), newSize.cy));
 		CPoint offsets(m_nOffsetX, m_nOffsetY);
 		CPoint offsetsInImage = m_pCurrentImage->ConvertOffset(newSize, clippedSize, offsets);
-		
-		// Configure areas dimmed out in bitmap
-		int nDimRegion = m_bShowIPTools ? m_pSliderMgr->SliderAreaHeight() - (m_clientRect.Height() - clippedSize.cy)/2 : 0;
-		CDimRect dimRects[2];
-		dimRects[0] = CDimRect(cfDimFactorIPA, CRect(0, clippedSize.cy - nDimRegion, clippedSize.cx, clippedSize.cy));
-		int nNumDimRects = (nDimRegion <= 0) ? 0 : 1;
-		if (rectEXIFInfo.Width() > 0) {
-			dimRects[nNumDimRects] = CDimRect(cfDimFactorEXIF, ScreenToDIB(clippedSize, rectEXIFInfo));
-			if (dimRects[nNumDimRects].Rect.Width() > 0 && dimRects[nNumDimRects].Rect.Height() > 0) {
-				nNumDimRects++;
-			}
-		}
-		m_pCurrentImage->SetDimRects(dimRects, nNumDimRects);
 
 		void* pDIBData = m_pCurrentImage->GetDIB(newSize, clippedSize, offsetsInImage, 
 			    *m_pImageProcParams, 
@@ -379,6 +423,18 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 			int yDest = (m_clientRect.Height() - clippedSize.cy) / 2;
 			dc.SetDIBitsToDevice(xDest, yDest, clippedSize.cx, clippedSize.cy, 0, 0, 0, clippedSize.cy, pDIBData, 
 				&bmInfo, DIB_RGB_COLORS);
+
+			// if we use a memory DC for the EXIF display, also blit to this, using blending
+			if (memDCexif.m_hDC != NULL) {
+				BitBltBlended(memDCexif, CSize(rectEXIFInfo.Width(), rectEXIFInfo.Height()), pDIBData, &bmInfo, 
+						  CPoint(xDest - rectEXIFInfo.left, yDest - rectEXIFInfo.top), clippedSize, cfDimFactorEXIF);
+			}
+			// same for image processing area
+			if (memDCipa.m_hDC != NULL) {
+				BitBltBlended(memDCipa, CSize(imageProcessingArea.Width(), imageProcessingArea.Height()), pDIBData, &bmInfo, 
+						  CPoint(xDest - imageProcessingArea.left, yDest - imageProcessingArea.top), clippedSize, cfDimFactorIPA);
+			}
+
 			// remaining client area is painted black
 			if (clippedSize.cx < m_clientRect.Width()) {
 				CRect r(0, 0, xDest, m_clientRect.Height());
@@ -393,6 +449,11 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 				dc.FillRect(&rr, (HBRUSH)::GetStockObject(BLACK_BRUSH));
 			}
 		}
+	}
+
+	// Restore the old clipping region if changed
+	if (bRestoreClipping) {
+		dc.SelectClipRgn(rgnOldClipRgn.m_hRgn);
 	}
 
 	dc.SelectStockFont(SYSTEM_FONT);
@@ -443,16 +504,6 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 		}
 	}
 
-	// Show current zoom factor
-	if (m_bInZooming || m_bShowZoomFactor) {
-		TCHAR buff[32];
-		_stprintf_s(buff, 32, _T("%d %%"), int(m_dZoom*100 + 0.5));
-		CRect textRect(m_clientRect.right - Scale(ZOOM_TEXT_RECT_WIDTH + ZOOM_TEXT_RECT_OFFSET), 
-			m_clientRect.bottom - Scale(ZOOM_TEXT_RECT_HEIGHT + ZOOM_TEXT_RECT_OFFSET), 
-			m_clientRect.right - Scale(ZOOM_TEXT_RECT_OFFSET), m_clientRect.bottom - Scale(ZOOM_TEXT_RECT_OFFSET));
-		DrawTextBordered(dc, buff, textRect, DT_RIGHT);
-	}
-
 	// Show timing info if requested
 	if (SHOW_TIMING_INFO && m_pCurrentImage != NULL) {
 		TCHAR buff[128];
@@ -462,7 +513,7 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 		dc.SetBkMode(TRANSPARENT);
 	}
 
-	// Show info about motiv detection
+	// Show info about nightshot/sunset detection
 #ifdef _DEBUG
 	if (m_pCurrentImage != NULL) {
 		dc.SetBkMode(OPAQUE);
@@ -478,89 +529,42 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 
 	// Paint the image processing area at bottom of screen
 	if (m_bShowIPTools) {
-		m_pSliderMgr->OnPaint(dc);
+		m_pSliderMgr->OnPaint(memDCipa, CPoint(-imageProcessingArea.left, -imageProcessingArea.top));
+		dc.BitBlt(imageProcessingArea.left, imageProcessingArea.top, imageProcessingArea.Width(), imageProcessingArea.Height(), memDCipa, 0, 0, SRCCOPY);
 	}
 
 	// Display file and EXIF information
 	if (pEXIFDisplay != NULL && m_pCurrentImage != NULL) {
-		pEXIFDisplay->Show(rectEXIFInfo.left, rectEXIFInfo.top);
+		// paint into the memory DC
+		pEXIFDisplay->Show(memDCexif, 0, 0);
+		dc.BitBlt(rectEXIFInfo.left, rectEXIFInfo.top, rectEXIFInfo.Width(), rectEXIFInfo.Height(), memDCexif, 0, 0, SRCCOPY);
+	}
+
+	// Show current zoom factor
+	if (m_bInZooming || m_bShowZoomFactor) {
+		TCHAR buff[32];
+		_stprintf_s(buff, 32, _T("%d %%"), int(m_dZoom*100 + 0.5));
+		CRect textRect(m_clientRect.right - Scale(ZOOM_TEXT_RECT_WIDTH + ZOOM_TEXT_RECT_OFFSET), 
+			m_clientRect.bottom - Scale(ZOOM_TEXT_RECT_HEIGHT + ZOOM_TEXT_RECT_OFFSET), 
+			m_clientRect.right - Scale(ZOOM_TEXT_RECT_OFFSET), m_clientRect.bottom - Scale(ZOOM_TEXT_RECT_OFFSET));
+		DrawTextBordered(dc, buff, textRect, DT_RIGHT);
 	}
 
 	// Display the help screen
-	if (m_bShowHelp) {
-		CHelpDisplay helpDisplay(dc);
-		helpDisplay.AddTitle(CNLS::GetString(_T("JPEGView Help")));
-		LPCTSTR sTitle = CurrentFileName(true);
-		if (sTitle != NULL && m_pCurrentImage != NULL) {
-			double fMPix = double(m_pCurrentImage->OrigWidth() * m_pCurrentImage->OrigHeight())/(1000000);
-			TCHAR buff[256];
-			_stprintf_s(buff, 256, _T("%s (%d x %d   %.1f MPixel)"), sTitle, m_pCurrentImage->OrigWidth(), m_pCurrentImage->OrigHeight(), fMPix);
-			helpDisplay.AddLine(CNLS::GetString(_T("Current image")), buff);
-		}
-		helpDisplay.AddLine(_T("Esc"), CNLS::GetString(_T("Close help text display / Close JPEGView")));
-		helpDisplay.AddLine(_T("F1"), CNLS::GetString(_T("Show/hide this help text")));
-		helpDisplay.AddLineInfo(_T("F2"), m_bShowFileInfo, CNLS::GetString(_T("Show/hide picture information (EXIF data)")));
-		helpDisplay.AddLineInfo(_T("Ctrl+F2"), m_bShowFileName, CNLS::GetString(_T("Show/hide file name")));
-		helpDisplay.AddLineInfo(_T("F3"), m_bHQResampling, CNLS::GetString(_T("Enable/disable high quality resampling")));
-		helpDisplay.AddLineInfo(_T("F4"), m_bKeepParams, CNLS::GetString(_T("Enable/disable keeping of geometry related (zoom/pan/rotation)")));
-		helpDisplay.AddLineInfo(_T(""),  LPCTSTR(NULL), CNLS::GetString(_T("and image processing (brightness/contrast/sharpen) parameters between images")));
-		helpDisplay.AddLineInfo(_T("F5"), m_bAutoContrast, CNLS::GetString(_T("Enable/disable automatic contrast correction (histogram equalization)")));
-		helpDisplay.AddLineInfo(_T("Shift+F5"), m_bAutoContrastSection, CNLS::GetString(_T("Apply auto contrast correction using only visible section of image")));
-		helpDisplay.AddLineInfo(_T("F6"), m_bLDC, CNLS::GetString(_T("Enable/disable automatic density correction (local brightness correction)")));
-		TCHAR buffLS[16]; _stprintf_s(buffLS, 16, _T("%.2f"), m_pImageProcParams->LightenShadows);
-		helpDisplay.AddLineInfo(_T("Ctrl/Alt+F6"), buffLS, CNLS::GetString(_T("Increase/decrease lightening of shadows (LDC must be on)")));
-		TCHAR buffDH[16]; _stprintf_s(buffDH, 16, _T("%.2f"), m_pImageProcParams->DarkenHighlights);
-		helpDisplay.AddLineInfo(_T("C/A+Shift+F6"), buffDH, CNLS::GetString(_T("Increase/decrease darkening of highlights (LDC must be on)")));
-		helpDisplay.AddLineInfo(_T("F7"), m_pFileList->GetNavigationMode() == Helpers::NM_LoopDirectory, CNLS::GetString(_T("Loop through files in current folder")));
-		helpDisplay.AddLineInfo(_T("F8"), m_pFileList->GetNavigationMode() == Helpers::NM_LoopSubDirectories, CNLS::GetString(_T("Loop through files in current directory and all subfolders")));
-		helpDisplay.AddLineInfo(_T("F9"), m_pFileList->GetNavigationMode() == Helpers::NM_LoopSameDirectoryLevel, CNLS::GetString(_T("Loop through files in current directory and all sibling folders (folders on same level)")));
-		helpDisplay.AddLineInfo(_T("F12"), m_bSpanVirtualDesktop, CNLS::GetString(_T("Maximize/restore to/from virtual desktop (only for multi-monitor systems)")));
-		helpDisplay.AddLine(_T("Ctrl+C/Ctrl+X"), CNLS::GetString(_T("Copy screen to clipboard/ Copy processed full size image to clipboard")));
-		helpDisplay.AddLine(_T("Ctrl+O"), CNLS::GetString(_T("Open new image or slideshow file")));
-		helpDisplay.AddLine(_T("Ctrl+S"), CNLS::GetString(_T("Save processed image to JPEG file (original size)")));
-		helpDisplay.AddLine(_T("s/d"), CNLS::GetString(_T("Save (s)/ delete (d) image processing parameters in/from parameter DB")));
-		helpDisplay.AddLineInfo(_T("c/m/n"), 
-			(m_pFileList->GetSorting() == Helpers::FS_LastModTime) ? _T("m") :
-			(m_pFileList->GetSorting() == Helpers::FS_FileName) ? _T("n") : _T("c"), 
-			CNLS::GetString(_T("Sort images by creation date, resp. modification date, resp. file name")));
-		helpDisplay.AddLine(CNLS::GetString(_T("PgUp or Left")), CNLS::GetString(_T("Goto previous image")));
-		helpDisplay.AddLine(CNLS::GetString(_T("PgDn or Right")), CNLS::GetString(_T("Goto next image")));
-		helpDisplay.AddLine(_T("Home/End"), CNLS::GetString(_T("Goto first/last image of current folder (using sort order as defined)")));
-		TCHAR buff[16]; _stprintf_s(buff, 16, _T("%.2f"), m_pImageProcParams->Gamma);
-		helpDisplay.AddLineInfo(_T("Shift +/-"), buff, CNLS::GetString(_T("Increase/decrease brightness")));
-		TCHAR buff1[16]; _stprintf_s(buff1, 16, _T("%.2f"), m_pImageProcParams->Contrast);
-		helpDisplay.AddLineInfo(_T("Ctrl +/-"), buff1, CNLS::GetString(_T("Increase/decrease contrast")));
-		TCHAR buff2[16]; _stprintf_s(buff2, 16, _T("%.2f"), m_pImageProcParams->Sharpen);
-		helpDisplay.AddLineInfo(_T("Alt +/-"), buff2, CNLS::GetString(_T("Increase/decrease sharpness")));
-		TCHAR buff3[16]; _stprintf_s(buff3, 16, _T("%.2f"), m_pImageProcParams->ColorCorrectionFactor);
-		helpDisplay.AddLineInfo(_T("Alt+Ctrl +/-"), buff3, CNLS::GetString(_T("Increase/decrease auto color cast correction amount")));
-		TCHAR buff4[16]; _stprintf_s(buff4, 16, _T("%.2f"), m_pImageProcParams->ContrastCorrectionFactor);
-		helpDisplay.AddLineInfo(_T("Ctrl+Shift +/-"), buff4, CNLS::GetString(_T("Increase/decrease auto contrast correction amount")));
-		helpDisplay.AddLine(_T("1 .. 9"), CNLS::GetString(_T("Slide show with timeout of n seconds (ESC to stop)")));
-		helpDisplay.AddLineInfo(_T("Ctrl[+Shift] 1 .. 9"),  LPCTSTR(NULL), CNLS::GetString(_T("Set timeout to n/10 sec, respectively n/100 sec (Ctrl+Shift)")));
-		helpDisplay.AddLine(CNLS::GetString(_T("up/down")), CNLS::GetString(_T("Rotate image and fit to screen")));
-		helpDisplay.AddLine(_T("Return"), CNLS::GetString(_T("Fit image to screen")));
-		helpDisplay.AddLine(_T("Space"), CNLS::GetString(_T("Zoom 1:1 (100 %)")));
-		TCHAR buff5[16]; _stprintf_s(buff5, 16, _T("%.0f %%"), m_dZoom*100);
-		helpDisplay.AddLineInfo(_T("+/-"), buff5, CNLS::GetString(_T("Zoom in/Zoom out (also Ctrl+up/down)")));
-		helpDisplay.AddLine(CNLS::GetString(_T("Mouse wheel")), CNLS::GetString(_T("Zoom in/out image")));
-		helpDisplay.AddLine(CNLS::GetString(_T("Left mouse & drag")), CNLS::GetString(_T("Pan image")));
-		helpDisplay.AddLine(CNLS::GetString(_T("Ctrl + L mouse")), CNLS::GetString(_T("Crop image")));
-		helpDisplay.AddLine(CNLS::GetString(_T("Fwd mouse button")), CNLS::GetString(_T("Next image")));
-		helpDisplay.AddLine(CNLS::GetString(_T("Back mouse button")), CNLS::GetString(_T("Previous image")));
-		std::list<CUserCommand*>::iterator iter;
-		std::list<CUserCommand*> & userCmdList = CSettingsProvider::This().UserCommandList();
-		for (iter = userCmdList.begin( ); iter != userCmdList.end( ); iter++ ) {
-			if (!(*iter)->HelpText().IsEmpty()) {
-				helpDisplay.AddLine((*iter)->HelpKey(), CNLS::GetString((*iter)->HelpText()));
-			}
-		}
-		helpDisplay.Show(CRect(CPoint(0, 0), CSize(m_monitorRect.Width(), m_monitorRect.Height())));
+	if (pHelpDisplay != NULL) {
+		pHelpDisplay->Show(CRect(CPoint(0, 0), CSize(m_monitorRect.Width(), m_monitorRect.Height())));
 	} else if (m_bCropping) {
 		PaintCropRect(dc.m_hDC);
 		ShowCroppingRect(m_nMouseX, m_nMouseY, dc.m_hDC);
 	}
 
+	if (hOffScreenBitmapEXIF != NULL) {
+		::DeleteObject(hOffScreenBitmapEXIF);
+	}
+	if (hOffScreenBitmapIPA != NULL) {
+		::DeleteObject(hOffScreenBitmapIPA);
+	}
+	delete pHelpDisplay;
 	delete pEXIFDisplay;
 
 	return 0;
@@ -2269,4 +2273,85 @@ void CMainDlg::FillEXIFDataDisplay(CEXIFDisplay* pEXIFDisplay) {
 			}
 		}
 	}
+}
+
+void CMainDlg::GenerateHelpDisplay(CHelpDisplay & helpDisplay) {
+	helpDisplay.AddTitle(CNLS::GetString(_T("JPEGView Help")));
+	LPCTSTR sTitle = CurrentFileName(true);
+	if (sTitle != NULL && m_pCurrentImage != NULL) {
+		double fMPix = double(m_pCurrentImage->OrigWidth() * m_pCurrentImage->OrigHeight())/(1000000);
+		TCHAR buff[256];
+		_stprintf_s(buff, 256, _T("%s (%d x %d   %.1f MPixel)"), sTitle, m_pCurrentImage->OrigWidth(), m_pCurrentImage->OrigHeight(), fMPix);
+		helpDisplay.AddLine(CNLS::GetString(_T("Current image")), buff);
+	}
+	helpDisplay.AddLine(_T("Esc"), CNLS::GetString(_T("Close help text display / Close JPEGView")));
+	helpDisplay.AddLine(_T("F1"), CNLS::GetString(_T("Show/hide this help text")));
+	helpDisplay.AddLineInfo(_T("F2"), m_bShowFileInfo, CNLS::GetString(_T("Show/hide picture information (EXIF data)")));
+	helpDisplay.AddLineInfo(_T("Ctrl+F2"), m_bShowFileName, CNLS::GetString(_T("Show/hide file name")));
+	helpDisplay.AddLineInfo(_T("F3"), m_bHQResampling, CNLS::GetString(_T("Enable/disable high quality resampling")));
+	helpDisplay.AddLineInfo(_T("F4"), m_bKeepParams, CNLS::GetString(_T("Enable/disable keeping of geometry related (zoom/pan/rotation)")));
+	helpDisplay.AddLineInfo(_T(""),  LPCTSTR(NULL), CNLS::GetString(_T("and image processing (brightness/contrast/sharpen) parameters between images")));
+	helpDisplay.AddLineInfo(_T("F5"), m_bAutoContrast, CNLS::GetString(_T("Enable/disable automatic contrast correction (histogram equalization)")));
+	helpDisplay.AddLineInfo(_T("Shift+F5"), m_bAutoContrastSection, CNLS::GetString(_T("Apply auto contrast correction using only visible section of image")));
+	helpDisplay.AddLineInfo(_T("F6"), m_bLDC, CNLS::GetString(_T("Enable/disable automatic density correction (local brightness correction)")));
+	TCHAR buffLS[16]; _stprintf_s(buffLS, 16, _T("%.2f"), m_pImageProcParams->LightenShadows);
+	helpDisplay.AddLineInfo(_T("Ctrl/Alt+F6"), buffLS, CNLS::GetString(_T("Increase/decrease lightening of shadows (LDC must be on)")));
+	TCHAR buffDH[16]; _stprintf_s(buffDH, 16, _T("%.2f"), m_pImageProcParams->DarkenHighlights);
+	helpDisplay.AddLineInfo(_T("C/A+Shift+F6"), buffDH, CNLS::GetString(_T("Increase/decrease darkening of highlights (LDC must be on)")));
+	helpDisplay.AddLineInfo(_T("F7"), m_pFileList->GetNavigationMode() == Helpers::NM_LoopDirectory, CNLS::GetString(_T("Loop through files in current folder")));
+	helpDisplay.AddLineInfo(_T("F8"), m_pFileList->GetNavigationMode() == Helpers::NM_LoopSubDirectories, CNLS::GetString(_T("Loop through files in current directory and all subfolders")));
+	helpDisplay.AddLineInfo(_T("F9"), m_pFileList->GetNavigationMode() == Helpers::NM_LoopSameDirectoryLevel, CNLS::GetString(_T("Loop through files in current directory and all sibling folders (folders on same level)")));
+	helpDisplay.AddLineInfo(_T("F12"), m_bSpanVirtualDesktop, CNLS::GetString(_T("Maximize/restore to/from virtual desktop (only for multi-monitor systems)")));
+	helpDisplay.AddLine(_T("Ctrl+C/Ctrl+X"), CNLS::GetString(_T("Copy screen to clipboard/ Copy processed full size image to clipboard")));
+	helpDisplay.AddLine(_T("Ctrl+O"), CNLS::GetString(_T("Open new image or slideshow file")));
+	helpDisplay.AddLine(_T("Ctrl+S"), CNLS::GetString(_T("Save processed image to JPEG file (original size)")));
+	helpDisplay.AddLine(_T("s/d"), CNLS::GetString(_T("Save (s)/ delete (d) image processing parameters in/from parameter DB")));
+	helpDisplay.AddLineInfo(_T("c/m/n"), 
+		(m_pFileList->GetSorting() == Helpers::FS_LastModTime) ? _T("m") :
+		(m_pFileList->GetSorting() == Helpers::FS_FileName) ? _T("n") : _T("c"), 
+		CNLS::GetString(_T("Sort images by creation date, resp. modification date, resp. file name")));
+	helpDisplay.AddLine(CNLS::GetString(_T("PgUp or Left")), CNLS::GetString(_T("Goto previous image")));
+	helpDisplay.AddLine(CNLS::GetString(_T("PgDn or Right")), CNLS::GetString(_T("Goto next image")));
+	helpDisplay.AddLine(_T("Home/End"), CNLS::GetString(_T("Goto first/last image of current folder (using sort order as defined)")));
+	TCHAR buff[16]; _stprintf_s(buff, 16, _T("%.2f"), m_pImageProcParams->Gamma);
+	helpDisplay.AddLineInfo(_T("Shift +/-"), buff, CNLS::GetString(_T("Increase/decrease brightness")));
+	TCHAR buff1[16]; _stprintf_s(buff1, 16, _T("%.2f"), m_pImageProcParams->Contrast);
+	helpDisplay.AddLineInfo(_T("Ctrl +/-"), buff1, CNLS::GetString(_T("Increase/decrease contrast")));
+	TCHAR buff2[16]; _stprintf_s(buff2, 16, _T("%.2f"), m_pImageProcParams->Sharpen);
+	helpDisplay.AddLineInfo(_T("Alt +/-"), buff2, CNLS::GetString(_T("Increase/decrease sharpness")));
+	TCHAR buff3[16]; _stprintf_s(buff3, 16, _T("%.2f"), m_pImageProcParams->ColorCorrectionFactor);
+	helpDisplay.AddLineInfo(_T("Alt+Ctrl +/-"), buff3, CNLS::GetString(_T("Increase/decrease auto color cast correction amount")));
+	TCHAR buff4[16]; _stprintf_s(buff4, 16, _T("%.2f"), m_pImageProcParams->ContrastCorrectionFactor);
+	helpDisplay.AddLineInfo(_T("Ctrl+Shift +/-"), buff4, CNLS::GetString(_T("Increase/decrease auto contrast correction amount")));
+	helpDisplay.AddLine(_T("1 .. 9"), CNLS::GetString(_T("Slide show with timeout of n seconds (ESC to stop)")));
+	helpDisplay.AddLineInfo(_T("Ctrl[+Shift] 1 .. 9"),  LPCTSTR(NULL), CNLS::GetString(_T("Set timeout to n/10 sec, respectively n/100 sec (Ctrl+Shift)")));
+	helpDisplay.AddLine(CNLS::GetString(_T("up/down")), CNLS::GetString(_T("Rotate image and fit to screen")));
+	helpDisplay.AddLine(_T("Return"), CNLS::GetString(_T("Fit image to screen")));
+	helpDisplay.AddLine(_T("Space"), CNLS::GetString(_T("Zoom 1:1 (100 %)")));
+	TCHAR buff5[16]; _stprintf_s(buff5, 16, _T("%.0f %%"), m_dZoom*100);
+	helpDisplay.AddLineInfo(_T("+/-"), buff5, CNLS::GetString(_T("Zoom in/Zoom out (also Ctrl+up/down)")));
+	helpDisplay.AddLine(CNLS::GetString(_T("Mouse wheel")), CNLS::GetString(_T("Zoom in/out image")));
+	helpDisplay.AddLine(CNLS::GetString(_T("Left mouse & drag")), CNLS::GetString(_T("Pan image")));
+	helpDisplay.AddLine(CNLS::GetString(_T("Ctrl + L mouse")), CNLS::GetString(_T("Crop image")));
+	helpDisplay.AddLine(CNLS::GetString(_T("Fwd mouse button")), CNLS::GetString(_T("Next image")));
+	helpDisplay.AddLine(CNLS::GetString(_T("Back mouse button")), CNLS::GetString(_T("Previous image")));
+	std::list<CUserCommand*>::iterator iter;
+	std::list<CUserCommand*> & userCmdList = CSettingsProvider::This().UserCommandList();
+	for (iter = userCmdList.begin( ); iter != userCmdList.end( ); iter++ ) {
+		if (!(*iter)->HelpText().IsEmpty()) {
+			helpDisplay.AddLine((*iter)->HelpKey(), CNLS::GetString((*iter)->HelpText()));
+		}
+	}
+}
+
+HBITMAP CMainDlg::PrepareRectForMemDCPainting(CDC & memDC, CDC & paintDC, const CRect& rect) {
+	paintDC.ExcludeClipRect(&rect);
+
+	// Create a memory DC of correct size
+	CBitmap memDCBitmap = CBitmap();
+	memDC.CreateCompatibleDC(paintDC);
+	memDCBitmap.CreateCompatibleBitmap(paintDC, rect.Width(), rect.Height());
+	memDC.SelectBitmap(memDCBitmap);
+	memDC.FillRect(CRect(0, 0, rect.Width(), rect.Height()), (HBRUSH)::GetStockObject(BLACK_BRUSH));
+	return memDCBitmap.m_hBitmap;
 }

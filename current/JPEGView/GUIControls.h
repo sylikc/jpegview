@@ -33,7 +33,7 @@ public:
 public:
 	virtual bool OnMouseLButton(EMouseEvent eMouseEvent, int nX, int nY) = 0;
 	virtual bool OnMouseMove(int nX, int nY) = 0;
-	virtual void OnPaint(CDC & dc);
+	virtual void OnPaint(CDC & dc, const CPoint& offset);
 	
 protected:
 	friend class CSliderMgr;
@@ -45,6 +45,7 @@ protected:
 	bool m_bShow;
 	bool m_bHighlight;
 	CRect m_position;
+	CPoint m_pos2Screen; // the offset from the paint position to the screen position (used when painting to memory DC)
 };
 
 //-------------------------------------------------------------------------------------------------
@@ -132,7 +133,7 @@ public:
 public:
 	virtual bool OnMouseLButton(EMouseEvent eMouseEvent, int nX, int nY);
 	virtual bool OnMouseMove(int nX, int nY);
-	virtual void OnPaint(CDC & dc);
+	virtual void OnPaint(CDC & dc, const CPoint& offset);
 
 protected:
 	virtual void Draw(CDC & dc, CRect position, bool bBlack);
@@ -198,7 +199,7 @@ public:
 	bool OnMouseLButton(EMouseEvent eMouseEvent, int nX, int nY);
 	bool OnMouseMove(int nX, int nY);
 	// Must be called when painting the window (hWnd given in constructor)
-	void OnPaint(CPaintDC & dc);
+	void OnPaint(CDC & dc, const CPoint& offset);
 
 	// Gets the HWND all UI controls are placed on
 	HWND GetHWND() const { return m_hWnd; }
