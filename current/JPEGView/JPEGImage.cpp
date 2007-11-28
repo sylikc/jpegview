@@ -711,16 +711,39 @@ void CJPEGImage::ConvertSrcTo4Channels() {
 EProcessingFlags CJPEGImage::GetProcFlagsIncludeExcludeFolders(LPCTSTR sFileName, EProcessingFlags procFlags) {
 	EProcessingFlags eFlags = procFlags;
 	CSettingsProvider& sp = CSettingsProvider::This();
-	if (Helpers::PatternMatch(sFileName, sp.ACCInclude())) {
-		eFlags = SetProcessingFlag(eFlags, PFLAG_AutoContrast, true);
-	} else if (Helpers::PatternMatch(sFileName, sp.ACCExclude())) {
-		eFlags = SetProcessingFlag(eFlags, PFLAG_AutoContrast, false);
+	LPCTSTR sPatternInclude;
+	LPCTSTR sPatternExclude;
+
+	bool bIncludeACCMatch = Helpers::PatternMatch(sPatternInclude, sFileName, sp.ACCInclude());
+	bool bExcludeACCMatch = Helpers::PatternMatch(sPatternExclude, sFileName, sp.ACCExclude());
+	if (bIncludeACCMatch && bExcludeACCMatch) {
+		// Take more specific pattern if both match
+		int nSpec = Helpers::FindMoreSpecificPattern(sPatternInclude, sPatternExclude);
+		if (nSpec == -1) {
+			bIncludeACCMatch = false; // Exclude is more specific
+		} else {
+			bExcludeACCMatch = false; // Include is more specific (or no difference)
+		}
 	}
-	if (Helpers::PatternMatch(sFileName, sp.LDCInclude())) {
-		eFlags = SetProcessingFlag(eFlags, PFLAG_LDC, true);
-	} else if (Helpers::PatternMatch(sFileName, sp.LDCExclude())) {
-		eFlags = SetProcessingFlag(eFlags, PFLAG_LDC, false);
+	if (bIncludeACCMatch || bExcludeACCMatch) {
+		eFlags = SetProcessingFlag(eFlags, PFLAG_AutoContrast, bIncludeACCMatch);
 	}
+
+	bool bIncludeLDCMatch = Helpers::PatternMatch(sPatternInclude, sFileName, sp.LDCInclude());
+	bool bExcludeLDCMatch = Helpers::PatternMatch(sPatternExclude, sFileName, sp.LDCExclude());
+	if (bIncludeLDCMatch && bExcludeLDCMatch) {
+		// Take more specific pattern if both match
+		int nSpec = Helpers::FindMoreSpecificPattern(sPatternInclude, sPatternExclude);
+		if (nSpec == -1) {
+			bIncludeLDCMatch = false; // Exclude is more specific
+		} else {
+			bExcludeLDCMatch = false; // Include is more specific (or no difference)
+		}
+	}
+	if (bIncludeLDCMatch || bExcludeLDCMatch) {
+		eFlags = SetProcessingFlag(eFlags, PFLAG_LDC, bIncludeLDCMatch);
+	}
+
 	return eFlags;
 }
 

@@ -178,7 +178,7 @@ CMainDlg::CMainDlg() {
 	m_dCurrentInitialLightenShadows = -1;
 
 	m_bShowFileName = sp.ShowFileName();
-	m_bShowFileInfo = false;
+	m_bShowFileInfo = sp.ShowFileInfo();
 	m_bKeepParams = sp.KeepParams();
 	m_eAutoZoomMode = sp.AutoZoomMode();
 
