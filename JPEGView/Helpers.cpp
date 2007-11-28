@@ -135,13 +135,15 @@ GiveUp:
 	return cpuType;
 }
 
-bool PatternMatch(LPCTSTR sString, LPCTSTR sPattern) {
+bool PatternMatch(LPCTSTR & sMatchingPattern, LPCTSTR sString, LPCTSTR sPattern) {
+	sMatchingPattern = NULL;
 	if (sString == NULL || sPattern == NULL || *sPattern == 0) return false;
 	LPCTSTR pInStr = sString;
 	LPCTSTR pInPat = sPattern;
 	while (*pInPat != 0) {
 		bool bThisPatternFails = false;
 		while (*pInPat == _T(';')) pInPat++; // skip sequences of separators
+		sMatchingPattern = pInPat;
 		while (*pInPat != 0 && *pInPat != _T(';')) {
 			bool bAsterix = false;
 			if (*pInPat == _T('*')) {
@@ -177,6 +179,35 @@ bool PatternMatch(LPCTSTR sString, LPCTSTR sPattern) {
 		if (*pInPat != 0) pInPat++;
 	}
 	return false;
+}
+
+int FindMoreSpecificPattern(LPCTSTR sPattern1, LPCTSTR sPattern2) {
+	if (sPattern1 == NULL) {
+		return (sPattern2 == NULL) ? 0 : -1;
+	} else if (sPattern2 == NULL) {
+		return 1;
+	}
+	while (*sPattern1 != 0 && *sPattern1 != _T(';') && *sPattern2 != 0 && *sPattern2 != _T(';') &&
+		_totlower(*sPattern1) == _totlower(*sPattern2)) {
+		sPattern1++;
+		sPattern2++;
+	}
+	if (*sPattern1 == 0 || *sPattern1 == _T(';')) {
+		if (*sPattern2 == 0 || *sPattern2 == _T(';')) {
+			return 0; // no one is more specific
+		} else {
+			return -1; // sPattern2 is more specific
+		}
+	} else if (*sPattern2 == 0 || *sPattern2 == _T(';')) {
+		return 1; // sPattern1 is more specific
+	} else {
+		if (*sPattern1 == _T('*')) {
+			return -1; // pattern 1 accepts any char, thus sPattern2 is more specific
+		} else if (*sPattern2 == _T('*')) {
+			return 1; // sPattern1 is more specific
+		}
+		return 0;
+	}
 }
 
 // calculate CRT table

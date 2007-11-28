@@ -121,6 +121,7 @@ void CSettingsProvider::ReadWriteableINISettings() {
 	m_dYellowBlue = GetDouble(_T("YellowBlue"), 0.0, -1.0, 1.0);
 	m_bHQRS = GetBool(_T("HighQualityResampling"), true);
 	m_bShowFileName = GetBool(_T("ShowFileName"), false);
+	m_bShowFileInfo = GetBool(_T("ShowFileInfo"), false);
 	m_bKeepParams = GetBool(_T("KeepParameters"), false);
 	
 	CString sCPU = GetString(_T("CPUType"), _T("AutoDetect"));

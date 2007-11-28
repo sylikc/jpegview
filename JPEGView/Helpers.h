@@ -69,7 +69,13 @@ namespace Helpers {
 	// Pattern: * - will be matched by any number of characters
 	//          ; - separates patterns
 	//          other chars - must match (ignoring case)
-	bool PatternMatch(LPCTSTR sString, LPCTSTR sPattern);
+	// In sMatchingPattern, the matching pattern is returned (ended with a ; or a null character)
+	bool PatternMatch(LPCTSTR & sMatchingPattern, LPCTSTR sString, LPCTSTR sPattern);
+
+	// Given two matching patterns as returned by PatternMatch() method, finds the more specific
+	// pattern, e.g. C:\images\jan\* is more specific than C:\images\*
+	// Returns 0 if equal patterns, 1 if pattern 1 is more specific and -1 if pattern 2 is more specific
+	int FindMoreSpecificPattern(LPCTSTR sPattern1, LPCTSTR sPattern2);
 
 	// Pad the given value to the next multiple of padvalue
 	inline int DoPadding(int value, int padvalue) {

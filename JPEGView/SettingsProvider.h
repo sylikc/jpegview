@@ -23,6 +23,7 @@ public:
 	double YellowBlue() { return m_dYellowBlue; }
 	bool HighQualityResampling() { return m_bHQRS; }
 	bool ShowFileName() { return m_bShowFileName; }
+	bool ShowFileInfo() { return m_bShowFileInfo; }
 	bool KeepParams() { return m_bKeepParams; }
 	Helpers::CPUType AlgorithmImplementation() { return m_eCPUAlgorithm; }
 	EFilterType DownsamplingFilter() { return m_eDownsamplingFilter; }
@@ -73,6 +74,7 @@ private:
 	double m_dYellowBlue;
 	bool m_bHQRS;
 	bool m_bShowFileName;
+	bool m_bShowFileInfo;
 	bool m_bKeepParams;
 	Helpers::CPUType m_eCPUAlgorithm;
 	EFilterType m_eDownsamplingFilter;
