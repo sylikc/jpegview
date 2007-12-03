@@ -42,6 +42,7 @@ static const int SLIDESHOW_TIMER_EVENT_ID = 1; // Slideshow timer ID
 static const int ZOOM_TIMER_EVENT_ID = 2; // Zoom refinement timer ID
 static const int ZOOM_TEXT_TIMER_EVENT_ID = 3; // Zoom label timer ID
 static const int AUTOSCROLL_TIMER_EVENT_ID = 4; // when cropping, auto scroll timer ID
+static const int NAVPANEL_TIMER_EVENT_ID = 5; // to show nav panel
 static const int ZOOM_TIMEOUT = 200; // refinement done after this many milliseconds
 static const int ZOOM_TEXT_TIMEOUT = 1000; // zoom label disappears after this many milliseconds
 static const int AUTOSCROLL_TIMEOUT = 20; // autoscroll time in ms
@@ -63,6 +64,7 @@ static const int KEEP_PARAMETERS = 4; // used in GotoImage() method
 // Dim factor (0..1) for image processing area, 1 means black, 0 means no dimming
 static const float cfDimFactorIPA = 0.5f;
 static const float cfDimFactorEXIF = 0.5f;
+static const float cfDimFactorNavPanel = 0.3f;
 
 CMainDlg * CMainDlg::sm_instance = NULL;
 
@@ -122,7 +124,7 @@ static void InitFromProcessingFlags(EProcessingFlags eFlags, bool& bHQResampling
 	bLDC = GetProcessingFlag(eFlags, PFLAG_LDC);
 }
 
-// Blits the DIB data section to target DC using dimming
+// Blits the DIB data section to target DC using dimming (blending with a black bitmap)
 static void BitBltBlended(CDC & dc, const CSize& dcSize, void* pDIBData, BITMAPINFO* pbmInfo, 
 						  const CPoint& dibStart, const CSize& dibSize, float fDimFactor) {
 	int nW = dcSize.cx;
@@ -143,6 +145,32 @@ static void BitBltBlended(CDC & dc, const CSize& dcSize, void* pDIBData, BITMAPI
 	blendFunc.SourceConstantAlpha = (unsigned char)(fDimFactor*255 + 0.5f);
 	blendFunc.AlphaFormat = 0;
 	dc.AlphaBlend(0, 0, nW, nH, memDCblack, 0, 0, nW, nH, blendFunc);
+}
+
+// Blits the DIB data section to target DC using blending with painted version of given panel
+static void BitBltBlended(CDC & dc, const CSize& dcSize, void* pDIBData, BITMAPINFO* pbmInfo, 
+						  const CPoint& dibStart, const CSize& dibSize, CPanelMgr& panel, const CPoint& offsetPanel,
+						  float fBlendFactor) {
+	int nW = dcSize.cx;
+	int nH = dcSize.cy;
+
+	dc.SetDIBitsToDevice(dibStart.x, dibStart.y, 
+		dibSize.cx, dibSize.cy, 0, 0, 0, dibSize.cy, pDIBData, pbmInfo, DIB_RGB_COLORS);
+
+	CDC memDCPanel;
+	memDCPanel.CreateCompatibleDC(dc);
+	CBitmap bitmapPanel;
+	bitmapPanel.CreateCompatibleBitmap(dc, nW, nH);
+	memDCPanel.SelectBitmap(bitmapPanel);
+	memDCPanel.BitBlt(0, 0, nW, nH, dc, 0, 0, SRCCOPY);
+	panel.OnPaint(memDCPanel, offsetPanel);
+	
+	BLENDFUNCTION blendFunc;
+	memset(&blendFunc, 0, sizeof(blendFunc));
+	blendFunc.BlendOp = AC_SRC_OVER;
+	blendFunc.SourceConstantAlpha = (unsigned char)(fBlendFactor*255 + 0.5f);
+	blendFunc.AlphaFormat = 0;
+	dc.AlphaBlend(0, 0, nW, nH, memDCPanel, 0, 0, nW, nH, blendFunc);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////
@@ -179,6 +207,7 @@ CMainDlg::CMainDlg() {
 
 	m_bShowFileName = sp.ShowFileName();
 	m_bShowFileInfo = sp.ShowFileInfo();
+	m_bShowNavPanel = sp.ShowNavPanel();
 	m_bKeepParams = sp.KeepParams();
 	m_eAutoZoomMode = sp.AutoZoomMode();
 
@@ -199,6 +228,7 @@ CMainDlg::CMainDlg() {
 	m_dZoom = -1.0;
 	m_dZoomMult = -1.0;
 	m_bDragging = false;
+	m_bDoDragging = false;
 	m_bCropping = false;
 	m_nOffsetX = 0;
 	m_nOffsetY = 0;
@@ -216,8 +246,10 @@ CMainDlg::CMainDlg() {
 	m_bSearchSubDirsOnEnter = false;
 	m_bSpanVirtualDesktop = false;
 	m_bShowIPTools = false;
+	m_bMouseInNavPanel = false;
 	m_storedWindowPlacement.length = sizeof(WINDOWPLACEMENT);
 	m_pSliderMgr = NULL;
+	m_pNavPanel = NULL;
 	m_bPasteFromClipboardFailed = false;
 
 	m_cropStart = CPoint(INT_MIN, INT_MIN);
@@ -230,6 +262,7 @@ CMainDlg::~CMainDlg() {
 	delete m_pImageProcParams;
 	delete m_pImageProcParamsKept;
 	delete m_pSliderMgr;
+	delete m_pNavPanel;
 }
 
 LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/)
@@ -261,6 +294,19 @@ LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam
 	m_txtFileName = m_pSliderMgr->AddText(NULL, true, &OnRenameFile);
 	m_txtAcqDate = m_pSliderMgr->AddText(NULL, false, NULL);
 	m_txtAcqDate->SetRightAligned(true);
+
+	// setup navigation panel
+	m_pNavPanel = new CNavigationPanel(this->m_hWnd, m_pSliderMgr);
+	m_pNavPanel->AddUserPaintButton(&(CNavigationPanel::PaintHomeBtn), &OnHome);
+	m_pNavPanel->AddUserPaintButton(&(CNavigationPanel::PaintPrevBtn), &OnPrev);
+	m_pNavPanel->AddGap(4);
+	m_pNavPanel->AddUserPaintButton(&(CNavigationPanel::PaintNextBtn), &OnNext);
+	m_pNavPanel->AddUserPaintButton(&(CNavigationPanel::PaintEndBtn), &OnEnd);
+	m_pNavPanel->AddGap(8);
+	m_pNavPanel->AddUserPaintButton(&(CNavigationPanel::PaintRotateCWBtn), &OnRotateCW);
+	m_pNavPanel->AddUserPaintButton(&(CNavigationPanel::PaintRotateCCWBtn), &OnRotateCCW);
+	m_pNavPanel->AddGap(16);
+	m_pNavPanel->AddUserPaintButton(&(CNavigationPanel::PaintInfoBtn), &OnShowInfo);
 
 	// place window on monitor as requested in INI file
 	int nMonitor = CSettingsProvider::This().DisplayMonitor();
@@ -321,7 +367,11 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 	CPaintDC dc(m_hWnd);
 
 	this->GetClientRect(&m_clientRect);
-	CRect imageProcessingArea = m_pSliderMgr->SliderAreaRect();
+	CRect imageProcessingArea = m_pSliderMgr->PanelRect();
+	CRect rectNavPanel = m_pNavPanel->PanelRect();
+	bool bBlendNavPanel = false;
+	bool bNavPanelInvisible = (CSettingsProvider::This().BlendFactorNavPanel() == 0.0f && !m_bMouseInNavPanel) ||
+		m_bMovieMode || m_bDoDragging || m_bCropping || m_bShowIPTools;
 
 	// Save old clipping region
 	CRgn rgnOldClipRgn;
@@ -361,6 +411,15 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 
 	if (m_bShowIPTools) {
 		hOffScreenBitmapIPA = PrepareRectForMemDCPainting(memDCipa, dc, imageProcessingArea);
+		bRestoreClipping = true;
+	}
+
+	// Create a memory DC for the nav panel (also excluded from clipping)
+	CDC memDCnavPanel = CDC();
+	HBITMAP hOffScreenBitmapNavPanel = NULL;
+
+	if (m_bShowNavPanel && !bNavPanelInvisible) {
+		hOffScreenBitmapNavPanel = PrepareRectForMemDCPainting(memDCnavPanel, dc, rectNavPanel);
 		bRestoreClipping = true;
 	}
 
@@ -428,6 +487,18 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 			if (memDCexif.m_hDC != NULL) {
 				BitBltBlended(memDCexif, CSize(rectEXIFInfo.Width(), rectEXIFInfo.Height()), pDIBData, &bmInfo, 
 						  CPoint(xDest - rectEXIFInfo.left, yDest - rectEXIFInfo.top), clippedSize, cfDimFactorEXIF);
+			}
+			// same for navigation panel
+			if (memDCnavPanel.m_hDC != NULL && !bNavPanelInvisible) {
+				if (m_bMouseInNavPanel) {
+					BitBltBlended(memDCnavPanel, CSize(rectNavPanel.Width(), rectNavPanel.Height()), pDIBData, &bmInfo, 
+						  CPoint(xDest - rectNavPanel.left, yDest - rectNavPanel.top), clippedSize, cfDimFactorNavPanel);
+				} else {
+					bBlendNavPanel = true;
+					BitBltBlended(memDCnavPanel, CSize(rectNavPanel.Width(), rectNavPanel.Height()), pDIBData, &bmInfo, 
+						  CPoint(xDest - rectNavPanel.left, yDest - rectNavPanel.top), clippedSize, 
+						  *m_pNavPanel, CPoint(-rectNavPanel.left, -rectNavPanel.top), CSettingsProvider::This().BlendFactorNavPanel());
+				}
 			}
 			// same for image processing area
 			if (memDCipa.m_hDC != NULL) {
@@ -533,6 +604,14 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 		dc.BitBlt(imageProcessingArea.left, imageProcessingArea.top, imageProcessingArea.Width(), imageProcessingArea.Height(), memDCipa, 0, 0, SRCCOPY);
 	}
 
+	// Paint navigation panel
+	if (m_bShowNavPanel && !bNavPanelInvisible) {
+		if (!bBlendNavPanel) {
+			m_pNavPanel->OnPaint(memDCnavPanel, CPoint(-rectNavPanel.left, -rectNavPanel.top));
+		} // else the nav panel has already been blended into mem DC
+		dc.BitBlt(rectNavPanel.left, rectNavPanel.top, rectNavPanel.Width(), rectNavPanel.Height(), memDCnavPanel, 0, 0, SRCCOPY);
+	}
+
 	// Display file and EXIF information
 	if (pEXIFDisplay != NULL && m_pCurrentImage != NULL) {
 		// paint into the memory DC
@@ -564,6 +643,9 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 	if (hOffScreenBitmapIPA != NULL) {
 		::DeleteObject(hOffScreenBitmapIPA);
 	}
+	if (hOffScreenBitmapNavPanel != NULL) {
+		::DeleteObject(hOffScreenBitmapNavPanel);
+	}
 	delete pHelpDisplay;
 	delete pEXIFDisplay;
 
@@ -580,14 +662,21 @@ LRESULT CMainDlg::OnAnotherInstanceStarted(UINT /*uMsg*/, WPARAM /*wParam*/, LPA
 
 LRESULT CMainDlg::OnLButtonDown(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, BOOL& /*bHandled*/) {
 	this->SetCapture();
+	bool bEatenByIPA = m_bShowIPTools && m_pSliderMgr->OnMouseLButton(MouseEvent_BtnDown, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+	bool bEatenByNavPanel = m_bShowNavPanel && !m_bShowIPTools && m_pNavPanel->OnMouseLButton(MouseEvent_BtnDown, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
 	// If the image processing area does not eat up the event, start dragging
-	if (!m_bShowIPTools || !m_pSliderMgr->OnMouseLButton(MouseEvent_BtnDown, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam))) {
+	if (!bEatenByIPA && !bEatenByNavPanel) {
 		bool bCtrl = (::GetKeyState(VK_CONTROL) & 0x8000) != 0;
 		if (bCtrl) {
 			StartCropping(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
 		} else {
 			StartDragging(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
 		}
+	}
+	bool bMouseInNavPanel = m_pNavPanel->PanelRect().PtInRect(CPoint(m_nMouseX, m_nMouseY));
+	if (bMouseInNavPanel && !m_bMouseInNavPanel) {
+		m_bMouseInNavPanel = true;
+		this->InvalidateRect(m_pNavPanel->PanelRect(), FALSE);
 	}
 	return 0;
 }
@@ -599,12 +688,15 @@ LRESULT CMainDlg::OnMButtonDown(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam,
 }
 
 LRESULT CMainDlg::OnLButtonUp(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, BOOL& /*bHandled*/) {
-	if (!m_bShowIPTools || m_bDragging || m_bCropping || !m_pSliderMgr->OnMouseLButton(MouseEvent_BtnUp, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam))) {
+	if (m_bDragging || m_bCropping) {
 		if (m_bDragging) {
 			EndDragging();
 		} else if (m_bCropping) {
 			EndCropping();
 		}
+	} else {
+		if (m_bShowIPTools) m_pSliderMgr->OnMouseLButton(MouseEvent_BtnUp, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+		if (m_bShowNavPanel && !m_bShowIPTools) m_pNavPanel->OnMouseLButton(MouseEvent_BtnUp, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
 	}
 	::ReleaseCapture();
 	return 0;
@@ -628,6 +720,7 @@ LRESULT CMainDlg::OnXButtonDown(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/,
 LRESULT CMainDlg::OnMouseMove(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, BOOL& /*bHandled*/) {
 	// Turn mouse pointer on when mouse has moved some distance
 	int nOldMouseY = m_nMouseY;
+	int nOldMouseX = m_nMouseX;
 	m_nMouseX = GET_X_LPARAM(lParam);
 	m_nMouseY = GET_Y_LPARAM(lParam);
 	if (!m_bDragging) {
@@ -648,18 +741,40 @@ LRESULT CMainDlg::OnMouseMove(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, B
 		if (m_nMouseX >= m_clientRect.Width() - 1 || m_nMouseX <= 0 || m_nMouseY >= m_clientRect.Height() - 1 || m_nMouseY <= 0 ) {
 			::SetTimer(this->m_hWnd, AUTOSCROLL_TIMER_EVENT_ID, AUTOSCROLL_TIMEOUT, NULL);
 		}
-	} else if (!m_bShowIPTools) {
-		int nIPAreaStart= m_clientRect.bottom - m_pSliderMgr->SliderAreaHeight();
-		if (nOldMouseY != 0 && nOldMouseY <= nIPAreaStart && m_nMouseY > nIPAreaStart) {
-			m_bShowIPTools = true;
-			this->Invalidate(FALSE);
-		}
 	} else {
-		if (!m_pSliderMgr->OnMouseMove(m_nMouseX, m_nMouseY)) {
-			if (m_nMouseY < m_clientRect.bottom - (m_pSliderMgr->SliderAreaHeight()*10 >> 3)) {
-				m_bShowIPTools = false;
-				this->Invalidate(FALSE);
+		if (!m_bShowIPTools) {
+			int nIPAreaStart= m_clientRect.bottom - m_pSliderMgr->SliderAreaHeight();
+			if (m_bShowNavPanel) {
+				CRect rectNavPanel = m_pNavPanel->PanelRect();
+				if (m_nMouseX > rectNavPanel.left && m_nMouseX < rectNavPanel.right) {
+					nIPAreaStart += m_pSliderMgr->SliderAreaHeight()/2;
+				}
 			}
+			if (nOldMouseY != 0 && nOldMouseY <= nIPAreaStart && m_nMouseY > nIPAreaStart) {
+				m_bShowIPTools = true;
+				this->InvalidateRect(m_pSliderMgr->PanelRect(), FALSE);
+				this->InvalidateRect(m_pNavPanel->PanelRect(), FALSE);
+			}
+		} else {
+			if (!m_pSliderMgr->OnMouseMove(m_nMouseX, m_nMouseY)) {
+				if (m_nMouseY < m_pNavPanel->PanelRect().top) {
+					m_bShowIPTools = false;
+					this->InvalidateRect(m_pSliderMgr->PanelRect(), FALSE);
+					this->InvalidateRect(m_pNavPanel->PanelRect(), FALSE);
+				}
+			}
+		}
+		if (m_bShowNavPanel && !m_bShowIPTools) {
+			bool bMouseInNavPanel = m_pNavPanel->PanelRect().PtInRect(CPoint(m_nMouseX, m_nMouseY));
+			if (!bMouseInNavPanel && m_bMouseInNavPanel) {
+				m_bMouseInNavPanel = false;
+				this->InvalidateRect(m_pNavPanel->PanelRect(), FALSE);
+			} else if (bMouseInNavPanel && !m_bMouseInNavPanel) {
+				StartNavPanelTimer(50);
+			}
+			m_pNavPanel->OnMouseMove(m_nMouseX, m_nMouseY);
+		} else {
+			m_bMouseInNavPanel = false;
 		}
 	}
 	return 0;
@@ -759,6 +874,8 @@ LRESULT CMainDlg::OnKeyDown(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOO
 		ExecuteCommand(IDM_LOOP_RECURSIVELY);
 	} else if (wParam == VK_F9) {
 		ExecuteCommand(IDM_LOOP_SIBLINGS);
+	} else if (wParam == VK_F11) {
+		ExecuteCommand(IDM_SHOW_NAVPANEL);
 	} else if (wParam == VK_F12) {
 		ExecuteCommand(IDM_SPAN_SCREENS);
 	} else if (wParam >= '1' && wParam <= '9' && (!bShift || bCtrl)) {
@@ -895,6 +1012,13 @@ LRESULT CMainDlg::OnTimer(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOOL&
 				this->Invalidate(FALSE);
 			}
 		}
+	} else if (wParam == NAVPANEL_TIMER_EVENT_ID) {
+		::KillTimer(this->m_hWnd, NAVPANEL_TIMER_EVENT_ID);
+		bool bMouseInNavPanel = m_pNavPanel->PanelRect().PtInRect(CPoint(m_nMouseX, m_nMouseY));
+		if (bMouseInNavPanel && !m_bMouseInNavPanel) {
+			m_bMouseInNavPanel = true;
+			this->InvalidateRect(m_pNavPanel->PanelRect(), FALSE);
+		}
 	} else if (wParam == ZOOM_TEXT_TIMER_EVENT_ID) {
 		m_bShowZoomFactor = false;
 		::KillTimer(this->m_hWnd, ZOOM_TEXT_TIMER_EVENT_ID);
@@ -974,6 +1098,7 @@ LRESULT CMainDlg::OnContextMenu(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam,
 	
 	if (m_bShowFileInfo) ::CheckMenuItem(hMenuTrackPopup, IDM_SHOW_FILEINFO, MF_CHECKED);
 	if (m_bShowFileName) ::CheckMenuItem(hMenuTrackPopup, IDM_SHOW_FILENAME, MF_CHECKED);
+	if (m_bShowNavPanel) ::CheckMenuItem(hMenuTrackPopup, IDM_SHOW_NAVPANEL, MF_CHECKED);
 	if (m_bAutoContrast) ::CheckMenuItem(hMenuTrackPopup, IDM_AUTO_CORRECTION, MF_CHECKED);
 	if (m_bLDC) ::CheckMenuItem(hMenuTrackPopup, IDM_LDC, MF_CHECKED);
 	if (m_bKeepParams) ::CheckMenuItem(hMenuTrackPopup, IDM_KEEP_PARAMETERS, MF_CHECKED);
@@ -987,6 +1112,9 @@ LRESULT CMainDlg::OnContextMenu(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam,
 	if (m_bSpanVirtualDesktop) ::CheckMenuItem(hMenuZoom,  IDM_SPAN_SCREENS, MF_CHECKED);
 	HMENU hMenuAutoZoomMode = ::GetSubMenu(hMenuTrackPopup, SUBMENU_POS_AUTOZOOMMODE);
 	::CheckMenuItem(hMenuAutoZoomMode,  m_eAutoZoomMode*10 + IDM_AUTO_ZOOM_FIT_NO_ZOOM, MF_CHECKED);
+
+	::EnableMenuItem(hMenuMovie, IDM_SLIDESHOW_START, MF_BYCOMMAND | MF_GRAYED);
+	::EnableMenuItem(hMenuMovie, IDM_MOVIE_START_FPS, MF_BYCOMMAND | MF_GRAYED);
 
 	bool bCanPaste = ::IsClipboardFormatAvailable(CF_DIB);
 	if (!bCanPaste) ::EnableMenuItem(hMenuTrackPopup, IDM_PASTE, MF_BYCOMMAND | MF_GRAYED);
@@ -1069,6 +1197,36 @@ bool CMainDlg::OnRenameFile(CTextCtrl & sender, LPCTSTR sChangedText) {
 	return sm_instance->RenameCurrentFile(sChangedText);
 }
 
+// Handlers for the navigation panel UI controls
+
+void CMainDlg::OnHome(CButtonCtrl & sender) {
+	sm_instance->GotoImage(POS_First);
+}
+
+void CMainDlg::OnPrev(CButtonCtrl & sender) {
+	sm_instance->ExecuteCommand(IDM_PREV);
+}
+
+void CMainDlg::OnNext(CButtonCtrl & sender) {
+	sm_instance->ExecuteCommand(IDM_NEXT);
+}
+
+void CMainDlg::OnEnd(CButtonCtrl & sender) {
+	sm_instance->GotoImage(POS_Last);
+}
+
+void CMainDlg::OnRotateCW(CButtonCtrl & sender) {
+	sm_instance->ExecuteCommand(IDM_ROTATE_90);
+}
+
+void CMainDlg::OnRotateCCW(CButtonCtrl & sender) {
+	sm_instance->ExecuteCommand(IDM_ROTATE_270);
+}
+
+void CMainDlg::OnShowInfo(CButtonCtrl & sender) {
+	sm_instance->ExecuteCommand(IDM_SHOW_FILEINFO);
+}
+
 ///////////////////////////////////////////////////////////////////////////////////
 // Private
 ///////////////////////////////////////////////////////////////////////////////////
@@ -1116,6 +1274,14 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 			m_bShowFileName = !m_bShowFileName;
 			this->Invalidate(FALSE);
 			break;
+		case IDM_SHOW_NAVPANEL:
+			m_bShowNavPanel = !m_bShowNavPanel;
+			if (m_bShowHelp) {
+				this->Invalidate(FALSE);
+			} else {
+				this->InvalidateRect(m_pNavPanel->PanelRect(), FALSE);
+			}
+			break;
 		case IDM_NEXT:
 			GotoImage(POS_Next);
 			break;
@@ -1144,6 +1310,16 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 			break;
 		case IDM_STOP_MOVIE:
 			StopMovieMode();
+			break;
+		case IDM_SLIDESHOW_1:
+		case IDM_SLIDESHOW_2:
+		case IDM_SLIDESHOW_3:
+		case IDM_SLIDESHOW_4:
+		case IDM_SLIDESHOW_5:
+		case IDM_SLIDESHOW_7:
+		case IDM_SLIDESHOW_10:
+		case IDM_SLIDESHOW_20:
+			StartMovieMode(1.0/(nCommand - IDM_SLIDESHOW_START));
 			break;
 		case IDM_MOVIE_5_FPS:
 		case IDM_MOVIE_10_FPS:
@@ -1436,6 +1612,9 @@ void CMainDlg::DoDragging(int nX, int nY) {
 	if (m_bDragging && m_pCurrentImage != NULL) {
 		int nXDelta = m_nMouseX - m_nCapturedX;
 		int nYDelta = m_nMouseY - m_nCapturedY;
+		if (!m_bDoDragging && (nXDelta != 0 || nYDelta != 0)) {
+			m_bDoDragging = true;
+		}
 		if (PerformPan(nXDelta, nYDelta, false)) {
 			m_nCapturedX = m_nMouseX;
 			m_nCapturedY = m_nMouseY;
@@ -1446,9 +1625,11 @@ void CMainDlg::DoDragging(int nX, int nY) {
 
 void CMainDlg::EndDragging() {
 	m_bDragging = false;
+	m_bDoDragging = false;
 	if (m_pCurrentImage != NULL) {
 		m_pCurrentImage->VerifyDIBPixelsCreated();
 	}
+	this->InvalidateRect(m_pNavPanel->PanelRect(), FALSE);
 }
 
 void CMainDlg::StartCropping(int nX, int nY) {
@@ -1460,6 +1641,9 @@ void CMainDlg::StartCropping(int nX, int nY) {
 }
 
 void CMainDlg::ShowCroppingRect(int nX, int nY, HDC hPaintDC) {
+	if (m_cropEnd == CPoint(INT_MIN, INT_MIN)) {
+		this->InvalidateRect(m_pNavPanel->PanelRect(), FALSE);
+	}
 	PaintCropRect(hPaintDC);
 	float fX = (float)nX, fY = (float)nY;
 	ScreenToImage(fX, fY);
@@ -1497,6 +1681,11 @@ void CMainDlg::PaintCropRect(HDC hPaintDC) {
 }
 
 void CMainDlg::EndCropping() {
+	if (m_pCurrentImage == NULL) {
+		m_bCropping = false;
+		return;
+	}
+
 	// Display the crop menu
 	HMENU hMenu = ::LoadMenu(_Module.m_hInst, _T("CropMenu"));
 	int nMenuCmd = 0;
@@ -1520,6 +1709,7 @@ void CMainDlg::EndCropping() {
 		PaintCropRect(NULL);
 	}
 	m_bCropping = false;
+	this->InvalidateRect(m_pNavPanel->PanelRect(), FALSE);
 }
 
 void CMainDlg::GotoImage(EImagePosition ePos) {
@@ -1877,6 +2067,7 @@ void CMainDlg::StartMovieMode(double dFPS) {
 	m_bMovieMode = true;
 	StartTimer(Helpers::RoundToInt(1000.0/dFPS));
 	AfterNewImageLoaded(false);
+	this->InvalidateRect(m_pNavPanel->PanelRect(), FALSE);
 }
 
 void CMainDlg::StopMovieMode() {
@@ -1912,8 +2103,14 @@ void CMainDlg::StartLowQTimer(int nTimeout) {
 	::SetTimer(this->m_hWnd, ZOOM_TIMER_EVENT_ID, nTimeout, NULL);
 }
 
+void CMainDlg::StartNavPanelTimer(int nTimeout) {
+	::KillTimer(this->m_hWnd, NAVPANEL_TIMER_EVENT_ID);
+	::SetTimer(this->m_hWnd, NAVPANEL_TIMER_EVENT_ID, nTimeout, NULL);
+}
+
 void CMainDlg::MouseOff() {
-	if (m_nCursorCnt >= 0 && m_nMouseY < m_clientRect.bottom - m_pSliderMgr->SliderAreaHeight() && !m_bInTrackPopupMenu) {
+	if (m_nCursorCnt >= 0 && m_nMouseY < m_clientRect.bottom - m_pSliderMgr->SliderAreaHeight() && 
+		!m_bInTrackPopupMenu && !m_pNavPanel->PanelRect().PtInRect(CPoint(m_nMouseX, m_nMouseY))) {
 		m_nCursorCnt = ::ShowCursor(FALSE);
 		m_startMouse.x = m_startMouse.y = -1;
 	}
@@ -2161,13 +2358,16 @@ void CMainDlg::SaveParameters() {
 	} else {
 		sText += CNLS::GetString(_T("Fit to screen (no zoom)"));
 	}
+	sText += _T("\n");
+	sText += CNLS::GetString(_T("Show navigation panel")); sText += _T(": ");
+	sText += m_bShowNavPanel ? CNLS::GetString(_T("yes")) : CNLS::GetString(_T("no"));
 	sText += _T("\n\n");
 	sText += CNLS::GetString(_T("These values will override the values from the INI file located in the program folder of JPEGView!"));
 
 	if (IDYES == this->MessageBox(sText, CNLS::GetString(_T("Confirm save default parameters")), MB_YESNO | MB_ICONQUESTION)) {
 		CSettingsProvider::This().SaveSettings(*m_pImageProcParams, 
 			CreateProcessingFlags(m_bHQResampling, m_bAutoContrast, 
-			m_bAutoContrastSection, m_bLDC, m_bKeepParams), m_pFileList->GetSorting(), m_eAutoZoomMode);
+			m_bAutoContrastSection, m_bLDC, m_bKeepParams), m_pFileList->GetSorting(), m_eAutoZoomMode, m_bShowNavPanel);
 	}
 }
 
@@ -2288,6 +2488,7 @@ void CMainDlg::GenerateHelpDisplay(CHelpDisplay & helpDisplay) {
 	helpDisplay.AddLine(_T("F1"), CNLS::GetString(_T("Show/hide this help text")));
 	helpDisplay.AddLineInfo(_T("F2"), m_bShowFileInfo, CNLS::GetString(_T("Show/hide picture information (EXIF data)")));
 	helpDisplay.AddLineInfo(_T("Ctrl+F2"), m_bShowFileName, CNLS::GetString(_T("Show/hide file name")));
+	helpDisplay.AddLineInfo(_T("F11"), m_bShowNavPanel, CNLS::GetString(_T("Show/hide navigation panel")));
 	helpDisplay.AddLineInfo(_T("F3"), m_bHQResampling, CNLS::GetString(_T("Enable/disable high quality resampling")));
 	helpDisplay.AddLineInfo(_T("F4"), m_bKeepParams, CNLS::GetString(_T("Enable/disable keeping of geometry related (zoom/pan/rotation)")));
 	helpDisplay.AddLineInfo(_T(""),  LPCTSTR(NULL), CNLS::GetString(_T("and image processing (brightness/contrast/sharpen) parameters between images")));

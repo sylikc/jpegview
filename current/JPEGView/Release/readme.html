@@ -32,7 +32,7 @@
 <td>
 <a name="Top"></a>
 <h1>JPEGView Readme</h1>
-Revision: 08-November-2007
+Revision: 03-December-2007
 <a name="Introduction"></a>
 <h2>Introduction</h2>
 JPEGView is a viewer/editor for JPEG, BMP, PNG, GIF and TIFF images. It is designed to view images from digital cameras
@@ -150,6 +150,7 @@ JPEGView runs without problems on accounts with restricted rights.
 For getting started, the following commands in JPEGView are the most important ones:<br/>
   <ul style="margin-top:0in;margin-bottom:0in">
   <li><kbd>F1</kbd> displays help on JPEGView</li>
+  <li><kbd>F2</kbd> displays information about the current image</li>
   <li><kbd>PgDn/PgUp</kbd> navigates to next/previous image (Alternative: 'forward' and 'back' mouse buttons)</li>
   <li>Mouse wheel zooms in and out</li>
   <li>Dragging mouse while left mouse button is pressed pans image</li>
@@ -181,13 +182,15 @@ To navigate between images, the following commands are supported:
   The standard 'File Open' dialog is shown and allows displaying images from other folders.
   Alternatively, a text file containing file names for a <a href="#SlideShow">slide show</a> can be opened.</li>
   </ul>
+The basic navigation command (First image in folder, Previous image, Next image, Last image in folder) are also
+available on the navigation panel, transparently blended over the image.<br/>
 JPEGView uses a second thread to read ahead and process the next image. Guessing the next image is based on
 the last navigations.<br/><br/>
 
 JPEGView supports the following navigation modes:
   <ul style="margin-top:0in;margin-bottom:0in">
   <li><kbd>F7</kbd>: (Default) Display all files in current folder, wrap around to first image when finished<br/>
-  The file name of the current file and it's position in the folder can be displayed using <kbd>F2</kbd>.</li>
+  The file name of the current file and it's position in the folder can be displayed using <kbd>Ctrl-F2</kbd>.</li>
   <li><kbd>F8</kbd>: Display all files in current folder, when finished recursively display images in subfolders.<br/>
   Subfolders in the same root directory are traversed in alphabetic order.</li>
   <li><kbd>F9</kbd>: Display all files in current folder, when finished advance to next sibling folder
@@ -202,6 +205,12 @@ The display-order within one folder is also configurable:
   <li><kbd>n</kbd>: Order files according to file name</li>
   </ul>
 The default ordering can be changed in the  <a href="#INIFile">INI file</a>.<br/>
+<h4>Image Information</h4>
+<h5>Image and EXIF information</h5>
+Use <kbd>F2</kbd> to display information about the current image, including the value of some EXIF tags, e.g. date and
+time the image was taken and exposure information.
+<h5>File name and path</h5>
+Use <kbd>Ctrl-F2</kbd> to display the full path and file name of the current image.
 <h4>Zoom and Pan</h4>
 Images can be zoomed and panned interactively. While zooming, a lower quality image processing mode is used. The
 image will be processed automatically with the high quality resize filters as soon as no zoom command is received for
@@ -271,6 +280,7 @@ defined. After having defined a selection, a context menu provides the following
  </li>
  <li>Zoom to selection</li>
  </ul>
+ Hint: Use a large zoom factor and the point-sampling mode (F3 key) to crop with pixel precision.
 <br/><br/><b><a href="#Top">Top of Page</a></b><br/>
 
 <a name="SlideShow"></a>
@@ -508,6 +518,7 @@ context menu.
   <li>Color and contrast correction on/off by default</li>
   <li>Default sorting order</li>
   <li>Default auto zoom mode</li>
+  <li>Navigation panel on/off</li>
   </ul>
 The values set for the current image are written to the INI file when using this command. Be
 aware that these values are then used as default values for all images!
@@ -517,6 +528,9 @@ Only an overview on the available settings is given here:
   <ul style="margin-top:0in;margin-bottom:0in">
   <li>Default image processing parameters: Contrast, brightness, sharpness, color balance</li>
   <li>Show file name by default</li>
+  <li>Show file info by default</li>
+  <li>Show navigation panel by default</li>
+  <li>Blending factor for navigation panel</li>
   <li>Keep parameters by default</li>
   <li>Force CPU type (if autodetection fails)</li>
   <li>Used filter kernel for downsampling images</li>

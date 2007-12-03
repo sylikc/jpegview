@@ -121,7 +121,10 @@ Loop siblings	Ordner gleicher Tiefe anzeigen
 Display order	Bilder anzeigen sortiert nach
 Modification date	Änderungsdatum
 Creation date	Erstellungsdatum
-Play folder as movie	Ordner als Film abspielen
+Play folder as slideshow/movie	Ordner als Diaschau/Film abspielen
+Slideshow	Diaschau
+Movie	Film
+Waiting time	Wartezeit
 Stop slide show/movie	Diaschau/Film stoppen
 Rotate +90	Rotieren +90
 Rotate -90	Rotieren -90
@@ -193,3 +196,5 @@ ISO Speed:	ISO-Wert:
 Modification date:	Änderungsdatum:
 yes	ja
 no	nein
+Show navigation panel	Navigationsleiste anzeigen
+Show/hide navigation panel	Naviationsleiste anzeigen/nicht anzeigen

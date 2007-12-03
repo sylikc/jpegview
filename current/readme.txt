@@ -28,8 +28,11 @@ Bugs removed:
 - EXIF information is now also found if not placed directly after SOI in JPEG image (e.g. after an APP0 block)
 - File name flickering fixed in image processing area (was happening when file name was long)
 New features:
-- Display of EXIF information from digicam JPEG files (F2), also available permanently in INI file
+- Display of EXIF information from digicam JPEG files (F2) - can be made permanantly using the INI file
 - Smoother screen update with less flickering by using back buffering of transparent areas
+- Navigation panel blended into image. The navigation panel is turned on by default but can be disabled with the F11 key.
+  To disable it permanently, press F11 then save the settings to the INI file with the context menu.
+  The blending factor of the panel can be configured also in the INI file.
 Other changes:
 - Using smaller font for help display (F1)
 - Exclusion/inclusion folders for LDC and color correction: More specific folder overrides less specific when matching for inclusion
