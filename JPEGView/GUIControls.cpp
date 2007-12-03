@@ -8,10 +8,14 @@
 #define WIDTH_ADD_PIXELS 63
 #define SLIDER_GAP 23
 #define SCREEN_Y_OFFSET 5
+#define NAV_PANEL_HEIGHT 32
+#define NAV_PANEL_BORDER 6
+#define NAV_PANEL_GAP 5
+#define NAV_PANEL_SLIDER_WIDTH 200
 #define WINPROP_THIS _T("JV_THIS")
 
 /////////////////////////////////////////////////////////////////////////////////////////////
-// CSliderMgr
+// static helper functions
 /////////////////////////////////////////////////////////////////////////////////////////////
 
 static CSize GetTextRect(HWND hWnd, LPCTSTR sText) {
@@ -29,10 +33,6 @@ static CSize GetTextRect(CDC & dc, LPCTSTR sText) {
 	return textlen;
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////
-// CSliderMgr
-/////////////////////////////////////////////////////////////////////////////////////////////
-
 // Gets the screen size of the screen containing the point with given virtual desktop coordinates
 static CSize GetScreenSize(int nX, int nY) {
 	HMONITOR hMonitor = ::MonitorFromPoint(CPoint(nX, nY), MONITOR_DEFAULTTONEAREST);
@@ -45,23 +45,17 @@ static CSize GetScreenSize(int nX, int nY) {
 	}
 }
 
-CSliderMgr::CSliderMgr(HWND hWnd) {
+/////////////////////////////////////////////////////////////////////////////////////////////
+// CPanelMgr
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+CPanelMgr::CPanelMgr(HWND hWnd) {
 	m_hWnd = hWnd;
 	m_fDPIScale = Helpers::ScreenScaling;
-	m_nSliderWidth = (int)(SLIDER_WIDTH*m_fDPIScale);
-	m_nNoLabelWidth = m_nSliderWidth + (int)(WIDTH_ADD_PIXELS*m_fDPIScale);
-	m_nSliderHeight = (int)(SLIDER_HEIGHT*m_fDPIScale);
-	m_nSliderGap = (int) (SLIDER_GAP*m_fDPIScale);
-	m_nTotalAreaHeight = m_nSliderHeight*3 + SCREEN_Y_OFFSET;
-	m_clientRect = CRect(0, 0, 0, 0);
-	m_sliderAreaRect = CRect(0, 0, 0, 0);
-
 	m_pCtrlCaptureMouse = NULL;
-	m_nTotalSliders = 0;
-	m_nYStart = 0xFFFF;
 }
 
-CSliderMgr::~CSliderMgr(void) {
+CPanelMgr::~CPanelMgr(void) {
 	std::list<CUICtrl*>::iterator iter;
 	for (iter = m_ctrlList.begin( ); iter != m_ctrlList.end( ); iter++ ) {
 		delete *iter;
@@ -69,27 +63,32 @@ CSliderMgr::~CSliderMgr(void) {
 	m_ctrlList.clear();
 }
 
-void CSliderMgr::AddSlider(LPCTSTR sName, double* pdValue, bool* pbEnable, 
-						   double dMin, double dMax, bool bLogarithmic, bool bInvert) {
-	CSliderDouble* pSlider = new CSliderDouble(this, sName, m_nSliderWidth, pdValue, pbEnable, dMin, dMax, 
+void CPanelMgr::AddSlider(LPCTSTR sName, double* pdValue, bool* pbEnable, 
+						   double dMin, double dMax, bool bLogarithmic, bool bInvert, int nWidth) {
+	CSliderDouble* pSlider = new CSliderDouble(this, sName, nWidth, pdValue, pbEnable, dMin, dMax, 
 		bLogarithmic, bInvert);
 	m_ctrlList.push_back(pSlider);
-	m_nTotalSliders++;
 }
 
-CTextCtrl* CSliderMgr::AddText(LPCTSTR sTextInit, bool bEditable, TextChangedHandler textChangedHandler) {
+CTextCtrl* CPanelMgr::AddText(LPCTSTR sTextInit, bool bEditable, TextChangedHandler textChangedHandler) {
 	CTextCtrl* pTextCtrl = new CTextCtrl(this, sTextInit, bEditable, textChangedHandler);
 	m_ctrlList.push_back(pTextCtrl);
 	return pTextCtrl;
 }
 
-CButtonCtrl* CSliderMgr::AddButton(LPCTSTR sButtonText, ButtonPressedHandler buttonPressedHandler) {
+CButtonCtrl* CPanelMgr::AddButton(LPCTSTR sButtonText, ButtonPressedHandler buttonPressedHandler) {
 	CButtonCtrl* pButtonCtrl = new CButtonCtrl(this, sButtonText, buttonPressedHandler);
 	m_ctrlList.push_back(pButtonCtrl);
 	return pButtonCtrl;
 }
 
-void CSliderMgr::ShowHideSlider(bool bShow, double* pdValue) {
+CButtonCtrl* CPanelMgr::AddUserPaintButton(PaintHandler paintHandler, ButtonPressedHandler buttonPressedHandler) {
+	CButtonCtrl* pButtonCtrl = new CButtonCtrl(this, paintHandler, buttonPressedHandler);
+	m_ctrlList.push_back(pButtonCtrl);
+	return pButtonCtrl;
+}
+
+void CPanelMgr::ShowHideSlider(bool bShow, double* pdValue) {
 	std::list<CUICtrl*>::iterator iter;
 	for (iter = m_ctrlList.begin( ); iter != m_ctrlList.end( ); iter++ ) {
 		CSliderDouble* pSlider = dynamic_cast<CSliderDouble*>(*iter);
@@ -101,7 +100,7 @@ void CSliderMgr::ShowHideSlider(bool bShow, double* pdValue) {
 	}
 }
 
-bool CSliderMgr::OnMouseLButton(EMouseEvent eMouseEvent, int nX, int nY) {
+bool CPanelMgr::OnMouseLButton(EMouseEvent eMouseEvent, int nX, int nY) {
 	bool bHandled = false;
 	CUICtrl* ctrlCapturedMouse = m_pCtrlCaptureMouse;
 	std::list<CUICtrl*>::iterator iter;
@@ -112,13 +111,10 @@ bool CSliderMgr::OnMouseLButton(EMouseEvent eMouseEvent, int nX, int nY) {
 			}
 		}
 	}
-	if (nY > m_nYStart) {
-		return true;
-	}
 	return bHandled;
 }
 
-bool CSliderMgr::OnMouseMove(int nX, int nY) {
+bool CPanelMgr::OnMouseMove(int nX, int nY) {
 	bool bHandled = false;
 	CUICtrl* ctrlCapturedMouse = m_pCtrlCaptureMouse;
 	std::list<CUICtrl*>::iterator iter;
@@ -132,7 +128,7 @@ bool CSliderMgr::OnMouseMove(int nX, int nY) {
 	return bHandled;
 }
 
-void CSliderMgr::OnPaint(CDC & dc, const CPoint& offset) {
+void CPanelMgr::OnPaint(CDC & dc, const CPoint& offset) {
 	RepositionAll();
 	std::list<CUICtrl*>::iterator iter;
 	for (iter = m_ctrlList.begin( ); iter != m_ctrlList.end( ); iter++ ) {
@@ -142,7 +138,40 @@ void CSliderMgr::OnPaint(CDC & dc, const CPoint& offset) {
 	}
 }
 
-CRect CSliderMgr::SliderAreaRect() {
+void CPanelMgr::CaptureMouse(CUICtrl* pCtrl) {
+	if (m_pCtrlCaptureMouse == NULL) m_pCtrlCaptureMouse = pCtrl;
+}
+
+void CPanelMgr::ReleaseMouse(CUICtrl* pCtrl) {
+	if (pCtrl == m_pCtrlCaptureMouse) m_pCtrlCaptureMouse = NULL;
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+// CSliderMgr
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+CSliderMgr::CSliderMgr(HWND hWnd) : CPanelMgr(hWnd) {
+	m_nSliderWidth = (int)(SLIDER_WIDTH*m_fDPIScale);
+	m_nNoLabelWidth = m_nSliderWidth + (int)(WIDTH_ADD_PIXELS*m_fDPIScale);
+	m_nSliderHeight = (int)(SLIDER_HEIGHT*m_fDPIScale);
+	m_nSliderGap = (int) (SLIDER_GAP*m_fDPIScale);
+	m_nTotalAreaHeight = m_nSliderHeight*3 + SCREEN_Y_OFFSET;
+	m_clientRect = CRect(0, 0, 0, 0);
+	m_sliderAreaRect = CRect(0, 0, 0, 0);
+
+	m_nYStart = 0xFFFF;
+	m_nTotalSliders = 0;
+}
+
+bool CSliderMgr::OnMouseLButton(EMouseEvent eMouseEvent, int nX, int nY) {
+	bool bHandled = CPanelMgr::OnMouseLButton(eMouseEvent, nX, nY);
+	if (nY > m_nYStart) {
+		return true;
+	}
+	return bHandled;
+}
+
+CRect CSliderMgr::PanelRect() {
 	CRect clientRect;
 	::GetClientRect(m_hWnd, &clientRect);
 
@@ -171,10 +200,16 @@ CRect CSliderMgr::SliderAreaRect() {
 	return m_sliderAreaRect;
 }
 
+void CSliderMgr::AddSlider(LPCTSTR sName, double* pdValue, bool* pbEnable, 
+						   double dMin, double dMax, bool bLogarithmic, bool bInvert) {
+	CPanelMgr::AddSlider(sName, pdValue, pbEnable, dMin, dMax, bLogarithmic, bInvert, m_nSliderWidth);
+	m_nTotalSliders++;
+}
+
 void CSliderMgr::RepositionAll() {
 	const int X_OFFSET = 5;
 
-	CRect sliderAreaRect = SliderAreaRect();
+	CRect sliderAreaRect = PanelRect();
 	int nXStart = sliderAreaRect.left + X_OFFSET;
 	int nYStart = sliderAreaRect.top;
 
@@ -269,20 +304,195 @@ void CSliderMgr::RepositionAll() {
 	}
 }
 
-void CSliderMgr::CaptureMouse(CUICtrl* pCtrl) {
-	if (m_pCtrlCaptureMouse == NULL) m_pCtrlCaptureMouse = pCtrl;
+/////////////////////////////////////////////////////////////////////////////////////////////
+// CNavigationPanel
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+CNavigationPanel::CNavigationPanel(HWND hWnd, CSliderMgr* pSliderMgr) : CPanelMgr(hWnd) {
+	m_pSliderMgr = pSliderMgr;
+	m_clientRect = CRect(0, 0, 0, 0);
+	m_nWidth = 0;
+	m_nHeight = (int)(NAV_PANEL_HEIGHT*m_fDPIScale);
+	m_nBorder = (int)(NAV_PANEL_BORDER*m_fDPIScale);
+	m_nGap = (int)(NAV_PANEL_GAP*m_fDPIScale);
 }
 
-void CSliderMgr::ReleaseMouse(CUICtrl* pCtrl) {
-	if (pCtrl == m_pCtrlCaptureMouse) m_pCtrlCaptureMouse = NULL;
+void CNavigationPanel::AddGap(int nGap) {
+	CGapCtrl* pGapCtrl = new CGapCtrl(this, nGap);
+	m_ctrlList.push_back(pGapCtrl);
+}
+
+CRect CNavigationPanel::PanelRect() {
+	if (m_nWidth == 0) {
+		int nNumButtons = 0;
+		int nTotalGap = 0;
+		std::list<CUICtrl*>::iterator iter;
+		for (iter = m_ctrlList.begin( ); iter != m_ctrlList.end( ); iter++ ) {
+			if (dynamic_cast<CButtonCtrl*>(*iter) != NULL) {
+				nNumButtons++;
+			} else {
+				CGapCtrl* pGapCtrl = dynamic_cast<CGapCtrl*>(*iter);
+				if (pGapCtrl != NULL) {
+					nTotalGap += (int)(pGapCtrl->GapWidth()*m_fDPIScale);
+				}
+			}
+		}
+		int nButtonSize = m_nHeight - m_nBorder;
+		m_nWidth = m_nBorder * 2 + (nNumButtons - 1) * m_nGap + nNumButtons * nButtonSize + nTotalGap;
+	}
+
+	CRect sliderRect = m_pSliderMgr->PanelRect();
+	m_clientRect = CRect(CPoint((sliderRect.right + sliderRect.left - m_nWidth)/2, sliderRect.top - m_nHeight),
+		CSize(m_nWidth, m_nHeight));
+	return m_clientRect;
+}
+
+bool CNavigationPanel::OnMouseLButton(EMouseEvent eMouseEvent, int nX, int nY) {
+	bool bHandled = CPanelMgr::OnMouseLButton(eMouseEvent, nX, nY);
+	if (m_clientRect.PtInRect(CPoint(nX, nY))) {
+		return true;
+	}
+	return bHandled;
+}
+
+void CNavigationPanel::RequestRepositioning() {
+}
+
+void CNavigationPanel::RepositionAll() {
+	m_clientRect = PanelRect();
+	int nButtonSize = m_nHeight - m_nBorder;
+	int nStartX = m_clientRect.left + m_nBorder;
+	int nStartY = m_clientRect.top + m_nBorder/2;
+	std::list<CUICtrl*>::iterator iter;
+	for (iter = m_ctrlList.begin( ); iter != m_ctrlList.end( ); iter++ ) {
+		CButtonCtrl* pButton = dynamic_cast<CButtonCtrl*>(*iter);
+		if (pButton != NULL) {
+			pButton->SetPosition(CRect(CPoint(nStartX, nStartY), CSize(nButtonSize, nButtonSize)));
+			nStartX += nButtonSize + m_nGap;
+		} else {
+			CGapCtrl* pGap = dynamic_cast<CGapCtrl*>(*iter);
+			if (pGap != NULL) {
+				nStartX += (int)(pGap->GapWidth()*m_fDPIScale);
+			}
+		}
+	}
+}
+
+static CRect InflateRect(const CRect& rect, float fAmount) {
+	CRect r(rect);
+	int nAmount = (int)(fAmount * r.Width());
+	r.InflateRect(-nAmount, -nAmount);
+	return r;
+}
+
+void CNavigationPanel::PaintHomeBtn(const CRect& rect, CDC& dc) {
+	CRect r = InflateRect(rect, 0.3f);
+	
+	dc.MoveTo(r.left, r.top);
+	dc.LineTo(r.left, r.bottom);
+
+	int nX = r.left + (int)(r.Width()*0.4f);
+
+	dc.MoveTo(nX, r.top);
+	dc.LineTo(nX, r.bottom);
+
+	dc.MoveTo(r.right, r.top+1);
+	dc.LineTo(nX + 3, (r.bottom + r.top)/2);
+	dc.LineTo(r.right+1, r.bottom);
+}
+
+void CNavigationPanel::PaintPrevBtn(const CRect& rect, CDC& dc) {
+	CRect r = InflateRect(rect, 0.3f);
+
+	int nX = r.left + (int)(r.Width()*0.2f);
+
+	dc.MoveTo(nX, r.top);
+	dc.LineTo(nX, r.bottom);
+
+	int nX2 = nX + r.Height()/2 + 2;
+	dc.MoveTo(nX2, r.top+1);
+	dc.LineTo(nX + 3, (r.bottom + r.top)/2);
+	dc.LineTo(nX2+1, r.bottom);
+}
+
+void CNavigationPanel::PaintNextBtn(const CRect& rect, CDC& dc) {
+	CRect r = InflateRect(rect, 0.3f);
+
+	int nX = r.left + (int)(r.Width()*0.2f);
+	int nX2 = nX + r.Height()/2;
+
+	dc.MoveTo(nX+1, r.top+1);
+	dc.LineTo(nX2, (r.bottom + r.top)/2);
+	dc.LineTo(nX, r.bottom);
+
+	dc.MoveTo(nX2 + 3, r.top);
+	dc.LineTo(nX2 + 3, r.bottom);
+}
+
+void CNavigationPanel::PaintEndBtn(const CRect& rect, CDC& dc) {
+	CRect r = InflateRect(rect, 0.3f);
+
+	int nX = r.left + r.Height()/2;
+
+	dc.MoveTo(r.left+1, r.top+1);
+	dc.LineTo(nX, (r.bottom + r.top)/2);
+	dc.LineTo(r.left, r.bottom);
+
+	dc.MoveTo(nX + 3, r.top);
+	dc.LineTo(nX + 3, r.bottom);
+
+	int nX2 = nX + 3 + (int)(r.Width()*0.4f);
+
+	dc.MoveTo(nX2, r.top);
+	dc.LineTo(nX2, r.bottom);
+}
+
+void CNavigationPanel::PaintRotateCWBtn(const CRect& rect, CDC& dc) {
+	CRect r = InflateRect(rect, 0.3f);
+
+	int nX = r.left + (int)(r.Width()*0.65f);
+
+	dc.MoveTo(r.left-2, r.bottom);
+	dc.LineTo(nX, r.bottom);
+	dc.LineTo(nX, r.bottom - (int)(r.Height()*0.4f));
+	dc.LineTo(r.left-2, r.bottom);
+
+	dc.MoveTo(nX+2, r.bottom);
+	dc.LineTo(r.right+2, r.bottom);
+	dc.LineTo(nX+2, r.top);
+	dc.LineTo(nX+2, r.bottom);
+}
+
+void CNavigationPanel::PaintRotateCCWBtn(const CRect& rect, CDC& dc) {
+	CRect r = InflateRect(rect, 0.3f);
+
+	int nX = r.left + (int)(r.Width()*0.33f);
+
+	dc.MoveTo(r.left-2, r.bottom);
+	dc.LineTo(nX, r.bottom);
+	dc.LineTo(nX, r.top);
+	dc.LineTo(r.left-2, r.bottom);
+
+	dc.MoveTo(nX+2, r.bottom);
+	dc.LineTo(r.right+2, r.bottom);
+	dc.LineTo(nX+2, r.bottom - (int)(r.Height()*0.4f));
+	dc.LineTo(nX+2, r.bottom);
+}
+
+void CNavigationPanel::PaintInfoBtn(const CRect& rect, CDC& dc) {
+	CFont font;
+	font.CreatePointFont(160, _T("Times New Roman"), dc, false, true);
+	HFONT oldFont = dc.SelectFont(font);
+	dc.DrawText(_T("i"), 1, (LPRECT)&rect, DT_CENTER | DT_VCENTER | DT_SINGLELINE | DT_NOCLIP);
+	dc.SelectFont(oldFont);
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 // CUICtrl
 /////////////////////////////////////////////////////////////////////////////////////////////
 
-CUICtrl::CUICtrl(CSliderMgr* pSliderMgr) { 
-	m_pMgr = pSliderMgr; 
+CUICtrl::CUICtrl(CPanelMgr* pPanelMgr) { 
+	m_pMgr = pPanelMgr; 
 	m_bShow = true; 
 	m_bHighlight = false; 
 	m_position = CRect(0, 0, 0, 0);
@@ -304,15 +514,6 @@ void CUICtrl::OnPaint(CDC & dc, const CPoint& offset) {
 	pos.OffsetRect(0, -1); Draw(dc, pos, false);
 }
 
-void CUICtrl::DrawGetDC(bool bBlack) {
-	m_pos2Screen = CPoint(0, 0);
-	HDC hDC = ::GetDC(m_pMgr->GetHWND());
-	CDC dc(hDC);
-	Draw(dc, m_position, bBlack);
-	dc.Detach();
-	::ReleaseDC(m_pMgr->GetHWND(), hDC);
-}
-
 void CUICtrl::SetShow(bool bShow) { 
 	if (bShow != m_bShow) {
 		m_bShow = bShow;
@@ -324,8 +525,8 @@ void CUICtrl::SetShow(bool bShow) {
 // CTextCtrl
 /////////////////////////////////////////////////////////////////////////////////////////////
 
-CTextCtrl::CTextCtrl(CSliderMgr* pSliderMgr, LPCTSTR sTextInit, bool bEditable, 
-					 TextChangedHandler textChangedHandler) : CUICtrl(pSliderMgr) {
+CTextCtrl::CTextCtrl(CPanelMgr* pPanelMgr, LPCTSTR sTextInit, bool bEditable, 
+					 TextChangedHandler textChangedHandler) : CUICtrl(pPanelMgr) {
 	 m_bEditable = bEditable;
 	 m_bRightAligned = false;
 	 m_textChangedHandler = textChangedHandler;
@@ -412,12 +613,10 @@ bool CTextCtrl::OnMouseMove(int nX, int nY) {
 			if (!m_bHighlight) {
 				m_bHighlight = true;
 				::InvalidateRect(m_pMgr->GetHWND(), &m_position, FALSE);
-				//DrawGetDC(false);
 			}
 		} else if (m_bHighlight) {
 			m_bHighlight = false;
 			::InvalidateRect(m_pMgr->GetHWND(), &m_position, FALSE);
-			//DrawGetDC(false);
 		}
 	}
 
@@ -456,12 +655,21 @@ LRESULT APIENTRY CTextCtrl::EditSubclassProc(HWND hwnd, UINT uMsg, WPARAM wParam
 // CButtonCtrl
 /////////////////////////////////////////////////////////////////////////////////////////////
 
-CButtonCtrl::CButtonCtrl(CSliderMgr* pSliderMgr, LPCTSTR sButtonText, 
-						 ButtonPressedHandler buttonPressedHandler) : CUICtrl(pSliderMgr) {
+CButtonCtrl::CButtonCtrl(CPanelMgr* pPanelMgr, LPCTSTR sButtonText, 
+						 ButtonPressedHandler buttonPressedHandler) : CUICtrl(pPanelMgr) {
 	 m_sText = sButtonText;
+	 m_paintHandler = NULL;
 	 m_buttonPressedHandler = buttonPressedHandler;
 	 m_nTextWidth = GetTextRect(m_pMgr->GetHWND(), m_sText).cx;
 	 m_bDragging = false;
+}
+
+CButtonCtrl::CButtonCtrl(CPanelMgr* pPanelMgr, PaintHandler paintHandler, ButtonPressedHandler buttonPressedHandler) 
+ : CUICtrl(pPanelMgr) {
+	m_paintHandler = paintHandler;
+	m_buttonPressedHandler = buttonPressedHandler;
+	m_nTextWidth = 0;
+	m_bDragging = false;
 }
 
 bool CButtonCtrl::OnMouseLButton(EMouseEvent eMouseEvent, int nX, int nY) {
@@ -472,7 +680,6 @@ bool CButtonCtrl::OnMouseLButton(EMouseEvent eMouseEvent, int nX, int nY) {
 			m_pMgr->CaptureMouse(this);
 			m_bDragging = true;
 			::InvalidateRect(m_pMgr->GetHWND(), &m_position, FALSE);
-			//DrawGetDC(false);
 			return true;
 		}
 		if (eMouseEvent == MouseEvent_BtnUp && m_buttonPressedHandler != NULL) {
@@ -485,7 +692,6 @@ bool CButtonCtrl::OnMouseLButton(EMouseEvent eMouseEvent, int nX, int nY) {
 		m_pMgr->ReleaseMouse(this);
 		m_bDragging = false;
 		::InvalidateRect(m_pMgr->GetHWND(), &m_position, FALSE);
-		//DrawGetDC(false);
 	}
 	return bRetVal;
 }
@@ -496,12 +702,10 @@ bool CButtonCtrl::OnMouseMove(int nX, int nY) {
 		if (!m_bHighlight) {
 			m_bHighlight = true;
 			::InvalidateRect(m_pMgr->GetHWND(), &m_position, FALSE);
-			//DrawGetDC(false);
 		}
 	} else if (m_bHighlight) {
 		m_bHighlight = false;
 		::InvalidateRect(m_pMgr->GetHWND(), &m_position, FALSE);
-		//DrawGetDC(false);
 	}
 
 	return false;
@@ -517,10 +721,19 @@ void CButtonCtrl::Draw(CDC & dc, CRect position, bool bBlack) {
 		hOldPen = dc.SelectPen(hPen);
 	}
 	dc.Rectangle(position);
-	dc.SelectStockFont(DEFAULT_GUI_FONT);
-	dc.SetBkMode(TRANSPARENT);
-	dc.SetTextColor(bBlack ? 0 : m_bHighlight ? RGB(255, 255, 255) : RGB(0, 255, 0));
-	dc.DrawText(m_sText, m_sText.GetLength(), &position, DT_CENTER | DT_VCENTER | DT_SINGLELINE | DT_WORD_ELLIPSIS);
+	if (m_sText.GetLength() > 0) {
+		dc.SelectStockFont(DEFAULT_GUI_FONT);
+		dc.SetBkMode(TRANSPARENT);
+		dc.SetTextColor(bBlack ? 0 : m_bHighlight ? RGB(255, 255, 255) : RGB(0, 255, 0));
+		dc.DrawText(m_sText, m_sText.GetLength(), &position, DT_CENTER | DT_VCENTER | DT_SINGLELINE | DT_WORD_ELLIPSIS);
+	} else if (m_paintHandler != NULL) {
+		if (m_bHighlight && !bBlack) {
+			dc.SelectPen((HPEN)::GetStockObject(WHITE_PEN));
+		}
+		dc.SetBkMode(TRANSPARENT);
+		dc.SetTextColor(bBlack ? 0 : m_bHighlight ? RGB(255, 255, 255) : RGB(0, 255, 0));
+		m_paintHandler(position, dc);
+	}
 	if (!bBlack) {
 		dc.SelectPen(hOldPen);
 		::DeleteObject(hPen);
@@ -531,7 +744,7 @@ void CButtonCtrl::Draw(CDC & dc, CRect position, bool bBlack) {
 // CSliderDouble
 /////////////////////////////////////////////////////////////////////////////////////////////
 
-CSliderDouble::CSliderDouble(CSliderMgr* pMgr, LPCTSTR sName, int nSliderLen, double* pdValue, bool* pbEnable,
+CSliderDouble::CSliderDouble(CPanelMgr* pMgr, LPCTSTR sName, int nSliderLen, double* pdValue, bool* pbEnable,
 							 double dMin, double dMax, bool bLogarithmic, bool bInvert) : CUICtrl(pMgr) {
 	m_sName = sName;
 	m_nSliderLen = nSliderLen;

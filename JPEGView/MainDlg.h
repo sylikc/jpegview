@@ -12,6 +12,7 @@ class CFileList;
 class CJPEGProvider;
 class CJPEGImage;
 class CSliderMgr;
+class CNavigationPanel;
 class CButtonCtrl;
 class CTextCtrl;
 class CEXIFDisplay;
@@ -137,6 +138,7 @@ private:
 
 	bool m_bPasteFromClipboardFailed;
 	bool m_bDragging;
+	bool m_bDoDragging;
 	bool m_bCropping;
 	bool m_bMovieMode;
 	bool m_bProcFlagsTouched;
@@ -160,6 +162,8 @@ private:
 	bool m_bSearchSubDirsOnEnter;
 	bool m_bSpanVirtualDesktop;
 	bool m_bShowIPTools;
+	bool m_bShowNavPanel;
+	bool m_bMouseInNavPanel;
 	WINDOWPLACEMENT m_storedWindowPlacement;
 	CRect m_monitorRect;
 	CRect m_clientRect;
@@ -170,6 +174,7 @@ private:
 	CTextCtrl* m_txtParamDB;
 	CTextCtrl* m_txtRename;
 	CTextCtrl* m_txtAcqDate;
+	CNavigationPanel* m_pNavPanel;
 	CString m_sSaveDirectory;
 
 	bool OpenFile(bool bAtStartup);
@@ -202,6 +207,7 @@ private:
 	void StartMovieMode(double dFPS);
 	void StopMovieMode();
 	void StartLowQTimer(int nTimeout);
+	void StartNavPanelTimer(int nTimeout);
 	void MouseOff();
 	void MouseOn();
 	void InitParametersForNewImage();
@@ -224,4 +230,11 @@ private:
 	static void OnSaveToDB(CButtonCtrl & sender);
 	static void OnRemoveFromDB(CButtonCtrl & sender);
 	static bool OnRenameFile(CTextCtrl & sender, LPCTSTR sChangedText);
+	static void OnHome(CButtonCtrl & sender);
+	static void OnPrev(CButtonCtrl & sender);
+	static void OnNext(CButtonCtrl & sender);
+	static void OnEnd(CButtonCtrl & sender);
+	static void OnRotateCW(CButtonCtrl & sender);
+	static void OnRotateCCW(CButtonCtrl & sender);
+	static void OnShowInfo(CButtonCtrl & sender);
 };

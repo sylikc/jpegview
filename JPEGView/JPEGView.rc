@@ -139,11 +139,14 @@ BEGIN
 	  MENUITEM "Save processed image...\tCtrl-S",	IDM_SAVE
 	  MENUITEM "Reload image\tCtrl-R",			IDM_RELOAD
 	  MENUITEM "Batch rename/copy...",			IDM_BATCH_COPY
+	  MENUITEM SEPARATOR
 	  MENUITEM "Copy to clipboard\tCtrl-C",		IDM_COPY
       MENUITEM "Copy original size image\tCtrl-X",	IDM_COPY_FULL
 	  MENUITEM "Paste from clipboard\tCtrl-V",	IDM_PASTE
+	  MENUITEM SEPARATOR
 	  MENUITEM "Show picture info (EXIF)\tF2",	IDM_SHOW_FILEINFO
       MENUITEM "Show filename\tCtrl-F2",		IDM_SHOW_FILENAME
+	  MENUITEM "Show navigation panel\tF11",	IDM_SHOW_NAVPANEL
 	  MENUITEM SEPARATOR
 	  MENUITEM "Next image\tPgDn",				IDM_NEXT
 	  MENUITEM "Previous image\tPgUp",			IDM_PREV
@@ -159,8 +162,19 @@ BEGIN
 		  MENUITEM "Creation date\tC",			IDM_SORT_CREATION_DATE
 		  MENUITEM "File name\tN",				IDM_SORT_NAME
         END
-      POPUP "Play folder as movie" 
+      POPUP "Play folder as slideshow/movie" 
         BEGIN
+		  MENUITEM "Slideshow",					IDM_SLIDESHOW_START
+		  MENUITEM "Waiting time\t1 sec",		IDM_SLIDESHOW_1
+		  MENUITEM "Waiting time\t2 sec",			IDM_SLIDESHOW_2
+		  MENUITEM "Waiting time\t3 sec",			IDM_SLIDESHOW_3
+		  MENUITEM "Waiting time\t4 sec",			IDM_SLIDESHOW_4
+		  MENUITEM "Waiting time\t5 sec",			IDM_SLIDESHOW_5
+		  MENUITEM "Waiting time\t7 sec",			IDM_SLIDESHOW_7
+		  MENUITEM "Waiting time\t10 sec",		IDM_SLIDESHOW_10
+		  MENUITEM "Waiting time\t20 sec",		IDM_SLIDESHOW_20
+		  MENUITEM SEPARATOR
+		  MENUITEM "Movie",						IDM_MOVIE_START_FPS
 		  MENUITEM "5 fps",						IDM_MOVIE_5_FPS
 		  MENUITEM "10 fps",					IDM_MOVIE_10_FPS
 		  MENUITEM "25 fps",					IDM_MOVIE_25_FPS

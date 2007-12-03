@@ -122,6 +122,8 @@ void CSettingsProvider::ReadWriteableINISettings() {
 	m_bHQRS = GetBool(_T("HighQualityResampling"), true);
 	m_bShowFileName = GetBool(_T("ShowFileName"), false);
 	m_bShowFileInfo = GetBool(_T("ShowFileInfo"), false);
+	m_bShowNavPanel = GetBool(_T("ShowNavPanel"), true);
+	m_fBlendFactorNavPanel = (float) GetDouble(_T("BlendFactorNavPanel"), 0.3, 0.0, 1.0);
 	m_bKeepParams = GetBool(_T("KeepParameters"), false);
 	
 	CString sCPU = GetString(_T("CPUType"), _T("AutoDetect"));
@@ -187,7 +189,8 @@ void CSettingsProvider::ReadWriteableINISettings() {
 
 void CSettingsProvider::SaveSettings(const CImageProcessingParams& procParams, 
 									 EProcessingFlags eProcFlags, Helpers::ESorting eFileSorting,
-									 Helpers::EAutoZoomMode eAutoZoomMode) {
+									 Helpers::EAutoZoomMode eAutoZoomMode,
+									 bool bShowNavPanel) {
 	SHCreateDirectoryEx(NULL, Helpers::JPEGViewAppDataPath(), NULL);
 
 	WriteDouble(_T("Contrast"), procParams.Contrast);
@@ -220,6 +223,8 @@ void CSettingsProvider::SaveSettings(const CImageProcessingParams& procParams,
 		sAutoZoomMode = _T("FillNoZoom");
 	}
 	WriteString(_T("AutoZoomMode"), sAutoZoomMode);
+
+	WriteBool(_T("ShowNavPanel"), bShowNavPanel);
 
 	m_bUserINIExists = true;
 	ReadWriteableINISettings();

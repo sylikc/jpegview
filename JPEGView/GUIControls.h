@@ -8,6 +8,7 @@ enum EMouseEvent {
 
 class CTextCtrl;
 class CButtonCtrl;
+class CPanelMgr;
 class CSliderMgr;
 
 // Defines a handler procedure called by CTextCtrl when the text has changed
@@ -18,12 +19,15 @@ typedef bool TextChangedHandler(CTextCtrl & sender, LPCTSTR sChangedText);
 // Defines a handler procedure called by CButtonCtrl when the button is pressed
 typedef void ButtonPressedHandler(CButtonCtrl & sender);
 
+// Defines a handler procedure for painting a user painted button
+typedef void PaintHandler(const CRect& rect, CDC& dc);
+
 //-------------------------------------------------------------------------------------------------
 
 // Base class for UI controls
 class CUICtrl {
 public:
-	CUICtrl(CSliderMgr* pSliderMgr);
+	CUICtrl(CPanelMgr* pPanelMgr);
 	
 	CRect GetPosition() const { return m_position; }
 	void SetPosition(CRect position) { m_position = position; }
@@ -38,10 +42,9 @@ public:
 protected:
 	friend class CSliderMgr;
 
-	void DrawGetDC(bool bBlack);
 	virtual void Draw(CDC & dc, CRect position, bool bBlack) = 0;
 
-	CSliderMgr* m_pMgr;
+	CPanelMgr* m_pMgr;
 	bool m_bShow;
 	bool m_bHighlight;
 	CRect m_position;
@@ -50,10 +53,27 @@ protected:
 
 //-------------------------------------------------------------------------------------------------
 
+// Represents some extra gap between buttons - only recognized bz navigation panel
+class CGapCtrl : public CUICtrl {
+public:
+	CGapCtrl(CPanelMgr* pPanelMgr, int nGap) : CUICtrl(pPanelMgr) { m_nGap = nGap; m_bShow = false; }
+
+	virtual bool OnMouseLButton(EMouseEvent eMouseEvent, int nX, int nY) { return false; }
+	virtual bool OnMouseMove(int nX, int nY) { return false; }
+	virtual void Draw(CDC & dc, CRect position, bool bBlack) {}
+
+	int GapWidth() { return m_nGap; }
+
+private:
+	int m_nGap;
+};
+
+//-------------------------------------------------------------------------------------------------
+
 // Control for showing static or editable text
 class CTextCtrl : public CUICtrl {
 public:
-	CTextCtrl(CSliderMgr* pSliderMgr, LPCTSTR sTextInit, bool bEditable, TextChangedHandler textChangedHandler);
+	CTextCtrl(CPanelMgr* pPanelMgr, LPCTSTR sTextInit, bool bEditable, TextChangedHandler textChangedHandler);
 	
 	// sets the text of the text control
 	void SetText(LPCTSTR sText);
@@ -100,7 +120,8 @@ private:
 // Control for showing a button
 class CButtonCtrl : public CUICtrl {
 public:
-	CButtonCtrl(CSliderMgr* pSliderMgr, LPCTSTR sButtonText, ButtonPressedHandler buttonPressedHandler);
+	CButtonCtrl(CPanelMgr* pPanelMgr, LPCTSTR sButtonText, ButtonPressedHandler buttonPressedHandler);
+	CButtonCtrl(CPanelMgr* pPanelMgr, PaintHandler paintHandler, ButtonPressedHandler buttonPressedHandler);
 
 	// gets the width of the button text in pixels
 	int GetTextLabelWidth() const { return m_nTextWidth; }
@@ -117,6 +138,7 @@ private:
 	int m_nTextWidth;
 	bool m_bDragging;
 	ButtonPressedHandler* m_buttonPressedHandler;
+	PaintHandler* m_paintHandler;
 };
 
 //-------------------------------------------------------------------------------------------------
@@ -124,7 +146,7 @@ private:
 // Transparent slider control allowing to select a value in a range
 class CSliderDouble : public CUICtrl {
 public:
-	CSliderDouble(CSliderMgr* pMgr, LPCTSTR sName, int nSliderLen, double* pdValue, bool* pbEnable,
+	CSliderDouble(CPanelMgr* pMgr, LPCTSTR sName, int nSliderLen, double* pdValue, bool* pbEnable,
 		double dMin, double dMax, bool bLogarithmic, bool bInvert);
 
 	double* GetValuePtr() { return m_pValue; }
@@ -156,9 +178,7 @@ private:
 	bool m_bHighlight;
 	bool m_bHighlightCheck;
 
-	void DrawRulerGetDC(bool bHighlight);
 	void DrawRuler(CDC & dc, int nXStart, int nXEnd, int nY, bool bBlack, bool bHighlight);
-	void DrawCheckGetDC(bool bHighlight);
 	void DrawCheck(CDC & dc, CRect position, bool bBlack, bool bHighlight);
 	int ValueToSliderPos(double dValue, int nSliderStart, int nSliderEnd);
 	double SliderPosToValue(int nSliderPos, int nSliderStart, int nSliderEnd);
@@ -166,25 +186,22 @@ private:
 
 //-------------------------------------------------------------------------------------------------
 
-// Manages a set of sliders and other controls by placing them on the bottom of the screen and
-// routing events to the sliders, buttons, etc.
-class CSliderMgr
-{
-public:
 
-	// The sliders are placed on the given window (at bottom)
-	CSliderMgr(HWND hWnd);
-	~CSliderMgr(void);
+// Manages and lay-outs the UI controls on a panel
+class CPanelMgr {
+public:
+	// The UI controls are created on the given window
+	CPanelMgr(HWND hWnd);
+	virtual ~CPanelMgr(void);
+
+	// Get size and position of the panel
+	virtual CRect PanelRect() = 0;
 
 	// Add a slider, controlling the value pdValue and labeled sName.
 	void AddSlider(LPCTSTR sName, double* pdValue, bool* pbEnable, double dMin, double dMax, 
-		bool bLogarithmic, bool bInvert);
+		bool bLogarithmic, bool bInvert, int nWidth);
 	// Show/hide a slider, identified by its controlled value
 	void ShowHideSlider(bool bShow, double* pdValue);
-	// height of slider area
-	int SliderAreaHeight() const { return m_nTotalAreaHeight; }
-	// rectangle used by the image processing area
-	CRect SliderAreaRect();
 
 	// Adds a text control to the slider area. The text can be editable or static. The handler
 	// procedure gets called for editable texts when the text has been changed. It must be null when
@@ -194,12 +211,15 @@ public:
 	// Adds a button to the slider area. The given handler procedure is called when the button is pressed.
 	CButtonCtrl* AddButton(LPCTSTR sButtonText, ButtonPressedHandler buttonPressedHandler);
 
-	// Mouse events must be passed to the slider manager using the two methods below.
-	// The mouse event is consumed by the sliders if the return value is true.
-	bool OnMouseLButton(EMouseEvent eMouseEvent, int nX, int nY);
-	bool OnMouseMove(int nX, int nY);
-	// Must be called when painting the window (hWnd given in constructor)
-	void OnPaint(CDC & dc, const CPoint& offset);
+	// Adds a user painted button
+	CButtonCtrl* AddUserPaintButton(PaintHandler paintHandler, ButtonPressedHandler buttonPressedHandler);
+
+	// Mouse events must be passed to the panel using the two methods below.
+	// The mouse event is consumed by a UI control if the return value is true.
+	virtual bool OnMouseLButton(EMouseEvent eMouseEvent, int nX, int nY);
+	virtual bool OnMouseMove(int nX, int nY);
+	// Must be called when painting the panel (hWnd given in constructor)
+	virtual void OnPaint(CDC & dc, const CPoint& offset);
 
 	// Gets the HWND all UI controls are placed on
 	HWND GetHWND() const { return m_hWnd; }
@@ -208,22 +228,81 @@ public:
 	void ReleaseMouse(CUICtrl* pCtrl);
 
 	// Request recalculation of the layout
-	void RequestRepositioning() { m_clientRect = CRect(0, 0, 0, 0); }
+	virtual void RequestRepositioning() = 0;
 
-private:
+protected:
+	// recalculates the layout
+	virtual void RepositionAll() = 0;
+
 	HWND m_hWnd;
 	float m_fDPIScale;
+	std::list<CUICtrl*> m_ctrlList;
+	CUICtrl* m_pCtrlCaptureMouse;
+};
+
+// Manages a set of sliders and other controls by placing them on the bottom of the screen and
+// routing events to the sliders, buttons, etc.
+class CSliderMgr : public CPanelMgr {
+public:
+	// The sliders are placed on the given window (at bottom)
+	CSliderMgr(HWND hWnd);
+
+	// height of slider area
+	int SliderAreaHeight() const { return m_nTotalAreaHeight; }
+	virtual CRect PanelRect();
+
+	void AddSlider(LPCTSTR sName, double* pdValue, bool* pbEnable, double dMin, double dMax, 
+		bool bLogarithmic, bool bInvert);
+
+	virtual bool OnMouseLButton(EMouseEvent eMouseEvent, int nX, int nY);
+
+	// Request recalculation of the layout
+	virtual void RequestRepositioning() { m_clientRect = CRect(0, 0, 0, 0); }
+
+protected:
+	virtual void RepositionAll();
+
+private:
 	int m_nSliderWidth;
 	int m_nSliderHeight;
 	int m_nNoLabelWidth;
 	int m_nSliderGap;
 	int m_nTotalAreaHeight;
-	int m_nTotalSliders;
 	int m_nYStart;
-	std::list<CUICtrl*> m_ctrlList;
-	CUICtrl* m_pCtrlCaptureMouse;
 	CRect m_clientRect;
 	CRect m_sliderAreaRect;
+	int m_nTotalSliders;
+};
 
-	void RepositionAll();
+// Navigation panel containing buttons and sliders
+class CNavigationPanel : public CPanelMgr {
+public:
+	// The panel is on the given window on top of the given slider manager
+	CNavigationPanel(HWND hWnd, CSliderMgr* pSliderMgr);
+
+	void AddGap(int nGap);
+
+	virtual CRect PanelRect();
+	virtual bool OnMouseLButton(EMouseEvent eMouseEvent, int nX, int nY);
+	virtual void RequestRepositioning();
+
+	// Painting handlers for the buttons
+	static void PaintHomeBtn(const CRect& rect, CDC& dc);
+	static void PaintPrevBtn(const CRect& rect, CDC& dc);
+	static void PaintNextBtn(const CRect& rect, CDC& dc);
+	static void PaintEndBtn(const CRect& rect, CDC& dc);
+	static void PaintRotateCWBtn(const CRect& rect, CDC& dc);
+	static void PaintRotateCCWBtn(const CRect& rect, CDC& dc);
+	static void PaintInfoBtn(const CRect& rect, CDC& dc);
+
+protected:
+	virtual void RepositionAll();
+
+private:
+
+	CSliderMgr* m_pSliderMgr;
+	CRect m_clientRect;
+	int m_nWidth, m_nHeight;
+	int m_nBorder;
+	int m_nGap;
 };

@@ -24,6 +24,8 @@ public:
 	bool HighQualityResampling() { return m_bHQRS; }
 	bool ShowFileName() { return m_bShowFileName; }
 	bool ShowFileInfo() { return m_bShowFileInfo; }
+	bool ShowNavPanel() { return m_bShowNavPanel; }
+	float BlendFactorNavPanel() { return m_fBlendFactorNavPanel; }
 	bool KeepParams() { return m_bKeepParams; }
 	Helpers::CPUType AlgorithmImplementation() { return m_eCPUAlgorithm; }
 	EFilterType DownsamplingFilter() { return m_eDownsamplingFilter; }
@@ -51,7 +53,7 @@ public:
 	// This will only save a subset of settings to the inifile located in AppData\JPEGView\JPEGView.ini.
 	// Note that this INI file has precedence over the ini file at the program directory
 	void SaveSettings(const CImageProcessingParams& procParams, EProcessingFlags eProcFlags, 
-		Helpers::ESorting eFileSorting, Helpers::EAutoZoomMode eAutoZoomMode);
+		Helpers::ESorting eFileSorting, Helpers::EAutoZoomMode eAutoZoomMode, bool bShowNavPanel);
 
 	// Saves the pattern used in the copy/rename dialog to rename files
 	void SaveCopyRenamePattern(const CString& sPattern);
@@ -75,6 +77,8 @@ private:
 	bool m_bHQRS;
 	bool m_bShowFileName;
 	bool m_bShowFileInfo;
+	bool m_bShowNavPanel;
+	float m_fBlendFactorNavPanel;
 	bool m_bKeepParams;
 	Helpers::CPUType m_eCPUAlgorithm;
 	EFilterType m_eDownsamplingFilter;
