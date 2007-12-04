@@ -667,7 +667,8 @@ LRESULT CMainDlg::OnLButtonDown(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam,
 	// If the image processing area does not eat up the event, start dragging
 	if (!bEatenByIPA && !bEatenByNavPanel) {
 		bool bCtrl = (::GetKeyState(VK_CONTROL) & 0x8000) != 0;
-		if (bCtrl) {
+		bool bDraggingRequired = m_virtualImageSize.cx > m_clientRect.Width() || m_virtualImageSize.cy > m_clientRect.Height();
+		if (bCtrl || !bDraggingRequired) {
 			StartCropping(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
 		} else {
 			StartDragging(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
@@ -1681,8 +1682,9 @@ void CMainDlg::PaintCropRect(HDC hPaintDC) {
 }
 
 void CMainDlg::EndCropping() {
-	if (m_pCurrentImage == NULL) {
+	if (m_pCurrentImage == NULL || m_cropStart.x == m_cropEnd.x || m_cropStart.y == m_cropEnd.y) {
 		m_bCropping = false;
+		this->InvalidateRect(m_pNavPanel->PanelRect(), FALSE);
 		return;
 	}
 
@@ -1972,24 +1974,7 @@ void CMainDlg::ResetZoomToFitScreen(bool bFillWithCrop) {
 
 void CMainDlg::ResetZoomTo100Percents() {
 	if (m_pCurrentImage != NULL && fabs(m_dZoom - 1) > 0.01) {
-		double dOldZoom = m_dZoom;
-		int nOffsetX, nOffsetY;
-		if (m_nCursorCnt >= 0) {
-			// mouse cursor visible, try to zoom image to mouse
-			m_nOffsetX = nOffsetX = m_clientRect.Width()/2 - m_nMouseX;
-			m_nOffsetY = nOffsetY = m_clientRect.Height()/2 - m_nMouseY;
-		} else {
-			nOffsetX = nOffsetY = 0;
-		}
-
-		m_bUserZoom = m_pCurrentImage->OrigWidth() > m_clientRect.Width() || m_pCurrentImage->OrigHeight() > m_clientRect.Height();
-		m_bUserPan = m_bUserZoom;
-		m_dZoom = 1.0;
-		m_nOffsetX = (int) (m_nOffsetX*m_dZoom/dOldZoom) - nOffsetX;
-		m_nOffsetY = (int) (m_nOffsetY*m_dZoom/dOldZoom) - nOffsetY;
-		if (fabs(dOldZoom - m_dZoom) > 0.01) {
-			this->Invalidate(FALSE);
-		}
+		PerformZoom(1.0, false);
 	}
 }
 
