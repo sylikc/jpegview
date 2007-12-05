@@ -319,7 +319,7 @@ LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam
 		SetWindowPos(HWND_TOP, &m_monitorRect, SWP_NOZORDER);
 	} else {
 		CRect wndRect(-1, -1, ::GetSystemMetrics(SM_CXSCREEN) + 1, ::GetSystemMetrics(SM_CYSCREEN) + 1);
-		//CRect wndRect(0, 0, 1024, 768);
+		//CRect wndRect(200, 100, 1024, 900);
 		this->MoveWindow(&wndRect);
 		m_monitorRect = wndRect;
 	}
@@ -371,16 +371,11 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 	CRect rectNavPanel = m_pNavPanel->PanelRect();
 	bool bBlendNavPanel = false;
 	bool bNavPanelInvisible = (CSettingsProvider::This().BlendFactorNavPanel() == 0.0f && !m_bMouseInNavPanel) ||
-		m_bMovieMode || m_bDoDragging || m_bCropping || m_bShowIPTools;
-
-	// Save old clipping region
-	CRgn rgnOldClipRgn;
-	rgnOldClipRgn.CreateRectRgn(0, 0, 1, 1);
-	::GetRandomRgn(dc.m_hDC, rgnOldClipRgn.m_hRgn, SYSRGN);
+		m_bMovieMode || m_bDoDragging || m_bCropping || m_bShowIPTools || m_nCursorCnt < 0;
 
 	// Exclude the help display from clipping area to reduce flickering
 	CHelpDisplay* pHelpDisplay = NULL;
-	bool bRestoreClipping = false;
+	std::list<CRect> excludedClippingRects;
 	if (m_bShowHelp) {
 		pHelpDisplay = new CHelpDisplay(dc);
 		GenerateHelpDisplay(*pHelpDisplay);
@@ -388,7 +383,7 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 		CRect rectHelpDisplay = CRect(CPoint(m_monitorRect.Width()/2 - helpRectSize.cx/2, 
 			m_monitorRect.Height()/2 - helpRectSize.cy/2), helpRectSize);
 		dc.ExcludeClipRect(&rectHelpDisplay);
-		bRestoreClipping = true;
+		excludedClippingRects.push_back(rectHelpDisplay);
 	}
 
 	// Create a memory DC for the EXIF area (to prevent flickering, this part of the screen
@@ -402,7 +397,7 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 		FillEXIFDataDisplay(pEXIFDisplay);
 		rectEXIFInfo = CRect(imageProcessingArea.left, 32, imageProcessingArea.left + pEXIFDisplay->GetSize(dc).cx, pEXIFDisplay->GetSize(dc).cy + 32);
 		hOffScreenBitmapEXIF = PrepareRectForMemDCPainting(memDCexif, dc, rectEXIFInfo);
-		bRestoreClipping = true;
+		excludedClippingRects.push_back(rectEXIFInfo);
 	}
 
 	// Create a memory DC for the image processing area (also excluded from clipping)
@@ -411,7 +406,7 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 
 	if (m_bShowIPTools) {
 		hOffScreenBitmapIPA = PrepareRectForMemDCPainting(memDCipa, dc, imageProcessingArea);
-		bRestoreClipping = true;
+		excludedClippingRects.push_back(imageProcessingArea);
 	}
 
 	// Create a memory DC for the nav panel (also excluded from clipping)
@@ -420,7 +415,7 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 
 	if (m_bShowNavPanel && !bNavPanelInvisible) {
 		hOffScreenBitmapNavPanel = PrepareRectForMemDCPainting(memDCnavPanel, dc, rectNavPanel);
-		bRestoreClipping = true;
+		excludedClippingRects.push_back(rectNavPanel);
 	}
 
 	if (m_pCurrentImage == NULL) {
@@ -523,8 +518,14 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 	}
 
 	// Restore the old clipping region if changed
-	if (bRestoreClipping) {
-		dc.SelectClipRgn(rgnOldClipRgn.m_hRgn);
+	if (excludedClippingRects.size() > 0) {
+		std::list<CRect>::iterator iter;
+		for (iter = excludedClippingRects.begin(); iter != excludedClippingRects.end(); iter++) {
+			CRect clippingRect = *iter;
+			CRgn rgn;
+			rgn.CreateRectRgn(clippingRect.left, clippingRect.top, clippingRect.right, clippingRect.bottom);
+			dc.SelectClipRgn(rgn, RGN_OR);
+		}
 	}
 
 	dc.SelectStockFont(SYSTEM_FONT);
@@ -1277,6 +1278,9 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 			break;
 		case IDM_SHOW_NAVPANEL:
 			m_bShowNavPanel = !m_bShowNavPanel;
+			if (m_bShowNavPanel) {
+				MouseOn();
+			}
 			if (m_bShowHelp) {
 				this->Invalidate(FALSE);
 			} else {
@@ -1682,7 +1686,7 @@ void CMainDlg::PaintCropRect(HDC hPaintDC) {
 }
 
 void CMainDlg::EndCropping() {
-	if (m_pCurrentImage == NULL || m_cropStart.x == m_cropEnd.x || m_cropStart.y == m_cropEnd.y) {
+	if (m_pCurrentImage == NULL || m_cropStart.x == m_cropEnd.x || m_cropStart.y == m_cropEnd.y || m_cropEnd == CPoint(INT_MIN, INT_MIN)) {
 		m_bCropping = false;
 		this->InvalidateRect(m_pNavPanel->PanelRect(), FALSE);
 		return;
@@ -1695,9 +1699,11 @@ void CMainDlg::EndCropping() {
 		HMENU hMenuTrackPopup = ::GetSubMenu(hMenu, 0);
 		TranslateMenu(hMenuTrackPopup);
 
+		CPoint posMouse(m_nMouseX, m_nMouseY);
+		this->ClientToScreen(&posMouse);
 		m_bInTrackPopupMenu = true;
 		nMenuCmd = ::TrackPopupMenu(hMenuTrackPopup, TPM_LEFTALIGN | TPM_RIGHTBUTTON | TPM_NONOTIFY | TPM_RETURNCMD, 
-			m_nMouseX, m_nMouseY, 0, this->m_hWnd, NULL);
+			posMouse.x, posMouse.y, 0, this->m_hWnd, NULL);
 		m_bInTrackPopupMenu = false;
 
 		if (m_bCropping) {
@@ -2098,12 +2104,14 @@ void CMainDlg::MouseOff() {
 		!m_bInTrackPopupMenu && !m_pNavPanel->PanelRect().PtInRect(CPoint(m_nMouseX, m_nMouseY))) {
 		m_nCursorCnt = ::ShowCursor(FALSE);
 		m_startMouse.x = m_startMouse.y = -1;
+		this->InvalidateRect(m_pNavPanel->PanelRect(), FALSE);
 	}
 }
 
 void CMainDlg::MouseOn() {
 	if (m_nCursorCnt < 0) {
 		m_nCursorCnt = ::ShowCursor(TRUE);
+		this->InvalidateRect(m_pNavPanel->PanelRect(), FALSE);
 	}
 }
 
