@@ -230,6 +230,7 @@ CMainDlg::CMainDlg() {
 	m_bDragging = false;
 	m_bDoDragging = false;
 	m_bCropping = false;
+	m_bDoCropping = false;
 	m_nOffsetX = 0;
 	m_nOffsetY = 0;
 	m_nCapturedX = m_nCapturedY = 0;
@@ -371,7 +372,7 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 	CRect rectNavPanel = m_pNavPanel->PanelRect();
 	bool bBlendNavPanel = false;
 	bool bNavPanelInvisible = (CSettingsProvider::This().BlendFactorNavPanel() == 0.0f && !m_bMouseInNavPanel) ||
-		m_bMovieMode || m_bDoDragging || m_bCropping || m_bShowIPTools || m_nCursorCnt < 0;
+		m_bMovieMode || m_bDoDragging || m_bDoCropping || m_bShowIPTools || m_nCursorCnt < 0;
 
 	// Exclude the help display from clipping area to reduce flickering
 	CHelpDisplay* pHelpDisplay = NULL;
@@ -1646,13 +1647,21 @@ void CMainDlg::StartCropping(int nX, int nY) {
 }
 
 void CMainDlg::ShowCroppingRect(int nX, int nY, HDC hPaintDC) {
-	if (m_cropEnd == CPoint(INT_MIN, INT_MIN)) {
-		this->InvalidateRect(m_pNavPanel->PanelRect(), FALSE);
-	}
 	PaintCropRect(hPaintDC);
 	float fX = (float)nX, fY = (float)nY;
 	ScreenToImage(fX, fY);
-	m_cropEnd = CPoint((int)fX, (int) fY);
+
+	CPoint newCropEnd = CPoint((int)fX, (int) fY);
+	if (newCropEnd.x == m_cropStart.x && newCropEnd.y == m_cropStart.y) {
+		return;
+	}
+	if (m_bCropping) {
+		m_bDoCropping = true;
+	}
+	if (m_cropEnd == CPoint(INT_MIN, INT_MIN)) {
+		this->InvalidateRect(m_pNavPanel->PanelRect(), FALSE);
+	}
+	m_cropEnd = newCropEnd;
 	PaintCropRect(hPaintDC);
 }
 
@@ -1688,6 +1697,7 @@ void CMainDlg::PaintCropRect(HDC hPaintDC) {
 void CMainDlg::EndCropping() {
 	if (m_pCurrentImage == NULL || m_cropStart.x == m_cropEnd.x || m_cropStart.y == m_cropEnd.y || m_cropEnd == CPoint(INT_MIN, INT_MIN)) {
 		m_bCropping = false;
+		m_bDoCropping = false;
 		this->InvalidateRect(m_pNavPanel->PanelRect(), FALSE);
 		return;
 	}
@@ -1717,6 +1727,7 @@ void CMainDlg::EndCropping() {
 		PaintCropRect(NULL);
 	}
 	m_bCropping = false;
+	m_bDoCropping = false;
 	this->InvalidateRect(m_pNavPanel->PanelRect(), FALSE);
 }
 

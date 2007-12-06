@@ -810,7 +810,7 @@ bool CSliderDouble::OnMouseMove(int nX, int nY) {
 
 	if (m_bDragging) {
 		double dOldValue = *m_pValue;
-		*m_pValue = SliderPosToValue(nX, m_nSliderStart, m_nSliderStart + m_nSliderLen);
+		*m_pValue = SliderPosToValue(nX - m_pos2Screen.x, m_nSliderStart, m_nSliderStart + m_nSliderLen);
 		if (dOldValue != *m_pValue) {
 			::InvalidateRect(m_pMgr->GetHWND(), NULL, FALSE);
 		}

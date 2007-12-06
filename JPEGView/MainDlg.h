@@ -140,6 +140,7 @@ private:
 	bool m_bDragging;
 	bool m_bDoDragging;
 	bool m_bCropping;
+	bool m_bDoCropping;
 	bool m_bMovieMode;
 	bool m_bProcFlagsTouched;
 	EProcessingFlags m_eProcFlagsBeforeMovie;
