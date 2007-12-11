@@ -42,6 +42,7 @@ public:
 	double DarkenHighlights() { return m_dDarkenHighlights; }
 	double BrightenShadowsSteepness() { return m_dBrightenShadowsSteepness; }
 	int JPEGSaveQuality() { return m_nJPEGSaveQuality; }
+	bool CreateParamDBEntryOnSave() { return m_bCreateParamDBEntryOnSave; }
 	LPCTSTR ACCExclude() { return m_sACCExclude; }
 	LPCTSTR ACCInclude() { return m_sACCInclude; }
 	LPCTSTR LDCExclude() { return m_sLDCExclude; }
@@ -95,6 +96,7 @@ private:
 	double m_dDarkenHighlights;
 	double m_dBrightenShadowsSteepness;
 	int m_nJPEGSaveQuality;
+	bool m_bCreateParamDBEntryOnSave;
 	CString m_sACCExclude;
 	CString m_sACCInclude;
 	CString m_sLDCExclude;

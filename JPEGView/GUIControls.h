@@ -126,6 +126,8 @@ public:
 	// gets the width of the button text in pixels
 	int GetTextLabelWidth() const { return m_nTextWidth; }
 
+	void SetEnabled(bool bEnabled);
+
 public:
 	virtual bool OnMouseLButton(EMouseEvent eMouseEvent, int nX, int nY);
 	virtual bool OnMouseMove(int nX, int nY);
@@ -137,6 +139,7 @@ private:
 	CString m_sText;
 	int m_nTextWidth;
 	bool m_bDragging;
+	bool m_bEnabled;
 	ButtonPressedHandler* m_buttonPressedHandler;
 	PaintHandler* m_paintHandler;
 };
@@ -294,6 +297,7 @@ public:
 	static void PaintRotateCWBtn(const CRect& rect, CDC& dc);
 	static void PaintRotateCCWBtn(const CRect& rect, CDC& dc);
 	static void PaintInfoBtn(const CRect& rect, CDC& dc);
+	static void PaintLandscapeModeBtn(const CRect& rect, CDC& dc);
 
 protected:
 	virtual void RepositionAll();

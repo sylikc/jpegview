@@ -479,6 +479,24 @@ void CNavigationPanel::PaintRotateCCWBtn(const CRect& rect, CDC& dc) {
 	dc.LineTo(nX+2, r.bottom);
 }
 
+void CNavigationPanel::PaintLandscapeModeBtn(const CRect& rect, CDC& dc) {
+	CRect r = InflateRect(rect, 0.3f);
+
+	CPoint p1(r.left-1, r.bottom);
+	dc.MoveTo(p1);
+	CPoint p2(r.left + (int)(r.Width()*0.25f), r.top + (int)(r.Height()*0.1f));
+	dc.LineTo(p2);
+	CPoint p3(r.left + (int)(r.Width()*0.5f), r.top + (int)(r.Height()*0.8f));
+	dc.LineTo(p3);
+	dc.LineTo(r.left + (int)(r.Width()*0.75f), r.top + (int)(r.Height()*0.5f));
+	dc.LineTo(r.right+1, r.bottom);
+	dc.LineTo(r.left-1, r.bottom);
+
+	int nRad = (int)(r.Width()*0.25f + 0.5f);
+	dc.Ellipse(r.right - nRad - 1, r.top - nRad + 1, r.right + nRad - 1, r.top + nRad + 1);
+	//dc.Arc(p2.x - nRad, p2.y - nRad, p2.x + nRad, p2.y + nRad, p3.x, p3.y, p1.x, p1.y);
+}
+
 void CNavigationPanel::PaintInfoBtn(const CRect& rect, CDC& dc) {
 	CFont font;
 	font.CreatePointFont(160, _T("Times New Roman"), dc, false, true);
@@ -662,6 +680,7 @@ CButtonCtrl::CButtonCtrl(CPanelMgr* pPanelMgr, LPCTSTR sButtonText,
 	 m_buttonPressedHandler = buttonPressedHandler;
 	 m_nTextWidth = GetTextRect(m_pMgr->GetHWND(), m_sText).cx;
 	 m_bDragging = false;
+	 m_bEnabled = false;
 }
 
 CButtonCtrl::CButtonCtrl(CPanelMgr* pPanelMgr, PaintHandler paintHandler, ButtonPressedHandler buttonPressedHandler) 
@@ -670,6 +689,16 @@ CButtonCtrl::CButtonCtrl(CPanelMgr* pPanelMgr, PaintHandler paintHandler, Button
 	m_buttonPressedHandler = buttonPressedHandler;
 	m_nTextWidth = 0;
 	m_bDragging = false;
+	m_bEnabled = false;
+}
+
+void CButtonCtrl::SetEnabled(bool bEnabled) {
+	if (bEnabled != m_bEnabled) {
+		m_bEnabled = bEnabled;
+		if (this->m_bShow) {
+			::InvalidateRect(m_pMgr->GetHWND(), &m_position, FALSE);
+		}
+	}
 }
 
 bool CButtonCtrl::OnMouseLButton(EMouseEvent eMouseEvent, int nX, int nY) {
@@ -717,21 +746,21 @@ void CButtonCtrl::Draw(CDC & dc, CRect position, bool bBlack) {
 	if (bBlack) {
 		dc.SelectStockPen(BLACK_PEN);
 	} else {
-		hPen = ::CreatePen(PS_SOLID, 1, (m_bDragging && m_bHighlight) ? RGB(255, 255, 255) : RGB(0, 255, 0));
+		hPen = ::CreatePen(PS_SOLID, 1, (m_bDragging && m_bHighlight) ? RGB(255, 255, 255) : m_bEnabled ? RGB(255, 255, 0) : RGB(0, 255, 0));
 		hOldPen = dc.SelectPen(hPen);
 	}
 	dc.Rectangle(position);
 	if (m_sText.GetLength() > 0) {
 		dc.SelectStockFont(DEFAULT_GUI_FONT);
 		dc.SetBkMode(TRANSPARENT);
-		dc.SetTextColor(bBlack ? 0 : m_bHighlight ? RGB(255, 255, 255) : RGB(0, 255, 0));
+		dc.SetTextColor(bBlack ? 0 : m_bHighlight ? RGB(255, 255, 255) : m_bEnabled ? RGB(255, 255, 0) : RGB(0, 255, 0));
 		dc.DrawText(m_sText, m_sText.GetLength(), &position, DT_CENTER | DT_VCENTER | DT_SINGLELINE | DT_WORD_ELLIPSIS);
 	} else if (m_paintHandler != NULL) {
 		if (m_bHighlight && !bBlack) {
 			dc.SelectPen((HPEN)::GetStockObject(WHITE_PEN));
 		}
 		dc.SetBkMode(TRANSPARENT);
-		dc.SetTextColor(bBlack ? 0 : m_bHighlight ? RGB(255, 255, 255) : RGB(0, 255, 0));
+		dc.SetTextColor(bBlack ? 0 : m_bHighlight ? RGB(255, 255, 255) : m_bEnabled ? RGB(255, 255, 0) : RGB(0, 255, 0));
 		m_paintHandler(position, dc);
 	}
 	if (!bBlack) {

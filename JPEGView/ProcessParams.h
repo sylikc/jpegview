@@ -9,7 +9,8 @@ enum EProcessingFlags {
 	PFLAG_AutoContrastSection = 2,
 	PFLAG_LDC = 4,
 	PFLAG_HighQualityResampling = 8,
-	PFLAG_KeepParams = 16
+	PFLAG_KeepParams = 16,
+	PFLAG_LandscapeMode = 32
 };
 
 static inline EProcessingFlags SetProcessingFlag(EProcessingFlags eFlags, EProcessingFlags eFlagToSet, bool bValue) {

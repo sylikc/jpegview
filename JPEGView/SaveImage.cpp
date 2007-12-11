@@ -179,7 +179,7 @@ bool CSaveImage::SaveImage(LPCTSTR sFileName, CJPEGImage * pImage, const CImageP
 	pDIB24bpp = NULL;
 
 	// Create database entry to avoid processing image again
-	if (bSuccess) {
+	if (bSuccess && CSettingsProvider::This().CreateParamDBEntryOnSave()) {
 		if (nPixelHash != 0) {
 			CParameterDBEntry newEntry;
 			CImageProcessingParams ippNone(0.0, 1.0, CSettingsProvider::This().Sharpen(), 0.0, 0.5, 0.5, 0.25, 0.5, 0.0, 0.0, 0.0);

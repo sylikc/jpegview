@@ -94,34 +94,59 @@ static CImageProcessingParams GetNoProcessingParams() {
 }
 
 // Gets default image processing flags as set in INI file
-static EProcessingFlags GetDefaultProcessingFlags() {
+static EProcessingFlags GetDefaultProcessingFlags(bool bLandscapeMode) {
 	CSettingsProvider& sp = CSettingsProvider::This();
 	EProcessingFlags eProcFlags = PFLAG_None;
 	eProcFlags = SetProcessingFlag(eProcFlags, PFLAG_HighQualityResampling, sp.HighQualityResampling());
 	eProcFlags = SetProcessingFlag(eProcFlags, PFLAG_AutoContrast, sp.AutoContrastCorrection());
 	eProcFlags = SetProcessingFlag(eProcFlags, PFLAG_LDC, sp.LocalDensityCorrection());
+	eProcFlags = SetProcessingFlag(eProcFlags, PFLAG_LandscapeMode, bLandscapeMode);
 	return eProcFlags;
 }
 
 // Create processing flags from literal boolean values
 static EProcessingFlags CreateProcessingFlags(bool bHQResampling, bool bAutoContrast, 
-											  bool bAutoContrastSection, bool bLDC, bool bKeepParams) {
+											  bool bAutoContrastSection, bool bLDC, bool bKeepParams,
+											  bool bLandscapeMode) {
 	EProcessingFlags eProcFlags = PFLAG_None;
 	eProcFlags = SetProcessingFlag(eProcFlags, PFLAG_HighQualityResampling, bHQResampling);
 	eProcFlags = SetProcessingFlag(eProcFlags, PFLAG_AutoContrast, bAutoContrast);
 	eProcFlags = SetProcessingFlag(eProcFlags, PFLAG_AutoContrastSection, bAutoContrastSection);
 	eProcFlags = SetProcessingFlag(eProcFlags, PFLAG_LDC, bLDC);
 	eProcFlags = SetProcessingFlag(eProcFlags, PFLAG_KeepParams, bKeepParams);
+	eProcFlags = SetProcessingFlag(eProcFlags, PFLAG_LandscapeMode, bLandscapeMode);
 	return eProcFlags;
 }
 
 // Initialize boolean processing values from flag bitfield
 static void InitFromProcessingFlags(EProcessingFlags eFlags, bool& bHQResampling, bool& bAutoContrast, 
-									bool& bAutoContrastSection, bool& bLDC) {
+									bool& bAutoContrastSection, bool& bLDC, bool& bLandscapeMode) {
 	bHQResampling = GetProcessingFlag(eFlags, PFLAG_HighQualityResampling);
 	bAutoContrast = GetProcessingFlag(eFlags, PFLAG_AutoContrast);
 	bAutoContrastSection = GetProcessingFlag(eFlags, PFLAG_AutoContrastSection);
 	bLDC = GetProcessingFlag(eFlags, PFLAG_LDC);
+	bLandscapeMode = GetProcessingFlag(eFlags, PFLAG_LandscapeMode);
+}
+
+// Sets the parameters according to the landscape enhancement mode
+static CImageProcessingParams _SetLandscapeModeParams(bool bLandscapeMode, const CImageProcessingParams& params) {
+	if (bLandscapeMode) {
+		return CImageProcessingParams(params.Contrast, params.Gamma, params.Sharpen, params.ColorCorrectionFactor,
+			0.50, 1.0, 0.75, 0.4, params.CyanRed, params.MagentaGreen, params.YellowBlue);
+	} else {
+		return params;
+	}
+}
+
+// Sets the processing flags according to the landscape enhancement mode
+static EProcessingFlags _SetLandscapeModeFlags(EProcessingFlags eFlags) {
+	if (GetProcessingFlag(eFlags, PFLAG_LandscapeMode)) {
+		eFlags = SetProcessingFlag(eFlags, PFLAG_AutoContrast, true);
+		eFlags = SetProcessingFlag(eFlags, PFLAG_LDC, true);
+		return eFlags;
+	} else {
+		return eFlags;
+	}
 }
 
 // Blits the DIB data section to target DC using dimming (blending with a black bitmap)
@@ -188,9 +213,10 @@ CMainDlg::CMainDlg() {
 	::GetLocaleInfo(threadLocale, LOCALE_SISO639LANGNAME, (LPTSTR) &buff, sizeof(buff));
 	CNLS::ReadStringTable(CString(sp.GetEXEPath()) + _T("strings_") + buff + _T(".txt"));
 
+	m_bLandscapeMode = false;
 	sm_instance = this;
 	m_pImageProcParams = new CImageProcessingParams(GetDefaultProcessingParams());
-	InitFromProcessingFlags(GetDefaultProcessingFlags(), m_bHQResampling, m_bAutoContrast, m_bAutoContrastSection, m_bLDC);
+	InitFromProcessingFlags(GetDefaultProcessingFlags(m_bLandscapeMode), m_bHQResampling, m_bAutoContrast, m_bAutoContrastSection, m_bLDC, m_bLandscapeMode);
 
 	// Initialize second parameter set using hard coded values, turning off all corrections except sharpening
 	m_pImageProcParams2 = new CImageProcessingParams(GetNoProcessingParams()); 
@@ -306,8 +332,10 @@ LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam
 	m_pNavPanel->AddGap(8);
 	m_pNavPanel->AddUserPaintButton(&(CNavigationPanel::PaintRotateCWBtn), &OnRotateCW);
 	m_pNavPanel->AddUserPaintButton(&(CNavigationPanel::PaintRotateCCWBtn), &OnRotateCCW);
+	m_pNavPanel->AddGap(8);
+	m_btnLandScape = m_pNavPanel->AddUserPaintButton(&(CNavigationPanel::PaintLandscapeModeBtn), &OnLandscapeMode);
 	m_pNavPanel->AddGap(16);
-	m_pNavPanel->AddUserPaintButton(&(CNavigationPanel::PaintInfoBtn), &OnShowInfo);
+	m_btnInfo = m_pNavPanel->AddUserPaintButton(&(CNavigationPanel::PaintInfoBtn), &OnShowInfo);
 
 	// place window on monitor as requested in INI file
 	int nMonitor = CSettingsProvider::This().DisplayMonitor();
@@ -427,9 +455,9 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 
 		// Find out zoom multiplier if not yet known
 		if (m_dZoomMult < 0.0) {
+			double dZoomToFit;
 			CSize fittedSize = Helpers::GetImageRect(m_pCurrentImage->OrigWidth(), m_pCurrentImage->OrigHeight(), 
-				m_clientRect.Width(), m_clientRect.Height(), true, false, false);
-			double dZoomToFit = (double)fittedSize.cx/m_pCurrentImage->OrigWidth();
+				m_clientRect.Width(), m_clientRect.Height(), true, false, false, dZoomToFit);
 			// Zoom multiplier (zoom step) should be around 1.1 but reach the value 1.0 after an integral number
 			// of zooming steps
 			int n = Helpers::RoundToInt(log(1/dZoomToFit)/log(1.1));
@@ -442,8 +470,7 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 			// zoom not set, interpret as 'fit to screen'
 			// ---------------------------------------------
 			newSize = Helpers::GetImageRect(m_pCurrentImage->OrigWidth(), m_pCurrentImage->OrigHeight(), 
-				m_clientRect.Width(), m_clientRect.Height(), m_eAutoZoomMode);
-			m_dZoom = (double)newSize.cx/m_pCurrentImage->OrigWidth();
+				m_clientRect.Width(), m_clientRect.Height(), m_eAutoZoomMode, m_dZoom);
 		} else {
 			// zoom set, use this value for the new size
 			// ---------------------------------------------
@@ -462,7 +489,7 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 		void* pDIBData = m_pCurrentImage->GetDIB(newSize, clippedSize, offsetsInImage, 
 			    *m_pImageProcParams, 
 				CreateProcessingFlags(m_bHQResampling && !m_bTemporaryLowQ, 
-				m_bAutoContrast, m_bAutoContrastSection, m_bLDC, false));
+				m_bAutoContrast, m_bAutoContrastSection, m_bLDC, false, m_bLandscapeMode));
 
 		// Paint the DIB
 		if (pDIBData != NULL) {
@@ -940,6 +967,10 @@ LRESULT CMainDlg::OnKeyDown(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOO
 		if (bCtrl) {
 			ExecuteCommand(IDM_PASTE);
 		}
+	} else if (wParam == 'L') {
+		if (bCtrl) {
+			ExecuteCommand(IDM_LANDSCAPE_MODE);
+		}
 	}
 	else if ((wParam == VK_DOWN || wParam == VK_UP || wParam == VK_RIGHT || wParam == VK_LEFT) && bShift) {
 		if (wParam == VK_DOWN) {
@@ -1230,6 +1261,10 @@ void CMainDlg::OnShowInfo(CButtonCtrl & sender) {
 	sm_instance->ExecuteCommand(IDM_SHOW_FILEINFO);
 }
 
+void CMainDlg::OnLandscapeMode(CButtonCtrl & sender) {
+	sm_instance->ExecuteCommand(IDM_LANDSCAPE_MODE);
+}
+
 ///////////////////////////////////////////////////////////////////////////////////
 // Private
 ///////////////////////////////////////////////////////////////////////////////////
@@ -1255,7 +1290,7 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 		case IDM_COPY_FULL:
 			if (m_pCurrentImage != NULL) {
 				CClipboard::CopyFullImageToClipboard(this->m_hWnd, m_pCurrentImage, *m_pImageProcParams, 
-					CreateProcessingFlags(m_bHQResampling, m_bAutoContrast, m_bAutoContrastSection, m_bLDC, false));
+					CreateProcessingFlags(m_bHQResampling, m_bAutoContrast, m_bAutoContrastSection, m_bLDC, false, m_bLandscapeMode));
 				this->Invalidate(FALSE);
 			}
 			break;
@@ -1271,6 +1306,7 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 			break;
 		case IDM_SHOW_FILEINFO:
 			m_bShowFileInfo = !m_bShowFileInfo;
+			m_btnInfo->SetEnabled(m_bShowFileInfo);
 			this->Invalidate(FALSE);
 			break;
 		case IDM_SHOW_FILENAME:
@@ -1338,7 +1374,7 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 		case IDM_SAVE_PARAM_DB:
 			if (m_pCurrentImage != NULL && !m_bMovieMode && !m_bKeepParams) {
 				CParameterDBEntry newEntry;
-				EProcessingFlags procFlags = CreateProcessingFlags(m_bHQResampling, m_bAutoContrast, false, m_bLDC, false);
+				EProcessingFlags procFlags = CreateProcessingFlags(m_bHQResampling, m_bAutoContrast, false, m_bLDC, false, m_bLandscapeMode);
 				newEntry.InitFromProcessParams(*m_pImageProcParams, procFlags, m_nRotation);
 				if ((m_bUserZoom || m_bUserPan) && !m_pCurrentImage->IsCropped()) {
 					newEntry.InitGeometricParams(CSize(m_pCurrentImage->OrigWidth(), m_pCurrentImage->OrigHeight()),
@@ -1357,13 +1393,13 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 			if (m_pCurrentImage != NULL && !m_bMovieMode && !m_bKeepParams) {
 				if (CParameterDB::This().DeleteEntry(m_pCurrentImage->GetPixelHash())) {
 					// restore initial parameters and realize the parameters
-					EProcessingFlags procFlags = GetDefaultProcessingFlags();
+					EProcessingFlags procFlags = GetDefaultProcessingFlags(m_bLandscapeMode);
 					m_pCurrentImage->RestoreInitialParameters(m_pFileList->Current(), 
 						GetDefaultProcessingParams(), procFlags, 0, -1, CPoint(0, 0), CSize(0, 0));
 					*m_pImageProcParams = GetDefaultProcessingParams();
 					// Sunset and night shot detection may has changed this
 					m_pImageProcParams->LightenShadows = m_pCurrentImage->GetInitialProcessParams().LightenShadows;
-					InitFromProcessingFlags(procFlags, m_bHQResampling, m_bAutoContrast, m_bAutoContrastSection, m_bLDC);
+					InitFromProcessingFlags(procFlags, m_bHQResampling, m_bAutoContrast, m_bAutoContrastSection, m_bLDC, m_bLandscapeMode);
 					m_nRotation = 0;
 					m_dZoom = -1;
 					m_pCurrentImage->SetIsInParamDB(false);
@@ -1393,11 +1429,36 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 			m_bLDC = !m_bLDC;
 			this->Invalidate(FALSE);
 			break;
+		case IDM_LANDSCAPE_MODE:
+			m_bLandscapeMode = !m_bLandscapeMode;
+			m_btnLandScape->SetEnabled(m_bLandscapeMode);
+			if (m_bLandscapeMode) {
+				*m_pImageProcParams = _SetLandscapeModeParams(true, *m_pImageProcParams);
+				if (m_pCurrentImage != NULL) {
+					m_pImageProcParams->LightenShadows *= m_pCurrentImage->GetLightenShadowFactor();
+				}
+				m_bLDC = true;
+				m_bAutoContrast = true;
+			} else {
+				EProcessingFlags eProcFlags = GetDefaultProcessingFlags(false);
+				CImageProcessingParams ipa = GetDefaultProcessingParams();
+				if (m_pCurrentImage != NULL) {
+					m_pCurrentImage->GetFileParams(m_pFileList->Current(), eProcFlags, ipa);
+				}
+				m_bLDC = GetProcessingFlag(eProcFlags, PFLAG_LDC);
+				m_bAutoContrast = GetProcessingFlag(eProcFlags, PFLAG_AutoContrast);
+				m_pImageProcParams->ContrastCorrectionFactor = ipa.ContrastCorrectionFactor;
+				m_pImageProcParams->LightenShadows = ipa.LightenShadows;
+				m_pImageProcParams->DarkenHighlights = ipa.DarkenHighlights;
+				m_pImageProcParams->LightenShadowSteepness = ipa.LightenShadowSteepness;
+			}
+			this->Invalidate(FALSE);
+			break;
 		case IDM_KEEP_PARAMETERS:
 			m_bKeepParams = !m_bKeepParams;
 			if (m_bKeepParams) {
 				*m_pImageProcParamsKept = *m_pImageProcParams;
-				m_eProcessingFlagsKept = CreateProcessingFlags(m_bHQResampling, m_bAutoContrast, false, m_bLDC, m_bKeepParams);
+				m_eProcessingFlagsKept = CreateProcessingFlags(m_bHQResampling, m_bAutoContrast, false, m_bLDC, m_bKeepParams, m_bLandscapeMode);
 				m_nRotationKept = m_nRotation;
 				m_dZoomKept = m_bUserZoom ? m_dZoom : -1;
 				m_offsetKept = m_bUserPan ? CPoint(m_nOffsetX, m_nOffsetY) : CPoint(0, 0);
@@ -1478,7 +1539,7 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 					max(m_cropStart.x, m_cropEnd.x) + 1, max(m_cropStart.y, m_cropEnd.y) + 1);
 
 				CClipboard::CopyFullImageToClipboard(this->m_hWnd, m_pCurrentImage, *m_pImageProcParams, 
-					CreateProcessingFlags(m_bHQResampling, m_bAutoContrast, m_bAutoContrastSection, m_bLDC, false),
+					CreateProcessingFlags(m_bHQResampling, m_bAutoContrast, m_bAutoContrastSection, m_bLDC, false, m_bLandscapeMode),
 					cropRect);
 				this->Invalidate(FALSE);
 			}
@@ -1541,7 +1602,7 @@ bool CMainDlg::SaveImage() {
 		m_sSaveDirectory = fileDlg.m_szFileName;
 		m_sSaveDirectory = m_sSaveDirectory.Left(m_sSaveDirectory.ReverseFind(_T('\\')) + 1);
 		if (CSaveImage::SaveImage(fileDlg.m_szFileName, m_pCurrentImage, *m_pImageProcParams, 
-			CreateProcessingFlags(m_bHQResampling, m_bAutoContrast, m_bAutoContrastSection, m_bLDC, false))) {
+			CreateProcessingFlags(m_bHQResampling, m_bAutoContrast, m_bAutoContrastSection, m_bLDC, false, m_bLandscapeMode))) {
 			m_pFileList->Reload(); // maybe image is stored to current directory - needs reload
 			return true;
 		} else {
@@ -1976,10 +2037,9 @@ void CMainDlg::LimitOffsets(const CRect & rect, const CSize & size) {
 
 void CMainDlg::ResetZoomToFitScreen(bool bFillWithCrop) {
 	if (m_pCurrentImage != NULL) {
-		CSize newSize = Helpers::GetImageRect(m_pCurrentImage->OrigWidth(), m_pCurrentImage->OrigHeight(), 
-			m_clientRect.Width(), m_clientRect.Height(), true, bFillWithCrop, false);
 		double dOldZoom = m_dZoom;
-		m_dZoom = (double)newSize.cx/m_pCurrentImage->OrigWidth();
+		CSize newSize = Helpers::GetImageRect(m_pCurrentImage->OrigWidth(), m_pCurrentImage->OrigHeight(), 
+			m_clientRect.Width(), m_clientRect.Height(), true, bFillWithCrop, false, m_dZoom);
 		m_dZoom = max(Helpers::ZoomMin, min(Helpers::ZoomMax, m_dZoom));
 		m_bUserZoom = m_dZoom > 1.0;
 		m_bUserPan = false;
@@ -2003,7 +2063,7 @@ CProcessParams CMainDlg::CreateProcessParams() {
 		if (m_bCurrentImageIsSpecialProcessing && m_pImageProcParams->LightenShadows == m_dCurrentInitialLightenShadows) {
 			m_pImageProcParamsKept->LightenShadows = dOldLightenShadows;
 		}
-		m_eProcessingFlagsKept = CreateProcessingFlags(m_bHQResampling, m_bAutoContrast, false, m_bLDC, m_bKeepParams);
+		m_eProcessingFlagsKept = CreateProcessingFlags(m_bHQResampling, m_bAutoContrast, false, m_bLDC, m_bKeepParams, m_bLandscapeMode);
 		m_nRotationKept = m_nRotation;
 		m_dZoomKept = m_bUserZoom ? m_dZoom : -1;
 		m_offsetKept = m_bUserPan ? CPoint(m_nOffsetX, m_nOffsetY) : CPoint(0, 0);
@@ -2012,14 +2072,14 @@ CProcessParams CMainDlg::CreateProcessParams() {
 			m_dZoomKept,
 			m_eAutoZoomMode,
 			m_offsetKept,
-			*m_pImageProcParamsKept, 
-			m_eProcessingFlagsKept);
+			_SetLandscapeModeParams(m_bLandscapeMode, *m_pImageProcParamsKept), 
+			_SetLandscapeModeFlags(m_eProcessingFlagsKept));
 	} else {
 		CSettingsProvider& sp = CSettingsProvider::This();
 		return CProcessParams(m_clientRect.Width(), m_clientRect.Height(), 0,
 			-1, m_eAutoZoomMode, CPoint(0, 0), 
-			GetDefaultProcessingParams(),
-			GetDefaultProcessingFlags());
+			_SetLandscapeModeParams(m_bLandscapeMode, GetDefaultProcessingParams()),
+			_SetLandscapeModeFlags(GetDefaultProcessingFlags(m_bLandscapeMode)));
 	}
 }
 
@@ -2031,7 +2091,7 @@ void CMainDlg::ResetParamsToDefault() {
 	m_bUserZoom = false;
 	m_bUserPan = false;
 	*m_pImageProcParams = GetDefaultProcessingParams();
-	InitFromProcessingFlags(GetDefaultProcessingFlags(), m_bHQResampling, m_bAutoContrast, m_bAutoContrastSection, m_bLDC);
+	InitFromProcessingFlags(GetDefaultProcessingFlags(m_bLandscapeMode), m_bHQResampling, m_bAutoContrast, m_bAutoContrastSection, m_bLDC, m_bLandscapeMode);
 }
 
 void CMainDlg::StartTimer(int nMilliSeconds) {
@@ -2052,7 +2112,7 @@ void CMainDlg::StartMovieMode(double dFPS) {
 
 	// Save processing flags at the time movie mode starts
 	if (!m_bMovieMode) {
-		m_eProcFlagsBeforeMovie = CreateProcessingFlags(m_bHQResampling, m_bAutoContrast, m_bAutoContrastSection, m_bLDC, m_bKeepParams);
+		m_eProcFlagsBeforeMovie = CreateProcessingFlags(m_bHQResampling, m_bAutoContrast, m_bAutoContrastSection, m_bLDC, m_bKeepParams, m_bLandscapeMode);
 	}
 	// Keep parameters during movie mode
 	if (!m_bKeepParams && dFPS > cdFPSMovie) {
@@ -2065,6 +2125,7 @@ void CMainDlg::StartMovieMode(double dFPS) {
 		m_bAutoContrastSection = false;
 		m_bAutoContrast = false;
 		m_bLDC = false;
+		m_bLandscapeMode = false;
 	}
 	m_bMovieMode = true;
 	StartTimer(Helpers::RoundToInt(1000.0/dFPS));
@@ -2089,6 +2150,9 @@ void CMainDlg::StopMovieMode() {
 			}
 			if (GetProcessingFlag(m_eProcFlagsBeforeMovie, PFLAG_HighQualityResampling)) {
 				m_bHQResampling = true;
+			}
+			if (GetProcessingFlag(m_eProcFlagsBeforeMovie, PFLAG_LandscapeMode)) {
+				m_bLandscapeMode = true;
 			}
 		}
 		m_bMovieMode = false;
@@ -2165,9 +2229,9 @@ void CMainDlg::DrawTextBordered(CPaintDC& dc, LPCTSTR sText, const CRect& rect, 
 void CMainDlg::ExchangeProcessingParams() {
 	bool bOldAutoContrastSection = m_bAutoContrastSection;
 	CImageProcessingParams tempParams = *m_pImageProcParams;
-	EProcessingFlags tempFlags = CreateProcessingFlags(m_bHQResampling, m_bAutoContrast, m_bAutoContrastSection, m_bLDC, false);
+	EProcessingFlags tempFlags = CreateProcessingFlags(m_bHQResampling, m_bAutoContrast, m_bAutoContrastSection, m_bLDC, false, m_bLandscapeMode);
 	*m_pImageProcParams = *m_pImageProcParams2;
-	InitFromProcessingFlags(m_eProcessingFlags2, m_bHQResampling, m_bAutoContrast, m_bAutoContrastSection, m_bLDC);
+	InitFromProcessingFlags(m_eProcessingFlags2, m_bHQResampling, m_bAutoContrast, m_bAutoContrastSection, m_bLDC, m_bLandscapeMode);
 	*m_pImageProcParams2 = tempParams;
 	m_eProcessingFlags2 = tempFlags;
 	m_bAutoContrastSection = bOldAutoContrastSection; // this flag cannot be exchanged this way
@@ -2371,7 +2435,7 @@ void CMainDlg::SaveParameters() {
 	if (IDYES == this->MessageBox(sText, CNLS::GetString(_T("Confirm save default parameters")), MB_YESNO | MB_ICONQUESTION)) {
 		CSettingsProvider::This().SaveSettings(*m_pImageProcParams, 
 			CreateProcessingFlags(m_bHQResampling, m_bAutoContrast, 
-			m_bAutoContrastSection, m_bLDC, m_bKeepParams), m_pFileList->GetSorting(), m_eAutoZoomMode, m_bShowNavPanel);
+			m_bAutoContrastSection, m_bLDC, m_bKeepParams, m_bLandscapeMode), m_pFileList->GetSorting(), m_eAutoZoomMode, m_bShowNavPanel);
 	}
 }
 
@@ -2503,6 +2567,7 @@ void CMainDlg::GenerateHelpDisplay(CHelpDisplay & helpDisplay) {
 	helpDisplay.AddLineInfo(_T("Ctrl/Alt+F6"), buffLS, CNLS::GetString(_T("Increase/decrease lightening of shadows (LDC must be on)")));
 	TCHAR buffDH[16]; _stprintf_s(buffDH, 16, _T("%.2f"), m_pImageProcParams->DarkenHighlights);
 	helpDisplay.AddLineInfo(_T("C/A+Shift+F6"), buffDH, CNLS::GetString(_T("Increase/decrease darkening of highlights (LDC must be on)")));
+	helpDisplay.AddLineInfo(_T("Ctrl+L"), m_bLandscapeMode, CNLS::GetString(_T("Enable/disable landscape picture enhancement mode")));
 	helpDisplay.AddLineInfo(_T("F7"), m_pFileList->GetNavigationMode() == Helpers::NM_LoopDirectory, CNLS::GetString(_T("Loop through files in current folder")));
 	helpDisplay.AddLineInfo(_T("F8"), m_pFileList->GetNavigationMode() == Helpers::NM_LoopSubDirectories, CNLS::GetString(_T("Loop through files in current directory and all subfolders")));
 	helpDisplay.AddLineInfo(_T("F9"), m_pFileList->GetNavigationMode() == Helpers::NM_LoopSameDirectoryLevel, CNLS::GetString(_T("Loop through files in current directory and all sibling folders (folders on same level)")));
