@@ -34,11 +34,14 @@ New features:
 - Navigation panel blended into image. The navigation panel is turned on by default but can be disabled with the F11 key.
   To disable it permanently, press F11 then save the settings to the INI file with the context menu.
   The blending factor of the panel can be configured also in the INI file.
+- New mode for optimal display of landscape pictures - lightens shadows and darkens highlights very progressively
+  Use Ctrl-L to enable or the button on the navigation panel
 Other changes:
 - Using smaller font for help display (F1)
 - Exclusion/inclusion folders for LDC and color correction: More specific folder overrides less specific when matching for inclusion
   and exclusion
 - Using Crop without Ctrl pressed when image cannot be dragged
+- New INI file entry: CreateParamDBEntryOnSave to disable/enable creation of a parameter DB entry for images saved in JPEGView
 
 [1.0.14]
 

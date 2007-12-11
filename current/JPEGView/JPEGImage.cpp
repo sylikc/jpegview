@@ -527,6 +527,24 @@ void CJPEGImage::RestoreInitialParameters(LPCTSTR sFileName, const CImageProcess
 	}
 }
 
+void CJPEGImage::GetFileParams(LPCTSTR sFileName, EProcessingFlags& eFlags, CImageProcessingParams& params) const {
+	if (IsClipboardImage()) {
+		return;
+	}
+	CParameterDBEntry* dbEntry = CParameterDB::This().FindEntry(GetPixelHash());
+	if (m_bInParamDB) {
+		int nDummy;
+		if (!::GetProcessingFlag(eFlags, PFLAG_KeepParams)) {
+			dbEntry->WriteToProcessParams(params, eFlags, nDummy);
+		}
+	} else {
+		params.LightenShadows *= m_fLightenShadowFactor;
+		if (!::GetProcessingFlag(eFlags, PFLAG_KeepParams)) {
+			eFlags = GetProcFlagsIncludeExcludeFolders(sFileName, eFlags);
+		}
+	}
+}
+
 void CJPEGImage::SetFileDependentProcessParams(LPCTSTR sFileName, CProcessParams* pParams) {
 	CParameterDBEntry* dbEntry = CParameterDB::This().FindEntry(GetPixelHash());
 	m_bInParamDB = dbEntry != NULL;
@@ -708,7 +726,7 @@ void CJPEGImage::ConvertSrcTo4Channels() {
 	}
 }
 
-EProcessingFlags CJPEGImage::GetProcFlagsIncludeExcludeFolders(LPCTSTR sFileName, EProcessingFlags procFlags) {
+EProcessingFlags CJPEGImage::GetProcFlagsIncludeExcludeFolders(LPCTSTR sFileName, EProcessingFlags procFlags) const {
 	EProcessingFlags eFlags = procFlags;
 	CSettingsProvider& sp = CSettingsProvider::This();
 	LPCTSTR sPatternInclude;

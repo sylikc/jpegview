@@ -116,6 +116,7 @@ private:
 	bool m_bAutoContrast;
 	bool m_bAutoContrastSection;
 	bool m_bLDC;
+	bool m_bLandscapeMode;
 	bool m_bKeepParams;
 
 	// used to enable switch between two sets of parameters with CTRL-A
@@ -175,6 +176,8 @@ private:
 	CTextCtrl* m_txtParamDB;
 	CTextCtrl* m_txtRename;
 	CTextCtrl* m_txtAcqDate;
+	CButtonCtrl* m_btnInfo;
+	CButtonCtrl* m_btnLandScape;
 	CNavigationPanel* m_pNavPanel;
 	CString m_sSaveDirectory;
 
@@ -238,4 +241,5 @@ private:
 	static void OnRotateCW(CButtonCtrl & sender);
 	static void OnRotateCCW(CButtonCtrl & sender);
 	static void OnShowInfo(CButtonCtrl & sender);
+	static void OnLandscapeMode(CButtonCtrl & sender);
 };

@@ -50,11 +50,12 @@ namespace Helpers {
 	// Gets the image size to be used when fitting the image to screen, either using 'fit to screen'
 	// or 'fill with crop' method. If 'fill with crop' is used, the bLimitAR can be set to avoid
 	// filling when to less pixels remain visible
+	// Outputs also the zoom factor to resize to this new size.
 	CSize GetImageRect(int nWidth, int nHeight, int nScreenWidth, int nScreenHeight, 
-		bool bAllowZoomIn, bool bFillCrop, bool bLimitAR);
+		bool bAllowZoomIn, bool bFillCrop, bool bLimitAR, double & dZoom);
 
 	// Gets the image size to be used when fitting the image to screen according to the auto zoom mode given
-	CSize GetImageRect(int nWidth, int nHeight, int nScreenWidth, int nScreenHeight, EAutoZoomMode eAutoZoomMode);
+	CSize GetImageRect(int nWidth, int nHeight, int nScreenWidth, int nScreenHeight, EAutoZoomMode eAutoZoomMode, double & dZoom);
 
 	// Gets the parameters for zooming the given zoom rectangle in an image of given size to a given window size.
 	void GetZoomParameters(float & fZoom, CPoint & offsets, CSize imageSize, CSize windowSize, CRect zoomRect);

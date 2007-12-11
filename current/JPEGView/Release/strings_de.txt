@@ -53,6 +53,7 @@ Increase/decrease contrast	Kontrast erhöhen/verringern
 Increase/decrease sharpness	Schärfe erhöhen/verringern
 Increase/decrease auto color cast correction amount	Farbkorrekturstärke erhöhen/verringern
 Increase/decrease auto contrast correction amount	Kontrastkorrekturstärke erhöhen/verringern
+Enable/disable landscape picture enhancement mode	Modus zur Optimierung von Landschaftsaufnahmen einschalten/ausschalten
 Slide show with timeout of n seconds (ESC to stop)	Diaschau mit Intervall von n Sekunden (ESC Taste stoppt Diaschau)
 Set timeout to n/10 sec, respectively n/100 sec (Ctrl+Shift)	Intervall auf n/10 Sekunden, bzw. n/100 Sekunden (Ctrl+Shift) verkürzen
 Rotate image and fit to screen	Bild rotieren und an Bildschirm anpassen

@@ -28,13 +28,14 @@ LPCTSTR JPEGViewAppDataPath() {
 }
 
 CSize GetImageRect(int nWidth, int nHeight, int nScreenWidth, int nScreenHeight, 
-					bool bAllowZoomIn, bool bFillCrop, bool bLimitAR) {
+					bool bAllowZoomIn, bool bFillCrop, bool bLimitAR, double & dZoom) {
 	double dAR1 = (double)nWidth/nScreenWidth;
 	double dAR2 = (double)nHeight/nScreenHeight;
 	double dARMin = min(dAR1, dAR2);
 	double dARMax = max(dAR1, dAR2);
 	double dAR = bFillCrop ? dARMin : dARMax;
 	if (dAR <= 1.0 && !bAllowZoomIn) {
+		dZoom = 1.0;
 		return CSize(nWidth, nHeight);
 	}
 	if (bFillCrop && bLimitAR) {
@@ -42,6 +43,8 @@ CSize GetImageRect(int nWidth, int nHeight, int nScreenWidth, int nScreenHeight,
 			dAR = dARMax; // use fit to screen
 		}
 	}
+	dZoom = 1.0/dAR;
+	dZoom = min(ZoomMax, dZoom);
 	return CSize((int)(nWidth/dAR + 0.5), (int)(nHeight/dAR + 0.5));
 }
 
@@ -55,13 +58,11 @@ CString SystemTimeToString(const SYSTEMTIME &time) {
 	return CString(sBufferDay) + _T(" ") + sBufferDate + _T(" ") + sBufferTime;
 }
 
-CSize GetImageRect(int nWidth, int nHeight, int nScreenWidth, int nScreenHeight, EAutoZoomMode eAutoZoomMode) {
+CSize GetImageRect(int nWidth, int nHeight, int nScreenWidth, int nScreenHeight, EAutoZoomMode eAutoZoomMode, double & dZoom) {
 	CSize newSize = GetImageRect(nWidth, nHeight, nScreenWidth, nScreenHeight,
 		eAutoZoomMode == ZM_FitToScreen || eAutoZoomMode == ZM_FillScreen,
 		eAutoZoomMode == ZM_FillScreenNoZoom || eAutoZoomMode == ZM_FillScreen,
-		eAutoZoomMode == ZM_FillScreenNoZoom);
-	double dZoom = (double)newSize.cx/nWidth;
-	dZoom = min(ZoomMax, dZoom);
+		eAutoZoomMode == ZM_FillScreenNoZoom, dZoom);
 	return CSize((int)(nWidth*dZoom + 0.5), (int)(nHeight*dZoom + 0.5));
 }
 

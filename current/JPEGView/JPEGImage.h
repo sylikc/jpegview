@@ -138,6 +138,9 @@ public:
 	void RestoreInitialParameters(LPCTSTR sFileName, const CImageProcessingParams& imageProcParams, 
 		EProcessingFlags & procFlags, int nRotation, double dZoom, CPoint offsets, CSize targetSize);
 
+	// Gets the parameters according to param DB or file path dependend.
+	void GetFileParams(LPCTSTR sFileName, EProcessingFlags& eFlags, CImageProcessingParams& params) const;
+
 	// To be called after creation of the object to intialize the initial processing parameters.
 	// Input are the global defaults for the processing parameters, output (in pParams) are the
 	// processing parameters for this file (maybe different from the global ones)
@@ -169,10 +172,10 @@ public:
 	CEXIFReader* GetEXIFReader() { return m_pEXIFReader; }
 
 	// Gets the image format this image was originally created from
-	EImageFormat GetImageFormat() { return m_eImageFormat; }
+	EImageFormat GetImageFormat() const { return m_eImageFormat; }
 
 	// Gets if this image was created from the clipboard
-	bool IsClipboardImage() { return m_eImageFormat == IF_CLIPBOARD; }
+	bool IsClipboardImage() const { return m_eImageFormat == IF_CLIPBOARD; }
 
 	// Debug: Ticks (millseconds) of the last operation
 	LONG LastOpTickCount() const { return m_nLastOpTickCount; }
@@ -267,7 +270,7 @@ private:
 	void ConvertSrcTo4Channels();
 
 	// Gets the processing flags according to the inclusion/exclusion list in INI file
-	EProcessingFlags GetProcFlagsIncludeExcludeFolders(LPCTSTR sFileName, EProcessingFlags procFlags);
+	EProcessingFlags GetProcFlagsIncludeExcludeFolders(LPCTSTR sFileName, EProcessingFlags procFlags) const;
 
 	// Return size of original image if the image would be rotated the given amount
 	CSize SizeAfterRotation(int nRotation);

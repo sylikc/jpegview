@@ -17,6 +17,7 @@
 <a href="#Installation">Installation</a><br/>
 <a href="#Using">Using JPEGView</a><br/>
 &nbsp;&nbsp;<a href="#GettingStarted">Getting started</a><br/>
+&nbsp;&nbsp;<a href="#NavPanel">Navigation panel</a><br/>
 &nbsp;&nbsp;<a href="#Viewing">Viewing images</a><br/>
 &nbsp;&nbsp;<a href="#SlideShow">Slideshow lists</a><br/>
 &nbsp;&nbsp;<a href="#Processing">Processing images</a><br/>
@@ -32,7 +33,7 @@
 <td>
 <a name="Top"></a>
 <h1>JPEGView Readme</h1>
-Revision: 03-December-2007
+Revision: 12-December-2007
 <a name="Introduction"></a>
 <h2>Introduction</h2>
 JPEGView is a viewer/editor for JPEG, BMP, PNG, GIF and TIFF images. It is designed to view images from digital cameras
@@ -58,7 +59,7 @@ images. JPEGView does not replace a full blown image editor - such an editor wil
 </li>
 <li>Small and fast
   <ul style="margin-top:0in;margin-bottom:0in">
-  <li>Executable is only 350 KB</li>
+  <li>Executable is only 400 KB</li>
   <li>C++/MMX/SSE code</li>
   <li>Minimal dependencies on external libraries</li>
   </ul>
@@ -78,6 +79,7 @@ images. JPEGView does not replace a full blown image editor - such an editor wil
   <li>Automatic color and contrast correction</li>
   <li>Rotation in 90 deg steps</li>
   <li>Crop image</li>
+  <li>Landscape picture improvement mode</li>
   </ul>
 </li>
 <li>Viewing and image processing parameters can be saved per image
@@ -158,7 +160,15 @@ For getting started, the following commands in JPEGView are the most important o
   <li>Right mouse button displays the context menu</li>
   <li><kbd>ESC</kbd> terminates the application</li>
   </ul>
-<br/><br/><b><a href="#Top">Top of Page</a></b><br/>
+<a name="NavPanel"></a>
+<h3>Navigation panel</h3>
+<img src="Navpanel.png" alt="Navigation panel" border="0"><br/>
+From left to right:<br/>
+First image in folder, Previous image, Next image, Last image in folder<br/>
+Rotate clockwise, Rotate counter-clockwise<br/>
+Toggle landscape picture enhancement mode<br/>
+Toggle display of image information (EXIF)<br/>
+<br/><b><a href="#Top">Top of Page</a></b><br/>
 
 <a name="Viewing"></a>
 <h3>Viewing Images</h3>
@@ -373,6 +383,11 @@ The following image processing commands are supported:
   Toggle color and contrast correction. Color correction tries to reduce global color casts. Contrast
   correction enhances contrast by moving the black point of the image (darkest area) towards black and the white point
   (brightest area) towards white. The color and contrast correction algorithm can be configured in the INI file.</li>
+   <li><b>Landscape picture enhancement mode</b><br/>
+  Keyboard: <kbd>Ctrl-L</kbd><br/>
+  Mouse: Use navigation panel<br/>
+  Toggle landscape picture enhancement mode. The landscape picture mode is simply a special parameter set optimized
+  for landscapes pictures. It will brighten shadows, darken highlights and enhance contrast when needed.</li>
   </ul>
 Most image processing can be done interactively with the mouse on the processing panel that appears when the mouse
 cursor is moved to the bottom of the screen.<br/>
