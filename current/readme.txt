@@ -6,6 +6,7 @@ To compile JPEGView you need:
 - Visual Studio 2005 Express Edition with VC++ package (of course the standard or professional editions also work)
 - Windows Platform SDK (platform SDK for Windows Server 2003 or later) - only Core SDK is needed
 - Windows Template Library (WTL), Version 8.0 (http://sourceforge.net/projects/wtl/)
+  (read http://www.codeproject.com/KB/wtl/WTLExpress.aspx how to patch the platform SDK headers so that WTL compiles with VC++ Express edition and PSDK)
 - To edit the resource file (rc) a free resource editor as www.radasm.com/resed/ is recommended
 
 The include directories of the platform SDK and WTL must be added to the include directories for VC++:

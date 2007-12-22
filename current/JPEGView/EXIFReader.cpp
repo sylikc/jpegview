@@ -33,9 +33,19 @@ static uint8* FindTag(uint8* ptr, uint8* ptrLast, uint16 nTag, bool bLittleEndia
 }
 
 static void ReadStringTag(CString & strOut, uint8* ptr, uint8* pTIFFHeader, bool bLittleEndian) {
-	if (ptr != NULL && ReadUShort(ptr + 2, bLittleEndian) == 2) {
-		strOut = CString(pTIFFHeader + ReadUInt(ptr + 8, bLittleEndian));
-	} else {
+	try {
+		if (ptr != NULL && ReadUShort(ptr + 2, bLittleEndian) == 2) {
+			int nSize = ReadUInt(ptr + 4, bLittleEndian);
+			if (nSize <= 4) {
+				strOut = CString(ptr + 8);
+			} else {
+				strOut = CString(pTIFFHeader + ReadUInt(ptr + 8, bLittleEndian));
+			}
+		} else {
+			strOut.Empty();
+		}
+	} catch (...) {
+		// EXIF corrupt?
 		strOut.Empty();
 	}
 }
