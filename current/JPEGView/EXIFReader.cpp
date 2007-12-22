@@ -174,6 +174,20 @@ CEXIFReader::CEXIFReader(void* pApp1Block)
 	uint8* pTagModel = FindTag(pIFD0, pLastIFD0, 0x110, bLittleEndian);
 	ReadStringTag(m_sModel, pTagModel, pTIFFHeader, bLittleEndian);
 
+	// Add the manufacturer name if not contained in model name
+	if (!m_sModel.IsEmpty()) {
+		CString sMake;
+		uint8* pTagMake = FindTag(pIFD0, pLastIFD0, 0x10F, bLittleEndian);
+		ReadStringTag(sMake, pTagMake, pTIFFHeader, bLittleEndian);
+		if (!sMake.IsEmpty()) {
+			int nSpace = sMake.Find(_T(' '));
+			CString sMakeL(nSpace > 0 ? sMake.Left(nSpace) : sMake);
+			if (m_sModel.Find(sMakeL) == -1) {
+				m_sModel = sMakeL + _T(" ") + m_sModel;
+			}
+		}
+	}
+
 	uint8* pTagEXIFIFD = FindTag(pIFD0, pLastIFD0, 0x8769, bLittleEndian);
 	if (pTagEXIFIFD == NULL) {
 		return;
