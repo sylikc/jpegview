@@ -29,6 +29,7 @@ Bugs removed:
   are rendered correctly when GDI+ can render them correctly - I have not tested this.
 New features:
 - About dialog
+- Tooltips for navigation panel buttons
 
 [1.0.15]
 

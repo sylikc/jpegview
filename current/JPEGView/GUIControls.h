@@ -10,6 +10,7 @@ class CTextCtrl;
 class CButtonCtrl;
 class CPanelMgr;
 class CSliderMgr;
+class CUICtrl;
 
 // Defines a handler procedure called by CTextCtrl when the text has changed
 // If true is returned, the text shall be set to the new text, if false, the text remains (or is set
@@ -23,6 +24,52 @@ typedef void ButtonPressedHandler(CButtonCtrl & sender);
 typedef void PaintHandler(const CRect& rect, CDC& dc);
 
 //-------------------------------------------------------------------------------------------------
+// Tooltip support
+
+// Tooltip class, draws the tooltip centered below the anchor rectangle
+class CTooltip {
+public:
+	CTooltip(HWND hWnd, const CUICtrl* pBoundCtrl, LPCTSTR sTooltip) : 
+	  m_hWnd(hWnd), m_pBoundCtrl(pBoundCtrl), m_sTooltip(sTooltip), m_TooltipRect(0, 0, 0, 0) {}
+
+	const CUICtrl* GetBoundCtrl() const { return m_pBoundCtrl; }
+	const CString& GetTooltip() const { return m_sTooltip; }
+
+	void Paint(CDC & dc) const;
+	CRect GetTooltipRect() const;
+private:
+	HWND m_hWnd;
+	const CUICtrl* m_pBoundCtrl;
+	CString m_sTooltip;
+	CRect m_TooltipRect;
+
+	CRect CalculateTooltipRect() const;
+};
+
+// Tooltip manager
+class CTooltipMgr {
+public:
+	CTooltipMgr(HWND hWnd);
+
+public:
+	void OnMouseLButton(EMouseEvent eMouseEvent, int nX, int nY);
+	void OnMouseMove(int nX, int nY);
+	void OnPaint(CDC & dc);
+
+	void AddTooltip(CUICtrl* pBoundCtrl, LPCTSTR sTooltip);
+	void RemoveActiveTooltip();
+	void EnableTooltips(bool bEnable); // default is true
+private:
+
+	HWND m_hWnd;
+	CTooltip* m_pActiveTooltip;
+	CTooltip* m_pMouseOnTooltip;
+	CTooltip* m_pBlockedTooltip;
+	std::list<CTooltip*> m_TooltipList;
+	bool m_bEnableTooltips;
+};
+
+//-------------------------------------------------------------------------------------------------
 
 // Base class for UI controls
 class CUICtrl {
@@ -33,6 +80,7 @@ public:
 	void SetPosition(CRect position) { m_position = position; }
 	bool IsShown() const { return m_bShow; }
 	void SetShow(bool bShow);
+	void SetTooltip(LPCTSTR sTooltipText);
 
 public:
 	virtual bool OnMouseLButton(EMouseEvent eMouseEvent, int nX, int nY) = 0;
@@ -215,7 +263,7 @@ public:
 	CButtonCtrl* AddButton(LPCTSTR sButtonText, ButtonPressedHandler buttonPressedHandler);
 
 	// Adds a user painted button
-	CButtonCtrl* AddUserPaintButton(PaintHandler paintHandler, ButtonPressedHandler buttonPressedHandler);
+	CButtonCtrl* AddUserPaintButton(PaintHandler paintHandler, ButtonPressedHandler buttonPressedHandler, LPCTSTR sTooltip);
 
 	// Mouse events must be passed to the panel using the two methods below.
 	// The mouse event is consumed by a UI control if the return value is true.
@@ -233,6 +281,9 @@ public:
 	// Request recalculation of the layout
 	virtual void RequestRepositioning() = 0;
 
+	// Gets the manager for all tooltips
+	CTooltipMgr& GetTooltipMgr() { return m_tooltipMgr; }
+
 protected:
 	// recalculates the layout
 	virtual void RepositionAll() = 0;
@@ -241,6 +292,7 @@ protected:
 	float m_fDPIScale;
 	std::list<CUICtrl*> m_ctrlList;
 	CUICtrl* m_pCtrlCaptureMouse;
+	CTooltipMgr m_tooltipMgr;
 };
 
 // Manages a set of sliders and other controls by placing them on the bottom of the screen and
