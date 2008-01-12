@@ -273,17 +273,41 @@ void CWorkThread::ProcessReadGDIPlusRequest(CRequest * request) {
 
 	Gdiplus::Bitmap* pBitmap = new Gdiplus::Bitmap(sFileName);
 	if (pBitmap->GetLastStatus() == Gdiplus::Ok) {
+		// If there is an alpha channel in the original file we must blit the image onto a black offscreen
+		// bitmap first to archieve proper rendering.
+		Gdiplus::PixelFormat pixelFormat = pBitmap->GetPixelFormat();
+		bool bHasAlphaChannel = (pixelFormat & (PixelFormatAlpha | PixelFormatPAlpha));
+		Gdiplus::Bitmap* pBmTarget = NULL;
+		Gdiplus::Graphics* pBmGraphics = NULL;
+		Gdiplus::Bitmap* pBitmapToUse;
+		if (bHasAlphaChannel) {
+			pBmTarget = new Gdiplus::Bitmap(pBitmap->GetWidth(), pBitmap->GetHeight(), PixelFormat32bppRGB);
+			pBmGraphics = new Gdiplus::Graphics(pBmTarget);
+			Gdiplus::SolidBrush blackBrush(Gdiplus::Color(255, 0, 0, 0));
+			pBmGraphics->FillRectangle(&blackBrush, 0, 0, pBmTarget->GetWidth(), pBmTarget->GetHeight());
+			pBmGraphics->DrawImage(pBitmap, 0, 0, pBmTarget->GetWidth(), pBmTarget->GetHeight());
+			pBitmapToUse = pBmTarget;
+		} else {
+			pBitmapToUse = pBitmap;
+		}
+
 		Gdiplus::Rect bmRect(0, 0, pBitmap->GetWidth(), pBitmap->GetHeight());
 		Gdiplus::BitmapData bmData;
-		if (pBitmap->LockBits(&bmRect, Gdiplus::ImageLockModeRead, PixelFormat32bppRGB, &bmData) == Gdiplus::Ok) {
+		if (pBitmapToUse->LockBits(&bmRect, Gdiplus::ImageLockModeRead, PixelFormat32bppRGB, &bmData) == Gdiplus::Ok) {
 			assert(bmData.PixelFormat == PixelFormat32bppRGB);
 			request->Image = new CJPEGImage(bmRect.Width, bmRect.Height, 
 				CBasicProcessing::ConvertGdiplus32bppRGB(bmRect.Width, bmRect.Height, bmData.Stride, bmData.Scan0), 
 				NULL, 4, 0, GetBitmapFormat(pBitmap));
-			pBitmap->UnlockBits(&bmData);
+			pBitmapToUse->UnlockBits(&bmData);
+		}
+
+		if (pBmGraphics != NULL && pBmTarget != NULL) {
+			delete pBmGraphics;
+			delete pBmTarget;
 		}
 	}
 	delete pBitmap;
+	
 }
 
 void CWorkThread::DeleteMarkedRequests(CWorkThread* thisPtr) {

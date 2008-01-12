@@ -199,3 +199,8 @@ yes	ja
 no	nein
 Show navigation panel	Navigationsleiste anzeigen
 Show/hide navigation panel	Naviationsleiste anzeigen/nicht anzeigen
+About JPEGView...	Über JPEGView...
+SIMD mode used:	Verwendeter SIMD Modus:
+Licensed under the GNU general public license (GPL), see readme file for details:	Lizenz: GNU General Public License (GPL), für weitere Informationen siehe:
+Project home page:	Projekt Home Page:
+
