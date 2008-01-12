@@ -27,6 +27,7 @@
 #include "ResizeFilter.h"
 #include "EXIFReader.h"
 #include "EXIFDisplay.h"
+#include "AboutDlg.h"
 
 //////////////////////////////////////////////////////////////////////////////////////////////
 // Constants
@@ -1518,6 +1519,15 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 			m_eAutoZoomMode = (Helpers::EAutoZoomMode)((nCommand - IDM_AUTO_ZOOM_FIT_NO_ZOOM)/10);
 			m_dZoom = -1.0;
 			this->Invalidate(FALSE);
+			break;
+		case IDM_ABOUT:
+			if (m_pCurrentImage != NULL) {
+				MouseOn();
+				HMODULE hMod = ::LoadLibrary(_T("RICHED32.DLL"));
+				CAboutDlg dlgAbout;
+				dlgAbout.DoModal();
+				::FreeLibrary(hMod);
+			}
 			break;
 		case IDM_EXIT:
 			this->EndDialog(0);

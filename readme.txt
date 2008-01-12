@@ -22,6 +22,14 @@ to JPEGView\Debug
 Changelog
 *********
 
+[1.0.16]
+
+Bugs removed:
+- PNGs with transparency (alpha channel) are now rendered correctly. Other formats supporting alpha channel
+  are rendered correctly when GDI+ can render them correctly - I have not tested this.
+New features:
+- About dialog
+
 [1.0.15]
 
 Bugs removed:
