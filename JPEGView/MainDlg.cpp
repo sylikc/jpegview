@@ -325,18 +325,18 @@ LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam
 
 	// setup navigation panel
 	m_pNavPanel = new CNavigationPanel(this->m_hWnd, m_pSliderMgr);
-	m_pNavPanel->AddUserPaintButton(&(CNavigationPanel::PaintHomeBtn), &OnHome);
-	m_pNavPanel->AddUserPaintButton(&(CNavigationPanel::PaintPrevBtn), &OnPrev);
+	m_pNavPanel->AddUserPaintButton(&(CNavigationPanel::PaintHomeBtn), &OnHome, CNLS::GetString(_T("Show first image in folder")));
+	m_pNavPanel->AddUserPaintButton(&(CNavigationPanel::PaintPrevBtn), &OnPrev, CNLS::GetString(_T("Show previous image")));
 	m_pNavPanel->AddGap(4);
-	m_pNavPanel->AddUserPaintButton(&(CNavigationPanel::PaintNextBtn), &OnNext);
-	m_pNavPanel->AddUserPaintButton(&(CNavigationPanel::PaintEndBtn), &OnEnd);
+	m_pNavPanel->AddUserPaintButton(&(CNavigationPanel::PaintNextBtn), &OnNext, CNLS::GetString(_T("Show next image")));
+	m_pNavPanel->AddUserPaintButton(&(CNavigationPanel::PaintEndBtn), &OnEnd, CNLS::GetString(_T("Show last image in folder")));
 	m_pNavPanel->AddGap(8);
-	m_pNavPanel->AddUserPaintButton(&(CNavigationPanel::PaintRotateCWBtn), &OnRotateCW);
-	m_pNavPanel->AddUserPaintButton(&(CNavigationPanel::PaintRotateCCWBtn), &OnRotateCCW);
+	m_pNavPanel->AddUserPaintButton(&(CNavigationPanel::PaintRotateCWBtn), &OnRotateCW, CNLS::GetString(_T("Rotate image 90 deg clockwise")));
+	m_pNavPanel->AddUserPaintButton(&(CNavigationPanel::PaintRotateCCWBtn), &OnRotateCCW, CNLS::GetString(_T("Rotate image 90 deg counter-clockwise")));
 	m_pNavPanel->AddGap(8);
-	m_btnLandScape = m_pNavPanel->AddUserPaintButton(&(CNavigationPanel::PaintLandscapeModeBtn), &OnLandscapeMode);
+	m_btnLandScape = m_pNavPanel->AddUserPaintButton(&(CNavigationPanel::PaintLandscapeModeBtn), &OnLandscapeMode, CNLS::GetString(_T("Landscape picture enhancement mode")));
 	m_pNavPanel->AddGap(16);
-	m_btnInfo = m_pNavPanel->AddUserPaintButton(&(CNavigationPanel::PaintInfoBtn), &OnShowInfo);
+	m_btnInfo = m_pNavPanel->AddUserPaintButton(&(CNavigationPanel::PaintInfoBtn), &OnShowInfo, CNLS::GetString(_T("Display image (EXIF) information")));
 
 	// place window on monitor as requested in INI file
 	int nMonitor = CSettingsProvider::This().DisplayMonitor();
@@ -632,6 +632,7 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 	if (m_bShowIPTools) {
 		m_pSliderMgr->OnPaint(memDCipa, CPoint(-imageProcessingArea.left, -imageProcessingArea.top));
 		dc.BitBlt(imageProcessingArea.left, imageProcessingArea.top, imageProcessingArea.Width(), imageProcessingArea.Height(), memDCipa, 0, 0, SRCCOPY);
+		m_pSliderMgr->GetTooltipMgr().OnPaint(dc);
 	}
 
 	// Paint navigation panel
@@ -640,6 +641,7 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 			m_pNavPanel->OnPaint(memDCnavPanel, CPoint(-rectNavPanel.left, -rectNavPanel.top));
 		} // else the nav panel has already been blended into mem DC
 		dc.BitBlt(rectNavPanel.left, rectNavPanel.top, rectNavPanel.Width(), rectNavPanel.Height(), memDCnavPanel, 0, 0, SRCCOPY);
+		m_pNavPanel->GetTooltipMgr().OnPaint(dc);
 	}
 
 	// Display file and EXIF information
@@ -656,6 +658,7 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 		CRect textRect(m_clientRect.right - Scale(ZOOM_TEXT_RECT_WIDTH + ZOOM_TEXT_RECT_OFFSET), 
 			m_clientRect.bottom - Scale(ZOOM_TEXT_RECT_HEIGHT + ZOOM_TEXT_RECT_OFFSET), 
 			m_clientRect.right - Scale(ZOOM_TEXT_RECT_OFFSET), m_clientRect.bottom - Scale(ZOOM_TEXT_RECT_OFFSET));
+		dc.SetTextColor(RGB(0, 255, 0));
 		DrawTextBordered(dc, buff, textRect, DT_RIGHT);
 	}
 
@@ -707,6 +710,7 @@ LRESULT CMainDlg::OnLButtonDown(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam,
 	bool bMouseInNavPanel = m_pNavPanel->PanelRect().PtInRect(CPoint(m_nMouseX, m_nMouseY));
 	if (bMouseInNavPanel && !m_bMouseInNavPanel) {
 		m_bMouseInNavPanel = true;
+		m_pNavPanel->GetTooltipMgr().EnableTooltips(true);
 		this->InvalidateRect(m_pNavPanel->PanelRect(), FALSE);
 	}
 	return 0;
@@ -792,6 +796,7 @@ LRESULT CMainDlg::OnMouseMove(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, B
 					m_bShowIPTools = false;
 					this->InvalidateRect(m_pSliderMgr->PanelRect(), FALSE);
 					this->InvalidateRect(m_pNavPanel->PanelRect(), FALSE);
+					m_pSliderMgr->GetTooltipMgr().RemoveActiveTooltip();
 				}
 			}
 		}
@@ -799,12 +804,14 @@ LRESULT CMainDlg::OnMouseMove(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, B
 			bool bMouseInNavPanel = m_pNavPanel->PanelRect().PtInRect(CPoint(m_nMouseX, m_nMouseY));
 			if (!bMouseInNavPanel && m_bMouseInNavPanel) {
 				m_bMouseInNavPanel = false;
+				m_pNavPanel->GetTooltipMgr().EnableTooltips(false);
 				this->InvalidateRect(m_pNavPanel->PanelRect(), FALSE);
 			} else if (bMouseInNavPanel && !m_bMouseInNavPanel) {
 				StartNavPanelTimer(50);
 			}
 			m_pNavPanel->OnMouseMove(m_nMouseX, m_nMouseY);
 		} else {
+			m_pNavPanel->GetTooltipMgr().EnableTooltips(false);
 			m_bMouseInNavPanel = false;
 		}
 	}
@@ -1052,6 +1059,7 @@ LRESULT CMainDlg::OnTimer(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOOL&
 		bool bMouseInNavPanel = m_pNavPanel->PanelRect().PtInRect(CPoint(m_nMouseX, m_nMouseY));
 		if (bMouseInNavPanel && !m_bMouseInNavPanel) {
 			m_bMouseInNavPanel = true;
+			m_pNavPanel->GetTooltipMgr().EnableTooltips(true);
 			this->InvalidateRect(m_pNavPanel->PanelRect(), FALSE);
 		}
 	} else if (wParam == ZOOM_TEXT_TIMER_EVENT_ID) {
@@ -1318,6 +1326,8 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 			m_bShowNavPanel = !m_bShowNavPanel;
 			if (m_bShowNavPanel) {
 				MouseOn();
+			} else {
+				m_pNavPanel->GetTooltipMgr().RemoveActiveTooltip();
 			}
 			if (m_bShowHelp) {
 				this->Invalidate(FALSE);

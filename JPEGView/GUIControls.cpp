@@ -46,10 +46,125 @@ static CSize GetScreenSize(int nX, int nY) {
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////
+// Tooltip support
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+void CTooltip::Paint(CDC & dc) const {
+	CRect tooltipRect = GetTooltipRect();
+	CBrush brush;
+	brush.CreateSolidBrush(RGB(255, 255, 200));
+	dc.SelectBrush(brush);
+	dc.SelectStockPen(BLACK_PEN);
+	dc.Rectangle(tooltipRect.left, tooltipRect.top, tooltipRect.right, tooltipRect.bottom);
+	dc.SetTextColor(RGB(0, 0, 0));
+	dc.SetBkColor(RGB(255, 255, 200));
+	dc.SelectStockFont(DEFAULT_GUI_FONT);
+	tooltipRect.OffsetRect(0, 2);
+	dc.DrawText(m_sTooltip, m_sTooltip.GetLength(), tooltipRect, DT_CENTER | DT_VCENTER);
+	dc.SelectStockBrush(BLACK_BRUSH);
+}
+
+CRect CTooltip::GetTooltipRect() const {
+	if (m_TooltipRect.IsRectEmpty()) {
+		const_cast<CTooltip*>(this)->m_TooltipRect = CalculateTooltipRect();
+	}
+	return m_TooltipRect;
+}
+
+CRect CTooltip::CalculateTooltipRect() const {
+	HDC dc = ::GetDC(m_hWnd);
+	::SelectObject(dc, (HGDIOBJ)::GetStockObject(DEFAULT_GUI_FONT));
+	CRect rectText(0, 0, 400, 0);
+	::DrawText(dc, m_sTooltip, m_sTooltip.GetLength(), &rectText, DT_CENTER | DT_VCENTER | DT_CALCRECT);
+	::ReleaseDC(m_hWnd, dc);
+
+	CRect boundRect = m_pBoundCtrl->GetPosition();
+	int nLeft = boundRect.CenterPoint().x - rectText.Width()/2;
+	int nTop = boundRect.bottom + 6;
+	return CRect(nLeft, nTop, nLeft + rectText.Width() + 8, nTop + rectText.Height() + 5);
+}
+
+CTooltipMgr::CTooltipMgr(HWND hWnd) {
+	m_hWnd = hWnd;
+	m_pActiveTooltip = NULL;
+	m_pMouseOnTooltip = NULL;
+	m_pBlockedTooltip = NULL;
+	m_bEnableTooltips = true;
+}
+
+void CTooltipMgr::OnMouseLButton(EMouseEvent eMouseEvent, int nX, int nY) {
+	if (eMouseEvent == MouseEvent_BtnDown) {
+		m_pBlockedTooltip = m_pMouseOnTooltip;
+		RemoveActiveTooltip();
+	}
+}
+
+void CTooltipMgr::OnMouseMove(int nX, int nY) {
+	// Find the control the mouse is currently on
+	CTooltip* pMouseOnTooltip = NULL;
+	std::list<CTooltip*>::const_iterator iter;
+	for (iter = m_TooltipList.begin( ); iter != m_TooltipList.end( ); iter++ ) {
+		const CUICtrl* pCtrl = (*iter)->GetBoundCtrl();
+		if (pCtrl->IsShown() && pCtrl->GetPosition().PtInRect(CPoint(nX, nY))) {
+			pMouseOnTooltip = *iter;
+			break;
+		}
+	}
+	if (pMouseOnTooltip != m_pMouseOnTooltip) {
+		m_pBlockedTooltip = NULL; // unblock showing tooltips when leaving current control
+		RemoveActiveTooltip();
+		m_pMouseOnTooltip = pMouseOnTooltip;
+		m_pActiveTooltip = pMouseOnTooltip;
+		if (m_pActiveTooltip != NULL && m_bEnableTooltips) {
+			CRect rect(m_pActiveTooltip->GetTooltipRect());
+			::InvalidateRect(m_hWnd, &rect, FALSE);
+		}
+	}
+}
+
+void CTooltipMgr::OnPaint(CDC & dc) {
+	if (m_pActiveTooltip != NULL && m_bEnableTooltips) {
+		m_pActiveTooltip->Paint(dc);
+	}
+}
+
+void CTooltipMgr::AddTooltip(CUICtrl* pBoundCtrl, LPCTSTR sTooltip) {
+	std::list<CTooltip*>::const_iterator iter;
+	for (iter = m_TooltipList.begin( ); iter != m_TooltipList.end( ); iter++ ) {
+		if ((*iter)->GetBoundCtrl() == pBoundCtrl) {
+			m_TooltipList.remove(*iter);
+			delete *iter;
+			break;
+		}
+	}
+	if (sTooltip != NULL && sTooltip[0] != 0) {
+		m_TooltipList.push_back(new CTooltip(m_hWnd, pBoundCtrl, sTooltip));
+	}
+}
+
+void CTooltipMgr::RemoveActiveTooltip() {
+	if (m_pActiveTooltip != NULL && m_bEnableTooltips) {
+		CRect rect(m_pActiveTooltip->GetTooltipRect());
+		::InvalidateRect(m_hWnd, &rect, FALSE);
+	}
+	m_pActiveTooltip = NULL;
+}
+
+void CTooltipMgr::EnableTooltips(bool bEnable) {
+	if (bEnable != m_bEnableTooltips) {
+		m_bEnableTooltips = bEnable;
+		if (m_pActiveTooltip != NULL) {
+			CRect rect(m_pActiveTooltip->GetTooltipRect());
+			::InvalidateRect(m_hWnd, &rect, FALSE);
+		}
+	}
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////
 // CPanelMgr
 /////////////////////////////////////////////////////////////////////////////////////////////
 
-CPanelMgr::CPanelMgr(HWND hWnd) {
+CPanelMgr::CPanelMgr(HWND hWnd) : m_tooltipMgr(hWnd) {
 	m_hWnd = hWnd;
 	m_fDPIScale = Helpers::ScreenScaling;
 	m_pCtrlCaptureMouse = NULL;
@@ -82,8 +197,12 @@ CButtonCtrl* CPanelMgr::AddButton(LPCTSTR sButtonText, ButtonPressedHandler butt
 	return pButtonCtrl;
 }
 
-CButtonCtrl* CPanelMgr::AddUserPaintButton(PaintHandler paintHandler, ButtonPressedHandler buttonPressedHandler) {
+CButtonCtrl* CPanelMgr::AddUserPaintButton(PaintHandler paintHandler, ButtonPressedHandler buttonPressedHandler, 
+										   LPCTSTR sTooltip) {
 	CButtonCtrl* pButtonCtrl = new CButtonCtrl(this, paintHandler, buttonPressedHandler);
+	if (sTooltip != NULL) {
+		pButtonCtrl->SetTooltip(sTooltip);
+	}
 	m_ctrlList.push_back(pButtonCtrl);
 	return pButtonCtrl;
 }
@@ -101,6 +220,8 @@ void CPanelMgr::ShowHideSlider(bool bShow, double* pdValue) {
 }
 
 bool CPanelMgr::OnMouseLButton(EMouseEvent eMouseEvent, int nX, int nY) {
+	m_tooltipMgr.OnMouseLButton(eMouseEvent, nX, nY);
+
 	bool bHandled = false;
 	CUICtrl* ctrlCapturedMouse = m_pCtrlCaptureMouse;
 	std::list<CUICtrl*>::iterator iter;
@@ -115,6 +236,8 @@ bool CPanelMgr::OnMouseLButton(EMouseEvent eMouseEvent, int nX, int nY) {
 }
 
 bool CPanelMgr::OnMouseMove(int nX, int nY) {
+	m_tooltipMgr.OnMouseMove(nX, nY);
+
 	bool bHandled = false;
 	CUICtrl* ctrlCapturedMouse = m_pCtrlCaptureMouse;
 	std::list<CUICtrl*>::iterator iter;
@@ -537,6 +660,10 @@ void CUICtrl::SetShow(bool bShow) {
 		m_bShow = bShow;
 		::InvalidateRect(m_pMgr->GetHWND(), &m_position, FALSE); // trigger redraw of area
 	}
+}
+
+void CUICtrl::SetTooltip(LPCTSTR sTooltipText) {
+	m_pMgr->GetTooltipMgr().AddTooltip(this, sTooltipText);
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////

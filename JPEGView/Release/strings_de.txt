@@ -203,4 +203,13 @@ About JPEGView...	Über JPEGView...
 SIMD mode used:	Verwendeter SIMD Modus:
 Licensed under the GNU general public license (GPL), see readme file for details:	Lizenz: GNU General Public License (GPL), für weitere Informationen siehe:
 Project home page:	Projekt Home Page:
+Show first image in folder	Erstes Bild im Ordner anzeigen
+Show previous image	Vorheriges Bild anzeigen
+Show next image	Nächstes Bild anzeigen
+Show last image in folder	Letztes Bild im Ordner anzeigen
+Rotate image 90 deg clockwise	Bild im Uhrzeigersinn drehen
+Rotate image 90 deg counter-clockwise	Bild gegen den Uhrzeigersinn drehen
+
+Landscape picture enhancement mode	Modus für Landschaftsbilder
+Display image (EXIF) information	Bildinfo (EXIF) anzeigen
 
