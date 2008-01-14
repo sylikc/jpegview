@@ -27,6 +27,7 @@ Changelog
 Bugs removed:
 - PNGs with transparency (alpha channel) are now rendered correctly. Other formats supporting alpha channel
   are rendered correctly when GDI+ can render them correctly - I have not tested this.
+- The 'R' key for rotating lossless works again
 New features:
 - About dialog
 - Tooltips for navigation panel buttons

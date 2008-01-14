@@ -830,7 +830,9 @@ LRESULT CMainDlg::OnKeyDown(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOO
 	bool bCtrl = (::GetKeyState(VK_CONTROL) & 0x8000) != 0;
 	bool bShift = (::GetKeyState(VK_SHIFT) & 0x8000) != 0;
 	bool bAlt = (::GetKeyState(VK_MENU) & 0x8000) != 0;
+	bool bHandled = false;
 	if (wParam == VK_ESCAPE) {
+		bHandled = true;
 		if (m_bShowHelp) {
 			m_bShowHelp = false;
 			this->Invalidate(FALSE);
@@ -840,22 +842,29 @@ LRESULT CMainDlg::OnKeyDown(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOO
 			this->EndDialog(0);
 		}
 	} else if (wParam == VK_F1) {
+		bHandled = true;
 		m_bShowHelp = !m_bShowHelp;
 		this->Invalidate(FALSE);
 	} else if (!bCtrl && m_bSearchSubDirsOnEnter) {
 		// search in subfolders if initially provider directory has no images
 		m_bSearchSubDirsOnEnter = false;
+		bHandled = true;
 		m_pFileList->SetNavigationMode(Helpers::NM_LoopSubDirectories);
 		GotoImage(POS_Next);
 	} else if (wParam == VK_PAGE_DOWN || (wParam == VK_RIGHT && !bCtrl && !bShift)) {
+		bHandled = true;
 		GotoImage(POS_Next);
 	} else if (wParam == VK_PAGE_UP || (wParam == VK_LEFT && !bCtrl && !bShift)) {
+		bHandled = true;
 		GotoImage(POS_Previous);
 	} else if (wParam == VK_HOME) {
+		bHandled = true;
 		GotoImage(POS_First);
 	} else if (wParam == VK_END) {
+		bHandled = true;
 		GotoImage(POS_Last);
 	} else if (wParam == VK_PLUS) {
+		bHandled = true;
 		if (bCtrl && bShift && m_bAutoContrast) {
 			m_pImageProcParams->ContrastCorrectionFactor = min(1.0, m_pImageProcParams->ContrastCorrectionFactor + 0.05);
 			this->Invalidate(FALSE);
@@ -870,6 +879,7 @@ LRESULT CMainDlg::OnKeyDown(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOO
 			PerformZoom(1, true);
 		}
 	} else if (wParam == VK_MINUS) {
+		bHandled = true;
 		if (bCtrl && bShift && m_bAutoContrast) {
 			m_pImageProcParams->ContrastCorrectionFactor = max(0.0, m_pImageProcParams->ContrastCorrectionFactor - 0.05);
 			this->Invalidate(FALSE);
@@ -884,13 +894,17 @@ LRESULT CMainDlg::OnKeyDown(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOO
 			PerformZoom(-1, true);
 		}
 	} else if (wParam == VK_F2) {
+		bHandled = true;
 		ExecuteCommand(bCtrl ? IDM_SHOW_FILENAME : IDM_SHOW_FILEINFO);
 	} else if (wParam == VK_F3) {
+		bHandled = true;
 		m_bHQResampling = !m_bHQResampling;
 		this->Invalidate(FALSE);
 	} else if (wParam == VK_F4) {
+		bHandled = true;
 		ExecuteCommand(IDM_KEEP_PARAMETERS);
 	} else if (wParam == VK_F5) {
+		bHandled = true;
 		if (bShift) {
 			m_bAutoContrastSection = !m_bAutoContrastSection;
 			m_bAutoContrast = true;
@@ -899,6 +913,7 @@ LRESULT CMainDlg::OnKeyDown(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOO
 			ExecuteCommand(IDM_AUTO_CORRECTION);
 		}
 	} else if (wParam == VK_F6) {
+		bHandled = true;
 		if (bShift && bCtrl) {
 			AdjustLDC(DARKEN_HIGHLIGHTS, LDC_INC);
 		} else if (bCtrl) {
@@ -907,17 +922,23 @@ LRESULT CMainDlg::OnKeyDown(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOO
 			ExecuteCommand(IDM_LDC);
 		}
 	} else if (wParam == VK_F7) {
+		bHandled = true;
 		ExecuteCommand(IDM_LOOP_FOLDER);
 	} else if (wParam == VK_F8) {
+		bHandled = true;
 		ExecuteCommand(IDM_LOOP_RECURSIVELY);
 	} else if (wParam == VK_F9) {
+		bHandled = true;
 		ExecuteCommand(IDM_LOOP_SIBLINGS);
 	} else if (wParam == VK_F11) {
+		bHandled = true;
 		ExecuteCommand(IDM_SHOW_NAVPANEL);
 	} else if (wParam == VK_F12) {
+		bHandled = true;
 		ExecuteCommand(IDM_SPAN_SCREENS);
 	} else if (wParam >= '1' && wParam <= '9' && (!bShift || bCtrl)) {
 		// Start the slideshow
+		bHandled = true;
 		int nValue = wParam - '1' + 1;
 		if (bCtrl && bShift) {
 			nValue *= 10; // 1/100 seconds
@@ -928,28 +949,36 @@ LRESULT CMainDlg::OnKeyDown(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOO
 		}
 		StartMovieMode(1000.0/nValue);
 	} else if (wParam == VK_SPACE) {
+		bHandled = true;
 		if (fabs(m_dZoom - 1) < 0.01) {
 			ResetZoomToFitScreen(false);
 		} else {
 			ResetZoomTo100Percents();
 		}
 	} else if (wParam == VK_RETURN) {
+		bHandled = true;
 		ResetZoomToFitScreen(bCtrl);
 	} else if ((wParam == VK_DOWN || wParam == VK_UP) && !bCtrl && !bShift) {
+		bHandled = true;
 		ExecuteCommand((wParam == VK_DOWN) ? IDM_ROTATE_90 : IDM_ROTATE_270);
 	} else if ((wParam == VK_DOWN || wParam == VK_UP) && bCtrl) {
+		bHandled = true;
 		PerformZoom((wParam == VK_DOWN) ? -1 : +1, true);
 	} else if (bCtrl && wParam == 'A') {
+		bHandled = true;
 		ExchangeProcessingParams();
 	} else if (wParam == 'C' || wParam == 'M' || wParam == 'N') {
 		if (bCtrl && wParam == 'C') {
+			bHandled = true;
 			ExecuteCommand(IDM_COPY);
 		} else {
 			if (!bCtrl) {
+				bHandled = true;
 				ExecuteCommand((wParam == 'C') ? IDM_SORT_CREATION_DATE : (wParam == 'M') ? IDM_SORT_MOD_DATE : IDM_SORT_NAME);
 			}
 		}
 	} else if (wParam == 'S') {
+		bHandled = true;
 		if (!bCtrl) {
 			ExecuteCommand(IDM_SAVE_PARAM_DB);
 		} else {
@@ -957,30 +986,37 @@ LRESULT CMainDlg::OnKeyDown(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOO
 		}
 	} else if (wParam == 'D') {
 		if (!bCtrl) {
+			bHandled = true;
 			ExecuteCommand(IDM_CLEAR_PARAM_DB);
 		}
 	} else if (wParam == 'O') {
 		if (bCtrl) {
+			bHandled = true;
 			OpenFile(false);
 		}
 	}  else if (wParam == 'R') {
 		if (bCtrl) {
+			bHandled = true;
 			ExecuteCommand(IDM_RELOAD);
 		}
 	} else if (wParam == 'X') {
 		if (bCtrl) {
+			bHandled = true;
 			ExecuteCommand(IDM_COPY_FULL);
 		}
 	} else if (wParam == 'V') {
 		if (bCtrl) {
+			bHandled = true;
 			ExecuteCommand(IDM_PASTE);
 		}
 	} else if (wParam == 'L') {
 		if (bCtrl) {
+			bHandled = true;
 			ExecuteCommand(IDM_LANDSCAPE_MODE);
 		}
 	}
 	else if ((wParam == VK_DOWN || wParam == VK_UP || wParam == VK_RIGHT || wParam == VK_LEFT) && bShift) {
+		bHandled = true;
 		if (wParam == VK_DOWN) {
 			PerformPan(0, -PAN_STEP, false);
 		} else if (wParam == VK_UP) {
@@ -990,7 +1026,8 @@ LRESULT CMainDlg::OnKeyDown(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOO
 		} else {
 			PerformPan(PAN_STEP, 0, false);
 		}
-	} else {
+	}
+	if (!bHandled) {
 		// look if any of the user commands wants to handle this key
 		if (m_pFileList->Current() != NULL) {
 			HandleUserCommands((uint32)wParam);
