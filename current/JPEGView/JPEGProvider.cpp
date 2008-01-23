@@ -1,7 +1,7 @@
 #include "StdAfx.h"
 #include "JPEGProvider.h"
 #include "JPEGImage.h"
-#include "WorkThread.h"
+#include "ImageLoadThread.h"
 #include "MessageDef.h"
 #include "FileList.h"
 #include "ProcessParams.h"
@@ -13,9 +13,9 @@ CJPEGProvider::CJPEGProvider(HWND handlerWnd, int nNumThreads, int nNumBuffers) 
 	m_nNumBuffers = nNumBuffers;
 	m_nCurrentTimeStamp = 0;
 	m_eOldDirection = FORWARD;
-	m_pWorkThreads = new CWorkThread*[nNumThreads];
+	m_pWorkThreads = new CImageLoadThread*[nNumThreads];
 	for (int i = 0; i < nNumThreads; i++) {
-		m_pWorkThreads[i] = new CWorkThread();
+		m_pWorkThreads[i] = new CImageLoadThread();
 	}
 }
 
@@ -203,12 +203,12 @@ void CJPEGProvider::GetLoadedImageFromWorkThread(CImageRequest* pRequest) {
 	}
 }
 
-CWorkThread* CJPEGProvider::SearchThread(void) {
+CImageLoadThread* CJPEGProvider::SearchThread(void) {
 	int nSmallestHandle = INT_MAX;
-	CWorkThread* pBestOccupiedThread = NULL;
+	CImageLoadThread* pBestOccupiedThread = NULL;
 	for (int i = 0; i < m_nNumThread; i++) {
 		bool bFree = true;
-		CWorkThread* pThisThread = m_pWorkThreads[i];
+		CImageLoadThread* pThisThread = m_pWorkThreads[i];
 		std::list<CImageRequest*>::iterator iter;
 		for (iter = m_requestList.begin( ); iter != m_requestList.end( ); iter++ ) {
 			if ((*iter)->Handle < nSmallestHandle && (*iter)->HandlingThread != NULL) {
@@ -274,7 +274,7 @@ void CJPEGProvider::ClearOldestReadAhead() {
 		for (iter = m_requestList.begin( ); iter != m_requestList.end( ); iter++ ) {
 			if ((*iter)->ReadAhead) {
 				// mark very old requests for removal
-				if (CWorkThread::GetCurHandleValue() - (*iter)->Handle > m_nNumBuffers) {
+				if (CImageLoadThread::GetCurHandleValue() - (*iter)->Handle > m_nNumBuffers) {
 					(*iter)->ReadAhead = false;
 				}
 				if ((*iter)->Handle < nFirstHandle) {

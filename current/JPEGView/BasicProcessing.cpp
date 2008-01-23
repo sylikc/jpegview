@@ -3,7 +3,10 @@
 #include "ResizeFilter.h"
 #include "XMMImage.h"
 #include "Helpers.h"
+#include "WorkThread.h"
+#include "ProcessingThreadPool.h"
 #include <math.h>
+
 
 // This macro allows for aligned definition of a 16 byte value with initialization of the 8 components
 // to a single value
@@ -126,17 +129,9 @@ static int32* CreateMulLUT(float fBlackPt, float fWhitePt, float fBlackPtSteepne
 	return pNewLUT;
 }
 
-void* CBasicProcessing::ApplyLDC32bpp(CSize fullTargetSize, CPoint fullTargetOffset, CSize dibSize,
+void* CBasicProcessing::ApplyLDC32bpp_Core(CSize fullTargetSize, CPoint fullTargetOffset, CSize dibSize,
 									  CSize ldcMapSize, const void* pDIBPixels, const uint8* pLUT, const uint8* pLDCMap,
-									  float fBlackPt, float fWhitePt, float fBlackPtSteepness) {
-
-	if (pDIBPixels == NULL || pLUT == NULL || pLDCMap == NULL) {
-	  return NULL;
-	}
-	if (fullTargetSize.cx <= 2 || fullTargetSize.cy <= 2) {
-		// cannot apply to tiny images
-		return Apply3ChannelLUT32bpp(dibSize.cx, dibSize.cy, pDIBPixels, pLUT);
-	}
+									  float fBlackPt, float fWhitePt, float fBlackPtSteepness, uint32* pTarget) {
 
 	uint32 nIncrementX, nIncrementY;
 	nIncrementX = (uint32)((65536*(ldcMapSize.cx - 1))/(fullTargetSize.cx - 1) - 1);
@@ -146,7 +141,6 @@ void* CBasicProcessing::ApplyLDC32bpp(CSize fullTargetSize, CPoint fullTargetOff
 	uint32 nStartX = fullTargetOffset.x*nIncrementX;
 
 	const int32* pMulLUT = CreateMulLUT(fBlackPt, fWhitePt, fBlackPtSteepness);
-	uint32* pTarget = new uint32[dibSize.cx * dibSize.cy];
 	const uint32* pSrc = (uint32*)pDIBPixels;
 	uint32* pTgt = pTarget;
 	for (int j = 0; j < dibSize.cy; j++) {
@@ -181,6 +175,27 @@ void* CBasicProcessing::ApplyLDC32bpp(CSize fullTargetSize, CPoint fullTargetOff
 		nCurY += nIncrementY;
 	}
 	delete[] pMulLUT;
+	return pTarget;
+}
+
+void* CBasicProcessing::ApplyLDC32bpp(CSize fullTargetSize, CPoint fullTargetOffset, CSize dibSize,
+									  CSize ldcMapSize, const void* pDIBPixels, const uint8* pLUT, const uint8* pLDCMap,
+									  float fBlackPt, float fWhitePt, float fBlackPtSteepness) {
+
+	if (pDIBPixels == NULL || pLUT == NULL || pLDCMap == NULL) {
+	  return NULL;
+	}
+	if (fullTargetSize.cx <= 2 || fullTargetSize.cy <= 2) {
+		// cannot apply to tiny images
+		return Apply3ChannelLUT32bpp(dibSize.cx, dibSize.cy, pDIBPixels, pLUT);
+	}
+
+	uint32* pTarget = new uint32[dibSize.cx * dibSize.cy];
+	CProcessingThreadPool& threadPool = CProcessingThreadPool::This();
+	CRequestLDC request(pDIBPixels, dibSize, pTarget, fullTargetSize, fullTargetOffset,
+		ldcMapSize, pLUT, pLDCMap, fBlackPt, fWhitePt, fBlackPtSteepness);
+	threadPool.Process(&request);
+
 	return pTarget;
 }
 
@@ -794,10 +809,12 @@ static CXMMImage* Rotate(const CXMMImage* pSourceImg) {
 }
 
 // RotateFlip the source image by 90 deg and return rotated image as 32 bpp DIB
-static void* RotateToDIB(const CXMMImage* pSourceImg) {
+static void* RotateToDIB(const CXMMImage* pSourceImg, uint8* pTarget = NULL) {
 
 	const int16* pSource = (const int16*) pSourceImg->AlignedPtr();
-	uint8* pTarget = new uint8[pSourceImg->GetHeight() * 4 * Helpers::DoPadding(pSourceImg->GetWidth(), 8)];
+	if (pTarget == NULL) {
+		pTarget = new uint8[pSourceImg->GetHeight() * 4 * Helpers::DoPadding(pSourceImg->GetWidth(), 8)];
+	}
 
 	const int cnBlockSize = 32;
 	int nX = 0, nY = 0;
@@ -1113,13 +1130,9 @@ FilterKernelLoop:
 // High quality downsampling (SSE/MMX implementation)
 /////////////////////////////////////////////////////////////////////////////////////////////
 
-
-void* CBasicProcessing::SampleDown_HQ_SSE_MMX(CSize fullTargetSize, CPoint fullTargetOffset, CSize clippedTargetSize,
-											  CSize sourceSize, const void* pIJLPixels, int nChannels, double dSharpen, 
-											  EFilterType eFilter, bool bSSE) {
-	if (pIJLPixels == NULL) {
-		return NULL;
-	}
+void* CBasicProcessing::SampleDown_HQ_SSE_MMX_Core(CSize fullTargetSize, CPoint fullTargetOffset, CSize clippedTargetSize,
+										CSize sourceSize, const void* pIJLPixels, int nChannels, double dSharpen, 
+										EFilterType eFilter, bool bSSE, uint8* pTarget) {
  	CAutoXMMFilter filterY(sourceSize.cy, fullTargetSize.cy, dSharpen, eFilter);
 	const XMMResizeFilterKernels& kernelsY = filterY.Kernels();
 	CAutoXMMFilter filterX(sourceSize.cx, fullTargetSize.cx, dSharpen, eFilter);
@@ -1146,39 +1159,35 @@ void* CBasicProcessing::SampleDown_HQ_SSE_MMX(CSize fullTargetSize, CPoint fullT
 	int nStartY = nIncOffsetY + nIncrementY*fullTargetOffset.y - 65536*nFirstY;
 
 	// Resize Y
-	DWORD t1 = ::GetTickCount();
+	double t1 = Helpers::GetExactTickCount();
 	CXMMImage* pImage1 = new CXMMImage(sourceSize.cx, sourceSize.cy, nFirstX, nLastX, nFirstY, nLastY, pIJLPixels, nChannels);
-	DWORD t2 = ::GetTickCount();
+	double t2 = Helpers::GetExactTickCount();
 	CXMMImage* pImage2 = bSSE ? ApplyFilter_SSE(pImage1->GetHeight(), clippedTargetSize.cy, pImage1->GetWidth(), nStartY, 0, nIncrementY, kernelsY, nFilterOffsetY, pImage1) :
 		ApplyFilter_MMX(pImage1->GetHeight(), clippedTargetSize.cy, pImage1->GetWidth(), nStartY, 0, nIncrementY, kernelsY, nFilterOffsetY, pImage1);
 	delete pImage1;
-	DWORD t3 = ::GetTickCount();
+	double t3 = Helpers::GetExactTickCount();
 	// Rotate
 	CXMMImage* pImage3 = Rotate(pImage2);
 	delete pImage2;
-	DWORD t4 = ::GetTickCount();
+	double t4 = Helpers::GetExactTickCount();
 	// Resize Y again
 	CXMMImage* pImage4 = bSSE ? ApplyFilter_SSE(pImage3->GetHeight(), clippedTargetSize.cx, clippedTargetSize.cy, nStartX, 0, nIncrementX, kernelsX, nFilterOffsetX, pImage3) :
 		ApplyFilter_MMX(pImage3->GetHeight(), clippedTargetSize.cx, clippedTargetSize.cy, nStartX, 0, nIncrementX, kernelsX, nFilterOffsetX, pImage3);
 	delete pImage3;
-	DWORD t5 = ::GetTickCount();
+	double t5 = Helpers::GetExactTickCount();
 	// Rotate back
-	void* pTargetDIB = RotateToDIB(pImage4);
-	DWORD t6 = ::GetTickCount();
+	void* pTargetDIB = RotateToDIB(pImage4, pTarget);
+	double t6 = Helpers::GetExactTickCount();
 
 	delete pImage4;
 
-	_stprintf_s(s_TimingInfo, 256, _T("Create: %d, Filter1: %d, Rotate: %d, Filter2: %d, Rotate: %d"), t2 - t1, t3 - t2, t4 - t3, t5-t4, t6-t5);
+	_stprintf_s(s_TimingInfo, 256, _T("Create: %.2f, Filter1: %.2f, Rotate: %.2f, Filter2: %.2f, Rotate: %.2f"), t2 - t1, t3 - t2, t4 - t3, t5 - t4, t6 - t5);
 	
 	return pTargetDIB;
 }
 
-
-void* CBasicProcessing::SampleUp_HQ_SSE_MMX(CSize fullTargetSize, CPoint fullTargetOffset, CSize clippedTargetSize,
-											CSize sourceSize, const void* pIJLPixels, int nChannels, bool bSSE) {
-	if (pIJLPixels == NULL || fullTargetSize.cx < 2 || fullTargetSize.cy < 2) {
-		return NULL;
-	}
+void* CBasicProcessing::SampleUp_HQ_SSE_MMX_Core(CSize fullTargetSize, CPoint fullTargetOffset, CSize clippedTargetSize,
+											CSize sourceSize, const void* pIJLPixels, int nChannels, bool bSSE, uint8* pTarget) {
 	int nTargetWidth = clippedTargetSize.cx;
 	int nTargetHeight = clippedTargetSize.cy;
 	int nSourceWidth = sourceSize.cx;
@@ -1214,10 +1223,41 @@ void* CBasicProcessing::SampleUp_HQ_SSE_MMX(CSize fullTargetSize, CPoint fullTar
 	CXMMImage* pImage4 = bSSE ? ApplyFilter_SSE(pImage3->GetHeight(), nTargetWidth, nTargetHeight, nStartX, 0, nIncrementX, kernelsX, nFilterOffsetX, pImage3) :
 		ApplyFilter_MMX(pImage3->GetHeight(), nTargetWidth, nTargetHeight, nStartX, 0, nIncrementX, kernelsX, nFilterOffsetX, pImage3);
 	delete pImage3;
-	void* pTargetDIB = RotateToDIB(pImage4);
+	void* pTargetDIB = RotateToDIB(pImage4, pTarget);
 	delete pImage4;
 	
 	return pTargetDIB;
+}
+
+void* CBasicProcessing::SampleDown_HQ_SSE_MMX(CSize fullTargetSize, CPoint fullTargetOffset, CSize clippedTargetSize,
+											  CSize sourceSize, const void* pIJLPixels, int nChannels, double dSharpen, 
+											  EFilterType eFilter, bool bSSE) {
+	if (pIJLPixels == NULL) {
+		return NULL;
+	}
+	uint8* pTarget = new uint8[clippedTargetSize.cx * 4 * Helpers::DoPadding(clippedTargetSize.cy, 8)];
+	CProcessingThreadPool& threadPool = CProcessingThreadPool::This();
+	CRequestUpDownSampling request(CProcessingRequest::Downsampling, pIJLPixels, sourceSize, 
+		pTarget, fullTargetSize, fullTargetOffset, clippedTargetSize,
+		nChannels, dSharpen, eFilter, bSSE);
+	threadPool.Process(&request);
+
+	return pTarget;
+}
+
+void* CBasicProcessing::SampleUp_HQ_SSE_MMX(CSize fullTargetSize, CPoint fullTargetOffset, CSize clippedTargetSize,
+											CSize sourceSize, const void* pIJLPixels, int nChannels, bool bSSE) {
+	if (pIJLPixels == NULL || fullTargetSize.cx < 2 || fullTargetSize.cy < 2) {
+		return NULL;
+	}
+	uint8* pTarget = new uint8[clippedTargetSize.cx * 4 * Helpers::DoPadding(clippedTargetSize.cy, 8)];
+	CProcessingThreadPool& threadPool = CProcessingThreadPool::This();
+	CRequestUpDownSampling request(CProcessingRequest::Upsampling, pIJLPixels, sourceSize, 
+		pTarget, fullTargetSize, fullTargetOffset, clippedTargetSize,
+		nChannels, 0.0, Filter_Upsampling_Bicubic, bSSE);
+	threadPool.Process(&request);
+
+	return pTarget;
 }
 
 LPCTSTR CBasicProcessing::TimingInfo() {

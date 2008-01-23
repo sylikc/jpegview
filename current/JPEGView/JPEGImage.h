@@ -178,7 +178,11 @@ public:
 	bool IsClipboardImage() const { return m_eImageFormat == IF_CLIPBOARD; }
 
 	// Debug: Ticks (millseconds) of the last operation
-	LONG LastOpTickCount() const { return m_nLastOpTickCount; }
+	double LastOpTickCount() const { return m_dLastOpTickCount; }
+
+	// Debug: Loading time of image in ms
+	void SetLoadTickCount(double tc) { m_dLoadTickCount = tc; }
+	double GetLoadTickCount() { return m_dLoadTickCount; }
 
 	// Debug: Returns if this could be a night shot (heuristic, between 0 and 1)
 	float IsNightShot() const;
@@ -239,7 +243,8 @@ private:
 	int m_nNumDimRects;
 	bool m_bEnableDimming;
 
-	LONG m_nLastOpTickCount;
+	double m_dLastOpTickCount;
+	double m_dLoadTickCount;
 
 	// stuff needed to perform LUT and LDC processing
 	uint8* m_pLUTAllChannels; // for global contrast and brightness correction

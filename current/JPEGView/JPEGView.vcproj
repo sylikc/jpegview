@@ -255,6 +255,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\ImageLoadThread.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\JPEGImage.cpp"
 				>
 			</File>
@@ -284,6 +288,10 @@
 			</File>
 			<File
 				RelativePath=".\ParameterDB.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ProcessingThreadPool.cpp"
 				>
 			</File>
 			<File
@@ -392,6 +400,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\ImageLoadThread.h"
+				>
+			</File>
+			<File
 				RelativePath=".\ImageProcessingTypes.h"
 				>
 			</File>
@@ -425,6 +437,10 @@
 			</File>
 			<File
 				RelativePath=".\ParameterDB.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ProcessingThreadPool.h"
 				>
 			</File>
 			<File

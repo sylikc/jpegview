@@ -31,6 +31,9 @@ Bugs removed:
 New features:
 - About dialog
 - Tooltips for navigation panel buttons
+- Support for multiple CPU cores. To set the number of cores to use to a specific value, set the CPUCoresUsed key
+  to a specific value in the INI file. Default is to use all cores (max 4) of the CPU.
+  
 
 [1.0.15]
 

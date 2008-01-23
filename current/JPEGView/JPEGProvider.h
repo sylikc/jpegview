@@ -1,7 +1,7 @@
 #pragma once
 
 class CJPEGImage;
-class CWorkThread;
+class CImageLoadThread;
 class CFileList;
 class CProcessParams;
 
@@ -61,7 +61,7 @@ private:
 		bool Deleted;
 		bool ReadAhead;
 		int AccessTimeStamp;
-		CWorkThread* HandlingThread;
+		CImageLoadThread* HandlingThread;
 		HANDLE EventFinished;
 
 		CImageRequest(LPCTSTR fileName) {
@@ -85,7 +85,7 @@ private:
 
 	std::list<CImageRequest*> m_requestList;
 	HWND m_hHandlerWnd;
-	CWorkThread** m_pWorkThreads;
+	CImageLoadThread** m_pWorkThreads;
 	int m_nNumThread;
 	int m_nNumBuffers;
 	int m_nCurrentTimeStamp;
@@ -93,7 +93,7 @@ private:
 
 	bool WaitForAsyncRequest(int nHandle, int nMessage);
 	void GetLoadedImageFromWorkThread(CImageRequest* pRequest);
-	CWorkThread* SearchThread(void);
+	CImageLoadThread* SearchThread(void);
 	void RemoveUnusedImages(bool bRemoveAlsoReadAhead);
 	CImageRequest* StartNewRequest(LPCTSTR sFileName, const CProcessParams & processParams);
 	void StartNewRequestBundle(CFileList* pFileList, EReadAheadDirection eDirection, const CProcessParams & processParams, int nNumRequests);

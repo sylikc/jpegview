@@ -1,25 +1,39 @@
 #pragma once
 
-#include "ProcessParams.h"
+// Base class for processing requests processed in a CWorkThread class
+class CRequestBase {
+public:
 
-class CJPEGImage;
+	CRequestBase(HANDLE eventFinished) {
+		EventFinished = eventFinished;
+		EventFinishedCounter = NULL;
+		Processed = false;
+		Deleted = false;
+	}
 
-// Read ahead and processing thread
+	CRequestBase() {
+		EventFinished = NULL;
+		EventFinishedCounter = NULL;
+		Processed = false;
+		Deleted = false;
+	}
+
+	HANDLE EventFinished; // Event signaled when processing is finished
+	volatile LONG* EventFinishedCounter; // if not NULL, this counter is decremented on having handled the request and the event is not fired until it is zero
+	volatile bool Processed; // Set to true when processing is finished
+	volatile bool Deleted; // Marks requests for deletion from the request queue
+};
+
+
+// Class for a treat handling processing requests in a request queue
 class CWorkThread
 {
 public:
 	CWorkThread(void);
-	~CWorkThread(void);
+	virtual ~CWorkThread(void);
 
-	// Request asynchronous load of JPEG, the message WM_JPEG_LOAD_COMPLETED is
-	// posted to the given window's message queue when finished and the given event is signaled (if not NULL).
-	// Returns identifier to query for resulting image. The query can be done as soon as the message is
-	// received or the event has been signaled.
-	int AsyncLoad(LPCTSTR strFileName, const CProcessParams & processParams, HWND targetWnd, HANDLE eventFinished);
-
-	// Get loaded image, null if not (yet) available - use handle returned by AsyncLoad()
-	// Marks the request for deletion - only call once with given handle
-	CJPEGImage* GetLoadedImage(int nHandle);
+	// Gets if the request queue is currently empty, meaning the thread has nothing to do
+	bool RequestQueueEmpty();
 
 	// Clean termination, reads the current request to the end
 	void Terminate();
@@ -27,46 +41,34 @@ public:
 	// Aborts the thread immediatly. Leaves an undefined state - only call on process termination.
 	void Abort();
 
-	// Gets the request handle value used for the last request
-	static LONG GetCurHandleValue() { return m_curHandle; }
+protected:
 
-private:
+	// Posts the request on the request queue and waits until the request is processed.
+	// The request is removed from the request queue automatically after it has been processed.
+	// Note that ownership of the request object is taken over by this method - allocate the
+	// request object with 'new' but do not delete it!
+	void ProcessAndWait(CRequestBase* pRequest);
 
-	// Request in request list
-	struct CRequest {
-		CRequest(LPCTSTR strFileName, HWND wndTarget, const CProcessParams& processParams, HANDLE eventFinished) 
-			: ProcessParams(processParams) {
-			FileName = strFileName;
-			TargetWnd = wndTarget;
-			RequestHandle = ::InterlockedIncrement(&m_curHandle);
-			Image = NULL;
-			Processed = false;
-			EventFinished = eventFinished;
-			Deleted = false;
-		}
+	// Posts a request on the request queue and returns immediately to the caller without waiting for the request
+	// to be processed.
+	// The request is not removed from the request queue automatically - the caller must do this by setting
+	// request.Deleted to true as soon as the request has finished processing and is handled by the caller.
+	// Ownership of the request object is taken over by the method.
+	void ProcessAsync(CRequestBase* pRequest);
 
-		CString FileName;
-		HWND TargetWnd;
-		int RequestHandle;
-		CJPEGImage* Image;
-		CProcessParams ProcessParams;
-		bool Processed;
-		HANDLE EventFinished;
-		bool Deleted;
-	};
+	// Called in the context of the working thread to process the request
+	virtual void ProcessRequest(CRequestBase& request) = 0;
 
-	std::list<CRequest*> m_requestList;
+	// Called in the context of the working thread after it has been signaled that the request has been processed
+	virtual void AfterFinishProcess(CRequestBase& request) {}
+
+	std::list<CRequestBase*> m_requestList;
 	CRITICAL_SECTION m_csList; // the critical section protecting the list above
 	HANDLE m_wakeUp; // wake up event for the tread (it sleeps while there is nothing to process)
 	HANDLE m_hThread; // working thread
 	volatile bool m_bTerminate; // flags termination for thread
-	static volatile LONG m_curHandle;
 
+private:
 	static void  __cdecl ThreadFunc(void* arg);
-	static void ProcessReadJPEGRequest(CRequest * request);
-	static void ProcessReadBMPRequest(CRequest * request);
-	static void ProcessReadGDIPlusRequest(CRequest * request);
-	static void SetFileDependentProcessParams(CRequest * request);
 	static void DeleteMarkedRequests(CWorkThread* thisPtr);
-	static void ProcessImageAfterLoad(CRequest * request);
 };

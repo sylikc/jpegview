@@ -28,6 +28,7 @@
 #include "EXIFReader.h"
 #include "EXIFDisplay.h"
 #include "AboutDlg.h"
+#include "ProcessingThreadPool.h"
 
 //////////////////////////////////////////////////////////////////////////////////////////////
 // Constants
@@ -291,6 +292,7 @@ CMainDlg::~CMainDlg() {
 	delete m_pImageProcParamsKept;
 	delete m_pSliderMgr;
 	delete m_pNavPanel;
+	CProcessingThreadPool::This().StopAllThreads();
 }
 
 LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/)
@@ -369,6 +371,9 @@ LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam
 	// intitialize navigation with startup file (and folder)
 	m_pFileList = new CFileList(m_sStartupFile, CSettingsProvider::This().Sorting());
 	m_pFileList->SetNavigationMode(CSettingsProvider::This().Navigation());
+
+	// create thread pool for processing requests on multiple CPU cores
+	CProcessingThreadPool::This().CreateThreadPoolThreads();
 
 	// create JPEG provider and request first image
 	m_pJPEGProvider = new CJPEGProvider(this->m_hWnd, NUM_THREADS, READ_AHEAD_BUFFERS);	
@@ -607,8 +612,8 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 
 	// Show timing info if requested
 	if (SHOW_TIMING_INFO && m_pCurrentImage != NULL) {
-		TCHAR buff[128];
-		_stprintf_s(buff, 128, _T("Last operation: %d ms, Last resize: %s"), m_pCurrentImage->LastOpTickCount(), CBasicProcessing::TimingInfo());
+		TCHAR buff[256];
+		_stprintf_s(buff, 256, _T("Loading: %.2f ms, Last op: %.2f ms, Last resize: %s"), m_pCurrentImage->GetLoadTickCount(), m_pCurrentImage->LastOpTickCount(), CBasicProcessing::TimingInfo());
 		dc.SetBkMode(OPAQUE);
 		dc.TextOut(5, 5, buff);
 		dc.SetBkMode(TRANSPARENT);
