@@ -136,6 +136,45 @@ GiveUp:
 	return cpuType;
 }
 
+// returns if the CPU supports some form of hardware multiprocessing, e.g. hyperthreading or multicore
+static bool CPUSupportsHWMultiprocessing(void) {   
+	unsigned int Regedx      = 0;
+
+	if (ProbeCPU() == CPU_SSE) {
+		_asm {
+			mov eax, 1
+			cpuid
+			mov Regedx, edx
+		}
+		return (Regedx & 0x10000000);  
+	} else {
+		return false;
+	}  
+}
+
+int NumCoresPerPhysicalProc(void) {
+	unsigned int Regeax = 0;
+	
+	if (!CPUSupportsHWMultiprocessing()) {
+		return 1;
+	}
+	_asm {
+		xor eax, eax
+		cpuid
+		cmp eax, 4			// check if cpuid supports leaf 4
+		jl single_core		// Single core
+		mov eax, 4			
+		mov ecx, 0			// start with index = 0; Leaf 4 reports
+		cpuid				// at least one valid cache level
+		mov Regeax, eax
+		jmp multi_core
+single_core:
+		xor eax, eax		
+multi_core:
+	}
+	return (int)((Regeax & 0xFC000000) >> 26) + 1;
+}
+
 bool PatternMatch(LPCTSTR & sMatchingPattern, LPCTSTR sString, LPCTSTR sPattern) {
 	sMatchingPattern = NULL;
 	if (sString == NULL || sPattern == NULL || *sPattern == 0) return false;
@@ -289,6 +328,22 @@ __int64 CalculateJPEGFileHash(void* pJPEGStream, int nStreamLength) {
 	}
 
 	return ((__int64)crcValue << 32) + sumValue;
+}
+
+double GetExactTickCount() {
+	static __int64 nFrequency = -1;
+	if (nFrequency == -1) {
+		if (!::QueryPerformanceFrequency((LARGE_INTEGER*)&nFrequency)) {
+			nFrequency = 0;
+		}
+	}
+	if (nFrequency == 0) {
+		return ::GetTickCount();
+	} else {
+		__int64 nCounter;
+		::QueryPerformanceCounter((LARGE_INTEGER*)&nCounter);
+		return (1000*(double)nCounter)/nFrequency;
+	}
 }
 
 }

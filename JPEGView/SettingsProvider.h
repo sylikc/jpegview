@@ -28,6 +28,7 @@ public:
 	float BlendFactorNavPanel() { return m_fBlendFactorNavPanel; }
 	bool KeepParams() { return m_bKeepParams; }
 	Helpers::CPUType AlgorithmImplementation() { return m_eCPUAlgorithm; }
+	int NumberOfCoresToUse() { return m_nNumCores; }
 	EFilterType DownsamplingFilter() { return m_eDownsamplingFilter; }
 	Helpers::ESorting Sorting() { return m_eSorting; }
 	Helpers::ENavigationMode Navigation() { return m_eNavigation; }
@@ -82,6 +83,7 @@ private:
 	float m_fBlendFactorNavPanel;
 	bool m_bKeepParams;
 	Helpers::CPUType m_eCPUAlgorithm;
+	int m_nNumCores;
 	EFilterType m_eDownsamplingFilter;
 	Helpers::ESorting m_eSorting;
 	Helpers::ENavigationMode m_eNavigation;

@@ -67,7 +67,7 @@ CJPEGImage::CJPEGImage(int nWidth, int nHeight, void* pIJLPixels, void* pEXIFDat
 	m_bCropped = false;
 	m_nRotation = 0;
 	m_bFirstReprocessing = true;
-	m_nLastOpTickCount = 0;
+	m_dLastOpTickCount = 0;
 	m_FullTargetSize = CSize(0, 0);
 	m_ClippingSize = CSize(0, 0);
 	m_TargetOffset = CPoint(0, 0);
@@ -129,7 +129,7 @@ void* CJPEGImage::GetDIB(CSize fullTargetSize, CSize clippingSize, CPoint target
 	m_ClippingSize = clippingSize;
 	m_TargetOffset = targetOffset;
 
-	LONG nStartTickCount = ::GetTickCount();
+	double dStartTickCount = Helpers::GetExactTickCount();
 
 	// Check if only the LUT must be reapplied but no resampling (resampling is much slower than the LUTs)
 	void * pDIB = NULL;
@@ -171,9 +171,9 @@ void* CJPEGImage::GetDIB(CSize fullTargetSize, CSize clippingSize, CPoint target
 		}
 	}
 
-	int nLastOpTickCount = ::GetTickCount() - nStartTickCount; 
-	if (nLastOpTickCount > 0) {
-		m_nLastOpTickCount = nLastOpTickCount;
+	double dLastOpTickCount = Helpers::GetExactTickCount() - dStartTickCount; 
+	if (dLastOpTickCount > 1) {
+		m_dLastOpTickCount = dLastOpTickCount;
 	}
 
 	// set these parameters after ApplyCorrectionLUT() - else it cannot be detected that the parameters changed
@@ -365,7 +365,7 @@ void CJPEGImage::VerifyRotation(int nRotation) {
 }
 
 void CJPEGImage::Rotate(int nRotation) {
-	LONG nStartTickCount = ::GetTickCount();
+	double dStartTickCount = Helpers::GetExactTickCount();
 
 	// Rotation can only be done in 32 bpp
 	ConvertSrcTo4Channels();
@@ -389,7 +389,7 @@ void CJPEGImage::Rotate(int nRotation) {
 	}
 	m_nRotation = (m_nRotation + nRotation) % 360;
 
-	m_nLastOpTickCount = ::GetTickCount() - nStartTickCount; 
+	m_dLastOpTickCount = Helpers::GetExactTickCount() - dStartTickCount; 
 }
 
 void CJPEGImage::Crop(CRect cropRect) {

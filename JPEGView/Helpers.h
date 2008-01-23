@@ -44,6 +44,9 @@ namespace Helpers {
 		return (d < 0) ? (int)(d - 0.5) : (int)(d + 0.5);
 	}
 
+	// Exact tick count in milliseconds using the high resolution timer
+	double GetExactTickCount();
+
 	// Converts the system time to a string
 	CString SystemTimeToString(const SYSTEMTIME &time);
 
@@ -62,6 +65,9 @@ namespace Helpers {
 
 	// Tests if the CPU supports SSE or MMX(2)
 	CPUType ProbeCPU(void);
+
+	// Get number of cores per physical processor, not counting hyperthreading
+	int NumCoresPerPhysicalProc(void);
 
 	// Gets the path where JPEGView stores its application data, including a trailing backslash
 	LPCTSTR JPEGViewAppDataPath();

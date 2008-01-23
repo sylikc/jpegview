@@ -21,6 +21,7 @@ LRESULT CAboutDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lPara
 
 	m_lblVersion.Attach(GetDlgItem(IDC_JPEGVIEW));
 	m_lblSIMD.Attach(GetDlgItem(IDC_SIMDMODE));
+	m_lblNumCores.Attach(GetDlgItem(IDC_NUMCORES));
 	m_richEdit.Attach(GetDlgItem(IDC_LICENSE));
 	m_btnClose.Attach(GetDlgItem(IDC_CLOSE));
 
@@ -34,6 +35,9 @@ LRESULT CAboutDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lPara
 		sSIMDMode = _T("Generic CPU");
 	}
 	m_lblSIMD.SetWindowText(CString(CNLS::GetString(_T("SIMD mode used:"))) + _T(" ") + sSIMDMode);
+	TCHAR sNumCores[16];
+	_sntprintf(sNumCores, 16, _T("%d"), CSettingsProvider::This().NumberOfCoresToUse());
+	m_lblNumCores.SetWindowText(CString(CNLS::GetString(_T("Number of CPU cores used:"))) + _T(" ") + sNumCores);
 	m_btnClose.SetWindowText(CNLS::GetString(_T("Close")));
 
 	m_richEdit.SetBackgroundColor(::GetSysColor(COLOR_3DFACE));

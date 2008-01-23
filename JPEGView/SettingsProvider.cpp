@@ -123,7 +123,7 @@ void CSettingsProvider::ReadWriteableINISettings() {
 	m_bShowFileName = GetBool(_T("ShowFileName"), false);
 	m_bShowFileInfo = GetBool(_T("ShowFileInfo"), false);
 	m_bShowNavPanel = GetBool(_T("ShowNavPanel"), true);
-	m_fBlendFactorNavPanel = (float) GetDouble(_T("BlendFactorNavPanel"), 0.3, 0.0, 1.0);
+	m_fBlendFactorNavPanel = (float) GetDouble(_T("BlendFactorNavPanel"), 0.5, 0.0, 1.0);
 	m_bKeepParams = GetBool(_T("KeepParameters"), false);
 	
 	CString sCPU = GetString(_T("CPUType"), _T("AutoDetect"));
@@ -135,6 +135,11 @@ void CSettingsProvider::ReadWriteableINISettings() {
 		m_eCPUAlgorithm = Helpers::CPU_SSE;
 	} else {
 		m_eCPUAlgorithm = Helpers::ProbeCPU();
+	}
+	m_nNumCores = GetInt(_T("CPUCoresUsed"), 0, 0, 4);
+	if (m_nNumCores == 0) {
+		m_nNumCores = Helpers::NumCoresPerPhysicalProc();
+		if (m_nNumCores > 4) m_nNumCores = 4;
 	}
 
 	CString sDownSampling = GetString(_T("DownSamplingFilter"), _T("BestQuality"));

@@ -1,9 +1,13 @@
 #pragma once
 
+class CProcessingThread;
+
 // Basic image processing methods processing the pixel data
 class CBasicProcessing
 {
 public:
+
+	friend class CProcessingThread;
 
 	// Note for all methods: The caller gets ownership of the returned image and is responsible to delete 
 	// this pointer if when no longer used.
@@ -114,4 +118,18 @@ public:
 
 private:
 	CBasicProcessing(void);
+
+	static void* ApplyLDC32bpp_Core(CSize fullTargetSize, CPoint fullTargetOffset, CSize dibSize,
+										CSize ldcMapSize, const void* pDIBPixels, const uint8* pLUT, const uint8* pLDCMap,
+										float fBlackPt, float fWhitePt, float fBlackPtSteepness, uint32* pTarget);
+
+
+	static void* SampleDown_HQ_SSE_MMX_Core(CSize fullTargetSize, CPoint fullTargetOffset, CSize clippedTargetSize,
+										CSize sourceSize, const void* pIJLPixels, int nChannels, double dSharpen, 
+										EFilterType eFilter, bool bSSE, uint8* pTarget);
+
+	static void* SampleUp_HQ_SSE_MMX_Core(CSize fullTargetSize, CPoint fullTargetOffset, CSize clippedTargetSize,
+										CSize sourceSize, const void* pIJLPixels, int nChannels, bool bSSE, 
+										uint8* pTarget);
+
 };
