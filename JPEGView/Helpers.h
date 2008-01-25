@@ -72,6 +72,10 @@ namespace Helpers {
 	// Gets the path where JPEGView stores its application data, including a trailing backslash
 	LPCTSTR JPEGViewAppDataPath();
 
+	// Sets the path where JPEGView stores its application data, including a trailing backslash.
+	// Default if not set is CSIDL_APPDATA/JPEGView/
+	void SetJPEGViewAppDataPath(LPCTSTR sPath);
+
 	// Checks if the given string matches the pattern definition given.
 	// Pattern: * - will be matched by any number of characters
 	//          ; - separates patterns

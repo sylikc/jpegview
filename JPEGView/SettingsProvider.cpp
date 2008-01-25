@@ -50,9 +50,18 @@ CSettingsProvider::CSettingsProvider(void) {
 		m_sIniNameGlobal = m_sEXEPath + INI_FILE_NAME; // use current dir as startup path
 	}
 
-	// User INI file
-	m_sIniNameUser = CString(Helpers::JPEGViewAppDataPath()) + INI_FILE_NAME;
-	m_bUserINIExists = (::GetFileAttributes(m_sIniNameUser) != INVALID_FILE_ATTRIBUTES);
+	// Read if the user INI file shall be used
+	m_bUserINIExists = false;
+	m_sIniNameUser = m_sIniNameGlobal;
+	m_bStoreToEXEPath = GetBool(_T("StoreToEXEPath"), false);
+
+	if (!m_bStoreToEXEPath) {
+		// User INI file
+		m_sIniNameUser = CString(Helpers::JPEGViewAppDataPath()) + INI_FILE_NAME;
+		m_bUserINIExists = (::GetFileAttributes(m_sIniNameUser) != INVALID_FILE_ATTRIBUTES);
+	} else {
+		Helpers::SetJPEGViewAppDataPath(m_sEXEPath);
+	}
 
 	// Get "My documents" path
 	CString sMyDocumentsFolder;
@@ -68,6 +77,8 @@ CSettingsProvider::CSettingsProvider(void) {
 
 	// Read settings that can be written with SaveSettings()
 	ReadWriteableINISettings();
+
+	m_sLanguage = GetString(_T("Language"), _T("auto")); 
 
 	m_sACCExclude = GetString(_T("ACCExclude"), _T("")); 
 	m_sACCExclude.Replace(_T("%mydocuments%"), sMyDocumentsFolder);

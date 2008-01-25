@@ -18,13 +18,18 @@ CReplacePipe::CReplacePipe(LPCTSTR sText) {
 	}
 }
 
+static TCHAR buffAppPath[MAX_PATH + 32] = _T("");
+
 LPCTSTR JPEGViewAppDataPath() {
-	static TCHAR buff[MAX_PATH + 32] = _T("");
-	if (buff[0] == 0) {
-		::SHGetFolderPath(NULL, CSIDL_APPDATA, NULL, SHGFP_TYPE_CURRENT, buff);
-		_tcscat(buff, _T("\\JPEGView\\"));
+	if (buffAppPath[0] == 0) {
+		::SHGetFolderPath(NULL, CSIDL_APPDATA, NULL, SHGFP_TYPE_CURRENT, buffAppPath);
+		_tcscat(buffAppPath, _T("\\JPEGView\\"));
 	}
-	return buff;
+	return buffAppPath;
+}
+
+void SetJPEGViewAppDataPath(LPCTSTR sPath) {
+	_tcscpy(buffAppPath, sPath);
 }
 
 CSize GetImageRect(int nWidth, int nHeight, int nScreenWidth, int nScreenHeight, 

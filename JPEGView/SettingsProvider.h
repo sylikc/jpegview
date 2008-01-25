@@ -15,6 +15,7 @@ public:
 	static CSettingsProvider& This();
 
 	// The methods correspond to the INI file settings
+	bool StoreToEXEPath() { return m_bStoreToEXEPath; }
 	double Contrast() { return m_dContrast; }
 	double Gamma() { return m_dGamma; }
 	double Sharpen() { return m_dSharpen; }
@@ -27,6 +28,7 @@ public:
 	bool ShowNavPanel() { return m_bShowNavPanel; }
 	float BlendFactorNavPanel() { return m_fBlendFactorNavPanel; }
 	bool KeepParams() { return m_bKeepParams; }
+	LPCTSTR Language() { return m_sLanguage; }
 	Helpers::CPUType AlgorithmImplementation() { return m_eCPUAlgorithm; }
 	int NumberOfCoresToUse() { return m_nNumCores; }
 	EFilterType DownsamplingFilter() { return m_eDownsamplingFilter; }
@@ -69,6 +71,7 @@ private:
 	CString m_sIniNameGlobal;
 	CString m_sIniNameUser;
 	bool m_bUserINIExists;
+	bool m_bStoreToEXEPath;
 
 	double m_dContrast;
 	double m_dGamma;
@@ -82,6 +85,7 @@ private:
 	bool m_bShowNavPanel;
 	float m_fBlendFactorNavPanel;
 	bool m_bKeepParams;
+	CString m_sLanguage;
 	Helpers::CPUType m_eCPUAlgorithm;
 	int m_nNumCores;
 	EFilterType m_eDownsamplingFilter;

@@ -152,14 +152,14 @@ static EProcessingFlags _SetLandscapeModeFlags(EProcessingFlags eFlags) {
 }
 
 // Blits the DIB data section to target DC using dimming (blending with a black bitmap)
-static void BitBltBlended(CDC & dc, const CSize& dcSize, void* pDIBData, BITMAPINFO* pbmInfo, 
+static void BitBltBlended(CDC & dc, CPaintDC & paintDC, const CSize& dcSize, void* pDIBData, BITMAPINFO* pbmInfo, 
 						  const CPoint& dibStart, const CSize& dibSize, float fDimFactor) {
 	int nW = dcSize.cx;
 	int nH = dcSize.cy;
 	CDC memDCblack;
-	memDCblack.CreateCompatibleDC(dc);
+	memDCblack.CreateCompatibleDC(paintDC);
 	CBitmap bitmapBlack;
-	bitmapBlack.CreateCompatibleBitmap(dc, nW, nH);
+	bitmapBlack.CreateCompatibleBitmap(paintDC, nW, nH);
 	memDCblack.SelectBitmap(bitmapBlack);
 	memDCblack.FillRect(CRect(0, 0, nW, nH), (HBRUSH)::GetStockObject(BLACK_BRUSH));
 	
@@ -175,7 +175,7 @@ static void BitBltBlended(CDC & dc, const CSize& dcSize, void* pDIBData, BITMAPI
 }
 
 // Blits the DIB data section to target DC using blending with painted version of given panel
-static void BitBltBlended(CDC & dc, const CSize& dcSize, void* pDIBData, BITMAPINFO* pbmInfo, 
+static void BitBltBlended(CDC & dc, CPaintDC & paintDC, const CSize& dcSize, void* pDIBData, BITMAPINFO* pbmInfo, 
 						  const CPoint& dibStart, const CSize& dibSize, CPanelMgr& panel, const CPoint& offsetPanel,
 						  float fBlendFactor) {
 	int nW = dcSize.cx;
@@ -185,9 +185,9 @@ static void BitBltBlended(CDC & dc, const CSize& dcSize, void* pDIBData, BITMAPI
 		dibSize.cx, dibSize.cy, 0, 0, 0, dibSize.cy, pDIBData, pbmInfo, DIB_RGB_COLORS);
 
 	CDC memDCPanel;
-	memDCPanel.CreateCompatibleDC(dc);
+	memDCPanel.CreateCompatibleDC(paintDC);
 	CBitmap bitmapPanel;
-	bitmapPanel.CreateCompatibleBitmap(dc, nW, nH);
+	bitmapPanel.CreateCompatibleBitmap(paintDC, nW, nH);
 	memDCPanel.SelectBitmap(bitmapPanel);
 	memDCPanel.BitBlt(0, 0, nW, nH, dc, 0, 0, SRCCOPY);
 	panel.OnPaint(memDCPanel, offsetPanel);
@@ -210,10 +210,14 @@ CMainDlg::CMainDlg() {
 	CResizeFilterCache::This(); // Access before multiple threads are created
 
 	// Read the string table for the current thread language if any is present
+	LPCTSTR sLanguageCode = sp.Language();
 	TCHAR buff[16];
-	LCID threadLocale = ::GetThreadLocale();
-	::GetLocaleInfo(threadLocale, LOCALE_SISO639LANGNAME, (LPTSTR) &buff, sizeof(buff));
-	CNLS::ReadStringTable(CString(sp.GetEXEPath()) + _T("strings_") + buff + _T(".txt"));
+	if (_tcscmp(sLanguageCode, _T("auto")) == 0) {
+		LCID threadLocale = ::GetThreadLocale();
+		::GetLocaleInfo(threadLocale, LOCALE_SISO639LANGNAME, (LPTSTR) &buff, sizeof(buff));
+		sLanguageCode = buff;
+	}
+	CNLS::ReadStringTable(CString(sp.GetEXEPath()) + _T("strings_") + sLanguageCode + _T(".txt"));
 
 	m_bLandscapeMode = false;
 	sm_instance = this;
@@ -514,24 +518,24 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 
 			// if we use a memory DC for the EXIF display, also blit to this, using blending
 			if (memDCexif.m_hDC != NULL) {
-				BitBltBlended(memDCexif, CSize(rectEXIFInfo.Width(), rectEXIFInfo.Height()), pDIBData, &bmInfo, 
+				BitBltBlended(memDCexif, dc, CSize(rectEXIFInfo.Width(), rectEXIFInfo.Height()), pDIBData, &bmInfo, 
 						  CPoint(xDest - rectEXIFInfo.left, yDest - rectEXIFInfo.top), clippedSize, cfDimFactorEXIF);
 			}
 			// same for navigation panel
 			if (memDCnavPanel.m_hDC != NULL && !bNavPanelInvisible) {
 				if (m_bMouseInNavPanel) {
-					BitBltBlended(memDCnavPanel, CSize(rectNavPanel.Width(), rectNavPanel.Height()), pDIBData, &bmInfo, 
+					BitBltBlended(memDCnavPanel, dc, CSize(rectNavPanel.Width(), rectNavPanel.Height()), pDIBData, &bmInfo, 
 						  CPoint(xDest - rectNavPanel.left, yDest - rectNavPanel.top), clippedSize, cfDimFactorNavPanel);
 				} else {
 					bBlendNavPanel = true;
-					BitBltBlended(memDCnavPanel, CSize(rectNavPanel.Width(), rectNavPanel.Height()), pDIBData, &bmInfo, 
+					BitBltBlended(memDCnavPanel, dc, CSize(rectNavPanel.Width(), rectNavPanel.Height()), pDIBData, &bmInfo, 
 						  CPoint(xDest - rectNavPanel.left, yDest - rectNavPanel.top), clippedSize, 
 						  *m_pNavPanel, CPoint(-rectNavPanel.left, -rectNavPanel.top), CSettingsProvider::This().BlendFactorNavPanel());
 				}
 			}
 			// same for image processing area
 			if (memDCipa.m_hDC != NULL) {
-				BitBltBlended(memDCipa, CSize(imageProcessingArea.Width(), imageProcessingArea.Height()), pDIBData, &bmInfo, 
+				BitBltBlended(memDCipa, dc, CSize(imageProcessingArea.Width(), imageProcessingArea.Height()), pDIBData, &bmInfo, 
 						  CPoint(xDest - imageProcessingArea.left, yDest - imageProcessingArea.top), clippedSize, cfDimFactorIPA);
 			}
 

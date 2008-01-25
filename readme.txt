@@ -14,7 +14,7 @@ Extras > Options > Projects and Solutions > VC++ directories > Include files
 
 
 Debug version:
-Before compiling the debug version for the first time, copy the five files included in this distribution
+Before compiling the debug version for the first time, copy the files included in this distribution
 from JPEGView\Release
 to JPEGView\Debug
 
@@ -28,12 +28,15 @@ Bugs removed:
 - PNGs with transparency (alpha channel) are now rendered correctly. Other formats supporting alpha channel
   are rendered correctly when GDI+ can render them correctly - I have not tested this.
 - The 'R' key for rotating lossless works again
+- Navigation panel was not visible on some graphic cards if mouse was not over it
 New features:
 - About dialog
 - Tooltips for navigation panel buttons
 - Support for multiple CPU cores. To set the number of cores to use to a specific value, set the CPUCoresUsed key
   to a specific value in the INI file. Default is to use all cores (max 4) of the CPU.
-  
+- New INI file setting to force user interface language (default is to use operating system language if supported by JPEGView)
+- New INI file setting forcing to write to config data and parameter DB to EXE path (used when installed on USB stick)
+
 
 [1.0.15]
 
