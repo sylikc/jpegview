@@ -25,8 +25,10 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR lp
 {
 	HRESULT hRes = ::CoInitialize(NULL);
 
-	// use the locale from the operating system
-	TCHAR* pp = _tsetlocale(LC_ALL, _T(""));
+	// use the locale from the operating system, however for numeric input/output always use 'C' locale
+	// with the OS locale the INI file can not be read correctly (due to the different decimal point characters)
+	_tsetlocale(LC_ALL, _T(""));
+	_tsetlocale(LC_NUMERIC, _T("C"));
 
 	// this resolves ATL window thunking problem when Microsoft Layer for Unicode (MSLU) is used
 	::DefWindowProc(NULL, 0, 0, 0L);
