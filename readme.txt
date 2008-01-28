@@ -28,7 +28,11 @@ Bugs removed:
 - PNGs with transparency (alpha channel) are now rendered correctly. Other formats supporting alpha channel
   are rendered correctly when GDI+ can render them correctly - I have not tested this.
 - The 'R' key for rotating lossless works again
-- Navigation panel was not visible on some graphic cards if mouse was not over it
+- Navigation panel was not visible when OS regional settings did not use a point as decimal number separator
+  (All other INI file settings represented by floating point numbers were also not read correctly in this case)
+- Crash removed when scaling up images with heigth=1
+- Cropping small areas (1 x n, n x 1) now possible
+- Not using IJL for 1 channel JPEGs anymore - seems to crash sometimes. GDI+ is used for these images instead.
 New features:
 - About dialog
 - Tooltips for navigation panel buttons

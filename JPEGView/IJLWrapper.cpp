@@ -77,10 +77,15 @@ void * Jpeg::ReadImage(int &width,
   }
   else
   {
+	  /*
     jcprops.DIBColor = IJL_G;
     jcprops.JPGColor = IJL_G;
     jcprops.JPGSubsampling = (IJL_JPGSUBSAMPLING) 0;
     jcprops.DIBSubsampling = (IJL_DIBSUBSAMPLING) 0;
+	*/
+	// IJL seems to crash sometimes when reading 1 channel JPEGs, better user GDI+ in this case
+	ijlFree(&jcprops);
+    return 0;
   } 
   if ( ijlRead(&jcprops, mode) != IJL_OK )
   {

@@ -455,8 +455,8 @@ static void* PointSample(CSize fullTargetSize, CPoint fullTargetOffset, CSize cl
 		nIncrementY = (uint32)(sourceSize.cy << 16)/fullTargetSize.cy + 1;
 	} else {
 		// Upsampling
-		nIncrementX = (uint32)((65536*(sourceSize.cx - 1) + 65535)/(fullTargetSize.cx - 1));
-		nIncrementY = (uint32)((65536*(sourceSize.cy - 1) + 65535)/(fullTargetSize.cy - 1));
+		nIncrementX = (fullTargetSize.cx == 1) ? 0 : (uint32)((65536*(sourceSize.cx - 1) + 65535)/(fullTargetSize.cx - 1));
+		nIncrementY = (fullTargetSize.cy == 1) ? 0 : (uint32)((65536*(sourceSize.cy - 1) + 65535)/(fullTargetSize.cy - 1));
 	}
 
 	int nPaddedSourceWidth = Helpers::DoPadding(sourceSize.cx * nChannels, 4);

@@ -93,7 +93,11 @@ void CResizeFilter::CalculateFilterKernels() {
 	uint32 nIncrementX;
 	uint32 nX;
 	if (m_eFilter == Filter_Upsampling_Bicubic) {
-		nIncrementX = (uint32)((m_nSourceSize - 1) << 16)/(m_nTargetSize - 1);
+		if (m_nSourceSize == 1 || m_nTargetSize == 1) {
+			nIncrementX = (uint32)(m_nSourceSize << 16)/m_nTargetSize;
+		} else {
+			nIncrementX = (uint32)((m_nSourceSize - 1) << 16)/(m_nTargetSize - 1);
+		}
 		nIncrementX = max(1, nIncrementX);
 		nX = 0;
 	} else {
@@ -127,6 +131,7 @@ void CResizeFilter::CalculateFilterKernels() {
 			// left border handling, the (m_nFilterOffset - nXInt) left elements are cut from the filter
 			int16* pBorderFilter = GetFilter((uint16)nXFrac, m_eFilter) + (m_nFilterOffset - nXInt);
 			int nFilterLen = min(m_nTargetSize, m_nFilterLen - (m_nFilterOffset - nXInt));
+			nFilterLen = min(nFilterLen, m_nSourceSize);
 			NormalizeFilter(pBorderFilter, nFilterLen);
 			FilterKernel* pThisKernel = &(m_kernels.Kernels[nIdxBorderKernel]);
 			pThisKernel->FilterLen = nFilterLen;
@@ -138,6 +143,7 @@ void CResizeFilter::CalculateFilterKernels() {
 			// right border handling
 			int16* pBorderFilter = GetFilter((uint16)nXFrac, m_eFilter);
 			int nFilterLen =  min(m_nTargetSize, m_nSourceSize - nXInt + m_nFilterOffset);
+			nFilterLen = min(nFilterLen, m_nSourceSize);
 			NormalizeFilter(pBorderFilter, nFilterLen);
 			FilterKernel* pThisKernel = &(m_kernels.Kernels[nIdxBorderKernel]);
 			pThisKernel->FilterLen = nFilterLen;

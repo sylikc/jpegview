@@ -1769,6 +1769,7 @@ void CMainDlg::StartCropping(int nX, int nY) {
 	float fX = (float)nX, fY = (float)nY;
 	ScreenToImage(fX, fY);
 	m_cropStart = CPoint((int)fX, (int) fY);
+	m_cropMouse = CPoint(nX, nY);
 	m_cropEnd = CPoint(INT_MIN, INT_MIN);
 	m_bCropping = true;
 }
@@ -1779,9 +1780,6 @@ void CMainDlg::ShowCroppingRect(int nX, int nY, HDC hPaintDC) {
 	ScreenToImage(fX, fY);
 
 	CPoint newCropEnd = CPoint((int)fX, (int) fY);
-	if (newCropEnd.x == m_cropStart.x && newCropEnd.y == m_cropStart.y) {
-		return;
-	}
 	if (m_bCropping) {
 		m_bDoCropping = true;
 	}
@@ -1822,9 +1820,10 @@ void CMainDlg::PaintCropRect(HDC hPaintDC) {
 }
 
 void CMainDlg::EndCropping() {
-	if (m_pCurrentImage == NULL || m_cropStart.x == m_cropEnd.x || m_cropStart.y == m_cropEnd.y || m_cropEnd == CPoint(INT_MIN, INT_MIN)) {
+	if (m_pCurrentImage == NULL || m_cropEnd == CPoint(INT_MIN, INT_MIN) || m_cropMouse == CPoint(m_nMouseX, m_nMouseY)) {
 		m_bCropping = false;
 		m_bDoCropping = false;
+		PaintCropRect(NULL);
 		this->InvalidateRect(m_pNavPanel->PanelRect(), FALSE);
 		return;
 	}
