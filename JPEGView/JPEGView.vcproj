@@ -342,6 +342,10 @@
 				RelativePath=".\XMMImage.cpp"
 				>
 			</File>
+			<File
+				RelativePath=".\ZoomNavigator.cpp"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -481,6 +485,10 @@
 			</File>
 			<File
 				RelativePath=".\XMMImage.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ZoomNavigator.h"
 				>
 			</File>
 		</Filter>

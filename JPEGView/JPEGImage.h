@@ -38,13 +38,15 @@ public:
 	// no EXIF data is available.
 	// The nJPEGHash hash value gives a hash over the compressed JPEG pixels that uniquely identifies the
 	// JPEG image. It can be zero in which case a pixel based hash value is internally created.
-	// The image format is a hint about the original image format this image was created from
+	// The image format is a hint about the original image format this image was created from.
+	// The pLDC object is used internally for thumbnail image creation to avoid duplication. From external,
+	// its value must be NULL.
 	CJPEGImage(int nWidth, int nHeight, void* pIJLPixels, void* pEXIFData, int nChannels, 
-		__int64 nJPEGHash, EImageFormat eImageFormat);
+		__int64 nJPEGHash, EImageFormat eImageFormat, CLocalDensityCorr* pLDC = NULL);
 	~CJPEGImage(void);
 
 	// Converts the target offset from 'center of image' based format to pixel coordinate format 
-	CPoint ConvertOffset(CSize fullTargetSize, CSize clippingSize, CPoint targetOffset) const;
+	static CPoint ConvertOffset(CSize fullTargetSize, CSize clippingSize, CPoint targetOffset);
 
 	// Gets resampled and processed DIB image (up or downsampled). 
 	// fullTargetSize: Full target size of image (without any clipping to actual screen size)
@@ -60,6 +62,9 @@ public:
 	// doing any processing then.
 	void* GetDIB(CSize fullTargetSize, CSize clippingSize, CPoint targetOffset,
 		const CImageProcessingParams & imageProcParams, EProcessingFlags eProcFlags);
+
+	// Gets a DIB for a thumbnail of the given size. The thumbnail should not be smaller than 400 x 300 pixels
+	void* GetThumbnailDIB(CSize size, const CImageProcessingParams & imageProcParams, EProcessingFlags eProcFlags);
 
 	// Gets the hash value of the pixels, for JPEGs it on the compressed pixels
 	__int64 GetPixelHash() const { return m_nPixelHash; }
@@ -210,6 +215,9 @@ private:
 	__int64 m_nPixelHash;
 	EImageFormat m_eImageFormat;
 
+	// cached thumbnail image, created on first request
+	CJPEGImage* m_pThumbnail;
+
 	// Processed data of size m_ClippingSize, with LUT/LDC applied and without
 	// The version without LUT/LDC is used to efficiently reapply a different LUT/LDC
 	void* m_pDIBPixelsLUTProcessed;
@@ -249,8 +257,8 @@ private:
 	// stuff needed to perform LUT and LDC processing
 	uint8* m_pLUTAllChannels; // for global contrast and brightness correction
 	uint8* m_pLUTRGB; // B,G,R three channel LUT
-	CHistogram* m_pHistogram;
 	CLocalDensityCorr* m_pLDC;
+	bool m_bLDCOwned;
 	float m_fColorCorrectionFactors[6];
 	float m_fColorCorrectionFactorsNull[6];
 

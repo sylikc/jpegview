@@ -29,6 +29,7 @@
 #include "EXIFDisplay.h"
 #include "AboutDlg.h"
 #include "ProcessingThreadPool.h"
+#include "ZoomNavigator.h"
 
 //////////////////////////////////////////////////////////////////////////////////////////////
 // Constants
@@ -261,6 +262,7 @@ CMainDlg::CMainDlg() {
 	m_dZoomMult = -1.0;
 	m_bDragging = false;
 	m_bDoDragging = false;
+	m_bDraggingWithZoomNavigator = false;
 	m_bCropping = false;
 	m_bDoCropping = false;
 	m_nOffsetX = 0;
@@ -273,6 +275,7 @@ CMainDlg::CMainDlg() {
 	m_startMouse.x = m_startMouse.y = -1;
 	m_nCursorCnt = 0;
 	m_virtualImageSize = CSize(-1, -1);
+	m_capturedPosZoomNavSection = CPoint(0, 0);
 	m_bInZooming = false;
 	m_bTemporaryLowQ = false;
 	m_bShowZoomFactor = false;
@@ -280,6 +283,7 @@ CMainDlg::CMainDlg() {
 	m_bSpanVirtualDesktop = false;
 	m_bShowIPTools = false;
 	m_bMouseInNavPanel = false;
+	m_bArrowCursorSet = false;
 	m_storedWindowPlacement.length = sizeof(WINDOWPLACEMENT);
 	m_pSliderMgr = NULL;
 	m_pNavPanel = NULL;
@@ -410,7 +414,10 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 	CRect rectNavPanel = m_pNavPanel->PanelRect();
 	bool bBlendNavPanel = false;
 	bool bNavPanelInvisible = (CSettingsProvider::This().BlendFactorNavPanel() == 0.0f && !m_bMouseInNavPanel) ||
-		m_bMovieMode || m_bDoDragging || m_bDoCropping || m_bShowIPTools || m_nCursorCnt < 0;
+		m_bMovieMode || m_bDoCropping || m_bShowIPTools || m_nCursorCnt < 0;
+	bool bShowZoomNavigator = false;
+	CRectF visRectZoomNavigator(0.0f, 0.0f, 1.0f, 1.0f);
+	CRect rectZoomNavigator(0, 0, 0, 0);
 
 	// Exclude the help display from clipping area to reduce flickering
 	CHelpDisplay* pHelpDisplay = NULL;
@@ -501,6 +508,17 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 				CreateProcessingFlags(m_bHQResampling && !m_bTemporaryLowQ, 
 				m_bAutoContrast, m_bAutoContrastSection, m_bLDC, false, m_bLandscapeMode));
 
+		// Zoom navigator - check if visible and create exclusion rectangle
+		bShowZoomNavigator = IsZoomNavigatorCurrentlyShown();
+		if (bShowZoomNavigator) {
+			rectZoomNavigator = CZoomNavigator::GetNavigatorRect(m_pCurrentImage, m_clientRect, imageProcessingArea.Height());
+			visRectZoomNavigator = CZoomNavigator::GetVisibleRect(newSize, clippedSize, offsetsInImage);
+			CRect rectExpanded(rectZoomNavigator);
+			rectExpanded.InflateRect(1, 1);
+			dc.ExcludeClipRect(&rectExpanded);
+			excludedClippingRects.push_back(rectExpanded);
+		}
+
 		// Paint the DIB
 		if (pDIBData != NULL) {
 			BITMAPINFO bmInfo;
@@ -552,6 +570,7 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 				CRect rr(0, yDest+clippedSize.cy, m_clientRect.Width(), m_clientRect.Height());
 				dc.FillRect(&rr, (HBRUSH)::GetStockObject(BLACK_BRUSH));
 			}
+
 		}
 	}
 
@@ -564,6 +583,12 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 			rgn.CreateRectRgn(clippingRect.left, clippingRect.top, clippingRect.right, clippingRect.bottom);
 			dc.SelectClipRgn(rgn, RGN_OR);
 		}
+	}
+
+	// paint zoom navigator
+	if (bShowZoomNavigator && m_pCurrentImage != NULL) {
+		CZoomNavigator::PaintZoomNavigator(m_pCurrentImage, visRectZoomNavigator, rectZoomNavigator, *m_pImageProcParams, 
+			CreateProcessingFlags(true, m_bAutoContrast, false, m_bLDC, false, m_bLandscapeMode), dc);
 	}
 
 	dc.SelectStockFont(SYSTEM_FONT);
@@ -691,6 +716,8 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 	delete pHelpDisplay;
 	delete pEXIFDisplay;
 
+	SetCursorForMoveSection();
+
 	return 0;
 }
 
@@ -704,6 +731,7 @@ LRESULT CMainDlg::OnAnotherInstanceStarted(UINT /*uMsg*/, WPARAM /*wParam*/, LPA
 
 LRESULT CMainDlg::OnLButtonDown(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, BOOL& /*bHandled*/) {
 	this->SetCapture();
+	SetCursorForMoveSection();
 	bool bEatenByIPA = m_bShowIPTools && m_pSliderMgr->OnMouseLButton(MouseEvent_BtnDown, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
 	bool bEatenByNavPanel = m_bShowNavPanel && !m_bShowIPTools && m_pNavPanel->OnMouseLButton(MouseEvent_BtnDown, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
 	// If the image processing area does not eat up the event, start dragging
@@ -713,7 +741,7 @@ LRESULT CMainDlg::OnLButtonDown(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam,
 		if (bCtrl || !bDraggingRequired) {
 			StartCropping(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
 		} else {
-			StartDragging(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+			StartDragging(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam), m_bArrowCursorSet);
 		}
 	}
 	bool bMouseInNavPanel = m_pNavPanel->PanelRect().PtInRect(CPoint(m_nMouseX, m_nMouseY));
@@ -727,7 +755,7 @@ LRESULT CMainDlg::OnLButtonDown(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam,
 
 LRESULT CMainDlg::OnMButtonDown(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, BOOL& /*bHandled*/) {
 	this->SetCapture();
-	StartDragging(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+	StartDragging(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam), false);
 	return 0;
 }
 
@@ -809,6 +837,7 @@ LRESULT CMainDlg::OnMouseMove(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, B
 				}
 			}
 		}
+
 		if (m_bShowNavPanel && !m_bShowIPTools) {
 			bool bMouseInNavPanel = m_pNavPanel->PanelRect().PtInRect(CPoint(m_nMouseX, m_nMouseY));
 			if (!bMouseInNavPanel && m_bMouseInNavPanel) {
@@ -822,6 +851,16 @@ LRESULT CMainDlg::OnMouseMove(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, B
 		} else {
 			m_pNavPanel->GetTooltipMgr().EnableTooltips(false);
 			m_bMouseInNavPanel = false;
+		}
+
+		CRect zoomHotArea = CZoomNavigator::GetNavigatorBound(m_clientRect, m_pSliderMgr->SliderAreaHeight());
+		BOOL bMouseInHotArea = zoomHotArea.PtInRect(CPoint(m_nMouseX, m_nMouseY));
+		if (bMouseInHotArea && CSettingsProvider::This().ShowZoomNavigator()) {
+			MouseOn();
+			SetCursorForMoveSection();
+		}
+		if (bMouseInHotArea != zoomHotArea.PtInRect(CPoint(nOldMouseX, nOldMouseY))) {
+			InvalidateZoomNavigatorRect();
 		}
 	}
 	return 0;
@@ -1111,6 +1150,7 @@ LRESULT CMainDlg::OnTimer(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOOL&
 	} else if (wParam == ZOOM_TEXT_TIMER_EVENT_ID) {
 		m_bShowZoomFactor = false;
 		::KillTimer(this->m_hWnd, ZOOM_TEXT_TIMER_EVENT_ID);
+		InvalidateZoomNavigatorRect();
 		this->InvalidateRect(CRect(m_clientRect.right - Scale(ZOOM_TEXT_RECT_WIDTH + ZOOM_TEXT_RECT_OFFSET), 
 			m_clientRect.bottom - Scale(ZOOM_TEXT_RECT_HEIGHT + ZOOM_TEXT_RECT_OFFSET), 
 			m_clientRect.right - Scale(ZOOM_TEXT_RECT_OFFSET), m_clientRect.bottom - Scale(ZOOM_TEXT_RECT_OFFSET)), FALSE);
@@ -1577,7 +1617,7 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 			this->Invalidate(FALSE);
 			break;
 		case IDM_ABOUT:
-			if (m_pCurrentImage != NULL) {
+			{
 				MouseOn();
 				HMODULE hMod = ::LoadLibrary(_T("RICHED32.DLL"));
 				CAboutDlg dlgAbout;
@@ -1734,9 +1774,13 @@ void CMainDlg::HandleUserCommands(uint32 virtualKeyCode) {
 	}
 }
 
-void CMainDlg::StartDragging(int nX, int nY) {
+void CMainDlg::StartDragging(int nX, int nY, bool bDragWithZoomNavigator) {
 	m_startMouse.x = m_startMouse.y = -1;
 	m_bDragging = true;
+	m_bDraggingWithZoomNavigator = bDragWithZoomNavigator;
+	if (m_bDraggingWithZoomNavigator) {
+		m_capturedPosZoomNavSection = CZoomNavigator::LastImageSectionRect().TopLeft();
+	}
 	m_nCapturedX = nX;
 	m_nCapturedY = nY;
 }
@@ -1748,10 +1792,18 @@ void CMainDlg::DoDragging(int nX, int nY) {
 		if (!m_bDoDragging && (nXDelta != 0 || nYDelta != 0)) {
 			m_bDoDragging = true;
 		}
-		if (PerformPan(nXDelta, nYDelta, false)) {
-			m_nCapturedX = m_nMouseX;
-			m_nCapturedY = m_nMouseY;
-			return;
+		if (m_bDraggingWithZoomNavigator) {
+			int nNewX = m_capturedPosZoomNavSection.x + nXDelta;
+			int nNewY = m_capturedPosZoomNavSection.y + nYDelta;
+			CRect fullRect = CZoomNavigator::GetNavigatorRect(m_pCurrentImage, m_clientRect, m_pSliderMgr->PanelRect().Height());
+			CPoint newOffsets = CJPEGImage::ConvertOffset(fullRect.Size(), CZoomNavigator::LastImageSectionRect().Size(), CPoint(nNewX - fullRect.left, nNewY - fullRect.top));
+			PerformPan((int)(newOffsets.x * (float)m_virtualImageSize.cx/fullRect.Width()), 
+				(int)(newOffsets.y * (float)m_virtualImageSize.cy/fullRect.Height()), true);
+		} else {
+			if (PerformPan(nXDelta, nYDelta, false)) {
+				m_nCapturedX = m_nMouseX;
+				m_nCapturedY = m_nMouseY;
+			}
 		}
 	}
 }
@@ -1759,10 +1811,12 @@ void CMainDlg::DoDragging(int nX, int nY) {
 void CMainDlg::EndDragging() {
 	m_bDragging = false;
 	m_bDoDragging = false;
+	m_bDraggingWithZoomNavigator = false;
 	if (m_pCurrentImage != NULL) {
 		m_pCurrentImage->VerifyDIBPixelsCreated();
 	}
 	this->InvalidateRect(m_pNavPanel->PanelRect(), FALSE);
+	InvalidateZoomNavigatorRect();
 }
 
 void CMainDlg::StartCropping(int nX, int nY) {
@@ -1825,6 +1879,7 @@ void CMainDlg::EndCropping() {
 		m_bDoCropping = false;
 		PaintCropRect(NULL);
 		this->InvalidateRect(m_pNavPanel->PanelRect(), FALSE);
+		InvalidateZoomNavigatorRect();
 		return;
 	}
 
@@ -1855,6 +1910,7 @@ void CMainDlg::EndCropping() {
 	m_bCropping = false;
 	m_bDoCropping = false;
 	this->InvalidateRect(m_pNavPanel->PanelRect(), FALSE);
+	InvalidateZoomNavigatorRect();
 }
 
 void CMainDlg::GotoImage(EImagePosition ePos) {
@@ -2689,4 +2745,40 @@ HBITMAP CMainDlg::PrepareRectForMemDCPainting(CDC & memDC, CDC & paintDC, const 
 	memDC.SelectBitmap(memDCBitmap);
 	memDC.FillRect(CRect(0, 0, rect.Width(), rect.Height()), (HBRUSH)::GetStockObject(BLACK_BRUSH));
 	return memDCBitmap.m_hBitmap;
+}
+
+void CMainDlg::InvalidateZoomNavigatorRect() {
+	bool bShowZoomNavigator = m_pCurrentImage != NULL && CSettingsProvider::This().ShowZoomNavigator();
+	if (bShowZoomNavigator) {
+		CRect rectZoomNavigator = CZoomNavigator::GetNavigatorRect(m_pCurrentImage, m_clientRect, m_pSliderMgr->PanelRect().Height());
+		rectZoomNavigator.InflateRect(1, 1);
+		this->InvalidateRect(rectZoomNavigator, FALSE);
+	}
+}
+
+bool CMainDlg::IsZoomNavigatorCurrentlyShown() {
+	bool bShowZoomNavigator = m_pCurrentImage != NULL && CSettingsProvider::This().ShowZoomNavigator();
+	if (bShowZoomNavigator) {
+		if (m_bDraggingWithZoomNavigator) {
+			return true;
+		}
+		CSize clippedSize(min(m_clientRect.Width(), m_virtualImageSize.cx), min(m_clientRect.Height(), m_virtualImageSize.cy));
+		bShowZoomNavigator = (m_virtualImageSize.cx > clippedSize.cx || m_virtualImageSize.cy > clippedSize.cy);
+		if (bShowZoomNavigator) {
+			CRect navBoundRect = CZoomNavigator::GetNavigatorBound(m_clientRect, m_pSliderMgr->PanelRect().Height());
+			bShowZoomNavigator = m_bDoDragging || m_bInZooming || m_bShowZoomFactor || 
+				(!m_bCropping && navBoundRect.PtInRect(CPoint(m_nMouseX, m_nMouseY)));
+		}
+	}
+	return bShowZoomNavigator;
+}
+
+void CMainDlg::SetCursorForMoveSection() {
+	if (IsZoomNavigatorCurrentlyShown() && CZoomNavigator::LastImageSectionRect().PtInRect(CPoint(m_nMouseX, m_nMouseY))) {
+		::SetCursor(::LoadCursor(NULL, MAKEINTRESOURCE(IDC_SIZEALL)));
+		m_bArrowCursorSet = true;
+	} else if (m_bArrowCursorSet) {
+		::SetCursor(::LoadCursor(NULL, MAKEINTRESOURCE(IDC_ARROW)));
+		m_bArrowCursorSet = false;
+	}
 }

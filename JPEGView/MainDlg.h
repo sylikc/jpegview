@@ -140,6 +140,7 @@ private:
 	bool m_bPasteFromClipboardFailed;
 	bool m_bDragging;
 	bool m_bDoDragging;
+	bool m_bDraggingWithZoomNavigator;
 	bool m_bCropping;
 	bool m_bDoCropping;
 	CPoint m_cropMouse;
@@ -159,6 +160,7 @@ private:
 	POINT m_startMouse;
 	int m_nCursorCnt;
 	CSize m_virtualImageSize;
+	CPoint m_capturedPosZoomNavSection;
 	bool m_bInZooming;
 	bool m_bTemporaryLowQ;
 	bool m_bShowZoomFactor;
@@ -167,6 +169,7 @@ private:
 	bool m_bShowIPTools;
 	bool m_bShowNavPanel;
 	bool m_bMouseInNavPanel;
+	bool m_bArrowCursorSet;
 	WINDOWPLACEMENT m_storedWindowPlacement;
 	CRect m_monitorRect;
 	CRect m_clientRect;
@@ -186,7 +189,7 @@ private:
 	bool SaveImage();
 	void BatchCopy();
 	void HandleUserCommands(uint32 virtualKeyCode);
-	void StartDragging(int nX, int nY);
+	void StartDragging(int nX, int nY, bool bDragWithZoomNavigator);
 	void DoDragging(int nX, int nY);
 	void EndDragging();
 	void StartCropping(int nX, int nY);
@@ -231,6 +234,9 @@ private:
 	void FillEXIFDataDisplay(CEXIFDisplay* pEXIFDisplay);
 	void GenerateHelpDisplay(CHelpDisplay & helpDisplay);
 	HBITMAP PrepareRectForMemDCPainting(CDC & memDC, CDC & paintDC, const CRect& rect);
+	void InvalidateZoomNavigatorRect();
+	bool IsZoomNavigatorCurrentlyShown();
+	void SetCursorForMoveSection();
 
 	static void OnSaveToDB(CButtonCtrl & sender);
 	static void OnRemoveFromDB(CButtonCtrl & sender);
