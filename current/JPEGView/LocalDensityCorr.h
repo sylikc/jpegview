@@ -13,10 +13,9 @@ public:
 	// if only constructed partially does the rest for creating a fully functional LDC object
 	void VerifyFullyConstructed();
 
-	// Gets the histogram - caller gets ownership of the histogram.
-	// Can only be called once.
+	// Gets the histogram.
 	// The histogram is a side product of the LDC and can be retrieved if needed
-	CHistogram* GetHistogram();
+	const CHistogram* GetHistogram() { return m_pHistogramm; }
 
 	// Gets the LDC map. The entries in the map are one byte, 127 means no correction, 
 	// 0 means darken max, 255 means brighten max
@@ -42,6 +41,12 @@ public:
 	float IsSunset() const { return m_fIsSunset; }
 
 	bool IsMaskAvailable() const { return m_pLDCMap != NULL; }
+
+	// Gets the size of the point sampled image
+	CSize GetPSISize() const { return CSize(m_nPSIWidth, m_nPSIHeight); }
+
+	// Gets the point sampled image as 32 bpp DIB block
+	void* GetPSImageAsDIB();
 
 private:
 	CHistogram* m_pHistogramm;

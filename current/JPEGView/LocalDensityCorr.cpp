@@ -178,16 +178,24 @@ CLocalDensityCorr::~CLocalDensityCorr(void) {
 	m_pLDCMapMultiplied = NULL;
 }
 
+void* CLocalDensityCorr::GetPSImageAsDIB() {
+	uint32* pDIBStart = new uint32[m_nPSIWidth*m_nPSIHeight];
+	uint32* pDIB = pDIBStart;
+	for (int j = 0; j < m_nPSIHeight; j++) {
+		uint16* pSrc = m_pPointSampledImage + m_nPSIWidth*j*3;
+		for (int i = 0; i < m_nPSIWidth; i++) {
+			*pDIB = (pSrc[m_nPSIWidth*2] << 16) + (pSrc[m_nPSIWidth] << 8) + pSrc[0];
+			pDIB++;
+			pSrc++;
+		}
+	}
+	return pDIBStart;
+}
+
 void CLocalDensityCorr::VerifyFullyConstructed() {
 	if (m_pLDCMap == NULL) {
 		CreateLDCMap();
 	}
-}
-
-CHistogram* CLocalDensityCorr::GetHistogram() {
-	CHistogram* histogram = m_pHistogramm;
-	m_pHistogramm = NULL;
-	return histogram;
 }
 
 const uint8* CLocalDensityCorr::GetLDCMap() {
@@ -299,9 +307,6 @@ void CLocalDensityCorr::CreateLDCMap() {
 		m_fMiddleGrey = 0.5f;
 	}
 	delete[] pLDCRowSum;
-
-	delete[] m_pPointSampledImage;
-	m_pPointSampledImage = NULL;
 
 	m_pLDCMap = pLDCImageStart;
 	m_pLDCMapMultiplied = NULL;

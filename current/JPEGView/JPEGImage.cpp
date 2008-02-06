@@ -16,7 +16,7 @@
 ///////////////////////////////////////////////////////////////////////////////////
 
 CJPEGImage::CJPEGImage(int nWidth, int nHeight, void* pIJLPixels, void* pEXIFData, int nChannels, 
-					   __int64 nJPEGHash, EImageFormat eImageFormat) {
+					   __int64 nJPEGHash, EImageFormat eImageFormat, CLocalDensityCorr* pLDC) {
 	if (nChannels == 3 || nChannels == 4) {
 		m_pIJLPixels = pIJLPixels;
 		m_nIJLChannels = nChannels;
@@ -50,6 +50,7 @@ CJPEGImage::CJPEGImage(int nWidth, int nHeight, void* pIJLPixels, void* pEXIFDat
 	m_pDIBPixels = NULL;
 	m_pDIBPixelsLUTProcessed = NULL;
 	m_pLastDIB = NULL;
+	m_pThumbnail = NULL;
 	
 	m_pLUTAllChannels = NULL;
 	m_pLUTRGB = NULL;
@@ -73,13 +74,13 @@ CJPEGImage::CJPEGImage(int nWidth, int nHeight, void* pIJLPixels, void* pEXIFDat
 	m_TargetOffset = CPoint(0, 0);
 
 	// Create the LDC object on the image
-	m_pLDC = new CLocalDensityCorr(*this, true);
-	m_pHistogram = m_pLDC->GetHistogram();
+	m_pLDC = (pLDC == NULL) ? (new CLocalDensityCorr(*this, true)) : pLDC;
+	m_bLDCOwned = pLDC == NULL;
 	if (nJPEGHash == 0) {
 		// Use the decompressed pixel hash in this case
 		m_nPixelHash = m_pLDC->GetPixelHash();
 	}
-	m_fLightenShadowFactor = (1.0f - m_pHistogram->IsNightShot())*(1.0f - m_pLDC->IsSunset());
+	m_fLightenShadowFactor = (1.0f - m_pLDC->GetHistogram()->IsNightShot())*(1.0f - m_pLDC->IsSunset());
 
 	// Initialize to INI value, may be overriden later by parameter DB
 	memcpy(m_fColorCorrectionFactors, CSettingsProvider::This().ColorCorrectionAmounts(), sizeof(m_fColorCorrectionFactors));
@@ -97,9 +98,7 @@ CJPEGImage::~CJPEGImage(void) {
 	m_pLUTAllChannels = NULL;
 	delete[] m_pLUTRGB;
 	m_pLUTRGB = NULL;
-	delete m_pHistogram;
-	m_pHistogram = NULL;
-	delete m_pLDC;
+	if (m_bLDCOwned) delete m_pLDC;
 	m_pLDC = NULL;
 	m_pLastDIB = NULL;
 	delete[] m_pEXIFData;
@@ -108,6 +107,8 @@ CJPEGImage::~CJPEGImage(void) {
 	m_pEXIFReader = NULL;
 	delete[] m_pDimRects;
 	m_pDimRects = NULL;
+	delete m_pThumbnail;
+	m_pThumbnail = NULL;
 }
 
 void* CJPEGImage::GetDIB(CSize fullTargetSize, CSize clippingSize, CPoint targetOffset,
@@ -188,6 +189,36 @@ void* CJPEGImage::GetDIB(CSize fullTargetSize, CSize clippingSize, CPoint target
 	m_pLastDIB = pDIB;
 
 	return pDIB;
+}
+
+void* CJPEGImage::GetThumbnailDIB(CSize size, const CImageProcessingParams & imageProcParams, EProcessingFlags eProcFlags) {
+	if (m_pThumbnail == NULL) {
+		if (m_pLDC == NULL) {
+			m_pLDC = new CLocalDensityCorr(*this, true);
+		}
+		void* pPixels = NULL;
+		int nWidth, nHeight;
+		if (m_nOrigWidth*m_nOrigHeight < 120000) {
+			// take a copy of the original pixels
+			nWidth = m_nOrigWidth;
+			nHeight = m_nOrigHeight;
+			if (m_nIJLChannels == 3) {
+				pPixels = CBasicProcessing::Convert3To4Channels(m_nOrigWidth, m_nOrigHeight, m_pIJLPixels);
+			} else {
+				int nSizeBytes = m_nOrigWidth*m_nOrigHeight*4;
+				pPixels = new uint8[nSizeBytes];
+				memcpy(pPixels, m_pIJLPixels, nSizeBytes);
+			}
+		} else {
+			// take the small image from the LDC
+			CSize psiSize = m_pLDC->GetPSISize();
+			nWidth = psiSize.cx;
+			nHeight = psiSize.cy;
+			pPixels = m_pLDC->GetPSImageAsDIB();
+		}
+		m_pThumbnail = new CJPEGImage(nWidth, nHeight, pPixels, NULL, 4, -1, IF_CLIPBOARD, m_pLDC);
+	}
+	return m_pThumbnail->GetDIB(size, size, CPoint(0, 0), imageProcParams, eProcFlags);
 }
 
 void CJPEGImage::ResampleWithPan(void* & pDIBPixels, void* & pDIBPixelsLUTProcessed, CSize fullTargetSize, 
@@ -351,7 +382,7 @@ void* CJPEGImage::Resample(CSize fullTargetSize, CSize clippingSize, CPoint targ
 	}
 }
 
-CPoint CJPEGImage::ConvertOffset(CSize fullTargetSize, CSize clippingSize, CPoint targetOffset) const {
+CPoint CJPEGImage::ConvertOffset(CSize fullTargetSize, CSize clippingSize, CPoint targetOffset) {
 	int nStartX = (fullTargetSize.cx - clippingSize.cx)/2 - targetOffset.x;
 	int nStartY = (fullTargetSize.cy - clippingSize.cy)/2 - targetOffset.y;
 	return CSize(nStartX, nStartY);
@@ -371,7 +402,7 @@ void CJPEGImage::Rotate(int nRotation) {
 	ConvertSrcTo4Channels();
 
 	m_pLastDIB = NULL;
-	delete m_pLDC; // LDC mask must be recalculated!
+	if (m_bLDCOwned) delete m_pLDC; // LDC mask must be recalculated!
 	m_pLDC = NULL;
 	delete[] m_pDIBPixels; 
 	m_pDIBPixels = NULL;
@@ -379,6 +410,8 @@ void CJPEGImage::Rotate(int nRotation) {
 	m_pDIBPixelsLUTProcessed = NULL;
 	void* pNewIJL = CBasicProcessing::Rotate32bpp(m_nOrigWidth, m_nOrigHeight, m_pIJLPixels, nRotation);
 	delete[] m_pIJLPixels;
+	delete m_pThumbnail;
+	m_pThumbnail = NULL;
 	m_pIJLPixels = pNewIJL;
 	m_ClippingSize = CSize(0, 0);
 	if (nRotation != 180) {
@@ -397,16 +430,16 @@ void CJPEGImage::Crop(CRect cropRect) {
 	ConvertSrcTo4Channels();
 
 	m_pLastDIB = NULL;
-	delete m_pLDC; // LDC mask must be recalculated!
+	if (m_bLDCOwned) delete m_pLDC; // LDC mask must be recalculated!
 	m_pLDC = NULL;
-	delete m_pHistogram;
-	m_pHistogram = NULL; // histogram must be recalculated!
 	delete[] m_pDIBPixels; 
 	m_pDIBPixels = NULL;
 	delete[] m_pDIBPixelsLUTProcessed; 
 	m_pDIBPixelsLUTProcessed = NULL;
 	void* pNewIJL = CBasicProcessing::Crop32bpp(m_nOrigWidth, m_nOrigHeight, m_pIJLPixels, cropRect);
 	delete[] m_pIJLPixels;
+	delete m_pThumbnail;
+	m_pThumbnail = NULL;
 	m_pIJLPixels = pNewIJL;
 	m_ClippingSize = CSize(0, 0);
 	m_nOrigWidth = cropRect.Width();
@@ -476,8 +509,8 @@ void CJPEGImage::VerifyDIBPixelsCreated() {
 }
 
 float CJPEGImage::IsNightShot() const {
-	if (m_pHistogram != NULL) {
-		return m_pHistogram->IsNightShot();
+	if (m_pLDC != NULL) {
+		return m_pLDC->GetHistogram()->IsNightShot();
 	} else {
 		return -1;
 	}
@@ -585,7 +618,7 @@ void CJPEGImage::OrigToDIB(float & fX, float & fY) {
 }
 
 __int64 CJPEGImage::GetUncompressedPixelHash() const { 
-	return m_pLDC->GetPixelHash(); 
+	return (m_pLDC == NULL) ? 0 : m_pLDC->GetPixelHash(); 
 }
 
 ///////////////////////////////////////////////////////////////////////////////////
@@ -647,7 +680,7 @@ void* CJPEGImage::ApplyCorrectionLUTandLDC(const CImageProcessingParams & imageP
 	}
 
 	// Calculate LDC if needed
-	if (bLDC && m_pLDC == NULL) {
+	if (m_pLDC == NULL) {
 		m_pLDC = new CLocalDensityCorr(*this, true);
 		bLDCParametersChanged = true;
 	}
@@ -655,15 +688,17 @@ void* CJPEGImage::ApplyCorrectionLUTandLDC(const CImageProcessingParams & imageP
 		// maybe only partially constructed, we need fully constructed object here
 		m_pLDC->VerifyFullyConstructed();
 	}
-	if (bLDCParametersChanged && m_pLDC != NULL && m_pLDC->IsMaskAvailable()) {
+	if (bLDCParametersChanged && m_pLDC->IsMaskAvailable()) {
 		m_pLDC->SetLDCAmount(imageProcParams.LightenShadows, imageProcParams.DarkenHighlights);
 	}
 
-	// Recalculate histogram if needed
+	// Recalculate special histogram if needed
+	const CHistogram* pHistogram = m_pLDC->GetHistogram();
+	bool bSpecialHistogram = false;
 	if (bMustUse3ChannelLUT) {
-		if (m_pHistogram == NULL || (bAutoContrast && m_pHistogram->UsingOrigPixels() != !bAutoContrastSection)) {
-			delete m_pHistogram;
-			m_pHistogram = new CHistogram(*this, !bAutoContrastSection);
+		if (bAutoContrast && bAutoContrastSection && m_bLDCOwned && (!bAutoContrastSectionOld || bCorrectionFactorChanged || bColorCastCorrChanged)) {
+			pHistogram = new CHistogram(*this, false);
+			bSpecialHistogram = true;
 			delete[] m_pLUTRGB;
 			m_pLUTRGB = NULL;
 		}
@@ -678,7 +713,7 @@ void* CJPEGImage::ApplyCorrectionLUTandLDC(const CImageProcessingParams & imageP
 		float fColorCorrFactor = bAutoContrast ? (float) imageProcParams.ColorCorrectionFactor : 0.0f;
 		float fBrightnessCorrFactor = bAutoContrast ? 1.0f : 0.0f;
 		float fContrastCorrFactor = bAutoContrast ? (float) imageProcParams.ContrastCorrectionFactor : 0.0f;
-		m_pLUTRGB = CHistogramCorr::CalculateCorrectionLUT(*m_pHistogram, fColorCorrFactor, fBrightnessCorrFactor,
+		m_pLUTRGB = CHistogramCorr::CalculateCorrectionLUT(*pHistogram, fColorCorrFactor, fBrightnessCorrFactor,
 			fColorCastCorrs, bAutoContrast ? m_fColorCorrectionFactors : m_fColorCorrectionFactorsNull, fContrastCorrFactor);
 	} else if (!bMustUse3ChannelLUT) {
 		delete[] m_pLUTRGB;
@@ -687,11 +722,14 @@ void* CJPEGImage::ApplyCorrectionLUTandLDC(const CImageProcessingParams & imageP
 	
 	delete[] pCachedTargetDIB;
 	pCachedTargetDIB = NULL;
+	if (bSpecialHistogram) {
+		delete pHistogram;
+	}
 
 	if (!bNoLUTApplied || bLDC) {
 		// LUT or/and LDC --> apply correction
 		uint8* pLUT = CHistogramCorr::CombineLUTs(m_pLUTAllChannels, m_pLUTRGB);
-		if (bLDC && m_pLDC != NULL) {
+		if (bLDC) {
 			pCachedTargetDIB = CBasicProcessing::ApplyLDC32bpp(fullTargetSize, targetOffset, dibSize, m_pLDC->GetLDCMapSize(),
 				pSourceDIB, pLUT, m_pLDC->GetLDCMap(), m_pLDC->GetBlackPt(), m_pLDC->GetWhitePt(), (float)imageProcParams.LightenShadowSteepness);
 		} else {
