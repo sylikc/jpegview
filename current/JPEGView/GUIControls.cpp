@@ -49,7 +49,29 @@ static CSize GetScreenSize(int nX, int nY) {
 // Tooltip support
 /////////////////////////////////////////////////////////////////////////////////////////////
 
+CTooltip::CTooltip(HWND hWnd, const CUICtrl* pBoundCtrl, LPCTSTR sTooltip) : 
+	m_hWnd(hWnd), m_pBoundCtrl(pBoundCtrl), m_sTooltip(sTooltip), m_TooltipRect(0, 0, 0, 0) {
+	m_ttHandler = NULL;
+}
+
+CTooltip::CTooltip(HWND hWnd, const CUICtrl* pBoundCtrl, TooltipHandler ttHandler) :
+	m_hWnd(hWnd), m_pBoundCtrl(pBoundCtrl), m_TooltipRect(0, 0, 0, 0) {
+	m_ttHandler = ttHandler;
+}
+
+const CString& CTooltip::GetTooltip() const {
+	if (m_ttHandler != NULL) {
+		LPCTSTR sNewTooltip = m_ttHandler();
+		if (m_sTooltip != sNewTooltip) {
+			const_cast<CTooltip*>(this)->m_sTooltip = sNewTooltip;
+			const_cast<CTooltip*>(this)->m_TooltipRect = CRect(0, 0, 0, 0);
+		}
+	}
+	return m_sTooltip;
+}
+
 void CTooltip::Paint(CDC & dc) const {
+	const CString& sTooltip = GetTooltip();
 	CRect tooltipRect = GetTooltipRect();
 	CBrush brush;
 	brush.CreateSolidBrush(RGB(255, 255, 200));
@@ -60,11 +82,12 @@ void CTooltip::Paint(CDC & dc) const {
 	dc.SetBkColor(RGB(255, 255, 200));
 	dc.SelectStockFont(DEFAULT_GUI_FONT);
 	tooltipRect.OffsetRect(0, 2);
-	dc.DrawText(m_sTooltip, m_sTooltip.GetLength(), tooltipRect, DT_CENTER | DT_VCENTER);
+	dc.DrawText(sTooltip, sTooltip.GetLength(), tooltipRect, DT_CENTER | DT_VCENTER);
 	dc.SelectStockBrush(BLACK_BRUSH);
 }
 
 CRect CTooltip::GetTooltipRect() const {
+	GetTooltip();
 	if (m_TooltipRect.IsRectEmpty()) {
 		const_cast<CTooltip*>(this)->m_TooltipRect = CalculateTooltipRect();
 	}
@@ -75,7 +98,8 @@ CRect CTooltip::CalculateTooltipRect() const {
 	HDC dc = ::GetDC(m_hWnd);
 	::SelectObject(dc, (HGDIOBJ)::GetStockObject(DEFAULT_GUI_FONT));
 	CRect rectText(0, 0, 400, 0);
-	::DrawText(dc, m_sTooltip, m_sTooltip.GetLength(), &rectText, DT_CENTER | DT_VCENTER | DT_CALCRECT);
+	const CString& sTooltip = GetTooltip();
+	::DrawText(dc, sTooltip, sTooltip.GetLength(), &rectText, DT_CENTER | DT_VCENTER | DT_CALCRECT);
 	::ReleaseDC(m_hWnd, dc);
 
 	CRect boundRect = m_pBoundCtrl->GetPosition();
@@ -128,7 +152,7 @@ void CTooltipMgr::OnPaint(CDC & dc) {
 	}
 }
 
-void CTooltipMgr::AddTooltip(CUICtrl* pBoundCtrl, LPCTSTR sTooltip) {
+void CTooltipMgr::AddTooltip(CUICtrl* pBoundCtrl, CTooltip* tooltip) {
 	std::list<CTooltip*>::const_iterator iter;
 	for (iter = m_TooltipList.begin( ); iter != m_TooltipList.end( ); iter++ ) {
 		if ((*iter)->GetBoundCtrl() == pBoundCtrl) {
@@ -137,9 +161,21 @@ void CTooltipMgr::AddTooltip(CUICtrl* pBoundCtrl, LPCTSTR sTooltip) {
 			break;
 		}
 	}
-	if (sTooltip != NULL && sTooltip[0] != 0) {
-		m_TooltipList.push_back(new CTooltip(m_hWnd, pBoundCtrl, sTooltip));
+	if (tooltip != NULL) {
+		m_TooltipList.push_back(tooltip);
 	}
+}
+
+void CTooltipMgr::AddTooltip(CUICtrl* pBoundCtrl, LPCTSTR sTooltip) {
+	if (sTooltip != NULL && sTooltip[0] != 0) {
+		AddTooltip(pBoundCtrl, new CTooltip(m_hWnd, pBoundCtrl, sTooltip));
+	} else {
+		AddTooltip(pBoundCtrl, (CTooltip*)NULL);
+	}
+}
+
+void CTooltipMgr::AddTooltipHandler(CUICtrl* pBoundCtrl, TooltipHandler ttHandler) {
+	AddTooltip(pBoundCtrl, new CTooltip(m_hWnd, pBoundCtrl, ttHandler));
 }
 
 void CTooltipMgr::RemoveActiveTooltip() {
@@ -203,6 +239,13 @@ CButtonCtrl* CPanelMgr::AddUserPaintButton(PaintHandler paintHandler, ButtonPres
 	if (sTooltip != NULL) {
 		pButtonCtrl->SetTooltip(sTooltip);
 	}
+	m_ctrlList.push_back(pButtonCtrl);
+	return pButtonCtrl;
+}
+
+CButtonCtrl* CPanelMgr::AddUserPaintButton(PaintHandler paintHandler, ButtonPressedHandler buttonPressedHandler, TooltipHandler ttHandler) {
+	CButtonCtrl* pButtonCtrl = new CButtonCtrl(this, paintHandler, buttonPressedHandler);
+	pButtonCtrl->SetTooltipHandler(ttHandler);
 	m_ctrlList.push_back(pButtonCtrl);
 	return pButtonCtrl;
 }
@@ -570,6 +613,36 @@ void CNavigationPanel::PaintEndBtn(const CRect& rect, CDC& dc) {
 	dc.LineTo(nX2, r.bottom);
 }
 
+void CNavigationPanel::PaintZoomToFitBtn(const CRect& rect, CDC& dc) {
+	CRect r = InflateRect(rect, 0.25f);
+
+	int nW = r.Width()/3;
+	int nD = r.Width()/2 - 1;
+
+	for (int i = 0; i < 4; i++) {
+		int nX = (i < 2) ? r.left : r.right;
+		int nXP = (i < 2) ? nW : -nW;
+		int nXD = (i < 2) ? nD : -nD;
+		int nXA = (i < 2) ? 1 : -1;
+		int nY = (i & 1) ? r.bottom : r.top;
+		int nYP = (i & 1) ? -nW : nW;
+		int nYD = (i & 1) ? -nD : nD;
+		dc.MoveTo(nX, nY+nYP);
+		dc.LineTo(nX, nY);
+		dc.LineTo(nX+nXP+nXA, nY);
+		dc.MoveTo(nX, nY);
+		dc.LineTo(nX+nXD, nY+nYD);
+	}
+}
+
+void CNavigationPanel::PaintZoomTo1to1Btn(const CRect& rect, CDC& dc) {
+	CFont font;
+	font.CreatePointFont(80, _T("MS Sans Serif"), dc, true, false);
+	HFONT oldFont = dc.SelectFont(font);
+	dc.DrawText(_T("1:1"), 3, (LPRECT)&rect, DT_CENTER | DT_VCENTER | DT_SINGLELINE | DT_NOCLIP);
+	dc.SelectFont(oldFont);
+}
+
 void CNavigationPanel::PaintRotateCWBtn(const CRect& rect, CDC& dc) {
 	CRect r = InflateRect(rect, 0.3f);
 
@@ -664,6 +737,10 @@ void CUICtrl::SetShow(bool bShow) {
 
 void CUICtrl::SetTooltip(LPCTSTR sTooltipText) {
 	m_pMgr->GetTooltipMgr().AddTooltip(this, sTooltipText);
+}
+
+void CUICtrl::SetTooltipHandler(TooltipHandler ttHandler) {
+	m_pMgr->GetTooltipMgr().AddTooltipHandler(this, ttHandler);
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////

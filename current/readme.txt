@@ -34,13 +34,14 @@ Bugs removed:
 - Cropping small areas (1 x n, n x 1) now possible
 - Not using IJL for 1 channel JPEGs anymore - seems to crash sometimes. GDI+ is used for these images instead.
 New features:
+- Support for multiple CPU cores. To set the number of cores to use to a specific value, set the CPUCoresUsed key
+  to a specific value in the INI file. Default is to use all cores (max 4) of the CPU.
+- Small thumbnail displayed when zooming, showing the visible section of the image. The section can be moved with
+  the mouse in the thumbnail image. To disable this feature set ShowZoomNavigator=false in INI file.
 - Spanish translation (thanks to Franco Bianconi)
 - About dialog
 - Tooltips for navigation panel buttons
-- Support for multiple CPU cores. To set the number of cores to use to a specific value, set the CPUCoresUsed key
-  to a specific value in the INI file. Default is to use all cores (max 4) of the CPU.
-- Small thumbnail blended when zooming, showing the visible section of the image. The section can be moved with
-  the mouse in the thumbnail image. To disable this feature set ShowZoomNavigator=false in INI file.
+- New button on navigation panel to switch to actual image size / fit to screen
 - New INI file setting (Language=xx) to force user interface language (default is to use operating system language if supported by JPEGView)
 - New INI file setting (StoreToEXEPath=true/false) forcing to write to config data and parameter DB to EXE path (used when installed on USB stick)
 

@@ -104,7 +104,7 @@ CSize CEXIFDisplay::GetSize(CDC & dc) {
 		if (m_sTitle != NULL) {
 			::GetTextExtentPoint32(dc, m_sTitle, _tcslen(m_sTitle), &size);
 			nTitleLength = size.cx;
-			m_nTitleHeight = size.cy + 2;
+			m_nTitleHeight = size.cy + 9;
 		}
 
 		::SelectObject(dc, ::GetStockObject(DEFAULT_GUI_FONT));

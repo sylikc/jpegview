@@ -341,6 +341,8 @@ LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam
 	m_pNavPanel->AddUserPaintButton(&(CNavigationPanel::PaintNextBtn), &OnNext, CNLS::GetString(_T("Show next image")));
 	m_pNavPanel->AddUserPaintButton(&(CNavigationPanel::PaintEndBtn), &OnEnd, CNLS::GetString(_T("Show last image in folder")));
 	m_pNavPanel->AddGap(8);
+	m_pNavPanel->AddUserPaintButton(&(CMainDlg::PaintZoomFitToggleBtn), &OnToggleZoomFit, &(CMainDlg::ZoomFitToggleTooltip));
+	m_pNavPanel->AddGap(8);
 	m_pNavPanel->AddUserPaintButton(&(CNavigationPanel::PaintRotateCWBtn), &OnRotateCW, CNLS::GetString(_T("Rotate image 90 deg clockwise")));
 	m_pNavPanel->AddUserPaintButton(&(CNavigationPanel::PaintRotateCCWBtn), &OnRotateCCW, CNLS::GetString(_T("Rotate image 90 deg counter-clockwise")));
 	m_pNavPanel->AddGap(8);
@@ -441,7 +443,8 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 	CRect rectEXIFInfo = CRect(0, 0, 0, 0);
 	if (pEXIFDisplay != NULL && m_pCurrentImage != NULL) {
 		FillEXIFDataDisplay(pEXIFDisplay);
-		rectEXIFInfo = CRect(imageProcessingArea.left, 32, imageProcessingArea.left + pEXIFDisplay->GetSize(dc).cx, pEXIFDisplay->GetSize(dc).cy + 32);
+		int nYStart = m_bShowFileName ? 32 : 0;
+		rectEXIFInfo = CRect(imageProcessingArea.left, nYStart, imageProcessingArea.left + pEXIFDisplay->GetSize(dc).cx, pEXIFDisplay->GetSize(dc).cy + nYStart);
 		hOffScreenBitmapEXIF = PrepareRectForMemDCPainting(memDCexif, dc, rectEXIFInfo);
 		excludedClippingRects.push_back(rectEXIFInfo);
 	}
@@ -511,7 +514,7 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 		// Zoom navigator - check if visible and create exclusion rectangle
 		bShowZoomNavigator = IsZoomNavigatorCurrentlyShown();
 		if (bShowZoomNavigator) {
-			rectZoomNavigator = CZoomNavigator::GetNavigatorRect(m_pCurrentImage, m_clientRect, imageProcessingArea.Height());
+			rectZoomNavigator = CZoomNavigator::GetNavigatorRect(m_pCurrentImage, imageProcessingArea);
 			visRectZoomNavigator = CZoomNavigator::GetVisibleRect(newSize, clippedSize, offsetsInImage);
 			CRect rectExpanded(rectZoomNavigator);
 			rectExpanded.InflateRect(1, 1);
@@ -689,9 +692,9 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 	if (m_bInZooming || m_bShowZoomFactor) {
 		TCHAR buff[32];
 		_stprintf_s(buff, 32, _T("%d %%"), int(m_dZoom*100 + 0.5));
-		CRect textRect(m_clientRect.right - Scale(ZOOM_TEXT_RECT_WIDTH + ZOOM_TEXT_RECT_OFFSET), 
-			m_clientRect.bottom - Scale(ZOOM_TEXT_RECT_HEIGHT + ZOOM_TEXT_RECT_OFFSET), 
-			m_clientRect.right - Scale(ZOOM_TEXT_RECT_OFFSET), m_clientRect.bottom - Scale(ZOOM_TEXT_RECT_OFFSET));
+		CRect textRect(imageProcessingArea.right - Scale(ZOOM_TEXT_RECT_WIDTH + ZOOM_TEXT_RECT_OFFSET), 
+			imageProcessingArea.bottom - Scale(ZOOM_TEXT_RECT_HEIGHT + ZOOM_TEXT_RECT_OFFSET), 
+			imageProcessingArea.right - Scale(ZOOM_TEXT_RECT_OFFSET), imageProcessingArea.bottom - Scale(ZOOM_TEXT_RECT_OFFSET));
 		dc.SetTextColor(RGB(0, 255, 0));
 		DrawTextBordered(dc, buff, textRect, DT_RIGHT);
 	}
@@ -853,7 +856,7 @@ LRESULT CMainDlg::OnMouseMove(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, B
 			m_bMouseInNavPanel = false;
 		}
 
-		CRect zoomHotArea = CZoomNavigator::GetNavigatorBound(m_clientRect, m_pSliderMgr->SliderAreaHeight());
+		CRect zoomHotArea = CZoomNavigator::GetNavigatorBound(m_pSliderMgr->PanelRect());
 		BOOL bMouseInHotArea = zoomHotArea.PtInRect(CPoint(m_nMouseX, m_nMouseY));
 		if (bMouseInHotArea && CSettingsProvider::This().ShowZoomNavigator()) {
 			MouseOn();
@@ -1344,6 +1347,14 @@ void CMainDlg::OnEnd(CButtonCtrl & sender) {
 	sm_instance->GotoImage(POS_Last);
 }
 
+void CMainDlg::OnToggleZoomFit(CButtonCtrl & sender) {
+	if (fabs(sm_instance->m_dZoom - 1) < 0.01) {
+		sm_instance->ResetZoomToFitScreen(false);
+	} else {
+		sm_instance->ResetZoomTo100Percents();
+	}
+}
+
 void CMainDlg::OnRotateCW(CButtonCtrl & sender) {
 	sm_instance->ExecuteCommand(IDM_ROTATE_90);
 }
@@ -1358,6 +1369,22 @@ void CMainDlg::OnShowInfo(CButtonCtrl & sender) {
 
 void CMainDlg::OnLandscapeMode(CButtonCtrl & sender) {
 	sm_instance->ExecuteCommand(IDM_LANDSCAPE_MODE);
+}
+
+void CMainDlg::PaintZoomFitToggleBtn(const CRect& rect, CDC& dc) {
+	if (fabs(sm_instance->m_dZoom - 1) < 0.01) {
+		CNavigationPanel::PaintZoomToFitBtn(rect, dc);
+	} else {
+		CNavigationPanel::PaintZoomTo1to1Btn(rect, dc);
+	}
+}
+
+LPCTSTR CMainDlg::ZoomFitToggleTooltip() {
+	if (fabs(sm_instance->m_dZoom - 1) < 0.01) {
+		return CNLS::GetString(_T("Fit image to screen"));
+	} else {
+		return CNLS::GetString(_T("Actual size of image"));
+	}
 }
 
 ///////////////////////////////////////////////////////////////////////////////////
@@ -1795,7 +1822,7 @@ void CMainDlg::DoDragging(int nX, int nY) {
 		if (m_bDraggingWithZoomNavigator) {
 			int nNewX = m_capturedPosZoomNavSection.x + nXDelta;
 			int nNewY = m_capturedPosZoomNavSection.y + nYDelta;
-			CRect fullRect = CZoomNavigator::GetNavigatorRect(m_pCurrentImage, m_clientRect, m_pSliderMgr->PanelRect().Height());
+			CRect fullRect = CZoomNavigator::GetNavigatorRect(m_pCurrentImage, m_pSliderMgr->PanelRect());
 			CPoint newOffsets = CJPEGImage::ConvertOffset(fullRect.Size(), CZoomNavigator::LastImageSectionRect().Size(), CPoint(nNewX - fullRect.left, nNewY - fullRect.top));
 			PerformPan((int)(newOffsets.x * (float)m_virtualImageSize.cx/fullRect.Width()), 
 				(int)(newOffsets.y * (float)m_virtualImageSize.cy/fullRect.Height()), true);
@@ -2750,7 +2777,7 @@ HBITMAP CMainDlg::PrepareRectForMemDCPainting(CDC & memDC, CDC & paintDC, const 
 void CMainDlg::InvalidateZoomNavigatorRect() {
 	bool bShowZoomNavigator = m_pCurrentImage != NULL && CSettingsProvider::This().ShowZoomNavigator();
 	if (bShowZoomNavigator) {
-		CRect rectZoomNavigator = CZoomNavigator::GetNavigatorRect(m_pCurrentImage, m_clientRect, m_pSliderMgr->PanelRect().Height());
+		CRect rectZoomNavigator = CZoomNavigator::GetNavigatorRect(m_pCurrentImage, m_pSliderMgr->PanelRect());
 		rectZoomNavigator.InflateRect(1, 1);
 		this->InvalidateRect(rectZoomNavigator, FALSE);
 	}
@@ -2765,7 +2792,7 @@ bool CMainDlg::IsZoomNavigatorCurrentlyShown() {
 		CSize clippedSize(min(m_clientRect.Width(), m_virtualImageSize.cx), min(m_clientRect.Height(), m_virtualImageSize.cy));
 		bShowZoomNavigator = (m_virtualImageSize.cx > clippedSize.cx || m_virtualImageSize.cy > clippedSize.cy);
 		if (bShowZoomNavigator) {
-			CRect navBoundRect = CZoomNavigator::GetNavigatorBound(m_clientRect, m_pSliderMgr->PanelRect().Height());
+			CRect navBoundRect = CZoomNavigator::GetNavigatorBound(m_pSliderMgr->PanelRect());
 			bShowZoomNavigator = m_bDoDragging || m_bInZooming || m_bShowZoomFactor || 
 				(!m_bCropping && navBoundRect.PtInRect(CPoint(m_nMouseX, m_nMouseY)));
 		}
