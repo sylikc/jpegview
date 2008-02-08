@@ -23,23 +23,27 @@ typedef void ButtonPressedHandler(CButtonCtrl & sender);
 // Defines a handler procedure for painting a user painted button
 typedef void PaintHandler(const CRect& rect, CDC& dc);
 
+// Defines a handler procedure for returning a tooltip for a button
+typedef LPCTSTR TooltipHandler();
+
 //-------------------------------------------------------------------------------------------------
 // Tooltip support
 
 // Tooltip class, draws the tooltip centered below the anchor rectangle
 class CTooltip {
 public:
-	CTooltip(HWND hWnd, const CUICtrl* pBoundCtrl, LPCTSTR sTooltip) : 
-	  m_hWnd(hWnd), m_pBoundCtrl(pBoundCtrl), m_sTooltip(sTooltip), m_TooltipRect(0, 0, 0, 0) {}
+	CTooltip(HWND hWnd, const CUICtrl* pBoundCtrl, LPCTSTR sTooltip);
+	CTooltip(HWND hWnd, const CUICtrl* pBoundCtrl, TooltipHandler ttHandler);
 
 	const CUICtrl* GetBoundCtrl() const { return m_pBoundCtrl; }
-	const CString& GetTooltip() const { return m_sTooltip; }
+	const CString& GetTooltip() const;
 
 	void Paint(CDC & dc) const;
 	CRect GetTooltipRect() const;
 private:
 	HWND m_hWnd;
 	const CUICtrl* m_pBoundCtrl;
+	TooltipHandler* m_ttHandler;
 	CString m_sTooltip;
 	CRect m_TooltipRect;
 
@@ -56,7 +60,9 @@ public:
 	void OnMouseMove(int nX, int nY);
 	void OnPaint(CDC & dc);
 
+	void AddTooltip(CUICtrl* pBoundCtrl, CTooltip* tooltip); // takes ownership of the tooltip
 	void AddTooltip(CUICtrl* pBoundCtrl, LPCTSTR sTooltip);
+	void AddTooltipHandler(CUICtrl* pBoundCtrl, TooltipHandler ttHandler);
 	void RemoveActiveTooltip();
 	void EnableTooltips(bool bEnable); // default is true
 private:
@@ -81,6 +87,7 @@ public:
 	bool IsShown() const { return m_bShow; }
 	void SetShow(bool bShow);
 	void SetTooltip(LPCTSTR sTooltipText);
+	void SetTooltipHandler(TooltipHandler ttHandler);
 
 public:
 	virtual bool OnMouseLButton(EMouseEvent eMouseEvent, int nX, int nY) = 0;
@@ -264,6 +271,7 @@ public:
 
 	// Adds a user painted button
 	CButtonCtrl* AddUserPaintButton(PaintHandler paintHandler, ButtonPressedHandler buttonPressedHandler, LPCTSTR sTooltip);
+	CButtonCtrl* AddUserPaintButton(PaintHandler paintHandler, ButtonPressedHandler buttonPressedHandler, TooltipHandler ttHandler);
 
 	// Mouse events must be passed to the panel using the two methods below.
 	// The mouse event is consumed by a UI control if the return value is true.
@@ -346,6 +354,8 @@ public:
 	static void PaintPrevBtn(const CRect& rect, CDC& dc);
 	static void PaintNextBtn(const CRect& rect, CDC& dc);
 	static void PaintEndBtn(const CRect& rect, CDC& dc);
+	static void PaintZoomToFitBtn(const CRect& rect, CDC& dc);
+	static void PaintZoomTo1to1Btn(const CRect& rect, CDC& dc);
 	static void PaintRotateCWBtn(const CRect& rect, CDC& dc);
 	static void PaintRotateCCWBtn(const CRect& rect, CDC& dc);
 	static void PaintInfoBtn(const CRect& rect, CDC& dc);

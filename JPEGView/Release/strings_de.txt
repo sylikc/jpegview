@@ -212,3 +212,4 @@ Rotate image 90 deg clockwise	Bild im Uhrzeigersinn drehen
 Rotate image 90 deg counter-clockwise	Bild gegen den Uhrzeigersinn drehen
 Landscape picture enhancement mode	Modus für Landschaftsbilder
 Display image (EXIF) information	Bildinfo (EXIF) anzeigen
+Actual size of image	Tatsächliche Bildgrösse

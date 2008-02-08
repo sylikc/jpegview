@@ -3,7 +3,7 @@
 #include "JPEGImage.h"
 #include "Helpers.h"
 
-static const int cnThumbW = 150;
+static const int cnThumbW = 200;
 static const int cnThumbH = 150;
 
 CRect CZoomNavigator::sm_lastSectionRect(0, 0, 0, 0);
@@ -14,18 +14,18 @@ CRectF CZoomNavigator::GetVisibleRect(CSize sizeFull, CSize sizeClipped, CPoint 
 	return CRectF(fLeft, fTop, fLeft + (float)sizeClipped.cx/sizeFull.cx, fTop + (float)sizeClipped.cy/sizeFull.cy);
 }
 
-CRect CZoomNavigator::GetNavigatorBound(const CRect& clientRect, int nBorderY) {
-	int nLeft = clientRect.Width() - cnThumbW;
-	int nTop = clientRect.Height() - nBorderY - cnThumbH;
+CRect CZoomNavigator::GetNavigatorBound(const CRect& panelRect) {
+	int nLeft = panelRect.right - cnThumbW;
+	int nTop = panelRect.top - cnThumbH;
 	return CRect(nLeft, nTop, nLeft + cnThumbW, nTop + cnThumbH);
 }
 
-CRect CZoomNavigator::GetNavigatorRect(CJPEGImage* pImage, const CRect& clientRect, int nBorderY) {
+CRect CZoomNavigator::GetNavigatorRect(CJPEGImage* pImage, const CRect& panelRect) {
 	double dZoom;
 	CSize sizeThumb = Helpers::GetImageRect(pImage->OrigWidth(), pImage->OrigHeight(), cnThumbW, cnThumbH, 
 		Helpers::ZM_FitToScreenNoZoom, dZoom);
-	int xDest = clientRect.Width() - cnThumbW - 1 + (cnThumbW - sizeThumb.cx) / 2;
-	int yDest = clientRect.Height() - nBorderY - cnThumbH - 1 + (cnThumbH - sizeThumb.cy) / 2;
+	int xDest = panelRect.right - cnThumbW - 1 + (cnThumbW - sizeThumb.cx) / 2;
+	int yDest = panelRect.top - cnThumbH - 1 + (cnThumbH - sizeThumb.cy) / 2;
 	return CRect(xDest, yDest, xDest + max(1, sizeThumb.cx), yDest + max(1, sizeThumb.cy));
 }
 

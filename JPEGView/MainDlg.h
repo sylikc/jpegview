@@ -245,8 +245,12 @@ private:
 	static void OnPrev(CButtonCtrl & sender);
 	static void OnNext(CButtonCtrl & sender);
 	static void OnEnd(CButtonCtrl & sender);
+	static void OnToggleZoomFit(CButtonCtrl & sender);
 	static void OnRotateCW(CButtonCtrl & sender);
 	static void OnRotateCCW(CButtonCtrl & sender);
 	static void OnShowInfo(CButtonCtrl & sender);
 	static void OnLandscapeMode(CButtonCtrl & sender);
+
+	static void PaintZoomFitToggleBtn(const CRect& rect, CDC& dc);
+	static LPCTSTR ZoomFitToggleTooltip();
 };

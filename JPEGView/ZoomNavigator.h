@@ -26,11 +26,12 @@ public:
 	// Gets the visible rectangle in float coordinates (normalized to 0..1) relative to full image
 	static CRectF GetVisibleRect(CSize sizeFull, CSize sizeClipped, CPoint offset);
 
-	// Gets the position of the navigator rectangle (thumbnail image rect)
-	static CRect GetNavigatorRect(CJPEGImage* pImage, const CRect& clientRect, int nBorderY);
+	// Gets the position of the navigator rectangle (thumbnail image rect), relative to the image processing
+	// panel rectangle
+	static CRect GetNavigatorRect(CJPEGImage* pImage, const CRect& panelRect);
 
 	// Gets the maximal bounds of the navigator
-	static CRect GetNavigatorBound(const CRect& clientRect, int nBorderY);
+	static CRect GetNavigatorBound(const CRect& panelRect);
 
 	// Paints the zoom navigator
 	static void PaintZoomNavigator(CJPEGImage* pImage, const CRectF& visRect, const CRect& navigatorRect,
