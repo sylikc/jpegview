@@ -33,6 +33,7 @@ Bugs removed:
 - Crash removed when scaling up images with heigth=1
 - Cropping small areas (1 x n, n x 1) now possible
 - Not using IJL for 1 channel JPEGs anymore - seems to crash sometimes. GDI+ is used for these images instead.
+- Two bugs fixed causing crashes with very small images or images with extreme aspect ratio
 New features:
 - Support for multiple CPU cores. To set the number of cores to use to a specific value, set the CPUCoresUsed key
   to a specific value in the INI file. Default is to use all cores (max 4) of the CPU.
