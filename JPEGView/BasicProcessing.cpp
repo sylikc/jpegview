@@ -134,8 +134,8 @@ void* CBasicProcessing::ApplyLDC32bpp_Core(CSize fullTargetSize, CPoint fullTarg
 									  float fBlackPt, float fWhitePt, float fBlackPtSteepness, uint32* pTarget) {
 
 	uint32 nIncrementX, nIncrementY;
-	nIncrementX = (uint32)((65536*(ldcMapSize.cx - 1))/(fullTargetSize.cx - 1) - 1);
-	nIncrementY = (uint32)((65536*(ldcMapSize.cy - 1))/(fullTargetSize.cy - 1) - 1);
+	nIncrementX = (ldcMapSize.cx == 1) ? 0 : (uint32)((65536*(ldcMapSize.cx - 1))/(fullTargetSize.cx - 1) - 1);
+	nIncrementY = (ldcMapSize.cy == 1) ? 0 : (uint32)((65536*(ldcMapSize.cy - 1))/(fullTargetSize.cy - 1) - 1);
 
 	uint32 nCurY = fullTargetOffset.y*nIncrementY;
 	uint32 nStartX = fullTargetOffset.x*nIncrementX;

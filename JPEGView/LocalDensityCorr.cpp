@@ -338,6 +338,10 @@ uint8* CLocalDensityCorr::MultiplyMap(double dLightenShadows, double dDarkenHigh
 
 // Smooth LDC mask by a triangle filter of length 3
 void CLocalDensityCorr::SmoothLDCMask() {
+	if (m_nLDCHeight <= 2 || m_nLDCWidth <= 2) {
+		return; // do not smooth tiny masks
+	}
+
 	uint8* pNewLDC = new uint8[m_nLDCHeight*m_nLDCWidth];
 	uint8* pSrc = m_pLDCMap;
 	uint8* pDst = pNewLDC;

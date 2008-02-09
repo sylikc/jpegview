@@ -263,8 +263,8 @@ void CImageLoadThread::ProcessImageAfterLoad(CRequest * request) {
 		newSize = CSize((int)(nWidth*dZoom + 0.5), (int)(nHeight*dZoom + 0.5));
 	}
 
-	newSize.cx = min(65535, newSize.cx);
-	newSize.cy = min(65535, newSize.cy); // max size must not be bigger than this after zoom
+	newSize.cx = max(1, min(65535, newSize.cx));
+	newSize.cy = max(1, min(65535, newSize.cy)); // max size must not be bigger than this after zoom
 
 	// clip to target rectangle
 	CSize clippedSize(min(request->ProcessParams.TargetWidth, newSize.cx), 

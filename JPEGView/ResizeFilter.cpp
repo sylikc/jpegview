@@ -130,7 +130,7 @@ void CResizeFilter::CalculateFilterKernels() {
 		if ((int)nXInt < m_nFilterOffset) {
 			// left border handling, the (m_nFilterOffset - nXInt) left elements are cut from the filter
 			int16* pBorderFilter = GetFilter((uint16)nXFrac, m_eFilter) + (m_nFilterOffset - nXInt);
-			int nFilterLen = min(m_nTargetSize, m_nFilterLen - (m_nFilterOffset - nXInt));
+			int nFilterLen = m_nFilterLen - (m_nFilterOffset - nXInt);
 			nFilterLen = min(nFilterLen, m_nSourceSize);
 			NormalizeFilter(pBorderFilter, nFilterLen);
 			FilterKernel* pThisKernel = &(m_kernels.Kernels[nIdxBorderKernel]);
@@ -142,7 +142,7 @@ void CResizeFilter::CalculateFilterKernels() {
 		} else if ((int)nXInt - m_nFilterOffset + m_nFilterLen > m_nSourceSize) {
 			// right border handling
 			int16* pBorderFilter = GetFilter((uint16)nXFrac, m_eFilter);
-			int nFilterLen =  min(m_nTargetSize, m_nSourceSize - nXInt + m_nFilterOffset);
+			int nFilterLen =  m_nSourceSize - nXInt + m_nFilterOffset;
 			nFilterLen = min(nFilterLen, m_nSourceSize);
 			NormalizeFilter(pBorderFilter, nFilterLen);
 			FilterKernel* pThisKernel = &(m_kernels.Kernels[nIdxBorderKernel]);
