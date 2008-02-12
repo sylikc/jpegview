@@ -22,6 +22,11 @@ to JPEGView\Debug
 Changelog
 *********
 
+[1.0.16.1] (repack - binary files equal to 1.0.16)
+
+New features:
+- Italian translation (thanks to Max)
+
 [1.0.16]
 
 Bugs removed:
