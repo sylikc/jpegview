@@ -4,6 +4,7 @@
 #include <math.h>
 
 #define SLIDER_WIDTH 130
+#define MIN_SLIDER_WIDTH 80
 #define SLIDER_HEIGHT 30
 #define WIDTH_ADD_PIXELS 63
 #define SLIDER_GAP 23
@@ -11,7 +12,6 @@
 #define NAV_PANEL_HEIGHT 32
 #define NAV_PANEL_BORDER 6
 #define NAV_PANEL_GAP 5
-#define NAV_PANEL_SLIDER_WIDTH 200
 #define WINPROP_THIS _T("JV_THIS")
 
 /////////////////////////////////////////////////////////////////////////////////////////////
@@ -317,12 +317,20 @@ void CPanelMgr::ReleaseMouse(CUICtrl* pCtrl) {
 /////////////////////////////////////////////////////////////////////////////////////////////
 
 CSliderMgr::CSliderMgr(HWND hWnd) : CPanelMgr(hWnd) {
+	// slider width is smaller for very small screens
+	::GetClientRect(hWnd, &m_clientRect);
 	m_nSliderWidth = (int)(SLIDER_WIDTH*m_fDPIScale);
+	int nNeededSpace = (int)(1200*m_fDPIScale);
+	if (m_clientRect.Width() < nNeededSpace) {
+		int nNeededGain = nNeededSpace - m_clientRect.Width();
+		m_nSliderWidth = m_nSliderWidth - nNeededGain/4;
+		m_nSliderWidth = max(MIN_SLIDER_WIDTH, m_nSliderWidth);
+	}
+
 	m_nNoLabelWidth = m_nSliderWidth + (int)(WIDTH_ADD_PIXELS*m_fDPIScale);
 	m_nSliderHeight = (int)(SLIDER_HEIGHT*m_fDPIScale);
 	m_nSliderGap = (int) (SLIDER_GAP*m_fDPIScale);
 	m_nTotalAreaHeight = m_nSliderHeight*3 + SCREEN_Y_OFFSET;
-	m_clientRect = CRect(0, 0, 0, 0);
 	m_sliderAreaRect = CRect(0, 0, 0, 0);
 
 	m_nYStart = 0xFFFF;

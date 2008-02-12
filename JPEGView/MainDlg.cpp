@@ -312,6 +312,23 @@ LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam
 	m_fScaling = ::GetDeviceCaps(dc, LOGPIXELSX)/96.0f;
 	Helpers::ScreenScaling = m_fScaling;
 
+	// place window on monitor as requested in INI file
+	int nMonitor = CSettingsProvider::This().DisplayMonitor();
+	m_monitorRect = CMultiMonitorSupport::GetMonitorRect(nMonitor);
+	if (CMultiMonitorSupport::IsMultiMonitorSystem()) {
+		m_monitorRect.top -= 1;
+		m_monitorRect.left -= 1;
+		m_monitorRect.bottom += 1;
+		m_monitorRect.right += 1;
+		// m_monitorRect = CRect(0, 0, 1024, 768);
+		SetWindowPos(HWND_TOP, &m_monitorRect, SWP_NOZORDER);
+	} else {
+		CRect wndRect(-1, -1, ::GetSystemMetrics(SM_CXSCREEN) + 1, ::GetSystemMetrics(SM_CYSCREEN) + 1);
+		this->MoveWindow(&wndRect);
+		m_monitorRect = wndRect;
+	}
+	this->GetClientRect(&m_clientRect);
+
 	// Configure the image processing area at bottom of screen
 	m_pSliderMgr = new CSliderMgr(this->m_hWnd);
 	m_pSliderMgr->AddSlider(CNLS::GetString(_T("Contrast")), &(m_pImageProcParams->Contrast), NULL, -0.5, 0.5, false, false);
@@ -349,23 +366,6 @@ LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam
 	m_btnLandScape = m_pNavPanel->AddUserPaintButton(&(CNavigationPanel::PaintLandscapeModeBtn), &OnLandscapeMode, CNLS::GetString(_T("Landscape picture enhancement mode")));
 	m_pNavPanel->AddGap(16);
 	m_btnInfo = m_pNavPanel->AddUserPaintButton(&(CNavigationPanel::PaintInfoBtn), &OnShowInfo, CNLS::GetString(_T("Display image (EXIF) information")));
-
-	// place window on monitor as requested in INI file
-	int nMonitor = CSettingsProvider::This().DisplayMonitor();
-	m_monitorRect = CMultiMonitorSupport::GetMonitorRect(nMonitor);
-	if (CMultiMonitorSupport::IsMultiMonitorSystem()) {
-		m_monitorRect.top -= 1;
-		m_monitorRect.left -= 1;
-		m_monitorRect.bottom += 1;
-		m_monitorRect.right += 1;
-		SetWindowPos(HWND_TOP, &m_monitorRect, SWP_NOZORDER);
-	} else {
-		CRect wndRect(-1, -1, ::GetSystemMetrics(SM_CXSCREEN) + 1, ::GetSystemMetrics(SM_CYSCREEN) + 1);
-		//CRect wndRect(200, 100, 1024, 900);
-		this->MoveWindow(&wndRect);
-		m_monitorRect = wndRect;
-	}
-	this->GetClientRect(&m_clientRect);
 
 	// set icons (for toolbar)
 	HICON hIcon = (HICON)::LoadImage(_Module.GetResourceInstance(), MAKEINTRESOURCE(IDR_MAINFRAME), 
