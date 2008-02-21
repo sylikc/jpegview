@@ -46,6 +46,7 @@ private:
 	TooltipHandler* m_ttHandler;
 	CString m_sTooltip;
 	CRect m_TooltipRect;
+	CRect m_oldRectBoundCtrl;
 
 	CRect CalculateTooltipRect() const;
 };
@@ -356,6 +357,7 @@ public:
 	static void PaintEndBtn(const CRect& rect, CDC& dc);
 	static void PaintZoomToFitBtn(const CRect& rect, CDC& dc);
 	static void PaintZoomTo1to1Btn(const CRect& rect, CDC& dc);
+	static void PaintWindowModeBtn(const CRect& rect, CDC& dc);
 	static void PaintRotateCWBtn(const CRect& rect, CDC& dc);
 	static void PaintRotateCCWBtn(const CRect& rect, CDC& dc);
 	static void PaintInfoBtn(const CRect& rect, CDC& dc);

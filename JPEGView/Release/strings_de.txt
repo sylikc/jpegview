@@ -213,3 +213,7 @@ Rotate image 90 deg counter-clockwise	Bild gegen den Uhrzeigersinn drehen
 Landscape picture enhancement mode	Modus für Landschaftsbilder
 Display image (EXIF) information	Bildinfo (EXIF) anzeigen
 Actual size of image	Tatsächliche Bildgrösse
+Toggle between screens (only for multi-monitor systems)	Umschalten zwischen Bildschirmen
+Enable/disable full screen mode	Vollbildmodus einschalten/ausschalten
+Full screen mode	Vollbildmodus
+Window mode	Fenstermodus

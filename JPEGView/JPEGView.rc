@@ -60,10 +60,10 @@ IDR_MAINFRAME           ICON                    "res\\JPEGView.ico"
 // Dialog
 //
 
-IDD_MAINDLG DIALOG  0, 0, 187, 98
+IDD_MAINDLG DIALOG  0, 0, 0, 0
 FONT 8, "MS Sans Serif"
+STYLE 0x0
 BEGIN
-	//CONTROL "",IDC_RENAME_FILE,"EDIT", ES_AUTOHSCROLL,10,10,200,16
 END
 
 IDD_BATCHCOPY DIALOGEX 10,9,626,355
@@ -211,6 +211,7 @@ BEGIN
           MENUITEM "Fit to screen\tReturn",		IDM_FIT_TO_SCREEN
 		  MENUITEM "Fill with crop\tCtrl-Return", IDM_FILL_WITH_CROP
 		  MENUITEM "Span all screens\tF12",		IDM_SPAN_SCREENS
+		  MENUITEM "Full screen mode\tCtrl-W",	IDM_FULL_SCREEN_MODE
 		  MENUITEM SEPARATOR
 		  MENUITEM "400 %",				IDM_ZOOM_400
 		  MENUITEM "200 %",				IDM_ZOOM_200

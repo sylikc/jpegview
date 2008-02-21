@@ -30,6 +30,8 @@ public:
 	BEGIN_MSG_MAP(CMainDlg)
 		MESSAGE_HANDLER(WM_ERASEBKGND, OnEraseBackground)
 		MESSAGE_HANDLER(WM_INITDIALOG, OnInitDialog)
+		MESSAGE_HANDLER(WM_SIZE, OnSize)
+		MESSAGE_HANDLER(WM_GETMINMAXINFO, OnGetMinMaxInfo)
 		MESSAGE_HANDLER(WM_PAINT, OnPaint)
 		MESSAGE_HANDLER(WM_LBUTTONDOWN, OnLButtonDown)
 		MESSAGE_HANDLER(WM_LBUTTONUP, OnLButtonUp)
@@ -62,6 +64,8 @@ public:
 	LRESULT OnCancel(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
 	LRESULT OnEraseBackground(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOOL& /*bHandled*/);
 	LRESULT OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);
+	LRESULT OnSize(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);
+	LRESULT OnGetMinMaxInfo(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);
 	LRESULT OnLButtonDown(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);
 	LRESULT OnLButtonUp(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);
 	LRESULT OnMButtonDown(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);
@@ -155,6 +159,7 @@ private:
 	bool m_bShowFileInfo;
 	bool m_bShowFileName;
 	bool m_bShowHelp;
+	bool m_bFullScreenMode;
 	bool m_bLockPaint;
 	int m_nCurrentTimeout;
 	POINT m_startMouse;
@@ -170,7 +175,9 @@ private:
 	bool m_bShowNavPanel;
 	bool m_bMouseInNavPanel;
 	bool m_bArrowCursorSet;
+	int m_nMonitor;
 	WINDOWPLACEMENT m_storedWindowPlacement;
+	WINDOWPLACEMENT m_storedWindowPlacement2;
 	CRect m_monitorRect;
 	CRect m_clientRect;
 	CSliderMgr * m_pSliderMgr;
@@ -182,6 +189,7 @@ private:
 	CTextCtrl* m_txtAcqDate;
 	CButtonCtrl* m_btnInfo;
 	CButtonCtrl* m_btnLandScape;
+	CButtonCtrl* m_btnWindowMode;
 	CNavigationPanel* m_pNavPanel;
 	CString m_sSaveDirectory;
 
@@ -237,6 +245,7 @@ private:
 	void InvalidateZoomNavigatorRect();
 	bool IsZoomNavigatorCurrentlyShown();
 	void SetCursorForMoveSection();
+	void ToggleMonitor();
 
 	static void OnSaveToDB(CButtonCtrl & sender);
 	static void OnRemoveFromDB(CButtonCtrl & sender);
@@ -246,6 +255,7 @@ private:
 	static void OnNext(CButtonCtrl & sender);
 	static void OnEnd(CButtonCtrl & sender);
 	static void OnToggleZoomFit(CButtonCtrl & sender);
+	static void OnToggleWindowMode(CButtonCtrl & sender);
 	static void OnRotateCW(CButtonCtrl & sender);
 	static void OnRotateCCW(CButtonCtrl & sender);
 	static void OnShowInfo(CButtonCtrl & sender);
@@ -253,4 +263,5 @@ private:
 
 	static void PaintZoomFitToggleBtn(const CRect& rect, CDC& dc);
 	static LPCTSTR ZoomFitToggleTooltip();
+	static LPCTSTR WindowModeTooltip();
 };
