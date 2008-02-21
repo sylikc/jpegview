@@ -22,6 +22,15 @@ to JPEGView\Debug
 Changelog
 *********
 
+[1.0.17]
+
+Bugs removed:
+- Image processing panel not truncated on 1024x768 screens, sliders are smaller in this case
+New features:
+- Toggle screen with Ctrl-F12 on multiscreen systems
+- Window mode, toggle between window mode and full screen mode with Ctrl-W
+
+
 [1.0.16.1] (repack - binary files equal to 1.0.16)
 
 New features:

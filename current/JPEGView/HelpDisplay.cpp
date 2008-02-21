@@ -3,7 +3,7 @@
 #include "Helpers.h"
 #include "NLS.h"
 
-static const int MAX_BUFF = 4096;
+static const int MAX_BUFF = 6000;
 
 static const COLORREF colorTitle = RGB(0, 0, 255);
 static const COLORREF colorLines = RGB(0, 0, 0);

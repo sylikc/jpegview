@@ -50,7 +50,7 @@ static CSize GetScreenSize(int nX, int nY) {
 /////////////////////////////////////////////////////////////////////////////////////////////
 
 CTooltip::CTooltip(HWND hWnd, const CUICtrl* pBoundCtrl, LPCTSTR sTooltip) : 
-	m_hWnd(hWnd), m_pBoundCtrl(pBoundCtrl), m_sTooltip(sTooltip), m_TooltipRect(0, 0, 0, 0) {
+	m_hWnd(hWnd), m_pBoundCtrl(pBoundCtrl), m_sTooltip(sTooltip), m_TooltipRect(0, 0, 0, 0), m_oldRectBoundCtrl(0, 0, 0, 0) {
 	m_ttHandler = NULL;
 }
 
@@ -88,7 +88,8 @@ void CTooltip::Paint(CDC & dc) const {
 
 CRect CTooltip::GetTooltipRect() const {
 	GetTooltip();
-	if (m_TooltipRect.IsRectEmpty()) {
+	if (m_pBoundCtrl->GetPosition() != m_oldRectBoundCtrl || m_TooltipRect.IsRectEmpty()) {
+		const_cast<CTooltip*>(this)->m_oldRectBoundCtrl = m_pBoundCtrl->GetPosition();
 		const_cast<CTooltip*>(this)->m_TooltipRect = CalculateTooltipRect();
 	}
 	return m_TooltipRect;
@@ -370,7 +371,7 @@ CRect CSliderMgr::PanelRect() {
 		}
 	}
 
-	m_sliderAreaRect = CRect(nXStart, nYStart, sizeScreen.cx + nXStart, nYStart + m_nTotalAreaHeight);
+	m_sliderAreaRect = CRect(nXStart, nYStart, min(clientRect.Width(), sizeScreen.cx) + nXStart, nYStart + m_nTotalAreaHeight);
 	return m_sliderAreaRect;
 }
 
@@ -530,6 +531,7 @@ bool CNavigationPanel::OnMouseLButton(EMouseEvent eMouseEvent, int nX, int nY) {
 }
 
 void CNavigationPanel::RequestRepositioning() {
+	RepositionAll();
 }
 
 void CNavigationPanel::RepositionAll() {
@@ -649,6 +651,16 @@ void CNavigationPanel::PaintZoomTo1to1Btn(const CRect& rect, CDC& dc) {
 	HFONT oldFont = dc.SelectFont(font);
 	dc.DrawText(_T("1:1"), 3, (LPRECT)&rect, DT_CENTER | DT_VCENTER | DT_SINGLELINE | DT_NOCLIP);
 	dc.SelectFont(oldFont);
+}
+
+void CNavigationPanel::PaintWindowModeBtn(const CRect& rect, CDC& dc) {
+	CRect r = InflateRect(rect, 0.25f);
+
+	dc.SelectStockBrush(HOLLOW_BRUSH);
+	dc.Rectangle(&r);
+	int nTop = r.top + r.Height()/4;
+	dc.MoveTo(r.left + 1, nTop);
+	dc.LineTo(r.right, nTop);
 }
 
 void CNavigationPanel::PaintRotateCWBtn(const CRect& rect, CDC& dc) {

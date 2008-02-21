@@ -270,6 +270,7 @@ CMainDlg::CMainDlg() {
 	m_nCapturedX = m_nCapturedY = 0;
 	m_nMouseX = m_nMouseY = 0;
 	m_bShowHelp = false;
+	m_bFullScreenMode = true;
 	m_bLockPaint = true;
 	m_nCurrentTimeout = 0;
 	m_startMouse.x = m_startMouse.y = -1;
@@ -285,9 +286,12 @@ CMainDlg::CMainDlg() {
 	m_bMouseInNavPanel = false;
 	m_bArrowCursorSet = false;
 	m_storedWindowPlacement.length = sizeof(WINDOWPLACEMENT);
+	memset(&m_storedWindowPlacement2, 0, sizeof(WINDOWPLACEMENT));
+	m_storedWindowPlacement2.length = sizeof(WINDOWPLACEMENT);
 	m_pSliderMgr = NULL;
 	m_pNavPanel = NULL;
 	m_bPasteFromClipboardFailed = false;
+	m_nMonitor = 0;
 
 	m_cropStart = CPoint(INT_MIN, INT_MIN);
 	m_cropEnd = CPoint(INT_MIN, INT_MIN);
@@ -305,6 +309,10 @@ CMainDlg::~CMainDlg() {
 
 LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/)
 {	
+	if (m_sStartupFile.GetLength() != 0) {
+		::SetWindowLong(m_hWnd, GWL_STYLE, WS_VISIBLE);
+	}
+
 	this->SetWindowText(_T("JPEGView")); // only relevant for toolbar
 
 	// get the scaling of the screen (DPI) compared to 96 DPI (design value)
@@ -313,17 +321,13 @@ LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam
 	Helpers::ScreenScaling = m_fScaling;
 
 	// place window on monitor as requested in INI file
-	int nMonitor = CSettingsProvider::This().DisplayMonitor();
-	m_monitorRect = CMultiMonitorSupport::GetMonitorRect(nMonitor);
+	m_nMonitor = CSettingsProvider::This().DisplayMonitor();
+	m_monitorRect = CMultiMonitorSupport::GetMonitorRect(m_nMonitor);
 	if (CMultiMonitorSupport::IsMultiMonitorSystem()) {
-		m_monitorRect.top -= 1;
-		m_monitorRect.left -= 1;
-		m_monitorRect.bottom += 1;
-		m_monitorRect.right += 1;
 		// m_monitorRect = CRect(0, 0, 1024, 768);
 		SetWindowPos(HWND_TOP, &m_monitorRect, SWP_NOZORDER);
 	} else {
-		CRect wndRect(-1, -1, ::GetSystemMetrics(SM_CXSCREEN) + 1, ::GetSystemMetrics(SM_CYSCREEN) + 1);
+		CRect wndRect(0, 0, ::GetSystemMetrics(SM_CXSCREEN), ::GetSystemMetrics(SM_CYSCREEN));
 		this->MoveWindow(&wndRect);
 		m_monitorRect = wndRect;
 	}
@@ -359,6 +363,7 @@ LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam
 	m_pNavPanel->AddUserPaintButton(&(CNavigationPanel::PaintEndBtn), &OnEnd, CNLS::GetString(_T("Show last image in folder")));
 	m_pNavPanel->AddGap(8);
 	m_pNavPanel->AddUserPaintButton(&(CMainDlg::PaintZoomFitToggleBtn), &OnToggleZoomFit, &(CMainDlg::ZoomFitToggleTooltip));
+	m_btnWindowMode = m_pNavPanel->AddUserPaintButton(&(CNavigationPanel::PaintWindowModeBtn), &OnToggleWindowMode, &(CMainDlg::WindowModeTooltip));
 	m_pNavPanel->AddGap(8);
 	m_pNavPanel->AddUserPaintButton(&(CNavigationPanel::PaintRotateCWBtn), &OnRotateCW, CNLS::GetString(_T("Rotate image 90 deg clockwise")));
 	m_pNavPanel->AddUserPaintButton(&(CNavigationPanel::PaintRotateCCWBtn), &OnRotateCCW, CNLS::GetString(_T("Rotate image 90 deg counter-clockwise")));
@@ -392,14 +397,16 @@ LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam
 	AfterNewImageLoaded(true); // synchronize to per image parameters
 
 	m_bLockPaint = false;
-	this->Invalidate(FALSE);
 
 	// If no file was passed on command line, show the 'Open file' dialog
 	if (m_sStartupFile.GetLength() == 0) {
 		if (!OpenFile(true)) {
 			EndDialog(0);
 		}
+		::SetWindowLong(m_hWnd, GWL_STYLE, WS_VISIBLE);
 	}
+
+	this->Invalidate(FALSE);
 
 	return TRUE;
 }
@@ -420,6 +427,7 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 	bool bShowZoomNavigator = false;
 	CRectF visRectZoomNavigator(0.0f, 0.0f, 1.0f, 1.0f);
 	CRect rectZoomNavigator(0, 0, 0, 0);
+	CRect helpDisplayRect = (m_clientRect.Width() > m_monitorRect.Width()) ? m_monitorRect : m_clientRect;
 
 	// Exclude the help display from clipping area to reduce flickering
 	CHelpDisplay* pHelpDisplay = NULL;
@@ -428,8 +436,8 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 		pHelpDisplay = new CHelpDisplay(dc);
 		GenerateHelpDisplay(*pHelpDisplay);
 		CSize helpRectSize = pHelpDisplay->GetSize();
-		CRect rectHelpDisplay = CRect(CPoint(m_monitorRect.Width()/2 - helpRectSize.cx/2, 
-			m_monitorRect.Height()/2 - helpRectSize.cy/2), helpRectSize);
+		CRect rectHelpDisplay = CRect(CPoint(helpDisplayRect.Width()/2 - helpRectSize.cx/2, 
+			helpDisplayRect.Height()/2 - helpRectSize.cy/2), helpRectSize);
 		dc.ExcludeClipRect(&rectHelpDisplay);
 		excludedClippingRects.push_back(rectHelpDisplay);
 	}
@@ -701,7 +709,7 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 
 	// Display the help screen
 	if (pHelpDisplay != NULL) {
-		pHelpDisplay->Show(CRect(CPoint(0, 0), CSize(m_monitorRect.Width(), m_monitorRect.Height())));
+		pHelpDisplay->Show(CRect(CPoint(0, 0), CSize(helpDisplayRect.Width(), helpDisplayRect.Height())));
 	} else if (m_bCropping) {
 		PaintCropRect(dc.m_hDC);
 		ShowCroppingRect(m_nMouseX, m_nMouseY, dc.m_hDC);
@@ -724,9 +732,26 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 	return 0;
 }
 
+LRESULT CMainDlg::OnSize(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/) {
+	this->GetClientRect(&m_clientRect);
+	this->Invalidate(FALSE);
+	m_nMouseX = m_nMouseY = -1;
+	return 0;
+}
+
+LRESULT CMainDlg::OnGetMinMaxInfo(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, BOOL& /*bHandled*/) {
+	if (m_pJPEGProvider != NULL) {
+		MINMAXINFO* pMinMaxInfo = (MINMAXINFO*) lParam;
+		pMinMaxInfo->ptMinTrackSize = CPoint(800, 600);
+		return 1;
+	} else {
+		return 0;
+	}
+}
+
 LRESULT CMainDlg::OnAnotherInstanceStarted(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, BOOL& /*bHandled*/) {
 	// Another instance has been started, terminate this one
-	if (lParam == KEY_MAGIC) {
+	if (lParam == KEY_MAGIC && m_bFullScreenMode) {
 		this->EndDialog(0);
 	}
 	return 0;
@@ -986,7 +1011,11 @@ LRESULT CMainDlg::OnKeyDown(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOO
 		ExecuteCommand(IDM_SHOW_NAVPANEL);
 	} else if (wParam == VK_F12) {
 		bHandled = true;
-		ExecuteCommand(IDM_SPAN_SCREENS);
+		if (bCtrl) {
+			ToggleMonitor();
+		} else {
+			ExecuteCommand(IDM_SPAN_SCREENS);
+		}
 	} else if (wParam >= '1' && wParam <= '9' && (!bShift || bCtrl)) {
 		// Start the slideshow
 		bHandled = true;
@@ -1065,7 +1094,12 @@ LRESULT CMainDlg::OnKeyDown(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOO
 			bHandled = true;
 			ExecuteCommand(IDM_LANDSCAPE_MODE);
 		}
-	}
+	} else if (wParam == 'W') {
+		if (bCtrl) {
+			bHandled = true;
+			ExecuteCommand(IDM_FULL_SCREEN_MODE);
+		}
+	} 
 	else if ((wParam == VK_DOWN || wParam == VK_UP || wParam == VK_RIGHT || wParam == VK_LEFT) && bShift) {
 		bHandled = true;
 		if (wParam == VK_DOWN) {
@@ -1105,6 +1139,7 @@ LRESULT CMainDlg::OnSysKeyDown(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, 
 	}
 	return 1;
 }
+
 
 LRESULT CMainDlg::OnGetDlgCode(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/) {
 	// need to request key messages, else the dialog proc eats them all up
@@ -1154,9 +1189,10 @@ LRESULT CMainDlg::OnTimer(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOOL&
 		m_bShowZoomFactor = false;
 		::KillTimer(this->m_hWnd, ZOOM_TEXT_TIMER_EVENT_ID);
 		InvalidateZoomNavigatorRect();
-		this->InvalidateRect(CRect(m_clientRect.right - Scale(ZOOM_TEXT_RECT_WIDTH + ZOOM_TEXT_RECT_OFFSET), 
-			m_clientRect.bottom - Scale(ZOOM_TEXT_RECT_HEIGHT + ZOOM_TEXT_RECT_OFFSET), 
-			m_clientRect.right - Scale(ZOOM_TEXT_RECT_OFFSET), m_clientRect.bottom - Scale(ZOOM_TEXT_RECT_OFFSET)), FALSE);
+		CRect imageProcArea = m_pSliderMgr->PanelRect();
+		this->InvalidateRect(CRect(imageProcArea.right - Scale(ZOOM_TEXT_RECT_WIDTH + ZOOM_TEXT_RECT_OFFSET), 
+			imageProcArea.bottom - Scale(ZOOM_TEXT_RECT_HEIGHT + ZOOM_TEXT_RECT_OFFSET), 
+			imageProcArea.right - Scale(ZOOM_TEXT_RECT_OFFSET), imageProcArea.bottom - Scale(ZOOM_TEXT_RECT_OFFSET)), FALSE);
 	} else if (wParam == AUTOSCROLL_TIMER_EVENT_ID) {
 		if (m_nMouseX < m_clientRect.Width() - 1 && m_nMouseX > 0 && m_nMouseY < m_clientRect.Height() - 1 && m_nMouseY > 0 ) {
 			::KillTimer(this->m_hWnd, AUTOSCROLL_TIMER_EVENT_ID);
@@ -1242,6 +1278,7 @@ LRESULT CMainDlg::OnContextMenu(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam,
 	if (!m_bMovieMode) ::EnableMenuItem(hMenuMovie, IDM_STOP_MOVIE, MF_BYCOMMAND | MF_GRAYED);
 	HMENU hMenuZoom = ::GetSubMenu(hMenuTrackPopup, SUBMENU_POS_ZOOM);
 	if (m_bSpanVirtualDesktop) ::CheckMenuItem(hMenuZoom,  IDM_SPAN_SCREENS, MF_CHECKED);
+	if (m_bFullScreenMode) ::CheckMenuItem(hMenuZoom,  IDM_FULL_SCREEN_MODE, MF_CHECKED);
 	HMENU hMenuAutoZoomMode = ::GetSubMenu(hMenuTrackPopup, SUBMENU_POS_AUTOZOOMMODE);
 	::CheckMenuItem(hMenuAutoZoomMode,  m_eAutoZoomMode*10 + IDM_AUTO_ZOOM_FIT_NO_ZOOM, MF_CHECKED);
 
@@ -1355,6 +1392,16 @@ void CMainDlg::OnToggleZoomFit(CButtonCtrl & sender) {
 	}
 }
 
+void CMainDlg::OnToggleWindowMode(CButtonCtrl & sender) {
+	sm_instance->ExecuteCommand(IDM_FULL_SCREEN_MODE);
+
+	sm_instance->m_pNavPanel->RequestRepositioning();
+	CRect rect = sm_instance->m_btnWindowMode->GetPosition();
+	CPoint ptWnd = rect.CenterPoint();
+	::ClientToScreen(sm_instance->m_hWnd, &ptWnd);
+	::SetCursorPos(ptWnd.x, ptWnd.y);
+}
+
 void CMainDlg::OnRotateCW(CButtonCtrl & sender) {
 	sm_instance->ExecuteCommand(IDM_ROTATE_90);
 }
@@ -1384,6 +1431,14 @@ LPCTSTR CMainDlg::ZoomFitToggleTooltip() {
 		return CNLS::GetString(_T("Fit image to screen"));
 	} else {
 		return CNLS::GetString(_T("Actual size of image"));
+	}
+}
+
+LPCTSTR CMainDlg::WindowModeTooltip() {
+	if (sm_instance->m_bFullScreenMode) {
+		return CNLS::GetString(_T("Window mode"));
+	} else {
+		return CNLS::GetString(_T("Full screen mode"));
 	}
 }
 
@@ -1610,15 +1665,37 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 				} else {
 					this->GetWindowPlacement(&m_storedWindowPlacement);
 					CRect rectAllScreens = CMultiMonitorSupport::GetVirtualDesktop();
-					rectAllScreens.top -= 1;
-					rectAllScreens.left -= 1;
-					rectAllScreens.bottom += 1;
-					rectAllScreens.right += 1;
 					this->SetWindowPos(HWND_TOP, &rectAllScreens, SWP_NOZORDER);
 				}
 				m_bSpanVirtualDesktop = !m_bSpanVirtualDesktop;
 				this->GetClientRect(&m_clientRect);
 			}
+			break;
+		case IDM_FULL_SCREEN_MODE:
+			m_bFullScreenMode = !m_bFullScreenMode;
+			if (!m_bFullScreenMode) {
+				CRect windowRect;
+				this->SetWindowLongW(GWL_STYLE, this->GetWindowLongW(GWL_STYLE) | WS_OVERLAPPEDWINDOW | WS_VISIBLE);
+				if (::IsRectEmpty(&(m_storedWindowPlacement2.rcNormalPosition))) {
+					// never set to window mode before, use default position
+					windowRect = CRect(CPoint(m_monitorRect.Width()/10, m_monitorRect.Height()/10), CSize(m_monitorRect.Width()*193/300, m_monitorRect.Height()*2/3));
+					this->SetWindowPos(HWND_TOP, windowRect.left, windowRect.top, windowRect.Width(), windowRect.Height(), SWP_NOZORDER);
+				} else {
+					this->SetWindowPlacement(&m_storedWindowPlacement2);
+				}
+			} else {
+				this->GetWindowPlacement(&m_storedWindowPlacement2);
+				HMONITOR hMonitor = ::MonitorFromWindow(m_hWnd, MONITOR_DEFAULTTONEAREST);
+				MONITORINFO monitorInfo;
+				monitorInfo.cbSize = sizeof(MONITORINFO);
+				if (::GetMonitorInfo(hMonitor, &monitorInfo)) {
+					CRect monitorRect(&(monitorInfo.rcMonitor));
+					this->SetWindowLongW(GWL_STYLE, WS_VISIBLE);
+					this->SetWindowPos(HWND_TOP, monitorRect.left, monitorRect.top, monitorRect.Width(), monitorRect.Height(), SWP_NOZORDER);
+				}
+			}
+			m_dZoom = -1;
+			this->SetWindowPos(NULL, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_FRAMECHANGED);
 			break;
 		case IDM_ZOOM_400:
 			PerformZoom(4.0, false);
@@ -2720,6 +2797,8 @@ void CMainDlg::GenerateHelpDisplay(CHelpDisplay & helpDisplay) {
 	helpDisplay.AddLineInfo(_T("F8"), m_pFileList->GetNavigationMode() == Helpers::NM_LoopSubDirectories, CNLS::GetString(_T("Loop through files in current directory and all subfolders")));
 	helpDisplay.AddLineInfo(_T("F9"), m_pFileList->GetNavigationMode() == Helpers::NM_LoopSameDirectoryLevel, CNLS::GetString(_T("Loop through files in current directory and all sibling folders (folders on same level)")));
 	helpDisplay.AddLineInfo(_T("F12"), m_bSpanVirtualDesktop, CNLS::GetString(_T("Maximize/restore to/from virtual desktop (only for multi-monitor systems)")));
+	helpDisplay.AddLineInfo(_T("Ctrl+F12"), LPCTSTR(NULL), CNLS::GetString(_T("Toggle between screens (only for multi-monitor systems)")));
+	helpDisplay.AddLineInfo(_T("Ctrl+W"), m_bFullScreenMode, CNLS::GetString(_T("Enable/disable full screen mode")));
 	helpDisplay.AddLine(_T("Ctrl+C/Ctrl+X"), CNLS::GetString(_T("Copy screen to clipboard/ Copy processed full size image to clipboard")));
 	helpDisplay.AddLine(_T("Ctrl+O"), CNLS::GetString(_T("Open new image or slideshow file")));
 	helpDisplay.AddLine(_T("Ctrl+S"), CNLS::GetString(_T("Save processed image to JPEG file (original size)")));
@@ -2807,5 +2886,26 @@ void CMainDlg::SetCursorForMoveSection() {
 	} else if (m_bArrowCursorSet) {
 		::SetCursor(::LoadCursor(NULL, MAKEINTRESOURCE(IDC_ARROW)));
 		m_bArrowCursorSet = false;
+	}
+}
+
+void CMainDlg::ToggleMonitor() {
+	if (CMultiMonitorSupport::IsMultiMonitorSystem() && !m_bSpanVirtualDesktop) {
+		int nMaxMonitorIdx = ::GetSystemMetrics(SM_CMONITORS);
+		if (m_nMonitor == -1) {
+			// index unknown, search
+			for (int i = 0; i < nMaxMonitorIdx; i++) {
+				if (m_monitorRect == CMultiMonitorSupport::GetMonitorRect(i)) {
+					m_nMonitor = i;
+					break;
+				}
+			}
+		}
+		m_dZoom = -1.0;
+		this->Invalidate(FALSE);
+		m_nMonitor = (m_nMonitor + 1) % nMaxMonitorIdx;
+		m_monitorRect = CMultiMonitorSupport::GetMonitorRect(m_nMonitor);
+		SetWindowPos(HWND_TOP, &m_monitorRect, SWP_NOZORDER);
+		this->GetClientRect(&m_clientRect);
 	}
 }
