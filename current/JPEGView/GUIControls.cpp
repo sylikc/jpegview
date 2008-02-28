@@ -4,7 +4,7 @@
 #include <math.h>
 
 #define SLIDER_WIDTH 130
-#define MIN_SLIDER_WIDTH 80
+#define MIN_SLIDER_WIDTH 40
 #define SLIDER_HEIGHT 30
 #define WIDTH_ADD_PIXELS 63
 #define SLIDER_GAP 23
@@ -320,6 +320,17 @@ void CPanelMgr::ReleaseMouse(CUICtrl* pCtrl) {
 CSliderMgr::CSliderMgr(HWND hWnd) : CPanelMgr(hWnd) {
 	// slider width is smaller for very small screens
 	::GetClientRect(hWnd, &m_clientRect);
+	DetermineSliderWidth();
+	m_nSliderHeight = (int)(SLIDER_HEIGHT*m_fDPIScale);
+	m_nSliderGap = (int) (SLIDER_GAP*m_fDPIScale);
+	m_nTotalAreaHeight = m_nSliderHeight*3 + SCREEN_Y_OFFSET;
+	m_sliderAreaRect = CRect(0, 0, 0, 0);
+
+	m_nYStart = 0xFFFF;
+	m_nTotalSliders = 0;
+}
+
+void CSliderMgr::DetermineSliderWidth() {
 	m_nSliderWidth = (int)(SLIDER_WIDTH*m_fDPIScale);
 	int nNeededSpace = (int)(1200*m_fDPIScale);
 	if (m_clientRect.Width() < nNeededSpace) {
@@ -329,13 +340,6 @@ CSliderMgr::CSliderMgr(HWND hWnd) : CPanelMgr(hWnd) {
 	}
 
 	m_nNoLabelWidth = m_nSliderWidth + (int)(WIDTH_ADD_PIXELS*m_fDPIScale);
-	m_nSliderHeight = (int)(SLIDER_HEIGHT*m_fDPIScale);
-	m_nSliderGap = (int) (SLIDER_GAP*m_fDPIScale);
-	m_nTotalAreaHeight = m_nSliderHeight*3 + SCREEN_Y_OFFSET;
-	m_sliderAreaRect = CRect(0, 0, 0, 0);
-
-	m_nYStart = 0xFFFF;
-	m_nTotalSliders = 0;
 }
 
 bool CSliderMgr::OnMouseLButton(EMouseEvent eMouseEvent, int nX, int nY) {
@@ -368,6 +372,16 @@ CRect CSliderMgr::PanelRect() {
 		if (sizeScreen2.cy > sizeScreen.cy) {
 			nXStart += sizeScreen.cx;
 			sizeScreen = sizeScreen2;
+		}
+	}
+
+	// Get the new width of the sliders and modify all existing sliders
+	DetermineSliderWidth();
+	std::list<CUICtrl*>::iterator iter;
+	for (iter = m_ctrlList.begin( ); iter != m_ctrlList.end( ); iter++ ) {
+		CSliderDouble* pSlider = dynamic_cast<CSliderDouble*>(*iter);
+		if (pSlider != NULL) {
+			pSlider->SetSliderLen(m_nSliderWidth);
 		}
 	}
 

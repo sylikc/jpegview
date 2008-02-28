@@ -65,6 +65,9 @@ static BOOL CALLBACK MonitorEnumProc(HMONITOR hMonitor, HDC hdcMonitor, LPRECT l
 }
 
 CRect CMultiMonitorSupport::GetMonitorRect(int nIndex) {
+	if (!CMultiMonitorSupport::IsMultiMonitorSystem()) {
+		return CRect(0, 0, ::GetSystemMetrics(SM_CXSCREEN), ::GetSystemMetrics(SM_CYSCREEN));
+	}
 	EnumMonitorParams params(nIndex);
 	::EnumDisplayMonitors(NULL, NULL, &MonitorEnumProc, (LPARAM) &params);
 	if (params.rectMonitor.Width() == 0) {

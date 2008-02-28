@@ -29,6 +29,7 @@ Bugs removed:
 New features:
 - Toggle screen with Ctrl-F12 on multiscreen systems
 - Window mode, toggle between window mode and full screen mode with Ctrl-W
+  The window mode can be made default in INI file and the starting window size can also be set in the INI
 
 
 [1.0.16.1] (repack - binary files equal to 1.0.16)

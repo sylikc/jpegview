@@ -323,13 +323,10 @@ LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam
 	// place window on monitor as requested in INI file
 	m_nMonitor = CSettingsProvider::This().DisplayMonitor();
 	m_monitorRect = CMultiMonitorSupport::GetMonitorRect(m_nMonitor);
-	if (CMultiMonitorSupport::IsMultiMonitorSystem()) {
-		// m_monitorRect = CRect(0, 0, 1024, 768);
+	if (CSettingsProvider::This().ShowFullScreen() || m_sStartupFile.GetLength() == 0) {
 		SetWindowPos(HWND_TOP, &m_monitorRect, SWP_NOZORDER);
 	} else {
-		CRect wndRect(0, 0, ::GetSystemMetrics(SM_CXSCREEN), ::GetSystemMetrics(SM_CYSCREEN));
-		this->MoveWindow(&wndRect);
-		m_monitorRect = wndRect;
+		ExecuteCommand(IDM_FULL_SCREEN_MODE);
 	}
 	this->GetClientRect(&m_clientRect);
 
@@ -380,8 +377,9 @@ LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam
 		IMAGE_ICON, ::GetSystemMetrics(SM_CXSMICON), ::GetSystemMetrics(SM_CYSMICON), LR_DEFAULTCOLOR);
 	SetIcon(hIconSmall, FALSE);
 
-	// turn off mouse coursor
-	m_nCursorCnt = ::ShowCursor(FALSE);
+	// turn on/off mouse coursor
+	m_bMouseOn = !CSettingsProvider::This().ShowFullScreen();
+	m_nCursorCnt = ::ShowCursor(m_bMouseOn);
 
 	// intitialize navigation with startup file (and folder)
 	m_pFileList = new CFileList(m_sStartupFile, CSettingsProvider::This().Sorting());
@@ -403,7 +401,11 @@ LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam
 		if (!OpenFile(true)) {
 			EndDialog(0);
 		}
-		::SetWindowLong(m_hWnd, GWL_STYLE, WS_VISIBLE);
+		if (CSettingsProvider::This().ShowFullScreen()) {
+			::SetWindowLong(m_hWnd, GWL_STYLE, WS_VISIBLE);
+		} else {
+			ExecuteCommand(IDM_FULL_SCREEN_MODE);
+		}
 	}
 
 	this->Invalidate(FALSE);
@@ -423,7 +425,7 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 	CRect rectNavPanel = m_pNavPanel->PanelRect();
 	bool bBlendNavPanel = false;
 	bool bNavPanelInvisible = (CSettingsProvider::This().BlendFactorNavPanel() == 0.0f && !m_bMouseInNavPanel) ||
-		m_bMovieMode || m_bDoCropping || m_bShowIPTools || m_nCursorCnt < 0;
+		m_bMovieMode || m_bDoCropping || m_bShowIPTools || m_nCursorCnt < 0 || (!m_bFullScreenMode && !m_bMouseOn && !m_bMouseInNavPanel);
 	bool bShowZoomNavigator = false;
 	CRectF visRectZoomNavigator(0.0f, 0.0f, 1.0f, 1.0f);
 	CRect rectZoomNavigator(0, 0, 0, 0);
@@ -1678,11 +1680,19 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 				this->SetWindowLongW(GWL_STYLE, this->GetWindowLongW(GWL_STYLE) | WS_OVERLAPPEDWINDOW | WS_VISIBLE);
 				if (::IsRectEmpty(&(m_storedWindowPlacement2.rcNormalPosition))) {
 					// never set to window mode before, use default position
-					windowRect = CRect(CPoint(m_monitorRect.Width()/10, m_monitorRect.Height()/10), CSize(m_monitorRect.Width()*193/300, m_monitorRect.Height()*2/3));
-					this->SetWindowPos(HWND_TOP, windowRect.left, windowRect.top, windowRect.Width(), windowRect.Height(), SWP_NOZORDER);
+					windowRect = CSettingsProvider::This().DefaultWindowRect();
+					CRect rectAllScreens = CMultiMonitorSupport::GetVirtualDesktop();
+					if (windowRect.IsRectEmpty() || !rectAllScreens.IntersectRect(&rectAllScreens, &windowRect)) {
+						int nDesiredWidth = m_monitorRect.Width()*2/3;
+						windowRect = CRect(CPoint(m_monitorRect.left + m_monitorRect.Width()/10, m_monitorRect.top + m_monitorRect.Height()/10), CSize(nDesiredWidth, nDesiredWidth*3/4));
+						AdjustWindowRectEx(&windowRect, GetStyle(), FALSE, GetExStyle());
+					}
+					this->SetWindowPos(HWND_TOP, windowRect.left, windowRect.top, windowRect.Width(), windowRect.Height(), SWP_NOZORDER | SWP_NOCOPYBITS);
 				} else {
+					m_storedWindowPlacement2.flags = 
 					this->SetWindowPlacement(&m_storedWindowPlacement2);
 				}
+				this->MouseOn();
 			} else {
 				this->GetWindowPlacement(&m_storedWindowPlacement2);
 				HMONITOR hMonitor = ::MonitorFromWindow(m_hWnd, MONITOR_DEFAULTTONEAREST);
@@ -1691,11 +1701,12 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 				if (::GetMonitorInfo(hMonitor, &monitorInfo)) {
 					CRect monitorRect(&(monitorInfo.rcMonitor));
 					this->SetWindowLongW(GWL_STYLE, WS_VISIBLE);
-					this->SetWindowPos(HWND_TOP, monitorRect.left, monitorRect.top, monitorRect.Width(), monitorRect.Height(), SWP_NOZORDER);
+					this->SetWindowPos(HWND_TOP, monitorRect.left, monitorRect.top, monitorRect.Width(), monitorRect.Height(), SWP_NOZORDER | SWP_NOCOPYBITS);
 				}
+				this->MouseOn();
 			}
 			m_dZoom = -1;
-			this->SetWindowPos(NULL, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_FRAMECHANGED);
+			this->SetWindowPos(NULL, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_NOCOPYBITS | SWP_FRAMECHANGED);
 			break;
 		case IDM_ZOOM_400:
 			PerformZoom(4.0, false);
@@ -2400,17 +2411,25 @@ void CMainDlg::StartNavPanelTimer(int nTimeout) {
 }
 
 void CMainDlg::MouseOff() {
-	if (m_nCursorCnt >= 0 && m_nMouseY < m_clientRect.bottom - m_pSliderMgr->SliderAreaHeight() && 
-		!m_bInTrackPopupMenu && !m_pNavPanel->PanelRect().PtInRect(CPoint(m_nMouseX, m_nMouseY))) {
-		m_nCursorCnt = ::ShowCursor(FALSE);
-		m_startMouse.x = m_startMouse.y = -1;
+	if (m_bMouseOn) {
+		if (m_nMouseY < m_clientRect.bottom - m_pSliderMgr->SliderAreaHeight() && 
+			!m_bInTrackPopupMenu && !m_pNavPanel->PanelRect().PtInRect(CPoint(m_nMouseX, m_nMouseY))) {
+			if (m_bFullScreenMode && m_nCursorCnt >= 0) {
+				m_nCursorCnt = ::ShowCursor(FALSE);
+			}
+			m_startMouse.x = m_startMouse.y = -1;
+			m_bMouseOn = false;
+		}
 		this->InvalidateRect(m_pNavPanel->PanelRect(), FALSE);
 	}
 }
 
 void CMainDlg::MouseOn() {
-	if (m_nCursorCnt < 0) {
-		m_nCursorCnt = ::ShowCursor(TRUE);
+	if (!m_bMouseOn) {
+		if (m_nCursorCnt < 0) {
+			m_nCursorCnt = ::ShowCursor(TRUE);
+		}
+		m_bMouseOn = true;
 		this->InvalidateRect(m_pNavPanel->PanelRect(), FALSE);
 	}
 }

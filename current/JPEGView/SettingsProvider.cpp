@@ -131,6 +131,7 @@ void CSettingsProvider::ReadWriteableINISettings() {
 	m_dMagentaGreen = GetDouble(_T("MagentaGreen"), 0.0, -1.0, 1.0);
 	m_dYellowBlue = GetDouble(_T("YellowBlue"), 0.0, -1.0, 1.0);
 	m_bHQRS = GetBool(_T("HighQualityResampling"), true);
+	m_bShowFullScreen = GetBool(_T("ShowFullScreen"), true);
 	m_bShowFileName = GetBool(_T("ShowFileName"), false);
 	m_bShowFileInfo = GetBool(_T("ShowFileInfo"), false);
 	m_bShowNavPanel = GetBool(_T("ShowNavPanel"), true);
@@ -203,6 +204,7 @@ void CSettingsProvider::ReadWriteableINISettings() {
 	m_dDarkenHighlights = GetDouble(_T("LDCDarkenHighlights"), 0.25, 0.0, 1.0);
 	m_dBrightenShadowsSteepness = GetDouble(_T("LDCBrightenShadowsSteepness"), 0.5, 0.0, 1.0);
 	m_sCopyRenamePattern = GetString(_T("CopyRenamePattern"), _T(""));
+	m_defaultWindowRect = GetRect(_T("DefaultWindowRect"), CRect(0, 0, 0, 0));
 }
 
 void CSettingsProvider::SaveSettings(const CImageProcessingParams& procParams, 
@@ -311,6 +313,21 @@ bool CSettingsProvider::GetBool(LPCTSTR sKey, bool bDefault) {
 		return false;
 	} else {
 		return bDefault;
+	}
+}
+
+CRect CSettingsProvider::GetRect(LPCTSTR sKey, const CRect& defaultRect) {
+	CString s = GetString(sKey, _T(""));
+	if (s.IsEmpty()) {
+		return defaultRect;
+	}
+	int nLeft, nTop, nRight, nBottom;
+	if (_stscanf((LPCTSTR)s, _T(" %d %d %d %d "), &nLeft, &nTop, &nRight, &nBottom) == 4) {
+		CRect newRect = CRect(nLeft, nTop, nRight, nBottom);
+		newRect.NormalizeRect();
+		return newRect;
+	} else {
+		return defaultRect;
 	}
 }
 
