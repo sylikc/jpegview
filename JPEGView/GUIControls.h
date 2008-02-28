@@ -109,7 +109,7 @@ protected:
 
 //-------------------------------------------------------------------------------------------------
 
-// Represents some extra gap between buttons - only recognized bz navigation panel
+// Represents some extra gap between buttons - only recognized by navigation panel
 class CGapCtrl : public CUICtrl {
 public:
 	CGapCtrl(CPanelMgr* pPanelMgr, int nGap) : CUICtrl(pPanelMgr) { m_nGap = nGap; m_bShow = false; }
@@ -210,6 +210,7 @@ public:
 
 	double* GetValuePtr() { return m_pValue; }
 	int GetNameLabelWidth() const { return m_nNameWidth; }
+	void SetSliderLen(int nSliderLen) { m_nSliderLen = nSliderLen; }
 
 public:
 	virtual bool OnMouseLButton(EMouseEvent eMouseEvent, int nX, int nY);
@@ -327,6 +328,8 @@ protected:
 	virtual void RepositionAll();
 
 private:
+	void DetermineSliderWidth();
+
 	int m_nSliderWidth;
 	int m_nSliderHeight;
 	int m_nNoLabelWidth;

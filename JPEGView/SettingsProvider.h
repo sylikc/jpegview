@@ -27,6 +27,7 @@ public:
 	bool ShowFileInfo() { return m_bShowFileInfo; }
 	bool ShowNavPanel() { return m_bShowNavPanel; }
 	bool ShowZoomNavigator() { return m_bShowZoomNavigator; }
+	bool ShowFullScreen() { return m_bShowFullScreen; }
 	float BlendFactorNavPanel() { return m_fBlendFactorNavPanel; }
 	bool KeepParams() { return m_bKeepParams; }
 	LPCTSTR Language() { return m_sLanguage; }
@@ -52,6 +53,7 @@ public:
 	LPCTSTR LDCExclude() { return m_sLDCExclude; }
 	LPCTSTR LDCInclude() { return m_sLDCInclude; }
 	LPCTSTR CopyRenamePattern() { return m_sCopyRenamePattern; }
+	CRect DefaultWindowRect() { return m_defaultWindowRect; }
 
 	std::list<CUserCommand*> & UserCommandList() { return m_userCommands; }
 
@@ -85,6 +87,7 @@ private:
 	bool m_bShowFileInfo;
 	bool m_bShowNavPanel;
 	bool m_bShowZoomNavigator;
+	bool m_bShowFullScreen;
 	float m_fBlendFactorNavPanel;
 	bool m_bKeepParams;
 	CString m_sLanguage;
@@ -110,6 +113,7 @@ private:
 	CString m_sLDCExclude;
 	CString m_sLDCInclude;
 	CString m_sCopyRenamePattern;
+	CRect m_defaultWindowRect;
 
 	std::list<CUserCommand*> m_userCommands;
 
@@ -118,6 +122,7 @@ private:
 	int GetInt(LPCTSTR sKey, int nDefault, int nMin, int nMax);
 	double GetDouble(LPCTSTR sKey, double dDefault, double dMin, double dMax);
 	bool GetBool(LPCTSTR sKey, bool bDefault);
+	CRect GetRect(LPCTSTR sKey, const CRect& defaultRect);
 	void WriteString(LPCTSTR sKey, LPCTSTR sString);
 	void WriteDouble(LPCTSTR sKey, double dValue);
 	void WriteBool(LPCTSTR sKey, bool bValue);

@@ -175,6 +175,7 @@ private:
 	bool m_bShowNavPanel;
 	bool m_bMouseInNavPanel;
 	bool m_bArrowCursorSet;
+	bool m_bMouseOn;
 	int m_nMonitor;
 	WINDOWPLACEMENT m_storedWindowPlacement;
 	WINDOWPLACEMENT m_storedWindowPlacement2;
