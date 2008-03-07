@@ -28,7 +28,7 @@ Bugs removed:
 - Image processing panel not truncated on 1024x768 screens, sliders are smaller in this case
 New features:
 - Toggle screen with Ctrl-F12 on multiscreen systems
-- Window mode, toggle between window mode and full screen mode with Ctrl-W
+- Window mode, toggle between window mode and full screen mode with Ctrl-W or with button on navigation panel
   The window mode can be made default in INI file and the starting window size can also be set in the INI
 
 
