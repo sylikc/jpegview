@@ -33,7 +33,7 @@
 				<td>
 					<a name="Top"></a>
 					<h1>JPEGView Readme</h1>
-					Revision: 12-February-2008
+					Revision: 07-March-2008
 					<a name="Introduction"></a>
 					<h2>Introduction</h2>
 					JPEGView is a viewer/editor for JPEG, BMP, PNG, GIF and TIFF images. It is designed to view images from digital cameras
@@ -57,6 +57,7 @@
 							<ul style="margin-top:0in;margin-bottom:0in">
 								<li>Image centric - nothing else visible by default</li>
 								<li>Multiple monitor support</li>
+								<li>Window mode also supported (Toggle with Ctrl-W)</li>
 							</ul>
 						</li>
 						<li>
@@ -209,9 +210,18 @@
 					From left to right:<br/>
 					First image in folder, Previous image, Next image, Last image in folder<br/>
 					Actual image size / Fit image to screen<br/>
+					Window mode / Full screen mode<br/>
 					Rotate clockwise, Rotate counter-clockwise<br/>
 					Toggle landscape picture enhancement mode<br/>
 					Toggle display of image information (EXIF)<br/>
+
+					<h4>Full screen mode / Window mode</h4>
+					By default JPEGView starts in full screen mode on the largest monitor attached to the computer.
+					A window mode is also supported. Toggling between full screen and window mode is done with <kbd>Ctrl-W</kbd> or with
+					the button on the navigation panel.<br/>
+					By changing the INI file, it is possible to force JPEGView to start in window mode and to use a different monitor
+					respectively window position and size. Note that when changing the window size with the mouse, the image is not
+					scaled automatically to fit the new size. Press then <kbd>Enter</kbd> key to fit the image to the window.
 					<br/><b>
 						<a href="#Top">Top of Page</a>
 					</b><br/>
@@ -349,6 +359,7 @@
 							Fill with crop (no zoom)<br/>
 							Images that are larger than the screen are scaled down to fill the entire screen. Cropping occurs if necessary to
 							avoid black borders. Images that are smaller than the screen are not enlarged.<br/>
+							This mode is suited for viewing 4:3 images on a 16:9 wide screen without black borders.<br/>
 							Note: Cropping is limited to approximately 30 % of the image in this mode. If more would be cropped, fit to screen is used instead.
 							As a result, portrait images will not be cropped on the screen.
 						</li>
