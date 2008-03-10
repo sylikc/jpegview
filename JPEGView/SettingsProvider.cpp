@@ -203,8 +203,30 @@ void CSettingsProvider::ReadWriteableINISettings() {
 	m_dBrightenShadows = GetDouble(_T("LDCBrightenShadows"), 0.5, 0.0, 1.0);
 	m_dDarkenHighlights = GetDouble(_T("LDCDarkenHighlights"), 0.25, 0.0, 1.0);
 	m_dBrightenShadowsSteepness = GetDouble(_T("LDCBrightenShadowsSteepness"), 0.5, 0.0, 1.0);
+	m_sLandscapeModeParams = GetString(_T("LandscapeModeParams"), _T("-1 -1 -1 -1 0.5 1.0 0.75 0.4 -1 -1 -1"));
 	m_sCopyRenamePattern = GetString(_T("CopyRenamePattern"), _T(""));
 	m_defaultWindowRect = GetRect(_T("DefaultWindowRect"), CRect(0, 0, 0, 0));
+}
+
+CImageProcessingParams CSettingsProvider::LandscapeModeParams(const CImageProcessingParams& templParams) {
+	const float cfUndefined = -1;
+	const int cnParams = 11;
+	float fParams[cnParams];
+	for (int i = 0; i < cnParams; i++) fParams[i] = cfUndefined;
+	_stscanf(m_sLandscapeModeParams, _T("%f %f %f %f %f %f %f %f %f %f %f"), &fParams[0], &fParams[1], &fParams[2], 
+		&fParams[3], &fParams[4], &fParams[5], &fParams[6], &fParams[7], &fParams[8], &fParams[9], &fParams[10]);
+	return CImageProcessingParams(
+		(fParams[0] == cfUndefined) ? templParams.Contrast : fParams[0],
+		(fParams[1] == cfUndefined) ? templParams.Gamma : fParams[1],
+		(fParams[2] == cfUndefined) ? templParams.Sharpen : fParams[2],
+		(fParams[3] == cfUndefined) ? templParams.ColorCorrectionFactor : fParams[3],
+		(fParams[4] == cfUndefined) ? templParams.ContrastCorrectionFactor : fParams[4],
+		(fParams[5] == cfUndefined) ? templParams.LightenShadows : fParams[5],
+		(fParams[6] == cfUndefined) ? templParams.DarkenHighlights : fParams[6],
+		(fParams[7] == cfUndefined) ? templParams.LightenShadowSteepness : fParams[7],
+		(fParams[8] == cfUndefined) ? templParams.CyanRed : fParams[8],
+		(fParams[9] == cfUndefined) ? templParams.MagentaGreen : fParams[9],
+		(fParams[10] == cfUndefined) ? templParams.YellowBlue : fParams[10]);
 }
 
 void CSettingsProvider::SaveSettings(const CImageProcessingParams& procParams, 

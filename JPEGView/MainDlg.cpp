@@ -134,8 +134,7 @@ static void InitFromProcessingFlags(EProcessingFlags eFlags, bool& bHQResampling
 // Sets the parameters according to the landscape enhancement mode
 static CImageProcessingParams _SetLandscapeModeParams(bool bLandscapeMode, const CImageProcessingParams& params) {
 	if (bLandscapeMode) {
-		return CImageProcessingParams(params.Contrast, params.Gamma, params.Sharpen, params.ColorCorrectionFactor,
-			0.50, 1.0, 0.75, 0.4, params.CyanRed, params.MagentaGreen, params.YellowBlue);
+		return CSettingsProvider::This().LandscapeModeParams(params);
 	} else {
 		return params;
 	}
@@ -1628,10 +1627,7 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 				}
 				m_bLDC = GetProcessingFlag(eProcFlags, PFLAG_LDC);
 				m_bAutoContrast = GetProcessingFlag(eProcFlags, PFLAG_AutoContrast);
-				m_pImageProcParams->ContrastCorrectionFactor = ipa.ContrastCorrectionFactor;
-				m_pImageProcParams->LightenShadows = ipa.LightenShadows;
-				m_pImageProcParams->DarkenHighlights = ipa.DarkenHighlights;
-				m_pImageProcParams->LightenShadowSteepness = ipa.LightenShadowSteepness;
+				*m_pImageProcParams = ipa;
 			}
 			this->Invalidate(FALSE);
 			break;
