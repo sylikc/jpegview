@@ -182,6 +182,8 @@ void CSettingsProvider::ReadWriteableINISettings() {
 		m_eNavigation = Helpers::NM_LoopDirectory;
 	}
 
+	m_bNavigateMouseWheel = GetBool(_T("NavigateWithMouseWheel"), false);
+
 	CString sAutoZoomMode = GetString(_T("AutoZoomMode"), _T("FitNoZoom"));
 	if (sAutoZoomMode.CompareNoCase(_T("Fit")) == 0) {
 		m_eAutoZoomMode = Helpers::ZM_FitToScreen;
@@ -206,6 +208,14 @@ void CSettingsProvider::ReadWriteableINISettings() {
 	m_sLandscapeModeParams = GetString(_T("LandscapeModeParams"), _T("-1 -1 -1 -1 0.5 1.0 0.75 0.4 -1 -1 -1"));
 	m_sCopyRenamePattern = GetString(_T("CopyRenamePattern"), _T(""));
 	m_defaultWindowRect = GetRect(_T("DefaultWindowRect"), CRect(0, 0, 0, 0));
+
+	int nRed, nGreen, nBlue;
+	CString sBkColor = GetString(_T("BackgroundColor"), _T("0 0 0"));
+	if (_stscanf(sBkColor, _T(" %d %d %d"), &nRed, &nGreen, &nBlue) == 3) {
+		m_nBackgroundColor = RGB(nRed, nGreen, nBlue);
+	} else {
+		m_nBackgroundColor = 0;
+	}
 }
 
 CImageProcessingParams CSettingsProvider::LandscapeModeParams(const CImageProcessingParams& templParams) {

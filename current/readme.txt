@@ -25,12 +25,14 @@ Changelog
 [1.0.17]
 
 Bugs removed:
-- Image processing panel not truncated on 1024x768 screens, sliders are smaller in this case
+- Image processing panel no longer truncated on 1024x768 screens, sliders are smaller in this case
 New features:
 - Toggle screen with Ctrl-F12 on multiscreen systems
 - Window mode, toggle between window mode and full screen mode with Ctrl-W or with button on navigation panel
-  The window mode can be made default in INI file and the starting window size can also be set in the INI
-- New INI file setting (LandscapeModeParams) that allows to define the parameters used in landscape enhancement mode
+  The window mode can be made default in INI file and the starting window size can also be set in the INI file
+- New INI file setting (LandscapeModeParams) that allows defining the parameters used in landscape enhancement mode
+- New INI file setting (BackgroundColor) that allows setting the background color
+- New INI file setting (NavigateWithMouseWheel) that allows using the mouse wheel for navigation (Ctrl-Wheel for zoom)
 
 
 [1.0.16.1] (repack - binary files equal to 1.0.16)
