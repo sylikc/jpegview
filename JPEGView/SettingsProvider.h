@@ -36,6 +36,7 @@ public:
 	EFilterType DownsamplingFilter() { return m_eDownsamplingFilter; }
 	Helpers::ESorting Sorting() { return m_eSorting; }
 	Helpers::ENavigationMode Navigation() { return m_eNavigation; }
+	bool NavigateWithMouseWheel() { return m_bNavigateMouseWheel; }
 	Helpers::EAutoZoomMode AutoZoomMode() { return m_eAutoZoomMode; }
 	int DisplayMonitor() { return m_nDisplayMonitor; }
 	bool AutoContrastCorrection() { return m_bAutoContrastCorrection; }
@@ -55,6 +56,7 @@ public:
 	LPCTSTR LDCInclude() { return m_sLDCInclude; }
 	LPCTSTR CopyRenamePattern() { return m_sCopyRenamePattern; }
 	CRect DefaultWindowRect() { return m_defaultWindowRect; }
+	int BackgroundColor() { return m_nBackgroundColor; }
 
 	std::list<CUserCommand*> & UserCommandList() { return m_userCommands; }
 
@@ -97,6 +99,7 @@ private:
 	EFilterType m_eDownsamplingFilter;
 	Helpers::ESorting m_eSorting;
 	Helpers::ENavigationMode m_eNavigation;
+	bool m_bNavigateMouseWheel;
 	Helpers::EAutoZoomMode m_eAutoZoomMode;
 	int m_nDisplayMonitor;
 	bool m_bAutoContrastCorrection;
@@ -116,6 +119,7 @@ private:
 	CString m_sLDCInclude;
 	CString m_sCopyRenamePattern;
 	CRect m_defaultWindowRect;
+	int m_nBackgroundColor;
 
 	std::list<CUserCommand*> m_userCommands;
 

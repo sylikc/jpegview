@@ -429,6 +429,8 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 	CRectF visRectZoomNavigator(0.0f, 0.0f, 1.0f, 1.0f);
 	CRect rectZoomNavigator(0, 0, 0, 0);
 	CRect helpDisplayRect = (m_clientRect.Width() > m_monitorRect.Width()) ? m_monitorRect : m_clientRect;
+	CBrush backBrush;
+	backBrush.CreateSolidBrush(CSettingsProvider::This().BackgroundColor());
 
 	// Exclude the help display from clipping area to reduce flickering
 	CHelpDisplay* pHelpDisplay = NULL;
@@ -477,7 +479,7 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 	}
 
 	if (m_pCurrentImage == NULL) {
-		dc.FillRect(&m_clientRect, (HBRUSH)::GetStockObject(BLACK_BRUSH));
+		dc.FillRect(&m_clientRect, backBrush);
 	} else {
 		// do this as very first - may changes size of image
 		m_pCurrentImage->VerifyRotation(m_nRotation);
@@ -572,15 +574,15 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 			// remaining client area is painted black
 			if (clippedSize.cx < m_clientRect.Width()) {
 				CRect r(0, 0, xDest, m_clientRect.Height());
-				dc.FillRect(&r, (HBRUSH)::GetStockObject(BLACK_BRUSH));
+				dc.FillRect(&r, backBrush);
 				CRect rr(xDest+clippedSize.cx, 0, m_clientRect.Width(), m_clientRect.Height());
-				dc.FillRect(&rr, (HBRUSH)::GetStockObject(BLACK_BRUSH));
+				dc.FillRect(&rr, backBrush);
 			}
 			if (clippedSize.cy < m_clientRect.Height()) {
 				CRect r(0, 0, m_clientRect.Width(), yDest);
-				dc.FillRect(&r, (HBRUSH)::GetStockObject(BLACK_BRUSH));
+				dc.FillRect(&r, backBrush);
 				CRect rr(0, yDest+clippedSize.cy, m_clientRect.Width(), m_clientRect.Height());
-				dc.FillRect(&rr, (HBRUSH)::GetStockObject(BLACK_BRUSH));
+				dc.FillRect(&rr, backBrush);
 			}
 
 		}
@@ -896,8 +898,15 @@ LRESULT CMainDlg::OnMouseMove(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, B
 }
 
 LRESULT CMainDlg::OnMouseWheel(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOOL& /*bHandled*/) {
-	if (m_dZoom > 0) {
-		int nDelta = GET_WHEEL_DELTA_WPARAM(wParam);
+	bool bCtrl = (::GetKeyState(VK_CONTROL) & 0x8000) != 0;
+	int nDelta = GET_WHEEL_DELTA_WPARAM(wParam);
+	if (!bCtrl && CSettingsProvider::This().NavigateWithMouseWheel()) {
+		if (nDelta < 0) {
+			GotoImage(POS_Next);
+		} else if (nDelta > 0) {
+			GotoImage(POS_Previous);
+		}
+	} else if (m_dZoom > 0) {
 		PerformZoom(double(nDelta)/WHEEL_DELTA, true);
 	}
 	return 0;
@@ -2859,12 +2868,15 @@ void CMainDlg::GenerateHelpDisplay(CHelpDisplay & helpDisplay) {
 HBITMAP CMainDlg::PrepareRectForMemDCPainting(CDC & memDC, CDC & paintDC, const CRect& rect) {
 	paintDC.ExcludeClipRect(&rect);
 
+	CBrush backBrush;
+	backBrush.CreateSolidBrush(CSettingsProvider::This().BackgroundColor());
+
 	// Create a memory DC of correct size
 	CBitmap memDCBitmap = CBitmap();
 	memDC.CreateCompatibleDC(paintDC);
 	memDCBitmap.CreateCompatibleBitmap(paintDC, rect.Width(), rect.Height());
 	memDC.SelectBitmap(memDCBitmap);
-	memDC.FillRect(CRect(0, 0, rect.Width(), rect.Height()), (HBRUSH)::GetStockObject(BLACK_BRUSH));
+	memDC.FillRect(CRect(0, 0, rect.Width(), rect.Height()), backBrush);
 	return memDCBitmap.m_hBitmap;
 }
 

@@ -208,7 +208,7 @@ void CImageLoadThread::ProcessReadGDIPlusRequest(CRequest * request) {
 
 	Gdiplus::Bitmap* pBitmap = new Gdiplus::Bitmap(sFileName);
 	if (pBitmap->GetLastStatus() == Gdiplus::Ok) {
-		// If there is an alpha channel in the original file we must blit the image onto a black offscreen
+		// If there is an alpha channel in the original file we must blit the image onto a background color offscreen
 		// bitmap first to archieve proper rendering.
 		Gdiplus::PixelFormat pixelFormat = pBitmap->GetPixelFormat();
 		bool bHasAlphaChannel = (pixelFormat & (PixelFormatAlpha | PixelFormatPAlpha));
@@ -218,8 +218,9 @@ void CImageLoadThread::ProcessReadGDIPlusRequest(CRequest * request) {
 		if (bHasAlphaChannel) {
 			pBmTarget = new Gdiplus::Bitmap(pBitmap->GetWidth(), pBitmap->GetHeight(), PixelFormat32bppRGB);
 			pBmGraphics = new Gdiplus::Graphics(pBmTarget);
-			Gdiplus::SolidBrush blackBrush(Gdiplus::Color(255, 0, 0, 0));
-			pBmGraphics->FillRectangle(&blackBrush, 0, 0, pBmTarget->GetWidth(), pBmTarget->GetHeight());
+			DWORD bkColor = CSettingsProvider::This().BackgroundColor();
+			Gdiplus::SolidBrush bkBrush(Gdiplus::Color(GetRValue(bkColor), GetGValue(bkColor), GetBValue(bkColor)));
+			pBmGraphics->FillRectangle(&bkBrush, 0, 0, pBmTarget->GetWidth(), pBmTarget->GetHeight());
 			pBmGraphics->DrawImage(pBitmap, 0, 0, pBmTarget->GetWidth(), pBmTarget->GetHeight());
 			pBitmapToUse = pBmTarget;
 		} else {
