@@ -29,25 +29,10 @@ LRESULT CFileOpenDialog::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /
 	return 0;
 }
 
-LRESULT CFileOpenDialog::OnSelChange(int /*idCtrl*/, LPNMHDR /*pnmh*/, BOOL& /*bHandled*/) {
-	if (!m_bSized) {
-		// This is a hack but only this member is called late enough to be able to change the size
-		// after Windows itself has set the size
-		HWND wndParent = this->GetParent(); // real dialog is parent of us
-
-		int nScreenX = ::GetSystemMetrics(SM_CXSCREEN);
-		int nScreenY = ::GetSystemMetrics(SM_CYSCREEN);
-		int nSizeX = nScreenX*80/100;
-		int nSizeY = nScreenY*80/100;
-		::MoveWindow(wndParent, (nScreenX-nSizeX)/2, (nScreenY-nSizeY)/2, 
-			nSizeX, nSizeY, TRUE);
-		m_bSized = true;
-	}
-	return 0;
-}
-
 LRESULT CFileOpenDialog::OnPostInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/) {
 	HWND wndParent = this->GetParent(); // real dialog is parent of us
+
+	SizeDialog();
 
 	// Get the shell window hosting the list view of the files and send a WM_COMMAND to it to
 	// switch to thumbnail view
@@ -58,4 +43,19 @@ LRESULT CFileOpenDialog::OnPostInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPAR
 	}
 	return 0;
 }
+
+void CFileOpenDialog::SizeDialog() {
+	if (!m_bSized) {
+		HWND wndParent = this->GetParent(); // real dialog is parent of us
+
+		int nScreenX = ::GetSystemMetrics(SM_CXSCREEN);
+		int nScreenY = ::GetSystemMetrics(SM_CYSCREEN);
+		int nSizeX = nScreenX*80/100;
+		int nSizeY = nScreenY*80/100;
+		::MoveWindow(wndParent, (nScreenX-nSizeX)/2, (nScreenY-nSizeY)/2, 
+			nSizeX, nSizeY, TRUE);
+		m_bSized = true;
+	}
+}
+
 
