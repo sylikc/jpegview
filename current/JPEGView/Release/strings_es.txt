@@ -212,3 +212,7 @@ Rotate image 90 deg clockwise	Rotar imagen 90 grad sentido horario
 Rotate image 90 deg counter-clockwise	Rotar imagen 90 grad sentido antihorario
 Landscape picture enhancement mode	Modo de mejora de imagen de paisajes
 Display image (EXIF) information	Mostrar información (EXIF) de la imagen
+Toggle between screens (only for multi-monitor systems)	Cambiar entre pantallas (sólo para sistemas multi-monitor)
+Enable/disable full screen mode	Habilitar/deshabilitar modo pantalla completa
+Full screen mode	Modo pantalla completa
+Window mode	Modo ventana
