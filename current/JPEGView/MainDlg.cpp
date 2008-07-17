@@ -1711,6 +1711,7 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 				this->MouseOn();
 			}
 			m_dZoom = -1;
+			StartLowQTimer(ZOOM_TIMEOUT);
 			this->SetWindowPos(NULL, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_NOCOPYBITS | SWP_FRAMECHANGED);
 			break;
 		case IDM_ZOOM_400:
