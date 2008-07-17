@@ -61,7 +61,7 @@ Fit image to screen	Adatta allo schermo
 Zoom 1:1 (100 %)	Zoom 1:1 (100 %)
 Zoom in/Zoom out (also Ctrl+up/down)	Ingrandire/ridurre (anche Ctrl+su/giù)
 Zoom in/out image	Ingrandire/ridurre l’immagine
-Pan image	Riquadra l’immagine Pan)
+Pan image	Riquadra l’immagine (Pan)
 Crop image	Ritaglia l’immagine
 Next image	Immagine successiva
 Previous image	Immagine precedente
@@ -212,6 +212,7 @@ Rotate image 90 deg clockwise	Ruota l’immagine di 90 gradi in senso orario
 Rotate image 90 deg counter-clockwise	Ruota l’immagine di 90 gradi in senso anti-orario
 Landscape picture enhancement mode	Modalità di miglioramento del paesaggio
 Display image (EXIF) information	Visualizza le informazioni dell’immagine (EXIF)
+Actual size of image	Dimensione attuale dell'immagine
 Toggle between screens (only for multi-monitor systems)	Alterna tra schermi (solo per sistemi multi-monitor)
 Enable/disable full screen mode	Abilita/disabilita la modalità tutto schermo
 Full screen mode	Modalità tutto schermo
