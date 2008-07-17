@@ -22,6 +22,12 @@ to JPEGView\Debug
 Changelog
 *********
 
+[1.0.18]
+
+New features:
+- Italian translation updated
+- Toggle to window mode and back now first uses low quality sampling and improves quality on idle
+
 [1.0.17]
 
 Bugs removed:
