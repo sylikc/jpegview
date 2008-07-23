@@ -22,6 +22,14 @@ static uint16 ReadUShort(void * ptr, bool bLittleEndian) {
 	}
 }
 
+static void WriteUShort(void * ptr, uint16 nValue, bool bLittleEndian) {
+	uint16 nVal = nValue;
+	if (!bLittleEndian) {
+		nVal = _byteswap_ushort(nVal);
+	}
+	*((uint16*)ptr) = nVal;
+}
+
 static uint8* FindTag(uint8* ptr, uint8* ptrLast, uint16 nTag, bool bLittleEndian) {
 	while (ptr < ptrLast) {
 		if (ReadUShort(ptr, bLittleEndian) == nTag) {
@@ -63,6 +71,12 @@ static uint16 ReadShortTag(uint8* ptr, bool bLittleEndian) {
 		return ReadUShort(ptr + 8, bLittleEndian);
 	} else {
 		return 0;
+	}
+}
+
+static void WriteShortTag(uint8* ptr, uint16 nValue, bool bLittleEndian) {
+	if (ptr != NULL && ReadUShort(ptr + 2, bLittleEndian) == 3) {
+		WriteUShort(ptr + 8, nValue, bLittleEndian);
 	}
 }
 
@@ -141,6 +155,9 @@ CEXIFReader::CEXIFReader(void* pApp1Block)
 	m_bFlashFlagPresent = false;
 	m_dFocalLength = m_dExposureBias = m_dFNumber = UNKNOWN_DOUBLE_VALUE;
 	m_nISOSpeed = 0;
+	m_nImageOrientation = 0;
+	m_pTagOrientation = NULL;
+	m_bLittleEndian = true;
 
 	uint8* pApp1 = (uint8*)pApp1Block;
 	// APP1 marker
@@ -159,6 +176,8 @@ CEXIFReader::CEXIFReader(void* pApp1Block)
 	} else {
 		return;
 	}
+	m_bLittleEndian = bLittleEndian;
+
 	uint8* pIFD0 = pTIFFHeader + ReadUInt(pTIFFHeader + 4, bLittleEndian);
 	if (pIFD0 - pApp1 >= nApp1Size) {
 		return;
@@ -170,6 +189,13 @@ CEXIFReader::CEXIFReader(void* pApp1Block)
 	if (pLastIFD0 - pApp1 >= nApp1Size) {
 		return;
 	}
+
+	// image orientation
+	uint8* pTagOrientation = FindTag(pIFD0, pLastIFD0, 0x112, bLittleEndian);
+	if (pTagOrientation != NULL) {
+		m_nImageOrientation = ReadShortTag(pTagOrientation, bLittleEndian);
+	}
+	m_pTagOrientation = pTagOrientation;
 
 	uint8* pTagModel = FindTag(pIFD0, pLastIFD0, 0x110, bLittleEndian);
 	ReadStringTag(m_sModel, pTagModel, pTIFFHeader, bLittleEndian);
@@ -232,4 +258,10 @@ CEXIFReader::CEXIFReader(void* pApp1Block)
 }
 
 CEXIFReader::~CEXIFReader(void) {
+}
+
+void CEXIFReader::WriteImageOrientation(int nOrientation) {
+	if (m_pTagOrientation != NULL && ImageOrientationPresent()) {
+		WriteShortTag(m_pTagOrientation, nOrientation, m_bLittleEndian);
+	}
 }

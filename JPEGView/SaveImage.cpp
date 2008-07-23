@@ -6,6 +6,7 @@
 #include "IJLWrapper.h"
 #include "SettingsProvider.h"
 #include "ParameterDB.h"
+#include "EXIFReader.h"
 #include <gdiplus.h>
 
 // Gets the image format given a file name (uses the file extension)
@@ -28,7 +29,7 @@ static CJPEGImage::EImageFormat GetImageFormat(LPCTSTR sFileName) {
 
 // Returns the compressed JPEG stream that must be freed by the caller. NULL in case of error.
 static void* CompressAndSave(LPCTSTR sFileName, CJPEGImage * pImage, 
-							 void* pData, int nWidth, int nHeight, int nQuality, int& nJPEGStreamLen) {
+							 void* pData, int nWidth, int nHeight, int nQuality, int& nJPEGStreamLen, bool bCopyEXIF) {
 	nJPEGStreamLen = 0;
 	unsigned char* pTargetStream = (unsigned char*) Jpeg::Compress(pData, nWidth, nHeight, 3, 
 		nJPEGStreamLen, nQuality);
@@ -43,10 +44,15 @@ static void* CompressAndSave(LPCTSTR sFileName, CJPEGImage * pImage,
 	}
 
 	// If EXIF data is present, replace any JFIF block by this EXIF block to preserve the EXIF information
-	if (pImage->GetEXIFData() != NULL) {
+	if (pImage->GetEXIFData() != NULL && bCopyEXIF) {
 		unsigned char* pNewStream = new unsigned char[nJPEGStreamLen + pImage->GetEXIFDataLength()];
 		memcpy(pNewStream, pTargetStream, 2); // copy SOI block
 		memcpy(pNewStream + 2, pImage->GetEXIFData(), pImage->GetEXIFDataLength()); // copy EXIF block
+		
+		// Set image orientation back to normal orientation, we save the pixels as displayed
+		CEXIFReader exifReader( pNewStream + 2);
+		exifReader.WriteImageOrientation(1); // 1 means default orientation (unrotated)
+
 		int nJFIFLength = 0;
 		if (pTargetStream[2] == 0xFF && pTargetStream[3] == 0xE0) {
 			// don't copy JFIF block
@@ -142,16 +148,29 @@ static bool SaveGDIPlus(LPCTSTR sFileName, CJPEGImage::EImageFormat eFileFormat,
 }
 
 bool CSaveImage::SaveImage(LPCTSTR sFileName, CJPEGImage * pImage, const CImageProcessingParams& procParams,
-						   EProcessingFlags eFlags) {
+						   EProcessingFlags eFlags, bool bFullSize) {
     pImage->EnableDimming(false);
 
-	CSize fullImageSize = CSize(pImage->OrigWidth(), pImage->OrigHeight());
-	void* pDIB32bpp = pImage->GetDIB(fullImageSize, fullImageSize, CPoint(0, 0), procParams, eFlags);
+	CSize imageSize;
+	void* pDIB32bpp;
 
-	uint32 nSizeLinePadded = Helpers::DoPadding(fullImageSize.cx*3, 4);
-	uint32 nSizeBytes = nSizeLinePadded*fullImageSize.cy;
+	if (bFullSize) {
+		imageSize = CSize(pImage->OrigWidth(), pImage->OrigHeight());
+		pDIB32bpp = pImage->GetDIB(imageSize, imageSize, CPoint(0, 0), procParams, eFlags);
+	} else {
+		imageSize = CSize(pImage->DIBWidth(), pImage->DIBHeight());
+		pDIB32bpp = pImage->DIBPixelsLastProcessed();
+	}
+
+	if (pDIB32bpp == NULL) {
+		pImage->EnableDimming(true);
+		return false;
+	}
+
+	uint32 nSizeLinePadded = Helpers::DoPadding(imageSize.cx*3, 4);
+	uint32 nSizeBytes = nSizeLinePadded*imageSize.cy;
 	char* pDIB24bpp = new char[nSizeBytes];
-	CBasicProcessing::Convert32bppTo24bppDIB(fullImageSize.cx, fullImageSize.cy, pDIB24bpp, pDIB32bpp, false);
+	CBasicProcessing::Convert32bppTo24bppDIB(imageSize.cx, imageSize.cy, pDIB24bpp, pDIB32bpp, false);
 
 	CJPEGImage::EImageFormat eFileFormat = GetImageFormat(sFileName);
 	bool bSuccess = false;
@@ -159,17 +178,17 @@ bool CSaveImage::SaveImage(LPCTSTR sFileName, CJPEGImage * pImage, const CImageP
 	if (eFileFormat == CJPEGImage::IF_JPEG) {
 		// Save JPEG not over GDI+ - we want to keep the meta-data if there is meta-data
 		int nJPEGStreamLen;
-		void* pCompressedJPEG = CompressAndSave(sFileName, pImage, pDIB24bpp, fullImageSize.cx, fullImageSize.cy, 
-			CSettingsProvider::This().JPEGSaveQuality(), nJPEGStreamLen);
+		void* pCompressedJPEG = CompressAndSave(sFileName, pImage, pDIB24bpp, imageSize.cx, imageSize.cy, 
+			CSettingsProvider::This().JPEGSaveQuality(), nJPEGStreamLen, bFullSize);
 		bSuccess = pCompressedJPEG != NULL;
 		if (bSuccess) {
 			nPixelHash = Helpers::CalculateJPEGFileHash(pCompressedJPEG, nJPEGStreamLen);
 			delete[] pCompressedJPEG;
 		}
 	} else {
-		bSuccess = SaveGDIPlus(sFileName, eFileFormat, pDIB24bpp, fullImageSize.cx, fullImageSize.cy);
+		bSuccess = SaveGDIPlus(sFileName, eFileFormat, pDIB24bpp, imageSize.cx, imageSize.cy);
 		if (bSuccess) {
-			CJPEGImage tempImage(fullImageSize.cx, fullImageSize.cy, pDIB32bpp, NULL, 4, 0, CJPEGImage::IF_Unknown);
+			CJPEGImage tempImage(imageSize.cx, imageSize.cy, pDIB32bpp, NULL, 4, 0, CJPEGImage::IF_Unknown);
 			nPixelHash = tempImage.GetUncompressedPixelHash();
 			tempImage.DetachIJLPixels();
 		}

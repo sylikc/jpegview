@@ -10,7 +10,7 @@ class CSaveImage
 public:
 	// Save processed image to JPEG file. Returns if saving was successful or not.
 	static bool SaveImage(LPCTSTR sFileName, CJPEGImage * pImage, const CImageProcessingParams& procParams,
-		EProcessingFlags eFlags);
+		EProcessingFlags eFlags, bool bFullSize);
 
 private:
 	CSaveImage(void);

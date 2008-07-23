@@ -193,9 +193,10 @@ private:
 	CButtonCtrl* m_btnWindowMode;
 	CNavigationPanel* m_pNavPanel;
 	CString m_sSaveDirectory;
+	CString m_sSaveExtension;
 
 	bool OpenFile(bool bAtStartup);
-	bool SaveImage();
+	bool SaveImage(bool bFullSize);
 	void BatchCopy();
 	void HandleUserCommands(uint32 virtualKeyCode);
 	void StartDragging(int nX, int nY, bool bDragWithZoomNavigator);

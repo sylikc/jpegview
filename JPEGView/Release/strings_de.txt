@@ -217,3 +217,5 @@ Toggle between screens (only for multi-monitor systems)	Umschalten zwischen Bild
 Enable/disable full screen mode	Vollbildmodus einschalten/ausschalten
 Full screen mode	Vollbildmodus
 Window mode	Fenstermodus
+Save as (in screen size/resolution)	Speichern unter (in Bildschirmgrösse und Auflösung)
+Save processed image to JPEG file (screen size)	Bearbeitetes Bild als JPEG Datei speichern (Bildschirmgrösse)
