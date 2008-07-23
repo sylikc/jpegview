@@ -46,6 +46,12 @@ public:
 	// ISO speed value
 	int GetISOSpeed() { return m_nISOSpeed; }
 	bool GetISOSpeedPresent() { return m_nISOSpeed > 0; }
+	// Image orientation as detected by sensor
+	int GetImageOrientation() { return m_nImageOrientation; }
+	bool ImageOrientationPresent() { return m_nImageOrientation > 0; }
+
+	// Sets the image orientation to given value (if tag was present in input stream)
+	void WriteImageOrientation(int nOrientation);
 public:
 	// unknown double value
 	static double UNKNOWN_DOUBLE_VALUE;
@@ -60,4 +66,8 @@ private:
 	double m_dFocalLength;
 	double m_dFNumber;
 	int m_nISOSpeed;
+	int m_nImageOrientation;
+
+	bool m_bLittleEndian;
+	uint8* m_pTagOrientation;
 };

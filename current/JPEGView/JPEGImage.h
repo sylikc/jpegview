@@ -182,6 +182,9 @@ public:
 	// Gets if this image was created from the clipboard
 	bool IsClipboardImage() const { return m_eImageFormat == IF_CLIPBOARD; }
 
+	// Gets if the rotation is given by EXIF
+	bool IsRotationByEXIF() const { return m_bRotationByEXIF; }
+
 	// Debug: Ticks (millseconds) of the last operation
 	double LastOpTickCount() const { return m_dLastOpTickCount; }
 
@@ -238,6 +241,7 @@ private:
 
 	bool m_bCropped; // Image has been cropped
 	uint32 m_nRotation; // current rotation angle
+	bool m_bRotationByEXIF; // is the rotation given by EXIF
 
 	// This is the geometry that was requested during last GetDIB() call
 	CSize m_FullTargetSize; 
@@ -290,4 +294,7 @@ private:
 
 	// Get if from source to target size it is down or upsampling
 	EResizeType GetResizeType(CSize targetSize, CSize sourceSize);
+
+	// Gets the rotation from EXIF if available
+	int GetRotationFromEXIF(int nOrigRotation);
 };

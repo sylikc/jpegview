@@ -1072,7 +1072,7 @@ LRESULT CMainDlg::OnKeyDown(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOO
 		if (!bCtrl) {
 			ExecuteCommand(IDM_SAVE_PARAM_DB);
 		} else {
-			ExecuteCommand(IDM_SAVE);
+			ExecuteCommand(bShift ? IDM_SAVE_SCREEN : IDM_SAVE);
 		}
 	} else if (wParam == 'D') {
 		if (!bCtrl) {
@@ -1462,8 +1462,9 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 			OpenFile(false);
 			break;
 		case IDM_SAVE:
+		case IDM_SAVE_SCREEN:
 			if (m_pCurrentImage != NULL) {
-				SaveImage();
+				SaveImage(nCommand == IDM_SAVE);
 			}
 			break;
 		case IDM_RELOAD:
@@ -1589,7 +1590,7 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 					// Sunset and night shot detection may has changed this
 					m_pImageProcParams->LightenShadows = m_pCurrentImage->GetInitialProcessParams().LightenShadows;
 					InitFromProcessingFlags(procFlags, m_bHQResampling, m_bAutoContrast, m_bAutoContrastSection, m_bLDC, m_bLandscapeMode);
-					m_nRotation = 0;
+					m_nRotation = m_pCurrentImage->GetInitialRotation();
 					m_dZoom = -1;
 					m_pCurrentImage->SetIsInParamDB(false);
 					ShowHideSaveDBButtons();
@@ -1802,7 +1803,7 @@ bool CMainDlg::OpenFile(bool bAtStartup) {
 	return false;
 }
 
-bool CMainDlg::SaveImage() {
+bool CMainDlg::SaveImage(bool bFullSize) {
 	if (m_bMovieMode) {
 		return false;
 	}
@@ -1821,15 +1822,30 @@ bool CMainDlg::SaveImage() {
 		sCurrentFile += _T("_proc");
 	}
 
-	CFileDialog fileDlg(FALSE, _T("jpg"), sCurrentFile, 
+	CString sExtension = m_sSaveExtension;
+	if (sExtension.IsEmpty()) {
+		sExtension = _T("jpg");
+	}
+	CFileDialog fileDlg(FALSE, sExtension, sCurrentFile, 
 			OFN_EXPLORER | OFN_ENABLESIZING | OFN_HIDEREADONLY | OFN_NOREADONLYRETURN | OFN_OVERWRITEPROMPT,
 			Helpers::CReplacePipe(CString(_T("JPEG (*.jpg;*.jpeg)|*.jpg;*.jpeg|BMP (*.bmp)|*.bmp|PNG (*.png)|*.png|TIFF (*.tiff;*.tif)|*.tiff;*.tif|")) +
 			CNLS::GetString(_T("All Files")) + _T("|*.*|")), m_hWnd);
+	if (sExtension.CompareNoCase(_T("bmp")) == 0) {
+		fileDlg.m_ofn.nFilterIndex = 2;
+	} else if (sExtension.CompareNoCase(_T("png")) == 0) {
+		fileDlg.m_ofn.nFilterIndex = 3;
+	} else if (sExtension.CompareNoCase(_T("tiff")) == 0 || sExtension.CompareNoCase(_T("tif")) == 0) {
+		fileDlg.m_ofn.nFilterIndex = 4;
+	} 
+	if (!bFullSize) {
+		fileDlg.m_ofn.lpstrTitle = CNLS::GetString(_T("Save as (in screen size/resolution)"));
+	}
 	if (IDOK == fileDlg.DoModal(m_hWnd)) {
 		m_sSaveDirectory = fileDlg.m_szFileName;
+		m_sSaveExtension = m_sSaveDirectory.Right(m_sSaveDirectory.GetLength() - m_sSaveDirectory.ReverseFind(_T('.')) - 1);
 		m_sSaveDirectory = m_sSaveDirectory.Left(m_sSaveDirectory.ReverseFind(_T('\\')) + 1);
 		if (CSaveImage::SaveImage(fileDlg.m_szFileName, m_pCurrentImage, *m_pImageProcParams, 
-			CreateProcessingFlags(m_bHQResampling, m_bAutoContrast, m_bAutoContrastSection, m_bLDC, false, m_bLandscapeMode))) {
+			CreateProcessingFlags(m_bHQResampling, m_bAutoContrast, m_bAutoContrastSection, m_bLDC, false, m_bLandscapeMode), bFullSize)) {
 			m_pFileList->Reload(); // maybe image is stored to current directory - needs reload
 			return true;
 		} else {
@@ -2553,6 +2569,13 @@ void CMainDlg::AfterNewImageLoaded(bool bSynchronize) {
 				// take kept value when last was special processing as the special processing value is not usable
 				m_pImageProcParams->LightenShadows = m_pImageProcParamsKept->LightenShadows;
 			}
+			if (m_bKeepParams) {
+				if (m_pCurrentImage->IsRotationByEXIF()) {
+					m_nRotation = m_pCurrentImage->GetInitialRotation();
+				} else {
+					m_nRotation = m_nRotationKept;
+				}
+			}
 		}
 	}
 }
@@ -2827,6 +2850,7 @@ void CMainDlg::GenerateHelpDisplay(CHelpDisplay & helpDisplay) {
 	helpDisplay.AddLine(_T("Ctrl+C/Ctrl+X"), CNLS::GetString(_T("Copy screen to clipboard/ Copy processed full size image to clipboard")));
 	helpDisplay.AddLine(_T("Ctrl+O"), CNLS::GetString(_T("Open new image or slideshow file")));
 	helpDisplay.AddLine(_T("Ctrl+S"), CNLS::GetString(_T("Save processed image to JPEG file (original size)")));
+	helpDisplay.AddLine(_T("Ctrl+Shift+S"), CNLS::GetString(_T("Save processed image to JPEG file (screen size)")));
 	helpDisplay.AddLine(_T("s/d"), CNLS::GetString(_T("Save (s)/ delete (d) image processing parameters in/from parameter DB")));
 	helpDisplay.AddLineInfo(_T("c/m/n"), 
 		(m_pFileList->GetSorting() == Helpers::FS_LastModTime) ? _T("m") :

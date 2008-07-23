@@ -25,6 +25,9 @@ Changelog
 [1.0.18]
 
 New features:
+- Auto-rotate image using EXIF image orientation
+- Save image in screen size (Ctrl-Shift-S)
+- Keeping last selected image format when saving images
 - Italian translation updated
 - Toggle to window mode and back now first uses low quality sampling and improves quality on idle
 

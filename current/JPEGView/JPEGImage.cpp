@@ -67,6 +67,7 @@ CJPEGImage::CJPEGImage(int nWidth, int nHeight, void* pIJLPixels, void* pEXIFDat
 
 	m_bCropped = false;
 	m_nRotation = 0;
+	m_bRotationByEXIF = false;
 	m_bFirstReprocessing = true;
 	m_dLastOpTickCount = 0;
 	m_FullTargetSize = CSize(0, 0);
@@ -552,7 +553,7 @@ void CJPEGImage::RestoreInitialParameters(LPCTSTR sFileName, const CImageProcess
 		dbEntry->WriteToGeometricParams(m_dInitialZoom, m_initialOffsets, SizeAfterRotation(m_nInitialRotation),
 			targetSize);
 	} else {
-		m_nInitialRotation = nRotation;
+		m_nInitialRotation = GetRotationFromEXIF(nRotation);
 		m_eProcFlagsInitial = bKeepParams ? procFlags : GetProcFlagsIncludeExcludeFolders(sFileName, procFlags);
 		procFlags = m_eProcFlagsInitial;
 		m_imageProcParamsInitial = imageProcParams;
@@ -590,6 +591,7 @@ void CJPEGImage::SetFileDependentProcessParams(LPCTSTR sFileName, CProcessParams
 				CSize(pParams->TargetWidth, pParams->TargetHeight));
 		}
 	} else {
+		pParams->Rotation = GetRotationFromEXIF(pParams->Rotation);
 		pParams->ImageProcParams.LightenShadows *= m_fLightenShadowFactor;
 		if (!::GetProcessingFlag(pParams->ProcFlags, PFLAG_KeepParams)) {
 			pParams->ProcFlags = GetProcFlagsIncludeExcludeFolders(sFileName, pParams->ProcFlags);
@@ -820,4 +822,24 @@ CJPEGImage::EResizeType CJPEGImage::GetResizeType(CSize targetSize, CSize source
 	} else {
 		return UpSample;
 	}
+}
+
+int CJPEGImage::GetRotationFromEXIF(int nOrigRotation) {
+	if (m_pEXIFReader != NULL && m_pEXIFReader->ImageOrientationPresent()) {
+		switch (m_pEXIFReader->GetImageOrientation()) {
+			case 1:
+				m_bRotationByEXIF = true;
+				return 0;
+			case 3:
+				m_bRotationByEXIF = true;
+				return 180;
+			case 6:
+				m_bRotationByEXIF = true;
+				return 90;
+			case 8:
+				m_bRotationByEXIF = true;
+				return 270;
+		}
+	}
+	return nOrigRotation;
 }
