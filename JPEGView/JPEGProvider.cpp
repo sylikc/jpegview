@@ -61,7 +61,7 @@ CJPEGImage* CJPEGProvider::RequestJPEG(CFileList* pFileList, EReadAheadDirection
 	} else {
 		CJPEGImage* pImage = pRequest->Image;
 		if (pImage != NULL) {
-			// make sure the intitial parameters are reset as when keep params was on before they are wrong
+			// make sure the initial parameters are reset as when keep params was on before they are wrong
 			EProcessingFlags procFlags = processParams.ProcFlags;
 			pImage->RestoreInitialParameters(strFileName, processParams.ImageProcParams, procFlags, 
 				processParams.Rotation, processParams.Zoom, processParams.Offsets, 

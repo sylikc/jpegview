@@ -72,7 +72,7 @@ public:
 	// Gets the pixel hash over the de-compressed pixels
 	__int64 GetUncompressedPixelHash() const;
 
-	// Original image size (of the unprocessed raw image)
+	// Original image size (of the unprocessed raw image, however the raw image may was rotated or cropped)
 	int OrigWidth() const { return m_nOrigWidth; }
 	int OrigHeight() const { return m_nOrigHeight; }
 
@@ -213,7 +213,8 @@ private:
 	void* m_pEXIFData;
 	int m_nEXIFSize;
 	CEXIFReader* m_pEXIFReader;
-	int m_nOrigWidth, m_nOrigHeight;
+	int m_nOrigWidth, m_nOrigHeight; // these may changes by rotation
+	int m_nInitOrigWidth, m_nInitOrigHeight; // original width of image when constructed (before any rotation and crop)
 	int m_nIJLChannels;
 	__int64 m_nPixelHash;
 	EImageFormat m_eImageFormat;

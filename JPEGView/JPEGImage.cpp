@@ -45,8 +45,8 @@ CJPEGImage::CJPEGImage(int nWidth, int nHeight, void* pIJLPixels, void* pEXIFDat
 	m_nPixelHash = nJPEGHash;
 	m_eImageFormat = eImageFormat;
 
-	m_nOrigWidth = nWidth;
-	m_nOrigHeight = nHeight;
+	m_nOrigWidth = m_nInitOrigWidth = nWidth;
+	m_nOrigHeight = m_nInitOrigHeight = nHeight;
 	m_pDIBPixels = NULL;
 	m_pDIBPixelsLUTProcessed = NULL;
 	m_pLastDIB = NULL;
@@ -826,6 +826,20 @@ CJPEGImage::EResizeType CJPEGImage::GetResizeType(CSize targetSize, CSize source
 
 int CJPEGImage::GetRotationFromEXIF(int nOrigRotation) {
 	if (m_pEXIFReader != NULL && m_pEXIFReader->ImageOrientationPresent()) {
+
+		// Some tools rotate the pixel data but do not reset the EXIF orientation flag.
+		// In this case the EXIF thumbnail is normally also not rotated.
+		// So check if the thumbnail orientation is the same as the image orientation.
+		// If not, it can be assumed that someone touched the pixels and we ignore the EXIF
+		// orientation.
+		if (m_pEXIFReader->GetThumbnailWidth() > 0 && m_pEXIFReader->GetThumbnailHeight() > 0) {
+			bool bWHOrig = m_nInitOrigWidth > m_nInitOrigHeight;
+			bool bWHThumb = m_pEXIFReader->GetThumbnailWidth() > m_pEXIFReader->GetThumbnailHeight();
+			if (bWHOrig != bWHThumb) {
+				return nOrigRotation;
+			}
+		}
+
 		switch (m_pEXIFReader->GetImageOrientation()) {
 			case 1:
 				m_bRotationByEXIF = true;
