@@ -49,6 +49,9 @@ public:
 	// Image orientation as detected by sensor
 	int GetImageOrientation() { return m_nImageOrientation; }
 	bool ImageOrientationPresent() { return m_nImageOrientation > 0; }
+	// Thumbnail image dimension
+	int GetThumbnailWidth() { return m_nThumbWidth; }
+	int GetThumbnailHeight() { return m_nThumbHeight; }
 
 	// Sets the image orientation to given value (if tag was present in input stream)
 	void WriteImageOrientation(int nOrientation);
@@ -67,6 +70,8 @@ private:
 	double m_dFNumber;
 	int m_nISOSpeed;
 	int m_nImageOrientation;
+	int m_nThumbWidth;
+	int m_nThumbHeight;
 
 	bool m_bLittleEndian;
 	uint8* m_pTagOrientation;
