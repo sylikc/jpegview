@@ -24,6 +24,8 @@ Changelog
 
 [1.0.18]
 
+Bugs fixed:
+- Resize now possible to sizes smaller than 800 x 600
 New features:
 - Auto-rotate image using EXIF image orientation
 - Save image in screen size (Ctrl-Shift-S)

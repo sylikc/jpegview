@@ -248,6 +248,7 @@ private:
 	bool IsZoomNavigatorCurrentlyShown();
 	void SetCursorForMoveSection();
 	void ToggleMonitor();
+	CRect GetZoomTextRect(CRect imageProcessingArea);
 
 	static void OnSaveToDB(CButtonCtrl & sender);
 	static void OnRemoveFromDB(CButtonCtrl & sender);
