@@ -531,7 +531,8 @@ CRect CNavigationPanel::PanelRect() {
 	}
 
 	CRect sliderRect = m_pSliderMgr->PanelRect();
-	m_clientRect = CRect(CPoint((sliderRect.right + sliderRect.left - m_nWidth)/2, sliderRect.top - m_nHeight),
+	m_clientRect = CRect(CPoint((sliderRect.right + sliderRect.left - m_nWidth)/2, 
+		((sliderRect.Width() < 800) ? (sliderRect.bottom - 26) : sliderRect.top) - m_nHeight),
 		CSize(m_nWidth, m_nHeight));
 	return m_clientRect;
 }

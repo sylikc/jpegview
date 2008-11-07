@@ -703,11 +703,8 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 	if (m_bInZooming || m_bShowZoomFactor) {
 		TCHAR buff[32];
 		_stprintf_s(buff, 32, _T("%d %%"), int(m_dZoom*100 + 0.5));
-		CRect textRect(imageProcessingArea.right - Scale(ZOOM_TEXT_RECT_WIDTH + ZOOM_TEXT_RECT_OFFSET), 
-			imageProcessingArea.bottom - Scale(ZOOM_TEXT_RECT_HEIGHT + ZOOM_TEXT_RECT_OFFSET), 
-			imageProcessingArea.right - Scale(ZOOM_TEXT_RECT_OFFSET), imageProcessingArea.bottom - Scale(ZOOM_TEXT_RECT_OFFSET));
 		dc.SetTextColor(RGB(0, 255, 0));
-		DrawTextBordered(dc, buff, textRect, DT_RIGHT);
+		DrawTextBordered(dc, buff, GetZoomTextRect(imageProcessingArea), DT_RIGHT);
 	}
 
 	// Display the help screen
@@ -738,6 +735,13 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 LRESULT CMainDlg::OnSize(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/) {
 	this->GetClientRect(&m_clientRect);
 	this->Invalidate(FALSE);
+	if (m_clientRect.Width() < 800) {
+		m_bShowHelp = false;
+		if (m_bShowIPTools) {
+			m_bShowIPTools = false;
+			m_pSliderMgr->GetTooltipMgr().RemoveActiveTooltip();
+		}
+	}
 	m_nMouseX = m_nMouseY = -1;
 	return 0;
 }
@@ -745,7 +749,7 @@ LRESULT CMainDlg::OnSize(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BO
 LRESULT CMainDlg::OnGetMinMaxInfo(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, BOOL& /*bHandled*/) {
 	if (m_pJPEGProvider != NULL) {
 		MINMAXINFO* pMinMaxInfo = (MINMAXINFO*) lParam;
-		pMinMaxInfo->ptMinTrackSize = CPoint(800, 600);
+		pMinMaxInfo->ptMinTrackSize = CPoint(400, 300);
 		return 1;
 	} else {
 		return 0;
@@ -845,26 +849,28 @@ LRESULT CMainDlg::OnMouseMove(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, B
 			::SetTimer(this->m_hWnd, AUTOSCROLL_TIMER_EVENT_ID, AUTOSCROLL_TIMEOUT, NULL);
 		}
 	} else {
-		if (!m_bShowIPTools) {
-			int nIPAreaStart= m_clientRect.bottom - m_pSliderMgr->SliderAreaHeight();
-			if (m_bShowNavPanel) {
-				CRect rectNavPanel = m_pNavPanel->PanelRect();
-				if (m_nMouseX > rectNavPanel.left && m_nMouseX < rectNavPanel.right) {
-					nIPAreaStart += m_pSliderMgr->SliderAreaHeight()/2;
+		if (m_clientRect.Width() >= 800) { 
+			if (!m_bShowIPTools) {
+				int nIPAreaStart= m_clientRect.bottom - m_pSliderMgr->SliderAreaHeight();
+				if (m_bShowNavPanel) {
+					CRect rectNavPanel = m_pNavPanel->PanelRect();
+					if (m_nMouseX > rectNavPanel.left && m_nMouseX < rectNavPanel.right) {
+						nIPAreaStart += m_pSliderMgr->SliderAreaHeight()/2;
+					}
 				}
-			}
-			if (nOldMouseY != 0 && nOldMouseY <= nIPAreaStart && m_nMouseY > nIPAreaStart) {
-				m_bShowIPTools = true;
-				this->InvalidateRect(m_pSliderMgr->PanelRect(), FALSE);
-				this->InvalidateRect(m_pNavPanel->PanelRect(), FALSE);
-			}
-		} else {
-			if (!m_pSliderMgr->OnMouseMove(m_nMouseX, m_nMouseY)) {
-				if (m_nMouseY < m_pNavPanel->PanelRect().top) {
-					m_bShowIPTools = false;
+				if (nOldMouseY != 0 && nOldMouseY <= nIPAreaStart && m_nMouseY > nIPAreaStart) {
+					m_bShowIPTools = true;
 					this->InvalidateRect(m_pSliderMgr->PanelRect(), FALSE);
 					this->InvalidateRect(m_pNavPanel->PanelRect(), FALSE);
-					m_pSliderMgr->GetTooltipMgr().RemoveActiveTooltip();
+				}
+			} else {
+				if (!m_pSliderMgr->OnMouseMove(m_nMouseX, m_nMouseY)) {
+					if (m_nMouseY < m_pNavPanel->PanelRect().top) {
+						m_bShowIPTools = false;
+						this->InvalidateRect(m_pSliderMgr->PanelRect(), FALSE);
+						this->InvalidateRect(m_pNavPanel->PanelRect(), FALSE);
+						m_pSliderMgr->GetTooltipMgr().RemoveActiveTooltip();
+					}
 				}
 			}
 		}
@@ -930,6 +936,9 @@ LRESULT CMainDlg::OnKeyDown(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOO
 	} else if (wParam == VK_F1) {
 		bHandled = true;
 		m_bShowHelp = !m_bShowHelp;
+		if (m_clientRect.Width() < 800) {
+			m_bShowHelp = false;
+		}
 		this->Invalidate(FALSE);
 	} else if (!bCtrl && m_bSearchSubDirsOnEnter) {
 		// search in subfolders if initially provider directory has no images
@@ -1200,9 +1209,7 @@ LRESULT CMainDlg::OnTimer(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOOL&
 		::KillTimer(this->m_hWnd, ZOOM_TEXT_TIMER_EVENT_ID);
 		InvalidateZoomNavigatorRect();
 		CRect imageProcArea = m_pSliderMgr->PanelRect();
-		this->InvalidateRect(CRect(imageProcArea.right - Scale(ZOOM_TEXT_RECT_WIDTH + ZOOM_TEXT_RECT_OFFSET), 
-			imageProcArea.bottom - Scale(ZOOM_TEXT_RECT_HEIGHT + ZOOM_TEXT_RECT_OFFSET), 
-			imageProcArea.right - Scale(ZOOM_TEXT_RECT_OFFSET), imageProcArea.bottom - Scale(ZOOM_TEXT_RECT_OFFSET)), FALSE);
+		this->InvalidateRect(GetZoomTextRect(imageProcArea), FALSE);
 	} else if (wParam == AUTOSCROLL_TIMER_EVENT_ID) {
 		if (m_nMouseX < m_clientRect.Width() - 1 && m_nMouseX > 0 && m_nMouseY < m_clientRect.Height() - 1 && m_nMouseY > 0 ) {
 			::KillTimer(this->m_hWnd, AUTOSCROLL_TIMER_EVENT_ID);
@@ -2960,4 +2967,11 @@ void CMainDlg::ToggleMonitor() {
 		SetWindowPos(HWND_TOP, &m_monitorRect, SWP_NOZORDER);
 		this->GetClientRect(&m_clientRect);
 	}
+}
+
+CRect CMainDlg::GetZoomTextRect(CRect imageProcessingArea) {
+	int nZoomTextRectBottomOffset = (m_clientRect.Width() < 800) ? 25 : ZOOM_TEXT_RECT_OFFSET;
+	return CRect(imageProcessingArea.right - Scale(ZOOM_TEXT_RECT_WIDTH + ZOOM_TEXT_RECT_OFFSET), 
+		imageProcessingArea.bottom - Scale(ZOOM_TEXT_RECT_HEIGHT + nZoomTextRectBottomOffset), 
+		imageProcessingArea.right - Scale(ZOOM_TEXT_RECT_OFFSET), imageProcessingArea.bottom - Scale(nZoomTextRectBottomOffset));
 }
