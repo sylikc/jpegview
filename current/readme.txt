@@ -26,6 +26,7 @@ Changelog
 
 Bugs fixed:
 - Resize now possible to sizes smaller than 800 x 600
+- Renaming files with %x placeholder now works correctly
 New features:
 - Auto-rotate image using EXIF image orientation
 - Save image in screen size (Ctrl-Shift-S)

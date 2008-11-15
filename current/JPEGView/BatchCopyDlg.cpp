@@ -168,12 +168,13 @@ LRESULT CBatchCopyDlg::OnPreview(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*
 
 	std::list<CFileDesc>::const_iterator iter;
 	const std::list<CFileDesc> & fileList = m_fileList.GetFileList();
-	int nIndex = 0;
+	int nIndex = 0, nSelectedIndex = 0;
 	for (iter = fileList.begin( ); iter != fileList.end( ); iter++ ) {
 		if (m_lvFiles.GetCheckState(nIndex) && iter->GetTitle() != NULL) {
-			CString strNewName = ReplacePlaceholders(strPattern, nIndex, *iter, false);
+			CString strNewName = ReplacePlaceholders(strPattern, nSelectedIndex, *iter, false);
 			bool bCopyNeeded = IsCopyNeeded(strNewName, m_fileList.CurrentDirectory());
 			m_lvFiles.SetItemText(nIndex, 2, bCopyNeeded ? _T(">> ") + strNewName : strNewName);
+			nSelectedIndex++;
 		} else {
 			m_lvFiles.SetItemText(nIndex, 2, _T(""));
 		}
@@ -194,14 +195,14 @@ LRESULT CBatchCopyDlg::OnRename(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*/
 	int nDirsCreated = 0;
 	std::list<CFileDesc>::iterator iter;
 	std::list<CFileDesc> & fileList = m_fileList.GetFileList();
-	int nIndex = 0;
+	int nIndex = 0, nSelectedIndex = 0;
 	for (iter = fileList.begin( ); iter != fileList.end( ); iter++ ) {
 		if (m_lvFiles.GetCheckState(nIndex) && iter->GetTitle() != NULL) {
 			
 			m_lblResult.SetWindowText(iter->GetTitle());
 			m_lblResult.UpdateWindow();
 
-			CString strNewName = ReplacePlaceholders(strPattern, nIndex, *iter, true);
+			CString strNewName = ReplacePlaceholders(strPattern, nSelectedIndex++, *iter, true);
 			bool bCopyNeeded = IsCopyNeeded(strNewName, m_fileList.CurrentDirectory()); // enables to force copy by giving .\ path
 			strNewName = MakeAbsolutePath(strNewName, m_fileList.CurrentDirectory());
 			bool bSuccess = true;
