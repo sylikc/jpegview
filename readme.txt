@@ -22,6 +22,14 @@ to JPEGView\Debug
 Changelog
 *********
 
+[1.0.19]
+
+Bugs fixed:
+- Corrected Italian translation
+New features:
+- 'DefaultWindowRect=max' in INI file will start with maximized window (if fullscreen mode is false)
+
+
 [1.0.18]
 
 Bugs fixed:

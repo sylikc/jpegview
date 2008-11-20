@@ -208,6 +208,13 @@ void CSettingsProvider::ReadWriteableINISettings() {
 	m_sLandscapeModeParams = GetString(_T("LandscapeModeParams"), _T("-1 -1 -1 -1 0.5 1.0 0.75 0.4 -1 -1 -1"));
 	m_sCopyRenamePattern = GetString(_T("CopyRenamePattern"), _T(""));
 	m_defaultWindowRect = GetRect(_T("DefaultWindowRect"), CRect(0, 0, 0, 0));
+	m_bDefaultMaximized = false;
+	if (m_defaultWindowRect.IsRectEmpty()) {
+		CString sAuto = GetString(_T("DefaultWindowRect"), _T(""));
+		if (sAuto.CompareNoCase(_T("max")) == 0) {
+			m_bDefaultMaximized = true;
+		}
+	}
 
 	int nRed, nGreen, nBlue;
 	CString sBkColor = GetString(_T("BackgroundColor"), _T("0 0 0"));

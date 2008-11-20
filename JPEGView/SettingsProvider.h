@@ -56,6 +56,7 @@ public:
 	LPCTSTR LDCInclude() { return m_sLDCInclude; }
 	LPCTSTR CopyRenamePattern() { return m_sCopyRenamePattern; }
 	CRect DefaultWindowRect() { return m_defaultWindowRect; }
+	bool DefaultMaximized() { return m_bDefaultMaximized; }
 	int BackgroundColor() { return m_nBackgroundColor; }
 
 	std::list<CUserCommand*> & UserCommandList() { return m_userCommands; }
@@ -119,6 +120,7 @@ private:
 	CString m_sLDCInclude;
 	CString m_sCopyRenamePattern;
 	CRect m_defaultWindowRect;
+	bool m_bDefaultMaximized;
 	int m_nBackgroundColor;
 
 	std::list<CUserCommand*> m_userCommands;
