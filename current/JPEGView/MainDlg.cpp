@@ -325,7 +325,7 @@ LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam
 	if (CSettingsProvider::This().ShowFullScreen() || m_sStartupFile.GetLength() == 0) {
 		SetWindowPos(HWND_TOP, &m_monitorRect, SWP_NOZORDER);
 	} else {
-		ExecuteCommand(IDM_FULL_SCREEN_MODE);
+		ExecuteCommand(IDM_FULL_SCREEN_MODE_AFTER_STARTUP);
 	}
 	this->GetClientRect(&m_clientRect);
 
@@ -403,7 +403,7 @@ LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam
 		if (CSettingsProvider::This().ShowFullScreen()) {
 			::SetWindowLong(m_hWnd, GWL_STYLE, WS_VISIBLE);
 		} else {
-			ExecuteCommand(IDM_FULL_SCREEN_MODE);
+			ExecuteCommand(IDM_FULL_SCREEN_MODE_AFTER_STARTUP);
 		}
 	}
 
@@ -1687,6 +1687,7 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 			}
 			break;
 		case IDM_FULL_SCREEN_MODE:
+		case IDM_FULL_SCREEN_MODE_AFTER_STARTUP:
 			m_bFullScreenMode = !m_bFullScreenMode;
 			if (!m_bFullScreenMode) {
 				CRect windowRect;
@@ -1701,6 +1702,9 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 						AdjustWindowRectEx(&windowRect, GetStyle(), FALSE, GetExStyle());
 					}
 					this->SetWindowPos(HWND_TOP, windowRect.left, windowRect.top, windowRect.Width(), windowRect.Height(), SWP_NOZORDER | SWP_NOCOPYBITS);
+					if (nCommand == IDM_FULL_SCREEN_MODE_AFTER_STARTUP && CSettingsProvider::This().DefaultMaximized()) {
+						this->ShowWindow(SW_MAXIMIZE);
+					}
 				} else {
 					m_storedWindowPlacement2.flags = 
 					this->SetWindowPlacement(&m_storedWindowPlacement2);

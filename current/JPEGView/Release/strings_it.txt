@@ -38,7 +38,7 @@ Loop through files in current folder	Ricarica i file della cartella attuale
 Loop through files in current directory and all subfolders	Ricarica tra i file della cartella attuale e tutte le sottocartelle
 Loop through files in current directory and all sibling folders (folders on same level)	Ricarica tra i file nella cartella attuale e tutte le cartelle pari livello
 Maximize/restore to/from virtual desktop (only for multi-monitor systems)	Massimizza/ripristina a/da desktop virtuale (solo per sistemi multi-monitor)
-Copy screen to clipboard/ Copy processed full size image to clipboard	 Copia la schermata negli Appunti/ Copia l’immagine elaborata delle dimensioni originali negli Appunti
+Copy screen to clipboard/ Copy processed full size image to clipboard	Copia la schermata negli Appunti/ Copia l’immagine elaborata delle dimensioni originali negli Appunti
 Open new image or slideshow file	Apri una nuova immagine o una presentazione
 Save processed image to JPEG file (original size)	Salva l'immagine modificata come JPEG file (dimensioni originali)
 Save (s)/ delete (d) image processing parameters in/from parameter DB	Salva (s)/ cancella (d) i parametri di modifica dell'immagine in/da parametri del DB
@@ -217,3 +217,5 @@ Toggle between screens (only for multi-monitor systems)	Alterna tra schermi (sol
 Enable/disable full screen mode	Abilita/disabilita la modalità tutto schermo
 Full screen mode	Modalità tutto schermo
 Window mode	Modalità finestra
+Save as (in screen size/resolution)	Salva come (in dimensioni/risoluzione schermo)
+Save processed image to JPEG file (screen size)	Salva l'immagine modificata come JPEG file (dimensione schermo)
