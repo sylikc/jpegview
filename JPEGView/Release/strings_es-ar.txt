@@ -1,0 +1,220 @@
+﻿// This file must be encoded with UTF-8 (e.g. with Windows Notepad)
+// Filename is 'strings_%languagecode%.txt' where %languagecode% is the ISO 639 language code e.g. 'fr' for French
+// Format is: English string<tab>Translated string<newline>
+// Translation made by ThecaTTony (thecattony@users.sourceforge.net - thecattony@thecattony.com.ar) 
+Contrast	Contraste
+Brightness	Brillo
+Sharpen	Nitidez
+Lighten Shadows	Sombras leves 
+Darken Highlights	Sombras medias
+Deep Shadows	Sombras profundas
+Color Correction	Corrección de colores
+Contrast Correction	Corrección de contraste
+Parameter DB:	Parámetros BD:
+Save to	Guardar como
+Remove from	Remover desde
+Rename:	Renombrar:
+No file or folder name was provided as command line parameter!	¡Ningún nombre de archivo o carpeta fue pasado como parámetro de la línea de comandos!
+To use JPEGView, associate JPG, JPEG and BMP files with JPEGView.	Para usar JPEGView, asocie las extensiones JPG, JPEG y BMP con JPEGView.
+Press ESC to exit...	Presione ESC para salir...
+The file '%s' could not be read!	¡El archivo '%s' no se pudo leer!
+The file '%s' does not contain a list of file names!	¡El archivo '%s' no contiene una lista de nombres de archivo!
+The directory '%s' does not contain any image files!	¡El directorio '%s' no contiene imágenes!
+Press any key to search the subdirectories for image files.	Presione cualquier tecla para buscar imágenes en los subdirectorios.
+JPEGView Help	Ayuda de JPEGView
+Current image	Imagen actual
+Close help text display / Close JPEGView	Cerrar texto de ayuda / Cerrar JPEGView
+Show/hide this help text	Mostrar/esconder este texto de ayuda
+Show/hide picture information (EXIF data)	Mostrar/esconder información sobre la imagen (datos EXIF)
+Show/hide file name	Mostrar/esconder nombre de archivo
+Enable/disable high quality resampling	Habilitar/deshabilitar remuestreo de alta calidad
+Enable/disable keeping of geometry related (zoom/pan/rotation)	Habilitar/deshabilitar mantener la relación de aspecto (Zoom/Paneo/Rotación)
+and image processing (brightness/contrast/sharpen) parameters between images	y parámetros de procesamiento entre imágenes (brillo/contraste/nitidez)
+Enable/disable automatic contrast correction (histogram equalization)	Habilitar/deshabilitar corrección automática de contraste (ecualización de histograma)
+Apply auto contrast correction using only visible section of image	Aplicar corrección automática de contraste usando sólo la sección visible de la imagen
+Enable/disable automatic density correction (local brightness correction)	Habilitar/deshabilitar corrección automática de densidad (corrección de brillo local)
+Increase/decrease lightening of shadows (LDC must be on)	Incrementar/decrementar iluminación de sombras (LDC debe estar activo)
+Increase/decrease darkening of highlights (LDC must be on)	Incrementar/decrementar oscurecimiento de luces (LDC debe estar activo)
+Loop through files in current folder	Ciclar en los archivos de la carpeta actual
+Loop through files in current directory and all subfolders	Ciclar en los archivos de la carpeta actual y de todos las subcarpetas
+Loop through files in current directory and all sibling folders (folders on same level)	Ciclar en los archivos de la carpeta actual y hermanas (carpetas del mismo nivel)
+Maximize/restore to/from virtual desktop (only for multi-monitor systems)	Maximizar/restaurar a/desde escritorio virtual (sólo para sistemas multi-monitor)
+Copy screen to clipboard/ Copy processed full size image to clipboard	Copiar pantalla al portapapeles/ Copiar imagen procesada de tamaño completo al portapapeles
+Open new image or slideshow file	Abrir nueva imagen o archivo de diapositivas
+Save processed image to JPEG file (original size)	Guardar imagen procesada en archivo JPEG (tamaño original)
+Save (s)/ delete (d) image processing parameters in/from parameter DB	Guardar (s)/ borrar (d) parámetros de procesado de imágenes en/desde parámetros de BD
+Sort images by creation date, resp. modification date, resp. file name	Ordenar imágenes por fecha de creación, resp. fecha de modificación, resp. nombre de archivo
+Goto previous image	Ir a la imagen anterior
+Goto next image	Ir a la imagen siguiente
+PgUp or Left	AvPag o izquierda
+PgDn or Right	RePag o derecha
+Goto first/last image of current folder (using sort order as defined)	Ir a primer/última imagen de la carpeta actual (usando el ordenamiento definido)
+Increase/decrease brightness	Incrementar/decrementar brillo
+Increase/decrease contrast		Incrementar/decrementar contraste
+Increase/decrease sharpness	Incrementar/decrementar nitidez
+Increase/decrease auto color cast correction amount	Incrementar/decrementar cantidad de autocorreción de colores
+Increase/decrease auto contrast correction amount	Incrementar/decrementar cantidad de autocorreción de contraste
+Enable/disable landscape picture enhancement mode	Habilitar/deshabilitar modo de mejora de foto de paisaje
+Slide show with timeout of n seconds (ESC to stop)	Presentación con intervalos de n segundos (ESC para detener)
+Set timeout to n/10 sec, respectively n/100 sec (Ctrl+Shift)	Establecer tiempo de salida a  n/10 seg, respectivamente n/100 sec (Ctrl+Shift)
+Rotate image and fit to screen	Rotar imagen y acomodar a la pantalla
+Fit image to screen	Acomodar imagen a la pantalla
+Zoom 1:1 (100 %)	Zoom 1:1 (100 %)
+Zoom in/Zoom out (also Ctrl+up/down)	Acercar/alejar (también Ctrl+arriba/abajo)
+Zoom in/out image	Acercar/alejar imagen
+Pan image	Panear imagen
+Crop image	Cortar bordes de imagen
+Next image	Imagen siguiente
+Previous image	Imagen anterior
+up/down	Arriba/abajo
+Mouse wheel	Rueda del ratón
+Left mouse & drag	Botón izquierdo y arrastrar
+Ctrl + L mouse	Ctrl + botón izquierdo
+Fwd mouse button	Fwd mouse button
+Back mouse button	Back mouse button
+Delete current file on disk permanently	Borrar archivo permanentemente del disco
+Rotate current file on disk lossless by 90 deg (W/H must be multiple of 16)	Rotar archivo actual 90° en el disco sin pérdida (ancho/alto deben ser múltiplo de 16)
+Rotate current file on disk lossless by 270 deg (W/H must be multiple of 16)	Rotar archivo actual 270° en el disco sin pérdida (ancho/alto deben ser múltiplo de 16)
+The file is read-only!	¡El archivo es de sólo lectura!
+Can't rename file	No se puede renombrar el archivo
+New name contains backslash character!	¡El nuevo nombre contiene una barra invertida!
+Renaming file failed!	¡El renombrado del archivo falló!
+Reason: 	Razón: 
+on	activado
+off	desact.
+Do you really want to save the following parameters as default to the INI file	Realmente quiere guardar los siguientes parámetros como defecto en el archivo INI
+Auto contrast and color correction: 	Autocorrección de contraste y color: 
+Local density correction: 	Corrección de densidad local: 
+Order files by: 	Ordenar archivos por: 
+Creation date/time	Hora/fecha de creación
+Last modification date/time	Hora/fecha de última modificación
+File name	Nombre de archivo
+These values will override the values from the INI file located in the program folder of JPEGView!	¡Estos valores sobrescribirán los valores del archivo INI en la carpeta de JPEGView!
+Confirm save default parameters	Confirma guardar parámetros por defecto
+Images	Imágenes
+All Files	Todos los archivos
+Parameter DB file '%s' could not be opened!	¡El archivo de parámetros de BD '%s' no se pudo abrir!
+Parameter DB file '%s' is not valid (invalid header)!	¡El archivo de parámetros de BD '%s' no es válido (cabecera inválida)!
+Cannot write to parameter DB file '%s'!	¡No se puede escribir al archivo de parámetros de BD '%s'!
+Cannot read from parameter DB file '%s'!	¡No se puede leer el archivo de parámetros de BD '%s'!
+Cannot read parameter DB file '%s' because it is too large!	¡No se puede leer el archivo de parámetros de BD '%s' porque es muy grande!
+The parameter DB file '%s' has been created by a newer version of JPEGView!	¡El archivo de parámetros de BD '%s' ha sido creado por una versión más nueva de JPEGView!
+The old parameter DB file '%s' could not be renamed during conversion to new format!	¡El antiguo archivo de parámetros de BD '%s' no se pudo renombrar durante la conversión al nuevo formato!
+Parameter DB error	Error de parámetros BD
+Error saving file	Error guardando archivo
+Error writing file to disk!	¡Error escribiendo archivo al disco!
+Confirm	Confirmar
+Do you really want to permanently delete the file %filename%?	¿Realmente quiere borrar permanentemente el archivo %filename%?
+Rotate the following file lossless by 90 deg?\n%filename%	Rotar 90° sin pérdidas el siguiente archivo?\n%filename%
+Rotate the following file lossless by 270 deg?\n%filename%	Rotar 270° sin pérdidas el siguiente archivo?\n%filename%
+Open image...	Abrir imagen...
+Save processed image...	Guardar imagen procesada...
+Reload image	Recargar imagen
+Copy to clipboard	Copiar al portapapeles
+Copy original size image	Copiar imagen en tamaño original
+Paste from clipboard	Pegar desde el portapapeles
+Batch rename/copy...	Copiar/renombrar por lotes...
+Show picture info (EXIF)	Mostrar información de la imagen (EXIF)
+Show filename	Mostrar nombre de archivo
+Navigation	Navegación
+Loop folder	Ciclar carpeta
+Loop recursively	Ciclar recursivamente
+Loop siblings	Ciclar en carpetas de mismo nivel
+Display order	Orden
+Modification date	Fecha de modificación
+Creation date	Fecha de creación
+Play folder as slideshow/movie	Ejecutar carpeta como presentación/película
+Slideshow	Presentación
+Movie	Película
+Waiting time	Tiempo de espera
+Stop slide show/movie	Detener presentación/película
+Rotate +90	Rotar 90° en sentido horario
+Rotate -90	Rotar 90° en sentido antihorario
+Auto correction	Autocorrección
+Local density correction	Corrección de densidad local
+Keep parameters	Mantener parámetros
+Save parameters to INI...	Guardar parámetros a INI...
+Save parameters to DB	Guardar parámetros a BD
+Clear parameters from DB	Limpiar parámetros de BD
+Zoom	Zoom
+Fit to screen	Ajustar todas las imagenes a la pantalla
+Fill with crop	Ajustar todas las imagenes con bordes cortados
+Span all screens	Extender a todas las pantallas
+Auto zoom mode	Modo de autozoom
+Fit to screen (no zoom)	Ajustar a la pantalla (sin zoom)
+Fill with crop (no zoom)	Ajustar con bordes cortados (sin zoom)
+Exit	Salir
+Cyan-Red	Cyan-Rojo
+Magenta-Green	Magenta-Verde
+Yellow-Blue	Amarillo-Azul
+C - R	Cy - Ro
+M - G	Ma - Ve
+Y - B	Am - Az
+Batch rename/copy of files	Renombrado/copia de archivos por lotes
+Image files in folder	Archivos de imágenes en la carpeta
+Placeholders:	Banderas de reemplazo:
+Number (consecutively numbered)	Número (consecutivamente enumerados)
+Number with N digits	Número con N dígitos
+Extracted number from original file name	Número extraído del nombre original del archivo
+Original file name (with extension)	Nombre original del archivo (con extensión)
+Original file name (without extension)	Nombre original del archivo (sin extensión)
+Original file extension	Extensión del archivo original
+'My Pictures' folder	Carpeta 'Mis imágenes'
+Day / Month / Year (as numbers)	Día / Mes / Año (numéricos)
+Year short form (2 digits)	Año en forma corta (2 dígitos)
+Month / Short form (text)	Mes / forma corta (texto)
+Target folders that are not yet existing are created as needed.	Las carpetas de destino que no existan serán creadas cuando se necesiten.
+Date placeholders use the modification date of the image.	Las banderas de reemplazo de fechas usan la fecha de modificación de la imagen.
+Rename/copy images to:	Renombrar/copiar imágenes a:
+Rename	Renombrar
+Preview	Previsualizar
+Save as template	Guardar como plantilla
+Close	Cerrar
+Old name	Nombre antiguo
+Date	Fecha
+New name (>> : file gets copied)	Nuevo nombre (>> : el archivo es copiado)
+Select all	Seleccionar todo
+Select none	Seleccionar nada
+The file '%s' could not be %s.	El archivo '%s' no pudo ser %s.
+copied	copiado
+renamed	renombrado
+Continue rename/copy?	Continuar renombrado/copiando?
+Error during rename/copy	Error durante renombrado/copia
+%d file(s) renamed, %d file(s) copied, %d folder(s) created	%d archivo(s) renombrado(s), %d archivo(s) copiado(s), %d carpeta(s) creada(s)
+Crop Selection	Cortar bordes de Selección
+Copy Selection to Clipboard	Copiar selección al portapapeles
+Zoom to Selection	Zoom a selección
+Pasting image from clipboard failed!	¡Falló el pegado de la imagen del portapapeles!
+Image width:	Ancho de imagen:
+Image height:	Alto de imagen:
+Acquisition date:	Fecha de adquisición:
+Camera model:	Modelo de cámara:
+Exposure time (s):	Tiempo de exposición (s):
+Exposure bias (EV):	Bias de exposición (EV):
+Flash fired:	Flash disparado:
+Focal length (mm):	Longitud focal (mm):
+F-Number:	Relación focal:
+ISO Speed:	Velocidad ISO:
+Modification date:	Fecha de modificación:
+yes	si
+no	no
+Show navigation panel	Mostrar panel de navegación
+Show/hide navigation panel	Mostrar/ocultar panel de navegación
+About JPEGView...	Acerca de JPEGView...
+SIMD mode used:	Modo SIMD usado:
+Number of CPU cores used:	Número de núcleos de CPU usados:
+Licensed under the GNU general public license (GPL), see readme file for details:	Licenciado bajo la Licencia Pública General de GNU (GPL), vea el archivo readme para detalles:
+Project home page:	Página principal del proyecto:
+Show first image in folder	Mostrar primer imagen de la carpeta
+Show previous image	Mostrar imagen anterior
+Show next image	Mostrar imagen siguiente
+Show last image in folder	Mostrar última imagen de la carpeta
+Rotate image 90 deg clockwise	Rotar imagen 90° sentido horario
+Rotate image 90 deg counter-clockwise	Rotar imagen 90° sentido antihorario
+Landscape picture enhancement mode	Modo de mejora de imagen de paisajes
+Display image (EXIF) information	Mostrar información (EXIF) de la imagen
+Toggle between screens (only for multi-monitor systems)	Cambiar entre pantallas (sólo para sistemas multi-monitor)
+Enable/disable full screen mode	Habilitar/deshabilitar modo pantalla completa
+Full screen mode	Modo pantalla completa
+Window mode	Modo ventana
+Actual size of image	Tamaño actual de la imagen

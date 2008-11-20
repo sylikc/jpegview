@@ -211,13 +211,22 @@ CMainDlg::CMainDlg() {
 
 	// Read the string table for the current thread language if any is present
 	LPCTSTR sLanguageCode = sp.Language();
-	TCHAR buff[16];
+	CString sNLSFile;
+	TCHAR buff[16], buff2[16];
 	if (_tcscmp(sLanguageCode, _T("auto")) == 0) {
 		LCID threadLocale = ::GetThreadLocale();
 		::GetLocaleInfo(threadLocale, LOCALE_SISO639LANGNAME, (LPTSTR) &buff, sizeof(buff));
+		::GetLocaleInfo(threadLocale, LOCALE_SISO3166CTRYNAME, (LPTSTR) &buff2, sizeof(buff2));
 		sLanguageCode = buff;
+		sNLSFile = CString(sp.GetEXEPath()) + _T("strings_") + sLanguageCode + "-" + buff2 + _T(".txt");
+		if (::GetFileAttributes(sNLSFile) == INVALID_FILE_ATTRIBUTES) {
+			sNLSFile.Empty();
+		}
 	}
-	CNLS::ReadStringTable(CString(sp.GetEXEPath()) + _T("strings_") + sLanguageCode + _T(".txt"));
+	if (sNLSFile.IsEmpty()) {
+		sNLSFile = CString(sp.GetEXEPath()) + _T("strings_") + sLanguageCode + _T(".txt");
+	}
+	CNLS::ReadStringTable(sNLSFile);
 
 	m_bLandscapeMode = false;
 	sm_instance = this;
