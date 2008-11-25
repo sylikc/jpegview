@@ -26,8 +26,10 @@ Changelog
 
 Bugs fixed:
 - Corrected Italian translation
+- Hiding of mouse cursor when starting up in window mode and switching to fullscreen mode
 New features:
 - 'DefaultWindowRect=max' in INI file will start with maximized window (if fullscreen mode is false)
+- Dropping files or folders to JPEGView from Windows Explorer now works
 
 
 [1.0.18]

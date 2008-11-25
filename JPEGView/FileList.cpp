@@ -170,12 +170,21 @@ CFileList::CFileList(const CString & sInitialFile, Helpers::ESorting eInitialSor
 	int nPos = sInitialFile.ReverseFind(_T('\\'));
 	m_sDirectory = (nPos > 0) ? sInitialFile.Left(nPos) : _T(""); // the backslash is stripped away!
 	nPos = sInitialFile.ReverseFind(_T('.'));
+	bool bIsDirectory = (::GetFileAttributes(sInitialFile) & FILE_ATTRIBUTE_DIRECTORY) != 0;
 	bool bImageFile = IsImageFile((nPos > 0) ? sInitialFile.Right(sInitialFile.GetLength()-nPos-1) : _T(""));
 	m_bIsSlideShowList = !bImageFile && TryReadingSlideShowList(sInitialFile);
 
 	if (!m_bIsSlideShowList) {
-		FindFiles();
-		m_iter = m_iterStart = FindFile(sInitialFile);
+		if (bImageFile || bIsDirectory) {
+			FindFiles();
+			m_iter = m_iterStart = FindFile(sInitialFile);
+		} else {
+			// neither image file nor directory nor list of file names - try to read anyway but normally will fail
+			CFindFile fileFind;
+			fileFind.FindFile(sInitialFile);
+			AddToFileList(m_fileList, fileFind);
+			m_iter = m_iterStart = m_fileList.begin();
+		}
 	} else {
 		sm_eMode = Helpers::NM_LoopDirectory;
 		m_iter = m_iterStart = m_fileList.begin();
@@ -620,7 +629,7 @@ bool CFileList::IsImageFile(const CString & sEnding) {
 	CString sEndingLC = sEnding;
 	sEndingLC.MakeLower();
 	for (int i = 0; i < cnNumEndings; i++) {
-		if (csFileEndings[i] == sEnding) {
+		if (csFileEndings[i] == sEndingLC) {
 			return true;
 		}
 	}

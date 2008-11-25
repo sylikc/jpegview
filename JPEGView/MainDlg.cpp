@@ -282,7 +282,6 @@ CMainDlg::CMainDlg() {
 	m_bLockPaint = true;
 	m_nCurrentTimeout = 0;
 	m_startMouse.x = m_startMouse.y = -1;
-	m_nCursorCnt = 0;
 	m_virtualImageSize = CSize(-1, -1);
 	m_capturedPosZoomNavSection = CPoint(0, 0);
 	m_bInZooming = false;
@@ -387,7 +386,7 @@ LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam
 
 	// turn on/off mouse coursor
 	m_bMouseOn = !CSettingsProvider::This().ShowFullScreen();
-	m_nCursorCnt = ::ShowCursor(m_bMouseOn);
+	::ShowCursor(m_bMouseOn);
 
 	// intitialize navigation with startup file (and folder)
 	m_pFileList = new CFileList(m_sStartupFile, CSettingsProvider::This().Sorting());
@@ -406,7 +405,7 @@ LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam
 
 	// If no file was passed on command line, show the 'Open file' dialog
 	if (m_sStartupFile.GetLength() == 0) {
-		if (!OpenFile(true)) {
+		if (!OpenFile()) {
 			EndDialog(0);
 		}
 		if (CSettingsProvider::This().ShowFullScreen()) {
@@ -417,6 +416,8 @@ LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam
 	}
 
 	this->Invalidate(FALSE);
+
+	this->DragAcceptFiles();
 
 	return TRUE;
 }
@@ -433,7 +434,7 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 	CRect rectNavPanel = m_pNavPanel->PanelRect();
 	bool bBlendNavPanel = false;
 	bool bNavPanelInvisible = (CSettingsProvider::This().BlendFactorNavPanel() == 0.0f && !m_bMouseInNavPanel) ||
-		m_bMovieMode || m_bDoCropping || m_bShowIPTools || m_nCursorCnt < 0 || (!m_bFullScreenMode && !m_bMouseOn && !m_bMouseInNavPanel);
+		m_bMovieMode || m_bDoCropping || m_bShowIPTools || (!m_bMouseOn && !m_bMouseInNavPanel);
 	bool bShowZoomNavigator = false;
 	CRectF visRectZoomNavigator(0.0f, 0.0f, 1.0f, 1.0f);
 	CRect rectZoomNavigator(0, 0, 0, 0);
@@ -1100,7 +1101,7 @@ LRESULT CMainDlg::OnKeyDown(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOO
 	} else if (wParam == 'O') {
 		if (bCtrl) {
 			bHandled = true;
-			OpenFile(false);
+			OpenFile();
 		}
 	}  else if (wParam == 'R') {
 		if (bCtrl) {
@@ -1177,6 +1178,22 @@ LRESULT CMainDlg::OnGetDlgCode(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam
 LRESULT CMainDlg::OnJPEGLoaded(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, BOOL& /*bHandled*/) {
 	// route to JPEG provider
 	m_pJPEGProvider->OnJPEGLoaded((int)lParam);
+	return 0;
+}
+
+LRESULT CMainDlg::OnDropFiles(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOOL& /*bHandled*/) {
+	HDROP hDrop = (HDROP) wParam;
+	if (hDrop != NULL) {
+		const int BUFF_SIZE = 512;
+		TCHAR buff[BUFF_SIZE];
+		if (::DragQueryFile(hDrop, 0, (LPTSTR) &buff, BUFF_SIZE - 1) > 0) {
+			if (::GetFileAttributes(buff) & FILE_ATTRIBUTE_DIRECTORY) {
+				_tcsncat(buff, _T("\\"), BUFF_SIZE);
+			}
+			OpenFile(buff);
+		}
+		::DragFinish(hDrop);
+	}
 	return 0;
 }
 
@@ -1475,7 +1492,7 @@ LPCTSTR CMainDlg::WindowModeTooltip() {
 void CMainDlg::ExecuteCommand(int nCommand) {
 	switch (nCommand) {
 		case IDM_OPEN:
-			OpenFile(false);
+			OpenFile();
 			break;
 		case IDM_SAVE:
 		case IDM_SAVE_SCREEN:
@@ -1795,32 +1812,36 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 	}
 }
 
-bool CMainDlg::OpenFile(bool bAtStartup) {
+bool CMainDlg::OpenFile() {
 	StopMovieMode();
 	MouseOn();
 	CFileOpenDialog dlgOpen(this->m_hWnd, m_pFileList->Current(), CFileList::GetSupportedFileEndings());
 	if (IDOK == dlgOpen.DoModal(this->m_hWnd)) {
-		// recreate file list based on image opened
-		Helpers::ESorting eOldSorting = m_pFileList->GetSorting();
-		delete m_pFileList;
-		m_sStartupFile = dlgOpen.m_szFileName;
-		m_pFileList = new CFileList(m_sStartupFile, eOldSorting);
-		// free current image and all read ahead images
-		InitParametersForNewImage();
-		m_pJPEGProvider->NotifyNotUsed(m_pCurrentImage);
-		m_pJPEGProvider->ClearAllRequests();
-		m_pCurrentImage = m_pJPEGProvider->RequestJPEG(m_pFileList, CJPEGProvider::FORWARD,
-			m_pFileList->Current(), CreateProcessParams());
-		AfterNewImageLoaded(true);
-		m_startMouse.x = m_startMouse.y = -1;
-		m_bSearchSubDirsOnEnter = false;
-		m_bPasteFromClipboardFailed = false;
-		m_sSaveDirectory = _T("");
-		MouseOff();
-		this->Invalidate(FALSE);
+		OpenFile(dlgOpen.m_szFileName);
 		return true;
 	}
 	return false;
+}
+
+void CMainDlg::OpenFile(LPCTSTR sFileName) {
+	// recreate file list based on image opened
+	Helpers::ESorting eOldSorting = m_pFileList->GetSorting();
+	delete m_pFileList;
+	m_sStartupFile = sFileName;
+	m_pFileList = new CFileList(m_sStartupFile, eOldSorting);
+	// free current image and all read ahead images
+	InitParametersForNewImage();
+	m_pJPEGProvider->NotifyNotUsed(m_pCurrentImage);
+	m_pJPEGProvider->ClearAllRequests();
+	m_pCurrentImage = m_pJPEGProvider->RequestJPEG(m_pFileList, CJPEGProvider::FORWARD,
+		m_pFileList->Current(), CreateProcessParams());
+	AfterNewImageLoaded(true);
+	m_startMouse.x = m_startMouse.y = -1;
+	m_bSearchSubDirsOnEnter = false;
+	m_bPasteFromClipboardFailed = false;
+	m_sSaveDirectory = _T("");
+	MouseOff();
+	this->Invalidate(FALSE);
 }
 
 bool CMainDlg::SaveImage(bool bFullSize) {
@@ -2217,7 +2238,7 @@ void CMainDlg::PerformZoom(double dValue, bool bExponent) {
 		nNewYSize = (int)(m_pCurrentImage->OrigHeight() * m_dZoom + 0.5);
 	}
 
-	if (m_nCursorCnt >= 0) {
+	if (m_bMouseOn) {
 		// cursor visible - zoom to mouse
 		int nOldX = nOldXSize/2 - m_clientRect.Width()/2 + m_nMouseX - m_nOffsetX;
 		int nOldY = nOldYSize/2 - m_clientRect.Height()/2 + m_nMouseY - m_nOffsetY;
@@ -2456,8 +2477,8 @@ void CMainDlg::MouseOff() {
 	if (m_bMouseOn) {
 		if (m_nMouseY < m_clientRect.bottom - m_pSliderMgr->SliderAreaHeight() && 
 			!m_bInTrackPopupMenu && !m_pNavPanel->PanelRect().PtInRect(CPoint(m_nMouseX, m_nMouseY))) {
-			if (m_bFullScreenMode && m_nCursorCnt >= 0) {
-				m_nCursorCnt = ::ShowCursor(FALSE);
+			if (m_bFullScreenMode) {
+				while (::ShowCursor(FALSE) >= 0);
 			}
 			m_startMouse.x = m_startMouse.y = -1;
 			m_bMouseOn = false;
@@ -2468,9 +2489,7 @@ void CMainDlg::MouseOff() {
 
 void CMainDlg::MouseOn() {
 	if (!m_bMouseOn) {
-		if (m_nCursorCnt < 0) {
-			m_nCursorCnt = ::ShowCursor(TRUE);
-		}
+		::ShowCursor(TRUE);
 		m_bMouseOn = true;
 		this->InvalidateRect(m_pNavPanel->PanelRect(), FALSE);
 	}
