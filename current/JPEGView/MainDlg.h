@@ -48,6 +48,7 @@ public:
 		MESSAGE_HANDLER(WM_CONTEXTMENU, OnContextMenu)
 		MESSAGE_HANDLER(WM_CTLCOLOREDIT, OnCtlColorEdit)
 		MESSAGE_HANDLER(WM_JPEG_LOAD_COMPLETED, OnJPEGLoaded)
+		MESSAGE_HANDLER(WM_DROPFILES, OnDropFiles)
 		MESSAGE_HANDLER(WM_ANOTHER_INSTANCE_QUIT, OnAnotherInstanceStarted)
 		COMMAND_ID_HANDLER(IDOK, OnOK)
 		COMMAND_ID_HANDLER(IDCANCEL, OnCancel)
@@ -80,6 +81,7 @@ public:
 	LRESULT OnContextMenu(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);
 	LRESULT OnCtlColorEdit(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);
 	LRESULT OnJPEGLoaded(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, BOOL& /*bHandled*/);
+	LRESULT OnDropFiles(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, BOOL& /*bHandled*/);
 	LRESULT OnAnotherInstanceStarted(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, BOOL& /*bHandled*/);
 
 	// Called by main()
@@ -163,7 +165,6 @@ private:
 	bool m_bLockPaint;
 	int m_nCurrentTimeout;
 	POINT m_startMouse;
-	int m_nCursorCnt;
 	CSize m_virtualImageSize;
 	CPoint m_capturedPosZoomNavSection;
 	bool m_bInZooming;
@@ -195,7 +196,8 @@ private:
 	CString m_sSaveDirectory;
 	CString m_sSaveExtension;
 
-	bool OpenFile(bool bAtStartup);
+	bool OpenFile();
+	void OpenFile(LPCTSTR sFileName);
 	bool SaveImage(bool bFullSize);
 	void BatchCopy();
 	void HandleUserCommands(uint32 virtualKeyCode);
