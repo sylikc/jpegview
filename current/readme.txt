@@ -30,6 +30,7 @@ Bugs fixed:
 New features:
 - 'DefaultWindowRect=max' in INI file will start with maximized window (if fullscreen mode is false)
 - Dropping files or folders to JPEGView from Windows Explorer now works
+- Edit global and user INI file using context menu
 
 
 [1.0.18]

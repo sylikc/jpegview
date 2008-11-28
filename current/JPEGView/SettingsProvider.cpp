@@ -250,7 +250,7 @@ void CSettingsProvider::SaveSettings(const CImageProcessingParams& procParams,
 									 EProcessingFlags eProcFlags, Helpers::ESorting eFileSorting,
 									 Helpers::EAutoZoomMode eAutoZoomMode,
 									 bool bShowNavPanel) {
-	SHCreateDirectoryEx(NULL, Helpers::JPEGViewAppDataPath(), NULL);
+	MakeSureUserINIExists();
 
 	WriteDouble(_T("Contrast"), procParams.Contrast);
 	WriteDouble(_T("Gamma"), procParams.Gamma);
@@ -290,10 +290,24 @@ void CSettingsProvider::SaveSettings(const CImageProcessingParams& procParams,
 }
 
 void CSettingsProvider::SaveCopyRenamePattern(const CString& sPattern) {
-	SHCreateDirectoryEx(NULL, Helpers::JPEGViewAppDataPath(), NULL);
+	MakeSureUserINIExists();
 
 	m_sCopyRenamePattern = sPattern;
 	WriteString(_T("CopyRenamePattern"), sPattern);
+
+	m_bUserINIExists = true;
+}
+
+void CSettingsProvider::MakeSureUserINIExists() {
+	if (m_bStoreToEXEPath) {
+		return; // no user INI file needed
+	}
+
+	// Create JPEGView appdata directory and copy INI file if it does not exist
+	::CreateDirectory(Helpers::JPEGViewAppDataPath(), NULL);
+	if (::GetFileAttributes(m_sIniNameUser) == INVALID_FILE_ATTRIBUTES) {
+		::CopyFile(CString(m_sIniNameGlobal) + ".tpl", m_sIniNameUser, TRUE);
+	}
 }
 
 CString CSettingsProvider::GetString(LPCTSTR sKey, LPCTSTR sDefault) {

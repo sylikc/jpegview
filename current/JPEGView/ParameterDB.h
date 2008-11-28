@@ -89,6 +89,9 @@ public:
 	// Returns if the entry was added or not.
 	bool AddEntry(const CParameterDBEntry& newEntry);
 
+	// Returns if the parameter DB is empty (no persistent param DB exists)
+	bool IsEmpty() { return m_blockList.size() == 0; }
+
 private:
 	CParameterDB(void);
 	~CParameterDB(void);

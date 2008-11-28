@@ -251,6 +251,7 @@ private:
 	void SetCursorForMoveSection();
 	void ToggleMonitor();
 	CRect GetZoomTextRect(CRect imageProcessingArea);
+	void EditINIFile(bool bGlobalINI);
 
 	static void OnSaveToDB(CButtonCtrl & sender);
 	static void OnRemoveFromDB(CButtonCtrl & sender);

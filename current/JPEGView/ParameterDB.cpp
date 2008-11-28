@@ -499,7 +499,7 @@ bool CParameterDB::SaveToFile(int nIndex, const CParameterDBEntry & dbEntry) {
 
 	// Create the directory in the application data path if it does not exist
 	if (::GetFileAttributes(Helpers::JPEGViewAppDataPath()) == INVALID_FILE_ATTRIBUTES) {
-		::SHCreateDirectoryEx(NULL, Helpers::JPEGViewAppDataPath(), NULL);
+		::CreateDirectory(Helpers::JPEGViewAppDataPath(), NULL);
 	}
 
 	HANDLE hFile = ::CreateFile(sParamDBName, GENERIC_READ | GENERIC_WRITE, 0, NULL, OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);

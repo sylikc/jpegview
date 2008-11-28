@@ -227,6 +227,14 @@ BEGIN
           MENUITEM "Fill with crop",	IDM_AUTO_ZOOM_FILL
         END 
 	  MENUITEM SEPARATOR
+	  POPUP "Settings/Admin" 
+        BEGIN 
+          MENUITEM "Edit global settings...",	IDM_EDIT_GLOBAL_CONFIG
+          MENUITEM "Edit user settings...",	IDM_EDIT_USER_CONFIG
+		  MENUITEM SEPARATOR
+          MENUITEM "Backup parameter DB...",	IDM_BACKUP_PARAMDB
+          MENUITEM "Restore parameter DB...",	IDM_RESTORE_PARAMDB
+        END 
 	  MENUITEM "About JPEGView...",		IDM_ABOUT
 	  MENUITEM SEPARATOR
 	  MENUITEM "Exit\tEsc",				IDM_EXIT
