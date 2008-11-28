@@ -72,6 +72,11 @@ public:
 	// Gets the path where the global INI file and the EXE is located
 	LPCTSTR GetEXEPath() { return m_sEXEPath; }
 
+	// Get the file name with path of the global INI file (in EXE path)
+	LPCTSTR GetGlobalINIFileName() { return m_sIniNameGlobal; }
+	// Get the file name with path of the user INI file (in AppData path)
+	LPCTSTR GetUserINIFileName() { return m_sIniNameUser; }
+
 private:
 	static CSettingsProvider* sm_instance;
 	CString m_sEXEPath;
@@ -125,6 +130,7 @@ private:
 
 	std::list<CUserCommand*> m_userCommands;
 
+	void MakeSureUserINIExists();
 	void ReadWriteableINISettings();
 	CString GetString(LPCTSTR sKey, LPCTSTR sDefault);
 	int GetInt(LPCTSTR sKey, int nDefault, int nMin, int nMax);
