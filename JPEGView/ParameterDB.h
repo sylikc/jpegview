@@ -65,7 +65,7 @@ struct ParameterDBHeader {
 	uint32 nMagic1;
 	uint32 nMagic2;
 	uint32 nVersion;
-	uint32 nFill[5];
+	uint32 nFill[5]; // NOTE: Header must have same size as entry
 };
 
 #pragma pack(pop)
@@ -92,6 +92,12 @@ public:
 	// Returns if the parameter DB is empty (no persistent param DB exists)
 	bool IsEmpty() { return m_blockList.size() == 0; }
 
+	// Gets the name of the parameter DB (with path)
+	CString GetParamDBName();
+
+	// Merges the given parameter DB with the current paramter DB
+	bool MergeParamDB(LPCTSTR sParamDBName);
+
 private:
 	CParameterDB(void);
 	~CParameterDB(void);
@@ -111,7 +117,7 @@ private:
 
 	CParameterDBEntry* FindEntryInternal(__int64 nHash, int& nIndex);
 	CParameterDBEntry* AllocateNewEntry(int& nIndex);
-	bool LoadFromFile();
+	DBBlock* LoadFromFile(const CString& sParamDBName, bool bConvertOldFormats);
 	bool SaveToFile(int nIndex, const CParameterDBEntry & dbEntry);
 	bool ConvertVersion1To2(HANDLE hFile, const CString& sFileName);
 };

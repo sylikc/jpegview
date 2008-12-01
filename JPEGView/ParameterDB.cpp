@@ -308,6 +308,11 @@ CParameterDB& CParameterDB::This() {
 	}
 	return *sm_instance;
 }
+
+CString CParameterDB::GetParamDBName() {
+	return CString(Helpers::JPEGViewAppDataPath()) + PARAM_DB_NAME; 
+}
+
 	
 CParameterDBEntry* CParameterDB::FindEntry(__int64 nHash) {
 	if (nHash == 0) {
@@ -370,6 +375,45 @@ bool CParameterDB::AddEntry(const CParameterDBEntry& newEntry) {
 	return true;
 }
 
+bool CParameterDB::MergeParamDB(LPCTSTR sParamDBName) {
+	DBBlock* pBlock = LoadFromFile(CString(sParamDBName), false);
+	if (pBlock == NULL) {
+		return false;
+	}
+
+	// Acquire lock before modifying the class
+	Helpers::CAutoCriticalSection lock(m_csDBLock);
+
+	bool bAlreadyAsked = false;
+	bool bPreserve = true;
+	for (int i = 0; i < pBlock->UsedEntries; i++) {
+		__int64 nThisHash = pBlock->Block[i].GetHash();
+		if (nThisHash != 0) {
+			int notUsed;
+			CParameterDBEntry* pEntry = FindEntryInternal(nThisHash, notUsed);
+			if (pEntry != NULL) {
+				// Entry to be merged already in parameter DB
+				if (!bAlreadyAsked) {
+					bPreserve = IDYES == ::MessageBox(NULL, CString(CNLS::GetString(_T("The imported param DB contains entries already present in active param DB."))) + _T("\n") +
+						CNLS::GetString(_T("Shall existing entries be preserved (Yes) or be overriden by the imported entries (No)?")),
+						CNLS::GetString(_T("Conflicting entries in Param DB")), MB_YESNO | MB_ICONQUESTION);
+					bAlreadyAsked = true;
+				}
+				if (!bPreserve) {
+					*pEntry = pBlock->Block[i];
+				}
+			} else {
+				// Entry to be merged not in parameter DB
+				pEntry = AllocateNewEntry(notUsed);
+				*pEntry = pBlock->Block[i];
+			}
+		}
+	}
+
+	CParameterDBEntry dummy;
+	return SaveToFile(-1, dummy); // this saves all entries
+}
+
 /////////////////////////////////////////////////////////////////////////////////////////////
 // Private
 /////////////////////////////////////////////////////////////////////////////////////////////
@@ -381,7 +425,10 @@ CParameterDB::CParameterDB(void) {
 
 	m_LRUHash = 0;
 	m_pLRUEntry = NULL;
-	LoadFromFile();
+	DBBlock* pBlock = LoadFromFile(GetParamDBName(), true);
+	if (pBlock != NULL) {
+		m_blockList.push_back(pBlock);
+	}
 }
 
 CParameterDB::~CParameterDB(void) {
@@ -430,38 +477,41 @@ CParameterDBEntry* CParameterDB::AllocateNewEntry(int& nIndex) {
 	return &(pBlock->Block[0]);
 }
 
-bool CParameterDB::LoadFromFile() {
-	CString sParamDBName = CString(Helpers::JPEGViewAppDataPath()) + PARAM_DB_NAME;
-
+CParameterDB::DBBlock* CParameterDB::LoadFromFile(const CString& sParamDBName, bool bConvertOldFormats) {
 	// file does not exist - no error
 	if (::GetFileAttributes(sParamDBName) == INVALID_FILE_ATTRIBUTES) {
-		return true;
+		return NULL;
 	}
 
 	// file exists, open it
 	HANDLE hFile = ::CreateFile(sParamDBName, GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 	if (hFile == INVALID_HANDLE_VALUE) {
 		HandleErrorAndCloseHandle(errorOpenFailed, sParamDBName, 0);
-		return true;
+		return NULL;
 	}
 
 	int nVersion;
 	if (!CheckHeader(hFile, nVersion)) {
 		HandleErrorAndCloseHandle(errorHeaderInvalid, sParamDBName, hFile);
-		return false;
+		return NULL;
 	}
 
-	// check version and convert if possible
+	// check version and convert if possible and requested
 	if (nVersion == 1) {
-		// convert parameter DB file
-		if (ConvertVersion1To2(hFile, sParamDBName)) {
-			return LoadFromFile();
+		if (bConvertOldFormats) {
+			// convert parameter DB file
+			if (ConvertVersion1To2(hFile, sParamDBName)) {
+				return LoadFromFile(sParamDBName, false);
+			} else {
+				return NULL;
+			}
 		} else {
-			return false;
+			HandleErrorAndCloseHandle(errorHeaderInvalid, sParamDBName, hFile);
+			return NULL;
 		}
 	} else if (nVersion > DB_FILE_VERSION) {
 		HandleErrorAndCloseHandle(errorHeaderInvalid, sParamDBName, hFile);
-		return false;
+		return NULL;
 	}
 
 	// Check if file is too large
@@ -469,7 +519,7 @@ bool CParameterDB::LoadFromFile() {
 	::GetFileSizeEx(hFile, (PLARGE_INTEGER)&nFileSize);
 	if (nFileSize > MAX_DB_FILE_SIZE) {
 		HandleErrorAndCloseHandle(errorTooLarge, sParamDBName, hFile);
-		return false;
+		return NULL;
 	}
 	int nBlocks = (uint32)(nFileSize - sizeof(ParameterDBHeader))/sizeof(CParameterDBEntry);
 
@@ -483,19 +533,19 @@ bool CParameterDB::LoadFromFile() {
 		HandleErrorAndCloseHandle(errorReadFailed, sParamDBName, hFile);
 		delete[] pBlock->Block;
 		delete pBlock;
-		return false;
+		return NULL;
 	}
 
 	pBlock->UsedEntries = numRead/sizeof(CParameterDBEntry);
-	m_blockList.push_back(pBlock);
 
 	// Close file and exit
 	::CloseHandle(hFile);
-	return true;
+
+	return pBlock;
 }
 
 bool CParameterDB::SaveToFile(int nIndex, const CParameterDBEntry & dbEntry) {
-	CString sParamDBName = CString(Helpers::JPEGViewAppDataPath()) + PARAM_DB_NAME;
+	CString sParamDBName = GetParamDBName();
 
 	// Create the directory in the application data path if it does not exist
 	if (::GetFileAttributes(Helpers::JPEGViewAppDataPath()) == INVALID_FILE_ATTRIBUTES) {
@@ -536,18 +586,37 @@ bool CParameterDB::SaveToFile(int nIndex, const CParameterDBEntry & dbEntry) {
 		return false;
 	}
 
+	bool bWriteAll = nIndex < 0;
+	if (bWriteAll) {
+		nIndex = 0;
+	}
+
 	// Seek to position of new entry to write
 	if (::SetFilePointer(hFile, (nIndex + 1)*sizeof(CParameterDBEntry), NULL, FILE_BEGIN) == INVALID_SET_FILE_POINTER) {
 		HandleErrorAndCloseHandle(errorWriteFailed, sParamDBName, hFile);
 		return false;
 	}
 
-	// Write entry
-	DWORD numWritten;
-	::WriteFile(hFile, &dbEntry, sizeof(ParameterDBHeader), &numWritten, NULL);
-	if (numWritten != sizeof(ParameterDBHeader)) {
-		HandleErrorAndCloseHandle(errorWriteFailed, sParamDBName, hFile);
-		return false;
+	if (bWriteAll) {
+		// Write all entries
+		std::list<DBBlock*>::iterator iter;
+		for (iter = m_blockList.begin( ); iter != m_blockList.end( ); iter++ ) {
+			DBBlock* pCurrentBlock = *iter;
+			DWORD numWritten;
+			::WriteFile(hFile, pCurrentBlock->Block, sizeof(CParameterDBEntry) * pCurrentBlock->UsedEntries, &numWritten, NULL);
+			if (numWritten != sizeof(CParameterDBEntry) * pCurrentBlock->UsedEntries) {
+				HandleErrorAndCloseHandle(errorWriteFailed, sParamDBName, hFile);
+				return false;
+			}
+		}
+	} else {
+		// Write a single entry
+		DWORD numWritten;
+		::WriteFile(hFile, &dbEntry, sizeof(CParameterDBEntry), &numWritten, NULL);
+		if (numWritten != sizeof(CParameterDBEntry)) {
+			HandleErrorAndCloseHandle(errorWriteFailed, sParamDBName, hFile);
+			return false;
+		}
 	}
 
 	// Close file and exit

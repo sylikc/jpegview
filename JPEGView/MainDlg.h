@@ -252,6 +252,8 @@ private:
 	void ToggleMonitor();
 	CRect GetZoomTextRect(CRect imageProcessingArea);
 	void EditINIFile(bool bGlobalINI);
+	void BackupParamDB();
+	void RestoreParamDB();
 
 	static void OnSaveToDB(CButtonCtrl & sender);
 	static void OnRemoveFromDB(CButtonCtrl & sender);
