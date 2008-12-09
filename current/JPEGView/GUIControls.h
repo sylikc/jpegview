@@ -377,3 +377,29 @@ private:
 	int m_nBorder;
 	int m_nGap;
 };
+
+// Window button panel
+class CWndButtonPanel : public CPanelMgr {
+public:
+	// The panel is on the given window on top border of the given slider manager
+	CWndButtonPanel(HWND hWnd, CSliderMgr* pSliderMgr);
+
+	virtual CRect PanelRect();
+	int ButtonPanelHeight() { return m_nHeight; }
+	virtual bool OnMouseLButton(EMouseEvent eMouseEvent, int nX, int nY);
+	virtual void RequestRepositioning();
+
+	// Painting handlers for the buttons
+	static void PaintMinimizeBtn(const CRect& rect, CDC& dc);
+	static void PaintRestoreBtn(const CRect& rect, CDC& dc);
+	static void PaintCloseBtn(const CRect& rect, CDC& dc);
+
+protected:
+	virtual void RepositionAll();
+
+private:
+
+	CSliderMgr* m_pSliderMgr;
+	CRect m_clientRect;
+	int m_nWidth, m_nHeight;
+};

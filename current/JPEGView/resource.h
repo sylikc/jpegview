@@ -39,6 +39,7 @@
 
 #define IDM_FIRST			1000
 #define IDM_STOP_MOVIE		1000
+#define IDM_MINIMIZE		1010
 #define IDM_OPEN			1100
 #define IDM_SAVE			1500
 #define IDM_SAVE_SCREEN		1501

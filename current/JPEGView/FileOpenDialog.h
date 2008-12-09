@@ -5,7 +5,7 @@
 class CFileOpenDialog : public CFileDialog
 {
 public:
-	CFileOpenDialog(HWND parentWindow, LPCTSTR sInitialFileName, LPCTSTR sFileEndings);
+	CFileOpenDialog(HWND parentWindow, LPCTSTR sInitialFileName, LPCTSTR sFileEndings, bool bFullScreen);
 
 	BEGIN_MSG_MAP(CFileOpenDialog)
 		MESSAGE_HANDLER(WM_INITDIALOG, OnInitDialog)
@@ -18,5 +18,6 @@ public:
 private:
 	void SizeDialog();
 
+	bool m_bFullScreen;
 	static bool m_bSized;
 };
