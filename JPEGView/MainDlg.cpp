@@ -68,6 +68,7 @@ static const int KEEP_PARAMETERS = 4; // used in GotoImage() method
 static const float cfDimFactorIPA = 0.5f;
 static const float cfDimFactorEXIF = 0.5f;
 static const float cfDimFactorNavPanel = 0.3f;
+static const float cfDimFactorWndButtons = 0.1f;
 
 CMainDlg * CMainDlg::sm_instance = NULL;
 
@@ -290,13 +291,16 @@ CMainDlg::CMainDlg() {
 	m_bSearchSubDirsOnEnter = false;
 	m_bSpanVirtualDesktop = false;
 	m_bShowIPTools = false;
+	m_bShowWndButtonPanel = false;
 	m_bMouseInNavPanel = false;
 	m_bArrowCursorSet = false;
+	m_bInInitialOpenFile = false;
 	m_storedWindowPlacement.length = sizeof(WINDOWPLACEMENT);
 	memset(&m_storedWindowPlacement2, 0, sizeof(WINDOWPLACEMENT));
 	m_storedWindowPlacement2.length = sizeof(WINDOWPLACEMENT);
 	m_pSliderMgr = NULL;
 	m_pNavPanel = NULL;
+	m_pWndButtonPanel = NULL;
 	m_bPasteFromClipboardFailed = false;
 	m_nMonitor = 0;
 
@@ -311,14 +315,13 @@ CMainDlg::~CMainDlg() {
 	delete m_pImageProcParamsKept;
 	delete m_pSliderMgr;
 	delete m_pNavPanel;
+	delete m_pWndButtonPanel;
 	CProcessingThreadPool::This().StopAllThreads();
 }
 
 LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/)
 {	
-	if (m_sStartupFile.GetLength() != 0) {
-		::SetWindowLong(m_hWnd, GWL_STYLE, WS_VISIBLE);
-	}
+	::SetWindowLong(m_hWnd, GWL_STYLE, WS_VISIBLE);
 
 	this->SetWindowText(_T("JPEGView")); // only relevant for toolbar
 
@@ -330,7 +333,7 @@ LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam
 	// place window on monitor as requested in INI file
 	m_nMonitor = CSettingsProvider::This().DisplayMonitor();
 	m_monitorRect = CMultiMonitorSupport::GetMonitorRect(m_nMonitor);
-	if (CSettingsProvider::This().ShowFullScreen() || m_sStartupFile.GetLength() == 0) {
+	if (CSettingsProvider::This().ShowFullScreen()) {
 		SetWindowPos(HWND_TOP, &m_monitorRect, SWP_NOZORDER);
 	} else {
 		ExecuteCommand(IDM_FULL_SCREEN_MODE_AFTER_STARTUP);
@@ -376,6 +379,12 @@ LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam
 	m_pNavPanel->AddGap(16);
 	m_btnInfo = m_pNavPanel->AddUserPaintButton(&(CNavigationPanel::PaintInfoBtn), &OnShowInfo, CNLS::GetString(_T("Display image (EXIF) information")));
 
+	// setup window button panel (on top, right)
+	m_pWndButtonPanel = new CWndButtonPanel(this->m_hWnd, m_pSliderMgr);
+	m_pWndButtonPanel->AddUserPaintButton(&(CWndButtonPanel::PaintMinimizeBtn), &OnMinimize, (LPCTSTR)NULL);
+	m_pWndButtonPanel->AddUserPaintButton(&(CWndButtonPanel::PaintRestoreBtn), &OnRestore, (LPCTSTR)NULL);
+	m_pWndButtonPanel->AddUserPaintButton(&(CWndButtonPanel::PaintCloseBtn), &OnClose, (LPCTSTR)NULL);
+
 	// set icons (for toolbar)
 	HICON hIcon = (HICON)::LoadImage(_Module.GetResourceInstance(), MAKEINTRESOURCE(IDR_MAINFRAME), 
 		IMAGE_ICON, ::GetSystemMetrics(SM_CXICON), ::GetSystemMetrics(SM_CYICON), LR_DEFAULTCOLOR);
@@ -403,18 +412,6 @@ LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam
 
 	m_bLockPaint = false;
 
-	// If no file was passed on command line, show the 'Open file' dialog
-	if (m_sStartupFile.GetLength() == 0) {
-		if (!OpenFile()) {
-			EndDialog(0);
-		}
-		if (CSettingsProvider::This().ShowFullScreen()) {
-			::SetWindowLong(m_hWnd, GWL_STYLE, WS_VISIBLE);
-		} else {
-			ExecuteCommand(IDM_FULL_SCREEN_MODE_AFTER_STARTUP);
-		}
-	}
-
 	this->Invalidate(FALSE);
 
 	this->DragAcceptFiles();
@@ -424,14 +421,30 @@ LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam
 
 LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/)
 {
+	static bool s_bFirst = true;
+
 	if (m_bLockPaint) {
 		return 0;
 	}
+
+	// On first paint show 'Open File' dialog if no file passed on command line
+	if (s_bFirst) {
+		s_bFirst = false;
+		if (m_sStartupFile.GetLength() == 0) {
+			m_bInInitialOpenFile = true;
+			if (!OpenFile(true)) {
+				EndDialog(0);
+			}
+			m_bInInitialOpenFile = false;
+		}
+	}
+
 	CPaintDC dc(m_hWnd);
 
 	this->GetClientRect(&m_clientRect);
 	CRect imageProcessingArea = m_pSliderMgr->PanelRect();
 	CRect rectNavPanel = m_pNavPanel->PanelRect();
+	CRect rectWndButtons = m_pWndButtonPanel->PanelRect();
 	bool bBlendNavPanel = false;
 	bool bNavPanelInvisible = (CSettingsProvider::This().BlendFactorNavPanel() == 0.0f && !m_bMouseInNavPanel) ||
 		m_bMovieMode || m_bDoCropping || m_bShowIPTools || (!m_bMouseOn && !m_bMouseInNavPanel);
@@ -473,7 +486,6 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 	// Create a memory DC for the image processing area (also excluded from clipping)
 	CDC memDCipa = CDC();
 	HBITMAP hOffScreenBitmapIPA = NULL;
-
 	if (m_bShowIPTools) {
 		hOffScreenBitmapIPA = PrepareRectForMemDCPainting(memDCipa, dc, imageProcessingArea);
 		excludedClippingRects.push_back(imageProcessingArea);
@@ -482,10 +494,17 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 	// Create a memory DC for the nav panel (also excluded from clipping)
 	CDC memDCnavPanel = CDC();
 	HBITMAP hOffScreenBitmapNavPanel = NULL;
-
 	if (m_bShowNavPanel && !bNavPanelInvisible) {
 		hOffScreenBitmapNavPanel = PrepareRectForMemDCPainting(memDCnavPanel, dc, rectNavPanel);
 		excludedClippingRects.push_back(rectNavPanel);
+	}
+
+	// Create a memory DC for the window button panel (also excluded from clipping)
+	CDC memDCwndBtns = CDC();
+	HBITMAP hOffScreenBitmapWndBtns = NULL;
+	if (m_bShowWndButtonPanel) {
+		hOffScreenBitmapWndBtns = PrepareRectForMemDCPainting(memDCwndBtns, dc, rectWndButtons);
+		excludedClippingRects.push_back(rectWndButtons);
 	}
 
 	if (m_pCurrentImage == NULL) {
@@ -580,6 +599,11 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 				BitBltBlended(memDCipa, dc, CSize(imageProcessingArea.Width(), imageProcessingArea.Height()), pDIBData, &bmInfo, 
 						  CPoint(xDest - imageProcessingArea.left, yDest - imageProcessingArea.top), clippedSize, cfDimFactorIPA);
 			}
+			// same for window buttons
+			if (memDCwndBtns.m_hDC != NULL) {
+				BitBltBlended(memDCwndBtns, dc, CSize(rectWndButtons.Width(), rectWndButtons.Height()), pDIBData, &bmInfo, 
+						  CPoint(xDest - rectWndButtons.left, yDest - rectWndButtons.top), clippedSize, cfDimFactorWndButtons);
+			}
 
 			// remaining client area is painted black
 			if (clippedSize.cx < m_clientRect.Width()) {
@@ -634,10 +658,11 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 	// Display errors and warnings
 	if (m_sStartupFile.IsEmpty()) {
 		CRect rectText(0, m_clientRect.Height()/2 - Scale(40), m_clientRect.Width(), m_clientRect.Height());
-		dc.DrawText(CString(CNLS::GetString(_T("No file or folder name was provided as command line parameter!"))) + _T('\n') +
+		CString sText = m_bInInitialOpenFile ? CNLS::GetString(_T("Select file to display in 'File Open' dialog")) :
+			CString(CNLS::GetString(_T("No file or folder name was provided as command line parameter!"))) + _T('\n') +
 			CNLS::GetString(_T("To use JPEGView, associate JPG, JPEG and BMP files with JPEGView.")) + _T('\n') +
-			CNLS::GetString(_T("Press ESC to exit...")),
-			-1, &rectText, DT_CENTER | DT_WORDBREAK);
+			CNLS::GetString(_T("Press ESC to exit..."));
+		dc.DrawText(sText, -1, &rectText, DT_CENTER | DT_WORDBREAK);
 	} else if (m_pCurrentImage == NULL) {
 		const int BUF_LEN = 512;
 		TCHAR buff[BUF_LEN];
@@ -702,6 +727,13 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 		m_pNavPanel->GetTooltipMgr().OnPaint(dc);
 	}
 
+	// Paint window buttons
+	if (m_bShowWndButtonPanel) {
+		m_pWndButtonPanel->OnPaint(memDCwndBtns, CPoint(-rectWndButtons.left, -rectWndButtons.top));
+		dc.BitBlt(rectWndButtons.left, rectWndButtons.top, rectWndButtons.Width(), rectWndButtons.Height(), memDCwndBtns, 0, 0, SRCCOPY);
+		m_pWndButtonPanel->GetTooltipMgr().OnPaint(dc);
+	}
+
 	// Display file and EXIF information
 	if (pEXIFDisplay != NULL && m_pCurrentImage != NULL) {
 		// paint into the memory DC
@@ -733,6 +765,9 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 	}
 	if (hOffScreenBitmapNavPanel != NULL) {
 		::DeleteObject(hOffScreenBitmapNavPanel);
+	}
+	if (hOffScreenBitmapWndBtns != NULL) {
+		::DeleteObject(hOffScreenBitmapWndBtns);
 	}
 	delete pHelpDisplay;
 	delete pEXIFDisplay;
@@ -779,8 +814,10 @@ LRESULT CMainDlg::OnLButtonDown(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam,
 	SetCursorForMoveSection();
 	bool bEatenByIPA = m_bShowIPTools && m_pSliderMgr->OnMouseLButton(MouseEvent_BtnDown, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
 	bool bEatenByNavPanel = m_bShowNavPanel && !m_bShowIPTools && m_pNavPanel->OnMouseLButton(MouseEvent_BtnDown, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+	bool bEatenByWndButtons = m_bShowWndButtonPanel && m_pWndButtonPanel->OnMouseLButton(MouseEvent_BtnDown, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+
 	// If the image processing area does not eat up the event, start dragging
-	if (!bEatenByIPA && !bEatenByNavPanel) {
+	if (!bEatenByIPA && !bEatenByNavPanel && !bEatenByWndButtons) {
 		bool bCtrl = (::GetKeyState(VK_CONTROL) & 0x8000) != 0;
 		bool bDraggingRequired = m_virtualImageSize.cx > m_clientRect.Width() || m_virtualImageSize.cy > m_clientRect.Height();
 		if (bCtrl || !bDraggingRequired) {
@@ -814,6 +851,7 @@ LRESULT CMainDlg::OnLButtonUp(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, B
 	} else {
 		if (m_bShowIPTools) m_pSliderMgr->OnMouseLButton(MouseEvent_BtnUp, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
 		if (m_bShowNavPanel && !m_bShowIPTools) m_pNavPanel->OnMouseLButton(MouseEvent_BtnUp, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+		if (m_bShowWndButtonPanel) m_pWndButtonPanel->OnMouseLButton(MouseEvent_BtnUp, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
 	}
 	::ReleaseCapture();
 	return 0;
@@ -898,6 +936,24 @@ LRESULT CMainDlg::OnMouseMove(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, B
 		} else {
 			m_pNavPanel->GetTooltipMgr().EnableTooltips(false);
 			m_bMouseInNavPanel = false;
+		}
+
+		if (!m_bShowWndButtonPanel) {
+			if (m_bFullScreenMode) {
+				int nWndBtnAreaStart = m_pWndButtonPanel->ButtonPanelHeight();
+				if (nOldMouseY != 0 && nOldMouseY > nWndBtnAreaStart && m_nMouseY <= nWndBtnAreaStart) {
+					m_bShowWndButtonPanel = true;
+					this->InvalidateRect(m_pWndButtonPanel->PanelRect(), FALSE);
+				}
+			}
+		} else {
+			if (!m_pWndButtonPanel->OnMouseMove(m_nMouseX, m_nMouseY)) {
+				if (m_nMouseY > m_pWndButtonPanel->ButtonPanelHeight()) {
+					m_bShowWndButtonPanel = false;
+					this->InvalidateRect(m_pWndButtonPanel->PanelRect(), FALSE);
+					m_pWndButtonPanel->GetTooltipMgr().RemoveActiveTooltip();
+				}
+			}
 		}
 
 		CRect zoomHotArea = CZoomNavigator::GetNavigatorBound(m_pSliderMgr->PanelRect());
@@ -1101,7 +1157,7 @@ LRESULT CMainDlg::OnKeyDown(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOO
 	} else if (wParam == 'O') {
 		if (bCtrl) {
 			bHandled = true;
-			OpenFile();
+			OpenFile(false);
 		}
 	}  else if (wParam == 'R') {
 		if (bCtrl) {
@@ -1440,13 +1496,19 @@ void CMainDlg::OnToggleZoomFit(CButtonCtrl & sender) {
 }
 
 void CMainDlg::OnToggleWindowMode(CButtonCtrl & sender) {
+	ToggleWindowMode(true);
+}
+
+void CMainDlg::ToggleWindowMode(bool bSetCursor) {
 	sm_instance->ExecuteCommand(IDM_FULL_SCREEN_MODE);
 
 	sm_instance->m_pNavPanel->RequestRepositioning();
-	CRect rect = sm_instance->m_btnWindowMode->GetPosition();
-	CPoint ptWnd = rect.CenterPoint();
-	::ClientToScreen(sm_instance->m_hWnd, &ptWnd);
-	::SetCursorPos(ptWnd.x, ptWnd.y);
+	if (bSetCursor) {
+		CRect rect = sm_instance->m_btnWindowMode->GetPosition();
+		CPoint ptWnd = rect.CenterPoint();
+		::ClientToScreen(sm_instance->m_hWnd, &ptWnd);
+		::SetCursorPos(ptWnd.x, ptWnd.y);
+	}
 }
 
 void CMainDlg::OnRotateCW(CButtonCtrl & sender) {
@@ -1463,6 +1525,18 @@ void CMainDlg::OnShowInfo(CButtonCtrl & sender) {
 
 void CMainDlg::OnLandscapeMode(CButtonCtrl & sender) {
 	sm_instance->ExecuteCommand(IDM_LANDSCAPE_MODE);
+}
+
+void CMainDlg::OnMinimize(CButtonCtrl & sender) {
+	sm_instance->ExecuteCommand(IDM_MINIMIZE);
+}
+
+void CMainDlg::OnRestore(CButtonCtrl & sender) {
+	ToggleWindowMode(false);
+}
+
+void CMainDlg::OnClose(CButtonCtrl & sender) {
+	sm_instance->ExecuteCommand(IDM_EXIT);
 }
 
 void CMainDlg::PaintZoomFitToggleBtn(const CRect& rect, CDC& dc) {
@@ -1495,8 +1569,11 @@ LPCTSTR CMainDlg::WindowModeTooltip() {
 
 void CMainDlg::ExecuteCommand(int nCommand) {
 	switch (nCommand) {
+		case IDM_MINIMIZE:
+			this->ShowWindow(SW_MINIMIZE);
+			break;
 		case IDM_OPEN:
-			OpenFile();
+			OpenFile(false);
 			break;
 		case IDM_SAVE:
 		case IDM_SAVE_SCREEN:
@@ -1720,6 +1797,7 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 		case IDM_FULL_SCREEN_MODE_AFTER_STARTUP:
 			m_bFullScreenMode = !m_bFullScreenMode;
 			if (!m_bFullScreenMode) {
+				m_bShowWndButtonPanel = false;
 				CRect windowRect;
 				this->SetWindowLongW(GWL_STYLE, this->GetWindowLongW(GWL_STYLE) | WS_OVERLAPPEDWINDOW | WS_VISIBLE);
 				if (::IsRectEmpty(&(m_storedWindowPlacement2.rcNormalPosition))) {
@@ -1826,10 +1904,10 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 	}
 }
 
-bool CMainDlg::OpenFile() {
+bool CMainDlg::OpenFile(bool bFullScreen) {
 	StopMovieMode();
 	MouseOn();
-	CFileOpenDialog dlgOpen(this->m_hWnd, m_pFileList->Current(), CFileList::GetSupportedFileEndings());
+	CFileOpenDialog dlgOpen(this->m_hWnd, m_pFileList->Current(), CFileList::GetSupportedFileEndings(), bFullScreen);
 	if (IDOK == dlgOpen.DoModal(this->m_hWnd)) {
 		OpenFile(dlgOpen.m_szFileName);
 		return true;

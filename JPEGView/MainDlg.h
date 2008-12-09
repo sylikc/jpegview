@@ -13,6 +13,7 @@ class CJPEGProvider;
 class CJPEGImage;
 class CSliderMgr;
 class CNavigationPanel;
+class CWndButtonPanel;
 class CButtonCtrl;
 class CTextCtrl;
 class CEXIFDisplay;
@@ -174,9 +175,11 @@ private:
 	bool m_bSpanVirtualDesktop;
 	bool m_bShowIPTools;
 	bool m_bShowNavPanel;
+	bool m_bShowWndButtonPanel;
 	bool m_bMouseInNavPanel;
 	bool m_bArrowCursorSet;
 	bool m_bMouseOn;
+	bool m_bInInitialOpenFile;
 	int m_nMonitor;
 	WINDOWPLACEMENT m_storedWindowPlacement;
 	WINDOWPLACEMENT m_storedWindowPlacement2;
@@ -193,10 +196,11 @@ private:
 	CButtonCtrl* m_btnLandScape;
 	CButtonCtrl* m_btnWindowMode;
 	CNavigationPanel* m_pNavPanel;
+	CWndButtonPanel* m_pWndButtonPanel;
 	CString m_sSaveDirectory;
 	CString m_sSaveExtension;
 
-	bool OpenFile();
+	bool OpenFile(bool bFullScreen);
 	void OpenFile(LPCTSTR sFileName);
 	bool SaveImage(bool bFullSize);
 	void BatchCopy();
@@ -268,6 +272,11 @@ private:
 	static void OnRotateCCW(CButtonCtrl & sender);
 	static void OnShowInfo(CButtonCtrl & sender);
 	static void OnLandscapeMode(CButtonCtrl & sender);
+	static void ToggleWindowMode(bool bSetCursor);
+
+	static void OnMinimize(CButtonCtrl & sender);
+	static void OnRestore(CButtonCtrl & sender);
+	static void OnClose(CButtonCtrl & sender);
 
 	static void PaintZoomFitToggleBtn(const CRect& rect, CDC& dc);
 	static LPCTSTR ZoomFitToggleTooltip();
