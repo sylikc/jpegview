@@ -109,6 +109,10 @@
 #define IDM_CROP_SEL		100
 #define IDM_COPY_SEL		200
 #define IDM_ZOOM_SEL		300
+#define IDM_CROPMODE_FREE   400
+#define IDM_CROPMODE_4_3    410
+#define IDM_CROPMODE_3_2    420
+#define IDM_CROPMODE_16_9   430
 
 // these position must be changed if menu items are inserted
 #define SUBMENU_POS_NAVIGATION 17
@@ -117,6 +121,8 @@
 #define SUBMENU_POS_ZOOM 31
 #define SUBMENU_POS_AUTOZOOMMODE 32
 #define SUBMENU_POS_SETTINGS 34
+
+#define SUBMENU_POS_CROPMODE 2
 
 // Next default values for new objects
 // 

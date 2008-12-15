@@ -248,6 +248,13 @@ BEGIN
     BEGIN
 	  MENUITEM "Crop Selection",				IDM_CROP_SEL
 	  MENUITEM "Copy Selection to Clipboard",	IDM_COPY_SEL
+	  POPUP "Crop Mode" 
+        BEGIN 
+          MENUITEM "Free",	IDM_CROPMODE_FREE
+		  MENUITEM "4 : 3",	IDM_CROPMODE_4_3
+		  MENUITEM "3 : 2",	IDM_CROPMODE_3_2
+		  MENUITEM "16 : 9",	IDM_CROPMODE_16_9
+        END 
 	  MENUITEM SEPARATOR
 	  MENUITEM "Zoom to Selection",				IDM_ZOOM_SEL
     END 

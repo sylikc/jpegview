@@ -35,6 +35,7 @@ New features:
 - Backup and restore/merge parameter DB using context menu
 - Small buttons for minimize/restore/close on top, right corner of screen in full screen mode (only shown
   when mouse moved to top of screen)
+- New crop modes with fixed aspect ratios
 
 
 [1.0.18]
