@@ -180,6 +180,7 @@ private:
 	bool m_bArrowCursorSet;
 	bool m_bMouseOn;
 	bool m_bInInitialOpenFile;
+	double m_dCropRatio;
 	int m_nMonitor;
 	WINDOWPLACEMENT m_storedWindowPlacement;
 	WINDOWPLACEMENT m_storedWindowPlacement2;
@@ -212,6 +213,8 @@ private:
 	void ShowCroppingRect(int nX, int nY, HDC hPaintDC);
 	void EndCropping();
 	void PaintCropRect(HDC hPaintDC);
+	void DeleteCropRect();
+	CRect GetCropRect();
 	void GotoImage(EImagePosition ePos);
 	void GotoImage(EImagePosition ePos, int nFlags);
 	void AdjustLDC(int nMode, double dInc);

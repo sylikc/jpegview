@@ -295,6 +295,7 @@ CMainDlg::CMainDlg() {
 	m_bMouseInNavPanel = false;
 	m_bArrowCursorSet = false;
 	m_bInInitialOpenFile = false;
+	m_dCropRatio = 0;
 	m_storedWindowPlacement.length = sizeof(WINDOWPLACEMENT);
 	memset(&m_storedWindowPlacement2, 0, sizeof(WINDOWPLACEMENT));
 	m_storedWindowPlacement2.length = sizeof(WINDOWPLACEMENT);
@@ -752,9 +753,6 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 	// Display the help screen
 	if (pHelpDisplay != NULL) {
 		pHelpDisplay->Show(CRect(CPoint(0, 0), CSize(helpDisplayRect.Width(), helpDisplayRect.Height())));
-	} else if (m_bCropping) {
-		PaintCropRect(dc.m_hDC);
-		ShowCroppingRect(m_nMouseX, m_nMouseY, dc.m_hDC);
 	}
 
 	if (hOffScreenBitmapEXIF != NULL) {
@@ -948,7 +946,7 @@ LRESULT CMainDlg::OnMouseMove(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, B
 			}
 		} else {
 			if (!m_pWndButtonPanel->OnMouseMove(m_nMouseX, m_nMouseY)) {
-				if (m_nMouseY > m_pWndButtonPanel->ButtonPanelHeight()) {
+				if (m_nMouseY > m_pWndButtonPanel->ButtonPanelHeight()*2) {
 					m_bShowWndButtonPanel = false;
 					this->InvalidateRect(m_pWndButtonPanel->PanelRect(), FALSE);
 					m_pWndButtonPanel->GetTooltipMgr().RemoveActiveTooltip();
@@ -1901,6 +1899,18 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 				this->Invalidate(FALSE);
 			}
 			break;
+		case IDM_CROPMODE_FREE:
+			m_dCropRatio = 0;
+			break;
+		case IDM_CROPMODE_4_3:
+			m_dCropRatio = 1.333333333333333333;
+			break;
+		case IDM_CROPMODE_3_2:
+			m_dCropRatio = 1.5;
+			break;
+		case IDM_CROPMODE_16_9:
+			m_dCropRatio = 1.777777777777777778;
+			break;
 	}
 }
 
@@ -2099,11 +2109,32 @@ void CMainDlg::StartCropping(int nX, int nY) {
 }
 
 void CMainDlg::ShowCroppingRect(int nX, int nY, HDC hPaintDC) {
-	PaintCropRect(hPaintDC);
+	DeleteCropRect();
 	float fX = (float)nX, fY = (float)nY;
 	ScreenToImage(fX, fY);
 
 	CPoint newCropEnd = CPoint((int)fX, (int) fY);
+	if (m_dCropRatio > 0) {
+		int w = abs(m_cropStart.x - newCropEnd.x);
+		int h = abs(m_cropStart.y - newCropEnd.y);
+		double dRatio = (h < w) ? 1.0/m_dCropRatio : m_dCropRatio;
+		int newH = (int)(w * dRatio + 0.5);
+		int newW = (int)(h * (1.0/dRatio) + 0.5);
+		if (w > h) {
+			if (m_cropStart.y > newCropEnd.y) {
+				newCropEnd = CPoint(newCropEnd.x, m_cropStart.y - newH);
+			} else {
+				newCropEnd = CPoint(newCropEnd.x, m_cropStart.y + newH);
+			}
+		} else {
+			if (m_cropStart.x > newCropEnd.x) {
+				newCropEnd = CPoint(m_cropStart.x - newW, newCropEnd.y);
+			} else {
+				newCropEnd = CPoint(m_cropStart.x + newW, newCropEnd.y);
+			}
+		}
+	}
+
 	if (m_bCropping) {
 		m_bDoCropping = true;
 	}
@@ -2115,14 +2146,39 @@ void CMainDlg::ShowCroppingRect(int nX, int nY, HDC hPaintDC) {
 }
 
 void CMainDlg::PaintCropRect(HDC hPaintDC) {
-	if (m_cropEnd != CPoint(INT_MIN, INT_MIN) && m_pCurrentImage != NULL) {
+	CRect cropRect = GetCropRect();
+	if (!cropRect.IsRectEmpty()) {
 		HDC hDC = (hPaintDC == NULL) ? this->GetDC() : hPaintDC;
 		HPEN hPen = ::CreatePen(PS_DOT, 1, RGB(255, 255, 255));
-		HGDIOBJ hOldPen = ::SelectObject(hDC, hPen);
-		::SelectObject(hDC, ::GetStockObject(HOLLOW_BRUSH));
-		::SetBkMode(hDC, TRANSPARENT);
-		int oldROP = ::SetROP2(hDC, R2_XORPEN);
+		HGDIOBJ hOldPen = ::SelectObject(hDC, ::GetStockObject(BLACK_PEN));
 
+		::SelectObject(hDC, ::GetStockObject(HOLLOW_BRUSH));
+		::Rectangle(hDC, cropRect.left, cropRect.top, cropRect.right, cropRect.bottom);
+		::SetBkMode(hDC, TRANSPARENT);
+		::SelectObject(hDC, hPen);
+		::Rectangle(hDC, cropRect.left, cropRect.top, cropRect.right, cropRect.bottom);
+
+		::SelectObject(hDC, hOldPen);
+		::DeleteObject(hPen);
+		if (hPaintDC == NULL) {
+			this->ReleaseDC(hDC);
+		}
+	}
+}
+
+void CMainDlg::DeleteCropRect() {
+	CRect cropRect = GetCropRect();
+	if (!cropRect.IsRectEmpty()) {
+		this->InvalidateRect(&CRect(cropRect.left-1, cropRect.top, cropRect.left+1, cropRect.bottom), FALSE);
+		this->InvalidateRect(&CRect(cropRect.right-1, cropRect.top, cropRect.right+1, cropRect.bottom), FALSE);
+		this->InvalidateRect(&CRect(cropRect.left, cropRect.top-1, cropRect.right, cropRect.top+1), FALSE);
+		this->InvalidateRect(&CRect(cropRect.left, cropRect.bottom-1, cropRect.right, cropRect.bottom+1), FALSE);
+		this->UpdateWindow();
+	}
+}
+
+CRect CMainDlg::GetCropRect() {
+	if (m_cropEnd != CPoint(INT_MIN, INT_MIN) && m_pCurrentImage != NULL) {
 		CPoint cropStart(min(m_cropStart.x, m_cropEnd.x), min(m_cropStart.y, m_cropEnd.y));
 		CPoint cropEnd(max(m_cropStart.x, m_cropEnd.x), max(m_cropStart.y, m_cropEnd.y));
 
@@ -2132,14 +2188,10 @@ void CMainDlg::PaintCropRect(HDC hPaintDC) {
 		float fXEnd = cropEnd.x + 0.999f;
 		float fYEnd = cropEnd.y + 0.999f;
 		ImageToScreen(fXEnd, fYEnd);
-		::Rectangle(hDC, (int)fXStart, (int)fYStart, (int)fXEnd, (int)fYEnd);
+		return CRect((int)fXStart, (int)fYStart, (int)fXEnd, (int)fYEnd);
 
-		::SelectObject(hDC, hOldPen);
-		::SetROP2(hDC, oldROP);
-		::DeleteObject(hPen);
-		if (hPaintDC == NULL) {
-			this->ReleaseDC(hDC);
-		}
+	} else {
+		return CRect(0, 0, 0, 0);
 	}
 }
 
@@ -2147,7 +2199,7 @@ void CMainDlg::EndCropping() {
 	if (m_pCurrentImage == NULL || m_cropEnd == CPoint(INT_MIN, INT_MIN) || m_cropMouse == CPoint(m_nMouseX, m_nMouseY)) {
 		m_bCropping = false;
 		m_bDoCropping = false;
-		PaintCropRect(NULL);
+		DeleteCropRect();
 		this->InvalidateRect(m_pNavPanel->PanelRect(), FALSE);
 		InvalidateZoomNavigatorRect();
 		return;
@@ -2163,6 +2215,17 @@ void CMainDlg::EndCropping() {
 		CPoint posMouse(m_nMouseX, m_nMouseY);
 		this->ClientToScreen(&posMouse);
 		m_bInTrackPopupMenu = true;
+
+		HMENU hMenuCropMode = ::GetSubMenu(hMenuTrackPopup, SUBMENU_POS_CROPMODE);
+		if (abs(m_dCropRatio - 1.3333) < 0.001) {
+			::CheckMenuItem(hMenuCropMode,  IDM_CROPMODE_4_3, MF_CHECKED);
+		} else if (abs(m_dCropRatio - 1.5) < 0.001) {
+			::CheckMenuItem(hMenuCropMode,  IDM_CROPMODE_3_2, MF_CHECKED);
+		} else if (abs(m_dCropRatio - 1.7777) < 0.001) {
+			::CheckMenuItem(hMenuCropMode,  IDM_CROPMODE_16_9, MF_CHECKED);
+		} else {
+			::CheckMenuItem(hMenuCropMode,  IDM_CROPMODE_FREE, MF_CHECKED);
+		}
 		nMenuCmd = ::TrackPopupMenu(hMenuTrackPopup, TPM_LEFTALIGN | TPM_RIGHTBUTTON | TPM_NONOTIFY | TPM_RETURNCMD, 
 			posMouse.x, posMouse.y, 0, this->m_hWnd, NULL);
 		m_bInTrackPopupMenu = false;
@@ -2175,7 +2238,7 @@ void CMainDlg::EndCropping() {
 	}
 
 	if (m_bCropping && nMenuCmd != IDM_COPY_SEL && nMenuCmd != IDM_CROP_SEL) {
-		PaintCropRect(NULL);
+		DeleteCropRect();
 	}
 	m_bCropping = false;
 	m_bDoCropping = false;

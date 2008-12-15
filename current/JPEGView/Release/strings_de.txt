@@ -231,3 +231,5 @@ Conflicting entries in Param DB	Konflikt beim Importieren in Param DB
 The imported param DB contains entries already present in active param DB.	Die importierte Param DB enthält Einträge, welche bereits in der aktuellen DB enthalten sind.
 Shall existing entries be preserved (Yes) or be overriden by the imported entries (No)?	Sollen existierende Einträge erhalten werden (Ja) oder sollen sie von den importierten Einträgen überschrieben werden (Nein)?
 Select file to display in 'File Open' dialog	Bilddatei auswählen im "Datei öffnen" Dialog
+Crop Mode	Freistellen Modus
+Free	Frei
