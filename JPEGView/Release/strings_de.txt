@@ -233,3 +233,10 @@ Shall existing entries be preserved (Yes) or be overriden by the imported entrie
 Select file to display in 'File Open' dialog	Bilddatei auswählen im "Datei öffnen" Dialog
 Crop Mode	Freistellen Modus
 Free	Frei
+Fixed size...	Feste Grösse...
+Set Fixed Crop Size	Feste Grösse für Freistellen setzen
+Width	Breite
+Height	Höhe
+Pixels	Pixel
+Screen Pixels	Bildschirm-Pixel
+Image Pixels	Originalbild-Pixel

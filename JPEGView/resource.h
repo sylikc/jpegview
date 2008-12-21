@@ -37,6 +37,17 @@
 #define IDC_SIMDMODE 1006
 #define IDC_NUMCORES 1007
 
+#define IDD_SET_CROP_SIZE 3000
+#define IDC_EDT_X 1001
+#define IDC_EDT_Y 1002
+#define IDC_RB_SCREEN 1003
+#define IDC_RB_IMAGE 1004
+#define IDC_BTN_CLOSE 1005
+#define IDC_LBL_X 1006
+#define IDC_LBL_Y 1007
+#define IDC_LBL_PIXEL 1008
+#define IDC_LBL_PIXEL2 1009
+
 #define IDM_FIRST			1000
 #define IDM_STOP_MOVIE		1000
 #define IDM_MINIMIZE		1010
@@ -106,14 +117,16 @@
 #define IDM_EXIT			13000
 #define IDM_LAST			13000
 
-#define IDM_CROP_SEL		100
-#define IDM_COPY_SEL		200
-#define IDM_ZOOM_SEL		300
-#define IDM_CROPMODE_FREE   400
-#define IDM_CROPMODE_4_3    410
-#define IDM_CROPMODE_3_2    420
-#define IDM_CROPMODE_16_9   430
+#define IDM_CROP_SEL		20000
+#define IDM_COPY_SEL		20100
+#define IDM_ZOOM_SEL		20200
+#define IDM_CROPMODE_FREE   20300
+#define IDM_CROPMODE_FIXED_SIZE 20400
+#define IDM_CROPMODE_4_3    20500
+#define IDM_CROPMODE_3_2    20600
+#define IDM_CROPMODE_16_9   20700
 
+// in the main menu
 // these position must be changed if menu items are inserted
 #define SUBMENU_POS_NAVIGATION 17
 #define SUBMENU_POS_DISPLAY_ORDER 18
@@ -122,6 +135,7 @@
 #define SUBMENU_POS_AUTOZOOMMODE 32
 #define SUBMENU_POS_SETTINGS 34
 
+// in the crop menu
 #define SUBMENU_POS_CROPMODE 2
 
 // Next default values for new objects
