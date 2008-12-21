@@ -46,6 +46,9 @@ ShowFullScreen=true
 ; Use space separated position: left top right bottom, e.g 100 100 900 700
 DefaultWindowRect=auto
 
+; The initial crop window size when using 'Fixed Size' crop mode
+DefaultFixedCropSize=320 200
+
 ; Set to true to initially display the filename of each image in the upper, left corner of the screen
 ShowFileName=false
 

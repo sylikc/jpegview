@@ -28,6 +28,7 @@
 #include "EXIFReader.h"
 #include "EXIFDisplay.h"
 #include "AboutDlg.h"
+#include "CropSizeDlg.h"
 #include "ProcessingThreadPool.h"
 #include "ZoomNavigator.h"
 
@@ -274,6 +275,8 @@ CMainDlg::CMainDlg() {
 	m_bDraggingWithZoomNavigator = false;
 	m_bCropping = false;
 	m_bDoCropping = false;
+	m_bDontStartCropOnNextClick = false;
+	m_bBlockPaintCropRect = false;
 	m_nOffsetX = 0;
 	m_nOffsetY = 0;
 	m_nCapturedX = m_nCapturedY = 0;
@@ -755,6 +758,11 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 		pHelpDisplay->Show(CRect(CPoint(0, 0), CSize(helpDisplayRect.Width(), helpDisplayRect.Height())));
 	}
 
+	if (m_bDoCropping && m_bCropping && !m_bBlockPaintCropRect) {
+		ShowCroppingRect(m_nMouseX, m_nMouseY, NULL, false);
+		PaintCropRect(dc);
+	}
+
 	if (hOffScreenBitmapEXIF != NULL) {
 		::DeleteObject(hOffScreenBitmapEXIF);
 	}
@@ -819,7 +827,9 @@ LRESULT CMainDlg::OnLButtonDown(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam,
 		bool bCtrl = (::GetKeyState(VK_CONTROL) & 0x8000) != 0;
 		bool bDraggingRequired = m_virtualImageSize.cx > m_clientRect.Width() || m_virtualImageSize.cy > m_clientRect.Height();
 		if (bCtrl || !bDraggingRequired) {
-			StartCropping(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+			if (!m_bDontStartCropOnNextClick) {
+				StartCropping(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+			}
 		} else {
 			StartDragging(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam), m_bArrowCursorSet);
 		}
@@ -830,6 +840,8 @@ LRESULT CMainDlg::OnLButtonDown(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam,
 		m_pNavPanel->GetTooltipMgr().EnableTooltips(true);
 		this->InvalidateRect(m_pNavPanel->PanelRect(), FALSE);
 	}
+
+	m_bDontStartCropOnNextClick = false;
 	return 0;
 }
 
@@ -890,7 +902,7 @@ LRESULT CMainDlg::OnMouseMove(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, B
 	if (m_bDragging) {
 		DoDragging(m_nMouseX, m_nMouseY);
 	} else if (m_bCropping) {
-		ShowCroppingRect(m_nMouseX, m_nMouseY, NULL);
+		ShowCroppingRect(m_nMouseX, m_nMouseY, NULL, true);
 		if (m_nMouseX >= m_clientRect.Width() - 1 || m_nMouseX <= 0 || m_nMouseY >= m_clientRect.Height() - 1 || m_nMouseY <= 0 ) {
 			::SetTimer(this->m_hWnd, AUTOSCROLL_TIMER_EVENT_ID, AUTOSCROLL_TIMEOUT, NULL);
 		}
@@ -1902,6 +1914,13 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 		case IDM_CROPMODE_FREE:
 			m_dCropRatio = 0;
 			break;
+		case IDM_CROPMODE_FIXED_SIZE:
+			{
+				CCropSizeDlg dlgSetCropSize;
+				dlgSetCropSize.DoModal();
+			}
+			m_dCropRatio = -1;
+			break;
 		case IDM_CROPMODE_4_3:
 			m_dCropRatio = 1.333333333333333333;
 			break;
@@ -2099,22 +2118,26 @@ void CMainDlg::EndDragging() {
 	InvalidateZoomNavigatorRect();
 }
 
+
 void CMainDlg::StartCropping(int nX, int nY) {
+	m_bCropping = true;
 	float fX = (float)nX, fY = (float)nY;
 	ScreenToImage(fX, fY);
 	m_cropStart = CPoint((int)fX, (int) fY);
 	m_cropMouse = CPoint(nX, nY);
 	m_cropEnd = CPoint(INT_MIN, INT_MIN);
-	m_bCropping = true;
 }
 
-void CMainDlg::ShowCroppingRect(int nX, int nY, HDC hPaintDC) {
-	DeleteCropRect();
+void CMainDlg::ShowCroppingRect(int nX, int nY, HDC hPaintDC, bool bShow) {
+	if (bShow) {
+		DeleteCropRect();
+	}
 	float fX = (float)nX, fY = (float)nY;
 	ScreenToImage(fX, fY);
 
 	CPoint newCropEnd = CPoint((int)fX, (int) fY);
 	if (m_dCropRatio > 0) {
+		// fixed ratio crop mode
 		int w = abs(m_cropStart.x - newCropEnd.x);
 		int h = abs(m_cropStart.y - newCropEnd.y);
 		double dRatio = (h < w) ? 1.0/m_dCropRatio : m_dCropRatio;
@@ -2133,16 +2156,31 @@ void CMainDlg::ShowCroppingRect(int nX, int nY, HDC hPaintDC) {
 				newCropEnd = CPoint(m_cropStart.x + newW, newCropEnd.y);
 			}
 		}
+	} else if (m_dCropRatio < 0) {
+		// fixed size crop mode
+		CSize cropSize = CCropSizeDlg::GetCropSize();
+		m_cropStart = CPoint((int)fX, (int) fY);
+		if (CCropSizeDlg::UseScreenPixels() && m_pCurrentImage != NULL) {
+			double dZoom = m_dZoom;
+			if (dZoom < 0.0) {
+				dZoom = (double)m_virtualImageSize.cx/m_pCurrentImage->OrigWidth();
+			}
+			newCropEnd = CPoint(m_cropStart.x + (int)(cropSize.cx/dZoom + 0.5) - 1, m_cropStart.y + (int)(cropSize.cy/dZoom + 0.5) - 1);
+		} else {
+			newCropEnd = CPoint((int)fX + cropSize.cx - 1, (int)fY + cropSize.cy - 1);
+		}
 	}
 
 	if (m_bCropping) {
 		m_bDoCropping = true;
 	}
-	if (m_cropEnd == CPoint(INT_MIN, INT_MIN)) {
+	if (bShow && m_cropEnd == CPoint(INT_MIN, INT_MIN)) {
 		this->InvalidateRect(m_pNavPanel->PanelRect(), FALSE);
 	}
 	m_cropEnd = newCropEnd;
-	PaintCropRect(hPaintDC);
+	if (bShow) {
+		PaintCropRect(hPaintDC);
+	}
 }
 
 void CMainDlg::PaintCropRect(HDC hPaintDC) {
@@ -2150,12 +2188,10 @@ void CMainDlg::PaintCropRect(HDC hPaintDC) {
 	if (!cropRect.IsRectEmpty()) {
 		HDC hDC = (hPaintDC == NULL) ? this->GetDC() : hPaintDC;
 		HPEN hPen = ::CreatePen(PS_DOT, 1, RGB(255, 255, 255));
-		HGDIOBJ hOldPen = ::SelectObject(hDC, ::GetStockObject(BLACK_PEN));
-
+		HGDIOBJ hOldPen = ::SelectObject(hDC, hPen);
 		::SelectObject(hDC, ::GetStockObject(HOLLOW_BRUSH));
-		::Rectangle(hDC, cropRect.left, cropRect.top, cropRect.right, cropRect.bottom);
-		::SetBkMode(hDC, TRANSPARENT);
-		::SelectObject(hDC, hPen);
+		::SetBkMode(hDC, OPAQUE);
+		::SetBkColor(hDC, 0);
 		::Rectangle(hDC, cropRect.left, cropRect.top, cropRect.right, cropRect.bottom);
 
 		::SelectObject(hDC, hOldPen);
@@ -2173,7 +2209,10 @@ void CMainDlg::DeleteCropRect() {
 		this->InvalidateRect(&CRect(cropRect.right-1, cropRect.top, cropRect.right+1, cropRect.bottom), FALSE);
 		this->InvalidateRect(&CRect(cropRect.left, cropRect.top-1, cropRect.right, cropRect.top+1), FALSE);
 		this->InvalidateRect(&CRect(cropRect.left, cropRect.bottom-1, cropRect.right, cropRect.bottom+1), FALSE);
+		bool bOldFlag = m_bBlockPaintCropRect;
+		m_bBlockPaintCropRect = true;
 		this->UpdateWindow();
+		m_bBlockPaintCropRect = bOldFlag;
 	}
 }
 
@@ -2223,6 +2262,8 @@ void CMainDlg::EndCropping() {
 			::CheckMenuItem(hMenuCropMode,  IDM_CROPMODE_3_2, MF_CHECKED);
 		} else if (abs(m_dCropRatio - 1.7777) < 0.001) {
 			::CheckMenuItem(hMenuCropMode,  IDM_CROPMODE_16_9, MF_CHECKED);
+		} else if (m_dCropRatio < 0) {
+			::CheckMenuItem(hMenuCropMode,  IDM_CROPMODE_FIXED_SIZE, MF_CHECKED);
 		} else {
 			::CheckMenuItem(hMenuCropMode,  IDM_CROPMODE_FREE, MF_CHECKED);
 		}
@@ -2235,6 +2276,12 @@ void CMainDlg::EndCropping() {
 		}
 
 		::DestroyMenu(hMenu);
+
+		// Hack: When context menu was canceled by clicking outside of menu, the main window gets a mouse click event and a mouse move event.
+		// This would start another crop what is not desired.
+		if (nMenuCmd == 0) {
+			m_bDontStartCropOnNextClick = true;
+		}
 	}
 
 	if (m_bCropping && nMenuCmd != IDM_COPY_SEL && nMenuCmd != IDM_CROP_SEL) {

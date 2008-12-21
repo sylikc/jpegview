@@ -150,6 +150,8 @@ private:
 	bool m_bDraggingWithZoomNavigator;
 	bool m_bCropping;
 	bool m_bDoCropping;
+	bool m_bDontStartCropOnNextClick;
+	bool m_bBlockPaintCropRect;
 	CPoint m_cropMouse;
 	bool m_bMovieMode;
 	bool m_bProcFlagsTouched;
@@ -210,7 +212,7 @@ private:
 	void DoDragging(int nX, int nY);
 	void EndDragging();
 	void StartCropping(int nX, int nY);
-	void ShowCroppingRect(int nX, int nY, HDC hPaintDC);
+	void ShowCroppingRect(int nX, int nY, HDC hPaintDC, bool bShow);
 	void EndCropping();
 	void PaintCropRect(HDC hPaintDC);
 	void DeleteCropRect();

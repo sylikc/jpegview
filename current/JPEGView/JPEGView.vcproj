@@ -219,6 +219,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\CropSizeDlg.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\EXIFDisplay.cpp"
 				>
 			</File>
@@ -365,6 +369,10 @@
 			</File>
 			<File
 				RelativePath=".\Clipboard.h"
+				>
+			</File>
+			<File
+				RelativePath=".\CropSizeDlg.h"
 				>
 			</File>
 			<File

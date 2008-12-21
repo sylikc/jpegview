@@ -107,6 +107,8 @@ CSettingsProvider::CSettingsProvider(void) {
 		}
 	}
 
+	m_DefaultFixedCropSize = GetSize(_T("DefaultFixedCropSize"), CSize(320, 200));
+
 	// read all user commands
 	CString sCmd;
 	int nIndex = 0;
@@ -381,6 +383,21 @@ CRect CSettingsProvider::GetRect(LPCTSTR sKey, const CRect& defaultRect) {
 		return newRect;
 	} else {
 		return defaultRect;
+	}
+}
+
+CSize CSettingsProvider::GetSize(LPCTSTR sKey, const CSize& defaultSize) {
+	CString s = GetString(sKey, _T(""));
+	if (s.IsEmpty()) {
+		return defaultSize;
+	}
+	int nWidth, nHeight;
+	if (_stscanf((LPCTSTR)s, _T(" %d %d "), &nWidth, &nHeight) == 2) {
+		nWidth = max(1, nWidth);
+		nHeight = max(1, nHeight);
+		return CSize(nWidth, nHeight);
+	} else {
+		return defaultSize;
 	}
 }
 

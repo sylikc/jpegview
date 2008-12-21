@@ -58,6 +58,7 @@ public:
 	CRect DefaultWindowRect() { return m_defaultWindowRect; }
 	bool DefaultMaximized() { return m_bDefaultMaximized; }
 	int BackgroundColor() { return m_nBackgroundColor; }
+	CSize DefaultFixedCropSize() { return m_DefaultFixedCropSize; }
 
 	std::list<CUserCommand*> & UserCommandList() { return m_userCommands; }
 
@@ -127,6 +128,7 @@ private:
 	CRect m_defaultWindowRect;
 	bool m_bDefaultMaximized;
 	int m_nBackgroundColor;
+	CSize m_DefaultFixedCropSize;
 
 	std::list<CUserCommand*> m_userCommands;
 
@@ -137,6 +139,7 @@ private:
 	double GetDouble(LPCTSTR sKey, double dDefault, double dMin, double dMax);
 	bool GetBool(LPCTSTR sKey, bool bDefault);
 	CRect GetRect(LPCTSTR sKey, const CRect& defaultRect);
+	CSize GetSize(LPCTSTR sKey, const CSize& defaultSize);
 	void WriteString(LPCTSTR sKey, LPCTSTR sString);
 	void WriteDouble(LPCTSTR sKey, double dValue);
 	void WriteBool(LPCTSTR sKey, bool bValue);
