@@ -17,8 +17,9 @@ public:
 
 	// Full name of file
 	const CString& GetName() const { return m_sName; }
-	// Only use after a rename of a file
+	// Only use after a rename of a file, respectively changing its modification date
 	void SetName(LPCTSTR sNewName);
+	void SetModificationDate(const FILETIME& lastModDate);
 
 	// File title (without path)
 	LPCTSTR GetTitle() const { return m_sTitle; }
@@ -58,6 +59,9 @@ public:
 
 	// Tells the file list that a file has been renamed externally
 	void FileHasRenamed(LPCTSTR sOldFileName, LPCTSTR sNewFileName);
+
+	// Tells that the modification date of the current file has changed
+	void ModificationTimeChanged();
 
 	// Move to next file in list, wrap according to navigation mode. The filelist object
 	// of the next item is returned (in most situation the same object)

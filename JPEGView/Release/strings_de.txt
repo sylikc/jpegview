@@ -240,3 +240,6 @@ Height	Höhe
 Pixels	Pixel
 Screen Pixels	Bildschirm-Pixel
 Image Pixels	Originalbild-Pixel
+Set modification date	Änderungsdatum setzen
+to current date	auf aktuelles Datum
+to EXIF date	auf EXIF Datum

@@ -1005,7 +1005,7 @@ void CTextCtrl::Draw(CDC & dc, CRect position, bool bBlack) {
 	dc.SetBkMode(TRANSPARENT);
 	dc.SetTextColor(bBlack ? 0 : m_bHighlight ? RGB(255, 255, 255) : RGB(0, 255, 0));
 	unsigned int nAlignment = m_bRightAligned ? DT_RIGHT : DT_LEFT;
-	dc.DrawText(m_sText, m_sText.GetLength(), &position, nAlignment | DT_VCENTER | DT_SINGLELINE | DT_WORD_ELLIPSIS);
+	dc.DrawText(m_sText, m_sText.GetLength(), &position, nAlignment | DT_VCENTER | DT_SINGLELINE | DT_WORD_ELLIPSIS | DT_NOPREFIX);
 }
 
 // Subclass procedure 
@@ -1113,7 +1113,7 @@ void CButtonCtrl::Draw(CDC & dc, CRect position, bool bBlack) {
 		dc.SelectStockFont(DEFAULT_GUI_FONT);
 		dc.SetBkMode(TRANSPARENT);
 		dc.SetTextColor(bBlack ? 0 : m_bHighlight ? RGB(255, 255, 255) : m_bEnabled ? RGB(255, 255, 0) : RGB(0, 255, 0));
-		dc.DrawText(m_sText, m_sText.GetLength(), &position, DT_CENTER | DT_VCENTER | DT_SINGLELINE | DT_WORD_ELLIPSIS);
+		dc.DrawText(m_sText, m_sText.GetLength(), &position, DT_CENTER | DT_VCENTER | DT_SINGLELINE | DT_WORD_ELLIPSIS | DT_NOPREFIX);
 	} else if (m_paintHandler != NULL) {
 		if (m_bHighlight && !bBlack) {
 			dc.SelectPen((HPEN)::GetStockObject(WHITE_PEN));
@@ -1228,7 +1228,7 @@ void CSliderDouble::OnPaint(CDC & dc, const CPoint& offset)  {
 void CSliderDouble::Draw(CDC & dc, CRect position, bool bBlack) {
 	dc.SetTextColor(bBlack ? 0 : RGB(0, 255, 0));
 	TCHAR buff[16]; _stprintf_s(buff, 16, _T("%.2f"), *m_pValue);
-	dc.DrawText(buff, _tcslen(buff), &position, DT_VCENTER | DT_SINGLELINE | DT_RIGHT);
+	dc.DrawText(buff, _tcslen(buff), &position, DT_VCENTER | DT_SINGLELINE | DT_RIGHT | DT_NOPREFIX);
 
 	if (m_pEnable != NULL) {
 		m_checkRect = CRect(CPoint(position.left, position.top + ((position.Height() - m_nCheckHeight) >> 1)),
@@ -1239,7 +1239,7 @@ void CSliderDouble::Draw(CDC & dc, CRect position, bool bBlack) {
 		DrawCheck(dc, m_checkRect, bBlack, m_bHighlightCheck);
 		position.left += m_nCheckHeight + m_nCheckHeight/2;
 	}
-	dc.DrawText(m_sName, _tcslen(m_sName), &position, DT_VCENTER | DT_SINGLELINE);
+	dc.DrawText(m_sName, _tcslen(m_sName), &position, DT_VCENTER | DT_SINGLELINE | DT_NOPREFIX);
 	
 	int nYMid = position.top + ((position.bottom - position.top) >> 1);
 	int nXPos = position.right - m_nNumberWidth;
