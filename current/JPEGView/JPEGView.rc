@@ -168,6 +168,11 @@ BEGIN
 	  MENUITEM "Save processed image...\tCtrl-S",	IDM_SAVE
 	  MENUITEM "Reload image\tCtrl-R",			IDM_RELOAD
 	  MENUITEM "Batch rename/copy...",			IDM_BATCH_COPY
+      POPUP "Set modification date" 
+        BEGIN
+          MENUITEM "to current date\tCtrl-Shift-M",	IDM_TOUCH_IMAGE
+		  MENUITEM "to EXIF date\tCtrl-Shift-E",	IDM_TOUCH_IMAGE_EXIF
+        END
 	  MENUITEM SEPARATOR
 	  MENUITEM "Copy to clipboard\tCtrl-C",		IDM_COPY
       MENUITEM "Copy original size image\tCtrl-X",	IDM_COPY_FULL

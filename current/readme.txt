@@ -28,6 +28,7 @@ Bugs fixed:
 - Corrected Italian translation
 - Hiding of mouse cursor when starting up in window mode and switching to fullscreen mode
 - Application shown in taskbar also when the file open dialog is displayed after startup
+- File names having a & in the name are now displayed correctly
 New features:
 - 'DefaultWindowRect=max' in INI file will start with maximized window (if fullscreen mode is false)
 - Dropping files or folders to JPEGView from Windows Explorer now works
@@ -36,6 +37,7 @@ New features:
 - Small buttons for minimize/restore/close on top, right corner of screen in full screen mode (only shown
   when mouse moved to top of screen)
 - New crop modes with fixed aspect ratio and fixed crop size
+- Set modification date to current date or to EXIF date
 
 
 [1.0.18]

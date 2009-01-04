@@ -151,6 +151,10 @@ void CFileDesc::SetName(LPCTSTR sNewName) {
 	m_sTitle = (LPCTSTR)m_sName + m_sName.ReverseFind(_T('\\')) + 1;
 }
 
+void CFileDesc::SetModificationDate(const FILETIME& lastModDate) {
+	memcpy(&m_lastModTime, &lastModDate, sizeof(FILETIME));
+}
+
 ///////////////////////////////////////////////////////////////////////////////////
 // Public interface
 ///////////////////////////////////////////////////////////////////////////////////
@@ -242,6 +246,20 @@ void CFileList::FileHasRenamed(LPCTSTR sOldFileName, LPCTSTR sNewFileName) {
 	for (iter = m_fileList.begin( ); iter != m_fileList.end( ); iter++ ) {
 		if (_tcsicmp(sOldFileName, iter->GetName()) == 0) {
 			iter->SetName(sNewFileName);
+		}
+	}
+}
+
+void CFileList::ModificationTimeChanged() {
+	if (m_iter != m_fileList.end()) {
+		LPCTSTR sName = m_iter->GetName();
+		HANDLE hFile = ::CreateFile(sName, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, 0, NULL);
+		if (hFile != NULL) {
+			FILETIME lastModTime;
+			if (::GetFileTime(hFile, NULL, NULL, &lastModTime)) {
+				m_iter->SetModificationDate(lastModTime);
+			}
+			::CloseHandle(hFile);
 		}
 	}
 }

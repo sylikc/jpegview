@@ -666,7 +666,7 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 			CString(CNLS::GetString(_T("No file or folder name was provided as command line parameter!"))) + _T('\n') +
 			CNLS::GetString(_T("To use JPEGView, associate JPG, JPEG and BMP files with JPEGView.")) + _T('\n') +
 			CNLS::GetString(_T("Press ESC to exit..."));
-		dc.DrawText(sText, -1, &rectText, DT_CENTER | DT_WORDBREAK);
+		dc.DrawText(sText, -1, &rectText, DT_CENTER | DT_WORDBREAK | DT_NOPREFIX);
 	} else if (m_pCurrentImage == NULL) {
 		const int BUF_LEN = 512;
 		TCHAR buff[BUF_LEN];
@@ -678,7 +678,7 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 			} else {
 				_stprintf_s(buff, BUF_LEN, CNLS::GetString(_T("The file '%s' could not be read!")), sCurrentFile);
 			}
-			dc.DrawText(buff, -1, &rectText, DT_CENTER | DT_WORDBREAK);
+			dc.DrawText(buff, -1, &rectText, DT_CENTER | DT_WORDBREAK | DT_NOPREFIX);
 		} else {
 			if (m_pFileList->IsSlideShowList()) {
 				_stprintf_s(buff, BUF_LEN, CNLS::GetString(_T("The file '%s' does not contain a list of file names!")),  
@@ -688,7 +688,7 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 					CNLS::GetString(_T("Press any key to search the subdirectories for image files.")), m_pFileList->CurrentDirectory());
 				m_bSearchSubDirsOnEnter = true;
 			}
-			dc.DrawText(buff, -1, &rectText, DT_CENTER | DT_WORDBREAK);
+			dc.DrawText(buff, -1, &rectText, DT_CENTER | DT_WORDBREAK | DT_NOPREFIX);
 		}
 	}
 
@@ -1150,6 +1150,9 @@ LRESULT CMainDlg::OnKeyDown(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOO
 			if (!bCtrl) {
 				bHandled = true;
 				ExecuteCommand((wParam == 'C') ? IDM_SORT_CREATION_DATE : (wParam == 'M') ? IDM_SORT_MOD_DATE : IDM_SORT_NAME);
+			} else if (bCtrl && bShift && wParam == 'M') {
+				bHandled = true;
+				ExecuteCommand(IDM_TOUCH_IMAGE);
 			}
 		}
 	} else if (wParam == 'S') {
@@ -1163,6 +1166,11 @@ LRESULT CMainDlg::OnKeyDown(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOO
 		if (!bCtrl) {
 			bHandled = true;
 			ExecuteCommand(IDM_CLEAR_PARAM_DB);
+		}
+	} else if (wParam == 'E') {
+		if (bCtrl && bShift) {
+			bHandled = true;
+			ExecuteCommand(IDM_TOUCH_IMAGE_EXIF);
 		}
 	} else if (wParam == 'O') {
 		if (bCtrl) {
@@ -1391,6 +1399,7 @@ LRESULT CMainDlg::OnContextMenu(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam,
 	HMENU hMenuAutoZoomMode = ::GetSubMenu(hMenuTrackPopup, SUBMENU_POS_AUTOZOOMMODE);
 	::CheckMenuItem(hMenuAutoZoomMode,  m_eAutoZoomMode*10 + IDM_AUTO_ZOOM_FIT_NO_ZOOM, MF_CHECKED);
 	HMENU hMenuSettings = ::GetSubMenu(hMenuTrackPopup, SUBMENU_POS_SETTINGS);
+	HMENU hMenuModDate = ::GetSubMenu(hMenuTrackPopup, SUBMENU_POS_MODDATE);
 
 	if (CSettingsProvider::This().StoreToEXEPath()) ::EnableMenuItem(hMenuSettings, IDM_EDIT_USER_CONFIG, MF_BYCOMMAND | MF_GRAYED);
 	if (CParameterDB::This().IsEmpty()) ::EnableMenuItem(hMenuSettings, IDM_BACKUP_PARAMDB, MF_BYCOMMAND | MF_GRAYED);
@@ -1411,12 +1420,20 @@ LRESULT CMainDlg::OnContextMenu(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam,
 		::EnableMenuItem(hMenuTrackPopup, IDM_SAVE_PARAM_DB, MF_BYCOMMAND | MF_GRAYED);
 		::EnableMenuItem(hMenuTrackPopup, IDM_CLEAR_PARAM_DB, MF_BYCOMMAND | MF_GRAYED);
 		::EnableMenuItem(hMenuTrackPopup, SUBMENU_POS_ZOOM, MF_BYPOSITION  | MF_GRAYED);
+		::EnableMenuItem(hMenuTrackPopup, SUBMENU_POS_MODDATE, MF_BYPOSITION  | MF_GRAYED);
 	} else {
 		if (m_bKeepParams || m_pCurrentImage->IsClipboardImage() ||
 			CParameterDB::This().FindEntry(m_pCurrentImage->GetPixelHash()) == NULL)
 			::EnableMenuItem(hMenuTrackPopup, IDM_CLEAR_PARAM_DB, MF_BYCOMMAND | MF_GRAYED);
 		if (m_bKeepParams || m_pCurrentImage->IsClipboardImage())
 			::EnableMenuItem(hMenuTrackPopup, IDM_SAVE_PARAM_DB, MF_BYCOMMAND | MF_GRAYED);
+		if (m_pCurrentImage->IsClipboardImage()) {
+			::EnableMenuItem(hMenuModDate, IDM_TOUCH_IMAGE, MF_BYCOMMAND | MF_GRAYED);
+			::EnableMenuItem(hMenuModDate, IDM_TOUCH_IMAGE_EXIF, MF_BYCOMMAND | MF_GRAYED);
+		}
+		if (m_pCurrentImage->GetEXIFReader() == NULL || !m_pCurrentImage->GetEXIFReader()->GetAcquisitionTimePresent()) {
+			::EnableMenuItem(hMenuModDate, IDM_TOUCH_IMAGE_EXIF, MF_BYCOMMAND | MF_GRAYED);
+		}
 	}
 	if (m_bMovieMode) {
 		::EnableMenuItem(hMenuTrackPopup, IDM_SAVE, MF_BYCOMMAND | MF_GRAYED);
@@ -1929,6 +1946,33 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 			break;
 		case IDM_CROPMODE_16_9:
 			m_dCropRatio = 1.777777777777777778;
+			break;
+		case IDM_TOUCH_IMAGE:
+		case IDM_TOUCH_IMAGE_EXIF:
+			if (m_pCurrentImage != NULL) {
+				if ((nCommand == IDM_TOUCH_IMAGE_EXIF) && (m_pCurrentImage->GetEXIFReader() == NULL || !m_pCurrentImage->GetEXIFReader()->GetAcquisitionTimePresent())) {
+					break; // cannot use EXIF date in this case, do nothing
+				}
+				LPCTSTR strFileName = CurrentFileName(false);
+				HANDLE hFile = ::CreateFile(strFileName, GENERIC_WRITE, FILE_SHARE_READ, NULL, OPEN_EXISTING, 0, NULL);
+				if (hFile != INVALID_HANDLE_VALUE) {
+					FILETIME ft;
+					SYSTEMTIME st;
+					if (nCommand == IDM_TOUCH_IMAGE) {
+						::GetSystemTime(&st);              // gets current time
+					} else {
+						// get date from EXIF
+						st = m_pCurrentImage->GetEXIFReader()->GetAcquisitionTime();
+					}
+					::SystemTimeToFileTime(&st, &ft);  // converts to file time format
+					::SetFileTime(hFile, NULL, NULL, &ft);
+					::CloseHandle(hFile);
+					m_pFileList->ModificationTimeChanged();
+					if (m_bShowFileInfo) {
+						this->Invalidate(FALSE);
+					}
+				}
+			}
 			break;
 	}
 }
@@ -2714,7 +2758,7 @@ void CMainDlg::InitParametersForNewImage() {
 void CMainDlg::DrawTextBordered(CPaintDC& dc, LPCTSTR sText, const CRect& rect, UINT nFormat) {
 	static HFONT hFont = 0;
 	if (hFont == 0) {
-		// Use cleartype here, this improved readability
+		// Use cleartype here, this improves the readability
 		hFont = ::CreateFont(16, 0, 0, 0, FW_BOLD, FALSE, FALSE, FALSE, DEFAULT_CHARSET, OUT_DEFAULT_PRECIS,
 			CLIP_DEFAULT_PRECIS, CLEARTYPE_QUALITY, VARIABLE_PITCH, _T("Arial"));
 	}
@@ -2723,13 +2767,13 @@ void CMainDlg::DrawTextBordered(CPaintDC& dc, LPCTSTR sText, const CRect& rect, 
 	COLORREF oldColor = dc.SetTextColor(RGB(0, 0, 0));
 	CRect textRect = rect;
 	textRect.InflateRect(-1, -1);
-	textRect.OffsetRect(-1, 0); dc.DrawText(sText, -1, &textRect, nFormat);
-	textRect.OffsetRect(2, 0); dc.DrawText(sText, -1, &textRect, nFormat);
-	textRect.OffsetRect(-1, -1); dc.DrawText(sText, -1, &textRect, nFormat);
-	textRect.OffsetRect(0, 2); dc.DrawText(sText, -1, &textRect, nFormat);
+	textRect.OffsetRect(-1, 0); dc.DrawText(sText, -1, &textRect, nFormat | DT_NOPREFIX);
+	textRect.OffsetRect(2, 0); dc.DrawText(sText, -1, &textRect, nFormat | DT_NOPREFIX);
+	textRect.OffsetRect(-1, -1); dc.DrawText(sText, -1, &textRect, nFormat | DT_NOPREFIX);
+	textRect.OffsetRect(0, 2); dc.DrawText(sText, -1, &textRect, nFormat | DT_NOPREFIX);
 	textRect.OffsetRect(0, -1);
 	dc.SetTextColor(oldColor);
-	dc.DrawText(sText, -1, &textRect, nFormat);
+	dc.DrawText(sText, -1, &textRect, nFormat | DT_NOPREFIX);
 	dc.SelectFont(hOldFont);
 }
 
