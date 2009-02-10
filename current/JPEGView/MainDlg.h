@@ -97,7 +97,8 @@ private:
 		POS_Next,
 		POS_Previous,
 		POS_Current,
-		POS_Clipboard
+		POS_Clipboard,
+		POS_Toggle
 	};
 
 	static CMainDlg* sm_instance; // single instance of the main dialog

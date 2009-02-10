@@ -39,7 +39,7 @@ CJPEGImage* CJPEGProvider::RequestJPEG(CFileList* pFileList, EReadAheadDirection
 
 	// Search if we have the requested image already present or in progress
 	CImageRequest* pRequest = FindRequest(strFileName);
-	bool bDirectionChanged = eDirection != m_eOldDirection;
+	bool bDirectionChanged = eDirection != m_eOldDirection || eDirection == TOGGLE;
 	bool bRemoveAlsoReadAhead = bDirectionChanged;
 	m_eOldDirection = eDirection;
 
@@ -176,7 +176,7 @@ void CJPEGProvider::StartNewRequestBundle(CFileList* pFileList, EReadAheadDirect
 		return;
 	}
 	for (int i = 0; i < nNumRequests; i++) {
-		LPCTSTR sFileName = pFileList->PeekNextPrev(i + 1, eDirection == FORWARD);
+		LPCTSTR sFileName = pFileList->PeekNextPrev(i + 1, eDirection == FORWARD, eDirection == TOGGLE);
 		if (sFileName != NULL && FindRequest(sFileName) == NULL) {
 			StartNewRequest(sFileName, processParams);
 		}

@@ -12,7 +12,8 @@ public:
 	// hint for caching - read ahead or opposite
 	enum EReadAheadDirection {
 		FORWARD,
-		BACKWARD
+		BACKWARD,
+		TOGGLE
 	};
 
 	// Window handle is needed to send the asynchronous messages (e.g. WM_JPEG_LOAD_COMPLETED)
