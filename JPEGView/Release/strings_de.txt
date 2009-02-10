@@ -243,3 +243,4 @@ Image Pixels	Originalbild-Pixel
 Set modification date	Änderungsdatum setzen
 to current date	auf aktuelles Datum
 to EXIF date	auf EXIF Datum
+Mark image for toggling. Use Ctrl+Left/Ctrl+Right to toggle between marked and current image	Bild markieren für Umschalten. Ctrl+Pfeil rechts/links schaltet auf markiertes Bild um

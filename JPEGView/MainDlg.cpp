@@ -1028,6 +1028,9 @@ LRESULT CMainDlg::OnKeyDown(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOO
 	} else if (wParam == VK_PAGE_UP || (wParam == VK_LEFT && !bCtrl && !bShift)) {
 		bHandled = true;
 		GotoImage(POS_Previous);
+	} else if ((wParam == VK_LEFT || wParam == VK_RIGHT) && bCtrl && m_pFileList->FileMarkedForToggle()) {
+		bHandled = true;
+		GotoImage(POS_Toggle);
 	} else if (wParam == VK_HOME) {
 		bHandled = true;
 		GotoImage(POS_First);
@@ -1150,9 +1153,13 @@ LRESULT CMainDlg::OnKeyDown(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOO
 			if (!bCtrl) {
 				bHandled = true;
 				ExecuteCommand((wParam == 'C') ? IDM_SORT_CREATION_DATE : (wParam == 'M') ? IDM_SORT_MOD_DATE : IDM_SORT_NAME);
-			} else if (bCtrl && bShift && wParam == 'M') {
+			} else if (bCtrl && wParam == 'M') {
 				bHandled = true;
-				ExecuteCommand(IDM_TOUCH_IMAGE);
+				if (bShift) {
+					ExecuteCommand(IDM_TOUCH_IMAGE);
+				} else if (m_pFileList->Current() != NULL && m_pCurrentImage != NULL && !m_pCurrentImage->IsClipboardImage()) {
+					m_pFileList->MarkCurrentFile();
+				}
 			}
 		}
 	} else if (wParam == 'S') {
@@ -2384,6 +2391,10 @@ void CMainDlg::GotoImage(EImagePosition ePos, int nFlags) {
 			m_pFileList = m_pFileList->Prev();
 			eDirection = CJPEGProvider::BACKWARD;
 			break;
+		case POS_Toggle:
+			m_pFileList->ToggleBetweenMarkedAndCurrentFile();
+			eDirection = CJPEGProvider::TOGGLE;
+			break;
 		case POS_Current:
 		case POS_Clipboard:
 			break;
@@ -3132,6 +3143,7 @@ void CMainDlg::GenerateHelpDisplay(CHelpDisplay & helpDisplay) {
 	helpDisplay.AddLineInfo(_T("F12"), m_bSpanVirtualDesktop, CNLS::GetString(_T("Maximize/restore to/from virtual desktop (only for multi-monitor systems)")));
 	helpDisplay.AddLineInfo(_T("Ctrl+F12"), LPCTSTR(NULL), CNLS::GetString(_T("Toggle between screens (only for multi-monitor systems)")));
 	helpDisplay.AddLineInfo(_T("Ctrl+W"), m_bFullScreenMode, CNLS::GetString(_T("Enable/disable full screen mode")));
+	helpDisplay.AddLine(_T("Ctrl+M"), CNLS::GetString(_T("Mark image for toggling. Use Ctrl+Left/Ctrl+Right to toggle between marked and current image")));
 	helpDisplay.AddLine(_T("Ctrl+C/Ctrl+X"), CNLS::GetString(_T("Copy screen to clipboard/ Copy processed full size image to clipboard")));
 	helpDisplay.AddLine(_T("Ctrl+O"), CNLS::GetString(_T("Open new image or slideshow file")));
 	helpDisplay.AddLine(_T("Ctrl+S"), CNLS::GetString(_T("Save processed image to JPEG file (original size)")));

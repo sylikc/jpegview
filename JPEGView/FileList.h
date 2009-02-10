@@ -54,8 +54,8 @@ public:
 	// Gets a list of all supported file endings, separated by semicolon
 	static CString GetSupportedFileEndings();
 
-	// Reload file list for this folder
-	void Reload();
+	// Reload file list for given file, if NULL for current file
+	void Reload(LPCTSTR sFileName = NULL);
 
 	// Tells the file list that a file has been renamed externally
 	void FileHasRenamed(LPCTSTR sOldFileName, LPCTSTR sNewFileName);
@@ -81,7 +81,7 @@ public:
 	// Modification time of current file
 	const FILETIME* CurrentModificationTime() const;
 	// Get the n-next file, does not change the internal state
-	LPCTSTR PeekNextPrev(int nIndex, bool bForward);
+	LPCTSTR PeekNextPrev(int nIndex, bool bForward, bool bToggle);
 	// Number of files in file list (for current directory)
 	int Size() const { return m_fileList.size(); }
 	// Index of current file in file list (zero based)
@@ -96,6 +96,13 @@ public:
 	void SetNavigationMode(Helpers::ENavigationMode eMode);
 	// Gets current navigation mode
 	Helpers::ENavigationMode GetNavigationMode() const { return sm_eMode; }
+
+	// Marks the current file for toggling between this file and the current file
+	void MarkCurrentFile();
+	// Returns if there is a file marked for toggling
+	bool FileMarkedForToggle();
+	// Toggle between marked and current file
+	void ToggleBetweenMarkedAndCurrentFile();
 
 	// Returns if the current file list is based on a slide show text file
 	bool IsSlideShowList() const { return m_bIsSlideShowList; }
@@ -117,6 +124,10 @@ private:
 	std::list<CFileDesc> m_fileList;
 	std::list<CFileDesc>::iterator m_iter; // current position in m_fileList
 	std::list<CFileDesc>::iterator m_iterStart; // start of iteration in m_fileList
+
+	CString m_sMarkedFile;
+	CString m_sMarkedFileCurrent;
+	int m_nMarkedIndexShow;
 
 	void DeleteHistory();
 	void MoveIterToLast();

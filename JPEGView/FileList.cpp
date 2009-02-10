@@ -177,6 +177,7 @@ CFileList::CFileList(const CString & sInitialFile, Helpers::ESorting eInitialSor
 	bool bIsDirectory = (::GetFileAttributes(sInitialFile) & FILE_ATTRIBUTE_DIRECTORY) != 0;
 	bool bImageFile = IsImageFile((nPos > 0) ? sInitialFile.Right(sInitialFile.GetLength()-nPos-1) : _T(""));
 	m_bIsSlideShowList = !bImageFile && TryReadingSlideShowList(sInitialFile);
+	m_nMarkedIndexShow = -1;
 
 	if (!m_bIsSlideShowList) {
 		if (bImageFile || bIsDirectory) {
@@ -212,10 +213,13 @@ CString CFileList::GetSupportedFileEndings() {
 	return sList;
 }
 
-void CFileList::Reload() {
-	LPCTSTR sCurrent = Current();
+void CFileList::Reload(LPCTSTR sFileName) {
+	LPCTSTR sCurrent = sFileName;
 	if (sCurrent == NULL) {
-		return;
+		sCurrent = Current();
+		if (sCurrent == NULL) {
+			return;
+		}
 	}
 
 	// delete the chain of CFileLists forward
@@ -265,6 +269,7 @@ void CFileList::ModificationTimeChanged() {
 }
 
 CFileList* CFileList::Next() {
+	m_nMarkedIndexShow = -1;
 	if (m_fileList.size() > 0) {
 		std::list<CFileDesc>::iterator iterTemp = m_iter;
 		iterTemp++;
@@ -301,6 +306,7 @@ CFileList* CFileList::Next() {
 }
 
 CFileList* CFileList::Prev() {
+	m_nMarkedIndexShow = -1;
 	if (m_iter == m_iterStart) {
 		if (sm_eMode == Helpers::NM_LoopDirectory) {
 			if (m_iter == m_fileList.begin()) {
@@ -325,10 +331,12 @@ CFileList* CFileList::Prev() {
 }
 
 void CFileList::First() {
+	m_nMarkedIndexShow = -1;
 	m_iter = m_iterStart = m_fileList.begin();
 }
 
 void CFileList::Last() {
+	m_nMarkedIndexShow = -1;
 	MoveIterToLast();
 	m_iterStart = m_fileList.begin();
 }
@@ -380,17 +388,21 @@ const FILETIME* CFileList::CurrentModificationTime() const {
 	}
 }
 
-LPCTSTR CFileList::PeekNextPrev(int nIndex, bool bForward) {
-	std::list<CFileDesc>::iterator thisIter = m_iter;
-	LPCTSTR sFileName;
-	if (nIndex != 0) {
-		CFileList* pFL = bForward ? Next() : Prev();
-		sFileName = pFL->PeekNextPrev(nIndex-1, bForward);
+LPCTSTR CFileList::PeekNextPrev(int nIndex, bool bForward, bool bToggle) {
+	if (bToggle) {
+		return (m_nMarkedIndexShow == 0) ? m_sMarkedFile : m_sMarkedFileCurrent;
 	} else {
-		sFileName = Current();
+		std::list<CFileDesc>::iterator thisIter = m_iter;
+		LPCTSTR sFileName;
+		if (nIndex != 0) {
+			CFileList* pFL = bForward ? Next() : Prev();
+			sFileName = pFL->PeekNextPrev(nIndex-1, bForward, bToggle);
+		} else {
+			sFileName = Current();
+		}
+		m_iter = thisIter;
+		return sFileName;
 	}
-	m_iter = thisIter;
-	return sFileName;
 }
 
 void CFileList::SetSorting(Helpers::ESorting eSorting) {
@@ -414,6 +426,41 @@ void CFileList::SetNavigationMode(Helpers::ENavigationMode eMode) {
 	sm_eMode = eMode;
 	DeleteHistory();
 	m_nLevel = 0;
+}
+
+void CFileList::MarkCurrentFile() {
+	LPCTSTR sCurrent = Current();
+	if (::GetFileAttributes(sCurrent) != INVALID_FILE_ATTRIBUTES) {
+		m_sMarkedFile = CString(sCurrent);
+		m_sMarkedFileCurrent = _T("");
+		m_nMarkedIndexShow = -1;
+	}
+}
+
+bool CFileList::FileMarkedForToggle() {
+	return !m_sMarkedFile.IsEmpty();
+}
+
+void CFileList::ToggleBetweenMarkedAndCurrentFile() {
+	if (m_nMarkedIndexShow == -1) {
+		m_nMarkedIndexShow = 0;
+	}
+	LPCTSTR sNewFile = (m_nMarkedIndexShow == 0) ? m_sMarkedFile : m_sMarkedFileCurrent;
+	if (sNewFile[0] == 0) {
+		return;
+	}
+	if (m_nMarkedIndexShow == 0) {
+		m_sMarkedFileCurrent = Current();
+	}
+
+	m_sInitialFile = sNewFile;
+	int nPos = m_sInitialFile.ReverseFind(_T('\\'));
+	m_sDirectory = (nPos > 0) ? m_sInitialFile.Left(nPos) : _T(""); // the backslash is stripped away!
+
+	DeleteHistory();
+	Reload(m_sInitialFile);
+
+	m_nMarkedIndexShow = (m_nMarkedIndexShow + 1) & 1;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////
