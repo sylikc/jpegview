@@ -33,7 +33,7 @@
 				<td>
 					<a name="Top"></a>
 					<h1>JPEGView Readme</h1>
-					Revision: 11-March-2008
+					Revision: 11-February-2009
 					<a name="Introduction"></a>
 					<h2>Introduction</h2>
 					JPEGView is a viewer/editor for JPEG, BMP, PNG, GIF and TIFF images. It is designed to view images from digital cameras
@@ -80,7 +80,7 @@
 							Interactive image processing and improvement
 							<ul style="margin-top:0in;margin-bottom:0in">
 								<li>Real time and full screen image processing</li>
-								<li>Contrastbr/ightness and Sharpness adaptation</li>
+								<li>Contrast, Brightness and Sharpness adaptation</li>
 								<li>Cyan-Red, Magenta-Green, Yellow-Blue color balance</li>
 								<li>Local brightness correction to lighten shadows and darken highlights</li>
 								<li>Automatic color and contrast correction</li>
@@ -198,6 +198,7 @@
 						<li>Mouse wheel zooms in and out</li>
 						<li>Dragging mouse while left mouse button is pressed pans image</li>
 						<li>Move mouse pointer to bottom of screen for image processing, parameter DB access and file renaming</li>
+						<li>Move mouse pointer to top of screen for minimizing or closing the application</li>
 						<li>Right mouse button displays the context menu</li>
 						<li>
 							<kbd>ESC</kbd> terminates the application
@@ -250,15 +251,28 @@
 							Keyboard: <kbd>End</kbd>
 						</li>
 						<li>
+							Mark image for toggling<br/>
+							Keyboard: <kbd>Ctrl-M</kbd>
+						</li>
+						<li>
+							Toggle between current image and marked image<br/>
+							Note that toggling only works between images in the same folder<br/>
+							Keyboard: <kbd>Ctrl-Left arrow</kbd> or <kbd>Ctrl-Right arrow</kbd>
+						</li>
+						<li>
 							Reload image<br/>
 							Keyboard: <kbd>Ctrl-R</kbd><br/>
-							<li>
-								Open image or folder<br/>
-								Keyboard: <kbd>Ctrl-O</kbd><br/>
-								The standard 'File Open' dialog is shown and allows displaying images from other folders.
-								Alternatively, a text file containing file names for a <a href="#SlideShow">slide show</a> can be opened.
-							</li>
-						</ul>
+						</li>
+						<li>
+							Open image or folder<br/>
+							Keyboard: <kbd>Ctrl-O</kbd><br/>
+							The standard 'File Open' dialog is shown and allows displaying images from other folders.
+							Alternatively, a text file containing file names for a <a href="#SlideShow">slide show</a> can be opened.
+						</li>
+						<li>
+							Drag and drop image or folder from Windows Explorer to JPEGView window.
+						</li>
+					</ul>
 					The basic navigation command (First image in folder, Previous image, Next image, Last image in folder) are also
 					available on the navigation panel, transparently blended over the image.<br/>
 					JPEGView uses a second thread to read ahead and process the next image. Guessing the next image is based on
@@ -375,7 +389,9 @@
 					</ul>
 					<h4>Rotate</h4>
 					With the <kbd>'Arrow down'</kbd> and <kbd>'Arrow up'</kbd> keys, the current image can be rotated clockwise, respectively
-					counter-clockwise.
+					counter-clockwise. Note that JPEGView looks for the rotation tag in the EXIF data to rotate the image automatically. Some
+					cameras have an orientation sensor and set this tag.<br/>
+					To rotate a JPEG image lossless on disk, use the <kbd>R</kbd> and <kbd>T</kbd> keys.
 					<h4>Crop</h4>
 					When the <kbd>Ctrl</kbd> key and the left mouse button are pressed and the mouse is dragged, a selection on the image can be
 					defined. After having defined a selection, a context menu provides the following commands:
@@ -389,6 +405,11 @@
 						<li>
 							Copy image selection to clipboard<br/>
 							Note that this command will copy the image selection in original resolution and not in screen resolution.
+						</li>
+						<li>
+							Crop Mode<br/>
+							Sets the crop mode - either to free croping, fixed size cropping or cropping with a fixed aspect ratio.
+							Note that the default fixed crop size can be set in the INI file.
 						</li>
 						<li>Zoom to selection</li>
 					</ul>
@@ -548,7 +569,8 @@
 					<h3>Saving and renaming Images</h3>
 					<h4>Saving images</h4>
 					Processed images can be saved as JPEG, BMP, PNG or TIFF files using the 'Save image' (<kbd>Ctrl-S</kbd>) command.
-					The image is always saved in its original size: Performed rotations are taken into account, zoom and pan are not.<br/>
+					The image is saved in its original size: Performed rotations are taken into account, zoom and pan are not.
+					To save an image in screen size, use the <kbd>Ctrl-Shift-S</kbd> keyboard shortcut.<br/>
 					<b>Note:</b> The quality of the saved JPEG file can be set in the <a href="#INIFile">INI file</a>.<br/>
 					JPEGView will automatically create a <a href="#ParameterDB">parameter DB</a> entry for the saved image having
 					all image processing disabled.
@@ -626,6 +648,17 @@
 							Keyboard: <kbd>D</kbd><br/>
 							Mouse: Use processing panel
 						</li>
+						<li>
+							<b>Backup parameter DB</b><br/>
+							Use this command in the context menu to backup the parameter DB to another folder or disk.
+						</li>
+						<li>
+							<b>Restore parameter DB</b><br/>
+							Use this command in the context menu to restore the parameter DB from a backuped version.
+							Note that when restoring the parameter DB, the selected DB is merged with the current DB - so this
+							command can also be used to merge two parameter DBs. In case of conflicting entries in the merge,
+							the system asks which entries shall have priority.
+						</li>
 					</ul>
 					Using the parameter DB has the advantage that the original image remains untouched. The parameter DB entry for an
 					image is found using a hash value of the image file what has the following advantages:
@@ -678,6 +711,8 @@
 							'<i>Path of JPEGView.exe</i>\JPEGView.ini'
 						</li>
 					</ul>
+					The global and user INI file can be edited by using the commands 'Edit global settings' and 'Edit user settings' in
+					the context menu. Note that changes to these files do not take effect until JPEGView is restarted.<br/>
 					Some parameters can be written to the user INI file with the command 'Save parameters to INI' located in the
 					context menu.
 					<ul style="margin-top:0in;margin-bottom:0in">
@@ -776,7 +811,7 @@
 
 					<a name="Copyright"></a>
 					<h2>License &amp; Copyright</h2>
-					Copyright &copy; 2006-2008 David Kleiner<br/><br/>
+					Copyright &copy; 2006-2009 David Kleiner<br/><br/>
 					This program is free software; you can redistribute it and/or modify
 					it under the terms of the GNU General Public License as published by
 					the Free Software Foundation, version 2.

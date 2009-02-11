@@ -1945,6 +1945,9 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 			}
 			m_dCropRatio = -1;
 			break;
+		case IDM_CROPMODE_5_4:
+			m_dCropRatio = 1.25;
+			break;
 		case IDM_CROPMODE_4_3:
 			m_dCropRatio = 1.333333333333333333;
 			break;
@@ -1954,6 +1957,9 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 		case IDM_CROPMODE_16_9:
 			m_dCropRatio = 1.777777777777777778;
 			break;
+		case IDM_CROPMODE_16_10:
+			m_dCropRatio = 1.6;
+		break;
 		case IDM_TOUCH_IMAGE:
 		case IDM_TOUCH_IMAGE_EXIF:
 			if (m_pCurrentImage != NULL) {
@@ -2307,12 +2313,16 @@ void CMainDlg::EndCropping() {
 		m_bInTrackPopupMenu = true;
 
 		HMENU hMenuCropMode = ::GetSubMenu(hMenuTrackPopup, SUBMENU_POS_CROPMODE);
-		if (abs(m_dCropRatio - 1.3333) < 0.001) {
+		if (abs(m_dCropRatio - 1.25) < 0.001) {
+			::CheckMenuItem(hMenuCropMode,  IDM_CROPMODE_5_4, MF_CHECKED);
+		} else if (abs(m_dCropRatio - 1.3333) < 0.001) {
 			::CheckMenuItem(hMenuCropMode,  IDM_CROPMODE_4_3, MF_CHECKED);
 		} else if (abs(m_dCropRatio - 1.5) < 0.001) {
 			::CheckMenuItem(hMenuCropMode,  IDM_CROPMODE_3_2, MF_CHECKED);
 		} else if (abs(m_dCropRatio - 1.7777) < 0.001) {
 			::CheckMenuItem(hMenuCropMode,  IDM_CROPMODE_16_9, MF_CHECKED);
+		} else if (abs(m_dCropRatio - 1.6) < 0.001) {
+			::CheckMenuItem(hMenuCropMode,  IDM_CROPMODE_16_10, MF_CHECKED);
 		} else if (m_dCropRatio < 0) {
 			::CheckMenuItem(hMenuCropMode,  IDM_CROPMODE_FIXED_SIZE, MF_CHECKED);
 		} else {

@@ -124,9 +124,11 @@
 #define IDM_ZOOM_SEL		20200
 #define IDM_CROPMODE_FREE   20300
 #define IDM_CROPMODE_FIXED_SIZE 20400
+#define IDM_CROPMODE_5_4	20450
 #define IDM_CROPMODE_4_3    20500
 #define IDM_CROPMODE_3_2    20600
 #define IDM_CROPMODE_16_9   20700
+#define IDM_CROPMODE_16_10	20800
 
 // in the main menu
 // these position must be changed if menu items are inserted
