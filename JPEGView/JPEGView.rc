@@ -273,9 +273,11 @@ BEGIN
         BEGIN 
           MENUITEM "Free",	IDM_CROPMODE_FREE
 		  MENUITEM "Fixed size...",	IDM_CROPMODE_FIXED_SIZE
+		  MENUITEM "5 : 4",	IDM_CROPMODE_5_4
 		  MENUITEM "4 : 3",	IDM_CROPMODE_4_3
 		  MENUITEM "3 : 2",	IDM_CROPMODE_3_2
 		  MENUITEM "16 : 9",	IDM_CROPMODE_16_9
+		  MENUITEM "16 : 10",	IDM_CROPMODE_16_10
         END 
 	  MENUITEM SEPARATOR
 	  MENUITEM "Zoom to Selection",				IDM_ZOOM_SEL
@@ -308,7 +310,7 @@ BEGIN
             VALUE "FileDescription", "High quality resampling JPEG viewer\0"
             VALUE "FileVersion", JPEGVIEW_VERSION
             VALUE "InternalName", "JPEGView\0"
-            VALUE "LegalCopyright", "Copyright 2006-2008 David Kleiner\0"
+            VALUE "LegalCopyright", "Copyright 2006-2009 David Kleiner\0"
             VALUE "OriginalFilename", "JPEGView.exe\0"
             VALUE "ProductName", "JPEGView Application\0"
             VALUE "ProductVersion", JPEGVIEW_VERSION
