@@ -145,6 +145,13 @@ private:
 	CPoint m_cropStart;
 	CPoint m_cropEnd;
 
+	// navigation panel animation
+	bool m_bInNavPanelAnimation;
+	bool m_bFadeOut;
+	float m_fCurrentBlendingFactorNavPanel;
+	CDC* m_pMemDCAnimation;
+	HBITMAP m_hOffScreenBitmapAnimation;
+
 	bool m_bPasteFromClipboardFailed;
 	bool m_bDragging;
 	bool m_bDoDragging;
@@ -264,6 +271,11 @@ private:
 	void EditINIFile(bool bGlobalINI);
 	void BackupParamDB();
 	void RestoreParamDB();
+	void SetWindowTitle();
+	bool IsNavPanelVisible();
+	void StartNavPanelAnimation(bool bFadeOut);
+	void DoNavPanelAnimation();
+	void EndNavPanelAnimation();
 
 	static void OnSaveToDB(CButtonCtrl & sender);
 	static void OnRemoveFromDB(CButtonCtrl & sender);

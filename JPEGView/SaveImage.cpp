@@ -159,7 +159,7 @@ bool CSaveImage::SaveImage(LPCTSTR sFileName, CJPEGImage * pImage, const CImageP
 		pDIB32bpp = pImage->GetDIB(imageSize, imageSize, CPoint(0, 0), procParams, eFlags);
 	} else {
 		imageSize = CSize(pImage->DIBWidth(), pImage->DIBHeight());
-		pDIB32bpp = pImage->DIBPixelsLastProcessed();
+		pDIB32bpp = pImage->DIBPixelsLastProcessed(true);
 	}
 
 	if (pDIB32bpp == NULL) {

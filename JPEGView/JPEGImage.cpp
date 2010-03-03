@@ -495,8 +495,8 @@ void CJPEGImage::EnableDimming(bool bEnable) {
 	}
 }
 
-void* CJPEGImage::DIBPixelsLastProcessed() {
-	if (m_pLastDIB == NULL) {
+void* CJPEGImage::DIBPixelsLastProcessed(bool bGenerateDIBIfNeeded) {
+	if (bGenerateDIBIfNeeded && m_pLastDIB == NULL) {
 		m_pLastDIB = GetDIB(m_FullTargetSize, m_ClippingSize, m_TargetOffset, m_imageProcParams, m_eProcFlags);
 	}
 	return m_pLastDIB;

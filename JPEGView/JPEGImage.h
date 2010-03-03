@@ -118,7 +118,7 @@ public:
 	void VerifyDIBPixelsCreated();
 
 	// Gets the DIB last processed. If none, the last used parameters are taken to generate the DIB
-	void* DIBPixelsLastProcessed();
+	void* DIBPixelsLastProcessed(bool bGenerateDIBIfNeeded);
 
 	// Gets the image processing flags as set as default (may varies from file to file)
 	EProcessingFlags GetInitialProcessFlags() const { return m_eProcFlagsInitial; }

@@ -47,6 +47,8 @@ static const int ZOOM_TIMER_EVENT_ID = 2; // Zoom refinement timer ID
 static const int ZOOM_TEXT_TIMER_EVENT_ID = 3; // Zoom label timer ID
 static const int AUTOSCROLL_TIMER_EVENT_ID = 4; // when cropping, auto scroll timer ID
 static const int NAVPANEL_TIMER_EVENT_ID = 5; // to show nav panel
+static const int NAVPANEL_ANI_TIMER_EVENT_ID = 6; // animation timer for navigation panel
+static const int NAVPANEL_START_ANI_TIMER_EVENT_ID = 7; // animation start timer for navigation panel
 static const int ZOOM_TIMEOUT = 200; // refinement done after this many milliseconds
 static const int ZOOM_TEXT_TIMEOUT = 1000; // zoom label disappears after this many milliseconds
 static const int AUTOSCROLL_TIMEOUT = 20; // autoscroll time in ms
@@ -154,7 +156,7 @@ static EProcessingFlags _SetLandscapeModeFlags(EProcessingFlags eFlags) {
 }
 
 // Blits the DIB data section to target DC using dimming (blending with a black bitmap)
-static void BitBltBlended(CDC & dc, CPaintDC & paintDC, const CSize& dcSize, void* pDIBData, BITMAPINFO* pbmInfo, 
+static void BitBltBlended(CDC & dc, CDC & paintDC, const CSize& dcSize, void* pDIBData, BITMAPINFO* pbmInfo, 
 						  const CPoint& dibStart, const CSize& dibSize, float fDimFactor) {
 	int nW = dcSize.cx;
 	int nH = dcSize.cy;
@@ -177,7 +179,7 @@ static void BitBltBlended(CDC & dc, CPaintDC & paintDC, const CSize& dcSize, voi
 }
 
 // Blits the DIB data section to target DC using blending with painted version of given panel
-static void BitBltBlended(CDC & dc, CPaintDC & paintDC, const CSize& dcSize, void* pDIBData, BITMAPINFO* pbmInfo, 
+static void BitBltBlended(CDC & dc, CDC & paintDC, const CSize& dcSize, void* pDIBData, BITMAPINFO* pbmInfo, 
 						  const CPoint& dibStart, const CSize& dibSize, CPanelMgr& panel, const CPoint& offsetPanel,
 						  float fBlendFactor) {
 	int nW = dcSize.cx;
@@ -310,6 +312,10 @@ CMainDlg::CMainDlg() {
 
 	m_cropStart = CPoint(INT_MIN, INT_MIN);
 	m_cropEnd = CPoint(INT_MIN, INT_MIN);
+	m_bInNavPanelAnimation = false;
+	m_fCurrentBlendingFactorNavPanel = CSettingsProvider::This().BlendFactorNavPanel();
+	m_pMemDCAnimation = NULL;
+	m_hOffScreenBitmapAnimation = NULL;
 }
 
 CMainDlg::~CMainDlg() {
@@ -320,14 +326,20 @@ CMainDlg::~CMainDlg() {
 	delete m_pSliderMgr;
 	delete m_pNavPanel;
 	delete m_pWndButtonPanel;
-	CProcessingThreadPool::This().StopAllThreads();
+	if (m_pMemDCAnimation != NULL) {
+		delete m_pMemDCAnimation;
+	}
+	if (m_hOffScreenBitmapAnimation != NULL) {
+		::DeleteObject(m_hOffScreenBitmapAnimation);
+	}
+	m_bInNavPanelAnimation = false;
 }
 
 LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/)
 {	
 	::SetWindowLong(m_hWnd, GWL_STYLE, WS_VISIBLE);
 
-	this->SetWindowText(_T("JPEGView")); // only relevant for toolbar
+	SetWindowTitle();
 
 	// get the scaling of the screen (DPI) compared to 96 DPI (design value)
 	CPaintDC dc(this->m_hWnd);
@@ -450,8 +462,7 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 	CRect rectNavPanel = m_pNavPanel->PanelRect();
 	CRect rectWndButtons = m_pWndButtonPanel->PanelRect();
 	bool bBlendNavPanel = false;
-	bool bNavPanelInvisible = (CSettingsProvider::This().BlendFactorNavPanel() == 0.0f && !m_bMouseInNavPanel) ||
-		m_bMovieMode || m_bDoCropping || m_bShowIPTools || (!m_bMouseOn && !m_bMouseInNavPanel);
+	bool bNavPanelVisible = IsNavPanelVisible();
 	bool bShowZoomNavigator = false;
 	CRectF visRectZoomNavigator(0.0f, 0.0f, 1.0f, 1.0f);
 	CRect rectZoomNavigator(0, 0, 0, 0);
@@ -498,7 +509,7 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 	// Create a memory DC for the nav panel (also excluded from clipping)
 	CDC memDCnavPanel = CDC();
 	HBITMAP hOffScreenBitmapNavPanel = NULL;
-	if (m_bShowNavPanel && !bNavPanelInvisible) {
+	if (bNavPanelVisible) {
 		hOffScreenBitmapNavPanel = PrepareRectForMemDCPainting(memDCnavPanel, dc, rectNavPanel);
 		excludedClippingRects.push_back(rectNavPanel);
 	}
@@ -587,7 +598,7 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 						  CPoint(xDest - rectEXIFInfo.left, yDest - rectEXIFInfo.top), clippedSize, cfDimFactorEXIF);
 			}
 			// same for navigation panel
-			if (memDCnavPanel.m_hDC != NULL && !bNavPanelInvisible) {
+			if (memDCnavPanel.m_hDC != NULL && bNavPanelVisible) {
 				if (m_bMouseInNavPanel) {
 					BitBltBlended(memDCnavPanel, dc, CSize(rectNavPanel.Width(), rectNavPanel.Height()), pDIBData, &bmInfo, 
 						  CPoint(xDest - rectNavPanel.left, yDest - rectNavPanel.top), clippedSize, cfDimFactorNavPanel);
@@ -595,7 +606,7 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 					bBlendNavPanel = true;
 					BitBltBlended(memDCnavPanel, dc, CSize(rectNavPanel.Width(), rectNavPanel.Height()), pDIBData, &bmInfo, 
 						  CPoint(xDest - rectNavPanel.left, yDest - rectNavPanel.top), clippedSize, 
-						  *m_pNavPanel, CPoint(-rectNavPanel.left, -rectNavPanel.top), CSettingsProvider::This().BlendFactorNavPanel());
+						  *m_pNavPanel, CPoint(-rectNavPanel.left, -rectNavPanel.top), m_fCurrentBlendingFactorNavPanel);
 				}
 			}
 			// same for image processing area
@@ -723,7 +734,7 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 	}
 
 	// Paint navigation panel
-	if (m_bShowNavPanel && !bNavPanelInvisible) {
+	if (bNavPanelVisible) {
 		if (!bBlendNavPanel) {
 			m_pNavPanel->OnPaint(memDCnavPanel, CPoint(-rectNavPanel.left, -rectNavPanel.top));
 		} // else the nav panel has already been blended into mem DC
@@ -898,6 +909,18 @@ LRESULT CMainDlg::OnMouseMove(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, B
 			}
 		}
 	}
+
+	// Start timer to fade out nav panel if no mouse movement
+	if (m_nMouseX != nOldMouseX || m_nMouseY != nOldMouseY) {
+		::KillTimer(this->m_hWnd, NAVPANEL_START_ANI_TIMER_EVENT_ID);
+		if (!m_bInNavPanelAnimation) {
+			::SetTimer(this->m_hWnd, NAVPANEL_START_ANI_TIMER_EVENT_ID, 2000, NULL);
+		} else {
+			// Mouse moved - fade in navigation panel
+			StartNavPanelAnimation(false);
+		}
+	}
+
 	// Do dragging if needed or turn on/off image processing controls if in lower area of screen
 	if (m_bDragging) {
 		DoDragging(m_nMouseX, m_nMouseY);
@@ -1310,7 +1333,15 @@ LRESULT CMainDlg::OnTimer(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOOL&
 			m_bMouseInNavPanel = true;
 			m_pNavPanel->GetTooltipMgr().EnableTooltips(true);
 			this->InvalidateRect(m_pNavPanel->PanelRect(), FALSE);
+			EndNavPanelAnimation();
 		}
+	} else if (wParam == NAVPANEL_START_ANI_TIMER_EVENT_ID) {
+		::KillTimer(this->m_hWnd, NAVPANEL_START_ANI_TIMER_EVENT_ID);
+		if (m_bShowNavPanel && !m_bMouseInNavPanel) {
+			StartNavPanelAnimation(true);
+		}
+	} else if (wParam == NAVPANEL_ANI_TIMER_EVENT_ID) {
+		DoNavPanelAnimation();
 	} else if (wParam == ZOOM_TEXT_TIMER_EVENT_ID) {
 		m_bShowZoomFactor = false;
 		::KillTimer(this->m_hWnd, ZOOM_TEXT_TIMER_EVENT_ID);
@@ -1652,6 +1683,8 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 		case IDM_SHOW_NAVPANEL:
 			m_bShowNavPanel = !m_bShowNavPanel;
 			if (m_bShowNavPanel) {
+				EndNavPanelAnimation();
+				::KillTimer(this->m_hWnd, NAVPANEL_START_ANI_TIMER_EVENT_ID);
 				MouseOn();
 			} else {
 				m_pNavPanel->GetTooltipMgr().RemoveActiveTooltip();
@@ -2817,6 +2850,8 @@ void CMainDlg::ShowHideSaveDBButtons() {
 }
 
 void CMainDlg::AfterNewImageLoaded(bool bSynchronize) {
+	EndNavPanelAnimation();
+	SetWindowTitle();
 	ShowHideSaveDBButtons();
 	if (m_pCurrentImage != NULL && !m_pCurrentImage->IsClipboardImage() && !m_bMovieMode) {
 		m_txtParamDB->SetShow(true);
@@ -2942,6 +2977,7 @@ bool CMainDlg::RenameCurrentFile(LPCTSTR sNewFileTitle) {
 	if (m_bShowFileInfo || m_bShowFileName || m_bShowHelp) {
 		this->Invalidate(FALSE);
 	}
+	SetWindowTitle();
 	return false;
 }
 
@@ -3064,10 +3100,14 @@ LPCTSTR CMainDlg::CurrentFileName(bool bFileTitle) {
 	if (m_pCurrentImage != NULL && m_pCurrentImage->IsClipboardImage()) {
 		return _T("Clipboard Image");
 	}
-	if (bFileTitle) {
-		return m_pFileList->CurrentFileTitle();
+	if (m_pFileList != NULL) {
+		if (bFileTitle) {
+			return m_pFileList->CurrentFileTitle();
+		} else {
+			return m_pFileList->Current();
+		}
 	} else {
-		return m_pFileList->Current();
+		return NULL;
 	}
 }
 
@@ -3325,4 +3365,112 @@ void CMainDlg::RestoreParamDB() {
 	if (IDOK == fileDlg.DoModal(m_hWnd)) {
 		CParameterDB::This().MergeParamDB(fileDlg.m_szFileName);
 	}
+}
+
+void CMainDlg::SetWindowTitle() {
+	LPCTSTR sCurrentFileName = CurrentFileName(true);
+	if (sCurrentFileName == NULL || m_pCurrentImage == NULL) {
+		this->SetWindowText(_T("JPEGView"));
+	} else {
+		CString sWindowText = CString(_T("JPEGView - ")) + sCurrentFileName;
+		CEXIFReader* pEXIF = m_pCurrentImage->GetEXIFReader();
+		if (pEXIF != NULL && pEXIF->GetAcquisitionTime().wYear > 1600) {
+			sWindowText += " - " + Helpers::SystemTimeToString(pEXIF->GetAcquisitionTime());
+		}
+		this->SetWindowText(sWindowText);
+	}
+}
+
+bool CMainDlg::IsNavPanelVisible() {
+	return m_bShowNavPanel && !(m_fCurrentBlendingFactorNavPanel <= 0.0f && !m_bMouseInNavPanel) &&
+		!m_bMovieMode && !m_bDoCropping && !m_bShowIPTools && (m_bMouseOn || m_bMouseInNavPanel);
+}
+
+void CMainDlg::StartNavPanelAnimation(bool bFadeOut) {
+	if (!m_bInNavPanelAnimation) {
+		m_bFadeOut = bFadeOut;
+		if (!bFadeOut) {
+			return; // already visible, do nothing
+		}
+		m_bInNavPanelAnimation = true;
+		m_fCurrentBlendingFactorNavPanel = CSettingsProvider::This().BlendFactorNavPanel();
+		::SetTimer(this->m_hWnd, NAVPANEL_ANI_TIMER_EVENT_ID, 100, NULL);
+	} else if (m_bFadeOut != bFadeOut) {
+		m_bFadeOut = bFadeOut;
+		::KillTimer(this->m_hWnd, NAVPANEL_ANI_TIMER_EVENT_ID);
+		::SetTimer(this->m_hWnd, NAVPANEL_ANI_TIMER_EVENT_ID, 20, NULL);
+	}
+}
+
+void CMainDlg::DoNavPanelAnimation() {
+	bool bTerminate = false;
+	if (m_bFadeOut) {
+		m_fCurrentBlendingFactorNavPanel = max(0.0f, m_fCurrentBlendingFactorNavPanel - 0.02f);
+	} else {
+		m_fCurrentBlendingFactorNavPanel = min(CSettingsProvider::This().BlendFactorNavPanel(), m_fCurrentBlendingFactorNavPanel + 0.06f);
+		bTerminate = m_fCurrentBlendingFactorNavPanel >= CSettingsProvider::This().BlendFactorNavPanel();
+	}
+
+	bool bDoAnimation = true;
+	if (!m_bInNavPanelAnimation || m_pCurrentImage == NULL || m_bShowHelp) {
+		bDoAnimation = false;
+	} else {
+		if (!IsNavPanelVisible()) {
+			bDoAnimation = false;
+		} else if ((m_bFadeOut && m_fCurrentBlendingFactorNavPanel <= 0) || (!m_bFadeOut && m_fCurrentBlendingFactorNavPanel >= CSettingsProvider::This().BlendFactorNavPanel())) {
+			bDoAnimation = false;
+		}
+	}
+
+	if (bDoAnimation) {
+		CRect rectNavPanel = m_pNavPanel->PanelRect();
+		CDC screenDC = GetDC();
+		void* pDIBData = m_pCurrentImage->DIBPixelsLastProcessed(false);
+		if (pDIBData != NULL) {
+			if (m_pMemDCAnimation == NULL) {
+				m_pMemDCAnimation = new CDC();
+				CDC screenDC = GetDC();
+				m_hOffScreenBitmapAnimation = PrepareRectForMemDCPainting(*m_pMemDCAnimation, screenDC, m_pNavPanel->PanelRect());
+			}
+
+			CBrush backBrush;
+			backBrush.CreateSolidBrush(CSettingsProvider::This().BackgroundColor());
+			m_pMemDCAnimation->FillRect(CRect(0, 0, rectNavPanel.Width(), rectNavPanel.Height()), backBrush);
+
+			BITMAPINFO bmInfo;
+			memset(&bmInfo, 0, sizeof(BITMAPINFO));
+			bmInfo.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
+			bmInfo.bmiHeader.biWidth = m_pCurrentImage->DIBWidth();
+			bmInfo.bmiHeader.biHeight = -m_pCurrentImage->DIBHeight();
+			bmInfo.bmiHeader.biPlanes = 1;
+			bmInfo.bmiHeader.biBitCount = 32;
+			bmInfo.bmiHeader.biCompression = BI_RGB;
+			int xDest = (m_clientRect.Width() - m_pCurrentImage->DIBWidth()) / 2;
+			int yDest = (m_clientRect.Height() - m_pCurrentImage->DIBHeight()) / 2;
+			BitBltBlended(*m_pMemDCAnimation, screenDC, CSize(rectNavPanel.Width(), rectNavPanel.Height()), pDIBData, &bmInfo, 
+								  CPoint(xDest - rectNavPanel.left, yDest - rectNavPanel.top), CSize(m_pCurrentImage->DIBWidth(), m_pCurrentImage->DIBHeight()), 
+								  *m_pNavPanel, CPoint(-rectNavPanel.left, -rectNavPanel.top), m_fCurrentBlendingFactorNavPanel);
+			screenDC.BitBlt(rectNavPanel.left, rectNavPanel.top, rectNavPanel.Width(), rectNavPanel.Height(), *m_pMemDCAnimation, 0, 0, SRCCOPY);
+		}
+	}
+	if (bTerminate) {
+		EndNavPanelAnimation();
+	}
+}
+
+void CMainDlg::EndNavPanelAnimation() {
+	if (m_bInNavPanelAnimation) {
+		::KillTimer(this->m_hWnd, NAVPANEL_ANI_TIMER_EVENT_ID);
+		m_bInNavPanelAnimation = false;
+		m_fCurrentBlendingFactorNavPanel = CSettingsProvider::This().BlendFactorNavPanel();
+		if (m_pMemDCAnimation != NULL) {
+			delete m_pMemDCAnimation;
+			m_pMemDCAnimation = NULL;
+			::DeleteObject(m_hOffScreenBitmapAnimation);
+			m_hOffScreenBitmapAnimation = NULL;
+		}
+		
+	}
+	::KillTimer(this->m_hWnd, NAVPANEL_START_ANI_TIMER_EVENT_ID);
+	::SetTimer(this->m_hWnd, NAVPANEL_START_ANI_TIMER_EVENT_ID, 2000, NULL);
 }

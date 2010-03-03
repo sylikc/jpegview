@@ -6,12 +6,12 @@
 #include <gdiplus.h>
 
 void CClipboard::CopyImageToClipboard(HWND hWnd, CJPEGImage * pImage) {
-	if (pImage == NULL || pImage->DIBPixelsLastProcessed() == NULL) {
+	if (pImage == NULL || pImage->DIBPixelsLastProcessed(true) == NULL) {
 		return;
 	}
 
 	pImage->EnableDimming(false);
-	DoCopy(hWnd, pImage->DIBWidth(), pImage->DIBHeight(), pImage->DIBPixelsLastProcessed());
+	DoCopy(hWnd, pImage->DIBWidth(), pImage->DIBHeight(), pImage->DIBPixelsLastProcessed(true));
 	pImage->EnableDimming(true);
 }
 
