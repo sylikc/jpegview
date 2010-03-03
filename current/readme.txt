@@ -39,6 +39,8 @@ New features:
 - New crop modes with fixed aspect ratio and fixed crop size
 - Set modification date to current date or to EXIF date
 - New command: Ctrl-M to mark file for toggling. Use Ctrl+Left/Right to toggle between marked files
+- Showing file name in window title
+- Smooth blending in and out of the navigation panel if mouse not moved for some time
 
 
 [1.0.18]
