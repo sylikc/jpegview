@@ -22,7 +22,7 @@ The directory '%s' does not contain any image files!	La cartella '%s' non contie
 Press any key to search the subdirectories for image files.	Premi un tasto per cercare le immagini nelle sottocartelle.
 JPEGView Help	Aiuto di JPEGView
 Current image	Immagine attuale
-Close help text display / Close JPEGView	Chiude aiuto / Chiude JPEGView
+Close help text display / Close JPEGView	Chiude testo d'aiuto / Chiude JPEGView
 Show/hide this help text	Visualizza/nasconde questo aiuto
 Show/hide picture information (EXIF data)	Visualizza/nasconde le informazioni dell'immagine (dati EXIF)
 Show/hide file name	Visualizza/nasconde il nome del file
@@ -200,9 +200,9 @@ no	no
 Show navigation panel	Visualizza il pannello di navigazione
 Show/hide navigation panel	Visualizza/nasconde il pannello di navigazione
 About JPEGView...	Informazioni su JPEGView...
-SIMD mode used:	Modalità SIMD usata:
-Number of CPU cores used:	Numero di CPU Core usate:
-Licensed under the GNU general public license (GPL), see readme file for details:	Rilasciato sotto licenza GNU General Public License (GPL), vedi il file “leggimi” per maggiori dettagli:
+SIMD mode used:	Modalità SIMD in uso:
+Number of CPU cores used:	Numero di Core CPU usate:
+Licensed under the GNU general public license (GPL), see readme file for details:	Rilasciato sotto licenza GNU General Public License (GPL), vedi il file leggimi per ulteriori dettagli:
 Project home page:	Pagina principale del progetto:
 Show first image in folder	Visualizza la prima immagine nella cartella
 Show previous image	Visualizza l’immagine precedente
@@ -219,3 +219,28 @@ Full screen mode	Modalità tutto schermo
 Window mode	Modalità finestra
 Save as (in screen size/resolution)	Salva come (in dimensioni/risoluzione schermo)
 Save processed image to JPEG file (screen size)	Salva l'immagine modificata come JPEG file (dimensione schermo)
+Settings/Admin	Settaggi/Amministratore
+Edit global settings...	Modifica dei settaggi globale...
+Edit user settings...	Modifica dei settaggi utente...
+Backup parameter DB...	Backup parametro del DB
+Restore parameter DB...	Ripristina parametro del DB
+No user INI file exits yet. Create user INI file from INI file template?	Non esiste ancora nessun file INI per l'utente. Creare un file INI per l'utente partendo da un modello?
+Copying parameter DB to file '%s' failed. Reason: %s	La copia del paramentro '%s' del DB è fallita. Motivo: %s
+Select parameter DB to restore	Seleziona il parametro di DB da ripristinare
+Conflicting entries in Param DB	Dati in conflitto nel Param DB
+The imported param DB contains entries already present in active param DB.	Il Param DB inportato contiene dati già presenti nel Param DB attivo.
+Shall existing entries be preserved (Yes) or be overriden by the imported entries (No)?	I dati estitenti devono essere mantenuti (Si) o devono essere sovrascritti dai dati importati (No)?
+Select file to display in 'File Open' dialog	Seleziona il file da visualizzare nella finestra 'Apri File'
+Crop Mode	Modalita' Ritaglia
+Free	Libero
+Fixed size...	Dimensione fissa
+Set Fixed Crop Size	Setta la dimensione fissa di ritaglio
+Width	Larghezza
+Height	Altezza
+Pixels	Pixels
+Screen Pixels	Pixels dello schermo
+Image Pixels	Pixels dell'immagine
+Set modification date	Imposta la data di modifica
+to current date	alla data odierna
+to EXIF date	alla data di EXIF
+Mark image for toggling. Use Ctrl+Left/Ctrl+Right to toggle between marked and current image	Marca l'immagine per alternarla. Usa Ctrl+Sinistra/Ctrl+Destra per alternare l'immagine marcata con l'immagine corrente
