@@ -120,6 +120,9 @@ public:
 	// Gets the DIB last processed. If none, the last used parameters are taken to generate the DIB
 	void* DIBPixelsLastProcessed(bool bGenerateDIBIfNeeded);
 
+	// Gets the DIB pixels of the last processed thumbnail image, NULL if none or invalid
+	void* DIBPixelsLastThumbnail() { return (m_pThumbnail == NULL) ? NULL : m_pThumbnail->DIBPixelsLastProcessed(false); }
+
 	// Gets the image processing flags as set as default (may varies from file to file)
 	EProcessingFlags GetInitialProcessFlags() const { return m_eProcFlagsInitial; }
 	

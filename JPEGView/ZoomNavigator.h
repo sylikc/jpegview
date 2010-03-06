@@ -35,15 +35,29 @@ public:
 
 	// Paints the zoom navigator
 	static void PaintZoomNavigator(CJPEGImage* pImage, const CRectF& visRect, const CRect& navigatorRect,
+		const CPoint& mousePt,
 		const CImageProcessingParams& processingParams,
 		EProcessingFlags eFlags, CPaintDC& dc);
 
-	// Rectangle of the visible image section
-	static CRect LastImageSectionRect() { return sm_lastSectionRect; }
+	// Paints the pan rectangle
+	static void PaintPanRectangle(CDC& dc, const CPoint& centerPt);
 
+	// Rectangle of the visible image section in pixels
+	static CRect LastVisibleRect() { return sm_lastSectionRect; }
+
+	// Last dotted pan rectangle in pixels
+	static CPoint LastPanRectPoint() { return sm_lastPanRectPoint; }
+
+	// Last navigator rectangle in pixels
+	static CRect LastNavigatorRect() { return sm_lastNavigatorRect; }
+
+	// Prevents painting of the dotted pan rectangle
+	static void ClearLastPanRectPoint() { sm_lastPanRectPoint = CPoint(-1, -1); }
 private:
 	CZoomNavigator(void);
 	~CZoomNavigator(void);
 
 	static CRect sm_lastSectionRect;
+	static CRect sm_lastNavigatorRect;
+	static CPoint sm_lastPanRectPoint;
 };

@@ -49,6 +49,7 @@ static const int AUTOSCROLL_TIMER_EVENT_ID = 4; // when cropping, auto scroll ti
 static const int NAVPANEL_TIMER_EVENT_ID = 5; // to show nav panel
 static const int NAVPANEL_ANI_TIMER_EVENT_ID = 6; // animation timer for navigation panel
 static const int NAVPANEL_START_ANI_TIMER_EVENT_ID = 7; // animation start timer for navigation panel
+static const int IPPANEL_TIMER_EVENT_ID = 8; // to show image processing panel in window mode
 static const int ZOOM_TIMEOUT = 200; // refinement done after this many milliseconds
 static const int ZOOM_TEXT_TIMEOUT = 1000; // zoom label disappears after this many milliseconds
 static const int AUTOSCROLL_TIMEOUT = 20; // autoscroll time in ms
@@ -298,7 +299,7 @@ CMainDlg::CMainDlg() {
 	m_bShowIPTools = false;
 	m_bShowWndButtonPanel = false;
 	m_bMouseInNavPanel = false;
-	m_bArrowCursorSet = false;
+	m_bPanMouseCursorSet = false;
 	m_bInInitialOpenFile = false;
 	m_dCropRatio = 0;
 	m_storedWindowPlacement.length = sizeof(WINDOWPLACEMENT);
@@ -650,8 +651,11 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 
 	// paint zoom navigator
 	if (bShowZoomNavigator && m_pCurrentImage != NULL) {
-		CZoomNavigator::PaintZoomNavigator(m_pCurrentImage, visRectZoomNavigator, rectZoomNavigator, *m_pImageProcParams, 
+		CZoomNavigator::PaintZoomNavigator(m_pCurrentImage, visRectZoomNavigator, rectZoomNavigator,
+			CPoint(m_nMouseX, m_nMouseY), *m_pImageProcParams,
 			CreateProcessingFlags(true, m_bAutoContrast, false, m_bLDC, false, m_bLandscapeMode), dc);
+	} else {
+		CZoomNavigator::ClearLastPanRectPoint();
 	}
 
 	dc.SelectStockFont(SYSTEM_FONT);
@@ -800,8 +804,7 @@ LRESULT CMainDlg::OnSize(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BO
 	if (m_clientRect.Width() < 800) {
 		m_bShowHelp = false;
 		if (m_bShowIPTools) {
-			m_bShowIPTools = false;
-			m_pSliderMgr->GetTooltipMgr().RemoveActiveTooltip();
+			ShowHideIPTools(false);
 		}
 	}
 	m_nMouseX = m_nMouseY = -1;
@@ -829,9 +832,10 @@ LRESULT CMainDlg::OnAnotherInstanceStarted(UINT /*uMsg*/, WPARAM /*wParam*/, LPA
 LRESULT CMainDlg::OnLButtonDown(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, BOOL& /*bHandled*/) {
 	this->SetCapture();
 	SetCursorForMoveSection();
-	bool bEatenByIPA = m_bShowIPTools && m_pSliderMgr->OnMouseLButton(MouseEvent_BtnDown, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
-	bool bEatenByNavPanel = m_bShowNavPanel && !m_bShowIPTools && m_pNavPanel->OnMouseLButton(MouseEvent_BtnDown, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
-	bool bEatenByWndButtons = m_bShowWndButtonPanel && m_pWndButtonPanel->OnMouseLButton(MouseEvent_BtnDown, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+	CPoint pointClicked(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+	bool bEatenByIPA = m_bShowIPTools && m_pSliderMgr->OnMouseLButton(MouseEvent_BtnDown, pointClicked.x, pointClicked.y);
+	bool bEatenByNavPanel = m_bShowNavPanel && !m_bShowIPTools && m_pNavPanel->OnMouseLButton(MouseEvent_BtnDown, pointClicked.x, pointClicked.y);
+	bool bEatenByWndButtons = m_bShowWndButtonPanel && m_pWndButtonPanel->OnMouseLButton(MouseEvent_BtnDown, pointClicked.x, pointClicked.y);
 
 	// If the image processing area does not eat up the event, start dragging
 	if (!bEatenByIPA && !bEatenByNavPanel && !bEatenByWndButtons) {
@@ -839,13 +843,23 @@ LRESULT CMainDlg::OnLButtonDown(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam,
 		bool bDraggingRequired = m_virtualImageSize.cx > m_clientRect.Width() || m_virtualImageSize.cy > m_clientRect.Height();
 		if (bCtrl || !bDraggingRequired) {
 			if (!m_bDontStartCropOnNextClick) {
-				StartCropping(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+				StartCropping(pointClicked.x, pointClicked.y);
 			}
 		} else {
-			StartDragging(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam), m_bArrowCursorSet);
+			// Check if clicking in thumbnail image
+			bool bClickInZoomNavigatorThumbnail = IsPointInZoomNavigatorThumbnail(pointClicked);
+			if (bClickInZoomNavigatorThumbnail) {
+				CPoint centerOfVisibleRect = CZoomNavigator::LastVisibleRect().CenterPoint();
+				StartDragging(pointClicked.x + (centerOfVisibleRect.x - pointClicked.x), pointClicked.y + (centerOfVisibleRect.y - pointClicked.y), true);
+				DoDragging();
+				EndDragging();
+				CZoomNavigator::ClearLastPanRectPoint();
+				this->UpdateWindow(); // force repainting to update zoom navigator
+			}
+			StartDragging(pointClicked.x, pointClicked.y, bClickInZoomNavigatorThumbnail);
 		}
 	}
-	bool bMouseInNavPanel = m_pNavPanel->PanelRect().PtInRect(CPoint(m_nMouseX, m_nMouseY));
+	bool bMouseInNavPanel = m_pNavPanel->PanelRect().PtInRect(pointClicked);
 	if (bMouseInNavPanel && !m_bMouseInNavPanel) {
 		m_bMouseInNavPanel = true;
 		m_pNavPanel->GetTooltipMgr().EnableTooltips(true);
@@ -865,6 +879,7 @@ LRESULT CMainDlg::OnMButtonDown(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam,
 LRESULT CMainDlg::OnLButtonUp(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, BOOL& /*bHandled*/) {
 	if (m_bDragging || m_bCropping) {
 		if (m_bDragging) {
+			CZoomNavigator::ClearLastPanRectPoint();
 			EndDragging();
 		} else if (m_bCropping) {
 			EndCropping();
@@ -911,7 +926,7 @@ LRESULT CMainDlg::OnMouseMove(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, B
 	}
 
 	// Start timer to fade out nav panel if no mouse movement
-	if (m_nMouseX != nOldMouseX || m_nMouseY != nOldMouseY) {
+	if ((m_nMouseX != nOldMouseX || m_nMouseY != nOldMouseY) && !m_bPanMouseCursorSet) {
 		::KillTimer(this->m_hWnd, NAVPANEL_START_ANI_TIMER_EVENT_ID);
 		if (!m_bInNavPanelAnimation) {
 			::SetTimer(this->m_hWnd, NAVPANEL_START_ANI_TIMER_EVENT_ID, 2000, NULL);
@@ -923,7 +938,7 @@ LRESULT CMainDlg::OnMouseMove(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, B
 
 	// Do dragging if needed or turn on/off image processing controls if in lower area of screen
 	if (m_bDragging) {
-		DoDragging(m_nMouseX, m_nMouseY);
+		DoDragging();
 	} else if (m_bCropping) {
 		ShowCroppingRect(m_nMouseX, m_nMouseY, NULL, true);
 		if (m_nMouseX >= m_clientRect.Width() - 1 || m_nMouseX <= 0 || m_nMouseY >= m_clientRect.Height() - 1 || m_nMouseY <= 0 ) {
@@ -939,18 +954,20 @@ LRESULT CMainDlg::OnMouseMove(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, B
 						nIPAreaStart += m_pSliderMgr->SliderAreaHeight()/2;
 					}
 				}
-				if (nOldMouseY != 0 && nOldMouseY <= nIPAreaStart && m_nMouseY > nIPAreaStart) {
-					m_bShowIPTools = true;
-					this->InvalidateRect(m_pSliderMgr->PanelRect(), FALSE);
-					this->InvalidateRect(m_pNavPanel->PanelRect(), FALSE);
+				if (!m_bFullScreenMode) {
+					::KillTimer(m_hWnd, IPPANEL_TIMER_EVENT_ID);
+				}
+				if (m_nMouseY > nIPAreaStart) {
+					if (!m_bFullScreenMode) {
+						::SetTimer(m_hWnd, IPPANEL_TIMER_EVENT_ID, 50, NULL);
+					} else if (nOldMouseY != 0 && nOldMouseY <= nIPAreaStart && m_nMouseY > nIPAreaStart) {	
+						ShowHideIPTools(true);
+					}
 				}
 			} else {
 				if (!m_pSliderMgr->OnMouseMove(m_nMouseX, m_nMouseY)) {
 					if (m_nMouseY < m_pNavPanel->PanelRect().top) {
-						m_bShowIPTools = false;
-						this->InvalidateRect(m_pSliderMgr->PanelRect(), FALSE);
-						this->InvalidateRect(m_pNavPanel->PanelRect(), FALSE);
-						m_pSliderMgr->GetTooltipMgr().RemoveActiveTooltip();
+						ShowHideIPTools(false);
 					}
 				}
 			}
@@ -997,6 +1014,15 @@ LRESULT CMainDlg::OnMouseMove(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, B
 		}
 		if (bMouseInHotArea != zoomHotArea.PtInRect(CPoint(nOldMouseX, nOldMouseY))) {
 			InvalidateZoomNavigatorRect();
+		}
+		if (m_nMouseX != nOldMouseX || m_nMouseY != nOldMouseY) {
+			if (IsPointInZoomNavigatorThumbnail(CPoint(m_nMouseX, m_nMouseY))) {
+				CDC dc(this->GetDC());
+				CZoomNavigator::PaintPanRectangle(dc, CPoint(-1, -1));
+				CZoomNavigator::PaintPanRectangle(dc, CPoint(m_nMouseX, m_nMouseY));
+			} else if (CZoomNavigator::LastPanRectPoint() != CPoint(-1, -1)) {
+				CZoomNavigator::PaintPanRectangle(CDC(this->GetDC()), CPoint(-1, -1));
+			}
 		}
 	}
 	return 0;
@@ -1302,6 +1328,9 @@ LRESULT CMainDlg::OnDropFiles(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, B
 }
 
 LRESULT CMainDlg::OnTimer(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOOL& /*bHandled*/) {
+	CPoint mousePos;
+	::GetCursorPos(&mousePos);
+	::ScreenToClient(m_hWnd, &mousePos);
 	if (wParam == SLIDESHOW_TIMER_EVENT_ID && m_nCurrentTimeout > 0) {
 		// Remove all timer messages for slideshow events that accumulated in the queue
 		MSG msg;
@@ -1342,6 +1371,11 @@ LRESULT CMainDlg::OnTimer(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOOL&
 		}
 	} else if (wParam == NAVPANEL_ANI_TIMER_EVENT_ID) {
 		DoNavPanelAnimation();
+	} else if (wParam == IPPANEL_TIMER_EVENT_ID) {
+		::KillTimer(m_hWnd, IPPANEL_TIMER_EVENT_ID);
+		if (mousePos.y > m_clientRect.bottom - m_pSliderMgr->SliderAreaHeight() && mousePos.y < m_clientRect.Height() - 1) {
+			ShowHideIPTools(true);
+		}
 	} else if (wParam == ZOOM_TEXT_TIMER_EVENT_ID) {
 		m_bShowZoomFactor = false;
 		::KillTimer(this->m_hWnd, ZOOM_TEXT_TIMER_EVENT_ID);
@@ -1349,21 +1383,21 @@ LRESULT CMainDlg::OnTimer(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOOL&
 		CRect imageProcArea = m_pSliderMgr->PanelRect();
 		this->InvalidateRect(GetZoomTextRect(imageProcArea), FALSE);
 	} else if (wParam == AUTOSCROLL_TIMER_EVENT_ID) {
-		if (m_nMouseX < m_clientRect.Width() - 1 && m_nMouseX > 0 && m_nMouseY < m_clientRect.Height() - 1 && m_nMouseY > 0 ) {
+		if (mousePos.x < m_clientRect.Width() - 1 && mousePos.x > 0 && mousePos.y < m_clientRect.Height() - 1 && mousePos.y > 0 ) {
 			::KillTimer(this->m_hWnd, AUTOSCROLL_TIMER_EVENT_ID);
 		}
 		const int PAN_DIST = 25;
 		int nPanX = 0, nPanY = 0;
-		if (m_nMouseX <= 0) {
+		if (mousePos.x <= 0) {
 			nPanX = PAN_DIST;
 		}
-		if (m_nMouseY <= 0) {
+		if (mousePos.y <= 0) {
 			nPanY = PAN_DIST;
 		}
-		if (m_nMouseX >= m_clientRect.Width() - 1) {
+		if (mousePos.x >= m_clientRect.Width() - 1) {
 			nPanX = -PAN_DIST;
 		}
-		if (m_nMouseY >= m_clientRect.Height() - 1) {
+		if (mousePos.y >= m_clientRect.Height() - 1) {
 			nPanY = -PAN_DIST;
 		}
 		if (m_bCropping) {
@@ -2168,13 +2202,13 @@ void CMainDlg::StartDragging(int nX, int nY, bool bDragWithZoomNavigator) {
 	m_bDragging = true;
 	m_bDraggingWithZoomNavigator = bDragWithZoomNavigator;
 	if (m_bDraggingWithZoomNavigator) {
-		m_capturedPosZoomNavSection = CZoomNavigator::LastImageSectionRect().TopLeft();
+		m_capturedPosZoomNavSection = CZoomNavigator::LastVisibleRect().TopLeft();
 	}
 	m_nCapturedX = nX;
 	m_nCapturedY = nY;
 }
 
-void CMainDlg::DoDragging(int nX, int nY) {
+void CMainDlg::DoDragging() {
 	if (m_bDragging && m_pCurrentImage != NULL) {
 		int nXDelta = m_nMouseX - m_nCapturedX;
 		int nYDelta = m_nMouseY - m_nCapturedY;
@@ -2185,7 +2219,7 @@ void CMainDlg::DoDragging(int nX, int nY) {
 			int nNewX = m_capturedPosZoomNavSection.x + nXDelta;
 			int nNewY = m_capturedPosZoomNavSection.y + nYDelta;
 			CRect fullRect = CZoomNavigator::GetNavigatorRect(m_pCurrentImage, m_pSliderMgr->PanelRect());
-			CPoint newOffsets = CJPEGImage::ConvertOffset(fullRect.Size(), CZoomNavigator::LastImageSectionRect().Size(), CPoint(nNewX - fullRect.left, nNewY - fullRect.top));
+			CPoint newOffsets = CJPEGImage::ConvertOffset(fullRect.Size(), CZoomNavigator::LastVisibleRect().Size(), CPoint(nNewX - fullRect.left, nNewY - fullRect.top));
 			PerformPan((int)(newOffsets.x * (float)m_virtualImageSize.cx/fullRect.Width()), 
 				(int)(newOffsets.y * (float)m_virtualImageSize.cy/fullRect.Height()), true);
 		} else {
@@ -2850,7 +2884,6 @@ void CMainDlg::ShowHideSaveDBButtons() {
 }
 
 void CMainDlg::AfterNewImageLoaded(bool bSynchronize) {
-	EndNavPanelAnimation();
 	SetWindowTitle();
 	ShowHideSaveDBButtons();
 	if (m_pCurrentImage != NULL && !m_pCurrentImage->IsClipboardImage() && !m_bMovieMode) {
@@ -3278,13 +3311,21 @@ bool CMainDlg::IsZoomNavigatorCurrentlyShown() {
 	return bShowZoomNavigator;
 }
 
+bool CMainDlg::IsPointInZoomNavigatorThumbnail(const CPoint& pt) {
+	if (IsZoomNavigatorCurrentlyShown() && m_pCurrentImage != NULL) {
+		CRect thumbnailRect = CZoomNavigator::GetNavigatorRect(m_pCurrentImage, m_pSliderMgr->PanelRect());
+		return thumbnailRect.PtInRect(pt);
+	}
+	return false;
+}
+
 void CMainDlg::SetCursorForMoveSection() {
-	if (IsZoomNavigatorCurrentlyShown() && CZoomNavigator::LastImageSectionRect().PtInRect(CPoint(m_nMouseX, m_nMouseY))) {
+	if (IsPointInZoomNavigatorThumbnail(CPoint(m_nMouseX, m_nMouseY))) {
 		::SetCursor(::LoadCursor(NULL, MAKEINTRESOURCE(IDC_SIZEALL)));
-		m_bArrowCursorSet = true;
-	} else if (m_bArrowCursorSet) {
+		m_bPanMouseCursorSet = true;
+	} else if (m_bPanMouseCursorSet) {
 		::SetCursor(::LoadCursor(NULL, MAKEINTRESOURCE(IDC_ARROW)));
-		m_bArrowCursorSet = false;
+		m_bPanMouseCursorSet = false;
 	}
 }
 
@@ -3403,14 +3444,6 @@ void CMainDlg::StartNavPanelAnimation(bool bFadeOut) {
 }
 
 void CMainDlg::DoNavPanelAnimation() {
-	bool bTerminate = false;
-	if (m_bFadeOut) {
-		m_fCurrentBlendingFactorNavPanel = max(0.0f, m_fCurrentBlendingFactorNavPanel - 0.02f);
-	} else {
-		m_fCurrentBlendingFactorNavPanel = min(CSettingsProvider::This().BlendFactorNavPanel(), m_fCurrentBlendingFactorNavPanel + 0.06f);
-		bTerminate = m_fCurrentBlendingFactorNavPanel >= CSettingsProvider::This().BlendFactorNavPanel();
-	}
-
 	bool bDoAnimation = true;
 	if (!m_bInNavPanelAnimation || m_pCurrentImage == NULL || m_bShowHelp) {
 		bDoAnimation = false;
@@ -3420,6 +3453,14 @@ void CMainDlg::DoNavPanelAnimation() {
 		} else if ((m_bFadeOut && m_fCurrentBlendingFactorNavPanel <= 0) || (!m_bFadeOut && m_fCurrentBlendingFactorNavPanel >= CSettingsProvider::This().BlendFactorNavPanel())) {
 			bDoAnimation = false;
 		}
+	}
+
+	bool bTerminate = false;
+	if (m_bFadeOut) {
+		m_fCurrentBlendingFactorNavPanel = max(0.0f, m_fCurrentBlendingFactorNavPanel - 0.02f);
+	} else {
+		m_fCurrentBlendingFactorNavPanel = min(CSettingsProvider::This().BlendFactorNavPanel(), m_fCurrentBlendingFactorNavPanel + 0.06f);
+		bTerminate = m_fCurrentBlendingFactorNavPanel >= CSettingsProvider::This().BlendFactorNavPanel();
 	}
 
 	if (bDoAnimation) {
@@ -3473,4 +3514,13 @@ void CMainDlg::EndNavPanelAnimation() {
 	}
 	::KillTimer(this->m_hWnd, NAVPANEL_START_ANI_TIMER_EVENT_ID);
 	::SetTimer(this->m_hWnd, NAVPANEL_START_ANI_TIMER_EVENT_ID, 2000, NULL);
+}
+
+void CMainDlg::ShowHideIPTools(bool bShow) {
+	m_bShowIPTools = bShow;
+	this->InvalidateRect(m_pSliderMgr->PanelRect(), FALSE);
+	this->InvalidateRect(m_pNavPanel->PanelRect(), FALSE);
+	if (!bShow) {
+		m_pSliderMgr->GetTooltipMgr().RemoveActiveTooltip();
+	}
 }
