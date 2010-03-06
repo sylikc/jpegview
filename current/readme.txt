@@ -41,6 +41,7 @@ New features:
 - New command: Ctrl-M to mark file for toggling. Use Ctrl+Left/Right to toggle between marked files
 - Showing file name in window title
 - Smooth blending in and out of the navigation panel if mouse not moved for some time
+- Thumbnail view behavior changed somewhat - pan by click supported
 
 
 [1.0.18]

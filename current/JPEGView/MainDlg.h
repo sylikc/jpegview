@@ -187,7 +187,7 @@ private:
 	bool m_bShowNavPanel;
 	bool m_bShowWndButtonPanel;
 	bool m_bMouseInNavPanel;
-	bool m_bArrowCursorSet;
+	bool m_bPanMouseCursorSet;
 	bool m_bMouseOn;
 	bool m_bInInitialOpenFile;
 	double m_dCropRatio;
@@ -217,7 +217,7 @@ private:
 	void BatchCopy();
 	void HandleUserCommands(uint32 virtualKeyCode);
 	void StartDragging(int nX, int nY, bool bDragWithZoomNavigator);
-	void DoDragging(int nX, int nY);
+	void DoDragging();
 	void EndDragging();
 	void StartCropping(int nX, int nY);
 	void ShowCroppingRect(int nX, int nY, HDC hPaintDC, bool bShow);
@@ -265,6 +265,7 @@ private:
 	HBITMAP PrepareRectForMemDCPainting(CDC & memDC, CDC & paintDC, const CRect& rect);
 	void InvalidateZoomNavigatorRect();
 	bool IsZoomNavigatorCurrentlyShown();
+	bool IsPointInZoomNavigatorThumbnail(const CPoint& pt);
 	void SetCursorForMoveSection();
 	void ToggleMonitor();
 	CRect GetZoomTextRect(CRect imageProcessingArea);
@@ -276,6 +277,7 @@ private:
 	void StartNavPanelAnimation(bool bFadeOut);
 	void DoNavPanelAnimation();
 	void EndNavPanelAnimation();
+	void ShowHideIPTools(bool bShow);
 
 	static void OnSaveToDB(CButtonCtrl & sender);
 	static void OnRemoveFromDB(CButtonCtrl & sender);
