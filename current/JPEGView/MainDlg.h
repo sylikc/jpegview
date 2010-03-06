@@ -274,7 +274,7 @@ private:
 	void RestoreParamDB();
 	void SetWindowTitle();
 	bool IsNavPanelVisible();
-	void StartNavPanelAnimation(bool bFadeOut);
+	void StartNavPanelAnimation(bool bFadeOut, bool bFast);
 	void DoNavPanelAnimation();
 	void EndNavPanelAnimation();
 	void ShowHideIPTools(bool bShow);
