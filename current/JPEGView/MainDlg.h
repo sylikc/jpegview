@@ -149,6 +149,7 @@ private:
 	bool m_bInNavPanelAnimation;
 	bool m_bFadeOut;
 	float m_fCurrentBlendingFactorNavPanel;
+	int m_nBlendInNavPanelCountdown;
 	CDC* m_pMemDCAnimation;
 	HBITMAP m_hOffScreenBitmapAnimation;
 
@@ -277,6 +278,7 @@ private:
 	void StartNavPanelAnimation(bool bFadeOut, bool bFast);
 	void DoNavPanelAnimation();
 	void EndNavPanelAnimation();
+	void HideNavPanelTemporary();
 	void ShowHideIPTools(bool bShow);
 
 	static void OnSaveToDB(CButtonCtrl & sender);
