@@ -315,6 +315,7 @@ CMainDlg::CMainDlg() {
 	m_cropEnd = CPoint(INT_MIN, INT_MIN);
 	m_bInNavPanelAnimation = false;
 	m_fCurrentBlendingFactorNavPanel = CSettingsProvider::This().BlendFactorNavPanel();
+	m_nBlendInNavPanelCountdown = 0;
 	m_pMemDCAnimation = NULL;
 	m_hOffScreenBitmapAnimation = NULL;
 }
@@ -928,11 +929,20 @@ LRESULT CMainDlg::OnMouseMove(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, B
 	// Start timer to fade out nav panel if no mouse movement
 	if ((m_nMouseX != nOldMouseX || m_nMouseY != nOldMouseY) && !m_bPanMouseCursorSet) {
 		::KillTimer(this->m_hWnd, NAVPANEL_START_ANI_TIMER_EVENT_ID);
-		if (!m_bInNavPanelAnimation) {
-			::SetTimer(this->m_hWnd, NAVPANEL_START_ANI_TIMER_EVENT_ID, 2000, NULL);
-		} else {
-			// Mouse moved - fade in navigation panel
-			StartNavPanelAnimation(false, true);
+		if (!m_bShowIPTools) {
+			if (!m_bInNavPanelAnimation) {
+				::SetTimer(this->m_hWnd, NAVPANEL_START_ANI_TIMER_EVENT_ID, 2000, NULL);
+			} else {
+				// Mouse moved - fade in navigation panel
+				if (m_bMouseOn) {
+					if (m_nBlendInNavPanelCountdown >= 5) {
+						StartNavPanelAnimation(false, true);
+						m_nBlendInNavPanelCountdown = 0;
+					} else {
+						m_nBlendInNavPanelCountdown++;
+					}
+				}
+			}
 		}
 	}
 
@@ -1358,12 +1368,14 @@ LRESULT CMainDlg::OnTimer(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOOL&
 		}
 	} else if (wParam == NAVPANEL_TIMER_EVENT_ID) {
 		::KillTimer(this->m_hWnd, NAVPANEL_TIMER_EVENT_ID);
-		bool bMouseInNavPanel = m_pNavPanel->PanelRect().PtInRect(CPoint(m_nMouseX, m_nMouseY));
-		if (bMouseInNavPanel && !m_bMouseInNavPanel) {
-			m_bMouseInNavPanel = true;
-			m_pNavPanel->GetTooltipMgr().EnableTooltips(true);
-			this->InvalidateRect(m_pNavPanel->PanelRect(), FALSE);
-			EndNavPanelAnimation();
+		if (!m_bShowIPTools) {
+			bool bMouseInNavPanel = m_pNavPanel->PanelRect().PtInRect(CPoint(m_nMouseX, m_nMouseY));
+			if (bMouseInNavPanel && !m_bMouseInNavPanel) {
+				m_bMouseInNavPanel = true;
+				m_pNavPanel->GetTooltipMgr().EnableTooltips(true);
+				this->InvalidateRect(m_pNavPanel->PanelRect(), FALSE);
+				EndNavPanelAnimation();
+			}
 		}
 	} else if (wParam == NAVPANEL_START_ANI_TIMER_EVENT_ID) {
 		::KillTimer(this->m_hWnd, NAVPANEL_START_ANI_TIMER_EVENT_ID);
@@ -1717,7 +1729,7 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 			break;
 		case IDM_SHOW_NAVPANEL:
 			m_bShowNavPanel = !m_bShowNavPanel;
-			if (m_bShowNavPanel) {
+			if (m_bShowNavPanel && !m_bShowIPTools) {
 				EndNavPanelAnimation();
 				::KillTimer(this->m_hWnd, NAVPANEL_START_ANI_TIMER_EVENT_ID);
 				MouseOn();
@@ -2367,7 +2379,7 @@ void CMainDlg::EndCropping() {
 		m_bCropping = false;
 		m_bDoCropping = false;
 		DeleteCropRect();
-		this->InvalidateRect(m_pNavPanel->PanelRect(), FALSE);
+		HideNavPanelTemporary();
 		InvalidateZoomNavigatorRect();
 		return;
 	}
@@ -2421,7 +2433,7 @@ void CMainDlg::EndCropping() {
 	}
 	m_bCropping = false;
 	m_bDoCropping = false;
-	this->InvalidateRect(m_pNavPanel->PanelRect(), FALSE);
+	HideNavPanelTemporary();
 	InvalidateZoomNavigatorRect();
 }
 
@@ -2889,6 +2901,7 @@ void CMainDlg::ShowHideSaveDBButtons() {
 
 void CMainDlg::AfterNewImageLoaded(bool bSynchronize) {
 	SetWindowTitle();
+	HideNavPanelTemporary();
 	ShowHideSaveDBButtons();
 	if (m_pCurrentImage != NULL && !m_pCurrentImage->IsClipboardImage() && !m_bMovieMode) {
 		m_txtParamDB->SetShow(true);
@@ -3427,8 +3440,9 @@ void CMainDlg::SetWindowTitle() {
 }
 
 bool CMainDlg::IsNavPanelVisible() {
-	return m_bShowNavPanel && !(m_fCurrentBlendingFactorNavPanel <= 0.0f && !m_bMouseInNavPanel) &&
-		!m_bMovieMode && !m_bDoCropping && !m_bShowIPTools && (m_bMouseOn || m_bMouseInNavPanel);
+	bool bMouseInNavPanel = m_bMouseInNavPanel && !m_bShowIPTools;
+	return m_bShowNavPanel && !(m_fCurrentBlendingFactorNavPanel <= 0.0f && !bMouseInNavPanel) &&
+		!m_bMovieMode && !m_bDoCropping && (m_bMouseOn || bMouseInNavPanel);
 }
 
 void CMainDlg::StartNavPanelAnimation(bool bFadeOut, bool bFast) {
@@ -3440,10 +3454,10 @@ void CMainDlg::StartNavPanelAnimation(bool bFadeOut, bool bFast) {
 		m_bInNavPanelAnimation = true;
 		m_fCurrentBlendingFactorNavPanel = CSettingsProvider::This().BlendFactorNavPanel();
 		::SetTimer(this->m_hWnd, NAVPANEL_ANI_TIMER_EVENT_ID, bFast ? 20 : 100, NULL);
-	} else if (m_bFadeOut != bFadeOut && !bFadeOut) {
+	} else if (m_bFadeOut != bFadeOut) {
 		m_bFadeOut = bFadeOut;
 		::KillTimer(this->m_hWnd, NAVPANEL_ANI_TIMER_EVENT_ID);
-		::SetTimer(this->m_hWnd, NAVPANEL_ANI_TIMER_EVENT_ID, 20, NULL);
+		::SetTimer(this->m_hWnd, NAVPANEL_ANI_TIMER_EVENT_ID, bFast ? 20 : 100, NULL);
 	}
 }
 
@@ -3520,11 +3534,25 @@ void CMainDlg::EndNavPanelAnimation() {
 	::SetTimer(this->m_hWnd, NAVPANEL_START_ANI_TIMER_EVENT_ID, 2000, NULL);
 }
 
+void CMainDlg::HideNavPanelTemporary() {
+	if (!m_bMouseInNavPanel || m_bShowIPTools || m_bCropping) {
+		m_bInNavPanelAnimation = true;
+		m_fCurrentBlendingFactorNavPanel = 0.0;
+		this->InvalidateRect(m_pNavPanel->PanelRect(), FALSE);
+		m_bFadeOut = true;
+	}
+}
+
 void CMainDlg::ShowHideIPTools(bool bShow) {
 	m_bShowIPTools = bShow;
 	this->InvalidateRect(m_pSliderMgr->PanelRect(), FALSE);
 	this->InvalidateRect(m_pNavPanel->PanelRect(), FALSE);
 	if (!bShow) {
 		m_pSliderMgr->GetTooltipMgr().RemoveActiveTooltip();
+	}
+	if (bShow) {
+		StartNavPanelAnimation(true, true);
+	} else {
+		StartNavPanelAnimation(false, true);
 	}
 }
