@@ -22,6 +22,12 @@ to JPEGView\Debug
 Changelog
 *********
 
+[1.0.20]
+Bugs fixed:
+- Flag 'ReloadCurrent' used in user commands does no longer keep geometric parameters after reloading (zoom, pan, rotate)
+New features:
+- Korean translation
+
 [1.0.19]
 
 Bugs fixed:
