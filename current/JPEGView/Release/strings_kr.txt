@@ -1,0 +1,249 @@
+﻿// This file must be encoded with UTF-8 (e.g. with Windows Notepad)
+// Filename is 'strings_%languagecode%.txt' where %languagecode% is the ISO 639 language code e.g. 'fr' for French
+// Format is: English string<tab>Translated string<newline>
+Contrast	대비
+Brightness	밝기
+Sharpen	선명하게
+Lighten 밝게
+Lighten Shadows	음영 밝게
+Darken Highlights	하이라이트 어둡게
+Deep Shadows	음영 깊게
+Color Correction	색상 보정
+Contrast Correction	대비 보정
+Parameter DB:	매개변수 DB:
+Save to	다른 포맷으로 저장
+Remove from	제거
+Rename:	이름 바꾸기:
+No file or folder name was provided as command line parameter!	파일명 또는 폴더명이 명령어 매개변수로 입력되지 않았습니다!
+To use JPEGView, associate JPG, JPEG and BMP files with JPEGView.	JPEGView를 사용하려면 JPG, JPEG, BMP 파일을 JPEGView 에 연결하십시오.
+Press ESC to exit...	나가려면 ESC를 누르세요...
+The file '%s' could not be read!	'%s' 파일을 읽을 수 없습니다!
+The file '%s' does not contain a list of file names!	'%s' 파일은 파일명 목록을 포함하지 않습니다!
+The directory '%s' does not contain any image files!	'%s' 폴더에는 이미지 파일이 없습니다!
+Press any key to search the subdirectories for image files.	하위 폴더에서 이미지 파일을 검색하려면 아무 키나 누르세요.
+JPEGView Help	JPEGView 도움말
+Current image	현재 이미지
+Close help text display / Close JPEGView	도움말 표시 닫기 / JPEGView 닫기
+Show/hide this help text	도움말 문자를 보이기/숨기기
+Show/hide picture information (EXIF data)	사진 정보 (EXIF) 보이기/숨기기
+Show/hide file name	파일명 보이기/숨기기
+Enable/disable high quality resampling	고품질 리샘플링 켜기/끄기
+Enable/disable keeping of geometry related (zoom/pan/rotation)	보기(배율/이동/회전) 및 이미지 처리(밝기/대비/선명) 매개변수를
+and image processing (brightness/contrast/sharpen) parameters between images	유지하기 켜기/끄기
+Enable/disable automatic contrast correction (histogram equalization)	자동 대비 보정을 켜기/끄기 (히스토그램 균일화) 
+Apply auto contrast correction using only visible section of image	이미지의 보이는 부분만 자동 대비 보정을 적용
+Enable/disable automatic density correction (local brightness correction)	자동 농도 보정 켜기/끄기 (부분 농도 보정이 켜있어야 함)
+Increase/decrease lightening of shadows (LDC must be on)	Shadow의 밝기를 증가/감소 (부분 농도 보정이 켜있어야 함)
+Increase/decrease darkening of highlights (LDC must be on)	하이라이트의 어두움을 증가/감소 (부분 농도 보정이 켜있어야 함)
+Loop through files in current folder	현재 폴더의 파일 순환
+Loop through files in current directory and all subfolders	현재 폴더와 모든 하위 폴더의 파일 순환
+Loop through files in current directory and all sibling folders (folders on same level)	현재 폴더와 모든 동기 폴더(같은 수준의 폴더)의 파일 순환
+Maximize/restore to/from virtual desktop (only for multi-monitor systems)	가상 바탕화면으로 최대화/복원 (다중 모니터 사용시)
+Copy screen to clipboard/ Copy processed full size image to clipboard	화면을 클립보드로 복사/ 변경된 이미지 전체를 클립보드로 복사
+Open new image or slideshow file	새 이미지 또는 슬라이드 쇼 파일 열기
+Save processed image to JPEG file (original size)	변경된 이미지를 JPEG 파일로 저장 (원본 크기)
+Save (s)/ delete (d) image processing parameters in/from parameter DB	이미지 처리 매개변수 DB를 저장 (s)/ 삭제 (d)
+Sort images by creation date, resp. modification date, resp. file name	만든 날짜 (c), 수정한 날짜 (m), 파일명 (n) 순으로 정렬
+Goto previous image	이전
+Goto next image	다음
+PgUp or Left	PgUp 또는 Left
+PgDn or Right	PgDn 또는 Right
+Goto first/last image of current folder (using sort order as defined)	처음/마지막 이미지 또는 현재 폴더로 가기 (지정된 정렬 순서에 따라)
+Increase/decrease brightness	밝기 증가/감소
+Increase/decrease contrast	대비 증가/감소
+Increase/decrease sharpness	선명하게 증가/감소
+Increase/decrease auto color cast correction amount	자동 색상 보정 정도 증가/감소
+Increase/decrease auto contrast correction amount	자동 대비 보정 정도 증가/감소
+Enable/disable landscape picture enhancement mode	풍경 사진 향상 모드 켜기/끄기
+Slide show with timeout of n seconds (ESC to stop)	n 초 동안 슬라이드 쇼 보기 (정지하려면 ESC)
+Set timeout to n/10 sec, respectively n/100 sec (Ctrl+Shift)	시간 간격을 n/10 초, 각각 n/100 초 단위로 설정 (Ctrl+Shift)
+Rotate image and fit to screen	회전 및 화면에 맞추기
+Fit image to screen	화면에 맞추기
+Zoom 1:1 (100 %)	1:1 배율 (100 %)
+Zoom in/Zoom out (also Ctrl+up/down)	확대/축소 (Ctrl+up/down)
+Zoom in/out image	확대/축소
+Pan image	이동
+Crop image	자르기
+Next image	다음
+Previous image	이전
+up/down	위/아래
+Mouse wheel	마우스 휠
+Left mouse & drag	왼쪽 마우스 & 드래그
+Ctrl + L mouse	Ctrl + L 마우스
+Fwd mouse button	앞 마우스 버튼
+Back mouse button	뒤 마우스 버튼
+Delete current file on disk permanently	현재 파일을 디스크에서 영구히 삭제
+Rotate current file on disk lossless by 90 deg (W/H must be multiple of 16)	현재 파일을 디스크에서 무손실 90도 회전 (너비/높이는 16의 배수여야 함)
+Rotate current file on disk lossless by 270 deg (W/H must be multiple of 16)	현재 파일을 디스크에서 무손실 270도 회전 (너비/높이는 16의 배수여야 함)
+The file is read-only!	파일이 읽기 전용임!
+Can't rename file	파일을 다른 이름으로 바꿀 수 없음
+New name contains backslash character!	새 이름이 \ 문자를 포함함!
+Renaming file failed!	파일명 변경 실패!
+Reason: 	이유: 
+on	켜기
+off	끄기
+Do you really want to save the following parameters as default to the INI file	다음 매개변수를 INI 파일에 기본값으로 저장할 것입니까?
+Auto contrast and color correction: 	자동 대비 및 색상 보정:
+Local density correction: 	부분 농도 보정: 
+Order files by: 	파일 정렬: 
+Creation date/time	만든 날짜/시각
+Last modification date/time	마지막으로 수정한 날짜/시각
+File name	파일명
+These values will override the values from the INI file located in the program folder of JPEGView!	위의 설정값이 JPEGView 프로그램 폴더에 있는 INI 파일을 덮어씌울 것입니다!
+Confirm save default parameters	기본 매개변수 저장 확인
+Images	이미지
+All Files	모든 파일
+Parameter DB file '%s' could not be opened!	매개변수 DB 파일 '%s' 을 열 수 없습니다!
+Parameter DB file '%s' is not valid (invalid header)!	매개변수 DB 파일 '%s' 이 유효하지 않습니다 (잘못된 헤더)!
+Cannot write to parameter DB file '%s'!	매개변수 DB 파일 '%s' 에 기록할 수 없습니다!
+Cannot read from parameter DB file '%s'!	매개변수 DB 파일 '%s' 을 읽을 수 없습니다!
+Cannot read parameter DB file '%s' because it is too large!	매개변수 DB 파일 '%s' 이 너무 커서 읽을 수 없습니다!
+The parameter DB file '%s' has been created by a newer version of JPEGView!	매개변수 DB 파일 '%s' 은 새 버전의 JPEGView에 의해 생성되었습니다!
+The old parameter DB file '%s' could not be renamed during conversion to new format!	오래된 매개변수 DB 파일 '%s' 은 새로운 포맷으로 변경하면서 이름을 바꿀 수 없습니다!
+Parameter DB error	매개변수 DB 에러
+Error saving file	파일 저장 에러
+Error writing file to disk!	파일을 디스크에 쓰는 중 에러!
+Confirm	Conferma
+Do you really want to permanently delete the file %filename%?	%filename% 파일을 영구히 삭제하겠습니까?
+Rotate the following file lossless by 90 deg?\n%filename%	다음 파일을 무손실 90도 회전하겠습니까?\n%filename%
+Rotate the following file lossless by 270 deg?\n%filename%	다음 파일을 무손실 270도 회전하겠습니까?\n%filename%
+Open image...	열기...
+Save processed image...	변경된 이미지 저장...
+Reload image	다시 불러오기
+Copy to clipboard	클립보드로 복사
+Copy original size image	원본 크기로 복사
+Paste from clipboard	클립보드에서 붙여넣기
+Batch rename/copy...	일괄 이름 바꾸기/복사...
+Show picture info (EXIF)	사진 정보 보이기 (EXIF)
+Show filename	파일명 보이기
+Navigation	탐색
+Loop folder	폴더 순환
+Loop recursively	반복 순환
+Loop siblings	동기 순환
+Display order	표시 순서
+Modification date	수정한 날짜
+Creation date	만든 날짜
+Play folder as slideshow/movie	슬라이드 쇼/영상으로 재생
+Slideshow	슬라이드 쇼
+Movie	영상
+Waiting time	정지 시간
+Stop slide show/movie	슬라이드 쇼/영상 정지
+Rotate +90	회전 +90°
+Rotate -90	회전 -90°
+Auto correction	자동 보정
+Local density correction	부분 농도 보정
+Keep parameters	매개변수 유지
+Save parameters to INI...	매개변수를 INI로 저장...
+Save parameters to DB	DB에 매개변수 저장하기
+Clear parameters from DB	DB의 매개변수 지우기
+Zoom	배율
+Fit to screen	화면에 맞추기
+Fill with crop	잘라서 채우기
+Span all screens	모든 화면으로 늘리기
+Auto zoom mode	자동 배율 모드
+Fit to screen (no zoom)	화면에 맞추기 (배율 조정 없음)
+Fill with crop (no zoom)	잘라서 채우기 (배율 조정 없음)
+Exit	나가기
+Cyan-Red	Cyan-Red
+Magenta-Green	Magenta-Green
+Yellow-Blue	Yellow-Blue
+C - R	C - R
+M - G	M - G
+Y - B	Y - B
+Batch rename/copy of files	일괄 파일 이름 바꾸기/복사
+Image files in folder	폴더에 있는 파일
+Placeholders:	위치 표시자:
+Number (consecutively numbered)	숫자 (연속)
+Number with N digits	N자리 숫자
+Extracted number from original file name	원본 파일 이름에서 추출된 숫자
+Original file name (with extension)	원본 파일명 (확장자 있음)
+Original file name (without extension)	원본 파일명 (확장자 없음)
+Original file extension	원본 파일 확장자
+'My Pictures' folder	'내 그림' 폴더
+Day / Month / Year (as numbers)	일 / 월 / 년 (숫자로)
+Year short form (2 digits)	연도 단축 형식 (2 자리)
+Month / Short form (text)	월 / 단축 형식 (문자)
+Target folders that are not yet existing are created as needed.	대상 폴더가 없습니다. 생성해야 합니다.
+Date placeholders use the modification date of the image.	이미지의 수정한 날짜를 이용하여 위치 표시자에 날짜 적기.
+Rename/copy images to:	이름 바꾸기/복사:
+Rename	이름 바꾸기
+Preview	미리보기
+Save as template	템플릿으로 저장
+Close	닫기
+Old name	예전 이름
+Date	날짜
+New name (>> : file gets copied)	새 이름 (>> : 파일은 복사됨)
+Select all	모두 선택
+Select none	선택 취소
+The file '%s' could not be %s.	'%s' 파일은 %s일 수 없습니다.
+copied	복사됨
+renamed	이름이 변경됨
+Continue rename/copy?	이름 바꾸기/복사를 계속하시겠습니까?
+Error during rename/copy	이름 바꾸기/복사 중 에러
+%d file(s) renamed, %d file(s) copied, %d folder(s) created	%d개 파일이 이름이 변경됨, %d개 파일이 복사됨, %d개 파일이 생성됨
+Crop Selection	자르기 선택
+Copy Selection to Clipboard	선택 영역을 클립보드로 복사
+Zoom to Selection	선택 영역으로 확대
+Pasting image from clipboard failed!	클립보드에서 붙여넣기 실패!
+Image width:	너비:
+Image height:	높이:
+Acquisition date:	사진 찍은 날짜:
+Camera model:	카메라 모델:
+Exposure time (s):	노출 시간 (sec):
+Exposure bias (EV):	노출 보정 (EV):
+Flash fired:	플래시:
+Focal length (mm):	초점 거리 (mm):
+F-Number:	F 번호:
+ISO Speed:	ISO 속도:
+Modification date:	수정한 날짜:
+yes	예
+no	아니오
+Show navigation panel	탐색 패널 보이기
+Show/hide navigation panel	탐색 패널 보이기/숨기기
+About JPEGView...	JPEGView 정보...
+SIMD mode used:	사용된 SIMD 모드:
+Number of CPU cores used:	사용된 CPU 코어의 수:
+Licensed under the GNU general public license (GPL), see readme file for details:	GNU General Public License (GPL) 라이센스, 상세 내용은 readme 파일을 보십시오:
+Project home page:	프로젝트 홈페이지:
+Show first image in folder	폴더의 처음
+Show previous image	이전
+Show next image	다음
+Show last image in folder	폴더의 마지막
+Rotate image 90 deg clockwise	시계 방향으로 90도 회전
+Rotate image 90 deg counter-clockwise	반시계 방향으로 90도 회전
+Landscape picture enhancement mode	풍경 사진 향상 모드
+Display image (EXIF) information	이미지 정보(EXIF) 표시
+Actual size of image	실제 크기
+Toggle between screens (only for multi-monitor systems)	화면 전환 (다중 모니터 사용시)
+Enable/disable full screen mode	전체 화면 모드 켜기/끄기
+Full screen mode	전체 화면 모드
+Window mode	창 모드
+Save as (in screen size/resolution)	다른 이름으로 저장 (화면 크기/해상도로)
+Save processed image to JPEG file (screen size)	변경된 이미지를 JPEG 파일로 저장 (화면 크기)
+Settings/Admin	설정/관리
+Edit global settings...	전역 설정 편집...
+Edit user settings...	사용자 설정 편집...
+Backup parameter DB...	매개변수 DB 백업
+Restore parameter DB...	매개변수 DB 복원
+No user INI file exits yet. Create user INI file from INI file template?	사용자 INI 파일이 없습니다. INI 파일 템플릿으로부터 INI 파일을 만들겠습니까?
+Copying parameter DB to file '%s' failed. Reason: %s	매개변수 DB를 '%s' 파일로 복사 실패. 이유: %s
+Select parameter DB to restore	복원할 매개변수 DB 선택
+Conflicting entries in Param DB	매개변수 DB의 항목 충돌
+The imported param DB contains entries already present in active param DB.	불러온 매개변수 DB는 사용중인 매개변수 DB에 이미 존재하는 항목을 포함함.
+Shall existing entries be preserved (Yes) or be overriden by the imported entries (No)?	기존 항목을 유지하겠습니까 (예)? 아니면 불러온 항목으로 덮어쓰겠습니까 (아니오)?
+Select file to display in 'File Open' dialog	'파일 열기' 대화상자에서 표시하기 위한 파일 선택
+Crop Mode	자르기 모드
+Free	자유
+Fixed size...	고정된 크기...
+Set Fixed Crop Size	고정된 자르기 크기 설정
+Width	너비
+Height	높이
+Pixels	픽셀
+Screen Pixels	화면 픽셀
+Image Pixels	이미지 픽셀
+Set modification date	수정한 날짜 변경
+to current date	현재 날짜로
+to EXIF date	EXIF 날짜로
+Mark image for toggling. Use Ctrl+Left/Ctrl+Right to toggle between marked and current image	바꿀 이미지 선택. 현재 이미지와 선택한 이미지를 바꾸려면 Ctrl+Left/Ctrl+Right 을 사용
+
+ 	  	 

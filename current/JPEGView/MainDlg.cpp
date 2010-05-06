@@ -2201,8 +2201,7 @@ void CMainDlg::HandleUserCommands(uint32 virtualKeyCode) {
 					}
 				}
 				if (bReloadCurrent) {
-					// Keep parameters when reloading
-					GotoImage(POS_Current, KEEP_PARAMETERS);
+					GotoImage(POS_Current);
 				}
 			}
 			break;
