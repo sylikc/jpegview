@@ -49,6 +49,7 @@ public:
 	double BrightenShadowsSteepness() { return m_dBrightenShadowsSteepness; }
 	CImageProcessingParams LandscapeModeParams(const CImageProcessingParams& templParams);
 	int JPEGSaveQuality() { return m_nJPEGSaveQuality; }
+	LPCTSTR DefaultSaveFormat() { return m_sDefaultSaveFormat; }
 	bool CreateParamDBEntryOnSave() { return m_bCreateParamDBEntryOnSave; }
 	LPCTSTR ACCExclude() { return m_sACCExclude; }
 	LPCTSTR ACCInclude() { return m_sACCInclude; }
@@ -119,6 +120,7 @@ private:
 	double m_dBrightenShadowsSteepness;
 	CString m_sLandscapeModeParams;
 	int m_nJPEGSaveQuality;
+	CString m_sDefaultSaveFormat;
 	bool m_bCreateParamDBEntryOnSave;
 	CString m_sACCExclude;
 	CString m_sACCInclude;

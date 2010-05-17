@@ -198,6 +198,7 @@ void CSettingsProvider::ReadWriteableINISettings() {
 	}
 
 	m_nJPEGSaveQuality = GetInt(_T("JPEGSaveQuality"), 85, 0, 100);
+	m_sDefaultSaveFormat = GetString(_T("DefaultSaveFormat"), _T("jpg"));
 	m_bCreateParamDBEntryOnSave = GetBool(_T("CreateParamDBEntryOnSave"), true);
 	m_nDisplayMonitor = GetInt(_T("DisplayMonitor"), -1, -1, 16);
 	m_bAutoContrastCorrection = GetBool(_T("AutoContrastCorrection"), false);
