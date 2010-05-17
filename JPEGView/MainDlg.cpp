@@ -2123,7 +2123,7 @@ bool CMainDlg::SaveImage(bool bFullSize) {
 
 	CString sExtension = m_sSaveExtension;
 	if (sExtension.IsEmpty()) {
-		sExtension = _T("jpg");
+		sExtension = CSettingsProvider::This().DefaultSaveFormat();
 	}
 	CFileDialog fileDlg(FALSE, sExtension, sCurrentFile, 
 			OFN_EXPLORER | OFN_ENABLESIZING | OFN_HIDEREADONLY | OFN_NOREADONLYRETURN | OFN_OVERWRITEPROMPT,
