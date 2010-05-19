@@ -23,9 +23,11 @@ Changelog
 *********
 
 [1.0.20]
+
 Bugs fixed:
 - Flag 'ReloadCurrent' used in user commands does no longer keep geometric parameters after reloading (zoom, pan, rotate)
 New features:
+- French translation
 - Korean translation
 - New INI file setting: DefaultSaveFormat to set the default format when saving images
 
