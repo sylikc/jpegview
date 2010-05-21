@@ -3062,11 +3062,11 @@ void CMainDlg::SaveParameters() {
 	_stprintf_s(buff, BUFF_SIZE, CString(CNLS::GetString(_T("Yellow-Blue"))) + _T(": %.2f\n"), m_pImageProcParams->YellowBlue);
 	sText += buff;
 	if (m_bLDC) {
-		_stprintf_s(buff, BUFF_SIZE, CString(CNLS::GetString(_T("Lighten shadows"))) + _T(": %.2f\n"), m_pImageProcParams->LightenShadows);
+		_stprintf_s(buff, BUFF_SIZE, CString(CNLS::GetString(_T("Lighten Shadows"))) + _T(": %.2f\n"), m_pImageProcParams->LightenShadows);
 		sText += buff;
-		_stprintf_s(buff, BUFF_SIZE, CString(CNLS::GetString(_T("Darken highlights"))) + _T(": %.2f\n"), m_pImageProcParams->DarkenHighlights);
+		_stprintf_s(buff, BUFF_SIZE, CString(CNLS::GetString(_T("Darken Highlights"))) + _T(": %.2f\n"), m_pImageProcParams->DarkenHighlights);
 		sText += buff;
-		_stprintf_s(buff, BUFF_SIZE, CString(CNLS::GetString(_T("Deep shadows"))) + _T(": %.2f\n"), m_pImageProcParams->LightenShadowSteepness);
+		_stprintf_s(buff, BUFF_SIZE, CString(CNLS::GetString(_T("Deep Shadows"))) + _T(": %.2f\n"), m_pImageProcParams->LightenShadowSteepness);
 		sText += buff;
 	}
 	AddFlagText(sText, CNLS::GetString(_T("Auto contrast and color correction: ")), m_bAutoContrast);

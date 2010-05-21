@@ -1,147 +1,147 @@
-// This file must be encoded with UTF-8 (e.g. with Windows Notepad)	
+﻿// This file must be encoded with UTF-8 (e.g. with Windows Notepad)	
 // Filename is 'strings_%languagecode%.txt' where %languagecode% is the ISO 639 language code e.g. 'fr' for French	
 // Format is: English string<tab>Translated string<newline>	
 Contrast	Contraste
-Brightness	Luminosite
-Sharpen	Nettete
-Lighten Shadows	Eclaircir les ombres
+Brightness	Luminosité
+Sharpen	Netteté
+Lighten Shadows	Eclairer les ombres
 Darken Highlights	Assombrir les points lumineux
 Deep Shadows	Ombres Profondes
 Color Correction	Correction des couleurs
 Contrast Correction	Correction de contraste
-Parameter DB:	Parametre BD:
+Parameter DB:	Paramètre BD:
 Save to	Enregistrer
 Remove from	Supprimer
 Rename:	Renommer:
-No file or folder name was provided as command line parameter!	Aucun nom de fichier ou dossier a ete fourni en tant que parametre de ligne de commande!
-To use JPEGView, associate JPG, JPEG and BMP files with JPEGView.	Pour utiliser JPEGView, associer les formats JPG, JPEG et BMP avec JPEGView.
+No file or folder name was provided as command line parameter!	Aucun nom de fichier ou dossier a été fourni en tant que paramètre de ligne de commande!
+To use JPEGView, associate JPG, JPEG and BMP files with JPEGView.	Pour utiliser JPEGView, associez les formats JPG, JPEG et BMP avec JPEGView.
 Press ESC to exit...	Appuyez sur Echap pour quitter ...
-The file '%s' could not be read!	Le fichier '%s' n'a pas pu etre lu!
+The file '%s' could not be read!	Le fichier '%s' n'a pas pu être lu!
 The file '%s' does not contain a list of file names!	Le fichier '%s' ne contient pas une liste de noms de fichiers!
-The directory '%s' does not contain any image files!	Le repertoire '%s' ne contient pas de fichiers image!
-Press any key to search the subdirectories for image files.	Appuyez sur une touche pour rechercher dans les sous-repertoires les fichiers image.
+The directory '%s' does not contain any image files!	Le répertoire '%s' ne contient pas de fichiers image!
+Press any key to search the subdirectories for image files.	Appuyez sur une touche pour rechercher dans les sous-répertoires les fichiers image.
 JPEGView Help	Aide JPEGView
 Current image	Image courante
 Close help text display / Close JPEGView	Fermer le panneau d'aide / Fermer JPEGView
 Show/hide this help text	Afficher/masquer le panneau d'aide
 Show/hide picture information (EXIF data)	Afficher/masquer les informations sur l'image (Donnees EXIF)
 Show/hide file name	Afficher/cacher le nom du fichier
-Enable/disable high quality resampling	Activer/desactiver la qualite elevee de reechantillonnage
-Enable/disable keeping of geometry related (zoom/pan/rotation)	Activer/desactiver le maintien des transformations geometriques (zoom/pan/rotation)
-and image processing (brightness/contrast/sharpen) parameters between images	et du traitement d'image (luminosite/contraste/nettete) des parametres entre les images
-Enable/disable automatic contrast correction (histogram equalization)	Activer/desactiver la correction automatique du contraste (egalisation d'histogramme)
+Enable/disable high quality resampling	Activer/desactiver la qualité élevée de reéchantillonnage
+Enable/disable keeping of geometry related (zoom/pan/rotation)	Activer/desactiver le maintien des transformations géométriques (zoom/pan/rotation)
+and image processing (brightness/contrast/sharpen) parameters between images	et du traitement d'image (luminosité/contraste/netteté) des paramètres entre les images
+Enable/disable automatic contrast correction (histogram equalization)	Activer/desactiver la correction automatique du contraste (égalisation d'histogramme)
 Apply auto contrast correction using only visible section of image	Appliquer la correction automatique de contraste en utilisant uniquement la section visible de l'image
-Enable/disable automatic density correction (local brightness correction)	Activer/desactiver la correction automatique de la densite (correction de luminosite locale)
-Increase/decrease lightening of shadows (LDC must be on)	Augmentation/diminution allegement des ombres (LDC doit etre active)
-Increase/decrease darkening of highlights (LDC must be on)	Augmentation/diminution de noircissement des faits saillants (LDC doit etre active)
-Loop through files in current folder	Boucle � travers les fichiers dans le dossier courant
-Loop through files in current directory and all subfolders	Boucle dans les fichiers du repertoire courant et tous les sous-dossiers
-Loop through files in current directory and all sibling folders (folders on same level)	Boucle dans les fichiers du repertoire courant et tous les dossiers soeur (dossiers au meme niveau)
-Maximize/restore to/from virtual desktop (only for multi-monitor systems)	Agrandir/Restaurer le bureau virtuel (uniquement pour les systemes multi-ecrans)
-Copy screen to clipboard/ Copy processed full size image to clipboard	Copie d'ecran dans le presse papier / Copier image transformee en taille reelle dans le presse papier
+Enable/disable automatic density correction (local brightness correction)	Activer/desactiver la correction automatique de la densité (correction de luminosité locale)
+Increase/decrease lightening of shadows (LDC must be on)	Augmentation/diminution allégement des ombres (LDC doit être activé)
+Increase/decrease darkening of highlights (LDC must be on)	Augmentation/diminution de noircissement des faits saillants (LDC doit être active)
+Loop through files in current folder	Boucle à travers les fichiers dans le dossier courant
+Loop through files in current directory and all subfolders	Boucle dans les fichiers du répertoire courant et tous les sous-dossiers
+Loop through files in current directory and all sibling folders (folders on same level)	Boucle dans les fichiers du répertoire courant et tous les dossiers soeur (dossiers au même niveau)
+Maximize/restore to/from virtual desktop (only for multi-monitor systems)	Agrandir/Restaurer le bureau virtuel (uniquement pour les systèmes multi-écrans)
+Copy screen to clipboard/ Copy processed full size image to clipboard	Copie d'écran dans le presse papier / Copier image transformée en taille réelle dans le presse papier
 Open new image or slideshow file	Ouvrir le fichier image ou le diaporama
-Save processed image to JPEG file (original size)	Enregistrer l'image traitee pour fichier JPEG (format original)
-Save (s)/ delete (d) image processing parameters in/from parameter DB	Sauvegarder (s)/supprimer (d) les parametres de traitement d'image dans parametre BD
-Sort images by creation date, resp. modification date, resp. file name	Trier les images par date de creation, resp. date de modification, resp. le nom du fichier
-Goto previous image	Aller � l'image precedente
-Goto next image	Aller � l'image suivante
+Save processed image to JPEG file (original size)	Enregistrer l'image traitée pour fichier JPEG (format original)
+Save (s)/ delete (d) image processing parameters in/from parameter DB	Sauvegarder (s)/supprimer (d) les paramètres de traitement d'image dans paramètre BD
+Sort images by creation date, resp. modification date, resp. file name	Trier les images par date de création, resp. date de modification, resp. le nom du fichier
+Goto previous image	Aller à l'image précédente
+Goto next image	Aller à l'image suivante
 PgUp or Left	PgUp ou Gauche
 PgDn or Right	PgDn ou Droite
-Goto first/last image of current folder (using sort order as defined)	Aller � la premiere/derniere image du dossier en cours (en utilisant l'ordre de tri tel que defini)
-Increase/decrease brightness	Augmenter/diminuer la luminosite
+Goto first/last image of current folder (using sort order as defined)	Aller à la premiere/dernière image du dossier en cours (en utilisant l'ordre de tri tel que défini)
+Increase/decrease brightness	Augmenter/diminuer la luminosité
 Increase/decrease contrast	Augmenter/diminuer le contraste
-Increase/decrease sharpness	Augmenter/diminuer la nettete
+Increase/decrease sharpness	Augmenter/diminuer la netteté
 Increase/decrease auto color cast correction amount	Augmenter/diminuer la correction automatique des couleurs
 Increase/decrease auto contrast correction amount	Augmenter/diminuer la quantite de correction automatique de contraste
-Enable/disable landscape picture enhancement mode	Activer/desactiver le mode d'amelioration des images (LDC)
-Slide show with timeout of n seconds (ESC to stop)	Diaporama avec delai de n secondes (ESC pour arreter)
-Set timeout to n/10 sec, respectively n/100 sec (Ctrl+Shift)	Configurer Delai � n/10 sec, respectivement n/100 sec (Ctrl+Maj)
-Rotate image and fit to screen	Faire pivoter l'image et ajuster � l'ecran
-Fit image to screen	Adapter l'image � l'ecran
+Enable/disable landscape picture enhancement mode	Activer/desactiver le mode d'amélioration des images (LDC)
+Slide show with timeout of n seconds (ESC to stop)	Diaporama avec delai de n secondes (ESC pour arrêter)
+Set timeout to n/10 sec, respectively n/100 sec (Ctrl+Shift)	Configurer delai à n/10 sec, respectivement n/100 sec (Ctrl+Maj)
+Rotate image and fit to screen	Faire pivoter l'image et ajuster à l'ecran
+Fit image to screen	Adapter l'image à l'ecran
 Zoom 1:1 (100 %)	Zoom 1:1 (100%)
-Zoom in/Zoom out (also Ctrl+up/down)	Zoom avant/Zoom arriere (Ctrl+haut/bas)
-Zoom in/out image	Zoom avant/arriere sur l'image
-Pan image	l'image de Pan
+Zoom in/Zoom out (also Ctrl+up/down)	Zoom avant/Zoom arrière (Ctrl+haut/bas)
+Zoom in/out image	Zoom avant/arrière sur l'image
+Pan image	Ajourner l'image
 Crop image	Recadrer
 Next image	Image suivante
-Previous image	Image precedente
+Previous image	Image précédente
 up/down	haut/bas
 Mouse wheel	Molette de la souris
 Left mouse & drag	Btn gauche souris et deplacer
-Ctrl + L mouse	Ctrl + L de souris
+Ctrl + L mouse	Ctrl + Btn L de souris
 Fwd mouse button	Btn Fwd de la souris
 Back mouse button	Btn Back de la souris
-Delete current file on disk permanently	Supprimer le fichier en cours sur le disque de fa�on permanente
-Rotate current file on disk lossless by 90 deg (W/H must be multiple of 16)	Tournez fichier en cours sur le disque sans perte de 90 deg (W / H doit etre multiple de 16)
-Rotate current file on disk lossless by 270 deg (W/H must be multiple of 16)	Tournez fichier en cours sur le disque sans perte de 270 deg (W / H doit etre multiple de 16)
+Delete current file on disk permanently	Supprimer le fichier en cours sur le disque de façon permanente
+Rotate current file on disk lossless by 90 deg (W/H must be multiple of 16)	Tournez fichier en cours sur le disque sans perte de 90 deg (W / H doit être multiple de 16)
+Rotate current file on disk lossless by 270 deg (W/H must be multiple of 16)	Tournez fichier en cours sur le disque sans perte de 270 deg (W / H doit être multiple de 16)
 The file is read-only!	Le fichier est en lecture seule!
 Can't rename file	Impossible de renommer le fichier
-New name contains backslash character!	Nouveau nom contient un caractere barre oblique inverse!
-Renaming file failed!	Renommer le fichier a echoue!
+New name contains backslash character!	Nouveau nom contient un caractère barre oblique inverse!
+Renaming file failed!	Renommer le fichier a échoué!
 Reason: 	Motif:
 on	marche
-off	arret
-Do you really want to save the following parameters as default to the INI file	Voulez-vous vraiment � mettre les parametres suivants par defaut dans le fichier INI
+off	arrêt
+Do you really want to save the following parameters as default to the INI file	Voulez-vous vraiment à mettre les paramètres suivants par défaut dans le fichier INI
 Auto contrast and color correction: 	Contraste automatique et la correction des couleurs:
-Local density correction: 	correction de la densite locale:
-Order files by: 	Fichiers Trier par:
-Creation date/time	Date de creation / heure
-Last modification date/time	Date de derniere modification / temps
+Local density correction: 	Correction de la densité locale:
+Order files by: 	Fichiers trier par:
+Creation date/time	Date de création / heure
+Last modification date/time	Date de dernière modification / temps
 File name	Nom du fichier
-These values will override the values from the INI file located in the program folder of JPEGView!	Ces valeurs ont priorite sur les valeurs de la fichier INI situe dans le dossier programme de JPEGView!
-Confirm save default parameters	Confirmer l'enregistrement les parametres par defaut
+These values will override the values from the INI file located in the program folder of JPEGView!	Ces valeurs ont priorité sur les valeurs de la fichier INI situé dans le dossier programme de JPEGView!
+Confirm save default parameters	Confirmer l'enregistrement des paramètres par defaut
 Images	Images
 All Files	Tous les fichiers
-Parameter DB file '%s' could not be opened!	Fichier parametre DB fichier '%s' n'a pas pu etre ouvert!
-Parameter DB file '%s' is not valid (invalid header)!	"Fichier parametre DB ""%s' n'est pas valide (en-tete non valide)!"
-Cannot write to parameter DB file '%s'!	Impossible d'ecrire dans le fichier parametre BD '%s'!
-Cannot read from parameter DB file '%s'!	Impossible de lire le fichier parametre BD '%s'!
-Cannot read parameter DB file '%s' because it is too large!	Impossible de lire le fichier parametre BD '%s' parce que sa taille est trop grande!
-The parameter DB file '%s' has been created by a newer version of JPEGView!	Le fichier parametre BD '%s' a ete cree par une version plus recente de JPEGView!
-The old parameter DB file '%s' could not be renamed during conversion to new format!	L'ancien fichier parametre BD '%s' ne peut pas etre renomme lors de la conversion au nouveau format!
-Parameter DB error	Erreur parametre BD
+Parameter DB file '%s' could not be opened!	Fichier paramètre DB '%s' n'a pas pu être ouvert!
+Parameter DB file '%s' is not valid (invalid header)!	Fichier paramètre DB '%s' n'est pas valide (en-tête non valide)!
+Cannot write to parameter DB file '%s'!	Impossible d'ecrire dans le fichier paramètre BD '%s'!
+Cannot read from parameter DB file '%s'!	Impossible de lire le fichier paramètre BD '%s'!
+Cannot read parameter DB file '%s' because it is too large!	Impossible de lire le fichier paramètre BD '%s' parce que sa taille est trop grande!
+The parameter DB file '%s' has been created by a newer version of JPEGView!	Le fichier paramètre BD '%s' a été créé par une version plus récente de JPEGView!
+The old parameter DB file '%s' could not be renamed during conversion to new format!	L'ancien fichier paramètre BD '%s' ne peut pas être renommé lors de la conversion au nouveau format!
+Parameter DB error	Erreur paramètre BD
 Error saving file	Erreur de sauvegarde du fichier
 Error writing file to disk!	Erreur d'ecriture sur le disque!
 Confirm	Confirmer
-Do you really want to permanently delete the file %filename%?	Voulez-vous vraiment supprimer definitivement le fichier %filename%?
-Rotate the following file lossless by 90 deg?\n%filename%	Tournez le fichier suivant sans perte de 90�?\n%filename%
-Rotate the following file lossless by 270 deg?\n%filename%	Tournez le fichier suivant sans perte de 270�?\n%filename%
+Do you really want to permanently delete the file %filename%?	Voulez-vous vraiment supprimer définitivement le fichier %filename%?
+Rotate the following file lossless by 90 deg?\n%filename%	Tournez le fichier suivant sans perte de 90°?\n%filename%
+Rotate the following file lossless by 270 deg?\n%filename%	Tournez le fichier suivant sans perte de 270°?\n%filename%
 Open image...	Ouvrir l'image ...
-Save processed image...	Enregistrer l'image generee ...
+Save processed image...	Enregistrer l'image générée ...
 Reload image	Recharger l'image
 Copy to clipboard	Copier dans le presse papier
-Copy original size image	Copier l'image � la taille originale
-Paste from clipboard	Coller � partir du presse-papiers
+Copy original size image	Copier l'image à la taille originale
+Paste from clipboard	Coller à partir du presse-papiers
 Batch rename/copy...	Batch renommer / copier ...
 Show picture info (EXIF)	Afficher les infos photo (EXIF)
 Show filename	Afficher le nom de fichier
 Navigation	Navigation
-Loop folder	dossier Loop
-Loop recursively	Boucle recursive
-Loop siblings	freres et s�urs Loop
+Loop folder	Boucle dossier
+Loop recursively	Boucle récursive
+Loop siblings	Boucle frères et soeurs
 Display order	Ordre d'affichage
 Modification date	Date de modification
-Creation date	Date de creation
+Creation date	Date de création
 Play folder as slideshow/movie	Ecouter dossier sous forme de diaporama / video
 Slideshow	Diaporama
 Movie	Film
-Waiting time	Le temps d'attente
-Stop slide show/movie	arreter le diaporama / video
+Waiting time	Temps d'attente
+Stop slide show/movie	Arrêter le diaporama / video
 Rotate +90	Rotation 90
 Rotate -90	Rotation -90
-Auto correction	La correction automatique
-Local density correction	correction de la densite locale
-Keep parameters	Conserver les parametres
-Save parameters to INI...	Sauvegarder les parametres dans le fichier INI ...
-Save parameters to DB	Sauvegarder les parametres dans le fichier parametre DB
-Clear parameters from DB	Supprimer les parametres de la BD
+Auto correction	Correction automatique
+Local density correction	Correction de la densité locale
+Keep parameters	Conserver les paramètres
+Save parameters to INI...	Sauvegarder les paramètres dans le fichier INI ...
+Save parameters to DB	Sauvegarder les paramètres dans le fichier paramètre DB
+Clear parameters from DB	Supprimer les paramètres de la BD
 Zoom	Zoom
-Fit to screen	Ajuster � l'ecran
-Fill with crop	Remplir avec la zone rogn�e
-Span all screens	Couvrent tous les ecrans
+Fit to screen	Ajuster à l'écran
+Fill with crop	Remplir l'écran
+Span all screens	Couvrent tous les écrans
 Auto zoom mode	Auto mode zoom
-Fit to screen (no zoom)	Ajuster � l'ecran (pas de zoom)
-Fill with crop (no zoom)	Remplir avec la culture (pas de zoom)
+Fit to screen (no zoom)	Ajuster à l'écran (pas de zoom)
+Fill with crop (no zoom)	Remplir l'écran (pas de zoom)
 Exit	Sortie
 Cyan-Red	Cyan-Rouge
 Magenta-Green	Magenta-Vert
@@ -150,48 +150,48 @@ C - R	C - R
 M - G	M - G
 Y - B	Y - B
 Batch rename/copy of files	Batch renommer / copie de fichiers
-Image files in folder	Les fichiers d'image dans le dossier
-Placeholders:	Espaces reserves:
-Number (consecutively numbered)	Nombre (numerotees)
+Image files in folder	Fichiers d'image dans le dossier
+Placeholders:	Espaces réservés:
+Number (consecutively numbered)	Nombre (numérotées)
 Number with N digits	Nombre de chiffres N
 Extracted number from original file name	Extrait du numero de nom de fichier original
-Original file name (with extension)	nom du fichier original (avec extension)
-Original file name (without extension)	nom du fichier original (sans extension)
-Original file extension	extension du fichier d'origine
-'My Pictures' folder	"""Mes images"" dossier"
-Day / Month / Year (as numbers)	Jour / Mois / Annee (en chiffres)
-Year short form (2 digits)	Annee forme courte (2 chiffres)
-Month / Short form (text)	Mois / simplifie (texte)
-Target folders that are not yet existing are created as needed.	dossiers cibles qui ne sont pas encore en vigueur sont crees selon les besoins.
-Date placeholders use the modification date of the image.	espaces reserves Date utiliser la date de modification de l'image.
-Rename/copy images to:	Renommer des images copier / �:
+Original file name (with extension)	Nom du fichier original (avec extension)
+Original file name (without extension)	Nom du fichier original (sans extension)
+Original file extension	Extension du fichier d'origine
+'My Pictures' folder	'Mes images' dossier
+Day / Month / Year (as numbers)	Jour / Mois / Année (en chiffres)
+Year short form (2 digits)	Année forme courte (2 chiffres)
+Month / Short form (text)	Mois / simplifié (texte)
+Target folders that are not yet existing are created as needed.	Dossiers cibles qui ne sont pas encore en vigueur sont crées selon les besoins.
+Date placeholders use the modification date of the image.	Les espaces réservés %d %m %y etc. utilisez la date de modification de l'image.
+Rename/copy images to:	Renommer des images / copier à:
 Rename	Renommer
-Preview	Avant-premiere
-Save as template	Enregistrer comme modele
+Preview	Avant-première
+Save as template	Enregistrer comme modèle
 Close	Fermer
 Old name	Ancien nom
 Date	Date
-New name (>> : file gets copied)	Nouveau nom (>>: le fichier est copie)
-Select all	Selectionner l'ensemble des
-Select none	Aucun Selectionnez
-The file '%s' could not be %s.	Le fichier '%s' n'a pas pu etre %s.
-copied	copie(s)
-renamed	renomme(s)
+New name (>> : file gets copied)	Nouveau nom (>>: le fichier est copié)
+Select all	Sélectionner tout
+Select none	Aucun sélectionnez
+The file '%s' could not be %s.	Le fichier '%s' n'a pas pu être %s.
+copied	copié
+renamed	renommé
 Continue rename/copy?	Continuer renommer/copie?
 Error during rename/copy	Erreur lors de renommage/copie
-%d file(s) renamed, %d file(s) copied, %d folder(s) created	%d fichier(s) a ete renomme(s),%d fichier(s) copie(s),%d dossier(s) cree(s)
-Crop Selection	Rogner la selection
-Copy Selection to Clipboard	Copier la selection vers le presse papier
-Zoom to Selection	Zoom sur la selection
-Pasting image from clipboard failed!	Le collage de l'image du presse-papier a echoue!
+%d file(s) renamed, %d file(s) copied, %d folder(s) created	%d fichier(s) a été renomme(s),%d fichier(s) copié(s),%d dossier(s) créé(s)
+Crop Selection	Rogner la sélection
+Copy Selection to Clipboard	Copier la sélection vers le presse papier
+Zoom to Selection	Zoom sur la sélection
+Pasting image from clipboard failed!	Le collage de l'image du presse-papier a échoué!
 Image width:	Largeur de l'image:
 Image height:	Hauteur de l'image:
 Acquisition date:	Date d'acquisition:
-Camera model:	Modele d'appareil photo:
+Camera model:	Modèle d'appareil photo:
 Exposure time (s):	Le temps d'exposition (s):
 Exposure bias (EV):	Correction d'exposition (EV):
 Flash fired:	Flash tire:
-Focal length (mm):	focale (mm):
+Focal length (mm):	Focale (mm):
 F-Number:	F-Nombre:
 ISO Speed:	Vitesse ISO:
 Modification date:	Date de modification:
@@ -200,19 +200,46 @@ no	non
 Show navigation panel	Afficher le panneau de navigation
 Show/hide navigation panel	Afficher/cacher le panneau de navigation
 About JPEGView...	A propos de JPEGView ...
-SIMD mode used:	mode SIMD utilises:
-Number of CPU cores used:	Nombre de c�urs de processeurs utilises:
-Licensed under the GNU general public license (GPL), see readme file for details:	Sous licence GNU licence publique generale (GPL), voir le fichier README pour plus de details:
-Project home page:	page d'accueil du projet:
-Show first image in folder	Voir la premiere image dans le dossier
-Show previous image	Voir l'image precedente
+SIMD mode used:	Mode SIMD utilisés:
+Number of CPU cores used:	Nombre de coeurs de processeurs utilisés:
+Licensed under the GNU general public license (GPL), see readme file for details:	Sous licence GNU licence publique générale (GPL), voir le fichier README pour plus de détails:
+Project home page:	Page d'accueil du projet:
+Show first image in folder	Voir la première image dans le dossier
+Show previous image	Voir l'image précédente
 Show next image	Voir l'image suivante
-Show last image in folder	Voir la derniere image dans le dossier
+Show last image in folder	Voir la dernière image dans le dossier
 Rotate image 90 deg clockwise	Faire pivoter l'image vers la droite 90 deg
 Rotate image 90 deg counter-clockwise	Faire pivoter l'image de 90 deg sens anti-horaire
-Landscape picture enhancement mode	Mode d'amelioration des images (LDC)
-Display image (EXIF) information	Afficher l'image (EXIF) des informations
-Toggle between screens (only for multi-monitor systems)	Basculer entre les ecrans des systemes (seulement pour les multi-ecrans)
-Enable/disable full screen mode	Activer/desactiver le mode plein ecran
-Full screen mode	Le mode plein ecran
-Window mode	mode fenetre
+Landscape picture enhancement mode	Mode d'amélioration des images (LDC)
+Display image (EXIF) information	Afficher les infos photo (EXIF)
+Toggle between screens (only for multi-monitor systems)	Basculer entre les écrans des systemes (seulement pour les multi-écrans)
+Enable/disable full screen mode	Activer/desactiver le mode plein écran
+Full screen mode	Mode plein écran
+Window mode	Mode fenêtre
+Save as (in screen size/resolution)	Enregistrer sous (a la taille/résolution de l'écran)
+Save processed image to JPEG file (screen size)	Enregistrer l'image modifiée en JPEG (taille de l'écran)
+Settings/Admin	Configuration/Administration
+Edit global settings...	Editer la configuration générale...
+Edit user settings...	Editer la configuration utilisateur...
+Backup parameter DB...	Sauvegarder paramètre BD
+Restore parameter DB...	Restaurer paramètre BD
+No user INI file exits yet. Create user INI file from INI file template?	Il n'existe encore aucun fichier INI utilisateur. Souhaitez-vous créer un fichier INI utilisateur depuis le fichier INI modele?
+Copying parameter DB to file '%s' failed. Reason: %s	Copie du paramètre BD vers le ficher '%s' a échoué. Cause: %s
+Select parameter DB to restore	Sélectionner paramètre BD à restaurer
+Conflicting entries in Param DB	Conflit d'entrées dans Param BD
+The imported param DB contains entries already present in active param DB.	Le param BD importe contient des entrées déjà présente dans le param BD.
+Shall existing entries be preserved (Yes) or be overriden by the imported entries (No)?	Souhaitez-vous conserver les entrées existantes (Oui) ou les écraser par les entrées importées (Non)?
+Select file to display in 'File Open' dialog	Sélectionnez le fichier à afficher dans la fenêtre "Ouvrir"
+Crop Mode	Mode Rognage
+Free	Libre
+Fixed size...	Taille fixe...
+Set Fixed Crop Size	Définir la taille fixe du rognage
+Width	Largeur
+Height	Hauteur 
+Pixels	Pixels
+Screen Pixels	Pixels Ecran
+Image Pixels	Pixels Image
+Set modification date	Définir la date de modification
+to current date	à la date du jour
+to EXIF date	à la date EXIF
+Mark image for toggling. Use Ctrl+Left/Ctrl+Right to toggle between marked and current image	Marquer l'image pour basculer. Utilisez Ctrl+Gauche/Ctrl+Droite pour basculer entre l'image marquée et la courante
