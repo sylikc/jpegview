@@ -6,7 +6,7 @@ Brightness	Luminosité
 Sharpen	Netteté
 Lighten Shadows	Eclairer les ombres
 Darken Highlights	Assombrir les points lumineux
-Deep Shadows	Ombres Profondes
+Deep Shadows	Ombres profondes
 Color Correction	Correction des couleurs
 Contrast Correction	Correction de contraste
 Parameter DB:	Paramètre BD:
@@ -145,7 +145,7 @@ Fill with crop (no zoom)	Remplir l'écran (pas de zoom)
 Exit	Sortie
 Cyan-Red	Cyan-Rouge
 Magenta-Green	Magenta-Vert
-Yellow-Blue	Jaune-bleu
+Yellow-Blue	Jaune-Bleu
 C - R	C - R
 M - G	M - G
 Y - B	Y - B
@@ -173,7 +173,7 @@ Old name	Ancien nom
 Date	Date
 New name (>> : file gets copied)	Nouveau nom (>>: le fichier est copié)
 Select all	Sélectionner tout
-Select none	Aucun sélectionnez
+Select none	Aucune sélection
 The file '%s' could not be %s.	Le fichier '%s' n'a pas pu être %s.
 copied	copié
 renamed	renommé
@@ -188,7 +188,7 @@ Image width:	Largeur de l'image:
 Image height:	Hauteur de l'image:
 Acquisition date:	Date d'acquisition:
 Camera model:	Modèle d'appareil photo:
-Exposure time (s):	Le temps d'exposition (s):
+Exposure time (s):	Temps de pose (s):
 Exposure bias (EV):	Correction d'exposition (EV):
 Flash fired:	Flash tire:
 Focal length (mm):	Focale (mm):
@@ -200,7 +200,7 @@ no	non
 Show navigation panel	Afficher le panneau de navigation
 Show/hide navigation panel	Afficher/cacher le panneau de navigation
 About JPEGView...	A propos de JPEGView ...
-SIMD mode used:	Mode SIMD utilisés:
+SIMD mode used:	Mode SIMD utilisé:
 Number of CPU cores used:	Nombre de coeurs de processeurs utilisés:
 Licensed under the GNU general public license (GPL), see readme file for details:	Sous licence GNU licence publique générale (GPL), voir le fichier README pour plus de détails:
 Project home page:	Page d'accueil du projet:
@@ -242,4 +242,5 @@ Image Pixels	Pixels Image
 Set modification date	Définir la date de modification
 to current date	à la date du jour
 to EXIF date	à la date EXIF
+Actual size of image	Taille effective de l'image
 Mark image for toggling. Use Ctrl+Left/Ctrl+Right to toggle between marked and current image	Marquer l'image pour basculer. Utilisez Ctrl+Gauche/Ctrl+Droite pour basculer entre l'image marquée et la courante
