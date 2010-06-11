@@ -219,13 +219,11 @@ void CSettingsProvider::ReadWriteableINISettings() {
 		}
 	}
 
-	int nRed, nGreen, nBlue;
-	CString sBkColor = GetString(_T("BackgroundColor"), _T("0 0 0"));
-	if (_stscanf(sBkColor, _T(" %d %d %d"), &nRed, &nGreen, &nBlue) == 3) {
-		m_nBackgroundColor = RGB(nRed, nGreen, nBlue);
-	} else {
-		m_nBackgroundColor = 0;
-	}
+	m_colorBackground = GetColor(_T("BackgroundColor"), 0);
+	m_colorGUI = GetColor(_T("GUIColor"), RGB(243, 242, 231));
+	m_colorHighlight = GetColor(_T("HighlightColor"), RGB(255, 205, 0));
+	m_colorSelected = GetColor(_T("SelectionColor"), RGB(255, 205, 0));
+	m_colorSlider = GetColor(_T("SliderColor"), RGB(255, 0, 80));
 }
 
 CImageProcessingParams CSettingsProvider::LandscapeModeParams(const CImageProcessingParams& templParams) {
@@ -399,6 +397,19 @@ CSize CSettingsProvider::GetSize(LPCTSTR sKey, const CSize& defaultSize) {
 		return CSize(nWidth, nHeight);
 	} else {
 		return defaultSize;
+	}
+}
+
+COLORREF CSettingsProvider::GetColor(LPCTSTR sKey, COLORREF defaultColor) {
+	int nRed, nGreen, nBlue;
+	CString sColor = GetString(sKey, _T(""));
+	if (sColor.IsEmpty()) {
+		return defaultColor;
+	}
+	if (_stscanf(sColor, _T(" %d %d %d"), &nRed, &nGreen, &nBlue) == 3) {
+		return RGB(nRed, nGreen, nBlue);
+	} else {
+		return defaultColor;
 	}
 }
 

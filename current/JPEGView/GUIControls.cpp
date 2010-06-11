@@ -1,6 +1,7 @@
 #include "StdAfx.h"
 #include "GUIControls.h"
 #include "Helpers.h"
+#include "SettingsProvider.h"
 #include <math.h>
 
 #define SLIDER_WIDTH 130
@@ -1003,7 +1004,7 @@ bool CTextCtrl::OnMouseMove(int nX, int nY) {
 void CTextCtrl::Draw(CDC & dc, CRect position, bool bBlack) {
 	dc.SelectStockFont(DEFAULT_GUI_FONT);
 	dc.SetBkMode(TRANSPARENT);
-	dc.SetTextColor(bBlack ? 0 : m_bHighlight ? RGB(255, 255, 255) : RGB(0, 255, 0));
+	dc.SetTextColor(bBlack ? 0 : m_bHighlight ? CSettingsProvider::This().ColorHighlight() : CSettingsProvider::This().ColorGUI());
 	unsigned int nAlignment = m_bRightAligned ? DT_RIGHT : DT_LEFT;
 	dc.DrawText(m_sText, m_sText.GetLength(), &position, nAlignment | DT_VCENTER | DT_SINGLELINE | DT_WORD_ELLIPSIS | DT_NOPREFIX);
 }
@@ -1102,29 +1103,34 @@ bool CButtonCtrl::OnMouseMove(int nX, int nY) {
 void CButtonCtrl::Draw(CDC & dc, CRect position, bool bBlack) {
 	dc.SelectStockBrush(HOLLOW_BRUSH);
 	HPEN hPen, hOldPen;
+	HPEN hPen2 = NULL;
 	if (bBlack) {
 		dc.SelectStockPen(BLACK_PEN);
 	} else {
-		hPen = ::CreatePen(PS_SOLID, 1, (m_bDragging && m_bHighlight) ? RGB(255, 255, 255) : m_bEnabled ? RGB(255, 255, 0) : RGB(0, 255, 0));
+		hPen = ::CreatePen(PS_SOLID, 1, (m_bDragging && m_bHighlight) ? CSettingsProvider::This().ColorHighlight() : m_bEnabled ? CSettingsProvider::This().ColorSelected() : CSettingsProvider::This().ColorGUI());
 		hOldPen = dc.SelectPen(hPen);
 	}
 	dc.Rectangle(position);
 	if (m_sText.GetLength() > 0) {
 		dc.SelectStockFont(DEFAULT_GUI_FONT);
 		dc.SetBkMode(TRANSPARENT);
-		dc.SetTextColor(bBlack ? 0 : m_bHighlight ? RGB(255, 255, 255) : m_bEnabled ? RGB(255, 255, 0) : RGB(0, 255, 0));
+		dc.SetTextColor(bBlack ? 0 : m_bHighlight ? CSettingsProvider::This().ColorHighlight() : m_bEnabled ? CSettingsProvider::This().ColorSelected() : CSettingsProvider::This().ColorGUI());
 		dc.DrawText(m_sText, m_sText.GetLength(), &position, DT_CENTER | DT_VCENTER | DT_SINGLELINE | DT_WORD_ELLIPSIS | DT_NOPREFIX);
 	} else if (m_paintHandler != NULL) {
 		if (m_bHighlight && !bBlack) {
-			dc.SelectPen((HPEN)::GetStockObject(WHITE_PEN));
+			hPen2 = ::CreatePen(PS_SOLID, 1, CSettingsProvider::This().ColorHighlight());
+			dc.SelectPen(hPen2);
 		}
 		dc.SetBkMode(TRANSPARENT);
-		dc.SetTextColor(bBlack ? 0 : m_bHighlight ? RGB(255, 255, 255) : m_bEnabled ? RGB(255, 255, 0) : RGB(0, 255, 0));
+		dc.SetTextColor(bBlack ? 0 : m_bHighlight ? CSettingsProvider::This().ColorHighlight() : m_bEnabled ? CSettingsProvider::This().ColorSelected() : CSettingsProvider::This().ColorGUI());
 		m_paintHandler(position, dc);
 	}
 	if (!bBlack) {
 		dc.SelectPen(hOldPen);
 		::DeleteObject(hPen);
+		if (hPen2 != NULL) {
+			::DeleteObject(hPen2);
+		}
 	}
 }
 
@@ -1226,7 +1232,7 @@ void CSliderDouble::OnPaint(CDC & dc, const CPoint& offset)  {
 }
 
 void CSliderDouble::Draw(CDC & dc, CRect position, bool bBlack) {
-	dc.SetTextColor(bBlack ? 0 : RGB(0, 255, 0));
+	dc.SetTextColor(bBlack ? 0 : CSettingsProvider::This().ColorGUI());
 	TCHAR buff[16]; _stprintf_s(buff, 16, _T("%.2f"), *m_pValue);
 	dc.DrawText(buff, _tcslen(buff), &position, DT_VCENTER | DT_SINGLELINE | DT_RIGHT | DT_NOPREFIX);
 
@@ -1254,8 +1260,8 @@ void CSliderDouble::DrawRuler(CDC & dc, int nXStart, int nXEnd, int nY, bool bBl
 	if (bBlack) {
 		dc.SelectStockPen(BLACK_PEN);
 	} else {
-		hPen = ::CreatePen(PS_SOLID, 1, bHighlight ? RGB(255, 255, 255) : RGB(0, 255, 0));
-		hPenRed = ::CreatePen(PS_SOLID, 1, RGB(255, 0, 0));
+		hPen = ::CreatePen(PS_SOLID, 1, bHighlight ? CSettingsProvider::This().ColorHighlight() : CSettingsProvider::This().ColorGUI());
+		hPenRed = ::CreatePen(PS_SOLID, 1, CSettingsProvider::This().ColorSlider());
 		dc.SelectPen(hPen);
 	}
 	
@@ -1295,7 +1301,7 @@ void CSliderDouble::DrawCheck(CDC & dc, CRect position, bool bBlack, bool bHighl
 	if (bBlack) {
 		dc.SelectStockPen(BLACK_PEN);
 	} else {
-		hPen = ::CreatePen(PS_SOLID, 1, bHighlight ? RGB(255, 255, 255) : RGB(0, 255, 0));
+		hPen = ::CreatePen(PS_SOLID, 1, bHighlight ? CSettingsProvider::This().ColorHighlight() : CSettingsProvider::This().ColorGUI());
 		dc.SelectPen(hPen);
 	}
 
