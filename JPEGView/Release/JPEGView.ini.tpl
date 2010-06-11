@@ -19,6 +19,12 @@ Language=auto
 ; Background color, R G B, each component must be in [0..255], e.g. "128 128 128" for a middle grey
 BackgroundColor=0 0 0
 
+; GUI colors, R G B format as used by BackgroundColor
+GUIColor=243 242 231
+HighlightColor=255 205 0
+SelectionColor=255 205 0
+SliderColor=255 0 80
+
 ; Initial fixed contrast correction to apply to all images. Must be in -0.5 .. 0.5
 ; Values > 0 increase contrast, values < 0 decrease contrast
 Contrast=0.0

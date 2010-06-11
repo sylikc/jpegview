@@ -218,7 +218,7 @@ void CImageLoadThread::ProcessReadGDIPlusRequest(CRequest * request) {
 		if (bHasAlphaChannel) {
 			pBmTarget = new Gdiplus::Bitmap(pBitmap->GetWidth(), pBitmap->GetHeight(), PixelFormat32bppRGB);
 			pBmGraphics = new Gdiplus::Graphics(pBmTarget);
-			DWORD bkColor = CSettingsProvider::This().BackgroundColor();
+			COLORREF bkColor = CSettingsProvider::This().ColorBackground();
 			Gdiplus::SolidBrush bkBrush(Gdiplus::Color(GetRValue(bkColor), GetGValue(bkColor), GetBValue(bkColor)));
 			pBmGraphics->FillRectangle(&bkBrush, 0, 0, pBmTarget->GetWidth(), pBmTarget->GetHeight());
 			pBmGraphics->DrawImage(pBitmap, 0, 0, pBmTarget->GetWidth(), pBmTarget->GetHeight());

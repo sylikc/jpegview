@@ -470,7 +470,7 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 	CRect rectZoomNavigator(0, 0, 0, 0);
 	CRect helpDisplayRect = (m_clientRect.Width() > m_monitorRect.Width()) ? m_monitorRect : m_clientRect;
 	CBrush backBrush;
-	backBrush.CreateSolidBrush(CSettingsProvider::This().BackgroundColor());
+	backBrush.CreateSolidBrush(CSettingsProvider::This().ColorBackground());
 
 	// Exclude the help display from clipping area to reduce flickering
 	CHelpDisplay* pHelpDisplay = NULL;
@@ -661,7 +661,7 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 
 	dc.SelectStockFont(SYSTEM_FONT);
 	dc.SetBkMode(TRANSPARENT);
-	dc.SetTextColor(RGB(0, 255, 0));
+	dc.SetTextColor(CSettingsProvider::This().ColorGUI());
 	dc.SetBkColor(RGB(0, 0, 0));
 
 	// Display file name if enabled
@@ -765,7 +765,7 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 	if (m_bInZooming || m_bShowZoomFactor) {
 		TCHAR buff[32];
 		_stprintf_s(buff, 32, _T("%d %%"), int(m_dZoom*100 + 0.5));
-		dc.SetTextColor(RGB(0, 255, 0));
+		dc.SetTextColor(CSettingsProvider::This().ColorGUI());
 		DrawTextBordered(dc, buff, GetZoomTextRect(imageProcessingArea), DT_RIGHT);
 	}
 
@@ -970,7 +970,7 @@ LRESULT CMainDlg::OnMouseMove(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, B
 				if (m_nMouseY > nIPAreaStart) {
 					if (!m_bFullScreenMode) {
 						::SetTimer(m_hWnd, IPPANEL_TIMER_EVENT_ID, 50, NULL);
-					} else if (nOldMouseY != 0 && nOldMouseY <= nIPAreaStart && m_nMouseY > nIPAreaStart) {	
+					} else if (nOldMouseY != 0 && !m_bShowIPTools && m_nMouseY > nIPAreaStart) {	
 						ShowHideIPTools(true);
 					}
 				}
@@ -3290,7 +3290,7 @@ HBITMAP CMainDlg::PrepareRectForMemDCPainting(CDC & memDC, CDC & paintDC, const 
 	paintDC.ExcludeClipRect(&rect);
 
 	CBrush backBrush;
-	backBrush.CreateSolidBrush(CSettingsProvider::This().BackgroundColor());
+	backBrush.CreateSolidBrush(CSettingsProvider::This().ColorBackground());
 
 	// Create a memory DC of correct size
 	CBitmap memDCBitmap = CBitmap();
@@ -3492,7 +3492,7 @@ void CMainDlg::DoNavPanelAnimation() {
 			}
 
 			CBrush backBrush;
-			backBrush.CreateSolidBrush(CSettingsProvider::This().BackgroundColor());
+			backBrush.CreateSolidBrush(CSettingsProvider::This().ColorBackground());
 			m_pMemDCAnimation->FillRect(CRect(0, 0, rectNavPanel.Width(), rectNavPanel.Height()), backBrush);
 
 			BITMAPINFO bmInfo;

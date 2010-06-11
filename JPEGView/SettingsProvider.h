@@ -58,8 +58,12 @@ public:
 	LPCTSTR CopyRenamePattern() { return m_sCopyRenamePattern; }
 	CRect DefaultWindowRect() { return m_defaultWindowRect; }
 	bool DefaultMaximized() { return m_bDefaultMaximized; }
-	int BackgroundColor() { return m_nBackgroundColor; }
 	CSize DefaultFixedCropSize() { return m_DefaultFixedCropSize; }
+	COLORREF ColorBackground() { return m_colorBackground; }
+	COLORREF ColorGUI() { return m_colorGUI; }
+	COLORREF ColorHighlight() { return m_colorHighlight; }
+	COLORREF ColorSelected() { return m_colorSelected; }
+	COLORREF ColorSlider() { return m_colorSlider; }
 
 	std::list<CUserCommand*> & UserCommandList() { return m_userCommands; }
 
@@ -129,8 +133,12 @@ private:
 	CString m_sCopyRenamePattern;
 	CRect m_defaultWindowRect;
 	bool m_bDefaultMaximized;
-	int m_nBackgroundColor;
 	CSize m_DefaultFixedCropSize;
+	COLORREF m_colorBackground;
+	COLORREF m_colorGUI;
+	COLORREF m_colorHighlight;
+	COLORREF m_colorSelected;
+	COLORREF m_colorSlider;
 
 	std::list<CUserCommand*> m_userCommands;
 
@@ -142,6 +150,7 @@ private:
 	bool GetBool(LPCTSTR sKey, bool bDefault);
 	CRect GetRect(LPCTSTR sKey, const CRect& defaultRect);
 	CSize GetSize(LPCTSTR sKey, const CSize& defaultSize);
+	COLORREF GetColor(LPCTSTR sKey, COLORREF defaultColor);
 	void WriteString(LPCTSTR sKey, LPCTSTR sString);
 	void WriteDouble(LPCTSTR sKey, double dValue);
 	void WriteBool(LPCTSTR sKey, bool bValue);
