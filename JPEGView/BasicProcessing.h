@@ -53,8 +53,19 @@ public:
 	// The lookup table contains 256 entries (single channel LUT)
 	static uint8* CreateSingleChannelLUT(double dContrastEnh, double dGamma);
 
+	// Creates lookup tables for color saturation correction.
+	// dSaturation must be between 0 and 2
+	//  0: Grayscale image
+	//  1: Image unmodified
+	//  2: Image strongly staturated
+	// Creates 6 * 256 entries for the matrix elements of the saturation matrix. The elements are scaled with 2^24
+	static int32* CreateColorSaturationLUTs(double dSaturation);
+
 	// Apply a three channel LUT (all B values, then all G, then all R) to a 32 bpp DIB
 	static void* Apply3ChannelLUT32bpp(int nWidth, int nHeight, const void* pDIBPixels, const uint8* pLUT);
+
+	// Apply saturation and then a three channel LUT (all B values, then all G, then all R) to a 32 bpp DIB
+	static void* ApplySaturationAnd3ChannelLUT32bpp(int nWidth, int nHeight, const void* pDIBPixels, const int32* pSatLUTs, const uint8* pLUT);
 
 	// Applies the LDC map and a three channel LUT to a 32 bpp DIB.
 	// fullTargetSize: Size of target image (unclipped)
@@ -62,12 +73,13 @@ public:
 	// dibSize: Actual clipped window size, this is also the size of the input DIB
 	// ldcMapSize: Size of LDC map
 	// pDIBPixels: 32 bpp DIB
+	// pSatLUTs: saturation LUTs - can be NULL
 	// pLUT: three channel LUT (BBBBB..., GGGGG..., RRRRRR...)
 	// pLDCMap: LDC map, 8 bits per pixel
 	// fBlackPt, fWhitePt: Black and white point of original unprocessed, unclipped image
 	// fBlackPtSteepness: Stepness of black point correction (0..1)
 	static void* ApplyLDC32bpp(CSize fullTargetSize, CPoint fullTargetOffset, CSize dibSize,
-		CSize ldcMapSize, const void* pDIBPixels, const uint8* pLUT, const uint8* pLDCMap, 
+		CSize ldcMapSize, const void* pDIBPixels, const int32* pSatLUTs, const uint8* pLUT, const uint8* pLDCMap, 
 		float fBlackPt, float fWhitePt, float fBlackPtSteepness);
 
 	// Dim out a rectangle in the given 32 bpp DIB using alpha blending
@@ -120,7 +132,7 @@ private:
 	CBasicProcessing(void);
 
 	static void* ApplyLDC32bpp_Core(CSize fullTargetSize, CPoint fullTargetOffset, CSize dibSize,
-										CSize ldcMapSize, const void* pDIBPixels, const uint8* pLUT, const uint8* pLDCMap,
+										CSize ldcMapSize, const void* pDIBPixels, const int32* pSatLUTs, const uint8* pLUT, const uint8* pLDCMap,
 										float fBlackPt, float fWhitePt, float fBlackPtSteepness, uint32* pTarget);
 
 

@@ -106,7 +106,7 @@ void CProcessingThread::DoProcess(CProcessingRequest* pRequest, int nOffsetY, in
 			CSize(pReq->ClippedTargetSize.cx, nSizeY),
 			pReq->LDCMapSize, 
 			(const uint32*)(pReq->SourcePixels) + pReq->ClippedTargetSize.cx * nOffsetY, 
-			pReq->LUT, pReq->LDCMap,
+			pReq->SatLUTs, pReq->LUT, pReq->LDCMap,
 			pReq->BlackPt, pReq->WhitePt, pReq->BlackPtSteepness,
 			(uint32*)(pReq->TargetPixels) + pReq->ClippedTargetSize.cx * nOffsetY);
 	}

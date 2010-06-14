@@ -265,6 +265,7 @@ private:
 	// stuff needed to perform LUT and LDC processing
 	uint8* m_pLUTAllChannels; // for global contrast and brightness correction
 	uint8* m_pLUTRGB; // B,G,R three channel LUT
+	int32* m_pSaturationLUTs; // Saturation LUTs
 	CLocalDensityCorr* m_pLDC;
 	bool m_bLDCOwned;
 	float m_fColorCorrectionFactors[6];

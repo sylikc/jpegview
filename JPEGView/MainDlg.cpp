@@ -86,6 +86,7 @@ static CImageProcessingParams GetDefaultProcessingParams() {
 	return CImageProcessingParams(
 		sp.Contrast(),
 		sp.Gamma(),
+		sp.Saturation(),
 		sp.Sharpen(),
 		0.0, 0.5,
 		sp.BrightenShadows(),
@@ -98,7 +99,7 @@ static CImageProcessingParams GetDefaultProcessingParams() {
 
 // Gets hardcoded processing parameters, turning off all processing except sharpening according to INI
 static CImageProcessingParams GetNoProcessingParams() {
-	return CImageProcessingParams(0.0, 1.0, CSettingsProvider::This().Sharpen(), 0.0, 0.5, 0.5, 0.25, 0.5, 0.0, 0.0, 0.0); 
+	return CImageProcessingParams(0.0, 1.0, 1.0, CSettingsProvider::This().Sharpen(), 0.0, 0.5, 0.5, 0.25, 0.5, 0.0, 0.0, 0.0); 
 }
 
 // Gets default image processing flags as set in INI file
@@ -362,7 +363,7 @@ LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam
 	m_pSliderMgr = new CSliderMgr(this->m_hWnd);
 	m_pSliderMgr->AddSlider(CNLS::GetString(_T("Contrast")), &(m_pImageProcParams->Contrast), NULL, -0.5, 0.5, false, false);
 	m_pSliderMgr->AddSlider(CNLS::GetString(_T("Brightness")), &(m_pImageProcParams->Gamma), NULL, 0.5, 2.0, true, true);
-	m_pSliderMgr->AddSlider(CNLS::GetString(_T("Sharpen")), &(m_pImageProcParams->Sharpen), NULL, 0.0, 0.5, false, false);
+	m_pSliderMgr->AddSlider(CNLS::GetString(_T("Saturation")), &(m_pImageProcParams->Saturation), NULL, 0.0, 2.0, false, false);
 	m_pSliderMgr->AddSlider(CNLS::GetString(_T("C - R")), &(m_pImageProcParams->CyanRed), NULL, -1.0, 1.0, false, false);
 	m_pSliderMgr->AddSlider(CNLS::GetString(_T("M - G")), &(m_pImageProcParams->MagentaGreen), NULL, -1.0, 1.0, false, false);
 	m_pSliderMgr->AddSlider(CNLS::GetString(_T("Y - B")), &(m_pImageProcParams->YellowBlue), NULL, -1.0, 1.0, false, false);
@@ -3045,13 +3046,15 @@ void CMainDlg::SaveParameters() {
 		return;
 	}
 
-	const int BUFF_SIZE = 128;
+	const int BUFF_SIZE = 256;
 	TCHAR buff[BUFF_SIZE];
 	CString sText = CString(CNLS::GetString(_T("Do you really want to save the following parameters as default to the INI file"))) + _T('\n') +
 					Helpers::JPEGViewAppDataPath() + _T("JPEGView.ini ?\n\n");
 	_stprintf_s(buff, BUFF_SIZE, CString(CNLS::GetString(_T("Contrast"))) + _T(": %.2f\n"), m_pImageProcParams->Contrast);
 	sText += buff;
 	_stprintf_s(buff, BUFF_SIZE, CString(CNLS::GetString(_T("Gamma"))) + _T(": %.2f\n"), m_pImageProcParams->Gamma);
+	sText += buff;
+	_stprintf_s(buff, BUFF_SIZE, CString(CNLS::GetString(_T("Saturation"))) + _T(": %.2f\n"), m_pImageProcParams->Saturation);
 	sText += buff;
 	_stprintf_s(buff, BUFF_SIZE, CString(CNLS::GetString(_T("Sharpen"))) + _T(": %.2f\n"), m_pImageProcParams->Sharpen);
 	sText += buff;

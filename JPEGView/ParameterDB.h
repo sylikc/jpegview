@@ -52,10 +52,13 @@ private:
 	uint8 cyanRed;
 	uint8 magentaGreen;
 	uint8 yellowBlue;
-	uint8 reserved[6]; // reserved for future use
+	int8 saturation;
+	uint8 reserved[5]; // reserved for future use
 
 	uint8 Convert(float value, float lowerLimit, float upperLimit, bool isLog10) const;
 	float Convert(uint8 value, float lowerLimit, float upperLimit, bool isLog10) const;
+	int8 ConvertSigned(float value, float range) const; // +- range
+	float ConvertSigned(int8 value, float range) const;
 };
 
 #pragma pack(1)

@@ -18,6 +18,7 @@ public:
 	bool StoreToEXEPath() { return m_bStoreToEXEPath; }
 	double Contrast() { return m_dContrast; }
 	double Gamma() { return m_dGamma; }
+	double Saturation() { return m_dSaturation; }
 	double Sharpen() { return m_dSharpen; }
 	double CyanRed() { return m_dCyanRed; }
 	double MagentaGreen() { return m_dMagentaGreen; }
@@ -93,6 +94,7 @@ private:
 
 	double m_dContrast;
 	double m_dGamma;
+	double m_dSaturation;
 	double m_dSharpen;
 	double m_dCyanRed;
 	double m_dMagentaGreen;
