@@ -19,7 +19,7 @@
 static TCHAR s_TimingInfo[256];
 
 /////////////////////////////////////////////////////////////////////////////////////////////
-// LUT creation for contrast and brightness and application of LUT
+// LUT creation for saturation, contrast and brightness and application of LUT
 /////////////////////////////////////////////////////////////////////////////////////////////
 
 uint8* CBasicProcessing::CreateSingleChannelLUT(double dContrastEnh, double dGamma) {
@@ -72,6 +72,21 @@ uint8* CBasicProcessing::CreateSingleChannelLUT(double dContrastEnh, double dGam
 	return pLUT;
 }
 
+int32* CBasicProcessing::CreateColorSaturationLUTs(double dSaturation) {
+	const double cdScaler = 1 << 16;
+	int32* pLUTs = new int32[6 * 256];
+	for (int i = 0; i < 256; i++) {
+		pLUTs[i] = Helpers::RoundToInt(i * (0.299 + 0.701 * dSaturation) * cdScaler);
+		pLUTs[i + 256] = Helpers::RoundToInt(i * 0.587 * (1.0 - dSaturation) * cdScaler);
+		pLUTs[i + 512] = Helpers::RoundToInt(i * 0.114 * (1.0 - dSaturation) * cdScaler);
+		pLUTs[i + 768] = Helpers::RoundToInt(i * 0.299 * (1.0 - dSaturation) * cdScaler);
+		pLUTs[i + 1024] = Helpers::RoundToInt(i * (0.587 + 0.413 * dSaturation) * cdScaler);
+		pLUTs[i + 1280] = Helpers::RoundToInt(i * (0.114 + 0.886 * dSaturation) * cdScaler);
+	}
+
+	return pLUTs;
+}
+
 void* CBasicProcessing::Apply3ChannelLUT32bpp(int nWidth, int nHeight, const void* pDIBPixels, const uint8* pLUT) {
 	if (pDIBPixels == NULL || pLUT == NULL) {
 		return NULL;
@@ -85,6 +100,33 @@ void* CBasicProcessing::Apply3ChannelLUT32bpp(int nWidth, int nHeight, const voi
 			uint32 nSrcPixels = *pSrc;
 			*pTgt = pLUT[nSrcPixels & 0xFF] + pLUT[256 + ((nSrcPixels >> 8) & 0xFF)] * 256 + 
 				pLUT[512 + ((nSrcPixels >> 16) & 0xFF)] * 65536;
+			pTgt++; pSrc++;
+		}
+	}
+	return pTarget;
+}
+
+void* CBasicProcessing::ApplySaturationAnd3ChannelLUT32bpp(int nWidth, int nHeight, const void* pDIBPixels, const int32* pSatLUTs, const uint8* pLUT) {
+	if (pDIBPixels == NULL || pSatLUTs == NULL || pLUT == NULL) {
+		return NULL;
+	}
+
+	const int cnScaler = 1 << 16;
+	const int cnMax = 255 * cnScaler;
+	uint32* pTarget = new uint32[nWidth * nHeight];
+	const uint32* pSrc = (uint32*)pDIBPixels;
+	uint32* pTgt = pTarget;
+	for (int j = 0; j < nHeight; j++) {
+		for (int i = 0; i < nWidth; i++) {
+			uint32 nSrcPixels = *pSrc;
+			int32 nSrcBlue = nSrcPixels & 0xFF;
+			int32 nSrcGreen = (nSrcPixels >> 8) & 0xFF;
+			int32 nSrcRed = (nSrcPixels >> 16) & 0xFF;
+			int32 nRed = pSatLUTs[nSrcRed] + pSatLUTs[256 + nSrcGreen] + pSatLUTs[512 + nSrcBlue];
+			int32 nGreen = pSatLUTs[768 + nSrcRed] + pSatLUTs[1024 + nSrcGreen] + pSatLUTs[512 + nSrcBlue];
+			int32 nBlue = pSatLUTs[768 + nSrcRed] + pSatLUTs[256 + nSrcGreen] + pSatLUTs[1280 + nSrcBlue];
+			*pTgt = pLUT[max(0, min(cnMax, nBlue)) >> 16] + pLUT[256 + (max(0, min(cnMax, nGreen)) >> 16)] * 256 + 
+				pLUT[512 + (max(0, min(cnMax, nRed)) >> 16)] * 65536;
 			pTgt++; pSrc++;
 		}
 	}
@@ -130,7 +172,7 @@ static int32* CreateMulLUT(float fBlackPt, float fWhitePt, float fBlackPtSteepne
 }
 
 void* CBasicProcessing::ApplyLDC32bpp_Core(CSize fullTargetSize, CPoint fullTargetOffset, CSize dibSize,
-									  CSize ldcMapSize, const void* pDIBPixels, const uint8* pLUT, const uint8* pLDCMap,
+									  CSize ldcMapSize, const void* pDIBPixels, const int32* pSatLUTs, const uint8* pLUT, const uint8* pLDCMap,
 									  float fBlackPt, float fWhitePt, float fBlackPtSteepness, uint32* pTarget) {
 
 	uint32 nIncrementX, nIncrementY;
@@ -140,6 +182,8 @@ void* CBasicProcessing::ApplyLDC32bpp_Core(CSize fullTargetSize, CPoint fullTarg
 	uint32 nCurY = fullTargetOffset.y*nIncrementY;
 	uint32 nStartX = fullTargetOffset.x*nIncrementX;
 
+	const int cnScaler = 1 << 16;
+	const int cnMax = 255 * cnScaler;
 	const int32* pMulLUT = CreateMulLUT(fBlackPt, fWhitePt, fBlackPtSteepness);
 	const uint32* pSrc = (uint32*)pDIBPixels;
 	uint32* pTgt = pTarget;
@@ -148,29 +192,63 @@ void* CBasicProcessing::ApplyLDC32bpp_Core(CSize fullTargetSize, CPoint fullTarg
 		uint32 nCurYFrac = nCurY & 0xFFFF;
 		const uint8* pLDCMapSrc = pLDCMap + ldcMapSize.cx * nCurYTrunc;
 		uint32 nCurX = nStartX;
-		for (int i = 0; i < dibSize.cx; i++) {
-			// perform bilinear interpolation of mask
-			uint32 nCurXTrunc = nCurX >> 16;
-			uint32 nCurXFrac = nCurX & 0xFFFF;
-			uint32 nMaskTopLeft  = pLDCMapSrc[nCurXTrunc];
-			uint32 nMaskTopRight = pLDCMapSrc[nCurXTrunc + 1];
-			uint32 nMaskBottomLeft = pLDCMapSrc[nCurXTrunc + ldcMapSize.cx];
-			uint32 nMaskBottomRight = pLDCMapSrc[nCurXTrunc + ldcMapSize.cx + 1];
-			uint32 nLeft = ((int)nCurYFrac*(int)(nMaskBottomLeft - nMaskTopLeft) >> 16) + nMaskTopLeft;
-			uint32 nRight = ((int)nCurYFrac*(int)(nMaskBottomRight - nMaskTopRight) >> 16) + nMaskTopRight;
-			int32 nMaskValue = ((int)nCurXFrac*(int)(nRight - nLeft) >> 16) + nLeft - 127;
+		if (pSatLUTs == NULL) {
+			for (int i = 0; i < dibSize.cx; i++) {
+				// perform bilinear interpolation of mask
+				uint32 nCurXTrunc = nCurX >> 16;
+				uint32 nCurXFrac = nCurX & 0xFFFF;
+				uint32 nMaskTopLeft  = pLDCMapSrc[nCurXTrunc];
+				uint32 nMaskTopRight = pLDCMapSrc[nCurXTrunc + 1];
+				uint32 nMaskBottomLeft = pLDCMapSrc[nCurXTrunc + ldcMapSize.cx];
+				uint32 nMaskBottomRight = pLDCMapSrc[nCurXTrunc + ldcMapSize.cx + 1];
+				uint32 nLeft = ((int)nCurYFrac*(int)(nMaskBottomLeft - nMaskTopLeft) >> 16) + nMaskTopLeft;
+				uint32 nRight = ((int)nCurYFrac*(int)(nMaskBottomRight - nMaskTopRight) >> 16) + nMaskTopRight;
+				int32 nMaskValue = ((int)nCurXFrac*(int)(nRight - nLeft) >> 16) + nLeft - 127;
 
-			uint32 nSrcPixels = *pSrc;
-			uint32 nBlue = pLUT[nSrcPixels & 0xFF];
-			nBlue = nBlue + (nMaskValue*pMulLUT[nBlue] >> 14);
-			uint32 nGreen = pLUT[((nSrcPixels >> 8) & 0xFF) + 256];
-			nGreen = nGreen + (nMaskValue*pMulLUT[nGreen] >> 14);
-			uint32 nRed = pLUT[((nSrcPixels >> 16) & 0xFF) + 512];
-			nRed = nRed + (nMaskValue*pMulLUT[nRed] >> 14);
+				uint32 nSrcPixels = *pSrc;
+				uint32 nBlue = pLUT[nSrcPixels & 0xFF];
+				nBlue = nBlue + (nMaskValue*pMulLUT[nBlue] >> 14);
+				uint32 nGreen = pLUT[((nSrcPixels >> 8) & 0xFF) + 256];
+				nGreen = nGreen + (nMaskValue*pMulLUT[nGreen] >> 14);
+				uint32 nRed = pLUT[((nSrcPixels >> 16) & 0xFF) + 512];
+				nRed = nRed + (nMaskValue*pMulLUT[nRed] >> 14);
 
-			*pTgt = max(0, min(255, (int)nBlue)) + max(0, min(255, (int)nGreen))*256 + max(0, min(255, (int)nRed))*65536;
-			pTgt++; pSrc++;
-			nCurX += nIncrementX;
+				*pTgt = max(0, min(255, (int)nBlue)) + max(0, min(255, (int)nGreen))*256 + max(0, min(255, (int)nRed))*65536;
+				pTgt++; pSrc++;
+				nCurX += nIncrementX;
+			}
+		} else {
+			for (int i = 0; i < dibSize.cx; i++) {
+				// perform bilinear interpolation of mask
+				uint32 nCurXTrunc = nCurX >> 16;
+				uint32 nCurXFrac = nCurX & 0xFFFF;
+				uint32 nMaskTopLeft  = pLDCMapSrc[nCurXTrunc];
+				uint32 nMaskTopRight = pLDCMapSrc[nCurXTrunc + 1];
+				uint32 nMaskBottomLeft = pLDCMapSrc[nCurXTrunc + ldcMapSize.cx];
+				uint32 nMaskBottomRight = pLDCMapSrc[nCurXTrunc + ldcMapSize.cx + 1];
+				uint32 nLeft = ((int)nCurYFrac*(int)(nMaskBottomLeft - nMaskTopLeft) >> 16) + nMaskTopLeft;
+				uint32 nRight = ((int)nCurYFrac*(int)(nMaskBottomRight - nMaskTopRight) >> 16) + nMaskTopRight;
+				int32 nMaskValue = ((int)nCurXFrac*(int)(nRight - nLeft) >> 16) + nLeft - 127;
+
+				// Apply saturation LUTs and three channel LUT
+				uint32 nSrcPixels = *pSrc;
+				int32 nSrcBlue = nSrcPixels & 0xFF;
+				int32 nSrcGreen = (nSrcPixels >> 8) & 0xFF;
+				int32 nSrcRed = (nSrcPixels >> 16) & 0xFF;
+				int32 nRed = pSatLUTs[nSrcRed] + pSatLUTs[256 + nSrcGreen] + pSatLUTs[512 + nSrcBlue];
+				int32 nGreen = pSatLUTs[768 + nSrcRed] + pSatLUTs[1024 + nSrcGreen] + pSatLUTs[512 + nSrcBlue];
+				int32 nBlue = pSatLUTs[768 + nSrcRed] + pSatLUTs[256 + nSrcGreen] + pSatLUTs[1280 + nSrcBlue];
+				nBlue = pLUT[max(0, min(cnMax, nBlue)) >> 16];
+				nBlue = nBlue + (nMaskValue*pMulLUT[nBlue] >> 14);
+				nGreen = pLUT[(max(0, min(cnMax, nGreen)) >> 16) + 256];
+				nGreen = nGreen + (nMaskValue*pMulLUT[nGreen] >> 14);
+				nRed = pLUT[(max(0, min(cnMax, nRed)) >> 16) + 512];
+				nRed = nRed + (nMaskValue*pMulLUT[nRed] >> 14);
+
+				*pTgt = max(0, min(255, (int)nBlue)) + max(0, min(255, (int)nGreen))*256 + max(0, min(255, (int)nRed))*65536;
+				pTgt++; pSrc++;
+				nCurX += nIncrementX;
+			}
 		}
 		nCurY += nIncrementY;
 	}
@@ -179,7 +257,7 @@ void* CBasicProcessing::ApplyLDC32bpp_Core(CSize fullTargetSize, CPoint fullTarg
 }
 
 void* CBasicProcessing::ApplyLDC32bpp(CSize fullTargetSize, CPoint fullTargetOffset, CSize dibSize,
-									  CSize ldcMapSize, const void* pDIBPixels, const uint8* pLUT, const uint8* pLDCMap,
+									  CSize ldcMapSize, const void* pDIBPixels, const int32* pSatLUTs, const uint8* pLUT, const uint8* pLDCMap,
 									  float fBlackPt, float fWhitePt, float fBlackPtSteepness) {
 
 	if (pDIBPixels == NULL || pLUT == NULL || pLDCMap == NULL) {
@@ -193,7 +271,7 @@ void* CBasicProcessing::ApplyLDC32bpp(CSize fullTargetSize, CPoint fullTargetOff
 	uint32* pTarget = new uint32[dibSize.cx * dibSize.cy];
 	CProcessingThreadPool& threadPool = CProcessingThreadPool::This();
 	CRequestLDC request(pDIBPixels, dibSize, pTarget, fullTargetSize, fullTargetOffset,
-		ldcMapSize, pLUT, pLDCMap, fBlackPt, fWhitePt, fBlackPtSteepness);
+		ldcMapSize, pSatLUTs, pLUT, pLDCMap, fBlackPt, fWhitePt, fBlackPtSteepness);
 	threadPool.Process(&request);
 
 	return pTarget;

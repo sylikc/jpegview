@@ -201,7 +201,7 @@ bool CSaveImage::SaveImage(LPCTSTR sFileName, CJPEGImage * pImage, const CImageP
 	if (bSuccess && CSettingsProvider::This().CreateParamDBEntryOnSave()) {
 		if (nPixelHash != 0) {
 			CParameterDBEntry newEntry;
-			CImageProcessingParams ippNone(0.0, 1.0, CSettingsProvider::This().Sharpen(), 0.0, 0.5, 0.5, 0.25, 0.5, 0.0, 0.0, 0.0);
+			CImageProcessingParams ippNone(0.0, 1.0, 1.0, CSettingsProvider::This().Sharpen(), 0.0, 0.5, 0.5, 0.25, 0.5, 0.0, 0.0, 0.0);
 			EProcessingFlags procFlagsNone = GetProcessingFlag(eFlags, PFLAG_HighQualityResampling) ? PFLAG_HighQualityResampling : PFLAG_None;
 			newEntry.InitFromProcessParams(ippNone, procFlagsNone, 0);
 			newEntry.SetHash(nPixelHash);

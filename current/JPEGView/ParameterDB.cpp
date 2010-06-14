@@ -105,6 +105,7 @@ void CParameterDBEntry::InitFromProcessParams(const CImageProcessingParams & pro
 
 	contrast = Convert((float)processParams.Contrast, -0.5f, 0.5f, false);
 	brightness = Convert((float)processParams.Gamma, 0.5f, 2.0f, false);
+	saturation = ConvertSigned((float)processParams.Saturation - 1, 1.0f);
 	sharpen = Convert((float)processParams.Sharpen, 0.0f, 0.5f, false);
 	lightenShadows = Convert((float)processParams.LightenShadows, 0.0f, 1.0f, false);
 	darkenHighlights = Convert((float)processParams.DarkenHighlights, 0.0f, 1.0f, false);
@@ -137,6 +138,7 @@ void CParameterDBEntry::WriteToProcessParams(CImageProcessingParams & processPar
 											 EProcessingFlags & eFlags, int & nRotation) const {
  	processParams.Contrast = Convert(contrast, -0.5f, 0.5f, false);
 	processParams.Gamma = Convert(brightness, 0.5f, 2.0f, false);
+	processParams.Saturation = ConvertSigned(saturation, 1.0f) + 1;
 	processParams.Sharpen = Convert(sharpen, 0.0f, 0.5f, false);
 	processParams.LightenShadows = Convert(lightenShadows, 0.0f, 1.0f, false);
 	processParams.DarkenHighlights = Convert(darkenHighlights, 0.0f, 1.0f, false);
@@ -287,6 +289,15 @@ float CParameterDBEntry::Convert(uint8 value, float lowerLimit, float upperLimit
 		fValue = pow(fValue, 10);
 	}
 	return fValue;
+}
+
+int8 CParameterDBEntry::ConvertSigned(float value, float range) const {
+	value = max(-range, min(range, value));
+	return min(127, Helpers::RoundToInt(128 * value/range));
+}
+
+float CParameterDBEntry::ConvertSigned(int8 value, float range) const{
+	return range*value/128.0f;
 }
 
 bool CParameterDBEntry::HasZoomOffsetStored() const {

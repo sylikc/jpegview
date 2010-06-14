@@ -128,6 +128,7 @@ CSettingsProvider::CSettingsProvider(void) {
 void CSettingsProvider::ReadWriteableINISettings() {
 	m_dContrast = GetDouble(_T("Contrast"), 0.0, -0.5, 0.5);
 	m_dGamma = GetDouble(_T("Gamma"), 1.0, 0.1, 10.0);
+	m_dSaturation = GetDouble(_T("Saturation"), 1.0, 0.0, 2.0);
 	m_dSharpen = GetDouble(_T("Sharpen"), 0.3, 0.0, 0.5);
 	m_dCyanRed = GetDouble(_T("CyanRed"), 0.0, -1.0, 1.0);
 	m_dMagentaGreen = GetDouble(_T("MagentaGreen"), 0.0, -1.0, 1.0);
@@ -228,14 +229,15 @@ void CSettingsProvider::ReadWriteableINISettings() {
 
 CImageProcessingParams CSettingsProvider::LandscapeModeParams(const CImageProcessingParams& templParams) {
 	const float cfUndefined = -1;
-	const int cnParams = 11;
+	const int cnParams = 12;
 	float fParams[cnParams];
 	for (int i = 0; i < cnParams; i++) fParams[i] = cfUndefined;
-	_stscanf(m_sLandscapeModeParams, _T("%f %f %f %f %f %f %f %f %f %f %f"), &fParams[0], &fParams[1], &fParams[2], 
-		&fParams[3], &fParams[4], &fParams[5], &fParams[6], &fParams[7], &fParams[8], &fParams[9], &fParams[10]);
+	_stscanf(m_sLandscapeModeParams, _T("%f %f %f %f %f %f %f %f %f %f %f %f"), &fParams[0], &fParams[1], &fParams[2], 
+		&fParams[3], &fParams[4], &fParams[5], &fParams[6], &fParams[7], &fParams[8], &fParams[9], &fParams[10], &fParams[11]);
 	return CImageProcessingParams(
 		(fParams[0] == cfUndefined) ? templParams.Contrast : fParams[0],
 		(fParams[1] == cfUndefined) ? templParams.Gamma : fParams[1],
+		(fParams[11] == cfUndefined) ? templParams.Saturation : fParams[11],
 		(fParams[2] == cfUndefined) ? templParams.Sharpen : fParams[2],
 		(fParams[3] == cfUndefined) ? templParams.ColorCorrectionFactor : fParams[3],
 		(fParams[4] == cfUndefined) ? templParams.ContrastCorrectionFactor : fParams[4],
@@ -255,6 +257,7 @@ void CSettingsProvider::SaveSettings(const CImageProcessingParams& procParams,
 
 	WriteDouble(_T("Contrast"), procParams.Contrast);
 	WriteDouble(_T("Gamma"), procParams.Gamma);
+	WriteDouble(_T("Saturation"), procParams.Saturation);
 	WriteDouble(_T("Sharpen"), procParams.Sharpen);
 	WriteDouble(_T("CyanRed"), procParams.CyanRed);
 	WriteDouble(_T("MagentaGreen"), procParams.MagentaGreen);

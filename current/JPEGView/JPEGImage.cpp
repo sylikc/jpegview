@@ -54,6 +54,7 @@ CJPEGImage::CJPEGImage(int nWidth, int nHeight, void* pIJLPixels, void* pEXIFDat
 	
 	m_pLUTAllChannels = NULL;
 	m_pLUTRGB = NULL;
+	m_pSaturationLUTs = NULL;
 	m_eProcFlags = PFLAG_None;
 	m_eProcFlagsInitial = PFLAG_None;
 	m_nInitialRotation = 0;
@@ -99,6 +100,8 @@ CJPEGImage::~CJPEGImage(void) {
 	m_pLUTAllChannels = NULL;
 	delete[] m_pLUTRGB;
 	m_pLUTRGB = NULL;
+	delete[] m_pSaturationLUTs;
+	m_pSaturationLUTs = NULL;
 	if (m_bLDCOwned) delete m_pLDC;
 	m_pLDC = NULL;
 	m_pLastDIB = NULL;
@@ -638,19 +641,21 @@ void* CJPEGImage::ApplyCorrectionLUTandLDC(const CImageProcessingParams & imageP
 	bool bLDC = GetProcessingFlag(eProcFlags, PFLAG_LDC);
 	bool bLDCOld = GetProcessingFlag(m_eProcFlags, PFLAG_LDC);
 
-	bool bNullLUTProcessings = fabs(imageProcParams.Contrast) < 1e-4 && fabs(imageProcParams.Gamma - 1) < 1e-4;
+	bool bNoContrastAndGammaLUT = fabs(imageProcParams.Contrast) < 1e-4 && fabs(imageProcParams.Gamma - 1) < 1e-4;
+	bool bMustUseSaturationLUTs = fabs(imageProcParams.Saturation - 1.0) > 1e-4;
 	bool bNoColorCastCorrection = fabs(imageProcParams.CyanRed) < 1e-4 && fabs(imageProcParams.MagentaGreen) < 1e-4 &&
 		fabs(imageProcParams.YellowBlue) < 1e-4;
-	bool bNoLUTApplied = bNullLUTProcessings && bNoColorCastCorrection && !bAutoContrast;
-	bool bGlobalLUTChanged = fabs(imageProcParams.Contrast - m_imageProcParams.Contrast) > 1e-4 ||
+	bool bNoLUTsApplied = bNoContrastAndGammaLUT && bNoColorCastCorrection && !bAutoContrast && !bMustUseSaturationLUTs;
+	bool bContrastOrGammaChanged = fabs(imageProcParams.Contrast - m_imageProcParams.Contrast) > 1e-4 ||
 		fabs(imageProcParams.Gamma - m_imageProcParams.Gamma) > 1e-4;
 	bool bColorCastCorrChanged = fabs(imageProcParams.CyanRed - m_imageProcParams.CyanRed) > 1e-4 ||
 		fabs(imageProcParams.MagentaGreen - m_imageProcParams.MagentaGreen) > 1e-4 ||
 		fabs(imageProcParams.YellowBlue - m_imageProcParams.YellowBlue) > 1e-4;
 	bool bCorrectionFactorChanged = fabs(imageProcParams.ColorCorrectionFactor-m_imageProcParams.ColorCorrectionFactor) > 1e-4 || 
 		fabs(imageProcParams.ContrastCorrectionFactor-m_imageProcParams.ContrastCorrectionFactor) > 1e-4;
-	bool bMustReapplyLUT = bAutoContrast != bAutoContrastOld || bAutoContrastSection != bAutoContrastSectionOld || bLDC != bLDCOld || 
-		bCorrectionFactorChanged || bGlobalLUTChanged || bColorCastCorrChanged;
+	bool bSaturationChanged = fabs(imageProcParams.Saturation - m_imageProcParams.Saturation) > 1e-4;
+	bool bMustReapplyLUTs = bAutoContrast != bAutoContrastOld || bAutoContrastSection != bAutoContrastSectionOld || bLDC != bLDCOld || 
+		bCorrectionFactorChanged || bContrastOrGammaChanged || bColorCastCorrChanged || bSaturationChanged;
 	bool bLDCParametersChanged = fabs(imageProcParams.LightenShadows - m_imageProcParams.LightenShadows) > 1e-4 ||
 		fabs(imageProcParams.DarkenHighlights - m_imageProcParams.DarkenHighlights) > 1e-4 ||
 		fabs(imageProcParams.LightenShadowSteepness - m_imageProcParams.LightenShadowSteepness) > 1e-4 ;
@@ -658,10 +663,10 @@ void* CJPEGImage::ApplyCorrectionLUTandLDC(const CImageProcessingParams & imageP
 	bool bMustUse3ChannelLUT = bAutoContrast || !bNoColorCastCorrection;
 	bool bUseDimming = m_pDimRects != NULL && m_bEnableDimming;
 
-	if (!bMustReapplyLUT && !bMustReapplyLDC && pCachedTargetDIB != NULL) {
+	if (!bMustReapplyLUTs && !bMustReapplyLDC && pCachedTargetDIB != NULL) {
 		// consider special case that nothing is dimmed and no LUT and LDC is applied but
 		// processed pixel is here, we do not want to use it - in this case we just continue.
-		if (!(bNoLUTApplied && !bUseDimming && !bLDC)) {
+		if (!(bNoLUTsApplied && !bUseDimming && !bLDC)) {
 			return pCachedTargetDIB;
 		}
 	}
@@ -676,9 +681,9 @@ void* CJPEGImage::ApplyCorrectionLUTandLDC(const CImageProcessingParams & imageP
 	}
 
 	// Recalculate LUTs if needed
-	if (bGlobalLUTChanged || m_pLUTAllChannels == NULL) {
+	if (bContrastOrGammaChanged || m_pLUTAllChannels == NULL) {
 		delete[] m_pLUTAllChannels;
-		m_pLUTAllChannels = bNullLUTProcessings ? NULL : CBasicProcessing::CreateSingleChannelLUT(imageProcParams.Contrast, imageProcParams.Gamma);
+		m_pLUTAllChannels = bNoContrastAndGammaLUT ? NULL : CBasicProcessing::CreateSingleChannelLUT(imageProcParams.Contrast, imageProcParams.Gamma);
 	}
 
 	// Calculate LDC if needed
@@ -721,6 +726,13 @@ void* CJPEGImage::ApplyCorrectionLUTandLDC(const CImageProcessingParams & imageP
 		delete[] m_pLUTRGB;
 		m_pLUTRGB = NULL;
 	}
+	if (bMustUseSaturationLUTs && (m_pSaturationLUTs == NULL || bSaturationChanged)) {
+		delete[] m_pSaturationLUTs;
+		m_pSaturationLUTs = CBasicProcessing::CreateColorSaturationLUTs(imageProcParams.Saturation);
+	} else if (!bMustUseSaturationLUTs) {
+		delete[] m_pSaturationLUTs;
+		m_pSaturationLUTs = NULL;
+	}
 	
 	delete[] pCachedTargetDIB;
 	pCachedTargetDIB = NULL;
@@ -728,21 +740,26 @@ void* CJPEGImage::ApplyCorrectionLUTandLDC(const CImageProcessingParams & imageP
 		delete pHistogram;
 	}
 
-	if (!bNoLUTApplied || bLDC) {
+	if (!bNoLUTsApplied || bLDC) {
 		// LUT or/and LDC --> apply correction
 		uint8* pLUT = CHistogramCorr::CombineLUTs(m_pLUTAllChannels, m_pLUTRGB);
 		if (bLDC) {
 			pCachedTargetDIB = CBasicProcessing::ApplyLDC32bpp(fullTargetSize, targetOffset, dibSize, m_pLDC->GetLDCMapSize(),
-				pSourceDIB, pLUT, m_pLDC->GetLDCMap(), m_pLDC->GetBlackPt(), m_pLDC->GetWhitePt(), (float)imageProcParams.LightenShadowSteepness);
+				pSourceDIB, bMustUseSaturationLUTs ? m_pSaturationLUTs : NULL, pLUT, m_pLDC->GetLDCMap(),
+				m_pLDC->GetBlackPt(), m_pLDC->GetWhitePt(), (float)imageProcParams.LightenShadowSteepness);
 		} else {
-			pCachedTargetDIB = CBasicProcessing::Apply3ChannelLUT32bpp(dibSize.cx, dibSize.cy, pSourceDIB, pLUT);
+			if (bMustUseSaturationLUTs) {
+				pCachedTargetDIB = CBasicProcessing::ApplySaturationAnd3ChannelLUT32bpp(dibSize.cx, dibSize.cy, pSourceDIB, m_pSaturationLUTs, pLUT);
+			} else {
+				pCachedTargetDIB = CBasicProcessing::Apply3ChannelLUT32bpp(dibSize.cx, dibSize.cy, pSourceDIB, pLUT);
+			}
 		}
 		delete[] pLUT;
 	} else if (!bUseDimming) {
-		// no LUT, no LDC, no dimming --> return original pixels
+		// no LUTs, no LDC, no dimming --> return original pixels
 		return pSourceDIB;
 	} else {
-		// no LUT, no LDC but dimming --> make copy of original pixels
+		// no LUTs, no LDC but dimming --> make copy of original pixels
 		pCachedTargetDIB = new uint32[dibSize.cx*dibSize.cy];
 		memcpy(pCachedTargetDIB, pSourceDIB, dibSize.cx*dibSize.cy*4);
 	}

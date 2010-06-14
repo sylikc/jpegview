@@ -25,6 +25,8 @@ Changelog
 [1.0.21]
 Bugs fixed:
 New features:
+- Color saturation feature added
+  Support includes: Default saturation in INI file, parameter DB and landscape picture mode
 - UI colors can be set in INI file. New default colors instead of the traditional green.
   To restore the old colors, change them in the INI file to:
   GUIColor=0 255 0

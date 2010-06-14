@@ -59,10 +59,11 @@ class CRequestLDC : public CProcessingRequest {
 public:
 	CRequestLDC(const void* pSourcePixels, CSize sourceSize, void* pTargetPixels,
 			CSize fullTargetSize, CPoint fullTargetOffset,
-			CSize ldcMapSize, const uint8* pLUT, const uint8* pLDCMap,
+			CSize ldcMapSize, const int32* pSatLUTs, const uint8* pLUT, const uint8* pLDCMap,
 			float fBlackPt, float fWhitePt, float fBlackPtSteepness) 
 			: CProcessingRequest(LDCAndLUT, pSourcePixels, sourceSize, pTargetPixels, fullTargetSize, fullTargetOffset, sourceSize) {
 		LDCMapSize = ldcMapSize;
+		SatLUTs = pSatLUTs;
 		LUT = pLUT;
 		LDCMap = pLDCMap;
 		BlackPt = fBlackPt;
@@ -71,6 +72,7 @@ public:
 	}
 
 	CSize LDCMapSize;
+	const int32* SatLUTs;
 	const uint8* LUT;
 	const uint8* LDCMap;
 	float BlackPt;
