@@ -220,7 +220,7 @@ void CResizeFilter::CalculateFilterParams(EFilterType eFilter) {
 		}
 	} else if (eFilter == Filter_Downsampling_No_Aliasing) {
 		double dFactor = (double)m_nSourceSize/m_nTargetSize;
-		m_dMultX = 1.0/((dFactor + 1)*0.5);
+		m_dMultX = 1.0/dFactor;
 		m_nFilterLen = (int) (5*dFactor);
 		m_nFilterLen = min(MAX_FILTER_LEN, m_nFilterLen);
 		m_nFilterOffset = (m_nFilterLen - 1)/2;
@@ -282,7 +282,7 @@ static inline double EvaluateCore_NoAliasing(double dX, double dSharpen) {
 	// this is a Lanczos filter
 	if (dX < -2 || dX > 2) {
 		return 0.0;
-	} else if (dX == 0.0) {
+	} else if (abs(dX) < 1e-6) {
 		return 1.0;
 	} else if (dX > -1 && dX < 1) {
 		return (2*sin(PI*dX)*sin(PI2*dX))/(PISQR*dX*dX);
@@ -291,7 +291,28 @@ static inline double EvaluateCore_NoAliasing(double dX, double dSharpen) {
 	}
 }
 
-double CResizeFilter::EvaluateKernel(double dX, EFilterType eFilter) {
+// Evaluate a filter kernel at position dX. The filter kernel is assumed to have zero solutions at
+// integer values and is centered around zero.
+// dSharpen is a parameter that is used to control scaling of the negative pads of the filter kernel,
+// resulting in increased sharpening effect.
+static double inline EvaluateKernel(double dX, double dSharpen, EFilterType eFilter) {
+	switch (eFilter) {
+		case Filter_Downsampling_Best_Quality:
+			return EvaluateCore_BestQuality(dX, dSharpen);
+			break;
+		case Filter_Downsampling_No_Aliasing:
+			return EvaluateCore_NoAliasing(dX, dSharpen);
+			break;
+		case Filter_Downsampling_Narrow:
+			return EvaluateCore_Narrow(dX, dSharpen);
+			break;
+	}
+}
+
+// Evaluation of filter kernel using an integration over the source pixel width.
+// This implements a convolution of a box filter with the filter kernel.
+// Note that dX is given in the source pixel space
+double CResizeFilter::EvaluateKernelIntegrated(double dX, EFilterType eFilter) {
 	double dXScaled = dX*m_dMultX;
 
 	// take integral of target function from [dX - 0.5, dX + 0.5]
@@ -300,17 +321,7 @@ double CResizeFilter::EvaluateKernel(double dX, EFilterType eFilter) {
 	double dStepX = m_dMultX*(1.0/(NUM_STEPS - 1));
 	double dSum = 0.0;
 	for (int i = 0; i < NUM_STEPS; i++) {
-		switch (eFilter) {
-			case Filter_Downsampling_Best_Quality:
-				dSum += EvaluateCore_BestQuality(dStartX, m_dSharpen);
-				break;
-			case Filter_Downsampling_No_Aliasing:
-				dSum += EvaluateCore_NoAliasing(dStartX, m_dSharpen);
-				break;
-			case Filter_Downsampling_Narrow:
-				dSum += EvaluateCore_Narrow(dStartX, m_dSharpen);
-				break;
-		}
+		dSum += EvaluateKernel(dStartX, m_dSharpen, eFilter);
 		dStartX += dStepX;
 	}
 	return dSum;
@@ -349,8 +360,10 @@ int16* CResizeFilter::GetFilter(uint16 nFrac, EFilterType eFilter) {
 	for (int i = 0; i < m_nFilterLen; i++) {
 		if (eFilter == Filter_Upsampling_Bicubic) {
 			dFilter[i] = EvaluateCubicFilterKernel(dFrac, i);
+		} else if (eFilter == Filter_Downsampling_No_Aliasing) {
+			dFilter[i] = EvaluateKernel(m_dMultX*(-m_nFilterOffset + i - dFrac), m_dSharpen, eFilter);
 		} else {
-			dFilter[i] = EvaluateKernel(-m_nFilterOffset + i - dFrac, eFilter);
+			dFilter[i] = EvaluateKernelIntegrated(-m_nFilterOffset + i - dFrac, eFilter);
 		}
 		dSum += dFilter[i];
 	}

@@ -357,7 +357,7 @@ void* CJPEGImage::Resample(CSize fullTargetSize, CSize clippingSize, CPoint targ
 	EFilterType filter = CSettingsProvider::This().DownsamplingFilter();
 
 	if (GetProcessingFlag(eProcFlags, PFLAG_HighQualityResampling) && 
-		!(eResizeType == NoResize && filter == Filter_Downsampling_Best_Quality)) {
+		!(eResizeType == NoResize && (filter == Filter_Downsampling_Best_Quality || filter == Filter_Downsampling_No_Aliasing))) {
 		if (cpu == Helpers::CPU_SSE || cpu == Helpers::CPU_MMX) {
 			if (eResizeType == UpSample) {
 				return CBasicProcessing::SampleUp_HQ_SSE_MMX(fullTargetSize, targetOffset, clippingSize, 
