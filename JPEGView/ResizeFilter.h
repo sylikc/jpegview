@@ -79,7 +79,7 @@ private:
 	bool ParametersMatch(int nSourceSize, int nTargetSize, double dSharpen, EFilterType eFilter, bool bXMM);
 
 	void CalculateFilterParams(EFilterType eFilter);
-	double EvaluateKernel(double dX, EFilterType eFilter);
+	double EvaluateKernelIntegrated(double dX, EFilterType eFilter);
 	double EvaluateCubicFilterKernel(double dFrac, int nKernelElement);
 	int16* GetFilter(uint16 nFrac, EFilterType eFilter);
 };
