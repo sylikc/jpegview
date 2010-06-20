@@ -195,6 +195,10 @@ public:
 	void SetLoadTickCount(double tc) { m_dLoadTickCount = tc; }
 	double GetLoadTickCount() { return m_dLoadTickCount; }
 
+	// Debug: Unsharp mask time of image in ms
+	void SetUnsharpMaskTickCount(double tc) { m_dUnsharpMaskTickCount = tc; }
+	double GetUnsharpMaskTickCount() { return m_dUnsharpMaskTickCount; }
+
 	// Debug: Returns if this could be a night shot (heuristic, between 0 and 1)
 	float IsNightShot() const;
 
@@ -261,6 +265,7 @@ private:
 
 	double m_dLastOpTickCount;
 	double m_dLoadTickCount;
+	double m_dUnsharpMaskTickCount;
 
 	// stuff needed to perform LUT and LDC processing
 	uint8* m_pLUTAllChannels; // for global contrast and brightness correction

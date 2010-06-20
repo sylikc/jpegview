@@ -5,7 +5,7 @@
 
 struct FilterKernel {
 	int16 Kernel[MAX_FILTER_LEN];
-	int FilterLen;
+	int FilterLen; // actual filter length
 	int FilterOffset; // the offset is stored as a number >= 0 and must be subracted! from the filter position to get the start of the filter
 };
 
@@ -21,20 +21,20 @@ struct XMMFilterKernel {
 	XMMKernelElement Kernel[1]; // this is a placehoder for a kernel of FilterLen elements
 };
 
-struct ResizeFilterKernels {
+struct FilterKernelBlock {
 	FilterKernel * Kernels; // size is NumKernels
-	FilterKernel** Indices; // size equals target size, each entry point to a kernel in the Kernels array
+	FilterKernel** Indices; // size equals size of target image, each entry points to a kernel in the Kernels array
 	int NumKernels; // this is NUM_KERNELS_RESIZE + border handling kernels as needed
 };
 
-struct XMMResizeFilterKernels {
+struct XMMFilterKernelBlock {
 	XMMFilterKernel * Kernels;
 	XMMFilterKernel** Indices; // Length equals target size
 	int NumKernels; // this is NUM_KERNELS_RESIZE + border handling kernels as needed
 	uint8* UnalignedMemory; // do not use directly
 };
 
-// Class for a (resize) filter. The filters are one dimensional FIR filters.
+// Class for a resize filter. The filters are one dimensional FIR filters.
 class CResizeFilter
 {
 public:
@@ -50,11 +50,11 @@ public:
 	// Gets a set of kernels for resizing from the source size to the target size.
 	// The returned filter must not be deleted by the caller and is only valid during the
 	// lifetime of the CResizeFilter object that generated it.
-	const ResizeFilterKernels& GetFilterKernels() const { return m_kernels; }
+	const FilterKernelBlock& GetFilterKernels() const { return m_kernels; }
 
 	// As above, returns the structure suitable for XMM processing with aligned memory.
 	// Object must have been created with XMM support
-	const XMMResizeFilterKernels& GetXMMFilterKernels() const { assert(m_bXMMCalculated); return m_kernelsXMM; }
+	const XMMFilterKernelBlock& GetXMMFilterKernels() const { assert(m_bXMMCalculated); return m_kernelsXMM; }
 
 private:
 	friend class CResizeFilterCache;
@@ -66,8 +66,8 @@ private:
 	int m_nFilterLen;
 	int m_nFilterOffset;
 	int16 m_Filter[MAX_FILTER_LEN];
-	ResizeFilterKernels m_kernels;
-	XMMResizeFilterKernels m_kernelsXMM;
+	FilterKernelBlock m_kernels;
+	XMMFilterKernelBlock m_kernelsXMM;
 	bool m_bCalculated;
 	bool m_bXMMCalculated;
 	int m_nRefCnt;
@@ -113,7 +113,7 @@ public:
 	CAutoFilter(int nSourceSize, int nTargetSize, double dSharpen, EFilterType eFilter) 
 		: m_filter(CResizeFilterCache::This().GetFilter(nSourceSize, nTargetSize, dSharpen, eFilter, false)) {}
 	
-	const ResizeFilterKernels& Kernels() { return m_filter.GetFilterKernels(); }
+	const FilterKernelBlock& Kernels() { return m_filter.GetFilterKernels(); }
 	
 	~CAutoFilter() { CResizeFilterCache::This().ReleaseFilter(m_filter); }
 private:
@@ -126,9 +126,32 @@ public:
 	CAutoXMMFilter(int nSourceSize, int nTargetSize, double dSharpen, EFilterType eFilter) 
 		: m_filter(CResizeFilterCache::This().GetFilter(nSourceSize, nTargetSize, dSharpen, eFilter, true)) {}
 	
-	const XMMResizeFilterKernels& Kernels() { return m_filter.GetXMMFilterKernels(); }
+	const XMMFilterKernelBlock& Kernels() { return m_filter.GetXMMFilterKernels(); }
 	
 	~CAutoXMMFilter() { CResizeFilterCache::This().ReleaseFilter(m_filter); }
 private:
 	const CResizeFilter& m_filter;
+};
+
+// Gauss filter (bluring image)
+class CGaussFilter {
+public:
+	CGaussFilter(int nSourceSize, double dRadius);
+	~CGaussFilter(void);
+
+	// Gets a set of kernels for applying a Gauss filter to an image of given size.
+	// The returned filter must not be deleted by the caller
+	const FilterKernelBlock& GetFilterKernels() const { return m_kernels; }
+
+	enum {
+		// 1.0 in our fixed point format
+		FP_ONE = 16383
+	};
+private:
+	int m_nSourceSize;
+	double m_dRadius;
+	FilterKernelBlock m_kernels;
+
+	void CalculateKernels();
+	static FilterKernel CalculateKernel(double dRadius);
 };

@@ -410,7 +410,7 @@ void CSliderMgr::RepositionAll() {
 	
 	m_nYStart = nYStart;
 	int nXLimitScreen = sliderAreaRect.right;
-	int nX = nXStart, nY = 0;
+	int nX = nXStart, nY = nYStart + 2*m_nSliderHeight;
 	int nSliderIdx = 0;
 	int nTotalSliderIdx = 0;
 	int nSliderEndX = 0;
@@ -431,10 +431,16 @@ void CSliderMgr::RepositionAll() {
 						nTotalWidth = max(nTotalWidth, pSliderColumn[i]->GetNameLabelWidth());
 					}
 					nTotalWidth += m_nNoLabelWidth;
+					nSliderEndX = nX + nTotalWidth;
+					// the last slider is 'Sharpen', only show if we have enough space
+					if (nTotalSliderIdx == m_nTotalSliders) {
+						bool bShowSharpen = nXLimitScreen - nSliderEndX > 350;
+						nSliderIdx += (int)bShowSharpen - (int)pSlider->m_bShow;
+						pSlider->m_bShow = bShowSharpen;
+					}
 					for (int i = 0; i < nSliderIdx; i++) {
 						pSliderColumn[i]->SetPosition(CRect(nX, nYStart + i*m_nSliderHeight, nX + nTotalWidth - m_nSliderGap, nYStart + (i+1)*m_nSliderHeight));
 					}
-					nSliderEndX = nX + nTotalWidth;
 					if (nSliderIdx == 3) {
 						nX += nTotalWidth;
 						nSliderIdx = 0;

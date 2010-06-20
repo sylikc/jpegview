@@ -307,6 +307,7 @@ static double inline EvaluateKernel(double dX, double dSharpen, EFilterType eFil
 			return EvaluateCore_Narrow(dX, dSharpen);
 			break;
 	}
+	return 0.0;
 }
 
 // Evaluation of filter kernel using an integration over the source pixel width.
@@ -459,4 +460,98 @@ void CResizeFilterCache::ReleaseFilter(const CResizeFilter& filter) {
 		}
 	}
 	::LeaveCriticalSection(&m_csList);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////
+// CGaussFilter
+//////////////////////////////////////////////////////////////////////////////////////
+
+CGaussFilter::CGaussFilter(int nSourceSize, double dRadius) {
+	m_nSourceSize = nSourceSize;
+	m_dRadius = dRadius;
+	memset(&m_kernels, 0, sizeof(m_kernels));
+
+	CalculateKernels();
+}
+
+CGaussFilter::~CGaussFilter(void) {
+	delete[] m_kernels.Indices;
+	delete[] m_kernels.Kernels;
+}
+
+void CGaussFilter::CalculateKernels() {
+	FilterKernel kernel = CalculateKernel(m_dRadius);
+	int nBorderKernels = kernel.FilterLen / 2;
+	m_kernels.NumKernels = 1 + 2 * nBorderKernels;
+	m_kernels.Kernels = new FilterKernel[m_kernels.NumKernels];
+	m_kernels.Indices = new FilterKernel*[m_nSourceSize];
+	for (int i = 0; i < m_nSourceSize; i++) {
+		if (i < nBorderKernels) {
+			// Left border
+			m_kernels.Indices[i] = &(m_kernels.Kernels[1 + i]);
+		} else if (i >= m_nSourceSize - nBorderKernels) {
+			// Right border
+			m_kernels.Indices[i] = &(m_kernels.Kernels[1 + nBorderKernels + i - (m_nSourceSize - nBorderKernels)]);
+		} else {
+			m_kernels.Indices[i] = &(m_kernels.Kernels[0]);
+		}
+	}
+	m_kernels.Kernels[0] = kernel;
+	// Calculate border kernels - these are cut and renormalized Gauss kernels
+	for (int i = 0; i < nBorderKernels; i++) {
+		// Left border kernels
+		int nStart = nBorderKernels - i;
+		int nCutFilterLen = min(m_nSourceSize, kernel.FilterLen - nStart);
+		m_kernels.Kernels[1 + i] = kernel;
+		m_kernels.Kernels[1 + i].FilterLen = nCutFilterLen;
+		m_kernels.Kernels[1 + i].FilterOffset = i;
+		memmove(&(m_kernels.Kernels[1 + i].Kernel[0]), &(m_kernels.Kernels[1 + i].Kernel[nStart]), sizeof(int16) * nCutFilterLen);
+		memset(&(m_kernels.Kernels[1 + i].Kernel[nCutFilterLen]), 0, sizeof(int16) * (MAX_FILTER_LEN - nCutFilterLen));
+		NormalizeFilter(m_kernels.Kernels[1 + i].Kernel, nCutFilterLen);
+	}
+	for (int i = 0; i < nBorderKernels; i++) {
+		// Right border kernels
+		int j = i + nBorderKernels + 1;
+		int nCutFilterLen = min(m_nSourceSize, kernel.FilterLen - i - 1);
+		m_kernels.Kernels[j] = kernel;
+		m_kernels.Kernels[j].FilterLen = nCutFilterLen;
+		// Filter offset remains as in kernel
+		memset(&(m_kernels.Kernels[j].Kernel[nCutFilterLen]), 0, sizeof(int16) * (i + 1));
+		NormalizeFilter(m_kernels.Kernels[j].Kernel, nCutFilterLen);
+	}
+}
+
+FilterKernel CGaussFilter::CalculateKernel(double dRadius) {
+	const int cnNumElems = 1 + ((MAX_FILTER_LEN - 1) >> 1);
+	double kernel[cnNumElems];
+	double dInnerFactor = 1.0/(2*dRadius*dRadius);
+	double dSum = 0.0;
+	for (int i = 0; i < cnNumElems; i++) {
+		kernel[i] = exp(-i*i*dInnerFactor);
+		if (i == 0) {
+			dSum += kernel[i];
+		} else {
+			dSum += 2 * kernel[i];
+		}
+	}
+	int nFilterLen = 0;
+	for (int i = 0; i < cnNumElems; i++) {
+		kernel[i] /= dSum;
+		if (kernel[i] > 0.002) {
+			nFilterLen++;
+		}
+	}
+	nFilterLen = 1 + (nFilterLen - 1) * 2;
+
+	FilterKernel filterKernel;
+	filterKernel.FilterLen = nFilterLen;
+	filterKernel.FilterOffset = (nFilterLen - 1) >> 1;
+	int j = 0;
+	for (int i = filterKernel.FilterOffset; i >= 0; i--) {
+		filterKernel.Kernel[i] = round(kernel[j] * FP_ONE);
+		filterKernel.Kernel[filterKernel.FilterOffset + j] = filterKernel.Kernel[i];
+		j++;
+	}
+	NormalizeFilter(filterKernel.Kernel, nFilterLen);
+	return filterKernel;
 }

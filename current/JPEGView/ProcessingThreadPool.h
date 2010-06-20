@@ -12,7 +12,9 @@ public:
 	enum ERequest {
 		Upsampling,
 		Downsampling,
-		LDCAndLUT
+		LDCAndLUT,
+		Gauss,
+		UnsharpMask
 	};
 
 	CProcessingRequest(ERequest eRequest, const void* pSourcePixels, CSize sourceSize, void* pTargetPixels,
@@ -78,6 +80,37 @@ public:
 	float BlackPt;
 	float WhitePt;
 	float BlackPtSteepness;
+};
+
+class CRequestGauss : public CProcessingRequest {
+public:
+	CRequestGauss(const int16* pSourcePixels, CSize fullSize, CPoint offset, CSize rect, double dRadius, int16* pTargetPixels)
+					: CProcessingRequest(Gauss, pSourcePixels, fullSize, pTargetPixels, rect, offset, rect) {
+		Radius = dRadius;
+	}
+
+	double Radius;
+};
+
+class CRequestUnsharpMask : public CProcessingRequest {
+public:
+	CRequestUnsharpMask(const void* pSourcePixels, CSize fullSize, CPoint offset, CSize rect, double dAmount, int nThreshold, 
+		const int16* pThresholdLUT, const int16* pGrayImage, const int16* pSmoothedGrayImage, void* pTargetPixels, int nChannels)
+					: CProcessingRequest(UnsharpMask, pSourcePixels, fullSize, pTargetPixels, rect, offset, rect) {
+		Amount = dAmount;
+		Threshold = nThreshold;
+		ThresholdLUT = pThresholdLUT;
+		GrayImage = pGrayImage;
+		SmoothedGrayImage = pSmoothedGrayImage;
+		Channels = nChannels;
+	}
+
+	double Amount;
+	int Threshold;
+	const int16* ThresholdLUT;
+	const int16* GrayImage;
+	const int16* SmoothedGrayImage;
+	int Channels;
 };
 
 // A processing request wrapped into another request

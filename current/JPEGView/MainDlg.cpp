@@ -372,6 +372,7 @@ LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam
 	m_pSliderMgr->AddSlider(CNLS::GetString(_T("Deep Shadows")), &(m_pImageProcParams->LightenShadowSteepness), &m_bLDC, 0.0, 1.0, false, false);
 	m_pSliderMgr->AddSlider(CNLS::GetString(_T("Color Correction")), &(m_pImageProcParams->ColorCorrectionFactor), &m_bAutoContrast, -0.5, 0.5, false, false);
 	m_pSliderMgr->AddSlider(CNLS::GetString(_T("Contrast Correction")), &(m_pImageProcParams->ContrastCorrectionFactor), &m_bAutoContrast, 0.0, 1.0, false, false);
+	m_pSliderMgr->AddSlider(CNLS::GetString(_T("Sharpen")), &(m_pImageProcParams->Sharpen), NULL, 0.0, 0.5, false, false);
 	m_txtParamDB = m_pSliderMgr->AddText(CNLS::GetString(_T("Parameter DB:")), false, NULL);
 	m_btnSaveToDB = m_pSliderMgr->AddButton(CNLS::GetString(_T("Save to")), &OnSaveToDB);
 	m_btnRemoveFromDB = m_pSliderMgr->AddButton(CNLS::GetString(_T("Remove from")), &OnRemoveFromDB);
@@ -712,7 +713,8 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 	// Show timing info if requested
 	if (SHOW_TIMING_INFO && m_pCurrentImage != NULL) {
 		TCHAR buff[256];
-		_stprintf_s(buff, 256, _T("Loading: %.2f ms, Last op: %.2f ms, Last resize: %s"), m_pCurrentImage->GetLoadTickCount(), m_pCurrentImage->LastOpTickCount(), CBasicProcessing::TimingInfo());
+		_stprintf_s(buff, 256, _T("Loading: %.2f ms, Last op: %.2f ms, Last resize: %s, Last sharpen: %.2f ms"), m_pCurrentImage->GetLoadTickCount(), 
+			m_pCurrentImage->LastOpTickCount(), CBasicProcessing::TimingInfo(), m_pCurrentImage->GetUnsharpMaskTickCount());
 		dc.SetBkMode(OPAQUE);
 		dc.TextOut(5, 5, buff);
 		dc.SetBkMode(TRANSPARENT);
