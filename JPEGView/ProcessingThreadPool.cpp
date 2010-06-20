@@ -82,33 +82,62 @@ void CProcessingThread::StartProcesss(CWrappedRequest* pRequest) {
 }
 
 void CProcessingThread::DoProcess(CProcessingRequest* pRequest, int nOffsetY, int nSizeY) {
-	if (pRequest->Request == CProcessingRequest::Upsampling) {
-		CRequestUpDownSampling* pReq = (CRequestUpDownSampling*)pRequest;
-		CBasicProcessing::SampleUp_HQ_SSE_MMX_Core(pReq->FullTargetSize, 
-			CPoint(pReq->FullTargetOffset.x, pReq->FullTargetOffset.y + nOffsetY), 
-			CSize(pReq->ClippedTargetSize.cx, nSizeY),
-			pReq->SourceSize, pReq->SourcePixels, 
-			pReq->Channels, pReq->SSE, 
-			(uint8*)(pReq->TargetPixels) + pReq->ClippedTargetSize.cx * 4 * nOffsetY);
-	} else if (pRequest->Request == CProcessingRequest::Downsampling) {
-		CRequestUpDownSampling* pReq = (CRequestUpDownSampling*)pRequest;
-		CBasicProcessing::SampleDown_HQ_SSE_MMX_Core(pReq->FullTargetSize, 
-			CPoint(pReq->FullTargetOffset.x, pReq->FullTargetOffset.y + nOffsetY), 
-			CSize(pReq->ClippedTargetSize.cx, nSizeY),
-			pReq->SourceSize, pReq->SourcePixels, 
-			pReq->Channels, pReq->Sharpen, 
-			pReq->Filter, pReq->SSE, 
-			(uint8*)(pReq->TargetPixels) + pReq->ClippedTargetSize.cx * 4 * nOffsetY);
-	} else if (pRequest->Request == CProcessingRequest::LDCAndLUT) {
-		CRequestLDC* pReq = (CRequestLDC*)pRequest;
-		CBasicProcessing::ApplyLDC32bpp_Core(pReq->FullTargetSize,
-			CPoint(pReq->FullTargetOffset.x, pReq->FullTargetOffset.y + nOffsetY),
-			CSize(pReq->ClippedTargetSize.cx, nSizeY),
-			pReq->LDCMapSize, 
-			(const uint32*)(pReq->SourcePixels) + pReq->ClippedTargetSize.cx * nOffsetY, 
-			pReq->SatLUTs, pReq->LUT, pReq->LDCMap,
-			pReq->BlackPt, pReq->WhitePt, pReq->BlackPtSteepness,
-			(uint32*)(pReq->TargetPixels) + pReq->ClippedTargetSize.cx * nOffsetY);
+	switch (pRequest->Request) {
+		case CProcessingRequest::Upsampling: {
+			CRequestUpDownSampling* pReq = (CRequestUpDownSampling*)pRequest;
+			CBasicProcessing::SampleUp_HQ_SSE_MMX_Core(pReq->FullTargetSize, 
+				CPoint(pReq->FullTargetOffset.x, pReq->FullTargetOffset.y + nOffsetY), 
+				CSize(pReq->ClippedTargetSize.cx, nSizeY),
+				pReq->SourceSize, pReq->SourcePixels, 
+				pReq->Channels, pReq->SSE, 
+				(uint8*)(pReq->TargetPixels) + pReq->ClippedTargetSize.cx * 4 * nOffsetY);
+			break;
+		} 
+		case CProcessingRequest::Downsampling: {
+			CRequestUpDownSampling* pReq = (CRequestUpDownSampling*)pRequest;
+			CBasicProcessing::SampleDown_HQ_SSE_MMX_Core(pReq->FullTargetSize, 
+				CPoint(pReq->FullTargetOffset.x, pReq->FullTargetOffset.y + nOffsetY), 
+				CSize(pReq->ClippedTargetSize.cx, nSizeY),
+				pReq->SourceSize, pReq->SourcePixels, 
+				pReq->Channels, pReq->Sharpen, 
+				pReq->Filter, pReq->SSE, 
+				(uint8*)(pReq->TargetPixels) + pReq->ClippedTargetSize.cx * 4 * nOffsetY);
+			break;
+		} 
+		case CProcessingRequest::LDCAndLUT: {
+			CRequestLDC* pReq = (CRequestLDC*)pRequest;
+			CBasicProcessing::ApplyLDC32bpp_Core(pReq->FullTargetSize,
+				CPoint(pReq->FullTargetOffset.x, pReq->FullTargetOffset.y + nOffsetY),
+				CSize(pReq->ClippedTargetSize.cx, nSizeY),
+				pReq->LDCMapSize, 
+				(const uint32*)(pReq->SourcePixels) + pReq->ClippedTargetSize.cx * nOffsetY, 
+				pReq->SatLUTs, pReq->LUT, pReq->LDCMap,
+				pReq->BlackPt, pReq->WhitePt, pReq->BlackPtSteepness,
+				(uint32*)(pReq->TargetPixels) + pReq->ClippedTargetSize.cx * nOffsetY);
+			break;
+		}
+		case CProcessingRequest::Gauss: {
+			CRequestGauss* pReq = (CRequestGauss*)pRequest;
+			CBasicProcessing::GaussFilter16bpp1Channel_Core(pReq->SourceSize,
+				CPoint(pReq->FullTargetOffset.x, pReq->FullTargetOffset.y + nOffsetY),
+				CSize(pReq->FullTargetSize.cx, nSizeY),
+				pReq->FullTargetSize.cy,
+				pReq->Radius,
+				(int16*)(pReq->SourcePixels),
+				(int16*)(pReq->TargetPixels) + nOffsetY);
+			break;
+		}
+		case CProcessingRequest::UnsharpMask: {
+			CRequestUnsharpMask* pReq = (CRequestUnsharpMask*)pRequest;
+			CBasicProcessing::UnsharpMask_Core(pReq->SourceSize,
+				CPoint(pReq->FullTargetOffset.x, pReq->FullTargetOffset.y + nOffsetY),
+				CSize(pReq->FullTargetSize.cx, nSizeY),
+				pReq->Amount, pReq->Threshold,
+				pReq->ThresholdLUT, pReq->GrayImage, pReq->SmoothedGrayImage,
+				pReq->SourcePixels, pReq->TargetPixels,
+				pReq->Channels);
+			break;
+		}
 	}
 }
 

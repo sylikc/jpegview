@@ -30,6 +30,9 @@ public:
 	// image is black/white.
 	static void* Convert1To4Channels(int nWidth, int nHeight, const void* pIJLPixels);
 
+	// Convert a 16 bpp 1 channel grayscale image to a 32 bpp DIB
+	static void* Convert16bppGrayTo32bppDIB(int nWidth, int nHeight, const int16* pPixels);
+
 	// Convert from a 3 channel image (BGR) to a 4 channel image (BGRA)
 	static void* Convert3To4Channels(int nWidth, int nHeight, const void* pIJLPixels);
 
@@ -60,6 +63,10 @@ public:
 	//  2: Image strongly staturated
 	// Creates 6 * 256 entries for the matrix elements of the saturation matrix. The elements are scaled with 2^24
 	static int32* CreateColorSaturationLUTs(double dSaturation);
+
+	// Create a one channel 16 bpp gray scale image from a 32 or 24 bpp DIB image (nChannels must be 3 or 4)
+	// In the resulting image, 14 bits are used, thus white is 2^14 
+	static int16* Create1Channel16bppGrayscaleImage(int nWidth, int nHeight, const void* pDIBPixels, int nChannels);
 
 	// Apply a three channel LUT (all B values, then all G, then all R) to a 32 bpp DIB
 	static void* Apply3ChannelLUT32bpp(int nWidth, int nHeight, const void* pDIBPixels, const uint8* pLUT);
@@ -125,6 +132,14 @@ public:
 	static void* SampleUp_HQ_SSE_MMX(CSize fullTargetSize, CPoint fullTargetOffset, CSize clippedTargetSize,
 		CSize sourceSize, const void* pIJLPixels, int nChannels, bool bSSE);
 
+	// Gauss filtering of a 16 bpp 1 channel image. Out of the image with size fullSize, the rectangle rect at position offset is filtered
+	static int16* GaussFilter16bpp1Channel(CSize fullSize, CPoint offset, CSize rect, double dRadius, const int16* pPixels);
+
+	// Apply unsharp masking to the given source image (3 or 4 channels) and store result in pTargetPixels. pTargetPixels and pSourcePixels
+	// can be the same pointer. Source and target image and the grayscale image must have size 'fullSize'
+	static void* UnsharpMask(CSize fullSize, CPoint offset, CSize rect, double dAmount, int nThreshold, 
+		const int16* pGrayImage, const int16* pSmoothedGrayImage, const void* pSourcePixels, void* pTargetPixels, int nChannels);
+
 	// Debug: Gives some timing info of the last resize operation
 	static LPCTSTR TimingInfo();
 
@@ -143,5 +158,11 @@ private:
 	static void* SampleUp_HQ_SSE_MMX_Core(CSize fullTargetSize, CPoint fullTargetOffset, CSize clippedTargetSize,
 										CSize sourceSize, const void* pIJLPixels, int nChannels, bool bSSE, 
 										uint8* pTarget);
+
+	static int16* GaussFilter16bpp1Channel_Core(CSize fullSize, CPoint offset, CSize rect, int nTargetWidth, double dRadius, 
+												const int16* pSourcePixels, int16* pTargetPixels);
+
+	static void* UnsharpMask_Core(CSize fullSize, CPoint offset, CSize rect, double dAmount, int nThreshold, const int16* pThresholdLUT,
+								  const int16* pGrayImage, const int16* pSmoothedGrayImage, const void* pSourcePixels, void* pTargetPixels, int nChannels);
 
 };

@@ -87,6 +87,30 @@ int32* CBasicProcessing::CreateColorSaturationLUTs(double dSaturation) {
 	return pLUTs;
 }
 
+int16* CBasicProcessing::Create1Channel16bppGrayscaleImage(int nWidth, int nHeight, const void* pDIBPixels, int nChannels) {
+	// Create LUTs for grayscale conversion
+	const double cdScaler = 1 << 16; // 1.0 is represented as 2^16
+	uint32 LUTs[3 * 256];
+	for (int i = 0; i < 256; i++) {
+		LUTs[i] = (uint32)(0.299 * i * cdScaler + 0.5);
+		LUTs[256 + i] = (uint32)(0.587 * i * cdScaler + 0.5);
+		LUTs[512 + i] = (uint32)(0.114 * i * cdScaler + 0.5);
+	}
+
+	int16* pNewImage = new int16[nWidth * nHeight];
+	int nPadSrc = Helpers::DoPadding(nWidth*nChannels, 4) - nWidth*nChannels;
+	int16* pTarget = pNewImage;
+	const uint8* pSource = (uint8*)pDIBPixels;
+	for (int j = 0; j < nHeight; j++) {
+		for (int i = 0; i < nWidth; i++) {
+			*pTarget++ = (LUTs[pSource[0]] + LUTs[256 + pSource[1]] + LUTs[512 + pSource[2]] + 32767) >> 10; // from 24 to 14 bits
+			pSource += nChannels;
+		}
+		pSource += nPadSrc;
+	}
+	return pNewImage;
+}
+
 void* CBasicProcessing::Apply3ChannelLUT32bpp(int nWidth, int nHeight, const void* pDIBPixels, const uint8* pLUT) {
 	if (pDIBPixels == NULL || pLUT == NULL) {
 		return NULL;
@@ -440,6 +464,20 @@ void* CBasicProcessing::Convert1To4Channels(int nWidth, int nHeight, const void*
 	return pNewDIB;
 }
 
+void* CBasicProcessing::Convert16bppGrayTo32bppDIB(int nWidth, int nHeight, const int16* pPixels) {
+	uint32* pNewDIB = new uint32[nWidth * nHeight];
+	uint32* pTarget = pNewDIB;
+	const int16* pSource = pPixels;
+	for (int j = 0; j < nHeight; j++) {
+		for (int i = 0; i < nWidth; i++) {
+			int nSourceValue = *pSource++ >> 6; // from 14 to 8 bits
+			*pTarget++ = nSourceValue + nSourceValue * 256 + nSourceValue * 65536;
+		}
+	}
+	return pNewDIB;
+}
+
+
 void* CBasicProcessing::Convert3To4Channels(int nWidth, int nHeight, const void* pIJLPixels) {
 	if (pIJLPixels == NULL) {
 		return NULL;
@@ -598,7 +636,7 @@ void* CBasicProcessing::SampleUpFast(CSize fullTargetSize, CPoint fullTargetOffs
 static uint8* ApplyFilter(int nSourceWidth, int nTargetWidth, int nHeight,
 						  int nSourceBytesPerPixel,
 						  int nStartX_FP, int nStartY, int nIncrementX_FP,
-						  const ResizeFilterKernels& filter,
+						  const FilterKernelBlock& filter,
 						  int nFilterOffset,
 						  const uint8* pSource) {
 
@@ -645,6 +683,73 @@ static uint8* ApplyFilter(int nSourceWidth, int nTargetWidth, int nHeight,
 	return pTarget;
 }
 
+// Apply filtering in x-direction and rotate, 16 bpp 1 channel image
+// NOTE: No saturation is done, only valid for filters that do not require saturation.
+// The filter is applied to the pixel centers, therefore no resize filters are possible.
+// nSourceWidth : Width of source in pixels
+// nTargetWidth: Width of target image in pixels (note that target image is rotated compared to source)
+// nStartX, nStartY: Start position for filtering in source image
+// nRunX, nRunY: Number of pixels in x and y to filter
+// filter: Filter to apply (in x direction)
+// pSource: Source image
+// pTarget: Target image, width must be nTargetWidth
+static void ApplyFilter1C16bpp(int nSourceWidth, int nTargetWidth,
+							   int nStartX, int nStartY,
+							   int nRunX, int nRunY,
+							   const FilterKernelBlock& filter,
+						       const int16* pSource, int16* pTarget) {
+
+	for (int j = 0; j < nRunY; j++) {
+		const int16* pSourcePixelLine = pSource + nStartX + nSourceWidth * (j + nStartY);
+		int16* pTargetPixelLine = pTarget + j;
+		int16* pTargetPixel = pTargetPixelLine;
+		for (int i = 0; i < nRunX; i++) {
+			FilterKernel* pKernel = filter.Indices[i + nStartX];
+			const int16* pSourcePixel = pSourcePixelLine + i - pKernel->FilterOffset;
+			int nPixelValue = 0;
+			for (int n = 0; n < pKernel->FilterLen; n++) {
+				nPixelValue += pKernel->Kernel[n] * pSourcePixel[n];
+			}
+			nPixelValue = nPixelValue >> 14;
+
+			*pTargetPixel = nPixelValue;
+			// rotate: go to next row in target
+			pTargetPixel += nTargetWidth;
+		}
+	}
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+// Gauss filter (C++ implementation)
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+int16* CBasicProcessing::GaussFilter16bpp1Channel_Core(CSize fullSize, CPoint offset, CSize rect, int nTargetWidth, double dRadius, 
+													  const int16* pSourcePixels, int16* pTargetPixels) {
+	CGaussFilter filterX(fullSize.cx, dRadius);
+	ApplyFilter1C16bpp(fullSize.cx, nTargetWidth, offset.x, offset.y, rect.cx, rect.cy, filterX.GetFilterKernels(), pSourcePixels, pTargetPixels);
+	return pTargetPixels;
+}
+
+int16* CBasicProcessing::GaussFilter16bpp1Channel(CSize fullSize, CPoint offset, CSize rect, double dRadius, const int16* pPixels) {
+	if (pPixels == NULL) {
+		return NULL;
+	}
+
+	// Gauss filter x-direction
+	CProcessingThreadPool& threadPool = CProcessingThreadPool::This();
+	int16* pIntermediate = new int16[rect.cx * rect.cy];
+	CRequestGauss requestX(pPixels, fullSize, offset, rect, dRadius, pIntermediate);
+	threadPool.Process(&requestX);
+
+	// Gauss filter y-direction
+	int16* pTargetPixels = new int16[rect.cx * rect.cy];
+	CRequestGauss requestY(pIntermediate, CSize(rect.cy, rect.cx), CPoint(0, 0), CSize(rect.cy, rect.cx), dRadius, pTargetPixels);
+	threadPool.Process(&requestY);
+	delete[] pIntermediate;
+
+	return pTargetPixels;
+}
+
 /////////////////////////////////////////////////////////////////////////////////////////////
 // Bicubic resize (C++ implementation)
 /////////////////////////////////////////////////////////////////////////////////////////////
@@ -679,14 +784,14 @@ void* CBasicProcessing::SampleUp_HQ(CSize fullTargetSize, CPoint fullTargetOffse
 	int nStartY = nIncrementY*fullTargetOffset.y - 65536*nFirstY;
 
 	CResizeFilter filterX(nSourceWidth, fullTargetSize.cx, 0.0, Filter_Upsampling_Bicubic, false);
-	const ResizeFilterKernels& kernelsX = filterX.GetFilterKernels();
+	const FilterKernelBlock& kernelsX = filterX.GetFilterKernels();
 
 	uint8* pTemp = ApplyFilter(nSourceWidth, nTempTargetHeight, nTempTargetWidth,
 		nChannels, nStartX, nFirstY, nIncrementX,
 		kernelsX, nFilterOffsetX, (const uint8*) pIJLPixels);
 
 	CResizeFilter filterY(nSourceHeight, fullTargetSize.cy, 0.0, Filter_Upsampling_Bicubic, false);
-	const ResizeFilterKernels& kernelsY = filterY.GetFilterKernels();
+	const FilterKernelBlock& kernelsY = filterY.GetFilterKernels();
 
 	uint8* pDIB = ApplyFilter(nTempTargetWidth, nTargetHeight, nTargetWidth,
 			4, nStartY, 0, nIncrementY,
@@ -714,9 +819,9 @@ void* CBasicProcessing::SampleDown_HQ(CSize fullTargetSize, CPoint fullTargetOff
 		return NULL;
 	}
 	CResizeFilter filterX(sourceSize.cx, fullTargetSize.cx, dSharpen, eFilter, false);
-	const ResizeFilterKernels& kernelsX = filterX.GetFilterKernels();
+	const FilterKernelBlock& kernelsX = filterX.GetFilterKernels();
 	CResizeFilter filterY(sourceSize.cy, fullTargetSize.cy, dSharpen, eFilter, false);
-	const ResizeFilterKernels& kernelsY = filterY.GetFilterKernels();
+	const FilterKernelBlock& kernelsY = filterY.GetFilterKernels();
 
 	uint32 nIncrementX = (uint32)(sourceSize.cx << 16)/fullTargetSize.cx + 1;
 	uint32 nIncrementY = (uint32)(sourceSize.cy << 16)/fullTargetSize.cy + 1;
@@ -933,7 +1038,7 @@ static void* RotateToDIB(const CXMMImage* pSourceImg, uint8* pTarget = NULL) {
 // boundary.
 static CXMMImage* ApplyFilter_SSE(int nSourceHeight, int nTargetHeight, int nWidth,
 								  int nStartY_FP, int nStartX, int nIncrementY_FP,
-								  const XMMResizeFilterKernels& filter,
+								  const XMMFilterKernelBlock& filter,
 								  int nFilterOffset, const CXMMImage* pSourceImg) {
 	
 	int nStartXAligned = nStartX & ~7;
@@ -1064,7 +1169,7 @@ FilterKernelLoop:
 // Apply filter in y direction in MMX
 static CXMMImage* ApplyFilter_MMX(int nSourceHeight, int nTargetHeight, int nWidth,
 								  int nStartY_FP, int nStartX, int nIncrementY_FP,
-								  const XMMResizeFilterKernels& filter,
+								  const XMMFilterKernelBlock& filter,
 								  int nFilterOffset, const CXMMImage* pSourceImg) {
 
 	int nStartXAligned = nStartX & ~7;
@@ -1212,9 +1317,9 @@ void* CBasicProcessing::SampleDown_HQ_SSE_MMX_Core(CSize fullTargetSize, CPoint 
 										CSize sourceSize, const void* pIJLPixels, int nChannels, double dSharpen, 
 										EFilterType eFilter, bool bSSE, uint8* pTarget) {
  	CAutoXMMFilter filterY(sourceSize.cy, fullTargetSize.cy, dSharpen, eFilter);
-	const XMMResizeFilterKernels& kernelsY = filterY.Kernels();
+	const XMMFilterKernelBlock& kernelsY = filterY.Kernels();
 	CAutoXMMFilter filterX(sourceSize.cx, fullTargetSize.cx, dSharpen, eFilter);
-	const XMMResizeFilterKernels& kernelsX = filterX.Kernels();
+	const XMMFilterKernelBlock& kernelsX = filterX.Kernels();
 
 	uint32 nIncrementX = (uint32)(sourceSize.cx << 16)/fullTargetSize.cx + 1;
 	uint32 nIncrementY = (uint32)(sourceSize.cy << 16)/fullTargetSize.cy + 1;
@@ -1286,10 +1391,10 @@ void* CBasicProcessing::SampleUp_HQ_SSE_MMX_Core(CSize fullTargetSize, CPoint fu
 	int nStartY = nIncrementY*fullTargetOffset.y - 65536*nFirstY;
 
 	CAutoXMMFilter filterY(nSourceHeight, fullTargetSize.cy, 0.0, Filter_Upsampling_Bicubic);
-	const XMMResizeFilterKernels& kernelsY = filterY.Kernels();
+	const XMMFilterKernelBlock& kernelsY = filterY.Kernels();
 
 	CAutoXMMFilter filterX(nSourceWidth, fullTargetSize.cx, 0.0, Filter_Upsampling_Bicubic);
-	const XMMResizeFilterKernels& kernelsX = filterX.Kernels();
+	const XMMFilterKernelBlock& kernelsX = filterX.Kernels();
 
 	// Resize Y
 	CXMMImage* pImage1 = new CXMMImage(nSourceWidth, nSourceHeight, nFirstX, nLastX, nFirstY, nLastY, pIJLPixels, nChannels);
@@ -1337,6 +1442,98 @@ void* CBasicProcessing::SampleUp_HQ_SSE_MMX(CSize fullTargetSize, CPoint fullTar
 
 	return pTarget;
 }
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+// Unsharp mask
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+// dX must be between 0 and 1, return value is in [0, dMaxPos]
+static double TransferFunc(double dX, double dThreshold, double dMaxPos) {
+	if (dX < dThreshold) {
+		double dXScaled = dX / dThreshold;
+		return dXScaled * dXScaled * dX;
+	} else if (dX < dMaxPos) {
+		return dX;
+	} else {
+		return (dX * dMaxPos - dMaxPos) / (dMaxPos - 1);
+	}
+}
+
+// Calculates a threshold LUT for sharpening, nNumEntriesPerSide*2 entries.
+static int16* CalculateThresholdLUT(int nNumEntriesPerSide, int nThreshold8bit, int16* & pLUTCenter) {
+	int16* pLUT = new int16[nNumEntriesPerSide*2];
+	const double dMin = -1.0 * (1 << 14); // Minimal value of LUT
+	const double dMax =  0.6 * (1 << 14); // Maximal value of LUT
+	const double cdPosXMaxValue = 0.2; // x-position where minimal respective maximal value is reached (normalized to 0, 1)
+	double dThreshold = nThreshold8bit / 255.0;
+	if (dThreshold > cdPosXMaxValue) dThreshold = cdPosXMaxValue;
+	double dNormFac = 1.0 / (double)nNumEntriesPerSide;
+	for (int nIndex = 0; nIndex < nNumEntriesPerSide*2; nIndex++) {
+		if (nIndex <= nNumEntriesPerSide) {
+			double dXNorm = (nNumEntriesPerSide - nIndex) * dNormFac; // goes 1 -> 0
+			pLUT[nIndex] = (int)(dMin * TransferFunc(dXNorm, dThreshold, cdPosXMaxValue) - 0.5);
+		} else {
+			double dXNorm = (nIndex - nNumEntriesPerSide) * dNormFac; // goes 0 -> 1
+			pLUT[nIndex] = (int)(dMax * TransferFunc(dXNorm, dThreshold, cdPosXMaxValue) + 0.5);
+		}
+	}
+	pLUTCenter = &(pLUT[nNumEntriesPerSide]);
+	return pLUT;
+}
+
+void* CBasicProcessing::UnsharpMask_Core(CSize fullSize, CPoint offset, CSize rect, double dAmount, int nThreshold, const int16* pThresholdLUT,
+										 const int16* pGrayImage, const int16* pSmoothedGrayImage, const void* pSourcePixels, void* pTargetPixels, int nChannels) {
+	int nDIBLineLen = Helpers::DoPadding(fullSize.cx * nChannels, 4);
+	int nAmount = (int)(dAmount * (1 << 12) + 0.5);
+
+	for (int j = 0; j < rect.cy; j++) {
+		int nStartOffsetGray = offset.x + (offset.y + j) * fullSize.cx;
+		const int16* pGrayPtr = pGrayImage + nStartOffsetGray;
+		const int16* pSmoothPtr = pSmoothedGrayImage + nStartOffsetGray;
+
+		int nStartOffsetDIB = offset.x * nChannels + (offset.y + j)* nDIBLineLen;
+		uint8* pTargetPixelLine = (uint8*)pTargetPixels + nStartOffsetDIB;
+		uint8* pSourcePixelLine = (uint8*)pSourcePixels + nStartOffsetDIB;
+
+		for (int i = 0; i < rect.cx; i++) {
+			int nDiff = pThresholdLUT[(*pGrayPtr++ - *pSmoothPtr++) >> 4]; // Note: LUT contains 2^11 entries, subtraction of two 14 bit values can be 15 bit
+			int nSharpen = (nDiff * nAmount) >> 18; // nAmount 12 bit, nDiff 14 bit, shift back to 8 bit
+			int nBlue = pSourcePixelLine[0];
+			nBlue = nBlue + ((nSharpen * nBlue) >> 8);
+			int nGreen = pSourcePixelLine[1];
+			nGreen = nGreen + ((nSharpen * nGreen) >> 8);
+			int nRed = pSourcePixelLine[2];
+			nRed = nRed + ((nSharpen * nRed) >> 8);
+			pTargetPixelLine[0] = min(255, max(0, nBlue));
+			pTargetPixelLine[1] = min(255, max(0, nGreen));
+			pTargetPixelLine[2] = min(255, max(0, nRed));
+			if (nChannels == 4) {
+				pTargetPixelLine[3] = 0;
+			}
+			pSourcePixelLine += nChannels;
+			pTargetPixelLine += nChannels;
+		}
+	}
+
+	return pTargetPixels;
+}
+
+void* CBasicProcessing::UnsharpMask(CSize fullSize, CPoint offset, CSize rect, double dAmount, int nThreshold, 
+									const int16* pGrayImage, const int16* pSmoothedGrayImage, const void* pSourcePixels, void* pTargetPixels, int nChannels) {
+	if (pSourcePixels == NULL || pTargetPixels == NULL || pGrayImage == NULL || pSmoothedGrayImage == NULL) {
+		return NULL;
+	}
+	int16* pThresholdLUT;
+	int16* pThresholdLUTBase = CalculateThresholdLUT(1024, nThreshold, pThresholdLUT);
+
+	CProcessingThreadPool& threadPool = CProcessingThreadPool::This();
+	CRequestUnsharpMask request(pSourcePixels, fullSize, offset, rect, dAmount, nThreshold, pThresholdLUT, pGrayImage, pSmoothedGrayImage, pTargetPixels, nChannels);
+	threadPool.Process(&request);
+
+	delete[] pThresholdLUTBase;
+	return pTargetPixels;
+}
+
 
 LPCTSTR CBasicProcessing::TimingInfo() {
 	return s_TimingInfo;
