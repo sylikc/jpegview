@@ -25,8 +25,12 @@ Changelog
 [1.0.21]
 Bugs fixed:
 New features:
-- Color saturation feature added
-  Support includes: Default saturation in INI file, parameter DB and landscape picture mode
+- Unsharp mask
+  Using a button on the image processing panel, an unsharp mask can be applied to the original pixels.
+  Note that preview is always in 100 % zoom. Unsharp masking cannot be stored in the parameter DB and it is not possible to
+  apply unsharp masking automatically after loading each image (unlike other processings)
+- Color saturation
+  Support includes: Saturation on image processing panel, default saturation in INI file, parameter DB and landscape picture mode
 - UI colors can be set in INI file. New default colors instead of the traditional green.
   To restore the old colors, change them in the INI file to:
   GUIColor=0 255 0

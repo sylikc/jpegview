@@ -291,6 +291,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\PaintMemDCMgr.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\ParameterDB.cpp"
 				>
 			</File>
@@ -445,6 +449,10 @@
 			</File>
 			<File
 				RelativePath=".\NLS.h"
+				>
+			</File>
+			<File
+				RelativePath=".\PaintMemDCMgr.h"
 				>
 			</File>
 			<File

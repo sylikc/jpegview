@@ -70,6 +70,30 @@ public:
 	double YellowBlue;
 };
 
+// Parameters used in unsharp masking
+class CUnsharpMaskParams {
+public:
+	CUnsharpMaskParams() {
+		Radius = Amount = Threshold = 0.0;
+	}
+
+	CUnsharpMaskParams(double dRadius, double dAmount, double dThreshold) {
+		Radius = dRadius;
+		Amount = dAmount;
+		Threshold = dThreshold;
+	}
+
+	CUnsharpMaskParams(const CUnsharpMaskParams& other) {
+		Radius = other.Radius;
+		Amount = other.Amount;
+		Threshold = other.Threshold;
+	}
+
+	double Radius;
+	double Amount;
+	double Threshold;
+};
+
 // Parameters used to process an image, including geometry
 class CProcessParams {
 public:

@@ -137,7 +137,7 @@ public:
 
 	// Apply unsharp masking to the given source image (3 or 4 channels) and store result in pTargetPixels. pTargetPixels and pSourcePixels
 	// can be the same pointer. Source and target image and the grayscale image must have size 'fullSize'
-	static void* UnsharpMask(CSize fullSize, CPoint offset, CSize rect, double dAmount, int nThreshold, 
+	static void* UnsharpMask(CSize fullSize, CPoint offset, CSize rect, double dAmount, double dThreshold, 
 		const int16* pGrayImage, const int16* pSmoothedGrayImage, const void* pSourcePixels, void* pTargetPixels, int nChannels);
 
 	// Debug: Gives some timing info of the last resize operation
@@ -162,7 +162,7 @@ private:
 	static int16* GaussFilter16bpp1Channel_Core(CSize fullSize, CPoint offset, CSize rect, int nTargetWidth, double dRadius, 
 												const int16* pSourcePixels, int16* pTargetPixels);
 
-	static void* UnsharpMask_Core(CSize fullSize, CPoint offset, CSize rect, double dAmount, int nThreshold, const int16* pThresholdLUT,
+	static void* UnsharpMask_Core(CSize fullSize, CPoint offset, CSize rect, double dAmount, const int16* pThresholdLUT,
 								  const int16* pGrayImage, const int16* pSmoothedGrayImage, const void* pSourcePixels, void* pTargetPixels, int nChannels);
 
 };

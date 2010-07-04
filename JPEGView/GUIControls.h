@@ -84,7 +84,7 @@ public:
 	CUICtrl(CPanelMgr* pPanelMgr);
 	
 	CRect GetPosition() const { return m_position; }
-	void SetPosition(CRect position) { m_position = position; }
+	virtual CSize GetMinSize() = 0;
 	bool IsShown() const { return m_bShow; }
 	void SetShow(bool bShow);
 	void SetTooltip(LPCTSTR sTooltipText);
@@ -97,8 +97,12 @@ public:
 	
 protected:
 	friend class CSliderMgr;
+	friend class CNavigationPanel;
+	friend class CWndButtonPanel;
+	friend class CUnsharpMaskPanel;
 
 	virtual void Draw(CDC & dc, CRect position, bool bBlack) = 0;
+	void SetPosition(CRect position) { m_position = position; }
 
 	CPanelMgr* m_pMgr;
 	bool m_bShow;
@@ -109,17 +113,19 @@ protected:
 
 //-------------------------------------------------------------------------------------------------
 
-// Represents some extra gap between buttons - only recognized by navigation panel
+// Represents some extra gap between UI elements
 class CGapCtrl : public CUICtrl {
 public:
 	CGapCtrl(CPanelMgr* pPanelMgr, int nGap) : CUICtrl(pPanelMgr) { m_nGap = nGap; m_bShow = false; }
 
+	virtual CSize GetMinSize() { return CSize(m_nGap, 0); }
 	virtual bool OnMouseLButton(EMouseEvent eMouseEvent, int nX, int nY) { return false; }
 	virtual bool OnMouseMove(int nX, int nY) { return false; }
-	virtual void Draw(CDC & dc, CRect position, bool bBlack) {}
 
 	int GapWidth() { return m_nGap; }
 
+protected:
+	virtual void Draw(CDC & dc, CRect position, bool bBlack) {}
 private:
 	int m_nGap;
 };
@@ -130,26 +136,31 @@ private:
 class CTextCtrl : public CUICtrl {
 public:
 	CTextCtrl(CPanelMgr* pPanelMgr, LPCTSTR sTextInit, bool bEditable, TextChangedHandler textChangedHandler);
-	
+	~CTextCtrl();
+
 	// sets the text of the text control
 	void SetText(LPCTSTR sText);
 	// gets the width of the text in pixels
-	int GetTextLabelWidth() const { return m_nTextWidth; }
+	int GetTextLabelWidth() const { return m_textSize.cx; }
 	// gets if the text is editable
 	bool IsEditable() const { return m_bEditable; }
 	// gets if the text is right aligned to the screen
 	bool IsRightAligned() const { return m_bRightAligned; }
+	// gets if the text is bold
+	bool IsBold() const { return m_bBold; }
 	// sets if the text is editable
 	void SetEditable(bool bEditable);
 	// sets the maximal text width in pixels
 	void SetMaxTextWidth(int nMaxWidth) { m_nMaxTextWidth = nMaxWidth; }
 	// Sets this text as right aligned on the right border of the screen (true) or left aligned (default, false)
 	void SetRightAligned(bool bValue) { m_bRightAligned = bValue; }
-	// terminates the edit mode and accept the text change if the flag is true. If false, the text change
-	// is undone.
+	// Sets if the text is bold or not
+	void SetBold(bool bValue);
+	// terminates the edit mode and accept the text change if the flag is true. If false, the text change is undone.
 	void TerminateEditMode(bool bAcceptNewName);
 
 public:
+	virtual CSize GetMinSize() { return m_textSize; }
 	virtual bool OnMouseLButton(EMouseEvent eMouseEvent, int nX, int nY);
 	virtual bool OnMouseMove(int nX, int nY);
 
@@ -157,18 +168,22 @@ protected:
 	virtual void Draw(CDC & dc, CRect position, bool bBlack);
 
 private:
+	void CreateBoldFont(CDC & dc);
+	CSize GetTextRectangle(HWND hWnd, LPCTSTR sText);
 
 	// Subclass procedure 
 	static LRESULT APIENTRY EditSubclassProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 	WNDPROC m_OrigEditProc; // saves original windows procedure
 
 	CString m_sText;
-	int m_nTextWidth;
+	CSize m_textSize;
 	int m_nMaxTextWidth;
 	bool m_bEditable;
 	bool m_bRightAligned;
+	bool m_bBold;
 	CEdit* m_pEdit;
 	TextChangedHandler* m_textChangedHandler;
+	HFONT m_hBoldFont;
 };
 
 //-------------------------------------------------------------------------------------------------
@@ -180,11 +195,12 @@ public:
 	CButtonCtrl(CPanelMgr* pPanelMgr, PaintHandler paintHandler, ButtonPressedHandler buttonPressedHandler);
 
 	// gets the width of the button text in pixels
-	int GetTextLabelWidth() const { return m_nTextWidth; }
+	int GetTextLabelWidth() const { return m_textSize.cx; }
 
 	void SetEnabled(bool bEnabled);
 
 public:
+	virtual CSize GetMinSize();
 	virtual bool OnMouseLButton(EMouseEvent eMouseEvent, int nX, int nY);
 	virtual bool OnMouseMove(int nX, int nY);
 
@@ -193,7 +209,7 @@ protected:
 
 private:
 	CString m_sText;
-	int m_nTextWidth;
+	CSize m_textSize;
 	bool m_bDragging;
 	bool m_bEnabled;
 	ButtonPressedHandler* m_buttonPressedHandler;
@@ -210,15 +226,18 @@ public:
 
 	double* GetValuePtr() { return m_pValue; }
 	int GetNameLabelWidth() const { return m_nNameWidth; }
-	void SetSliderLen(int nSliderLen) { m_nSliderLen = nSliderLen; }
 
 public:
+	virtual CSize GetMinSize();
 	virtual bool OnMouseLButton(EMouseEvent eMouseEvent, int nX, int nY);
 	virtual bool OnMouseMove(int nX, int nY);
 	virtual void OnPaint(CDC & dc, const CPoint& offset);
 
 protected:
+	friend class CSliderMgr;
+
 	virtual void Draw(CDC & dc, CRect position, bool bBlack);
+	void SetSliderLen(int nSliderLen) { m_nSliderLen = nSliderLen; }
 
 private:
 	CString m_sName;
@@ -232,6 +251,7 @@ private:
 	int m_nNumberWidth;
 	int m_nCheckHeight;
 	int m_nNameWidth;
+	CSize m_textSize;
 	bool m_bLogarithmic;
 	int m_nSign;
 	bool m_bDragging;
@@ -402,4 +422,25 @@ private:
 	CSliderMgr* m_pSliderMgr;
 	CRect m_clientRect;
 	int m_nWidth, m_nHeight;
+};
+
+class CUnsharpMaskPanel : public CPanelMgr {
+public:
+	// The panel is on the given window on top border of the given slider manager
+	CUnsharpMaskPanel(HWND hWnd, CSliderMgr* pSliderMgr);
+
+	virtual CRect PanelRect();
+	virtual bool OnMouseLButton(EMouseEvent eMouseEvent, int nX, int nY);
+	virtual void RequestRepositioning();
+	virtual void OnPaint(CDC & dc, const CPoint& offset);
+
+protected:
+	virtual void RepositionAll();
+
+private:
+
+	CSliderMgr* m_pSliderMgr;
+	CRect m_clientRect;
+	int m_nWidth, m_nHeight;
+	int m_nMaxSliderWidth;
 };

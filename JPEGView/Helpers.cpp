@@ -97,6 +97,21 @@ void GetZoomParameters(float & fZoom, CPoint & offsets, CSize imageSize, CSize w
 	offsets = CPoint(nOffsetX, nOffsetY);
 }
 
+HFONT CreateBoldFontOfSelectedFont(CDC & dc) {
+	TCHAR buff[64];
+	if (::GetTextFace(dc, 64, buff) != 0) {
+		TEXTMETRIC textMetrics;
+		::GetTextMetrics(dc, &textMetrics);
+		LOGFONT logFont;
+		memset(&logFont, 0, sizeof(LOGFONT));
+		logFont.lfHeight = textMetrics.tmHeight;
+		logFont.lfWeight = FW_BOLD;
+		_tcsncpy(logFont.lfFaceName, buff, 64);  
+		return ::CreateFontIndirect(&logFont);
+	}
+	return NULL;
+}
+
 CPUType ProbeCPU(void) {
 	static CPUType cpuType = CPU_Unknown;
 	if (cpuType != CPU_Unknown) {
