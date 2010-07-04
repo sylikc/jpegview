@@ -52,6 +52,7 @@ public:
 	int JPEGSaveQuality() { return m_nJPEGSaveQuality; }
 	LPCTSTR DefaultSaveFormat() { return m_sDefaultSaveFormat; }
 	bool CreateParamDBEntryOnSave() { return m_bCreateParamDBEntryOnSave; }
+	bool SaveWithoutPrompt() { return m_bSaveWithoutPrompt; }
 	LPCTSTR ACCExclude() { return m_sACCExclude; }
 	LPCTSTR ACCInclude() { return m_sACCInclude; }
 	LPCTSTR LDCExclude() { return m_sLDCExclude; }
@@ -129,6 +130,7 @@ private:
 	int m_nJPEGSaveQuality;
 	CString m_sDefaultSaveFormat;
 	bool m_bCreateParamDBEntryOnSave;
+	bool m_bSaveWithoutPrompt;
 	CString m_sACCExclude;
 	CString m_sACCInclude;
 	CString m_sLDCExclude;

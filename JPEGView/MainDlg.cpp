@@ -1146,7 +1146,11 @@ LRESULT CMainDlg::OnKeyDown(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOO
 		if (!bCtrl) {
 			ExecuteCommand(IDM_SAVE_PARAM_DB);
 		} else {
-			ExecuteCommand(bShift ? IDM_SAVE_SCREEN : IDM_SAVE);
+			if (!bShift && m_pCurrentImage != NULL && !m_pCurrentImage->IsClipboardImage() && CSettingsProvider::This().SaveWithoutPrompt()) {
+				SaveImageNoPrompt(CurrentFileName(false), true);
+			} else {
+				ExecuteCommand(bShift ? IDM_SAVE_SCREEN : IDM_SAVE);
+			}
 		}
 	} else if (wParam == 'D') {
 		if (!bCtrl) {
@@ -2085,16 +2089,32 @@ bool CMainDlg::SaveImage(bool bFullSize) {
 		m_sSaveDirectory = fileDlg.m_szFileName;
 		m_sSaveExtension = m_sSaveDirectory.Right(m_sSaveDirectory.GetLength() - m_sSaveDirectory.ReverseFind(_T('.')) - 1);
 		m_sSaveDirectory = m_sSaveDirectory.Left(m_sSaveDirectory.ReverseFind(_T('\\')) + 1);
-		if (CSaveImage::SaveImage(fileDlg.m_szFileName, m_pCurrentImage, *m_pImageProcParams, 
-			CreateProcessingFlags(m_bHQResampling, m_bAutoContrast, m_bAutoContrastSection, m_bLDC, false, m_bLandscapeMode), bFullSize)) {
-			m_pFileList->Reload(); // maybe image is stored to current directory - needs reload
-			return true;
-		} else {
-			::MessageBox(m_hWnd, CNLS::GetString(_T("Error saving file")), 
-				CNLS::GetString(_T("Error writing file to disk!")), MB_ICONSTOP | MB_OK); 
-		}
+		return SaveImageNoPrompt(fileDlg.m_szFileName, bFullSize);
 	}
 	return false;
+}
+
+bool CMainDlg::SaveImageNoPrompt(LPCTSTR sFileName, bool bFullSize) {
+	if (m_bMovieMode) {
+		return false;
+	}
+
+	MouseOn();
+
+	HCURSOR hOldCursor = ::SetCursor(::LoadCursor(NULL, MAKEINTRESOURCE(IDC_WAIT)));	
+
+	if (CSaveImage::SaveImage(sFileName, m_pCurrentImage, *m_pImageProcParams, 
+		CreateProcessingFlags(m_bHQResampling, m_bAutoContrast, m_bAutoContrastSection, m_bLDC, false, m_bLandscapeMode), bFullSize)) {
+		m_pFileList->Reload(); // maybe image is stored to current directory - needs reload
+		::SetCursor(hOldCursor);
+		Invalidate();
+		return true;
+	} else {
+		::SetCursor(hOldCursor);
+		::MessageBox(m_hWnd, CNLS::GetString(_T("Error saving file")), 
+			CNLS::GetString(_T("Error writing file to disk!")), MB_ICONSTOP | MB_OK);
+		return false;
+	}
 }
 
 void CMainDlg::BatchCopy() {
