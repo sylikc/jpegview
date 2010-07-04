@@ -81,18 +81,8 @@ void CEXIFDisplay::AddLine(LPCTSTR sDescription, const Rational &number) {
 
 CSize CEXIFDisplay::GetSize(CDC & dc) {
 	if (m_nLineHeight == 0) {
-		TCHAR buff[32];
 		::SelectObject(dc, ::GetStockObject(DEFAULT_GUI_FONT));
-		if (::GetTextFace(dc, 64, buff) != 0) {
-			TEXTMETRIC textMetrics;
-			::GetTextMetrics(dc, &textMetrics);
-			LOGFONT logFont;
-			memset(&logFont, 0, sizeof(LOGFONT));
-			logFont.lfHeight = textMetrics.tmHeight;
-			logFont.lfWeight = FW_BOLD;
-			_tcsncpy(logFont.lfFaceName, buff, 32);  
-			m_hTitleFont = ::CreateFontIndirect(&logFont);
-		}
+		m_hTitleFont = Helpers::CreateBoldFontOfSelectedFont(dc);
 
 		if (m_hTitleFont != 0) {
 			::SelectObject(dc, m_hTitleFont);

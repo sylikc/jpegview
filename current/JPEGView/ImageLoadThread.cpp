@@ -151,29 +151,10 @@ void CImageLoadThread::ProcessReadJPEGRequest(CRequest * request) {
 				if (pEXIFBlock != NULL && strncmp((const char*)(pEXIFBlock + 4), "Exif", 4) != 0) {
 					pEXIFBlock = NULL;
 				}
-
-				/*
-				double dStartTime = Helpers::GetExactTickCount();
-				int16* pGray = CBasicProcessing::Create1Channel16bppGrayscaleImage(nWidth, nHeight, pPixelData, nBPP);
-				int16* pSmoothed = CBasicProcessing::GaussFilter16bpp1Channel(CSize(nWidth, nHeight), CPoint(0, 0), CSize(nWidth, nHeight), 2.1, pGray);
-				//pPixelData = (char*)CBasicProcessing::Convert16bppGrayTo32bppDIB(cropRect.cx, cropRect.cy, pSmoothed);
-				CBasicProcessing::UnsharpMask(CSize(nWidth, nHeight), CPoint(0,0), CSize(nWidth, nHeight), 3.0, 4, pGray, pSmoothed, pPixelData, pPixelData, nBPP);
-				delete[] pGray;
-				delete[] pSmoothed;
-
-				double dTime = Helpers::GetExactTickCount() - dStartTime;
-
-				request->Image = new CJPEGImage(nWidth, nHeight, pPixelData, 
-					pEXIFBlock, nBPP, 
-					Helpers::CalculateJPEGFileHash(pBuffer, nFileSize), CJPEGImage::IF_JPEG);
-
-				request->Image->SetUnsharpMaskTickCount(dTime);
-				*/
 				
 				request->Image = new CJPEGImage(nWidth, nHeight, pPixelData, 
 					pEXIFBlock, nBPP, 
 					Helpers::CalculateJPEGFileHash(pBuffer, nFileSize), CJPEGImage::IF_JPEG);
-				
 			} else {
 				// failed, try GDI+
 				delete[] pPixelData;

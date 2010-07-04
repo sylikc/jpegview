@@ -225,6 +225,17 @@ void CSettingsProvider::ReadWriteableINISettings() {
 	m_colorHighlight = GetColor(_T("HighlightColor"), RGB(255, 205, 0));
 	m_colorSelected = GetColor(_T("SelectionColor"), RGB(255, 205, 0));
 	m_colorSlider = GetColor(_T("SliderColor"), RGB(255, 0, 80));
+	CString sUnsharpMaskParams = GetString(_T("UnsharpMaskParameters"), _T(""));
+	float fRadius, fAmount, fThreshold;
+	if (_stscanf(sUnsharpMaskParams, _T(" %f %f %f "), &fRadius, &fAmount, &fThreshold) == 3) {
+		m_unsharpMaskParms.Radius = fRadius;
+		m_unsharpMaskParms.Amount = fAmount;
+		m_unsharpMaskParms.Threshold = fThreshold;
+	} else {
+		m_unsharpMaskParms.Radius = 1.0;
+		m_unsharpMaskParms.Amount = 1.0;
+		m_unsharpMaskParms.Threshold = 4.0;
+	}
 }
 
 CImageProcessingParams CSettingsProvider::LandscapeModeParams(const CImageProcessingParams& templParams) {

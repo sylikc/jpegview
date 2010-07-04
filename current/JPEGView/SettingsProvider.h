@@ -65,6 +65,7 @@ public:
 	COLORREF ColorHighlight() { return m_colorHighlight; }
 	COLORREF ColorSelected() { return m_colorSelected; }
 	COLORREF ColorSlider() { return m_colorSlider; }
+	const CUnsharpMaskParams& UnsharpMaskParams() { return m_unsharpMaskParms; }
 
 	std::list<CUserCommand*> & UserCommandList() { return m_userCommands; }
 
@@ -141,6 +142,7 @@ private:
 	COLORREF m_colorHighlight;
 	COLORREF m_colorSelected;
 	COLORREF m_colorSlider;
+	CUnsharpMaskParams m_unsharpMaskParms;
 
 	std::list<CUserCommand*> m_userCommands;
 

@@ -1460,12 +1460,12 @@ static double TransferFunc(double dX, double dThreshold, double dMaxPos) {
 }
 
 // Calculates a threshold LUT for sharpening, nNumEntriesPerSide*2 entries.
-static int16* CalculateThresholdLUT(int nNumEntriesPerSide, int nThreshold8bit, int16* & pLUTCenter) {
+static int16* CalculateThresholdLUT(int nNumEntriesPerSide, double dThreshold8bit, int16* & pLUTCenter) {
 	int16* pLUT = new int16[nNumEntriesPerSide*2];
 	const double dMin = -1.0 * (1 << 14); // Minimal value of LUT
 	const double dMax =  0.6 * (1 << 14); // Maximal value of LUT
 	const double cdPosXMaxValue = 0.2; // x-position where minimal respective maximal value is reached (normalized to 0, 1)
-	double dThreshold = nThreshold8bit / 255.0;
+	double dThreshold = dThreshold8bit / 255.0;
 	if (dThreshold > cdPosXMaxValue) dThreshold = cdPosXMaxValue;
 	double dNormFac = 1.0 / (double)nNumEntriesPerSide;
 	for (int nIndex = 0; nIndex < nNumEntriesPerSide*2; nIndex++) {
@@ -1481,7 +1481,7 @@ static int16* CalculateThresholdLUT(int nNumEntriesPerSide, int nThreshold8bit, 
 	return pLUT;
 }
 
-void* CBasicProcessing::UnsharpMask_Core(CSize fullSize, CPoint offset, CSize rect, double dAmount, int nThreshold, const int16* pThresholdLUT,
+void* CBasicProcessing::UnsharpMask_Core(CSize fullSize, CPoint offset, CSize rect, double dAmount, const int16* pThresholdLUT,
 										 const int16* pGrayImage, const int16* pSmoothedGrayImage, const void* pSourcePixels, void* pTargetPixels, int nChannels) {
 	int nDIBLineLen = Helpers::DoPadding(fullSize.cx * nChannels, 4);
 	int nAmount = (int)(dAmount * (1 << 12) + 0.5);
@@ -1518,16 +1518,16 @@ void* CBasicProcessing::UnsharpMask_Core(CSize fullSize, CPoint offset, CSize re
 	return pTargetPixels;
 }
 
-void* CBasicProcessing::UnsharpMask(CSize fullSize, CPoint offset, CSize rect, double dAmount, int nThreshold, 
+void* CBasicProcessing::UnsharpMask(CSize fullSize, CPoint offset, CSize rect, double dAmount, double dThreshold, 
 									const int16* pGrayImage, const int16* pSmoothedGrayImage, const void* pSourcePixels, void* pTargetPixels, int nChannels) {
 	if (pSourcePixels == NULL || pTargetPixels == NULL || pGrayImage == NULL || pSmoothedGrayImage == NULL) {
 		return NULL;
 	}
 	int16* pThresholdLUT;
-	int16* pThresholdLUTBase = CalculateThresholdLUT(1024, nThreshold, pThresholdLUT);
+	int16* pThresholdLUTBase = CalculateThresholdLUT(1024, dThreshold, pThresholdLUT);
 
 	CProcessingThreadPool& threadPool = CProcessingThreadPool::This();
-	CRequestUnsharpMask request(pSourcePixels, fullSize, offset, rect, dAmount, nThreshold, pThresholdLUT, pGrayImage, pSmoothedGrayImage, pTargetPixels, nChannels);
+	CRequestUnsharpMask request(pSourcePixels, fullSize, offset, rect, dAmount, dThreshold, pThresholdLUT, pGrayImage, pSmoothedGrayImage, pTargetPixels, nChannels);
 	threadPool.Process(&request);
 
 	delete[] pThresholdLUTBase;

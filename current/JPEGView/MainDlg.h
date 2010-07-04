@@ -14,6 +14,7 @@ class CJPEGImage;
 class CSliderMgr;
 class CNavigationPanel;
 class CWndButtonPanel;
+class CUnsharpMaskPanel;
 class CButtonCtrl;
 class CTextCtrl;
 class CEXIFDisplay;
@@ -120,6 +121,7 @@ private:
 	Helpers::EAutoZoomMode m_eAutoZoomMode;
 
 	CImageProcessingParams* m_pImageProcParams;
+	CUnsharpMaskParams* m_pUnsharpMaskParams;
 	bool m_bHQResampling;
 	bool m_bAutoContrast;
 	bool m_bAutoContrastSection;
@@ -186,18 +188,22 @@ private:
 	bool m_bSpanVirtualDesktop;
 	bool m_bShowIPTools;
 	bool m_bShowNavPanel;
+	bool m_bOldShowNavPanel;
 	bool m_bShowWndButtonPanel;
+	bool m_bShowUnsharpMaskPanel;
 	bool m_bMouseInNavPanel;
 	bool m_bPanMouseCursorSet;
 	bool m_bMouseOn;
 	bool m_bInInitialOpenFile;
 	double m_dCropRatio;
+	double m_dAlternateUSMAmount;
 	int m_nMonitor;
 	WINDOWPLACEMENT m_storedWindowPlacement;
 	WINDOWPLACEMENT m_storedWindowPlacement2;
 	CRect m_monitorRect;
 	CRect m_clientRect;
 	CSliderMgr * m_pSliderMgr;
+	CButtonCtrl* m_btnUnsharpMask;
 	CButtonCtrl* m_btnSaveToDB;
 	CButtonCtrl* m_btnRemoveFromDB;
 	CTextCtrl* m_txtFileName;
@@ -209,6 +215,7 @@ private:
 	CButtonCtrl* m_btnWindowMode;
 	CNavigationPanel* m_pNavPanel;
 	CWndButtonPanel* m_pWndButtonPanel;
+	CUnsharpMaskPanel* m_pUnsharpMaskPanel;
 	CString m_sSaveDirectory;
 	CString m_sSaveExtension;
 
@@ -263,7 +270,6 @@ private:
 	LPCTSTR CurrentFileName(bool bFileTitle);
 	void FillEXIFDataDisplay(CEXIFDisplay* pEXIFDisplay);
 	void GenerateHelpDisplay(CHelpDisplay & helpDisplay);
-	HBITMAP PrepareRectForMemDCPainting(CDC & memDC, CDC & paintDC, const CRect& rect);
 	void InvalidateZoomNavigatorRect();
 	bool IsZoomNavigatorCurrentlyShown();
 	bool IsPointInZoomNavigatorThumbnail(const CPoint& pt);
@@ -280,7 +286,11 @@ private:
 	void EndNavPanelAnimation();
 	void HideNavPanelTemporary();
 	void ShowHideIPTools(bool bShow);
+	void TerminateUnsharpMaskPanel();
 
+	static void OnUnsharpMask(CButtonCtrl & sender);
+	static void OnCancelUnsharpMask(CButtonCtrl & sender);
+	static void OnApplyUnsharpMask(CButtonCtrl & sender);
 	static void OnSaveToDB(CButtonCtrl & sender);
 	static void OnRemoveFromDB(CButtonCtrl & sender);
 	static bool OnRenameFile(CTextCtrl & sender, LPCTSTR sChangedText);

@@ -132,7 +132,7 @@ void CProcessingThread::DoProcess(CProcessingRequest* pRequest, int nOffsetY, in
 			CBasicProcessing::UnsharpMask_Core(pReq->SourceSize,
 				CPoint(pReq->FullTargetOffset.x, pReq->FullTargetOffset.y + nOffsetY),
 				CSize(pReq->FullTargetSize.cx, nSizeY),
-				pReq->Amount, pReq->Threshold,
+				pReq->Amount,
 				pReq->ThresholdLUT, pReq->GrayImage, pReq->SmoothedGrayImage,
 				pReq->SourcePixels, pReq->TargetPixels,
 				pReq->Channels);

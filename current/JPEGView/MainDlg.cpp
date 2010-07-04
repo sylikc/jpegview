@@ -31,6 +31,7 @@
 #include "CropSizeDlg.h"
 #include "ProcessingThreadPool.h"
 #include "ZoomNavigator.h"
+#include "PaintMemDCMgr.h"
 
 //////////////////////////////////////////////////////////////////////////////////////////////
 // Constants
@@ -57,9 +58,9 @@ static const int AUTOSCROLL_TIMEOUT = 20; // autoscroll time in ms
 static const int DARKEN_HIGHLIGHTS = 0; // used in AdjustLDC() call
 static const int BRIGHTEN_SHADOWS = 1; // used in AdjustLDC() call
 
-static const int ZOOM_TEXT_RECT_WIDTH = 100; // zoom label width
+static const int ZOOM_TEXT_RECT_WIDTH = 70; // zoom label width
 static const int ZOOM_TEXT_RECT_HEIGHT = 25; // zoom label height
-static const int ZOOM_TEXT_RECT_OFFSET = 40; // zoom label offset from right border
+static const int ZOOM_TEXT_RECT_OFFSET = 35; // zoom label offset from right border
 static const int PAN_STEP = 48; // number of pixels to pan if pan with cursor keys (SHIFT+up/down/left/right)
 
 static const bool SHOW_TIMING_INFO = false; // Set to true for debugging
@@ -71,8 +72,9 @@ static const int KEEP_PARAMETERS = 4; // used in GotoImage() method
 // Dim factor (0..1) for image processing area, 1 means black, 0 means no dimming
 static const float cfDimFactorIPA = 0.5f;
 static const float cfDimFactorEXIF = 0.5f;
-static const float cfDimFactorNavPanel = 0.3f;
+static const float cfDimFactorNavPanel = 0.5f;
 static const float cfDimFactorWndButtons = 0.1f;
+static const float cfDimFactorUSMPanel = 0.5f;
 
 CMainDlg * CMainDlg::sm_instance = NULL;
 
@@ -157,55 +159,6 @@ static EProcessingFlags _SetLandscapeModeFlags(EProcessingFlags eFlags) {
 	}
 }
 
-// Blits the DIB data section to target DC using dimming (blending with a black bitmap)
-static void BitBltBlended(CDC & dc, CDC & paintDC, const CSize& dcSize, void* pDIBData, BITMAPINFO* pbmInfo, 
-						  const CPoint& dibStart, const CSize& dibSize, float fDimFactor) {
-	int nW = dcSize.cx;
-	int nH = dcSize.cy;
-	CDC memDCblack;
-	memDCblack.CreateCompatibleDC(paintDC);
-	CBitmap bitmapBlack;
-	bitmapBlack.CreateCompatibleBitmap(paintDC, nW, nH);
-	memDCblack.SelectBitmap(bitmapBlack);
-	memDCblack.FillRect(CRect(0, 0, nW, nH), (HBRUSH)::GetStockObject(BLACK_BRUSH));
-	
-	dc.SetDIBitsToDevice(dibStart.x, dibStart.y, 
-		dibSize.cx, dibSize.cy, 0, 0, 0, dibSize.cy, pDIBData, pbmInfo, DIB_RGB_COLORS);
-	
-	BLENDFUNCTION blendFunc;
-	memset(&blendFunc, 0, sizeof(blendFunc));
-	blendFunc.BlendOp = AC_SRC_OVER;
-	blendFunc.SourceConstantAlpha = (unsigned char)(fDimFactor*255 + 0.5f);
-	blendFunc.AlphaFormat = 0;
-	dc.AlphaBlend(0, 0, nW, nH, memDCblack, 0, 0, nW, nH, blendFunc);
-}
-
-// Blits the DIB data section to target DC using blending with painted version of given panel
-static void BitBltBlended(CDC & dc, CDC & paintDC, const CSize& dcSize, void* pDIBData, BITMAPINFO* pbmInfo, 
-						  const CPoint& dibStart, const CSize& dibSize, CPanelMgr& panel, const CPoint& offsetPanel,
-						  float fBlendFactor) {
-	int nW = dcSize.cx;
-	int nH = dcSize.cy;
-
-	dc.SetDIBitsToDevice(dibStart.x, dibStart.y, 
-		dibSize.cx, dibSize.cy, 0, 0, 0, dibSize.cy, pDIBData, pbmInfo, DIB_RGB_COLORS);
-
-	CDC memDCPanel;
-	memDCPanel.CreateCompatibleDC(paintDC);
-	CBitmap bitmapPanel;
-	bitmapPanel.CreateCompatibleBitmap(paintDC, nW, nH);
-	memDCPanel.SelectBitmap(bitmapPanel);
-	memDCPanel.BitBlt(0, 0, nW, nH, dc, 0, 0, SRCCOPY);
-	panel.OnPaint(memDCPanel, offsetPanel);
-	
-	BLENDFUNCTION blendFunc;
-	memset(&blendFunc, 0, sizeof(blendFunc));
-	blendFunc.BlendOp = AC_SRC_OVER;
-	blendFunc.SourceConstantAlpha = (unsigned char)(fBlendFactor*255 + 0.5f);
-	blendFunc.AlphaFormat = 0;
-	dc.AlphaBlend(0, 0, nW, nH, memDCPanel, 0, 0, nW, nH, blendFunc);
-}
-
 //////////////////////////////////////////////////////////////////////////////////////////////
 // Public
 //////////////////////////////////////////////////////////////////////////////////////////////
@@ -238,6 +191,7 @@ CMainDlg::CMainDlg() {
 	sm_instance = this;
 	m_pImageProcParams = new CImageProcessingParams(GetDefaultProcessingParams());
 	InitFromProcessingFlags(GetDefaultProcessingFlags(m_bLandscapeMode), m_bHQResampling, m_bAutoContrast, m_bAutoContrastSection, m_bLDC, m_bLandscapeMode);
+	m_pUnsharpMaskParams = new CUnsharpMaskParams(CSettingsProvider::This().UnsharpMaskParams());
 
 	// Initialize second parameter set using hard coded values, turning off all corrections except sharpening
 	m_pImageProcParams2 = new CImageProcessingParams(GetNoProcessingParams()); 
@@ -299,10 +253,12 @@ CMainDlg::CMainDlg() {
 	m_bSpanVirtualDesktop = false;
 	m_bShowIPTools = false;
 	m_bShowWndButtonPanel = false;
+	m_bShowUnsharpMaskPanel = false;
 	m_bMouseInNavPanel = false;
 	m_bPanMouseCursorSet = false;
 	m_bInInitialOpenFile = false;
 	m_dCropRatio = 0;
+	m_dAlternateUSMAmount = 0;
 	m_storedWindowPlacement.length = sizeof(WINDOWPLACEMENT);
 	memset(&m_storedWindowPlacement2, 0, sizeof(WINDOWPLACEMENT));
 	m_storedWindowPlacement2.length = sizeof(WINDOWPLACEMENT);
@@ -326,9 +282,11 @@ CMainDlg::~CMainDlg() {
 	delete m_pJPEGProvider;
 	delete m_pImageProcParams;
 	delete m_pImageProcParamsKept;
+	delete m_pUnsharpMaskParams;
 	delete m_pSliderMgr;
 	delete m_pNavPanel;
 	delete m_pWndButtonPanel;
+	delete m_pUnsharpMaskPanel;
 	if (m_pMemDCAnimation != NULL) {
 		delete m_pMemDCAnimation;
 	}
@@ -373,6 +331,7 @@ LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam
 	m_pSliderMgr->AddSlider(CNLS::GetString(_T("Color Correction")), &(m_pImageProcParams->ColorCorrectionFactor), &m_bAutoContrast, -0.5, 0.5, false, false);
 	m_pSliderMgr->AddSlider(CNLS::GetString(_T("Contrast Correction")), &(m_pImageProcParams->ContrastCorrectionFactor), &m_bAutoContrast, 0.0, 1.0, false, false);
 	m_pSliderMgr->AddSlider(CNLS::GetString(_T("Sharpen")), &(m_pImageProcParams->Sharpen), NULL, 0.0, 0.5, false, false);
+	m_btnUnsharpMask = m_pSliderMgr->AddButton(CNLS::GetString(_T("Unsharp mask...")), &OnUnsharpMask);
 	m_txtParamDB = m_pSliderMgr->AddText(CNLS::GetString(_T("Parameter DB:")), false, NULL);
 	m_btnSaveToDB = m_pSliderMgr->AddButton(CNLS::GetString(_T("Save to")), &OnSaveToDB);
 	m_btnRemoveFromDB = m_pSliderMgr->AddButton(CNLS::GetString(_T("Remove from")), &OnRemoveFromDB);
@@ -404,6 +363,16 @@ LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam
 	m_pWndButtonPanel->AddUserPaintButton(&(CWndButtonPanel::PaintMinimizeBtn), &OnMinimize, (LPCTSTR)NULL);
 	m_pWndButtonPanel->AddUserPaintButton(&(CWndButtonPanel::PaintRestoreBtn), &OnRestore, (LPCTSTR)NULL);
 	m_pWndButtonPanel->AddUserPaintButton(&(CWndButtonPanel::PaintCloseBtn), &OnClose, (LPCTSTR)NULL);
+
+	// setup unsharp mask panel
+	m_pUnsharpMaskPanel = new CUnsharpMaskPanel(this->m_hWnd, m_pSliderMgr);
+	CTextCtrl* pTextUSM = m_pUnsharpMaskPanel->AddText(CNLS::GetString(_T("Apply Unsharp Mask")), false, NULL);
+	pTextUSM->SetBold(true);
+	m_pUnsharpMaskPanel->AddSlider(CNLS::GetString(_T("Radius")), &(m_pUnsharpMaskParams->Radius), NULL, 0.0, 5.0, false, false, 200);
+	m_pUnsharpMaskPanel->AddSlider(CNLS::GetString(_T("Amount")), &(m_pUnsharpMaskParams->Amount), NULL, 0.0, 10.0, false, false, 200);
+	m_pUnsharpMaskPanel->AddSlider(CNLS::GetString(_T("Threshold")), &(m_pUnsharpMaskParams->Threshold), NULL, 0, 20, false, false, 200);
+	m_pUnsharpMaskPanel->AddButton(CNLS::GetString(_T("Cancel")), &OnCancelUnsharpMask);
+    m_pUnsharpMaskPanel->AddButton(CNLS::GetString(_T("Apply")), &OnApplyUnsharpMask);
 
 	// set icons (for toolbar)
 	HICON hIcon = (HICON)::LoadImage(_Module.GetResourceInstance(), MAKEINTRESOURCE(IDR_MAINFRAME), 
@@ -463,11 +432,9 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 
 	this->GetClientRect(&m_clientRect);
 	CRect imageProcessingArea = m_pSliderMgr->PanelRect();
-	CRect rectNavPanel = m_pNavPanel->PanelRect();
-	CRect rectWndButtons = m_pWndButtonPanel->PanelRect();
-	bool bBlendNavPanel = false;
 	bool bNavPanelVisible = IsNavPanelVisible();
 	bool bShowZoomNavigator = false;
+	bool bShowEXIFInfo = m_bShowFileInfo && m_pCurrentImage != NULL;
 	CRectF visRectZoomNavigator(0.0f, 0.0f, 1.0f, 1.0f);
 	CRect rectZoomNavigator(0, 0, 0, 0);
 	CRect helpDisplayRect = (m_clientRect.Width() > m_monitorRect.Width()) ? m_monitorRect : m_clientRect;
@@ -487,43 +454,26 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 		excludedClippingRects.push_back(rectHelpDisplay);
 	}
 
-	// Create a memory DC for the EXIF area (to prevent flickering, this part of the screen
-	// is excluded from the clipping area and drawn into this memory DC)
-	CDC memDCexif = CDC();
-	HBITMAP hOffScreenBitmapEXIF = NULL;
+	// These panels and regions are handled over memory DCs to eliminate flickering
+	CPaintMemDCMgr memDCMgr(dc);
 
-	CEXIFDisplay* pEXIFDisplay = m_bShowFileInfo ? new CEXIFDisplay() : NULL;
-	CRect rectEXIFInfo = CRect(0, 0, 0, 0);
-	if (pEXIFDisplay != NULL && m_pCurrentImage != NULL) {
+	CEXIFDisplay* pEXIFDisplay = NULL;
+	if (bShowEXIFInfo) {
+		pEXIFDisplay =  new CEXIFDisplay();
 		FillEXIFDataDisplay(pEXIFDisplay);
-		int nYStart = m_bShowFileName ? 32 : 0;
-		rectEXIFInfo = CRect(imageProcessingArea.left, nYStart, imageProcessingArea.left + pEXIFDisplay->GetSize(dc).cx, pEXIFDisplay->GetSize(dc).cy + nYStart);
-		hOffScreenBitmapEXIF = PrepareRectForMemDCPainting(memDCexif, dc, rectEXIFInfo);
-		excludedClippingRects.push_back(rectEXIFInfo);
+		excludedClippingRects.push_back(memDCMgr.CreateEXIFDisplayRegion(pEXIFDisplay, cfDimFactorEXIF, imageProcessingArea.left, m_bShowFileName));
 	}
-
-	// Create a memory DC for the image processing area (also excluded from clipping)
-	CDC memDCipa = CDC();
-	HBITMAP hOffScreenBitmapIPA = NULL;
 	if (m_bShowIPTools) {
-		hOffScreenBitmapIPA = PrepareRectForMemDCPainting(memDCipa, dc, imageProcessingArea);
-		excludedClippingRects.push_back(imageProcessingArea);
+		excludedClippingRects.push_back(memDCMgr.CreatePanelRegion(m_pSliderMgr, cfDimFactorIPA, false));
 	}
-
-	// Create a memory DC for the nav panel (also excluded from clipping)
-	CDC memDCnavPanel = CDC();
-	HBITMAP hOffScreenBitmapNavPanel = NULL;
 	if (bNavPanelVisible) {
-		hOffScreenBitmapNavPanel = PrepareRectForMemDCPainting(memDCnavPanel, dc, rectNavPanel);
-		excludedClippingRects.push_back(rectNavPanel);
+		excludedClippingRects.push_back(memDCMgr.CreatePanelRegion(m_pNavPanel, cfDimFactorNavPanel, !m_bMouseInNavPanel));
 	}
-
-	// Create a memory DC for the window button panel (also excluded from clipping)
-	CDC memDCwndBtns = CDC();
-	HBITMAP hOffScreenBitmapWndBtns = NULL;
 	if (m_bShowWndButtonPanel) {
-		hOffScreenBitmapWndBtns = PrepareRectForMemDCPainting(memDCwndBtns, dc, rectWndButtons);
-		excludedClippingRects.push_back(rectWndButtons);
+		excludedClippingRects.push_back(memDCMgr.CreatePanelRegion(m_pWndButtonPanel, cfDimFactorWndButtons, false));
+	}
+	if (m_bShowUnsharpMaskPanel) {
+		excludedClippingRects.push_back(memDCMgr.CreatePanelRegion(m_pUnsharpMaskPanel, cfDimFactorUSMPanel, false));
 	}
 
 	if (m_pCurrentImage == NULL) {
@@ -565,10 +515,18 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 		CPoint offsets(m_nOffsetX, m_nOffsetY);
 		CPoint offsetsInImage = m_pCurrentImage->ConvertOffset(newSize, clippedSize, offsets);
 
-		void* pDIBData = m_pCurrentImage->GetDIB(newSize, clippedSize, offsetsInImage, 
+		void* pDIBData;
+		if (m_bShowUnsharpMaskPanel) {
+			pDIBData = m_pCurrentImage->GetDIBUnsharpMasked(clippedSize, offsetsInImage, 
+			    *m_pImageProcParams, 
+				CreateProcessingFlags(m_bHQResampling && !m_bTemporaryLowQ, m_bAutoContrast, m_bAutoContrastSection, m_bLDC, false, m_bLandscapeMode),
+				*m_pUnsharpMaskParams);
+		} else {
+			pDIBData = m_pCurrentImage->GetDIB(newSize, clippedSize, offsetsInImage, 
 			    *m_pImageProcParams, 
 				CreateProcessingFlags(m_bHQResampling && !m_bTemporaryLowQ, 
 				m_bAutoContrast, m_bAutoContrastSection, m_bLDC, false, m_bLandscapeMode));
+		}
 
 		// Zoom navigator - check if visible and create exclusion rectangle
 		bShowZoomNavigator = IsZoomNavigatorCurrentlyShown();
@@ -596,34 +554,6 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 			dc.SetDIBitsToDevice(xDest, yDest, clippedSize.cx, clippedSize.cy, 0, 0, 0, clippedSize.cy, pDIBData, 
 				&bmInfo, DIB_RGB_COLORS);
 
-			// if we use a memory DC for the EXIF display, also blit to this, using blending
-			if (memDCexif.m_hDC != NULL) {
-				BitBltBlended(memDCexif, dc, CSize(rectEXIFInfo.Width(), rectEXIFInfo.Height()), pDIBData, &bmInfo, 
-						  CPoint(xDest - rectEXIFInfo.left, yDest - rectEXIFInfo.top), clippedSize, cfDimFactorEXIF);
-			}
-			// same for navigation panel
-			if (memDCnavPanel.m_hDC != NULL && bNavPanelVisible) {
-				if (m_bMouseInNavPanel) {
-					BitBltBlended(memDCnavPanel, dc, CSize(rectNavPanel.Width(), rectNavPanel.Height()), pDIBData, &bmInfo, 
-						  CPoint(xDest - rectNavPanel.left, yDest - rectNavPanel.top), clippedSize, cfDimFactorNavPanel);
-				} else {
-					bBlendNavPanel = true;
-					BitBltBlended(memDCnavPanel, dc, CSize(rectNavPanel.Width(), rectNavPanel.Height()), pDIBData, &bmInfo, 
-						  CPoint(xDest - rectNavPanel.left, yDest - rectNavPanel.top), clippedSize, 
-						  *m_pNavPanel, CPoint(-rectNavPanel.left, -rectNavPanel.top), m_fCurrentBlendingFactorNavPanel);
-				}
-			}
-			// same for image processing area
-			if (memDCipa.m_hDC != NULL) {
-				BitBltBlended(memDCipa, dc, CSize(imageProcessingArea.Width(), imageProcessingArea.Height()), pDIBData, &bmInfo, 
-						  CPoint(xDest - imageProcessingArea.left, yDest - imageProcessingArea.top), clippedSize, cfDimFactorIPA);
-			}
-			// same for window buttons
-			if (memDCwndBtns.m_hDC != NULL) {
-				BitBltBlended(memDCwndBtns, dc, CSize(rectWndButtons.Width(), rectWndButtons.Height()), pDIBData, &bmInfo, 
-						  CPoint(xDest - rectWndButtons.left, yDest - rectWndButtons.top), clippedSize, cfDimFactorWndButtons);
-			}
-
 			// remaining client area is painted black
 			if (clippedSize.cx < m_clientRect.Width()) {
 				CRect r(0, 0, xDest, m_clientRect.Height());
@@ -638,6 +568,8 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 				dc.FillRect(&rr, backBrush);
 			}
 
+			// The DIB is also blitted into the memory DCs of the panels
+			memDCMgr.BlitImageToMemDC(pDIBData, &bmInfo, CPoint(xDest, yDest), m_fCurrentBlendingFactorNavPanel);
 		}
 	}
 
@@ -734,35 +666,8 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 	}
 #endif
 
-	// Paint the image processing area at bottom of screen
-	if (m_bShowIPTools) {
-		m_pSliderMgr->OnPaint(memDCipa, CPoint(-imageProcessingArea.left, -imageProcessingArea.top));
-		dc.BitBlt(imageProcessingArea.left, imageProcessingArea.top, imageProcessingArea.Width(), imageProcessingArea.Height(), memDCipa, 0, 0, SRCCOPY);
-		m_pSliderMgr->GetTooltipMgr().OnPaint(dc);
-	}
-
-	// Paint navigation panel
-	if (bNavPanelVisible) {
-		if (!bBlendNavPanel) {
-			m_pNavPanel->OnPaint(memDCnavPanel, CPoint(-rectNavPanel.left, -rectNavPanel.top));
-		} // else the nav panel has already been blended into mem DC
-		dc.BitBlt(rectNavPanel.left, rectNavPanel.top, rectNavPanel.Width(), rectNavPanel.Height(), memDCnavPanel, 0, 0, SRCCOPY);
-		m_pNavPanel->GetTooltipMgr().OnPaint(dc);
-	}
-
-	// Paint window buttons
-	if (m_bShowWndButtonPanel) {
-		m_pWndButtonPanel->OnPaint(memDCwndBtns, CPoint(-rectWndButtons.left, -rectWndButtons.top));
-		dc.BitBlt(rectWndButtons.left, rectWndButtons.top, rectWndButtons.Width(), rectWndButtons.Height(), memDCwndBtns, 0, 0, SRCCOPY);
-		m_pWndButtonPanel->GetTooltipMgr().OnPaint(dc);
-	}
-
-	// Display file and EXIF information
-	if (pEXIFDisplay != NULL && m_pCurrentImage != NULL) {
-		// paint into the memory DC
-		pEXIFDisplay->Show(memDCexif, 0, 0);
-		dc.BitBlt(rectEXIFInfo.left, rectEXIFInfo.top, rectEXIFInfo.Width(), rectEXIFInfo.Height(), memDCexif, 0, 0, SRCCOPY);
-	}
+	// Now blit the memory DCs of the panels to the screen
+	memDCMgr.PaintMemDCToScreen();
 
 	// Show current zoom factor
 	if (m_bInZooming || m_bShowZoomFactor) {
@@ -782,18 +687,6 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 		PaintCropRect(dc);
 	}
 
-	if (hOffScreenBitmapEXIF != NULL) {
-		::DeleteObject(hOffScreenBitmapEXIF);
-	}
-	if (hOffScreenBitmapIPA != NULL) {
-		::DeleteObject(hOffScreenBitmapIPA);
-	}
-	if (hOffScreenBitmapNavPanel != NULL) {
-		::DeleteObject(hOffScreenBitmapNavPanel);
-	}
-	if (hOffScreenBitmapWndBtns != NULL) {
-		::DeleteObject(hOffScreenBitmapWndBtns);
-	}
 	delete pHelpDisplay;
 	delete pEXIFDisplay;
 
@@ -837,16 +730,17 @@ LRESULT CMainDlg::OnLButtonDown(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam,
 	this->SetCapture();
 	SetCursorForMoveSection();
 	CPoint pointClicked(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+	bool bEatenByUnsharpMaskPanel = m_bShowUnsharpMaskPanel && m_pUnsharpMaskPanel->OnMouseLButton(MouseEvent_BtnDown, pointClicked.x, pointClicked.y);
 	bool bEatenByIPA = m_bShowIPTools && m_pSliderMgr->OnMouseLButton(MouseEvent_BtnDown, pointClicked.x, pointClicked.y);
 	bool bEatenByNavPanel = m_bShowNavPanel && !m_bShowIPTools && m_pNavPanel->OnMouseLButton(MouseEvent_BtnDown, pointClicked.x, pointClicked.y);
 	bool bEatenByWndButtons = m_bShowWndButtonPanel && m_pWndButtonPanel->OnMouseLButton(MouseEvent_BtnDown, pointClicked.x, pointClicked.y);
 
-	// If the image processing area does not eat up the event, start dragging
-	if (!bEatenByIPA && !bEatenByNavPanel && !bEatenByWndButtons) {
+	// If the panels do not eat up the event, start dragging
+	if (!bEatenByUnsharpMaskPanel && !bEatenByIPA && !bEatenByNavPanel && !bEatenByWndButtons) {
 		bool bCtrl = (::GetKeyState(VK_CONTROL) & 0x8000) != 0;
 		bool bDraggingRequired = m_virtualImageSize.cx > m_clientRect.Width() || m_virtualImageSize.cy > m_clientRect.Height();
 		if (bCtrl || !bDraggingRequired) {
-			if (!m_bDontStartCropOnNextClick) {
+			if (!m_bShowUnsharpMaskPanel && !m_bDontStartCropOnNextClick) {
 				StartCropping(pointClicked.x, pointClicked.y);
 			}
 		} else {
@@ -863,7 +757,7 @@ LRESULT CMainDlg::OnLButtonDown(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam,
 			StartDragging(pointClicked.x, pointClicked.y, bClickInZoomNavigatorThumbnail);
 		}
 	}
-	bool bMouseInNavPanel = m_pNavPanel->PanelRect().PtInRect(pointClicked);
+	bool bMouseInNavPanel = !m_bShowUnsharpMaskPanel && m_pNavPanel->PanelRect().PtInRect(pointClicked);
 	if (bMouseInNavPanel && !m_bMouseInNavPanel) {
 		m_bMouseInNavPanel = true;
 		m_pNavPanel->GetTooltipMgr().EnableTooltips(true);
@@ -892,6 +786,7 @@ LRESULT CMainDlg::OnLButtonUp(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, B
 		if (m_bShowIPTools) m_pSliderMgr->OnMouseLButton(MouseEvent_BtnUp, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
 		if (m_bShowNavPanel && !m_bShowIPTools) m_pNavPanel->OnMouseLButton(MouseEvent_BtnUp, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
 		if (m_bShowWndButtonPanel) m_pWndButtonPanel->OnMouseLButton(MouseEvent_BtnUp, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+		if (m_bShowUnsharpMaskPanel) m_pUnsharpMaskPanel->OnMouseLButton(MouseEvent_BtnUp, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
 	}
 	::ReleaseCapture();
 	return 0;
@@ -904,10 +799,12 @@ LRESULT CMainDlg::OnMButtonUp(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*
 }
 
 LRESULT CMainDlg::OnXButtonDown(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOOL& /*bHandled*/) {
-	if (GET_XBUTTON_WPARAM(wParam) == XBUTTON1) {
-		GotoImage(POS_Next);
-	} else {
-		GotoImage(POS_Previous);
+	if (!m_bShowUnsharpMaskPanel) {
+		if (GET_XBUTTON_WPARAM(wParam) == XBUTTON1) {
+			GotoImage(POS_Next);
+		} else {
+			GotoImage(POS_Previous);
+		}
 	}
 	return 0;
 }
@@ -932,7 +829,7 @@ LRESULT CMainDlg::OnMouseMove(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, B
 	// Start timer to fade out nav panel if no mouse movement
 	if ((m_nMouseX != nOldMouseX || m_nMouseY != nOldMouseY) && !m_bPanMouseCursorSet) {
 		::KillTimer(this->m_hWnd, NAVPANEL_START_ANI_TIMER_EVENT_ID);
-		if (!m_bShowIPTools) {
+		if (!m_bShowIPTools && !m_bShowUnsharpMaskPanel) {
 			if (!m_bInNavPanelAnimation) {
 				::SetTimer(this->m_hWnd, NAVPANEL_START_ANI_TIMER_EVENT_ID, 2000, NULL);
 			} else {
@@ -958,7 +855,7 @@ LRESULT CMainDlg::OnMouseMove(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, B
 			::SetTimer(this->m_hWnd, AUTOSCROLL_TIMER_EVENT_ID, AUTOSCROLL_TIMEOUT, NULL);
 		}
 	} else {
-		if (m_clientRect.Width() >= 800) { 
+		if (m_clientRect.Width() >= 800 && !m_bShowUnsharpMaskPanel) { 
 			if (!m_bShowIPTools) {
 				int nIPAreaStart= m_clientRect.bottom - m_pSliderMgr->SliderAreaHeight();
 				if (m_bShowNavPanel) {
@@ -986,35 +883,40 @@ LRESULT CMainDlg::OnMouseMove(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, B
 			}
 		}
 
-		if (m_bShowNavPanel && !m_bShowIPTools) {
-			bool bMouseInNavPanel = m_pNavPanel->PanelRect().PtInRect(CPoint(m_nMouseX, m_nMouseY));
-			if (!bMouseInNavPanel && m_bMouseInNavPanel) {
-				m_bMouseInNavPanel = false;
-				m_pNavPanel->GetTooltipMgr().EnableTooltips(false);
-				this->InvalidateRect(m_pNavPanel->PanelRect(), FALSE);
-			} else if (bMouseInNavPanel && !m_bMouseInNavPanel) {
-				StartNavPanelTimer(50);
-			}
-			m_pNavPanel->OnMouseMove(m_nMouseX, m_nMouseY);
-		} else {
-			m_pNavPanel->GetTooltipMgr().EnableTooltips(false);
+		if (m_bShowUnsharpMaskPanel) {
 			m_bMouseInNavPanel = false;
-		}
-
-		if (!m_bShowWndButtonPanel) {
-			if (m_bFullScreenMode) {
-				int nWndBtnAreaStart = m_pWndButtonPanel->ButtonPanelHeight();
-				if (nOldMouseY != 0 && nOldMouseY > nWndBtnAreaStart && m_nMouseY <= nWndBtnAreaStart) {
-					m_bShowWndButtonPanel = true;
-					this->InvalidateRect(m_pWndButtonPanel->PanelRect(), FALSE);
-				}
-			}
+			m_pUnsharpMaskPanel->OnMouseMove(m_nMouseX, m_nMouseY);
 		} else {
-			if (!m_pWndButtonPanel->OnMouseMove(m_nMouseX, m_nMouseY)) {
-				if (m_nMouseY > m_pWndButtonPanel->ButtonPanelHeight()*2) {
-					m_bShowWndButtonPanel = false;
-					this->InvalidateRect(m_pWndButtonPanel->PanelRect(), FALSE);
-					m_pWndButtonPanel->GetTooltipMgr().RemoveActiveTooltip();
+			if (m_bShowNavPanel && !m_bShowIPTools) {
+				bool bMouseInNavPanel = m_pNavPanel->PanelRect().PtInRect(CPoint(m_nMouseX, m_nMouseY));
+				if (!bMouseInNavPanel && m_bMouseInNavPanel) {
+					m_bMouseInNavPanel = false;
+					m_pNavPanel->GetTooltipMgr().EnableTooltips(false);
+					this->InvalidateRect(m_pNavPanel->PanelRect(), FALSE);
+				} else if (bMouseInNavPanel && !m_bMouseInNavPanel) {
+					StartNavPanelTimer(50);
+				}
+				m_pNavPanel->OnMouseMove(m_nMouseX, m_nMouseY);
+			} else {
+				m_pNavPanel->GetTooltipMgr().EnableTooltips(false);
+				m_bMouseInNavPanel = false;
+			}
+
+			if (!m_bShowWndButtonPanel) {
+				if (m_bFullScreenMode) {
+					int nWndBtnAreaStart = m_pWndButtonPanel->ButtonPanelHeight();
+					if (nOldMouseY != 0 && nOldMouseY > nWndBtnAreaStart && m_nMouseY <= nWndBtnAreaStart) {
+						m_bShowWndButtonPanel = true;
+						this->InvalidateRect(m_pWndButtonPanel->PanelRect(), FALSE);
+					}
+				}
+			} else {
+				if (!m_pWndButtonPanel->OnMouseMove(m_nMouseX, m_nMouseY)) {
+					if (m_nMouseY > m_pWndButtonPanel->ButtonPanelHeight()*2) {
+						m_bShowWndButtonPanel = false;
+						this->InvalidateRect(m_pWndButtonPanel->PanelRect(), FALSE);
+						m_pWndButtonPanel->GetTooltipMgr().RemoveActiveTooltip();
+					}
 				}
 			}
 		}
@@ -1045,13 +947,13 @@ LRESULT CMainDlg::OnMouseMove(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, B
 LRESULT CMainDlg::OnMouseWheel(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOOL& /*bHandled*/) {
 	bool bCtrl = (::GetKeyState(VK_CONTROL) & 0x8000) != 0;
 	int nDelta = GET_WHEEL_DELTA_WPARAM(wParam);
-	if (!bCtrl && CSettingsProvider::This().NavigateWithMouseWheel()) {
+	if (!bCtrl && CSettingsProvider::This().NavigateWithMouseWheel() && !m_bShowUnsharpMaskPanel) {
 		if (nDelta < 0) {
 			GotoImage(POS_Next);
 		} else if (nDelta > 0) {
 			GotoImage(POS_Previous);
 		}
-	} else if (m_dZoom > 0) {
+	} else if (m_dZoom > 0 && !m_bShowUnsharpMaskPanel) {
 		PerformZoom(double(nDelta)/WHEEL_DELTA, true);
 	}
 	return 0;
@@ -1061,6 +963,20 @@ LRESULT CMainDlg::OnKeyDown(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOO
 	bool bCtrl = (::GetKeyState(VK_CONTROL) & 0x8000) != 0;
 	bool bShift = (::GetKeyState(VK_SHIFT) & 0x8000) != 0;
 	bool bAlt = (::GetKeyState(VK_MENU) & 0x8000) != 0;
+	if (m_bShowUnsharpMaskPanel) {
+		if (wParam == VK_ESCAPE) {
+			TerminateUnsharpMaskPanel();
+			return 1;
+		}
+		if (wParam == 'A' && bCtrl) {
+			double dTemp = m_dAlternateUSMAmount;
+			m_dAlternateUSMAmount = m_pUnsharpMaskParams->Amount;
+			m_pUnsharpMaskParams->Amount = dTemp;
+			Invalidate();
+			return 1;
+		}
+		return 0; // no other keys are recogized in this mode
+	}
 	bool bHandled = false;
 	if (wParam == VK_ESCAPE) {
 		bHandled = true;
@@ -1296,6 +1212,9 @@ LRESULT CMainDlg::OnKeyDown(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOO
 }
 
 LRESULT CMainDlg::OnSysKeyDown(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOOL& /*bHandled*/) {
+	if (m_bShowUnsharpMaskPanel) {
+		return 1;
+	}
 	bool bShift = (::GetKeyState(VK_SHIFT) & 0x8000) != 0;
 	if (wParam == VK_PLUS) {
 		AdjustSharpen(SHARPEN_INC);
@@ -1327,7 +1246,7 @@ LRESULT CMainDlg::OnJPEGLoaded(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, 
 
 LRESULT CMainDlg::OnDropFiles(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOOL& /*bHandled*/) {
 	HDROP hDrop = (HDROP) wParam;
-	if (hDrop != NULL) {
+	if (hDrop != NULL && !m_bShowUnsharpMaskPanel) {
 		const int BUFF_SIZE = 512;
 		TCHAR buff[BUFF_SIZE];
 		if (::DragQueryFile(hDrop, 0, (LPTSTR) &buff, BUFF_SIZE - 1) > 0) {
@@ -1458,6 +1377,9 @@ static void TranslateMenu(HMENU hMenu) {
 }
 
 LRESULT CMainDlg::OnContextMenu(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, BOOL& /*bHandled*/) {
+	if (m_bShowUnsharpMaskPanel) {
+		return 1;
+	}
 	int nX = GET_X_LPARAM(lParam);
     int nY = GET_Y_LPARAM(lParam);
 
@@ -1571,6 +1493,36 @@ LRESULT CMainDlg::OnCancel(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*/, BOO
 }
 
 // Handlers for image processing UI controls
+
+void CMainDlg::OnUnsharpMask(CButtonCtrl & sender) {
+	if (sm_instance->m_pCurrentImage != NULL) {
+		bool bOldMouseOn = sm_instance->m_bMouseOn;
+		sm_instance->m_bMouseOn = false;
+		sm_instance->ResetZoomTo100Percents();
+		sm_instance->m_bMouseOn = bOldMouseOn;
+		sm_instance->m_bShowUnsharpMaskPanel = true;
+		sm_instance->m_bShowHelp = false;
+		sm_instance->m_bShowIPTools = false;
+		sm_instance->m_bOldShowNavPanel = sm_instance->m_bShowNavPanel;
+		sm_instance->m_bShowNavPanel = false;
+		sm_instance->m_bShowWndButtonPanel = false;
+		sm_instance->EndNavPanelAnimation();
+		sm_instance->StopTimer();
+		sm_instance->StopMovieMode();
+		sm_instance->Invalidate();
+	}
+}
+
+void CMainDlg::OnCancelUnsharpMask(CButtonCtrl & sender) {
+	sm_instance->TerminateUnsharpMaskPanel();
+}
+
+void CMainDlg::OnApplyUnsharpMask(CButtonCtrl & sender) {
+	HCURSOR hOldCursor = ::SetCursor(::LoadCursor(NULL, MAKEINTRESOURCE(IDC_WAIT)));
+	sm_instance->m_pCurrentImage->ApplyUnsharpMaskToOriginalPixels(*(sm_instance->m_pUnsharpMaskParams));
+	::SetCursor(hOldCursor);
+	sm_instance->TerminateUnsharpMaskPanel();
+}
 
 void CMainDlg::OnSaveToDB(CButtonCtrl & sender) {
 	sm_instance->ExecuteCommand(IDM_SAVE_PARAM_DB);
@@ -2748,6 +2700,7 @@ void CMainDlg::ResetParamsToDefault() {
 void CMainDlg::StartTimer(int nMilliSeconds) {
 	m_nCurrentTimeout = nMilliSeconds;
 	::SetTimer(this->m_hWnd, SLIDESHOW_TIMER_EVENT_ID, nMilliSeconds, NULL);
+	EndNavPanelAnimation();
 }
 
 void CMainDlg::StopTimer(void) {
@@ -2905,6 +2858,7 @@ void CMainDlg::AfterNewImageLoaded(bool bSynchronize) {
 	SetWindowTitle();
 	HideNavPanelTemporary();
 	ShowHideSaveDBButtons();
+	m_btnUnsharpMask->SetShow(m_pCurrentImage != NULL);
 	if (m_pCurrentImage != NULL && !m_pCurrentImage->IsClipboardImage() && !m_bMovieMode) {
 		m_txtParamDB->SetShow(true);
 		m_txtRename->SetShow(true);
@@ -3291,21 +3245,6 @@ void CMainDlg::GenerateHelpDisplay(CHelpDisplay & helpDisplay) {
 	}
 }
 
-HBITMAP CMainDlg::PrepareRectForMemDCPainting(CDC & memDC, CDC & paintDC, const CRect& rect) {
-	paintDC.ExcludeClipRect(&rect);
-
-	CBrush backBrush;
-	backBrush.CreateSolidBrush(CSettingsProvider::This().ColorBackground());
-
-	// Create a memory DC of correct size
-	CBitmap memDCBitmap = CBitmap();
-	memDC.CreateCompatibleDC(paintDC);
-	memDCBitmap.CreateCompatibleBitmap(paintDC, rect.Width(), rect.Height());
-	memDC.SelectBitmap(memDCBitmap);
-	memDC.FillRect(CRect(0, 0, rect.Width(), rect.Height()), backBrush);
-	return memDCBitmap.m_hBitmap;
-}
-
 void CMainDlg::InvalidateZoomNavigatorRect() {
 	bool bShowZoomNavigator = m_pCurrentImage != NULL && CSettingsProvider::This().ShowZoomNavigator();
 	if (bShowZoomNavigator) {
@@ -3373,9 +3312,17 @@ void CMainDlg::ToggleMonitor() {
 
 CRect CMainDlg::GetZoomTextRect(CRect imageProcessingArea) {
 	int nZoomTextRectBottomOffset = (m_clientRect.Width() < 800) ? 25 : ZOOM_TEXT_RECT_OFFSET;
-	return CRect(imageProcessingArea.right - Scale(ZOOM_TEXT_RECT_WIDTH + ZOOM_TEXT_RECT_OFFSET), 
+	int nStartX = imageProcessingArea.right - Scale(ZOOM_TEXT_RECT_WIDTH + ZOOM_TEXT_RECT_OFFSET);
+	if (m_bShowIPTools) {
+		nStartX = max(nStartX, m_btnUnsharpMask->GetPosition().right);
+	}
+	int nEndX = nStartX + Scale(ZOOM_TEXT_RECT_WIDTH);
+	if (m_bShowIPTools) {
+		nEndX = min(nEndX, imageProcessingArea.right - 2);
+	}
+	return CRect(nStartX, 
 		imageProcessingArea.bottom - Scale(ZOOM_TEXT_RECT_HEIGHT + nZoomTextRectBottomOffset), 
-		imageProcessingArea.right - Scale(ZOOM_TEXT_RECT_OFFSET), imageProcessingArea.bottom - Scale(nZoomTextRectBottomOffset));
+		nEndX, imageProcessingArea.bottom - Scale(nZoomTextRectBottomOffset));
 }
 
 void CMainDlg::EditINIFile(bool bGlobalINI) {
@@ -3450,6 +3397,7 @@ bool CMainDlg::IsNavPanelVisible() {
 }
 
 void CMainDlg::StartNavPanelAnimation(bool bFadeOut, bool bFast) {
+	if (m_bShowUnsharpMaskPanel) return;
 	if (!m_bInNavPanelAnimation) {
 		m_bFadeOut = bFadeOut;
 		if (!bFadeOut) {
@@ -3493,7 +3441,7 @@ void CMainDlg::DoNavPanelAnimation() {
 			if (m_pMemDCAnimation == NULL) {
 				m_pMemDCAnimation = new CDC();
 				CDC screenDC = GetDC();
-				m_hOffScreenBitmapAnimation = PrepareRectForMemDCPainting(*m_pMemDCAnimation, screenDC, m_pNavPanel->PanelRect());
+				m_hOffScreenBitmapAnimation = CPaintMemDCMgr::PrepareRectForMemDCPainting(*m_pMemDCAnimation, screenDC, m_pNavPanel->PanelRect());
 			}
 
 			CBrush backBrush;
@@ -3510,7 +3458,7 @@ void CMainDlg::DoNavPanelAnimation() {
 			bmInfo.bmiHeader.biCompression = BI_RGB;
 			int xDest = (m_clientRect.Width() - m_pCurrentImage->DIBWidth()) / 2;
 			int yDest = (m_clientRect.Height() - m_pCurrentImage->DIBHeight()) / 2;
-			BitBltBlended(*m_pMemDCAnimation, screenDC, CSize(rectNavPanel.Width(), rectNavPanel.Height()), pDIBData, &bmInfo, 
+			CPaintMemDCMgr::BitBltBlended(*m_pMemDCAnimation, screenDC, CSize(rectNavPanel.Width(), rectNavPanel.Height()), pDIBData, &bmInfo, 
 								  CPoint(xDest - rectNavPanel.left, yDest - rectNavPanel.top), CSize(m_pCurrentImage->DIBWidth(), m_pCurrentImage->DIBHeight()), 
 								  *m_pNavPanel, CPoint(-rectNavPanel.left, -rectNavPanel.top), m_fCurrentBlendingFactorNavPanel);
 			screenDC.BitBlt(rectNavPanel.left, rectNavPanel.top, rectNavPanel.Width(), rectNavPanel.Height(), *m_pMemDCAnimation, 0, 0, SRCCOPY);
@@ -3559,4 +3507,11 @@ void CMainDlg::ShowHideIPTools(bool bShow) {
 	} else {
 		StartNavPanelAnimation(false, true);
 	}
+}
+
+void CMainDlg::TerminateUnsharpMaskPanel() {
+	m_bShowUnsharpMaskPanel = false;
+	m_bShowNavPanel = m_bOldShowNavPanel;
+	m_pCurrentImage->FreeUnsharpMaskResources();
+	Invalidate();
 }

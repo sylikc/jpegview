@@ -51,6 +51,8 @@ CJPEGImage::CJPEGImage(int nWidth, int nHeight, void* pIJLPixels, void* pEXIFDat
 	m_pDIBPixelsLUTProcessed = NULL;
 	m_pLastDIB = NULL;
 	m_pThumbnail = NULL;
+	m_pGrayImage = NULL;
+	m_pSmoothGrayImage = NULL;
 	
 	m_pLUTAllChannels = NULL;
 	m_pLUTRGB = NULL;
@@ -65,12 +67,15 @@ CJPEGImage::CJPEGImage(int nWidth, int nHeight, void* pIJLPixels, void* pEXIFDat
 	m_bEnableDimming = true;
 	m_bInParamDB = false;
 	m_bHasZoomStoredInParamDB = false;
+	m_bUnsharpMaskParamsValid = false;
 
 	m_bCropped = false;
 	m_nRotation = 0;
 	m_bRotationByEXIF = false;
 	m_bFirstReprocessing = true;
 	m_dLastOpTickCount = 0;
+	m_dLoadTickCount = 0;
+	m_dUnsharpMaskTickCount = 0;
 	m_FullTargetSize = CSize(0, 0);
 	m_ClippingSize = CSize(0, 0);
 	m_TargetOffset = CPoint(0, 0);
@@ -96,6 +101,10 @@ CJPEGImage::~CJPEGImage(void) {
 	m_pDIBPixels = NULL;
 	delete[] m_pDIBPixelsLUTProcessed;
 	m_pDIBPixelsLUTProcessed = NULL;
+	delete[] m_pGrayImage;
+	m_pGrayImage = NULL;
+	delete[] m_pSmoothGrayImage;
+	m_pSmoothGrayImage = NULL;
 	delete[] m_pLUTAllChannels;
 	m_pLUTAllChannels = NULL;
 	delete[] m_pLUTRGB;
@@ -115,85 +124,6 @@ CJPEGImage::~CJPEGImage(void) {
 	m_pThumbnail = NULL;
 }
 
-void* CJPEGImage::GetDIB(CSize fullTargetSize, CSize clippingSize, CPoint targetOffset,
-						 const CImageProcessingParams & imageProcParams, EProcessingFlags eProcFlags) {
-
-	// Check if resampling due to bHighQualityResampling parameter change is needed
-	bool bMustResampleQuality = GetProcessingFlag(eProcFlags, PFLAG_HighQualityResampling) != GetProcessingFlag(m_eProcFlags, PFLAG_HighQualityResampling);
-	bool bTargetSizeChanged = fullTargetSize != m_FullTargetSize;
-	// Check if resampling due to change of geometric parameters is needed
-	bool bMustResampleGeometry = bTargetSizeChanged || clippingSize != m_ClippingSize || targetOffset != m_TargetOffset;
-	// Check if resampling due to change of processing parameters is needed
-	bool bMustResampleProcessings = fabs(imageProcParams.Sharpen - m_imageProcParams.Sharpen) > 1e-2;
-
-	EResizeType eResizeType = GetResizeType(fullTargetSize, CSize(m_nOrigWidth, m_nOrigHeight));
-
-	// the geometrical parameters must be set before calling ApplyCorrectionLUT()
-	CRect oldClippingRect = CRect(m_TargetOffset, m_ClippingSize);
-	m_FullTargetSize = fullTargetSize;
-	m_ClippingSize = clippingSize;
-	m_TargetOffset = targetOffset;
-
-	double dStartTickCount = Helpers::GetExactTickCount();
-
-	// Check if only the LUT must be reapplied but no resampling (resampling is much slower than the LUTs)
-	void * pDIB = NULL;
-	if (!bMustResampleQuality && !bMustResampleGeometry && !bMustResampleProcessings) {
-		// only LUT must be reapplied (or even nothing must be done)
-		pDIB = ApplyCorrectionLUTandLDC(imageProcParams, eProcFlags, m_pDIBPixelsLUTProcessed, 
-			fullTargetSize, targetOffset, m_pDIBPixels, clippingSize, bMustResampleGeometry, false);
-	}
-	// ApplyCorrectionLUTandLDC() could have failed, then recreate the DIBs
-	if (pDIB == NULL) {
-		// if the image is reprocessed more than once, it is worth to convert the original to 4 channels
-		// as this is faster for further processing
-		if (!m_bFirstReprocessing) {
-			ConvertSrcTo4Channels();
-		}
-
-		// If we only pan, we can resample far more efficiently by only calculating the newly visible areas
-		bool bPanningOnly = !m_bFirstReprocessing && !bMustResampleProcessings && !bTargetSizeChanged && !bMustResampleQuality;
-		m_bFirstReprocessing = false;
-		if (bPanningOnly) {
-			ResampleWithPan(m_pDIBPixels, m_pDIBPixelsLUTProcessed, fullTargetSize, clippingSize, targetOffset, 
-				oldClippingRect, eProcFlags, imageProcParams, eResizeType);
-		} else {
-			delete[] m_pDIBPixelsLUTProcessed; m_pDIBPixelsLUTProcessed = NULL;
-			delete[] m_pDIBPixels; m_pDIBPixels = NULL;
-		}
-
-		// both DIBs are NULL, do normal resampling
-		if (m_pDIBPixels == NULL && m_pDIBPixelsLUTProcessed == NULL) {
-			m_pDIBPixels = Resample(fullTargetSize, clippingSize, targetOffset, eProcFlags, imageProcParams.Sharpen, eResizeType);
-		}
-
-		// if ResampleWithPan() has preseved this DIB, we can reuse it
-		if (m_pDIBPixelsLUTProcessed == NULL) {
-			pDIB = ApplyCorrectionLUTandLDC(imageProcParams, eProcFlags, m_pDIBPixelsLUTProcessed, fullTargetSize, 
-				targetOffset, m_pDIBPixels, clippingSize, bMustResampleGeometry, false);
-		} else {
-			pDIB = m_pDIBPixelsLUTProcessed;
-		}
-	}
-
-	double dLastOpTickCount = Helpers::GetExactTickCount() - dStartTickCount; 
-	if (dLastOpTickCount > 1) {
-		m_dLastOpTickCount = dLastOpTickCount;
-	}
-
-	// set these parameters after ApplyCorrectionLUT() - else it cannot be detected that the parameters changed
-	double dOldSharpen = m_imageProcParams.Sharpen;
-	m_imageProcParams = imageProcParams;
-	// do not touch sharpen parameter if no resampling done - avoids cummulative error propagation
-	if (!bMustResampleProcessings) {
-		m_imageProcParams.Sharpen = dOldSharpen;
-	}
-	m_eProcFlags = eProcFlags;
-
-	m_pLastDIB = pDIB;
-
-	return pDIB;
-}
 
 void* CJPEGImage::GetThumbnailDIB(CSize size, const CImageProcessingParams & imageProcParams, EProcessingFlags eProcFlags) {
 	if (m_pThumbnail == NULL) {
@@ -225,6 +155,39 @@ void* CJPEGImage::GetThumbnailDIB(CSize size, const CImageProcessingParams & ima
 	return m_pThumbnail->GetDIB(size, size, CPoint(0, 0), imageProcParams, eProcFlags);
 }
 
+void* CJPEGImage::GetDIBUnsharpMasked(CSize clippingSize, CPoint targetOffset,
+									  const CImageProcessingParams & imageProcParams, EProcessingFlags eProcFlags, 
+									  const CUnsharpMaskParams & unsharpMaskParams) {
+	bool bUseUnsharpMask = unsharpMaskParams.Amount > 0 && unsharpMaskParams.Radius > 0;
+	return GetDIBInternal(CSize(m_nOrigWidth, m_nOrigHeight), clippingSize, targetOffset, imageProcParams, 
+		eProcFlags, bUseUnsharpMask ? &unsharpMaskParams : NULL);
+}
+
+void CJPEGImage::FreeUnsharpMaskResources() {
+	delete[] m_pGrayImage;
+	m_pGrayImage = NULL;
+	delete[] m_pSmoothGrayImage;
+	m_pSmoothGrayImage = NULL;
+}
+
+void CJPEGImage::ApplyUnsharpMaskToOriginalPixels(const CUnsharpMaskParams & unsharpMaskParams) {
+	InvalidateAllCachedPixelData();
+
+	double dStartTime = Helpers::GetExactTickCount();
+
+	int16* pGray = CBasicProcessing::Create1Channel16bppGrayscaleImage(m_nOrigWidth, m_nOrigHeight, m_pIJLPixels, m_nIJLChannels);
+	int16* pSmoothed = CBasicProcessing::GaussFilter16bpp1Channel(CSize(m_nOrigWidth, m_nOrigHeight), CPoint(0, 0), 
+		CSize(m_nOrigWidth, m_nOrigHeight), unsharpMaskParams.Radius, pGray);
+	CBasicProcessing::UnsharpMask(CSize(m_nOrigWidth, m_nOrigHeight), CPoint(0,0), CSize(m_nOrigWidth, m_nOrigHeight), 
+		unsharpMaskParams.Amount, unsharpMaskParams.Threshold, pGray, pSmoothed, m_pIJLPixels, m_pIJLPixels, m_nIJLChannels);
+	
+	delete[] pGray;
+	delete[] pSmoothed;
+
+	m_dUnsharpMaskTickCount = Helpers::GetExactTickCount() - dStartTime;
+}
+
+
 void CJPEGImage::ResampleWithPan(void* & pDIBPixels, void* & pDIBPixelsLUTProcessed, CSize fullTargetSize, 
 								 CSize clippingSize, CPoint targetOffset, CRect oldClippingRect,
 								 EProcessingFlags eProcFlags, const CImageProcessingParams & imageProcParams, EResizeType eResizeType) {
@@ -239,7 +202,7 @@ void CJPEGImage::ResampleWithPan(void* & pDIBPixels, void* & pDIBPixelsLUTProces
 			CSize(sourceRect.Width(), sourceRect.Height()));
 
 		bool bCanUseLUTProcDIB = ApplyCorrectionLUTandLDC(imageProcParams, eProcFlags, pDIBPixelsLUTProcessed, fullTargetSize, 
-			targetOffset, pDIBPixels, clippingSize, false, true) != NULL && (m_pDimRects == NULL || !m_bEnableDimming);
+			targetOffset, pDIBPixels, clippingSize, false, true, false) != NULL && (m_pDimRects == NULL || !m_bEnableDimming);
 
 		// the LUT processed pixels cannot be used and the original pixels are not available -
 		// full recreation of DIBs is needed
@@ -274,7 +237,7 @@ void CJPEGImage::ResampleWithPan(void* & pDIBPixels, void* & pDIBPixelsLUTProces
 					clipSize, CRect(CPoint(0, 0), clipSize));
 			} else {
 				void* pTopProc = NULL;
-				ApplyCorrectionLUTandLDC(imageProcParams, eProcFlags, pTopProc, fullTargetSize, targetOffset, pTop, clipSize, false, false);
+				ApplyCorrectionLUTandLDC(imageProcParams, eProcFlags, pTopProc, fullTargetSize, targetOffset, pTop, clipSize, false, false, false);
 				CBasicProcessing::CopyRect32bpp(pPannedPixelsLUTProcessed, pTopProc,
 					clippingSize, CRect(CPoint(0, 0), clipSize),
 					clipSize, CRect(CPoint(0, 0), clipSize));
@@ -294,7 +257,7 @@ void CJPEGImage::ResampleWithPan(void* & pDIBPixels, void* & pDIBPixelsLUTProces
 					clipSize, CRect(CPoint(0, 0), clipSize));
 			} else {
 				void* pBottomProc = NULL;
-				ApplyCorrectionLUTandLDC(imageProcParams, eProcFlags, pBottomProc, fullTargetSize, offset, pBottom, clipSize, false, false);
+				ApplyCorrectionLUTandLDC(imageProcParams, eProcFlags, pBottomProc, fullTargetSize, offset, pBottom, clipSize, false, false, false);
 				CBasicProcessing::CopyRect32bpp(pPannedPixelsLUTProcessed, pBottomProc,
 					clippingSize, CRect(CPoint(0, targetRect.bottom), clipSize),
 					clipSize, CRect(CPoint(0, 0), clipSize));
@@ -313,7 +276,7 @@ void CJPEGImage::ResampleWithPan(void* & pDIBPixels, void* & pDIBPixelsLUTProces
 					clipSize, CRect(CPoint(0, 0), clipSize));
 			} else {
 				void* pLeftProc = NULL;
-				ApplyCorrectionLUTandLDC(imageProcParams, eProcFlags, pLeftProc, fullTargetSize, targetOffset, pLeft, clipSize, false, false);
+				ApplyCorrectionLUTandLDC(imageProcParams, eProcFlags, pLeftProc, fullTargetSize, targetOffset, pLeft, clipSize, false, false, false);
 				CBasicProcessing::CopyRect32bpp(pPannedPixelsLUTProcessed, pLeftProc,
 					clippingSize, CRect(CPoint(0, 0), clipSize),
 					clipSize, CRect(CPoint(0, 0), clipSize));
@@ -333,7 +296,7 @@ void CJPEGImage::ResampleWithPan(void* & pDIBPixels, void* & pDIBPixelsLUTProces
 					clipSize, CRect(CPoint(0, 0), clipSize));
 			} else {
 				void* pRigthProc = NULL;
-				ApplyCorrectionLUTandLDC(imageProcParams, eProcFlags, pRigthProc, fullTargetSize, offset, pRight, clipSize, false, false);
+				ApplyCorrectionLUTandLDC(imageProcParams, eProcFlags, pRigthProc, fullTargetSize, offset, pRight, clipSize, false, false, false);
 				CBasicProcessing::CopyRect32bpp(pPannedPixelsLUTProcessed, pRigthProc,
 					clippingSize, CRect(CPoint(targetRect.right, 0), clipSize),
 					clipSize, CRect(CPoint(0, 0), clipSize));
@@ -405,19 +368,10 @@ void CJPEGImage::Rotate(int nRotation) {
 	// Rotation can only be done in 32 bpp
 	ConvertSrcTo4Channels();
 
-	m_pLastDIB = NULL;
-	if (m_bLDCOwned) delete m_pLDC; // LDC mask must be recalculated!
-	m_pLDC = NULL;
-	delete[] m_pDIBPixels; 
-	m_pDIBPixels = NULL;
-	delete[] m_pDIBPixelsLUTProcessed; 
-	m_pDIBPixelsLUTProcessed = NULL;
+	InvalidateAllCachedPixelData();
 	void* pNewIJL = CBasicProcessing::Rotate32bpp(m_nOrigWidth, m_nOrigHeight, m_pIJLPixels, nRotation);
 	delete[] m_pIJLPixels;
-	delete m_pThumbnail;
-	m_pThumbnail = NULL;
 	m_pIJLPixels = pNewIJL;
-	m_ClippingSize = CSize(0, 0);
 	if (nRotation != 180) {
 		// swap width and height
 		int nTemp = m_nOrigWidth;
@@ -433,19 +387,10 @@ void CJPEGImage::Crop(CRect cropRect) {
 	// Cropping can only be done in 32 bpp
 	ConvertSrcTo4Channels();
 
-	m_pLastDIB = NULL;
-	if (m_bLDCOwned) delete m_pLDC; // LDC mask must be recalculated!
-	m_pLDC = NULL;
-	delete[] m_pDIBPixels; 
-	m_pDIBPixels = NULL;
-	delete[] m_pDIBPixelsLUTProcessed; 
-	m_pDIBPixelsLUTProcessed = NULL;
+	InvalidateAllCachedPixelData();
 	void* pNewIJL = CBasicProcessing::Crop32bpp(m_nOrigWidth, m_nOrigHeight, m_pIJLPixels, cropRect);
 	delete[] m_pIJLPixels;
-	delete m_pThumbnail;
-	m_pThumbnail = NULL;
 	m_pIJLPixels = pNewIJL;
-	m_ClippingSize = CSize(0, 0);
 	m_nOrigWidth = cropRect.Width();
 	m_nOrigHeight = cropRect.Height();
 	m_bCropped = true;
@@ -630,10 +575,154 @@ __int64 CJPEGImage::GetUncompressedPixelHash() const {
 // Private
 ///////////////////////////////////////////////////////////////////////////////////
 
+void* CJPEGImage::GetDIBInternal(CSize fullTargetSize, CSize clippingSize, CPoint targetOffset,
+						 const CImageProcessingParams & imageProcParams, EProcessingFlags eProcFlags,
+						 const CUnsharpMaskParams * pUnsharpMaskParams) {
+
+ 	// Check if resampling due to bHighQualityResampling parameter change is needed
+	bool bMustResampleQuality = GetProcessingFlag(eProcFlags, PFLAG_HighQualityResampling) != GetProcessingFlag(m_eProcFlags, PFLAG_HighQualityResampling);
+	bool bTargetSizeChanged = fullTargetSize != m_FullTargetSize;
+	// Check if resampling due to change of geometric parameters is needed
+	bool bMustResampleGeometry = bTargetSizeChanged || clippingSize != m_ClippingSize || targetOffset != m_TargetOffset;
+	// Check if resampling due to change of processing parameters is needed
+	bool bMustResampleProcessings = fabs(imageProcParams.Sharpen - m_imageProcParams.Sharpen) > 1e-2;
+
+	EResizeType eResizeType = GetResizeType(fullTargetSize, CSize(m_nOrigWidth, m_nOrigHeight));
+
+	// the geometrical parameters must be set before calling ApplyCorrectionLUT()
+	CRect oldClippingRect = CRect(m_TargetOffset, m_ClippingSize);
+	m_FullTargetSize = fullTargetSize;
+	m_ClippingSize = clippingSize;
+	m_TargetOffset = targetOffset;
+
+	double dStartTickCount = Helpers::GetExactTickCount();
+
+	// Check if only the LUT must be reapplied but no resampling (resampling is much slower than the LUTs)
+	void * pDIB = NULL;
+	void * pDIBUnsharpMasked = NULL;
+	if (!bMustResampleQuality && !bMustResampleGeometry && !bMustResampleProcessings) {
+		// no resizing needed (maybe even nothing must be done)
+		bool bNoChangesLDCandLUTs = ApplyCorrectionLUTandLDC(imageProcParams, eProcFlags, m_pDIBPixelsLUTProcessed, 
+			fullTargetSize, targetOffset, m_pDIBPixels, clippingSize, bMustResampleGeometry, true, false) != NULL;
+		pDIBUnsharpMasked = ApplyUnsharpMask(pUnsharpMaskParams, bNoChangesLDCandLUTs);
+		pDIB = ApplyCorrectionLUTandLDC(imageProcParams, eProcFlags, m_pDIBPixelsLUTProcessed, 
+			fullTargetSize, targetOffset, (pDIBUnsharpMasked != NULL) ? pDIBUnsharpMasked : m_pDIBPixels, clippingSize, 
+			bMustResampleGeometry, false, pDIBUnsharpMasked != NULL);
+	}
+	// ApplyCorrectionLUTandLDC() could have failed, then recreate the DIBs
+	if (pDIB == NULL) {
+		// if the image is reprocessed more than once, it is worth to convert the original to 4 channels
+		// as this is faster for further processing
+		if (!m_bFirstReprocessing) {
+			ConvertSrcTo4Channels();
+		}
+
+		assert(pDIBUnsharpMasked == NULL);
+
+		// If we only pan, we can resample far more efficiently by only calculating the newly visible areas
+		bool bPanningOnly = !m_bFirstReprocessing && !bMustResampleProcessings && !bTargetSizeChanged && !bMustResampleQuality;
+		m_bFirstReprocessing = false;
+		if (bPanningOnly && pUnsharpMaskParams == NULL) {
+			ResampleWithPan(m_pDIBPixels, m_pDIBPixelsLUTProcessed, fullTargetSize, clippingSize, targetOffset, 
+				oldClippingRect, eProcFlags, imageProcParams, eResizeType);
+			delete[] m_pGrayImage; m_pGrayImage = NULL;
+			delete[] m_pSmoothGrayImage; m_pSmoothGrayImage = NULL;
+		} else {
+			delete[] m_pDIBPixelsLUTProcessed; m_pDIBPixelsLUTProcessed = NULL;
+			delete[] m_pDIBPixels; m_pDIBPixels = NULL;
+			delete[] m_pGrayImage; m_pGrayImage = NULL;
+			delete[] m_pSmoothGrayImage; m_pSmoothGrayImage = NULL;
+		}
+
+		// both DIBs are NULL, do normal resampling
+		if (m_pDIBPixels == NULL && m_pDIBPixelsLUTProcessed == NULL) {
+			m_pDIBPixels = Resample(fullTargetSize, clippingSize, targetOffset, eProcFlags, imageProcParams.Sharpen, eResizeType);
+		}
+
+		// if ResampleWithPan() has preseved this DIB, we can reuse it
+		if (m_pDIBPixelsLUTProcessed == NULL) {
+			pDIBUnsharpMasked = ApplyUnsharpMask(pUnsharpMaskParams, false);
+			pDIB = ApplyCorrectionLUTandLDC(imageProcParams, eProcFlags, m_pDIBPixelsLUTProcessed, fullTargetSize, 
+				targetOffset, (pDIBUnsharpMasked != NULL) ? pDIBUnsharpMasked : m_pDIBPixels, clippingSize, 
+				bMustResampleGeometry, false, pDIBUnsharpMasked != NULL);
+		} else {
+			pDIB = m_pDIBPixelsLUTProcessed;
+		}
+	}
+
+	double dLastOpTickCount = Helpers::GetExactTickCount() - dStartTickCount; 
+	if (dLastOpTickCount > 1) {
+		m_dLastOpTickCount = dLastOpTickCount;
+	}
+
+	// set these parameters after ApplyCorrectionLUT() - else it cannot be detected that the parameters changed
+	double dOldSharpen = m_imageProcParams.Sharpen;
+	m_imageProcParams = imageProcParams;
+	if (pUnsharpMaskParams != NULL) {
+		m_unsharpMaskParams = *pUnsharpMaskParams;
+		m_bUnsharpMaskParamsValid = true;
+	} else {
+		m_bUnsharpMaskParamsValid = false;
+	}
+	// do not touch sharpen parameter if no resampling done - avoids cummulative error propagation
+	if (!bMustResampleProcessings) {
+		m_imageProcParams.Sharpen = dOldSharpen;
+	}
+	m_eProcFlags = eProcFlags;
+
+	m_pLastDIB = pDIB;
+	if (m_pDIBPixelsLUTProcessed != pDIBUnsharpMasked) {
+		delete[] pDIBUnsharpMasked;
+	}
+
+	return pDIB;
+}
+
+void* CJPEGImage::ApplyUnsharpMask(const CUnsharpMaskParams * pUnsharpMaskParams, bool bNoChangesLDCandLUT) {
+	bool bThisUnsharpMaskValid = pUnsharpMaskParams != NULL;
+	if (bThisUnsharpMaskValid != m_bUnsharpMaskParamsValid) {
+		delete[] m_pDIBPixelsLUTProcessed;
+		m_pDIBPixelsLUTProcessed = NULL;
+	}
+	bool bAmountChanged = true;
+	bool bRadiusChanged = true;
+	bool bThresholdChanged = true;
+	if (bThisUnsharpMaskValid && m_bUnsharpMaskParamsValid) {
+		bAmountChanged = fabs(pUnsharpMaskParams->Amount - m_unsharpMaskParams.Amount) > 1e-4;
+		bRadiusChanged = fabs(pUnsharpMaskParams->Radius - m_unsharpMaskParams.Radius) > 1e-4;
+		bThresholdChanged = fabs(pUnsharpMaskParams->Threshold - m_unsharpMaskParams.Threshold) > 1e-4;
+		if (bAmountChanged || bRadiusChanged || bThresholdChanged) {
+			delete[] m_pDIBPixelsLUTProcessed;
+			m_pDIBPixelsLUTProcessed = NULL;
+		}
+	}
+	if (m_pDIBPixels == NULL || pUnsharpMaskParams == NULL) {
+		return NULL;
+	}
+	if (!(bAmountChanged || bRadiusChanged || bThresholdChanged) && bNoChangesLDCandLUT) {
+		return NULL; // nothing changed, we can reuse m_pDIBPixelsLUTProcessed later on
+	}
+	if (bRadiusChanged) {
+		delete[] m_pSmoothGrayImage;
+		m_pSmoothGrayImage = NULL;
+	}
+	if (m_pGrayImage == NULL) {
+		m_pGrayImage = CBasicProcessing::Create1Channel16bppGrayscaleImage(m_ClippingSize.cx, m_ClippingSize.cy, m_pDIBPixels, 4);
+	}
+	if (m_pSmoothGrayImage == NULL) {
+		m_pSmoothGrayImage = CBasicProcessing::GaussFilter16bpp1Channel(m_ClippingSize, CPoint(0, 0), 
+			m_ClippingSize, pUnsharpMaskParams->Radius, m_pGrayImage);
+	}
+
+	uint32* pNewImage = new uint32[m_ClippingSize.cx * m_ClippingSize.cy];
+	return CBasicProcessing::UnsharpMask(m_ClippingSize, CPoint(0,0), m_ClippingSize, 
+		pUnsharpMaskParams->Amount, pUnsharpMaskParams->Threshold, m_pGrayImage, m_pSmoothGrayImage, m_pDIBPixels, pNewImage, 4);
+}
+
 void* CJPEGImage::ApplyCorrectionLUTandLDC(const CImageProcessingParams & imageProcParams, EProcessingFlags eProcFlags,
 										   void * & pCachedTargetDIB, CSize fullTargetSize, CPoint targetOffset, 
 										   void * pSourceDIB, CSize dibSize,
-										   bool bGeometryChanged, bool bOnlyCheck) {
+										   bool bGeometryChanged, bool bOnlyCheck, bool bCanTakeOwnershipOfSourceDIB) {
 	bool bAutoContrast = GetProcessingFlag(eProcFlags, PFLAG_AutoContrast);
 	bool bAutoContrastOld = GetProcessingFlag(m_eProcFlags, PFLAG_AutoContrast);
 	bool bAutoContrastSection = GetProcessingFlag(eProcFlags, PFLAG_AutoContrastSection) && bAutoContrast;
@@ -755,6 +844,9 @@ void* CJPEGImage::ApplyCorrectionLUTandLDC(const CImageProcessingParams & imageP
 			}
 		}
 		delete[] pLUT;
+	} else if (bCanTakeOwnershipOfSourceDIB) {
+		// no LUTs, no LDC just take over ownership of source DIB if we are allowed
+		pCachedTargetDIB = pSourceDIB;
 	} else if (!bUseDimming) {
 		// no LUTs, no LDC, no dimming --> return original pixels
 		return pSourceDIB;
@@ -873,4 +965,21 @@ int CJPEGImage::GetRotationFromEXIF(int nOrigRotation) {
 		}
 	}
 	return nOrigRotation;
+}
+
+void CJPEGImage::InvalidateAllCachedPixelData() {
+	m_pLastDIB = NULL;
+	if (m_bLDCOwned) delete m_pLDC; // LDC mask must be recalculated!
+	m_pLDC = NULL;
+	delete[] m_pDIBPixels; 
+	m_pDIBPixels = NULL;
+	delete[] m_pDIBPixelsLUTProcessed; 
+	m_pDIBPixelsLUTProcessed = NULL;
+	delete[] m_pGrayImage;
+	m_pGrayImage = NULL;
+	delete[] m_pSmoothGrayImage;
+	m_pSmoothGrayImage = NULL;
+	delete m_pThumbnail;
+	m_pThumbnail = NULL;
+	m_ClippingSize = CSize(0, 0);
 }

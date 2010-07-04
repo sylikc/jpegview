@@ -49,7 +49,7 @@ public:
 	static CPoint ConvertOffset(CSize fullTargetSize, CSize clippingSize, CPoint targetOffset);
 
 	// Gets resampled and processed DIB image (up or downsampled). 
-	// fullTargetSize: Full target size of image (without any clipping to actual screen size)
+	// fullTargetSize: Full target size of image to render (without any clipping to actual screen size)
 	// clippingSize: Sub-rectangle in fullTargetSize to render (the returned DIB has this size)
 	// targetOffset: Offset of the clipping rectangle in full target size
 	// imageProcParams: Processing parameters, such as contrast, brightness and sharpen
@@ -61,10 +61,27 @@ public:
 	// to GetDIB() with the same set of parameters will return the same image in the second call without
 	// doing any processing then.
 	void* GetDIB(CSize fullTargetSize, CSize clippingSize, CPoint targetOffset,
-		const CImageProcessingParams & imageProcParams, EProcessingFlags eProcFlags);
+		const CImageProcessingParams & imageProcParams, EProcessingFlags eProcFlags) {
+		return GetDIBInternal(fullTargetSize, clippingSize, targetOffset, imageProcParams, eProcFlags, NULL);
+	}
 
 	// Gets a DIB for a thumbnail of the given size. The thumbnail should not be smaller than 400 x 300 pixels
 	void* GetThumbnailDIB(CSize size, const CImageProcessingParams & imageProcParams, EProcessingFlags eProcFlags);
+
+	// Performs unsharp masking to a section in the original image, then apply image processing as requested and
+	// return resulting DIB. The returned DIB is always in original image resolution. The original
+	// image pixels are not touched by this operation.
+	// clippingSize: Sub-rectangle in original size image to render (the returned DIB has this size)
+	// targetOffset: Offset in original size image
+	// See GetDIB() for more information.
+	void* GetDIBUnsharpMasked(CSize clippingSize, CPoint targetOffset,
+		const CImageProcessingParams & imageProcParams, EProcessingFlags eProcFlags, const CUnsharpMaskParams & unsharpMaskParams);
+
+	// Frees any resources hold to speed up GetDIBUnsharpMasked(). Subsequent calls to GetDIBUnsharpMasked() will work but may be slower.
+	void FreeUnsharpMaskResources();
+
+	// Apply unsharp masking to the original image pixels. Cannot be undone except by reloading the image from disc.
+	void ApplyUnsharpMaskToOriginalPixels(const CUnsharpMaskParams & unsharpMaskParams);
 
 	// Gets the hash value of the pixels, for JPEGs it on the compressed pixels
 	__int64 GetPixelHash() const { return m_nPixelHash; }
@@ -94,7 +111,8 @@ public:
 	// Applies to original image!
 	void Rotate(int nRotation);
 
-	// Crops the image
+	// Crops the image. 
+	// Applies to original image!
 	void Crop(CRect cropRect);
 
 	// Returns if this image has been cropped or not
@@ -196,7 +214,6 @@ public:
 	double GetLoadTickCount() { return m_dLoadTickCount; }
 
 	// Debug: Unsharp mask time of image in ms
-	void SetUnsharpMaskTickCount(double tc) { m_dUnsharpMaskTickCount = tc; }
 	double GetUnsharpMaskTickCount() { return m_dUnsharpMaskTickCount; }
 
 	// Debug: Returns if this could be a night shot (heuristic, between 0 and 1)
@@ -231,13 +248,20 @@ private:
 
 	// Processed data of size m_ClippingSize, with LUT/LDC applied and without
 	// The version without LUT/LDC is used to efficiently reapply a different LUT/LDC
+	// Size of the DIBs is m_ClippingSize
 	void* m_pDIBPixelsLUTProcessed;
 	void* m_pDIBPixels;
 	void* m_pLastDIB; // one of the pointers above
 
+	// Cached gray and smoothed gray image for unsharp masking
+	int16* m_pGrayImage;
+	int16* m_pSmoothGrayImage;
+
 	// Image processing parameters and flags during last call to GetDIB()
 	CImageProcessingParams m_imageProcParams;
 	EProcessingFlags m_eProcFlags;
+	CUnsharpMaskParams m_unsharpMaskParams;
+	bool m_bUnsharpMaskParamsValid;
 
 	// Initial image processing parameters and flags, as set with SetFileDependentProcessParams()
 	CImageProcessingParams m_imageProcParamsInitial;
@@ -276,6 +300,11 @@ private:
 	float m_fColorCorrectionFactors[6];
 	float m_fColorCorrectionFactorsNull[6];
 
+	// Internal GetDIB() implementation combining unsharp mask with GetDIB(). pUnsharpMaskParams can be null if not used. 
+	void* GetDIBInternal(CSize fullTargetSize, CSize clippingSize, CPoint targetOffset,
+						 const CImageProcessingParams & imageProcParams, EProcessingFlags eProcFlags,
+						 const CUnsharpMaskParams * pUnsharpMaskParams);
+
 	// Resample when panning was done, using existing data in DIBs. Old clipping rectangle is given in oldClippingRect
 	void CJPEGImage::ResampleWithPan(void* & pDIBPixels, void* & pDIBPixelsLUTProcessed, CSize fullTargetSize, 
 		CSize clippingSize, CPoint targetOffset, CRect oldClippingRect,
@@ -285,13 +314,16 @@ private:
 	void* Resample(CSize fullTargetSize, CSize clippingSize, CPoint targetOffset, 
 		EProcessingFlags eProcFlags, double dSharpen, EResizeType eResizeType);
 
+	// Apply the given unsharp mask to m_pDIBPixels (can be null to not apply an unsharp mask, then NULL is returned)
+	void* ApplyUnsharpMask(const CUnsharpMaskParams * pUnsharpMaskParams, bool bNoChangesLDCandLUT);
+
 	// pCachedTargetDIB is a pointer at the caller side holding the old processed DIB.
 	// Returns a pointer to DIB to be used (either pCachedTargetDIB or pSourceDIB)
 	// If bOnlyCheck is set to true, the method does nothing but only checks if the existing processed DIB
 	// can be used (return != NULL) or not (return == NULL)
 	void* ApplyCorrectionLUTandLDC(const CImageProcessingParams & imageProcParams, EProcessingFlags eProcFlags,
 		void * & pCachedTargetDIB, CSize fullTargetSize, CPoint targetOffset, 
-		void * pSourceDIB, CSize dibSize, bool bGeometryChanged, bool bOnlyCheck);
+		void * pSourceDIB, CSize dibSize, bool bGeometryChanged, bool bOnlyCheck, bool bCanTakeOwnershipOfSourceDIB);
 
 	// makes sure that the input image (m_pIJLPixels) is a 4 channel BGRA image (converts if necessary)
 	void ConvertSrcTo4Channels();
@@ -307,4 +339,7 @@ private:
 
 	// Gets the rotation from EXIF if available
 	int GetRotationFromEXIF(int nOrigRotation);
+
+	// Called when the original pixels have changed (rotate, crop, unsharp mask), all cached pixel data gets invalid
+	void InvalidateAllCachedPixelData();
 };

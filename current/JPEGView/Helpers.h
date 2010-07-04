@@ -63,6 +63,9 @@ namespace Helpers {
 	// Gets the parameters for zooming the given zoom rectangle in an image of given size to a given window size.
 	void GetZoomParameters(float & fZoom, CPoint & offsets, CSize imageSize, CSize windowSize, CRect zoomRect);
 
+	// Creates a bold version of the font that is selected in the given DC
+	HFONT CreateBoldFontOfSelectedFont(CDC & dc);
+
 	// Tests if the CPU supports SSE or MMX(2)
 	CPUType ProbeCPU(void);
 

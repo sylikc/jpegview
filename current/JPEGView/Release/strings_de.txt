@@ -245,3 +245,10 @@ to current date	auf aktuelles Datum
 to EXIF date	auf EXIF Datum
 Mark image for toggling. Use Ctrl+Left/Ctrl+Right to toggle between marked and current image	Bild markieren für Umschalten. Ctrl+Pfeil rechts/links schaltet auf markiertes Bild um
 Saturation	Sättigung
+Unsharp mask...	Unscharfmaske...
+Apply Unsharp Mask	Unscharfmaske anwenden
+Radius	Radius
+Amount	Stärke
+Threshold	Schwellwert
+Apply	Anwenden
+Cancel	Abbrechen

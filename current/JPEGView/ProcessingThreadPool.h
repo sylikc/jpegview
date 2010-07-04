@@ -94,11 +94,11 @@ public:
 
 class CRequestUnsharpMask : public CProcessingRequest {
 public:
-	CRequestUnsharpMask(const void* pSourcePixels, CSize fullSize, CPoint offset, CSize rect, double dAmount, int nThreshold, 
+	CRequestUnsharpMask(const void* pSourcePixels, CSize fullSize, CPoint offset, CSize rect, double dAmount, double dThreshold, 
 		const int16* pThresholdLUT, const int16* pGrayImage, const int16* pSmoothedGrayImage, void* pTargetPixels, int nChannels)
 					: CProcessingRequest(UnsharpMask, pSourcePixels, fullSize, pTargetPixels, rect, offset, rect) {
 		Amount = dAmount;
-		Threshold = nThreshold;
+		Threshold = dThreshold;
 		ThresholdLUT = pThresholdLUT;
 		GrayImage = pGrayImage;
 		SmoothedGrayImage = pSmoothedGrayImage;
@@ -106,7 +106,7 @@ public:
 	}
 
 	double Amount;
-	int Threshold;
+	double Threshold;
 	const int16* ThresholdLUT;
 	const int16* GrayImage;
 	const int16* SmoothedGrayImage;
