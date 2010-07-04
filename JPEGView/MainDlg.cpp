@@ -1496,20 +1496,7 @@ LRESULT CMainDlg::OnCancel(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*/, BOO
 
 void CMainDlg::OnUnsharpMask(CButtonCtrl & sender) {
 	if (sm_instance->m_pCurrentImage != NULL) {
-		bool bOldMouseOn = sm_instance->m_bMouseOn;
-		sm_instance->m_bMouseOn = false;
-		sm_instance->ResetZoomTo100Percents();
-		sm_instance->m_bMouseOn = bOldMouseOn;
-		sm_instance->m_bShowUnsharpMaskPanel = true;
-		sm_instance->m_bShowHelp = false;
-		sm_instance->m_bShowIPTools = false;
-		sm_instance->m_bOldShowNavPanel = sm_instance->m_bShowNavPanel;
-		sm_instance->m_bShowNavPanel = false;
-		sm_instance->m_bShowWndButtonPanel = false;
-		sm_instance->EndNavPanelAnimation();
-		sm_instance->StopTimer();
-		sm_instance->StopMovieMode();
-		sm_instance->Invalidate();
+		sm_instance->StartUnsharpMaskPanel();
 	}
 }
 
@@ -3513,5 +3500,22 @@ void CMainDlg::TerminateUnsharpMaskPanel() {
 	m_bShowUnsharpMaskPanel = false;
 	m_bShowNavPanel = m_bOldShowNavPanel;
 	m_pCurrentImage->FreeUnsharpMaskResources();
+	Invalidate();
+}
+
+void CMainDlg::StartUnsharpMaskPanel() {
+	bool bOldMouseOn = m_bMouseOn;
+	m_bMouseOn = false;
+	ResetZoomTo100Percents();
+	m_bMouseOn = bOldMouseOn;
+	m_bShowUnsharpMaskPanel = true;
+	m_bShowHelp = false;
+	m_bShowIPTools = false;
+	m_bOldShowNavPanel = m_bShowNavPanel;
+	m_bShowNavPanel = false;
+	m_bShowWndButtonPanel = false;
+	EndNavPanelAnimation();
+	StopTimer();
+	StopMovieMode();
 	Invalidate();
 }

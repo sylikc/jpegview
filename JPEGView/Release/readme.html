@@ -33,7 +33,7 @@
 				<td>
 					<a name="Top"></a>
 					<h1>JPEGView Readme</h1>
-					Revision: 19-May-2010
+					Revision: 04-July-2010
 					<a name="Introduction"></a>
 					<h2>Introduction</h2>
 					JPEGView is a viewer/editor for JPEG, BMP, PNG, GIF and TIFF images. It is designed to view images from digital cameras
@@ -80,7 +80,8 @@
 							Interactive image processing and improvement
 							<ul style="margin-top:0in;margin-bottom:0in">
 								<li>Real time and full screen image processing</li>
-								<li>Contrast, Brightness and Sharpness adaptation</li>
+								<li>Contrast, Brightness and Saturation adaptation</li>
+								<li>Unsharp masking</li>
 								<li>Cyan-Red, Magenta-Green, Yellow-Blue color balance</li>
 								<li>Local brightness correction to lighten shadows and darken highlights</li>
 								<li>Automatic color and contrast correction</li>
@@ -158,6 +159,8 @@
 						<li>German</li>
 						<li>Spanish</li>
 						<li>Italian</li>
+						<li>French</li>
+						<li>Korean</li>
 					</ul>
 					By default JPEGView uses the same language as the operating system. However another language can be forced using the INI file.
 					Translations to other languages can be done very easily by providing an UTF8 coded text mapping file, see
@@ -509,12 +512,29 @@
 							a gamma curve is changed by this parameter.
 						</li>
 						<li>
-							<b>Sharpness</b><br/>
-							Keyboard: <kbd>Alt - +/-</kbd><br/>
+							<b>Saturation</b><br/>
+							Keyboard: <kbd>none</kbd><br/>
 							Mouse: Use processing panel<br/>
+							Increases or decreases the color saturation of the image.
+						</li>
+						<li>
+							<b>Downsampling Sharpness</b><br/>
+							Keyboard: <kbd>Alt - +/-</kbd><br/>
+							Mouse: Use processing panel. Note that this slider is only visible when the window/screen is large enough.<br/>
 							Increases or decreases sharpness of the image. If the default sharpening filter is used, sharpness
 							only applies to images that are downsampled but not for images displayed with 100% zoom. The
 							filter to be used can be set in the INI file.
+						</li>
+						<li>
+							<b>Unsharp Mask</b><br/>
+							Keyboard: <kbd>none</kbd><br/>
+							Mouse: Use processing panel, 'Unsharp Mask' button.<br/>
+							Unsharp masking is an adaptive sharpening filter that creates a smoothed version of the original image (thus the name 'unsharp').
+							The filter then adds the difference of the original image and the smoothed image to the original image:<br/>
+							Sharpened Image = Original Image + Amount * ( Original Image - Smoothed Image)<br/>
+							The 'Radius' parameter sets the radius of the smoothing kernel, the 'Amount' parameter sets the amount of sharpening and the
+							'Threshold' value sets the miminal difference of original and smoothed image to apply the filter to a pixel.<br/>
+							Note that unsharp masking is previewed always in 100 % zoom.
 						</li>
 						<li>
 							<b>Color balance</b><br/>
@@ -679,7 +699,8 @@
 						<li>Rotation of image</li>
 						<li>Contrast value</li>
 						<li>Brightness value</li>
-						<li>Sharpness value</li>
+						<li>Saturation value</li>
+						<li>Sharpness value (but no Unsharp Mask)</li>
 						<li>Color balance values</li>
 						<li>Local brighness correction on/off</li>
 						<li>Lighten shadows value</li>
@@ -719,6 +740,7 @@
 					<ul style="margin-top:0in;margin-bottom:0in">
 						<li>Default contrast</li>
 						<li>Default brightness</li>
+						<li>Default saturation</li>
 						<li>Default sharpness</li>
 						<li>Default color balance</li>
 						<li>Local brighness correction on/off by default</li>
