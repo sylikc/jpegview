@@ -222,6 +222,7 @@ private:
 	bool OpenFile(bool bFullScreen);
 	void OpenFile(LPCTSTR sFileName);
 	bool SaveImage(bool bFullSize);
+	bool SaveImageNoPrompt(LPCTSTR sFileName, bool bFullSize);
 	void BatchCopy();
 	void HandleUserCommands(uint32 virtualKeyCode);
 	void StartDragging(int nX, int nY, bool bDragWithZoomNavigator);

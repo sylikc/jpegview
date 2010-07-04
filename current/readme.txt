@@ -24,12 +24,13 @@ Changelog
 
 [1.0.21]
 Bugs fixed:
+- After saving, navigation panel was not painted correctly sometimes
 New features:
-- Unsharp mask
+- New image processing: Unsharp mask
   Using a button on the image processing panel, an unsharp mask can be applied to the original pixels.
   Note that preview is always in 100 % zoom. Unsharp masking cannot be stored in the parameter DB and it is not possible to
   apply unsharp masking automatically after loading each image (unlike other processings)
-- Color saturation
+- New image processing: Color saturation
   Support includes: Saturation on image processing panel, default saturation in INI file, parameter DB and landscape picture mode
 - UI colors can be set in INI file. New default colors instead of the traditional green.
   To restore the old colors, change them in the INI file to:
@@ -37,6 +38,9 @@ New features:
   HighlightColor=255 255 255
   SelectionColor=255 255 0
   SliderColor=255 0 0
+- New INI file setting: OverrideOriginalFileWithoutSaveDialog
+  If set to true, Ctrl-S overrides the original file on disk, applying the current processings without showing a dialog or prompting the user to confirm.
+  Use with care, the original file will be replaced by the processed file!
 
 
 [1.0.20]
