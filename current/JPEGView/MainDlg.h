@@ -287,6 +287,7 @@ private:
 	void HideNavPanelTemporary();
 	void ShowHideIPTools(bool bShow);
 	void TerminateUnsharpMaskPanel();
+	void StartUnsharpMaskPanel();
 
 	static void OnUnsharpMask(CButtonCtrl & sender);
 	static void OnCancelUnsharpMask(CButtonCtrl & sender);
