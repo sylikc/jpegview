@@ -596,7 +596,10 @@
 					JPEGView will automatically create a <a href="#ParameterDB">parameter DB</a> entry for the saved image having
 					all image processing disabled.
 					This prevents that JPEGView will double-apply automatic image improvements next time the image is displayed.<br/>
-					<b>EXIF information</b><br/>
+					<b>Note:</b> When saving images, JPEGView will prompt for a new file name. If you want that Ctrl-S just overrides the
+					original file without showing a dialog, use the INI file setting OverrideOriginalFileWithoutSaveDialog=true.<br/>
+					Use this setting with care, be aware of the risk!<br/>
+				<b>EXIF information</b><br/>
 					EXIF information is copied to the target JPEG image if it was present in the source JPEG image. An embedded thumbnail image
 					is not touched - neither rotation nor image processing will be applied to the thumbnail image.<br/>
 
@@ -838,7 +841,7 @@
 					This program is free software; you can redistribute it and/or modify
 					it under the terms of the GNU General Public License as published by
 					the Free Software Foundation, version 2.
-					The full text of the GPL can be found <a href="http://opensource.org/osi3.0/licenses/gpl-license.php">here.</a><br/>
+					The full text of the GPL can be found <a href="http://opensource.org/licenses/gpl-2.0.php">here.</a><br/>
 					JPEGView is hosted by <a href="http://www.sourceforge.net">SourceForge.</a> You can check for a new version,
 					get the source code, report a bug or contact me, using the following URL:<br/>
 					<a href="https://sourceforge.net/projects/jpegview/">https://sourceforge.net/projects/jpegview/</a>
@@ -848,7 +851,7 @@
 					- JPEGTran.exe, &copy; Independent JPEG Group<br/>
 					<br/>
 					JPEGView includes or uses the following source code libraries:<br/>
-					- Windows Template Library 8.0 (build 6137) 5/17/06, Copyright © 2006 Microsoft Corporation<br/>
+					- Windows Template Library 8.0 (build 6137) 5/17/06, Copyright &copy; 2006 Microsoft Corporation<br/>
 					- IJLWrapper, &copy; by John W. Ratcliff 2000<br/>
 					<br/>
 					Developed with Visual Studio 2005, C++ Express Edition
