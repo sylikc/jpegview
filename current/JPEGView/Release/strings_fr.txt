@@ -244,3 +244,11 @@ to current date	à la date du jour
 to EXIF date	à la date EXIF
 Actual size of image	Taille effective de l'image
 Mark image for toggling. Use Ctrl+Left/Ctrl+Right to toggle between marked and current image	Marquer l'image pour basculer. Utilisez Ctrl+Gauche/Ctrl+Droite pour basculer entre l'image marquée et la courante
+Saturation	Saturation
+Unsharp mask...	Renforcer la netteté...
+Apply Unsharp Mask	Appliquer la netteté
+Radius	Rayon
+Amount	Quantité
+Threshold	Seuil
+Apply	Appliquer
+Cancel	Annuler

@@ -244,3 +244,11 @@ Set modification date	Imposta la data di modifica
 to current date	alla data odierna
 to EXIF date	alla data di EXIF
 Mark image for toggling. Use Ctrl+Left/Ctrl+Right to toggle between marked and current image	Marca l'immagine per alternarla. Usa Ctrl+Sinistra/Ctrl+Destra per alternare l'immagine marcata con l'immagine corrente
+Saturation	Saturazione
+Unsharp mask...	Maschera di contrasto
+Apply Unsharp Mask	Applica maschera di contrasto
+Radius	Raggio
+Amount	Quantità
+Threshold	Soglia
+Apply	Applica
+Cancel	Annulla
