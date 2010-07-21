@@ -22,6 +22,10 @@ to JPEGView\Debug
 Changelog
 *********
 
+[1.0.22]
+New features:
+- Romanian translation (thanks to Silviu)
+
 [1.0.21]
 Bugs fixed:
 - After saving, navigation panel was not painted correctly sometimes
