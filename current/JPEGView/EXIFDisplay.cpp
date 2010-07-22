@@ -8,7 +8,7 @@ static LPTSTR CopyStrAlloc(LPCTSTR str) {
 	}
 	int nLen = _tcslen(str);
 	TCHAR* pNewStr = new TCHAR[nLen + 1];
-	_tcscpy(pNewStr, str);
+	_tcscpy_s(pNewStr, nLen + 1, str);
 	return pNewStr;
 }
 

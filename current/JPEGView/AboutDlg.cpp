@@ -36,7 +36,7 @@ LRESULT CAboutDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lPara
 	}
 	m_lblSIMD.SetWindowText(CString(CNLS::GetString(_T("SIMD mode used:"))) + _T(" ") + sSIMDMode);
 	TCHAR sNumCores[16];
-	_sntprintf(sNumCores, 16, _T("%d"), CSettingsProvider::This().NumberOfCoresToUse());
+	_sntprintf_s(sNumCores, 16, 16, _T("%d"), CSettingsProvider::This().NumberOfCoresToUse());
 	m_lblNumCores.SetWindowText(CString(CNLS::GetString(_T("Number of CPU cores used:"))) + _T(" ") + sNumCores);
 	m_btnClose.SetWindowText(CNLS::GetString(_T("Close")));
 
