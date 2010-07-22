@@ -9,7 +9,7 @@ float ScreenScaling = -1.0f;
 TCHAR CReplacePipe::sm_buffer[MAX_SIZE_REPLACE_PIPE];
 
 CReplacePipe::CReplacePipe(LPCTSTR sText) {
-	_tcsncpy(sm_buffer, sText, MAX_SIZE_REPLACE_PIPE);
+	_tcsncpy_s(sm_buffer, MAX_SIZE_REPLACE_PIPE, sText, MAX_SIZE_REPLACE_PIPE);
 	sm_buffer[MAX_SIZE_REPLACE_PIPE-1] = 0;
 	TCHAR* pPtr = sm_buffer;
 	while (*pPtr != 0) {
@@ -23,13 +23,13 @@ static TCHAR buffAppPath[MAX_PATH + 32] = _T("");
 LPCTSTR JPEGViewAppDataPath() {
 	if (buffAppPath[0] == 0) {
 		::SHGetFolderPath(NULL, CSIDL_APPDATA, NULL, SHGFP_TYPE_CURRENT, buffAppPath);
-		_tcscat(buffAppPath, _T("\\JPEGView\\"));
+		_tcscat_s(buffAppPath, MAX_PATH + 32, _T("\\JPEGView\\"));
 	}
 	return buffAppPath;
 }
 
 void SetJPEGViewAppDataPath(LPCTSTR sPath) {
-	_tcscpy(buffAppPath, sPath);
+	_tcscpy_s(buffAppPath, MAX_PATH + 32, sPath);
 }
 
 CSize GetImageRect(int nWidth, int nHeight, int nScreenWidth, int nScreenHeight, 
@@ -98,15 +98,15 @@ void GetZoomParameters(float & fZoom, CPoint & offsets, CSize imageSize, CSize w
 }
 
 HFONT CreateBoldFontOfSelectedFont(CDC & dc) {
-	TCHAR buff[64];
-	if (::GetTextFace(dc, 64, buff) != 0) {
+	TCHAR buff[LF_FACESIZE];
+	if (::GetTextFace(dc, LF_FACESIZE, buff) != 0) {
 		TEXTMETRIC textMetrics;
 		::GetTextMetrics(dc, &textMetrics);
 		LOGFONT logFont;
 		memset(&logFont, 0, sizeof(LOGFONT));
 		logFont.lfHeight = textMetrics.tmHeight;
 		logFont.lfWeight = FW_BOLD;
-		_tcsncpy(logFont.lfFaceName, buff, 64);  
+		_tcsncpy_s(logFont.lfFaceName, LF_FACESIZE, buff, LF_FACESIZE);  
 		return ::CreateFontIndirect(&logFont);
 	}
 	return NULL;

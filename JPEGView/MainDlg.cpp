@@ -624,7 +624,7 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 		LPCTSTR sCurrentFile = CurrentFileName(false);
 		if (sCurrentFile != NULL) {
 			if (m_bPasteFromClipboardFailed) {
-				_tcsncpy(buff, CNLS::GetString(_T("Pasting image from clipboard failed!")), BUF_LEN);
+				_tcsncpy_s(buff, BUF_LEN, CNLS::GetString(_T("Pasting image from clipboard failed!")), BUF_LEN);
 			} else {
 				_stprintf_s(buff, BUF_LEN, CNLS::GetString(_T("The file '%s' could not be read!")), sCurrentFile);
 			}
@@ -640,16 +640,6 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 			}
 			dc.DrawText(buff, -1, &rectText, DT_CENTER | DT_WORDBREAK | DT_NOPREFIX);
 		}
-	}
-
-	// Show timing info if requested
-	if (SHOW_TIMING_INFO && m_pCurrentImage != NULL) {
-		TCHAR buff[256];
-		_stprintf_s(buff, 256, _T("Loading: %.2f ms, Last op: %.2f ms, Last resize: %s, Last sharpen: %.2f ms"), m_pCurrentImage->GetLoadTickCount(), 
-			m_pCurrentImage->LastOpTickCount(), CBasicProcessing::TimingInfo(), m_pCurrentImage->GetUnsharpMaskTickCount());
-		dc.SetBkMode(OPAQUE);
-		dc.TextOut(5, 5, buff);
-		dc.SetBkMode(TRANSPARENT);
 	}
 
 	// Show info about nightshot/sunset detection
@@ -668,6 +658,17 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 
 	// Now blit the memory DCs of the panels to the screen
 	memDCMgr.PaintMemDCToScreen();
+
+	// Show timing info if requested
+	if (SHOW_TIMING_INFO && m_pCurrentImage != NULL) {
+		TCHAR buff[256];
+		_stprintf_s(buff, 256, _T("Loading: %.2f ms, Last op: %.2f ms, Last resize: %s, Last sharpen: %.2f ms"), m_pCurrentImage->GetLoadTickCount(), 
+			m_pCurrentImage->LastOpTickCount(), CBasicProcessing::TimingInfo(), m_pCurrentImage->GetUnsharpMaskTickCount());
+		dc.SetTextColor(RGB(255, 255, 255));
+		dc.SetBkMode(OPAQUE);
+		dc.TextOut(5, 5, buff);
+		dc.SetBkMode(TRANSPARENT);
+	}
 
 	// Show current zoom factor
 	if (m_bInZooming || m_bShowZoomFactor) {
@@ -1255,7 +1256,7 @@ LRESULT CMainDlg::OnDropFiles(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, B
 		TCHAR buff[BUFF_SIZE];
 		if (::DragQueryFile(hDrop, 0, (LPTSTR) &buff, BUFF_SIZE - 1) > 0) {
 			if (::GetFileAttributes(buff) & FILE_ATTRIBUTE_DIRECTORY) {
-				_tcsncat(buff, _T("\\"), BUFF_SIZE);
+				_tcsncat_s(buff, BUFF_SIZE, _T("\\"), BUFF_SIZE);
 			}
 			OpenFile(buff);
 		}
