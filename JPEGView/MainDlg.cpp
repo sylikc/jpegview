@@ -354,6 +354,7 @@ LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam
 	m_pNavPanel->AddUserPaintButton(&(CNavigationPanel::PaintRotateCWBtn), &OnRotateCW, CNLS::GetString(_T("Rotate image 90 deg clockwise")));
 	m_pNavPanel->AddUserPaintButton(&(CNavigationPanel::PaintRotateCCWBtn), &OnRotateCCW, CNLS::GetString(_T("Rotate image 90 deg counter-clockwise")));
 	m_pNavPanel->AddGap(8);
+	m_btnKeepParams = m_pNavPanel->AddUserPaintButton(&(CNavigationPanel::PaintKeepParamsBtn), &OnKeepParameters, CNLS::GetString(_T("Keep processing parameters between images")));
 	m_btnLandScape = m_pNavPanel->AddUserPaintButton(&(CNavigationPanel::PaintLandscapeModeBtn), &OnLandscapeMode, CNLS::GetString(_T("Landscape picture enhancement mode")));
 	m_pNavPanel->AddGap(16);
 	m_btnInfo = m_pNavPanel->AddUserPaintButton(&(CNavigationPanel::PaintInfoBtn), &OnShowInfo, CNLS::GetString(_T("Display image (EXIF) information")));
@@ -1582,6 +1583,10 @@ void CMainDlg::OnShowInfo(CButtonCtrl & sender) {
 	sm_instance->ExecuteCommand(IDM_SHOW_FILEINFO);
 }
 
+void CMainDlg::OnKeepParameters(CButtonCtrl & sender) {
+	sm_instance->ExecuteCommand(IDM_KEEP_PARAMETERS);
+}
+
 void CMainDlg::OnLandscapeMode(CButtonCtrl & sender) {
 	sm_instance->ExecuteCommand(IDM_LANDSCAPE_MODE);
 }
@@ -1818,6 +1823,7 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 			break;
 		case IDM_KEEP_PARAMETERS:
 			m_bKeepParams = !m_bKeepParams;
+			m_btnKeepParams->SetEnabled(m_bKeepParams);
 			if (m_bKeepParams) {
 				*m_pImageProcParamsKept = *m_pImageProcParams;
 				m_eProcessingFlagsKept = CreateProcessingFlags(m_bHQResampling, m_bAutoContrast, false, m_bLDC, m_bKeepParams, m_bLandscapeMode);

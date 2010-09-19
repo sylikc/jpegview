@@ -252,3 +252,4 @@ Amount	Stärke
 Threshold	Schwellwert
 Apply	Anwenden
 Cancel	Abbrechen
+Keep processing parameters between images	Eingestellte Parameter bei Bildwechsel beibehalten

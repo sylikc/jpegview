@@ -211,6 +211,7 @@ private:
 	CTextCtrl* m_txtRename;
 	CTextCtrl* m_txtAcqDate;
 	CButtonCtrl* m_btnInfo;
+	CButtonCtrl* m_btnKeepParams;
 	CButtonCtrl* m_btnLandScape;
 	CButtonCtrl* m_btnWindowMode;
 	CNavigationPanel* m_pNavPanel;
@@ -305,6 +306,7 @@ private:
 	static void OnRotateCW(CButtonCtrl & sender);
 	static void OnRotateCCW(CButtonCtrl & sender);
 	static void OnShowInfo(CButtonCtrl & sender);
+	static void OnKeepParameters(CButtonCtrl & sender);
 	static void OnLandscapeMode(CButtonCtrl & sender);
 	static void ToggleWindowMode(bool bSetCursor);
 

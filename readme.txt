@@ -24,9 +24,10 @@ Changelog
 
 [1.0.22]
 Bugs fixed:
-- Copy EXIF data when saving image in screen size (Ctrl-Shift-S)
+- Copying EXIF data when saving image in screen size (Ctrl-Shift-S)
 New features:
 - Updating EXIF thumbnail image when saving processed image
+- New button on navigation panel: Keep processing parameters between images
 - Romanian translation (thanks to Silviu)
 
 [1.0.21]

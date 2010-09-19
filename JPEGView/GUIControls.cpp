@@ -737,6 +737,20 @@ void CNavigationPanel::PaintRotateCCWBtn(const CRect& rect, CDC& dc) {
 	dc.LineTo(nX+2, r.bottom);
 }
 
+void CNavigationPanel::PaintKeepParamsBtn(const CRect& rect, CDC& dc) {
+	CRect r = InflateRect(rect, 0.25f);
+	int nX = (int)(r.Width()*0.28f);
+	int nY = r.bottom - (int)(r.Height()*0.25f);
+	int nXM = (r.left + r.right) >> 1;
+
+	dc.SelectStockBrush(HOLLOW_BRUSH);
+	dc.Rectangle(r.left + nX, r.top, r.right - nX, nY);
+	dc.MoveTo(r.left + nX, nY - nX);
+	dc.LineTo(r.right - nX, nY - nX);
+	dc.MoveTo(nXM, nY);
+	dc.LineTo(nXM, r.bottom + 1);
+}
+
 void CNavigationPanel::PaintLandscapeModeBtn(const CRect& rect, CDC& dc) {
 	CRect r = InflateRect(rect, 0.3f);
 
