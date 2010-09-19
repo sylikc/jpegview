@@ -143,9 +143,15 @@ public:
 
 	// Gets the image processing flags as set as default (may varies from file to file)
 	EProcessingFlags GetInitialProcessFlags() const { return m_eProcFlagsInitial; }
+
+	// Gets the image processing flags last used to process an image
+	EProcessingFlags GetLastProcessFlags() const { return m_eProcFlags; }
 	
 	// Gets the image processing parameters as set as default (may varies from file to file)
 	const CImageProcessingParams& GetInitialProcessParams() const { return m_imageProcParamsInitial; }
+
+	// Gets the image processing parameters last used to process an image
+	const CImageProcessingParams& GetLastProcessParams() const { return m_imageProcParams; } 
 
 	// Gets the rotation as set as default (may varies from file to file)
 	int GetInitialRotation() const { return m_nInitialRotation; }
