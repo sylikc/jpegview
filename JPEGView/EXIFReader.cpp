@@ -14,6 +14,14 @@ static uint32 ReadUInt(void * ptr, bool bLittleEndian) {
 	}
 }
 
+static void WriteUInt(void * ptr, uint32 nValue, bool bLittleEndian) {
+	uint32 nVal = nValue;
+	if (!bLittleEndian) {
+		nVal = _byteswap_ulong(nVal);
+	}
+	*((uint32*)ptr) = nVal;
+}
+
 static uint16 ReadUShort(void * ptr, bool bLittleEndian) {
 	uint16 nValue = *((uint16*)ptr);
 	if (!bLittleEndian) {
@@ -90,6 +98,12 @@ static uint32 ReadShortOrLongTag(uint8* ptr, bool bLittleEndian) {
 static void WriteShortTag(uint8* ptr, uint16 nValue, bool bLittleEndian) {
 	if (ptr != NULL && ReadUShort(ptr + 2, bLittleEndian) == 3) {
 		WriteUShort(ptr + 8, nValue, bLittleEndian);
+	}
+}
+
+static void WriteLongTag(uint8* ptr, uint32 nValue, bool bLittleEndian) {
+	if (ptr != NULL && ReadUShort(ptr + 2, bLittleEndian) == 4) {
+		WriteUInt(ptr + 8, nValue, bLittleEndian);
 	}
 }
 
@@ -173,16 +187,21 @@ CEXIFReader::CEXIFReader(void* pApp1Block)
 	m_bLittleEndian = true;
 	m_nThumbWidth = -1;
 	m_nThumbHeight = -1;
-
-	uint8* pApp1 = (uint8*)pApp1Block;
+	m_pLastIFD0 = NULL;
+	m_pIFD1 = NULL;
+	m_pLastIFD1 = NULL;
+	m_bHasJPEGCompressedThumbnail = false;
+	m_nJPEGThumbStreamLen = 0;
+	
+	m_pApp1 = (uint8*)pApp1Block;
 	// APP1 marker
-	if (pApp1[0] != 0xFF || pApp1[1] != 0xE1) {
+	if (m_pApp1[0] != 0xFF || m_pApp1[1] != 0xE1) {
 		return;
 	}
-	int nApp1Size = pApp1[2]*256 + pApp1[3] + 2;
+	int nApp1Size = m_pApp1[2]*256 + m_pApp1[3] + 2;
 
 	// Read TIFF header
-	uint8* pTIFFHeader = pApp1 + 10;
+	uint8* pTIFFHeader = m_pApp1 + 10;
 	bool bLittleEndian;
 	if (*(short*)pTIFFHeader == 0x4949) {
 		bLittleEndian = true;
@@ -194,17 +213,18 @@ CEXIFReader::CEXIFReader(void* pApp1Block)
 	m_bLittleEndian = bLittleEndian;
 
 	uint8* pIFD0 = pTIFFHeader + ReadUInt(pTIFFHeader + 4, bLittleEndian);
-	if (pIFD0 - pApp1 >= nApp1Size) {
+	if (pIFD0 - m_pApp1 >= nApp1Size) {
 		return;
 	}
 	// Read IFD0
 	uint16 nNumTags = ReadUShort(pIFD0, bLittleEndian);
 	pIFD0 += 2;
 	uint8* pLastIFD0 = pIFD0 + nNumTags*12;
-	if (pLastIFD0 - pApp1 + 4 >= nApp1Size) {
+	if (pLastIFD0 - m_pApp1 + 4 >= nApp1Size) {
 		return;
 	}
 	uint32 nOffsetIFD1 = ReadUInt(pLastIFD0, bLittleEndian);
+	m_pLastIFD0 = pLastIFD0;
 
 	// image orientation
 	uint8* pTagOrientation = FindTag(pIFD0, pLastIFD0, 0x112, bLittleEndian);
@@ -244,7 +264,7 @@ CEXIFReader::CEXIFReader(void* pApp1Block)
 	nNumTags = ReadUShort(pEXIFIFD, bLittleEndian);
 	pEXIFIFD += 2;
 	uint8* pLastEXIF = pEXIFIFD + nNumTags*12;
-	if (pLastEXIF - pApp1 >= nApp1Size) {
+	if (pLastEXIF - m_pApp1 >= nApp1Size) {
 		return;
 	}
 	uint8* pTagAcquisitionDate = FindTag(pEXIFIFD, pLastEXIF, 0x9003, bLittleEndian);
@@ -273,21 +293,22 @@ CEXIFReader::CEXIFReader(void* pApp1Block)
 	m_nISOSpeed = ReadShortTag(pTagISOSpeed, bLittleEndian);
 
 	if (nOffsetIFD1 != 0) {
-		uint8* pIFD1 = pTIFFHeader + nOffsetIFD1;
-		nNumTags = ReadUShort(pIFD1, bLittleEndian);
-		pIFD1 += 2;
-		uint8* pLastIFD1 = pIFD1 + nNumTags*12;
-		if (pLastIFD1 - pApp1 >= nApp1Size) {
+		m_pIFD1 = pTIFFHeader + nOffsetIFD1;
+		nNumTags = ReadUShort(m_pIFD1, bLittleEndian);
+		m_pIFD1 += 2;
+		uint8* pLastIFD1 = m_pIFD1 + nNumTags*12;
+		if (pLastIFD1 - m_pApp1 >= nApp1Size) {
 			return;
 		}
-		uint8* pTagCompression = FindTag(pIFD1, pLastIFD1, 0x103, bLittleEndian);
+		m_pLastIFD1 = pLastIFD1;
+		uint8* pTagCompression = FindTag(m_pIFD1, pLastIFD1, 0x103, bLittleEndian);
 		if (pTagCompression == NULL) {
 			return;
 		}
 		if (ReadShortTag(pTagCompression, bLittleEndian) == 6) {
 			// compressed
-			uint8* pTagOffsetSOI = FindTag(pIFD1, pLastIFD1, 0x0201, bLittleEndian);
-			uint8* pTagJPEGLen = FindTag(pIFD1, pLastIFD1, 0x0202, bLittleEndian);
+			uint8* pTagOffsetSOI = FindTag(m_pIFD1, pLastIFD1, 0x0201, bLittleEndian);
+			uint8* pTagJPEGLen = FindTag(m_pIFD1, pLastIFD1, 0x0202, bLittleEndian);
 			if (pTagOffsetSOI != NULL && pTagJPEGLen != NULL) {
 				uint32 nOffsetSOI = ReadLongTag(pTagOffsetSOI, bLittleEndian);
 				uint32 nJPEGBytes = ReadLongTag(pTagJPEGLen, bLittleEndian);
@@ -296,12 +317,14 @@ CEXIFReader::CEXIFReader(void* pApp1Block)
 				if (pSOF != NULL) {
 					m_nThumbWidth = pSOF[7]*256 + pSOF[8];
 					m_nThumbHeight = pSOF[5]*256 + pSOF[6];
+					m_nJPEGThumbStreamLen = nJPEGBytes;
+					m_bHasJPEGCompressedThumbnail = true;
 				}
 			}
 		} else {
 			// uncompressed
-			uint8* pTagThumbWidth = FindTag(pIFD1, pLastIFD1, 0x0001, bLittleEndian);
-			uint8* pTagThumbHeight = FindTag(pIFD1, pLastIFD1, 0x0101, bLittleEndian);
+			uint8* pTagThumbWidth = FindTag(m_pIFD1, pLastIFD1, 0x0001, bLittleEndian);
+			uint8* pTagThumbHeight = FindTag(m_pIFD1, pLastIFD1, 0x0101, bLittleEndian);
 			if (pTagThumbWidth != NULL && pTagThumbHeight != NULL) {
 				m_nThumbWidth = ReadShortOrLongTag(pTagThumbWidth, bLittleEndian);
 				m_nThumbHeight = ReadShortOrLongTag(pTagThumbHeight, bLittleEndian);
@@ -317,4 +340,27 @@ void CEXIFReader::WriteImageOrientation(int nOrientation) {
 	if (m_pTagOrientation != NULL && ImageOrientationPresent()) {
 		WriteShortTag(m_pTagOrientation, nOrientation, m_bLittleEndian);
 	}
+}
+
+void CEXIFReader::DeleteThumbnail() {
+	if (m_pLastIFD0 != NULL) {
+		*m_pLastIFD0 = 0;
+	}
+}
+
+void CEXIFReader::UpdateJPEGThumbnail(unsigned char* pJPEGStream, int nStreamLen, int nEXIFBlockLenCorrection, CSize sizeThumb) {
+	if (!m_bHasJPEGCompressedThumbnail) {
+		return;
+	}
+	uint8* pTagOffsetSOI = FindTag(m_pIFD1, m_pLastIFD1, 0x0201, m_bLittleEndian);
+	uint32 nOffsetSOI = ReadLongTag(pTagOffsetSOI, m_bLittleEndian);
+	uint8* pTIFFHeader = m_pApp1 + 10;
+	uint8* pSOI = pTIFFHeader + nOffsetSOI;
+	memcpy(pSOI + 2, pJPEGStream, nStreamLen);
+
+	uint8* pTagJPEGBytes = FindTag(m_pIFD1, m_pLastIFD1, 0x0202, m_bLittleEndian);
+	WriteLongTag(pTagJPEGBytes, nStreamLen + 2, m_bLittleEndian);
+	int nNewApp1Size = m_pApp1[2]*256 + m_pApp1[3] + nEXIFBlockLenCorrection;
+	m_pApp1[2] = nNewApp1Size >> 8;
+	m_pApp1[3] = nNewApp1Size & 0xFF;
 }

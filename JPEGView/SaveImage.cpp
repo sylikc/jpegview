@@ -27,9 +27,38 @@ static CJPEGImage::EImageFormat GetImageFormat(LPCTSTR sFileName) {
 	return CJPEGImage::IF_Unknown;
 }
 
+// Gets the thumbnail DIB, returns size of thumbnail in sizeThumb
+static void* GetThumbnailDIB(CJPEGImage * pImage, CSize& sizeThumb) {
+	EProcessingFlags eFlags = pImage->GetLastProcessFlags();
+	eFlags = (EProcessingFlags)(eFlags | PFLAG_HighQualityResampling);
+	eFlags = (EProcessingFlags)(eFlags & ~PFLAG_AutoContrastSection);
+	eFlags = (EProcessingFlags)(eFlags & ~PFLAG_KeepParams);
+	CImageProcessingParams params = pImage->GetLastProcessParams();
+	params.Sharpen = 0.0;
+	double dZoom;
+	sizeThumb = Helpers::GetImageRect(pImage->OrigWidth(), pImage->OrigHeight(), 160, 160, Helpers::ZM_FitToScreenNoZoom, dZoom);
+	void* pDIB32bpp = pImage->GetThumbnailDIB(sizeThumb, params, eFlags);
+	if (pDIB32bpp == NULL) {
+		return NULL;
+	}
+	uint32 nSizeLinePadded = Helpers::DoPadding(sizeThumb.cx*3, 4);
+	uint32 nSizeBytes = nSizeLinePadded*sizeThumb.cy;
+	char* pDIB24bpp = new char[nSizeBytes];
+	CBasicProcessing::Convert32bppTo24bppDIB(sizeThumb.cx, sizeThumb.cy, pDIB24bpp, pDIB32bpp, false);
+	return pDIB24bpp;
+}
+
+static int GetJFIFBlockLength(unsigned char* pJPEGStream) {
+	int nJFIFLength = 0;
+	if (pJPEGStream[2] == 0xFF && pJPEGStream[3] == 0xE0) {
+		nJFIFLength = pJPEGStream[4]*256 + pJPEGStream[5] + 2;
+	}
+	return nJFIFLength;
+}
+
 // Returns the compressed JPEG stream that must be freed by the caller. NULL in case of error.
 static void* CompressAndSave(LPCTSTR sFileName, CJPEGImage * pImage, 
-							 void* pData, int nWidth, int nHeight, int nQuality, int& nJPEGStreamLen, bool bCopyEXIF) {
+							 void* pData, int nWidth, int nHeight, int nQuality, int& nJPEGStreamLen, bool bCopyEXIF, bool bDeleteThumbnail) {
 	nJPEGStreamLen = 0;
 	unsigned char* pTargetStream = (unsigned char*) Jpeg::Compress(pData, nWidth, nHeight, 3, 
 		nJPEGStreamLen, nQuality);
@@ -45,23 +74,43 @@ static void* CompressAndSave(LPCTSTR sFileName, CJPEGImage * pImage,
 
 	// If EXIF data is present, replace any JFIF block by this EXIF block to preserve the EXIF information
 	if (pImage->GetEXIFData() != NULL && bCopyEXIF) {
-		unsigned char* pNewStream = new unsigned char[nJPEGStreamLen + pImage->GetEXIFDataLength()];
+		const int cnAdditionalThumbBytes = 32000;
+		int nEXIFBlockLenCorrection = 0;
+		unsigned char* pNewStream = new unsigned char[nJPEGStreamLen + pImage->GetEXIFDataLength() + cnAdditionalThumbBytes];
 		memcpy(pNewStream, pTargetStream, 2); // copy SOI block
 		memcpy(pNewStream + 2, pImage->GetEXIFData(), pImage->GetEXIFDataLength()); // copy EXIF block
 		
 		// Set image orientation back to normal orientation, we save the pixels as displayed
 		CEXIFReader exifReader( pNewStream + 2);
 		exifReader.WriteImageOrientation(1); // 1 means default orientation (unrotated)
-
-		int nJFIFLength = 0;
-		if (pTargetStream[2] == 0xFF && pTargetStream[3] == 0xE0) {
-			// don't copy JFIF block
-			nJFIFLength = pTargetStream[4]*256 + pTargetStream[5] + 2;
+		if (bDeleteThumbnail) {
+			exifReader.DeleteThumbnail();
+		} else if (exifReader.HasJPEGCompressedThumbnail()) {
+			// recreate EXIF thumbnail image
+			CSize sizeThumb;
+			void* pDIBThumb = GetThumbnailDIB(pImage, sizeThumb);
+			if (pDIBThumb != NULL) {
+				int nJPEGThumbStreamLen;
+				unsigned char* pJPEGThumb = (unsigned char*) Jpeg::Compress(pDIBThumb, sizeThumb.cx, sizeThumb.cy, 3, nJPEGThumbStreamLen, 70);
+				if (pJPEGThumb != NULL) {
+					int nThumbJFIFLen = GetJFIFBlockLength(pJPEGThumb);
+					nEXIFBlockLenCorrection = nJPEGThumbStreamLen - nThumbJFIFLen - exifReader.GetJPEGThumbStreamLen();
+					if (nEXIFBlockLenCorrection <= cnAdditionalThumbBytes && pImage->GetEXIFDataLength() + nEXIFBlockLenCorrection < 65536) {
+						exifReader.UpdateJPEGThumbnail(pJPEGThumb + 2 + nThumbJFIFLen, nJPEGThumbStreamLen - 2 - nThumbJFIFLen, nEXIFBlockLenCorrection, sizeThumb);
+					} else {
+						nEXIFBlockLenCorrection = 0;
+					}
+					delete[] pJPEGThumb;
+				}
+				delete[] pDIBThumb;
+			}
 		}
-		memcpy(pNewStream + 2 + pImage->GetEXIFDataLength(), pTargetStream + 2 + nJFIFLength, nJPEGStreamLen - 2 - nJFIFLength);
+
+		int nJFIFLength = GetJFIFBlockLength(pTargetStream);
+		memcpy(pNewStream + 2 + pImage->GetEXIFDataLength() + nEXIFBlockLenCorrection, pTargetStream + 2 + nJFIFLength, nJPEGStreamLen - 2 - nJFIFLength);
 		delete[] pTargetStream;
 		pTargetStream = pNewStream;
-		nJPEGStreamLen = nJPEGStreamLen - nJFIFLength + pImage->GetEXIFDataLength();
+		nJPEGStreamLen = nJPEGStreamLen - nJFIFLength + pImage->GetEXIFDataLength() + nEXIFBlockLenCorrection;
 	}
 
 	bool bSuccess = fwrite(pTargetStream, 1, nJPEGStreamLen, fptr) == nJPEGStreamLen;
@@ -179,7 +228,7 @@ bool CSaveImage::SaveImage(LPCTSTR sFileName, CJPEGImage * pImage, const CImageP
 		// Save JPEG not over GDI+ - we want to keep the meta-data if there is meta-data
 		int nJPEGStreamLen;
 		void* pCompressedJPEG = CompressAndSave(sFileName, pImage, pDIB24bpp, imageSize.cx, imageSize.cy, 
-			CSettingsProvider::This().JPEGSaveQuality(), nJPEGStreamLen, bFullSize);
+			CSettingsProvider::This().JPEGSaveQuality(), nJPEGStreamLen, true, !bFullSize);
 		bSuccess = pCompressedJPEG != NULL;
 		if (bSuccess) {
 			nPixelHash = Helpers::CalculateJPEGFileHash(pCompressedJPEG, nJPEGStreamLen);

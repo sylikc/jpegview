@@ -49,12 +49,20 @@ public:
 	// Image orientation as detected by sensor
 	int GetImageOrientation() { return m_nImageOrientation; }
 	bool ImageOrientationPresent() { return m_nImageOrientation > 0; }
-	// Thumbnail image dimension
+	// Thumbnail image information
+	bool HasJPEGCompressedThumbnail() { return m_bHasJPEGCompressedThumbnail; }
+	int GetJPEGThumbStreamLen() { return m_nJPEGThumbStreamLen; }
 	int GetThumbnailWidth() { return m_nThumbWidth; }
 	int GetThumbnailHeight() { return m_nThumbHeight; }
 
 	// Sets the image orientation to given value (if tag was present in input stream)
 	void WriteImageOrientation(int nOrientation);
+	
+	// Updates an existing JPEG compressed thumbnail image by given JPEG stream (SOI stripped)
+	void UpdateJPEGThumbnail(unsigned char* pJPEGStream, int nStreamLen, int nEXIFBlockLenCorrection, CSize sizeThumb);
+
+	// Delete the thumbnail image
+	void DeleteThumbnail();
 public:
 	// unknown double value
 	static double UNKNOWN_DOUBLE_VALUE;
@@ -70,9 +78,15 @@ private:
 	double m_dFNumber;
 	int m_nISOSpeed;
 	int m_nImageOrientation;
+	bool m_bHasJPEGCompressedThumbnail;
 	int m_nThumbWidth;
 	int m_nThumbHeight;
+	int m_nJPEGThumbStreamLen;
 
 	bool m_bLittleEndian;
+	uint8* m_pApp1;
 	uint8* m_pTagOrientation;
+	uint8* m_pLastIFD0;
+	uint8* m_pIFD1;
+	uint8* m_pLastIFD1;
 };
