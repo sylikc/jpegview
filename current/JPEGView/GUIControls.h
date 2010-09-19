@@ -384,6 +384,7 @@ public:
 	static void PaintRotateCWBtn(const CRect& rect, CDC& dc);
 	static void PaintRotateCCWBtn(const CRect& rect, CDC& dc);
 	static void PaintInfoBtn(const CRect& rect, CDC& dc);
+	static void PaintKeepParamsBtn(const CRect& rect, CDC& dc);
 	static void PaintLandscapeModeBtn(const CRect& rect, CDC& dc);
 
 protected:
