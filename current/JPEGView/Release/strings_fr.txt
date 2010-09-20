@@ -252,3 +252,4 @@ Amount	Quantité
 Threshold	Seuil
 Apply	Appliquer
 Cancel	Annuler
+Keep processing parameters between images	Conserver les paramètres lors du changement de l‘image

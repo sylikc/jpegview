@@ -245,6 +245,7 @@ private:
 	bool PerformPan(int dx, int dy, bool bAbsolute);
 	void ZoomToSelection();
 	void LimitOffsets(const CRect & rect, const CSize & size);
+	double GetZoomFactorForFitToScreen(bool bFillWithCrop);
 	void ResetZoomToFitScreen(bool bFillWithCrop);
 	void ResetZoomTo100Percents();
 	CProcessParams CreateProcessParams();

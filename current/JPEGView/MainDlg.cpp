@@ -1548,7 +1548,7 @@ void CMainDlg::OnEnd(CButtonCtrl & sender) {
 }
 
 void CMainDlg::OnToggleZoomFit(CButtonCtrl & sender) {
-	if (fabs(sm_instance->m_dZoom - 1) < 0.01) {
+	if (fabs(sm_instance->m_dZoom - sm_instance->GetZoomFactorForFitToScreen(false)) > 0.01) {
 		sm_instance->ResetZoomToFitScreen(false);
 	} else {
 		sm_instance->ResetZoomTo100Percents();
@@ -1604,7 +1604,7 @@ void CMainDlg::OnClose(CButtonCtrl & sender) {
 }
 
 void CMainDlg::PaintZoomFitToggleBtn(const CRect& rect, CDC& dc) {
-	if (fabs(sm_instance->m_dZoom - 1) < 0.01) {
+	if (fabs(sm_instance->m_dZoom - sm_instance->GetZoomFactorForFitToScreen(false)) > 0.01) {
 		CNavigationPanel::PaintZoomToFitBtn(rect, dc);
 	} else {
 		CNavigationPanel::PaintZoomTo1to1Btn(rect, dc);
@@ -1612,7 +1612,7 @@ void CMainDlg::PaintZoomFitToggleBtn(const CRect& rect, CDC& dc) {
 }
 
 LPCTSTR CMainDlg::ZoomFitToggleTooltip() {
-	if (fabs(sm_instance->m_dZoom - 1) < 0.01) {
+	if (fabs(sm_instance->m_dZoom - sm_instance->GetZoomFactorForFitToScreen(false)) > 0.01) {
 		return CNLS::GetString(_T("Fit image to screen"));
 	} else {
 		return CNLS::GetString(_T("Actual size of image"));
@@ -2652,12 +2652,21 @@ void CMainDlg::LimitOffsets(const CRect & rect, const CSize & size) {
 	m_nOffsetY = max(-nMaxOffsetY, min(+nMaxOffsetY, m_nOffsetY));
 }
 
+double CMainDlg::GetZoomFactorForFitToScreen(bool bFillWithCrop) {
+	if (m_pCurrentImage != NULL) {
+		double dZoom;
+		Helpers::GetImageRect(m_pCurrentImage->OrigWidth(), m_pCurrentImage->OrigHeight(), 
+			m_clientRect.Width(), m_clientRect.Height(), true, bFillWithCrop, false, dZoom);
+		return max(Helpers::ZoomMin, min(Helpers::ZoomMax, dZoom));
+	} else {
+		return 1.0;
+	}
+}
+
 void CMainDlg::ResetZoomToFitScreen(bool bFillWithCrop) {
 	if (m_pCurrentImage != NULL) {
 		double dOldZoom = m_dZoom;
-		CSize newSize = Helpers::GetImageRect(m_pCurrentImage->OrigWidth(), m_pCurrentImage->OrigHeight(), 
-			m_clientRect.Width(), m_clientRect.Height(), true, bFillWithCrop, false, m_dZoom);
-		m_dZoom = max(Helpers::ZoomMin, min(Helpers::ZoomMax, m_dZoom));
+		m_dZoom = GetZoomFactorForFitToScreen(bFillWithCrop);
 		m_bUserZoom = m_dZoom > 1.0;
 		m_bUserPan = false;
 		if (fabs(dOldZoom - m_dZoom) > 0.01) {
