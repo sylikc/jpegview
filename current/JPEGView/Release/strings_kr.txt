@@ -69,8 +69,8 @@ Previous image	이전
 up/down	위/아래
 Mouse wheel	마우스 휠
 Left mouse & drag	왼쪽 마우스 & 드래그
-Ctrl + L mouse	Ctrl + L 마우스
-Fwd mouse button	앞 마우스 버튼
+Ctrl + Left mouse	Ctrl + L 마우스
+Forward mouse button	앞 마우스 버튼
 Back mouse button	뒤 마우스 버튼
 Delete current file on disk permanently	현재 파일을 디스크에서 영구히 삭제
 Rotate current file on disk lossless by 90 deg (W/H must be multiple of 16)	현재 파일을 디스크에서 무손실 90도 회전 (너비/높이는 16의 배수여야 함)

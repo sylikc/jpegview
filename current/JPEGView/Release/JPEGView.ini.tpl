@@ -15,6 +15,7 @@
 ; 'fr'    French
 ; 'kr'    Korean
 ; 'ro'    Romanian
+; 'ru'    Russian
 Language=auto
 
 ; Background color, R G B, each component must be in [0..255], e.g. "128 128 128" for a middle grey

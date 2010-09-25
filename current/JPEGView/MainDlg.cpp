@@ -3256,8 +3256,8 @@ void CMainDlg::GenerateHelpDisplay(CHelpDisplay & helpDisplay) {
 	helpDisplay.AddLineInfo(_T("+/-"), buff5, CNLS::GetString(_T("Zoom in/Zoom out (also Ctrl+up/down)")));
 	helpDisplay.AddLine(CNLS::GetString(_T("Mouse wheel")), CNLS::GetString(_T("Zoom in/out image")));
 	helpDisplay.AddLine(CNLS::GetString(_T("Left mouse & drag")), CNLS::GetString(_T("Pan image")));
-	helpDisplay.AddLine(CNLS::GetString(_T("Ctrl + L mouse")), CNLS::GetString(_T("Crop image")));
-	helpDisplay.AddLine(CNLS::GetString(_T("Fwd mouse button")), CNLS::GetString(_T("Next image")));
+	helpDisplay.AddLine(CNLS::GetString(_T("Ctrl + Left mouse")), CNLS::GetString(_T("Crop image")));
+	helpDisplay.AddLine(CNLS::GetString(_T("Forward mouse button")), CNLS::GetString(_T("Next image")));
 	helpDisplay.AddLine(CNLS::GetString(_T("Back mouse button")), CNLS::GetString(_T("Previous image")));
 	std::list<CUserCommand*>::iterator iter;
 	std::list<CUserCommand*> & userCmdList = CSettingsProvider::This().UserCommandList();

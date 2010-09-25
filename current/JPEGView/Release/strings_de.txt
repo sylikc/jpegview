@@ -67,9 +67,9 @@ Next image	Nächstes Bild anzeigen
 Previous image	Voriges Bild anzeigen
 up/down	Pfeil oben/unten
 Mouse wheel	Mausrad
-Left mouse & drag	L Maustaste & ziehen
-Ctrl + L mouse	Ctrl + L Maustaste
-Fwd mouse button	Vorwärts Maustaste
+Left mouse & drag	Linke Maustaste & ziehen
+Ctrl + Left mouse	Ctrl + Linke Maustaste
+Forward mouse button	Vorwärts Maustaste
 Back mouse button	Zurück Maustaste
 Delete current file on disk permanently	Aktuelle Bilddatei permanent löschen
 Rotate current file on disk lossless by 90 deg (W/H must be multiple of 16)	Aktuelle Bilddatei verlustfrei um 90 Grad rotieren (B/H muss durch 16 teilbar sein)

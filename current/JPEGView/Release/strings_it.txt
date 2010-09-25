@@ -68,8 +68,8 @@ Previous image	Immagine precedente
 up/down	su/giu
 Mouse wheel	Rotellina del mouse
 Left mouse & drag	Tasto sinistro mouse e trascina
-Ctrl + L mouse	Ctrl + Tasto sinistro del mouse
-Fwd mouse button	Tasto avanti del mouse
+Ctrl + Left mouse	Ctrl + Tasto sinistro del mouse
+Forward mouse button	Tasto avanti del mouse
 Back mouse button	Tasto indietro del mouse
 Delete current file on disk permanently	Cancella definitivamente dal disco il file attuale 
 Rotate current file on disk lossless by 90 deg (W/H must be multiple of 16)	Ruota immagine attuale su disco senza perdita di qualità di 90 gradi (larghezza/altezza deve essere multiplo di 16)

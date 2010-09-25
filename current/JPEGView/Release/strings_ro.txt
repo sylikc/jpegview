@@ -68,8 +68,8 @@ Previous image	Imaginea anterioară
 up/down	sus/jos
 Mouse wheel	Rotiţa mouse-ului
 Left mouse & drag	Stânga mouse şi trage
-Ctrl + L mouse	Ctrl + Butonul stâng al mouse-ului
-Fwd mouse button	'Forward' la mouse
+Ctrl + Left mouse	Ctrl + Butonul stâng al mouse-ului
+Forward mouse button	'Forward' la mouse
 Back mouse button	'Back' la mouse
 Delete current file on disk permanently	Şterge fişierul curent permanent de pe harddisk! 
 Rotate current file on disk lossless by 90 deg (W/H must be multiple of 16)	Roteşte fişierul curent pe harddisk 90gr. (spre dreapta) (W/H trebuie să fie multiplu de 16)

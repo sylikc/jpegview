@@ -1,0 +1,255 @@
+﻿// This file must be encoded with UTF-8 (e.g. with Windows Notepad)
+// Filename is 'strings_%languagecode%.txt' where %languagecode% is the ISO 639 language code e.g. 'fr' for French
+// Format is: English string<tab>Translated string<newline>
+// Translated by Dmitry Yerokhin (erodim@mail.ru), September 23, 2010
+Contrast	Контрастность
+Brightness	Яркость
+Sharpen	Резкость
+Lighten Shadows	Высветлить тени
+Darken Highlights	Притемнить света
+Deep Shadows	Глубокие тени
+Color Correction	Коррекция цвета
+Contrast Correction	Коррекция контрастности
+Parameter DB:	БД параметров:
+Save to	Сохранить в
+Remove from	Удалить из
+Rename:	Переименовать:
+No file or folder name was provided as command line parameter!	В командной строке не указано имени ни файла, ни папки
+To use JPEGView, associate JPG, JPEG and BMP files with JPEGView.	Для использования программы JPEGView ассоциируйте её с файлами JPG, JPEG и BMP.
+Press ESC to exit...	Нажмите ESC для выхода...
+The file '%s' could not be read!	Невозможно прочитать файл '%s'.
+The file '%s' does not contain a list of file names!	В файле '%s' нет списка имён файлов.
+The directory '%s' does not contain any image files!	В папке '%s' нет поддерживаемых графических файлов.
+Press any key to search the subdirectories for image files.	Нажмите любую клавишу, чтобы выполнить поиск графических файлов во вложенных папках.
+JPEGView Help	Справка JPEGView
+Current image	Текущее изображение
+Close help text display / Close JPEGView	Закрыть экран справки / Закрыть JPEGView
+Show/hide this help text	Показать/скрыть этот справочный текст
+Show/hide picture information (EXIF data)	Показать/скрыть данные об изображении (EXIF)
+Show/hide file name	Показать/скрыть имя файла
+Enable/disable high quality resampling	Включить/выключить высококачественное ресемплирование
+Enable/disable keeping of geometry related (zoom/pan/rotation)	Включить/выключить сохранение геометрии (масштаб/панорамирование/поворот)
+and image processing (brightness/contrast/sharpen) parameters between images	и обработку картинки (яркость/контрастность/резкость) между изображениями
+Enable/disable automatic contrast correction (histogram equalization)	Включить/выключить автокоррекцию контрастности (подстройку гистограммы)
+Apply auto contrast correction using only visible section of image	Применить автокоррекцию контрастности только к видимой области изображения
+Enable/disable automatic density correction (local brightness correction)	Включить/выключить автокоррекцию интенсивности (локальную подстройку яркости - ЛПЯ)
+Increase/decrease lightening of shadows (LDC must be on)	Увеличить/уменьшить высветление теней (нужно включить ЛПЯ)
+Increase/decrease darkening of highlights (LDC must be on)	Увеличить/уменьшить притемнение светов (нужно включить ЛПЯ)
+Loop through files in current folder	Циклический просмотр файлов в текущей папке
+Loop through files in current directory and all subfolders	Циклический просмотр файлов в текущей папке и её подпапках
+Loop through files in current directory and all sibling folders (folders on same level)	Циклический просмотр файлов в текущей папке и всех папках того же уровня
+Maximize/restore to/from virtual desktop (only for multi-monitor systems)	Распахнуть/восстановить на/из виртуальный рабочий стол (для мультимониторных систем)
+Copy screen to clipboard/ Copy processed full size image to clipboard	Скопировать в буфер обмена экран/обработанное полноразмерное изображение
+Open new image or slideshow file	Открыть новое изображение или файл со слайдшоу
+Save processed image to JPEG file (original size)	Сохранить обработанное изображение как JPEG (исходного размера)
+Save (s)/ delete (d) image processing parameters in/from parameter DB	Сохранить (s) / удалить (d) параметры обработки изображения в базе данных
+Sort images by creation date, resp. modification date, resp. file name	Сортировать изображения по дате создания (c), изменения (m) или имени файла (n)
+Goto previous image	Перейти к предыдущему изображению
+Goto next image	Перейти к следующему изображению
+PgUp or Left	PgUp или стрелка влево
+PgDn or Right	PgDn или стрелка вправо
+Goto first/last image of current folder (using sort order as defined)	Перейти к первому/последнему изображению в текущей папке (в соответствии с сортировкой)
+Increase/decrease brightness	Увеличить/уменьшить яркость
+Increase/decrease contrast	Увеличить/уменьшить контрастность
+Increase/decrease sharpness	Увеличить/уменьшить резкость
+Increase/decrease auto color cast correction amount	Увеличить/уменьшить автокоррекцию цвета
+Increase/decrease auto contrast correction amount	Увеличить/уменьшить автокоррекцию контрастности
+Enable/disable landscape picture enhancement mode	Включить/выключить режим улучшения пейзажных изображений
+Slide show with timeout of n seconds (ESC to stop)	Слайдшоу с интервалом n секунд (ESC - стоп)
+Set timeout to n/10 sec, respectively n/100 sec (Ctrl+Shift)	Интервал n/10 с, соотв. n/100 с (Ctrl+Shift)
+Rotate image and fit to screen	Повернуть изображение и вписать в экран
+Fit image to screen	Вписать изображение в экран
+Zoom 1:1 (100 %)	Масштаб 1:1 (100%)
+Zoom in/Zoom out (also Ctrl+up/down)	Увеличить/уменьшить (также Ctrl+вверх/вниз)
+Zoom in/out image	Увеличить/уменьшить изображение (масштабировать)
+Pan image	Панорамировать изображение
+Crop image	Обрезать изображение
+Next image	Следующее изображение
+Previous image	Предыдущее изображение
+up/down	Стрелки вверх/вниз
+Mouse wheel	Ролик мыши
+Left mouse & drag	ЛКМ и перетаскивание
+Ctrl + Left mouse	Ctrl + ЛКМ
+Forward mouse button	Кнопка мыши 'вперёд'
+Back mouse button	Кнопка мыши 'назад'
+Delete current file on disk permanently	Окончательно удалить текущий файл с диска
+Rotate current file on disk lossless by 90 deg (W/H must be multiple of 16)	Повернуть текущий файл на диске без потерь на 90° вправо (Ш/В должны быть кратны 16)
+Rotate current file on disk lossless by 270 deg (W/H must be multiple of 16)	Повернуть текущий файл на диске без потерь на 90° влево (Ш/В должны быть кратны 16)
+The file is read-only!	Этот файл только для чтения!
+Can't rename file	Невозможно переименовать файл
+New name contains backslash character!	В новом имени содержится символ обратной косой черты (\).
+Renaming file failed!	Ошибка при переименовании файла.
+Reason: 	Причина: 
+on	вкл.
+off	выкл.
+Do you really want to save the following parameters as default to the INI file	Вы действительно хотите сохранить эти параметры как стандартные в INI-файле
+Auto contrast and color correction: 	Автокоррекция контрастности и цвета: 
+Local density correction: 	Коррекция локальной плотности: 
+Order files by: 	Сортировка файлов: 
+Creation date/time	Дата/время создания
+Last modification date/time	Дата/время изменения
+File name	Имя файла
+These values will override the values from the INI file located in the program folder of JPEGView!	Эти значения переопределят установки в INI-файле, расположенном в папке с JPEGView.
+Confirm save default parameters	Сохранить параметры по умолчанию?
+Images	Изображения
+All Files	Все файлы
+Parameter DB file '%s' could not be opened!	Невозможно открыть файл '%s' c БД параметров.
+Parameter DB file '%s' is not valid (invalid header)!	Неверный файл '%s' с БД параметров (недопустимый заголовок).
+Cannot write to parameter DB file '%s'!	Невозможно выполнить запись в файл '%s' с БД параметров.
+Cannot read from parameter DB file '%s'!	Невозможно выполнить из файла '%s' с БД параметров.
+Cannot read parameter DB file '%s' because it is too large!	Невозможно прочитать файл '%s' в БД параметров: он слишком велик.
+The parameter DB file '%s' has been created by a newer version of JPEGView!	Файл '%s' с БД параметров создан более новой версией JPEGView.
+The old parameter DB file '%s' could not be renamed during conversion to new format!	Не удалось переименовать старый файл '%s' с БД параметров при преобразовании в новый формат.
+Parameter DB error	Ошибка в БД параметров
+Error saving file	Ошибка сохранения файла
+Error writing file to disk!	Ошибка записи файла на диск.
+Confirm	Подтвердите
+Do you really want to permanently delete the file %filename%?	Вы действительно хотите окончательно удалить файл %filename%?
+Rotate the following file lossless by 90 deg?\n%filename%	Повернуть этот файл без потерь на 90° вправо?\n%filename%
+Rotate the following file lossless by 270 deg?\n%filename%	Повернуть этот файл без потерь на 90° влево?\n%filename%
+Open image...	Открыть изображение...
+Save processed image...	Сохранить обработанное изображение...
+Reload image	Перезагрузить изображение
+Copy to clipboard	Скопировать в буфер обмена
+Copy original size image	Скопировать изображение исходного размера
+Paste from clipboard	Вставить из буфера обмена
+Batch rename/copy...	Пакетное переименование/копирование...
+Show picture info (EXIF)	Показать сведения об изображении (EXIF)
+Show filename	Показать имя файла
+Navigation	Навигация
+Loop folder	Циклично в папке
+Loop recursively	Циклично с рекурсией
+Loop siblings	Циклично в папках на том же уровне
+Display order	Порядок вывода
+Modification date	Дата изменения
+Creation date	Дата создания
+Play folder as slideshow/movie	Воспроизвести папку как слайдшоу/фильм
+Slideshow	Слайдшоу
+Movie	Фильм
+Waiting time	Интервал
+Stop slide show/movie	Остановить слайдшоу/фильм
+Rotate +90	Повернуть на 90° вправо
+Rotate -90	Повернуть на 90° влево
+Auto correction	Автокоррекция
+Local density correction	Коррекция локальной плотности
+Keep parameters	Удерживать параметры
+Save parameters to INI...	Сохранить параметры в INI-файле...
+Save parameters to DB	Сохранить параметры в базе данных
+Clear parameters from DB	Удалить параметры из базы данных
+Zoom	Масштаб
+Fit to screen	Заполнение экрана
+Fill with crop	Заполнение с обрезкой
+Span all screens	На все экраны
+Auto zoom mode	Режим автомасштабирования
+Fit to screen (no zoom)	Заполнение экрана (без масштабирования)
+Fill with crop (no zoom)	Заполнение с обрезкой (без масштабирования)
+Exit	Выход
+Cyan-Red	Голубой-Красный
+Magenta-Green	Малиновый-Зелёный
+Yellow-Blue	Жёлтый-Синий
+C - R	C - R
+M - G	M - G
+Y - B	Y - B
+Batch rename/copy of files	Пакетное переименование/копирование файлов
+Image files in folder	Графические файлы в папке
+Placeholders:	Заполнители:
+Number (consecutively numbered)	Номер (последовательный)
+Number with N digits	Номер с N цифрами
+Extracted number from original file name	Номер из исходного имени файла
+Original file name (with extension)	Исходное имя файла (с расширением)
+Original file name (without extension)	Исходное имя файла (без расширения)
+Original file extension	Исходное расширение файла
+'My Pictures' folder	Папка 'Мои рисунки'
+Day / Month / Year (as numbers)	День / Месяц / Год (цифрами)
+Year short form (2 digits)	Год коротко (две цифры)
+Month / Short form (text)	Месяц коротко (текст)
+Target folders that are not yet existing are created as needed.	Несуществующие папки назначения создаются по необходимости.
+Date placeholders use the modification date of the image.	Заполнители даты используют дату изменения изображения.
+Rename/copy images to:	Переименовать/скопировать изображения в:
+Rename	Переименовать
+Preview	Предпросмотр
+Save as template	Сохранить как шаблон
+Close	Закрыть
+Old name	Старое имя
+Date	Дата
+New name (>> : file gets copied)	Новое имя (>> : файл скопирован)
+Select all	Выбрать все
+Select none	Снять весь выбор
+The file '%s' could not be %s.	Для файла '%s' невозможно выполнить операцию %s.
+copied	скопировано
+renamed	переименовано
+Continue rename/copy?	Продолжить переименование/копирование?
+Error during rename/copy	Ошибка при переименовании/копировании
+%d file(s) renamed, %d file(s) copied, %d folder(s) created	Файлов переименовано: %d, скопировано: %d, создано папок: %d
+Crop Selection	Обрезать выделенное
+Copy Selection to Clipboard	Скопировать выделенное в буфер обмена
+Zoom to Selection	Масштабировать до выделенного
+Pasting image from clipboard failed!	Ошибка при вставке изображения из буфера обмена.
+Image width:	Ширина:
+Image height:	Высота:
+Acquisition date:	Дата съёмки:
+Camera model:	Модель камеры:
+Exposure time (s):	Выдержка (с):
+Exposure bias (EV):	Экспокоррекция (EV):
+Flash fired:	Вспышка:
+Focal length (mm):	Фокусное расстояние (мм):
+F-Number:	Диафрагма:
+ISO Speed:	Чувствительность ISO:
+Modification date:	Дата изменения:
+yes	да
+no	нет
+Show navigation panel	Панель навигации
+Show/hide navigation panel	Показать/скрыть панель навигации
+About JPEGView...	О программе JPEGView...
+SIMD mode used:	Режим SIMD:
+Number of CPU cores used:	Число ядер ЦП:
+Licensed under the GNU general public license (GPL), see readme file for details:	Лицензия: GNU General Public License (GPL), см. подробности в файле:
+Project home page:	Домашняя страница проекта:
+Show first image in folder	Показать первое изображение в папке
+Show previous image	Показать предыдущее изображение
+Show next image	Показать следующее изображение
+Show last image in folder	Показать последнее изображение в папке
+Rotate image 90 deg clockwise	Повернуть изображение на 90° по часовой стрелке
+Rotate image 90 deg counter-clockwise	Повернуть изображение на 90° против часовой стрелки
+Landscape picture enhancement mode	Режим улучшения пейзажных изображений
+Display image (EXIF) information	Показать сведения об изображении (EXIF)
+Actual size of image	Настоящий размер изображения
+Toggle between screens (only for multi-monitor systems)	Переключиться между экранами (в мультимониторных системах)
+Enable/disable full screen mode	Включить/выключить полноэкранный режим
+Full screen mode	Полноэкранный режим
+Window mode	Оконный режим
+Save as (in screen size/resolution)	Сохранить как (в экранном размере/разрешении)
+Save processed image to JPEG file (screen size)	Сохранить обработанное изображение как JPEG-файл (экранного размера)
+Settings/Admin	Настройки
+Edit global settings...	Изменить общие параметры...
+Edit user settings...	Изменить пользовательские параметры...
+Backup parameter DB...	Сделать резервную копию БД с параметрами...
+Restore parameter DB...	Восстановить из копии БД с параметрами...
+No user INI file exits yet. Create user INI file from INI file template?	Пользовательского INI-файла пока не существует. Создать его из шаблона INI-файла?
+Copying parameter DB to file '%s' failed. Reason: %s	Ошибка копирования БД параметров в файл '%s'. Причина: %s
+Select parameter DB to restore	Выберите БД параметров для восстановления
+Conflicting entries in Param DB	Конфликт записей в БД параметров
+The imported param DB contains entries already present in active param DB.	Импортированная БД параметров содержит записи, которые уже присутствуют в активной БД.
+Shall existing entries be preserved (Yes) or be overriden by the imported entries (No)?	Следует ли сохранить имеющиеся записи ('Да') или перезаписать их импортированными ('Нет')?
+Select file to display in 'File Open' dialog	Выберите файл для показа в диалоге открытия файлов
+Crop Mode	Режим обрезки
+Free	Произвольно
+Fixed size...	Фиксированный размер...
+Set Fixed Crop Size	Выбрать фиксированный размер обрезки
+Width	Ширина
+Height	Высота
+Pixels	Пикселы
+Screen Pixels	Экранные пикселы
+Image Pixels	Исходные пикселы
+Set modification date	Установить дату изменения
+to current date	по текущей дате
+to EXIF date	по дате из EXIF
+Mark image for toggling. Use Ctrl+Left/Ctrl+Right to toggle between marked and current image	Отметьте файлы для переключения. Ctrl+влево/вправо - переключение между отмеченным и текущим изображениями.
+Saturation	Насыщенность
+Unsharp mask...	Нерезкая маска...
+Apply Unsharp Mask	Применить нерезкую маску
+Radius	Радиус
+Amount	Количество
+Threshold	Порог
+Apply	Применить
+Cancel	Отмена
