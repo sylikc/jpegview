@@ -69,8 +69,8 @@ Previous image	Imagen anterior
 up/down	Arriba/abajo
 Mouse wheel	Rueda del ratón
 Left mouse & drag	Botón izquierdo y arrastrar
-Ctrl + L mouse	Ctrl + botón izquierdo
-Fwd mouse button	Fwd mouse button
+Ctrl + Left mouse	Ctrl + botón izquierdo
+Forward mouse button	Fwd mouse button
 Back mouse button	Back mouse button
 Delete current file on disk permanently	Borrar archivo permanentemente del disco
 Rotate current file on disk lossless by 90 deg (W/H must be multiple of 16)	Rotar archivo actual 90° en el disco sin pérdida (ancho/alto deben ser múltiplo de 16)

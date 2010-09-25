@@ -30,6 +30,7 @@ New features:
 - New button on navigation panel: Keep processing parameters between images
 - Changed behavior of fit to screen/actual size button, fit to screen is now default when not yet fit to screen
 - Romanian translation (thanks to Silviu)
+- Russian translation (thanks to Dmitry)
 
 [1.0.21]
 Bugs fixed:

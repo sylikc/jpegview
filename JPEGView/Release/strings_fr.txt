@@ -68,8 +68,8 @@ Previous image	Image précédente
 up/down	haut/bas
 Mouse wheel	Molette de la souris
 Left mouse & drag	Btn gauche souris et deplacer
-Ctrl + L mouse	Ctrl + Btn L de souris
-Fwd mouse button	Btn Fwd de la souris
+Ctrl + Left mouse	Ctrl + Btn gauche de souris
+Forward mouse button	Btn Fwd de la souris
 Back mouse button	Btn Back de la souris
 Delete current file on disk permanently	Supprimer le fichier en cours sur le disque de façon permanente
 Rotate current file on disk lossless by 90 deg (W/H must be multiple of 16)	Tournez fichier en cours sur le disque sans perte de 90 deg (W / H doit être multiple de 16)
