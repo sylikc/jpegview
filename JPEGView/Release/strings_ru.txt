@@ -1,7 +1,7 @@
 ﻿// This file must be encoded with UTF-8 (e.g. with Windows Notepad)
 // Filename is 'strings_%languagecode%.txt' where %languagecode% is the ISO 639 language code e.g. 'fr' for French
 // Format is: English string<tab>Translated string<newline>
-// Translated by Dmitry Yerokhin (erodim@mail.ru), September 23, 2010
+// Translated by Dmitry Yerokhin (erodim@mail.ru), September 28, 2010
 Contrast	Контрастность
 Brightness	Яркость
 Sharpen	Резкость
@@ -14,20 +14,20 @@ Parameter DB:	БД параметров:
 Save to	Сохранить в
 Remove from	Удалить из
 Rename:	Переименовать:
-No file or folder name was provided as command line parameter!	В командной строке не указано имени ни файла, ни папки
+No file or folder name was provided as command line parameter!	В командной строке не указано имя ни файла, ни папки
 To use JPEGView, associate JPG, JPEG and BMP files with JPEGView.	Для использования программы JPEGView ассоциируйте её с файлами JPG, JPEG и BMP.
 Press ESC to exit...	Нажмите ESC для выхода...
 The file '%s' could not be read!	Невозможно прочитать файл '%s'.
 The file '%s' does not contain a list of file names!	В файле '%s' нет списка имён файлов.
 The directory '%s' does not contain any image files!	В папке '%s' нет поддерживаемых графических файлов.
-Press any key to search the subdirectories for image files.	Нажмите любую клавишу, чтобы выполнить поиск графических файлов во вложенных папках.
+Press any key to search the subdirectories for image files.	Нажмите любую клавишу для поиска графических файлов во вложенных папках.
 JPEGView Help	Справка JPEGView
 Current image	Текущее изображение
 Close help text display / Close JPEGView	Закрыть экран справки / Закрыть JPEGView
 Show/hide this help text	Показать/скрыть этот справочный текст
 Show/hide picture information (EXIF data)	Показать/скрыть данные об изображении (EXIF)
 Show/hide file name	Показать/скрыть имя файла
-Enable/disable high quality resampling	Включить/выключить высококачественное ресемплирование
+Enable/disable high quality resampling	Включить/выключить высококачественное ресэмплирование
 Enable/disable keeping of geometry related (zoom/pan/rotation)	Включить/выключить сохранение геометрии (масштаб/панорамирование/поворот)
 and image processing (brightness/contrast/sharpen) parameters between images	и обработку картинки (яркость/контрастность/резкость) между изображениями
 Enable/disable automatic contrast correction (histogram equalization)	Включить/выключить автокоррекцию контрастности (подстройку гистограммы)
@@ -54,9 +54,9 @@ Increase/decrease contrast	Увеличить/уменьшить контрас�
 Increase/decrease sharpness	Увеличить/уменьшить резкость
 Increase/decrease auto color cast correction amount	Увеличить/уменьшить автокоррекцию цвета
 Increase/decrease auto contrast correction amount	Увеличить/уменьшить автокоррекцию контрастности
-Enable/disable landscape picture enhancement mode	Включить/выключить режим улучшения пейзажных изображений
-Slide show with timeout of n seconds (ESC to stop)	Слайдшоу с интервалом n секунд (ESC - стоп)
-Set timeout to n/10 sec, respectively n/100 sec (Ctrl+Shift)	Интервал n/10 с, соотв. n/100 с (Ctrl+Shift)
+Enable/disable landscape picture enhancement mode	Включить/выключить режим улучшения изображений
+Slide show with timeout of n seconds (ESC to stop)	Запустить слайдшоу с интервалом N секунд (ESC - стоп)
+Set timeout to n/10 sec, respectively n/100 sec (Ctrl+Shift)	Задать интервал N/10 с или N/100 (Ctrl+Shift)
 Rotate image and fit to screen	Повернуть изображение и вписать в экран
 Fit image to screen	Вписать изображение в экран
 Zoom 1:1 (100 %)	Масштаб 1:1 (100%)
@@ -69,8 +69,8 @@ Previous image	Предыдущее изображение
 up/down	Стрелки вверх/вниз
 Mouse wheel	Ролик мыши
 Left mouse & drag	ЛКМ и перетаскивание
-Ctrl + Left mouse	Ctrl + ЛКМ
-Forward mouse button	Кнопка мыши 'вперёд'
+Ctrl + L mouse	Ctrl + ЛКМ
+Fwd mouse button	Кнопка мыши 'вперёд'
 Back mouse button	Кнопка мыши 'назад'
 Delete current file on disk permanently	Окончательно удалить текущий файл с диска
 Rotate current file on disk lossless by 90 deg (W/H must be multiple of 16)	Повернуть текущий файл на диске без потерь на 90° вправо (Ш/В должны быть кратны 16)
@@ -153,16 +153,16 @@ Y - B	Y - B
 Batch rename/copy of files	Пакетное переименование/копирование файлов
 Image files in folder	Графические файлы в папке
 Placeholders:	Заполнители:
-Number (consecutively numbered)	Номер (последовательный)
-Number with N digits	Номер с N цифрами
-Extracted number from original file name	Номер из исходного имени файла
-Original file name (with extension)	Исходное имя файла (с расширением)
-Original file name (without extension)	Исходное имя файла (без расширения)
-Original file extension	Исходное расширение файла
-'My Pictures' folder	Папка 'Мои рисунки'
-Day / Month / Year (as numbers)	День / Месяц / Год (цифрами)
-Year short form (2 digits)	Год коротко (две цифры)
-Month / Short form (text)	Месяц коротко (текст)
+Number (consecutively numbered)	номер (последовательный)
+Number with N digits	номер с N цифрами
+Extracted number from original file name	номер из исходного имени файла
+Original file name (with extension)	исходное имя файла (с расширением)
+Original file name (without extension)	исходное имя файла (без расширения)
+Original file extension	исходное расширение файла
+'My Pictures' folder	папка 'Мои рисунки'
+Day / Month / Year (as numbers)	день / месяц / год (цифрами)
+Year short form (2 digits)	год коротко (две цифры)
+Month / Short form (text)	месяц / месяц коротко (текст)
 Target folders that are not yet existing are created as needed.	Несуществующие папки назначения создаются по необходимости.
 Date placeholders use the modification date of the image.	Заполнители даты используют дату изменения изображения.
 Rename/copy images to:	Переименовать/скопировать изображения в:
@@ -211,7 +211,7 @@ Show next image	Показать следующее изображение
 Show last image in folder	Показать последнее изображение в папке
 Rotate image 90 deg clockwise	Повернуть изображение на 90° по часовой стрелке
 Rotate image 90 deg counter-clockwise	Повернуть изображение на 90° против часовой стрелки
-Landscape picture enhancement mode	Режим улучшения пейзажных изображений
+Landscape picture enhancement mode	Режим улучшения изображений
 Display image (EXIF) information	Показать сведения об изображении (EXIF)
 Actual size of image	Настоящий размер изображения
 Toggle between screens (only for multi-monitor systems)	Переключиться между экранами (в мультимониторных системах)
@@ -244,7 +244,7 @@ Image Pixels	Исходные пикселы
 Set modification date	Установить дату изменения
 to current date	по текущей дате
 to EXIF date	по дате из EXIF
-Mark image for toggling. Use Ctrl+Left/Ctrl+Right to toggle between marked and current image	Отметьте файлы для переключения. Ctrl+влево/вправо - переключение между отмеченным и текущим изображениями.
+Mark image for toggling. Use Ctrl+Left/Ctrl+Right to toggle between marked and current image	Отметить файл (Ctrl+влево/вправо - переключение между отмеченным и текущим изображениями)
 Saturation	Насыщенность
 Unsharp mask...	Нерезкая маска...
 Apply Unsharp Mask	Применить нерезкую маску

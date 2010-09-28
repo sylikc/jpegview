@@ -3031,7 +3031,7 @@ void CMainDlg::SaveParameters() {
 					Helpers::JPEGViewAppDataPath() + _T("JPEGView.ini ?\n\n");
 	_stprintf_s(buff, BUFF_SIZE, CString(CNLS::GetString(_T("Contrast"))) + _T(": %.2f\n"), m_pImageProcParams->Contrast);
 	sText += buff;
-	_stprintf_s(buff, BUFF_SIZE, CString(CNLS::GetString(_T("Gamma"))) + _T(": %.2f\n"), m_pImageProcParams->Gamma);
+	_stprintf_s(buff, BUFF_SIZE, CString(CNLS::GetString(_T("Brightness"))) + _T(": %.2f\n"), m_pImageProcParams->Gamma);
 	sText += buff;
 	_stprintf_s(buff, BUFF_SIZE, CString(CNLS::GetString(_T("Saturation"))) + _T(": %.2f\n"), m_pImageProcParams->Saturation);
 	sText += buff;
