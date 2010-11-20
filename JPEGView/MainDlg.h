@@ -35,6 +35,7 @@ public:
 		MESSAGE_HANDLER(WM_SIZE, OnSize)
 		MESSAGE_HANDLER(WM_GETMINMAXINFO, OnGetMinMaxInfo)
 		MESSAGE_HANDLER(WM_PAINT, OnPaint)
+		MESSAGE_HANDLER(WM_NCLBUTTONDOWN, OnNCLButtonDown)
 		MESSAGE_HANDLER(WM_LBUTTONDOWN, OnLButtonDown)
 		MESSAGE_HANDLER(WM_LBUTTONUP, OnLButtonUp)
 		MESSAGE_HANDLER(WM_MBUTTONDOWN, OnMButtonDown)
@@ -70,6 +71,7 @@ public:
 	LRESULT OnSize(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);
 	LRESULT OnGetMinMaxInfo(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);
 	LRESULT OnLButtonDown(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);
+	LRESULT OnNCLButtonDown(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);
 	LRESULT OnLButtonUp(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);
 	LRESULT OnMButtonDown(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);
 	LRESULT OnMButtonUp(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);
@@ -117,6 +119,7 @@ private:
 	bool m_bUserZoom;
 	bool m_bUserPan;
 	double m_dZoom;
+	double m_dZoomAtResizeStart;
 	double m_dZoomMult;
 	Helpers::EAutoZoomMode m_eAutoZoomMode;
 
@@ -245,8 +248,8 @@ private:
 	bool PerformPan(int dx, int dy, bool bAbsolute);
 	void ZoomToSelection();
 	void LimitOffsets(const CRect & rect, const CSize & size);
-	double GetZoomFactorForFitToScreen(bool bFillWithCrop);
-	void ResetZoomToFitScreen(bool bFillWithCrop);
+	double GetZoomFactorForFitToScreen(bool bFillWithCrop, bool bAllowEnlarge);
+	void ResetZoomToFitScreen(bool bFillWithCrop, bool bAllowEnlarge);
 	void ResetZoomTo100Percents();
 	CProcessParams CreateProcessParams();
 	void ResetParamsToDefault();

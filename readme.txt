@@ -29,6 +29,7 @@ New features:
 - Updating EXIF thumbnail image when saving processed image
 - New button on navigation panel: Keep processing parameters between images
 - Changed behavior of fit to screen/actual size button, fit to screen is now default when not yet fit to screen
+- Keeping fit to screen when rezising JPEGView window
 - Romanian translation (thanks to Silviu)
 - Russian translation (thanks to Dmitry)
 
