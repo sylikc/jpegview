@@ -221,6 +221,7 @@ CMainDlg::CMainDlg() {
 
 	m_eProcFlagsBeforeMovie = PFLAG_None;
 	m_nRotation = 0;
+	m_dZoomAtResizeStart = 1.0;
 	m_bUserZoom = false;
 	m_bUserPan = false;
 	m_bMovieMode = false;
@@ -698,6 +699,7 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 }
 
 LRESULT CMainDlg::OnSize(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/) {
+	bool bKeepFitToScreen = fabs(m_dZoom - GetZoomFactorForFitToScreen(false, false)) < 0.01;
 	this->GetClientRect(&m_clientRect);
 	this->Invalidate(FALSE);
 	if (m_clientRect.Width() < 800) {
@@ -707,6 +709,14 @@ LRESULT CMainDlg::OnSize(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BO
 		}
 	}
 	m_nMouseX = m_nMouseY = -1;
+
+	// keep fit to screen
+	if (bKeepFitToScreen) {
+		if (fabs(m_dZoom - GetZoomFactorForFitToScreen(false, false)) >= 0.00001) {
+			StartLowQTimer(ZOOM_TIMEOUT);
+		}
+		ResetZoomToFitScreen(false, false);
+	}
 	return 0;
 }
 
@@ -767,6 +777,12 @@ LRESULT CMainDlg::OnLButtonDown(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam,
 	}
 
 	m_bDontStartCropOnNextClick = false;
+	return 0;
+}
+
+LRESULT CMainDlg::OnNCLButtonDown(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& bHandled) {
+	m_dZoomAtResizeStart = m_dZoom;
+	bHandled = FALSE; // do not handle message, this would block correct processing by OS
 	return 0;
 }
 
@@ -1110,13 +1126,13 @@ LRESULT CMainDlg::OnKeyDown(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOO
 	} else if (wParam == VK_SPACE) {
 		bHandled = true;
 		if (fabs(m_dZoom - 1) < 0.01) {
-			ResetZoomToFitScreen(false);
+			ResetZoomToFitScreen(false, true);
 		} else {
 			ResetZoomTo100Percents();
 		}
 	} else if (wParam == VK_RETURN) {
 		bHandled = true;
-		ResetZoomToFitScreen(bCtrl);
+		ResetZoomToFitScreen(bCtrl, true);
 	} else if ((wParam == VK_DOWN || wParam == VK_UP) && !bCtrl && !bShift) {
 		bHandled = true;
 		ExecuteCommand((wParam == VK_DOWN) ? IDM_ROTATE_90 : IDM_ROTATE_270);
@@ -1548,8 +1564,8 @@ void CMainDlg::OnEnd(CButtonCtrl & sender) {
 }
 
 void CMainDlg::OnToggleZoomFit(CButtonCtrl & sender) {
-	if (fabs(sm_instance->m_dZoom - sm_instance->GetZoomFactorForFitToScreen(false)) > 0.01) {
-		sm_instance->ResetZoomToFitScreen(false);
+	if (fabs(sm_instance->m_dZoom - sm_instance->GetZoomFactorForFitToScreen(false, true)) > 0.01) {
+		sm_instance->ResetZoomToFitScreen(false, true);
 	} else {
 		sm_instance->ResetZoomTo100Percents();
 	}
@@ -1604,7 +1620,7 @@ void CMainDlg::OnClose(CButtonCtrl & sender) {
 }
 
 void CMainDlg::PaintZoomFitToggleBtn(const CRect& rect, CDC& dc) {
-	if (fabs(sm_instance->m_dZoom - sm_instance->GetZoomFactorForFitToScreen(false)) > 0.01) {
+	if (fabs(sm_instance->m_dZoom - sm_instance->GetZoomFactorForFitToScreen(false, true)) > 0.01) {
 		CNavigationPanel::PaintZoomToFitBtn(rect, dc);
 	} else {
 		CNavigationPanel::PaintZoomTo1to1Btn(rect, dc);
@@ -1612,7 +1628,7 @@ void CMainDlg::PaintZoomFitToggleBtn(const CRect& rect, CDC& dc) {
 }
 
 LPCTSTR CMainDlg::ZoomFitToggleTooltip() {
-	if (fabs(sm_instance->m_dZoom - sm_instance->GetZoomFactorForFitToScreen(false)) > 0.01) {
+	if (fabs(sm_instance->m_dZoom - sm_instance->GetZoomFactorForFitToScreen(false, true)) > 0.01) {
 		return CNLS::GetString(_T("Fit image to screen"));
 	} else {
 		return CNLS::GetString(_T("Actual size of image"));
@@ -1840,10 +1856,10 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 			SaveParameters();
 			break;
 		case IDM_FIT_TO_SCREEN:
-			ResetZoomToFitScreen(false);
+			ResetZoomToFitScreen(false, true);
 			break;
 		case IDM_FILL_WITH_CROP:
-			ResetZoomToFitScreen(true);
+			ResetZoomToFitScreen(true, true);
 			break;
 		case IDM_SPAN_SCREENS:
 			if (CMultiMonitorSupport::IsMultiMonitorSystem()) {
@@ -2652,21 +2668,22 @@ void CMainDlg::LimitOffsets(const CRect & rect, const CSize & size) {
 	m_nOffsetY = max(-nMaxOffsetY, min(+nMaxOffsetY, m_nOffsetY));
 }
 
-double CMainDlg::GetZoomFactorForFitToScreen(bool bFillWithCrop) {
+double CMainDlg::GetZoomFactorForFitToScreen(bool bFillWithCrop, bool bAllowEnlarge) {
 	if (m_pCurrentImage != NULL) {
 		double dZoom;
 		Helpers::GetImageRect(m_pCurrentImage->OrigWidth(), m_pCurrentImage->OrigHeight(), 
 			m_clientRect.Width(), m_clientRect.Height(), true, bFillWithCrop, false, dZoom);
-		return max(Helpers::ZoomMin, min(Helpers::ZoomMax, dZoom));
+		double dZoomMax = bAllowEnlarge ? Helpers::ZoomMax : max(1.0, m_dZoomAtResizeStart);
+		return max(Helpers::ZoomMin, min(dZoomMax, dZoom));
 	} else {
 		return 1.0;
 	}
 }
 
-void CMainDlg::ResetZoomToFitScreen(bool bFillWithCrop) {
+void CMainDlg::ResetZoomToFitScreen(bool bFillWithCrop, bool bAllowEnlarge) {
 	if (m_pCurrentImage != NULL) {
 		double dOldZoom = m_dZoom;
-		m_dZoom = GetZoomFactorForFitToScreen(bFillWithCrop);
+		m_dZoom = GetZoomFactorForFitToScreen(bFillWithCrop, bAllowEnlarge);
 		m_bUserZoom = m_dZoom > 1.0;
 		m_bUserPan = false;
 		if (fabs(dOldZoom - m_dZoom) > 0.01) {
