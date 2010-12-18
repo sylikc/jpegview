@@ -762,7 +762,7 @@ void* CBasicProcessing::SampleUp_HQ(CSize fullTargetSize, CPoint fullTargetOffse
 	// thus enabling to use the same loop on the rows for both resize directions.
 	// The image is correctly orientated again after two rotation/flip operations!
 
-	if (pIJLPixels == NULL || fullTargetSize.cx < 2 || fullTargetSize.cy < 2) {
+	if (pIJLPixels == NULL || fullTargetSize.cx < 2 || fullTargetSize.cy < 2 || clippedTargetSize.cx <= 0 || clippedTargetSize.cy <= 0) {
 		return NULL;
 	}
 	int nTargetWidth = clippedTargetSize.cx;
@@ -815,7 +815,7 @@ void* CBasicProcessing::SampleDown_HQ(CSize fullTargetSize, CPoint fullTargetOff
 	// thus enabling to use the same loop on the rows for both resize directions.
 	// The image is correctly orientated again after two rotation/flip operations!
 
-	if (pIJLPixels == NULL) {
+	if (pIJLPixels == NULL || clippedTargetSize.cx <= 0 || clippedTargetSize.cy <= 0) {
 		return NULL;
 	}
 	CResizeFilter filterX(sourceSize.cx, fullTargetSize.cx, dSharpen, eFilter, false);
@@ -1415,7 +1415,7 @@ void* CBasicProcessing::SampleUp_HQ_SSE_MMX_Core(CSize fullTargetSize, CPoint fu
 void* CBasicProcessing::SampleDown_HQ_SSE_MMX(CSize fullTargetSize, CPoint fullTargetOffset, CSize clippedTargetSize,
 											  CSize sourceSize, const void* pIJLPixels, int nChannels, double dSharpen, 
 											  EFilterType eFilter, bool bSSE) {
-	if (pIJLPixels == NULL) {
+	if (pIJLPixels == NULL || clippedTargetSize.cx <= 0 || clippedTargetSize.cy <= 0) {
 		return NULL;
 	}
 	uint8* pTarget = new uint8[clippedTargetSize.cx * 4 * Helpers::DoPadding(clippedTargetSize.cy, 8)];
@@ -1430,7 +1430,7 @@ void* CBasicProcessing::SampleDown_HQ_SSE_MMX(CSize fullTargetSize, CPoint fullT
 
 void* CBasicProcessing::SampleUp_HQ_SSE_MMX(CSize fullTargetSize, CPoint fullTargetOffset, CSize clippedTargetSize,
 											CSize sourceSize, const void* pIJLPixels, int nChannels, bool bSSE) {
-	if (pIJLPixels == NULL || fullTargetSize.cx < 2 || fullTargetSize.cy < 2) {
+	if (pIJLPixels == NULL || fullTargetSize.cx < 2 || fullTargetSize.cy < 2 || clippedTargetSize.cx <= 0 || clippedTargetSize.cy <= 0) {
 		return NULL;
 	}
 	uint8* pTarget = new uint8[clippedTargetSize.cx * 4 * Helpers::DoPadding(clippedTargetSize.cy, 8)];
