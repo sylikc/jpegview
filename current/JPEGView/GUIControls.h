@@ -199,6 +199,9 @@ public:
 
 	void SetEnabled(bool bEnabled);
 
+	// extends the active area of the button over the normal position
+	void SetExtendedActiveArea(CRect rect) { m_extendedArea = rect; }
+
 public:
 	virtual CSize GetMinSize();
 	virtual bool OnMouseLButton(EMouseEvent eMouseEvent, int nX, int nY);
@@ -212,6 +215,7 @@ private:
 	CSize m_textSize;
 	bool m_bDragging;
 	bool m_bEnabled;
+	CRect m_extendedArea;
 	ButtonPressedHandler* m_buttonPressedHandler;
 	PaintHandler* m_paintHandler;
 };

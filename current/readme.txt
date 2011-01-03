@@ -26,6 +26,7 @@ Changelog
 Bugs fixed:
 - Copying EXIF data when saving image in screen size (Ctrl-Shift-S)
 - Fixed crash when window is minimized while slideshow is playing
+- Close button is active when moving mouse to top, right corner of screen
 New features:
 - Updating EXIF thumbnail image when saving processed image
 - New button on navigation panel: Keep processing parameters between images

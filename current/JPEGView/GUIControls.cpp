@@ -1217,6 +1217,7 @@ CButtonCtrl::CButtonCtrl(CPanelMgr* pPanelMgr, LPCTSTR sButtonText,
 	 m_textSize = GetTextRect(m_pMgr->GetHWND(), m_sText);
 	 m_bDragging = false;
 	 m_bEnabled = false;
+	 m_extendedArea = CRect(0, 0, 0, 0);
 }
 
 CButtonCtrl::CButtonCtrl(CPanelMgr* pPanelMgr, PaintHandler paintHandler, ButtonPressedHandler buttonPressedHandler) 
@@ -1226,6 +1227,7 @@ CButtonCtrl::CButtonCtrl(CPanelMgr* pPanelMgr, PaintHandler paintHandler, Button
 	m_textSize = CSize(0, 0);
 	m_bDragging = false;
 	m_bEnabled = false;
+	m_extendedArea = CRect(0, 0, 0, 0);
 }
 
 void CButtonCtrl::SetEnabled(bool bEnabled) {
@@ -1244,7 +1246,9 @@ CSize CButtonCtrl::GetMinSize() {
 bool CButtonCtrl::OnMouseLButton(EMouseEvent eMouseEvent, int nX, int nY) {
 	bool bRetVal = false;
 	CPoint mousePos(nX, nY);
-	if (m_position.PtInRect(mousePos)) {
+	CRect extendedPosition(m_position.left + m_extendedArea.left, m_position.top + m_extendedArea.top,
+		m_position.right + m_extendedArea.right, m_position.bottom + m_extendedArea.bottom);
+	if (extendedPosition.PtInRect(mousePos)) {
 		if (eMouseEvent == MouseEvent_BtnDown) {
 			m_pMgr->CaptureMouse(this);
 			m_bDragging = true;
@@ -1267,7 +1271,9 @@ bool CButtonCtrl::OnMouseLButton(EMouseEvent eMouseEvent, int nX, int nY) {
 
 bool CButtonCtrl::OnMouseMove(int nX, int nY) {
 	CPoint mousePos(nX, nY);
-	if (m_position.PtInRect(mousePos)) {
+	CRect extendedPosition(m_position.left + m_extendedArea.left, m_position.top + m_extendedArea.top,
+		m_position.right + m_extendedArea.right, m_position.bottom + m_extendedArea.bottom);
+	if (extendedPosition.PtInRect(mousePos)) {
 		if (!m_bHighlight) {
 			m_bHighlight = true;
 			::InvalidateRect(m_pMgr->GetHWND(), &m_position, FALSE);
