@@ -362,9 +362,12 @@ LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam
 
 	// setup window button panel (on top, right)
 	m_pWndButtonPanel = new CWndButtonPanel(this->m_hWnd, m_pSliderMgr);
-	m_pWndButtonPanel->AddUserPaintButton(&(CWndButtonPanel::PaintMinimizeBtn), &OnMinimize, (LPCTSTR)NULL);
-	m_pWndButtonPanel->AddUserPaintButton(&(CWndButtonPanel::PaintRestoreBtn), &OnRestore, (LPCTSTR)NULL);
-	m_pWndButtonPanel->AddUserPaintButton(&(CWndButtonPanel::PaintCloseBtn), &OnClose, (LPCTSTR)NULL);
+	CButtonCtrl* pMinimizeBtn = m_pWndButtonPanel->AddUserPaintButton(&(CWndButtonPanel::PaintMinimizeBtn), &OnMinimize, (LPCTSTR)NULL);
+	pMinimizeBtn->SetExtendedActiveArea(CRect(0, -2, 0, 0));
+	CButtonCtrl* pRestoreBtn = m_pWndButtonPanel->AddUserPaintButton(&(CWndButtonPanel::PaintRestoreBtn), &OnRestore, (LPCTSTR)NULL);
+	pRestoreBtn->SetExtendedActiveArea(CRect(0, -2, 0, 0));
+	CButtonCtrl* pCloseBtn = m_pWndButtonPanel->AddUserPaintButton(&(CWndButtonPanel::PaintCloseBtn), &OnClose, (LPCTSTR)NULL);
+	pCloseBtn->SetExtendedActiveArea(CRect(0, -2, 2, 0)); // extend to make sure that moving mouse to top, right screen corner closes the application
 
 	// setup unsharp mask panel
 	m_pUnsharpMaskPanel = new CUnsharpMaskPanel(this->m_hWnd, m_pSliderMgr);
