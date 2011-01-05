@@ -3,7 +3,8 @@
 // CSliderMgr.OnMouseLButton uses this enum
 enum EMouseEvent {
 	MouseEvent_BtnDown,
-	MouseEvent_BtnUp
+	MouseEvent_BtnUp,
+	MouseEvent_BtnDblClk
 };
 
 class CTextCtrl;
@@ -226,7 +227,7 @@ private:
 class CSliderDouble : public CUICtrl {
 public:
 	CSliderDouble(CPanelMgr* pMgr, LPCTSTR sName, int nSliderLen, double* pdValue, bool* pbEnable,
-		double dMin, double dMax, bool bLogarithmic, bool bInvert);
+		double dMin, double dMax, double dDefaultValue, bool bAllowPreviewAndReset, bool bLogarithmic, bool bInvert);
 
 	double* GetValuePtr() { return m_pValue; }
 	int GetNameLabelWidth() const { return m_nNameWidth; }
@@ -249,6 +250,8 @@ private:
 	double* m_pValue;
 	bool* m_pEnable;
 	double m_dMin, m_dMax;
+	double m_dDefaultValue;
+	double m_dSavedValue;
 	CRect m_sliderRect;
 	CRect m_checkRect;
 	CRect m_checkRectFull;
@@ -259,11 +262,15 @@ private:
 	bool m_bLogarithmic;
 	int m_nSign;
 	bool m_bDragging;
+	bool m_bNumberClicked;
 	bool m_bHighlight;
 	bool m_bHighlightCheck;
+	bool m_bHighlightNumber;
+	bool m_bAllowPreviewAndReset;
 
 	void DrawRuler(CDC & dc, int nXStart, int nXEnd, int nY, bool bBlack, bool bHighlight);
 	void DrawCheck(CDC & dc, CRect position, bool bBlack, bool bHighlight);
+	void SetValue(double dValue);
 	int ValueToSliderPos(double dValue, int nSliderStart, int nSliderEnd);
 	double SliderPosToValue(int nSliderPos, int nSliderStart, int nSliderEnd);
 };
@@ -282,8 +289,8 @@ public:
 	virtual CRect PanelRect() = 0;
 
 	// Add a slider, controlling the value pdValue and labeled sName.
-	void AddSlider(LPCTSTR sName, double* pdValue, bool* pbEnable, double dMin, double dMax, 
-		bool bLogarithmic, bool bInvert, int nWidth);
+	void AddSlider(LPCTSTR sName, double* pdValue, bool* pbEnable, 
+				double dMin, double dMax, double dDefaultValue, bool bAllowPreviewAndReset, bool bLogarithmic, bool bInvert, int nWidth);
 	// Show/hide a slider, identified by its controlled value
 	void ShowHideSlider(bool bShow, double* pdValue);
 
@@ -340,8 +347,8 @@ public:
 	int SliderAreaHeight() const { return m_nTotalAreaHeight; }
 	virtual CRect PanelRect();
 
-	void AddSlider(LPCTSTR sName, double* pdValue, bool* pbEnable, double dMin, double dMax, 
-		bool bLogarithmic, bool bInvert);
+	void AddSlider(LPCTSTR sName, double* pdValue, bool* pbEnable, 
+		 double dMin, double dMax, double dDefaultValue, bool bAllowPreviewAndReset, bool bLogarithmic, bool bInvert);
 
 	virtual bool OnMouseLButton(EMouseEvent eMouseEvent, int nX, int nY);
 

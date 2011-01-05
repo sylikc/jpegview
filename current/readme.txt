@@ -32,6 +32,8 @@ New features:
 - New button on navigation panel: Keep processing parameters between images
 - Changed behavior of fit to screen/actual size button, fit to screen is now default when not yet fit to screen
 - Keeping fit to screen when rezising JPEGView window
+- Image processing panel: Temporarily reset slider by clicking with the mouse on slider number
+- Image processing panel: Reset slider to default value by double-clicking above slider
 - Romanian translation (thanks to Silviu)
 - Russian translation (thanks to Dmitry)
 
