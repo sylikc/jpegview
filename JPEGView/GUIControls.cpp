@@ -225,9 +225,9 @@ CPanelMgr::~CPanelMgr(void) {
 }
 
 void CPanelMgr::AddSlider(LPCTSTR sName, double* pdValue, bool* pbEnable, 
-						   double dMin, double dMax, bool bLogarithmic, bool bInvert, int nWidth) {
-	CSliderDouble* pSlider = new CSliderDouble(this, sName, nWidth, pdValue, pbEnable, dMin, dMax, 
-		bLogarithmic, bInvert);
+						  double dMin, double dMax, double dDefaultValue, bool bAllowPreviewAndReset, bool bLogarithmic, bool bInvert, int nWidth) {
+	CSliderDouble* pSlider = new CSliderDouble(this, sName, nWidth, pdValue, pbEnable, dMin, dMax, dDefaultValue, 
+		bAllowPreviewAndReset, bLogarithmic, bInvert);
 	m_ctrlList.push_back(pSlider);
 }
 
@@ -399,8 +399,8 @@ CRect CSliderMgr::PanelRect() {
 }
 
 void CSliderMgr::AddSlider(LPCTSTR sName, double* pdValue, bool* pbEnable, 
-						   double dMin, double dMax, bool bLogarithmic, bool bInvert) {
-	CPanelMgr::AddSlider(sName, pdValue, pbEnable, dMin, dMax, bLogarithmic, bInvert, m_nSliderWidth);
+						   double dMin, double dMax, double dDefaultValue, bool bAllowPreviewAndReset, bool bLogarithmic, bool bInvert) {
+	CPanelMgr::AddSlider(sName, pdValue, pbEnable, dMin, dMax, dDefaultValue, bAllowPreviewAndReset, bLogarithmic, bInvert, m_nSliderWidth);
 	m_nTotalSliders++;
 }
 
@@ -1325,13 +1325,14 @@ void CButtonCtrl::Draw(CDC & dc, CRect position, bool bBlack) {
 /////////////////////////////////////////////////////////////////////////////////////////////
 
 CSliderDouble::CSliderDouble(CPanelMgr* pMgr, LPCTSTR sName, int nSliderLen, double* pdValue, bool* pbEnable,
-							 double dMin, double dMax, bool bLogarithmic, bool bInvert) : CUICtrl(pMgr) {
+		double dMin, double dMax, double dDefaultValue, bool bAllowPreviewAndReset, bool bLogarithmic, bool bInvert) : CUICtrl(pMgr) {
 	m_sName = sName;
 	m_nSliderLen = nSliderLen;
 	m_pValue = pdValue;
 	m_pEnable = pbEnable;
 	m_dMin = bLogarithmic ? log10(dMin) : dMin;;
 	m_dMax = bLogarithmic ? log10(dMax) : dMax;
+	m_dDefaultValue = dDefaultValue;
 	m_sliderRect = CRect(0, 0, 0, 0);
 	m_checkRect = CRect(0, 0, 0, 0);
 	m_checkRectFull = CRect(0, 0, 0, 0);
@@ -1339,6 +1340,9 @@ CSliderDouble::CSliderDouble(CPanelMgr* pMgr, LPCTSTR sName, int nSliderLen, dou
 	m_nSign = bInvert ? -1 : +1;
 	m_bDragging = false;
 	m_bHighlightCheck = false;
+	m_bHighlightNumber = false;
+	m_bNumberClicked = false;
+	m_bAllowPreviewAndReset = bAllowPreviewAndReset;
 
 	CPaintDC dc(m_pMgr->GetHWND());
 	m_nNumberWidth = GetTextRect(dc, _T("--X.XX")).cx;
@@ -1355,9 +1359,11 @@ CSize CSliderDouble::GetMinSize() {
 bool CSliderDouble::OnMouseLButton(EMouseEvent eMouseEvent, int nX, int nY) {
 	CPoint mousePos(nX, nY);
 
+	m_bNumberClicked = false;
+
 	if (eMouseEvent == MouseEvent_BtnDown) {
 		if (m_position.PtInRect(mousePos)) m_pMgr->CaptureMouse(this);
-	} else {
+	} else if (eMouseEvent == MouseEvent_BtnUp) {
 		m_pMgr->ReleaseMouse(this);
 	}
 
@@ -1371,7 +1377,20 @@ bool CSliderDouble::OnMouseLButton(EMouseEvent eMouseEvent, int nX, int nY) {
 	} else if (m_pEnable && eMouseEvent == MouseEvent_BtnUp && m_checkRectFull.PtInRect(mousePos)) {
 		*m_pEnable = !(*m_pEnable);
 		::InvalidateRect(m_pMgr->GetHWND(), NULL, FALSE); // trigger redraw of window
+	} else if (eMouseEvent == MouseEvent_BtnDblClk) {
+		CRect resetRect(m_sliderRect.left, m_position.top, m_sliderRect.right, m_sliderRect.top);
+		if ((!m_pEnable || *m_pEnable) && resetRect.PtInRect(mousePos)) {
+			m_dSavedValue = m_dDefaultValue;
+			SetValue(m_dDefaultValue);
+		}
+	} else if (m_bHighlightNumber) {
+		OnMouseMove(nX, nY);
+		m_bNumberClicked = eMouseEvent == MouseEvent_BtnDown && m_bHighlightNumber;
+		if (m_bNumberClicked) m_dSavedValue = *m_pValue;
+		SetValue(m_bNumberClicked ? m_dDefaultValue : m_dSavedValue);
+		return true;
 	}
+
 	return false;
 }
 
@@ -1390,39 +1409,47 @@ bool CSliderDouble::OnMouseMove(int nX, int nY) {
 		}
 	}
 
-	if (m_pEnable && !*m_pEnable) return false;
+	if (m_pEnable && !*m_pEnable) { return false; }
 
 	if (m_bDragging) {
-		double dOldValue = *m_pValue;
-		*m_pValue = SliderPosToValue(nX - m_pos2Screen.x, m_nSliderStart, m_nSliderStart + m_nSliderLen);
-		if (dOldValue != *m_pValue) {
-			::InvalidateRect(m_pMgr->GetHWND(), NULL, FALSE);
-		}
+		SetValue(SliderPosToValue(nX - m_pos2Screen.x, m_nSliderStart, m_nSliderStart + m_nSliderLen));
 		return true;
-	} else if (m_sliderRect.PtInRect(mousePos)) {
-		if (!m_bHighlight) {
-			m_bHighlight = true;
+	} else {
+		if (m_sliderRect.PtInRect(mousePos) && !m_bNumberClicked) {
+			if (!m_bHighlight) {
+				m_bHighlight = true;
+				CRect invRect(&m_sliderRect);
+				invRect.OffsetRect(0, -8);
+				::InvalidateRect(m_pMgr->GetHWND(), &invRect, FALSE);
+			}
+		} else if (m_bHighlight) {
+			m_bHighlight = false;
 			CRect invRect(&m_sliderRect);
 			invRect.OffsetRect(0, -8);
 			::InvalidateRect(m_pMgr->GetHWND(), &invRect, FALSE);
 		}
-	} else if (m_bHighlight) {
-		m_bHighlight = false;
-		CRect invRect(&m_sliderRect);
-		invRect.OffsetRect(0, -8);
-		::InvalidateRect(m_pMgr->GetHWND(), &invRect, FALSE);
+		CRect numberRect(m_sliderRect.right + 2, m_position.top, m_position.right, m_position.bottom);
+		if (numberRect.PtInRect(mousePos)) {
+			if (!m_bHighlightNumber && abs(*m_pValue - m_dDefaultValue) > 5e-3) {
+				m_bHighlightNumber = true;
+				::InvalidateRect(m_pMgr->GetHWND(), &numberRect, FALSE);
+			}
+		} else if (m_bHighlightNumber && !m_bNumberClicked) {
+			m_bHighlightNumber = false;
+			::InvalidateRect(m_pMgr->GetHWND(), &numberRect, FALSE);
+		}
 	}
 
-	return false;
+	return m_bNumberClicked;
 }
 
 void CSliderDouble::OnPaint(CDC & dc, const CPoint& offset)  {
-	if (m_pEnable && !*m_pEnable) m_bHighlight = false;
+	if (m_pEnable && !*m_pEnable) { m_bHighlight = false; m_bHighlightNumber = false; }
 	CUICtrl::OnPaint(dc, offset);
 }
 
 void CSliderDouble::Draw(CDC & dc, CRect position, bool bBlack) {
-	dc.SetTextColor(bBlack ? 0 : CSettingsProvider::This().ColorGUI());
+	dc.SetTextColor(bBlack ? 0 : m_bHighlightNumber ? CSettingsProvider::This().ColorHighlight() : CSettingsProvider::This().ColorGUI());
 	TCHAR buff[16]; _stprintf_s(buff, 16, _T("%.2f"), *m_pValue);
 	dc.DrawText(buff, _tcslen(buff), &position, DT_VCENTER | DT_SINGLELINE | DT_RIGHT | DT_NOPREFIX);
 
@@ -1435,6 +1462,7 @@ void CSliderDouble::Draw(CDC & dc, CRect position, bool bBlack) {
 		DrawCheck(dc, m_checkRect, bBlack, m_bHighlightCheck);
 		position.left += m_nCheckHeight + m_nCheckHeight/2;
 	}
+	dc.SetTextColor(bBlack ? 0 : CSettingsProvider::This().ColorGUI());
 	dc.DrawText(m_sName, _tcslen(m_sName), &position, DT_VCENTER | DT_SINGLELINE | DT_NOPREFIX);
 	
 	int nYMid = position.top + ((position.bottom - position.top) >> 1);
@@ -1506,6 +1534,14 @@ void CSliderDouble::DrawCheck(CDC & dc, CRect position, bool bBlack, bool bHighl
 	if (!bBlack) {
 		dc.SelectStockPen(BLACK_PEN);
 		::DeleteObject(hPen);
+	}
+}
+
+void CSliderDouble::SetValue(double dValue) {
+	double dOldValue = *m_pValue;
+	*m_pValue = dValue;
+	if (dOldValue != *m_pValue) {
+		::InvalidateRect(m_pMgr->GetHWND(), NULL, FALSE);
 	}
 }
 

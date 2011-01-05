@@ -20,6 +20,8 @@ class CTextCtrl;
 class CEXIFDisplay;
 class CHelpDisplay;
 
+enum EMouseEvent;
+
 // The main dialog is a full screen modal dialog with no border and no window title
 class CMainDlg : public CDialogImpl<CMainDlg>
 {
@@ -38,6 +40,7 @@ public:
 		MESSAGE_HANDLER(WM_NCLBUTTONDOWN, OnNCLButtonDown)
 		MESSAGE_HANDLER(WM_LBUTTONDOWN, OnLButtonDown)
 		MESSAGE_HANDLER(WM_LBUTTONUP, OnLButtonUp)
+		MESSAGE_HANDLER(WM_LBUTTONDBLCLK, OnLButtonDblClk)
 		MESSAGE_HANDLER(WM_MBUTTONDOWN, OnMButtonDown)
 		MESSAGE_HANDLER(WM_MBUTTONUP, OnMButtonUp)
 		MESSAGE_HANDLER(WM_XBUTTONDOWN, OnXButtonDown)
@@ -73,6 +76,7 @@ public:
 	LRESULT OnLButtonDown(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);
 	LRESULT OnNCLButtonDown(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);
 	LRESULT OnLButtonUp(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);
+	LRESULT OnLButtonDblClk(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);
 	LRESULT OnMButtonDown(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);
 	LRESULT OnMButtonUp(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);
 	LRESULT OnXButtonDown(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);
@@ -294,6 +298,7 @@ private:
 	void ShowHideIPTools(bool bShow);
 	void TerminateUnsharpMaskPanel();
 	void StartUnsharpMaskPanel();
+	bool RouteMouseLButtonEventToPanels(EMouseEvent eMouseEvent, int nX, int nY);
 
 	static void OnUnsharpMask(CButtonCtrl & sender);
 	static void OnCancelUnsharpMask(CButtonCtrl & sender);

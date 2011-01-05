@@ -320,18 +320,18 @@ LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam
 
 	// Configure the image processing area at bottom of screen
 	m_pSliderMgr = new CSliderMgr(this->m_hWnd);
-	m_pSliderMgr->AddSlider(CNLS::GetString(_T("Contrast")), &(m_pImageProcParams->Contrast), NULL, -0.5, 0.5, false, false);
-	m_pSliderMgr->AddSlider(CNLS::GetString(_T("Brightness")), &(m_pImageProcParams->Gamma), NULL, 0.5, 2.0, true, true);
-	m_pSliderMgr->AddSlider(CNLS::GetString(_T("Saturation")), &(m_pImageProcParams->Saturation), NULL, 0.0, 2.0, false, false);
-	m_pSliderMgr->AddSlider(CNLS::GetString(_T("C - R")), &(m_pImageProcParams->CyanRed), NULL, -1.0, 1.0, false, false);
-	m_pSliderMgr->AddSlider(CNLS::GetString(_T("M - G")), &(m_pImageProcParams->MagentaGreen), NULL, -1.0, 1.0, false, false);
-	m_pSliderMgr->AddSlider(CNLS::GetString(_T("Y - B")), &(m_pImageProcParams->YellowBlue), NULL, -1.0, 1.0, false, false);
-	m_pSliderMgr->AddSlider(CNLS::GetString(_T("Lighten Shadows")), &(m_pImageProcParams->LightenShadows), &m_bLDC, 0.0, 1.0, false, false);
-	m_pSliderMgr->AddSlider(CNLS::GetString(_T("Darken Highlights")), &(m_pImageProcParams->DarkenHighlights), &m_bLDC, 0.0, 1.0, false, false);
-	m_pSliderMgr->AddSlider(CNLS::GetString(_T("Deep Shadows")), &(m_pImageProcParams->LightenShadowSteepness), &m_bLDC, 0.0, 1.0, false, false);
-	m_pSliderMgr->AddSlider(CNLS::GetString(_T("Color Correction")), &(m_pImageProcParams->ColorCorrectionFactor), &m_bAutoContrast, -0.5, 0.5, false, false);
-	m_pSliderMgr->AddSlider(CNLS::GetString(_T("Contrast Correction")), &(m_pImageProcParams->ContrastCorrectionFactor), &m_bAutoContrast, 0.0, 1.0, false, false);
-	m_pSliderMgr->AddSlider(CNLS::GetString(_T("Sharpen")), &(m_pImageProcParams->Sharpen), NULL, 0.0, 0.5, false, false);
+	m_pSliderMgr->AddSlider(CNLS::GetString(_T("Contrast")), &(m_pImageProcParams->Contrast), NULL, -0.5, 0.5, 0.0, true, false, false);
+	m_pSliderMgr->AddSlider(CNLS::GetString(_T("Brightness")), &(m_pImageProcParams->Gamma), NULL, 0.5, 2.0, 1.0, true, true, true);
+	m_pSliderMgr->AddSlider(CNLS::GetString(_T("Saturation")), &(m_pImageProcParams->Saturation), NULL, 0.0, 2.0, 1.0, true, false, false);
+	m_pSliderMgr->AddSlider(CNLS::GetString(_T("C - R")), &(m_pImageProcParams->CyanRed), NULL, -1.0, 1.0, 0.0, true, false, false);
+	m_pSliderMgr->AddSlider(CNLS::GetString(_T("M - G")), &(m_pImageProcParams->MagentaGreen), NULL, -1.0, 1.0, 0.0, true, false, false);
+	m_pSliderMgr->AddSlider(CNLS::GetString(_T("Y - B")), &(m_pImageProcParams->YellowBlue), NULL, -1.0, 1.0, 0.0, true, false, false);
+	m_pSliderMgr->AddSlider(CNLS::GetString(_T("Lighten Shadows")), &(m_pImageProcParams->LightenShadows), &m_bLDC, 0.0, 1.0, 0.0, true, false, false);
+	m_pSliderMgr->AddSlider(CNLS::GetString(_T("Darken Highlights")), &(m_pImageProcParams->DarkenHighlights), &m_bLDC, 0.0, 1.0, 0.0, true, false, false);
+	m_pSliderMgr->AddSlider(CNLS::GetString(_T("Deep Shadows")), &(m_pImageProcParams->LightenShadowSteepness), &m_bLDC, 0.0, 1.0, 0.0, true, false, false);
+	m_pSliderMgr->AddSlider(CNLS::GetString(_T("Color Correction")), &(m_pImageProcParams->ColorCorrectionFactor), &m_bAutoContrast, -0.5, 0.5, 0.0, true, false, false);
+	m_pSliderMgr->AddSlider(CNLS::GetString(_T("Contrast Correction")), &(m_pImageProcParams->ContrastCorrectionFactor), &m_bAutoContrast, 0.0, 1.0, 0.0, true, false, false);
+	m_pSliderMgr->AddSlider(CNLS::GetString(_T("Sharpen")), &(m_pImageProcParams->Sharpen), NULL, 0.0, 0.5, 0.0, false, false, false);
 	m_btnUnsharpMask = m_pSliderMgr->AddButton(CNLS::GetString(_T("Unsharp mask...")), &OnUnsharpMask);
 	m_txtParamDB = m_pSliderMgr->AddText(CNLS::GetString(_T("Parameter DB:")), false, NULL);
 	m_btnSaveToDB = m_pSliderMgr->AddButton(CNLS::GetString(_T("Save to")), &OnSaveToDB);
@@ -373,9 +373,9 @@ LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam
 	m_pUnsharpMaskPanel = new CUnsharpMaskPanel(this->m_hWnd, m_pSliderMgr);
 	CTextCtrl* pTextUSM = m_pUnsharpMaskPanel->AddText(CNLS::GetString(_T("Apply Unsharp Mask")), false, NULL);
 	pTextUSM->SetBold(true);
-	m_pUnsharpMaskPanel->AddSlider(CNLS::GetString(_T("Radius")), &(m_pUnsharpMaskParams->Radius), NULL, 0.0, 5.0, false, false, 200);
-	m_pUnsharpMaskPanel->AddSlider(CNLS::GetString(_T("Amount")), &(m_pUnsharpMaskParams->Amount), NULL, 0.0, 10.0, false, false, 200);
-	m_pUnsharpMaskPanel->AddSlider(CNLS::GetString(_T("Threshold")), &(m_pUnsharpMaskParams->Threshold), NULL, 0, 20, false, false, 200);
+	m_pUnsharpMaskPanel->AddSlider(CNLS::GetString(_T("Radius")), &(m_pUnsharpMaskParams->Radius), NULL, 0.0, 5.0, 1.0, true, false, false, 200);
+	m_pUnsharpMaskPanel->AddSlider(CNLS::GetString(_T("Amount")), &(m_pUnsharpMaskParams->Amount), NULL, 0.0, 10.0, 0.0, true, false, false, 200);
+	m_pUnsharpMaskPanel->AddSlider(CNLS::GetString(_T("Threshold")), &(m_pUnsharpMaskParams->Threshold), NULL, 0, 20, 4.0, true, false, false, 200);
 	m_pUnsharpMaskPanel->AddButton(CNLS::GetString(_T("Cancel")), &OnCancelUnsharpMask);
     m_pUnsharpMaskPanel->AddButton(CNLS::GetString(_T("Apply")), &OnApplyUnsharpMask);
 
@@ -745,13 +745,10 @@ LRESULT CMainDlg::OnLButtonDown(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam,
 	this->SetCapture();
 	SetCursorForMoveSection();
 	CPoint pointClicked(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
-	bool bEatenByUnsharpMaskPanel = m_bShowUnsharpMaskPanel && m_pUnsharpMaskPanel->OnMouseLButton(MouseEvent_BtnDown, pointClicked.x, pointClicked.y);
-	bool bEatenByIPA = m_bShowIPTools && m_pSliderMgr->OnMouseLButton(MouseEvent_BtnDown, pointClicked.x, pointClicked.y);
-	bool bEatenByNavPanel = m_bShowNavPanel && !m_bShowIPTools && m_pNavPanel->OnMouseLButton(MouseEvent_BtnDown, pointClicked.x, pointClicked.y);
-	bool bEatenByWndButtons = m_bShowWndButtonPanel && m_pWndButtonPanel->OnMouseLButton(MouseEvent_BtnDown, pointClicked.x, pointClicked.y);
+	bool bEatenByPanel = RouteMouseLButtonEventToPanels(MouseEvent_BtnDown, pointClicked.x, pointClicked.y);
 
 	// If the panels do not eat up the event, start dragging
-	if (!bEatenByUnsharpMaskPanel && !bEatenByIPA && !bEatenByNavPanel && !bEatenByWndButtons) {
+	if (!bEatenByPanel) {
 		bool bCtrl = (::GetKeyState(VK_CONTROL) & 0x8000) != 0;
 		bool bDraggingRequired = m_virtualImageSize.cx > m_clientRect.Width() || m_virtualImageSize.cy > m_clientRect.Height();
 		if (bCtrl || !bDraggingRequired) {
@@ -804,13 +801,25 @@ LRESULT CMainDlg::OnLButtonUp(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, B
 			EndCropping();
 		}
 	} else {
-		if (m_bShowIPTools) m_pSliderMgr->OnMouseLButton(MouseEvent_BtnUp, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
-		if (m_bShowNavPanel && !m_bShowIPTools) m_pNavPanel->OnMouseLButton(MouseEvent_BtnUp, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
-		if (m_bShowWndButtonPanel) m_pWndButtonPanel->OnMouseLButton(MouseEvent_BtnUp, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
-		if (m_bShowUnsharpMaskPanel) m_pUnsharpMaskPanel->OnMouseLButton(MouseEvent_BtnUp, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+		RouteMouseLButtonEventToPanels(MouseEvent_BtnUp, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
 	}
 	::ReleaseCapture();
 	return 0;
+}
+
+LRESULT CMainDlg::OnLButtonDblClk(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, BOOL& /*bHandled*/) {
+	if (!m_bDragging && !m_bCropping) {
+		RouteMouseLButtonEventToPanels(MouseEvent_BtnDblClk, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+	}
+	return 0;
+}
+
+bool CMainDlg::RouteMouseLButtonEventToPanels(EMouseEvent eMouseEvent, int nX, int nY) {
+	bool bEatenByUnsharpMaskPanel = m_bShowUnsharpMaskPanel && m_pUnsharpMaskPanel->OnMouseLButton(eMouseEvent, nX, nY);
+	bool bEatenByIPA = m_bShowIPTools && m_pSliderMgr->OnMouseLButton(eMouseEvent, nX, nY);
+	bool bEatenByNavPanel = m_bShowNavPanel && !m_bShowIPTools && m_pNavPanel->OnMouseLButton(eMouseEvent, nX, nY);
+	bool bEatenByWndButtons = m_bShowWndButtonPanel && m_pWndButtonPanel->OnMouseLButton(eMouseEvent, nX, nY);
+	return bEatenByUnsharpMaskPanel || bEatenByIPA || bEatenByNavPanel || bEatenByWndButtons;
 }
 
 LRESULT CMainDlg::OnMButtonUp(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/) {
