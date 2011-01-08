@@ -253,3 +253,5 @@ Threshold	Schwellwert
 Apply	Anwenden
 Cancel	Abbrechen
 Keep processing parameters between images	Eingestellte Parameter bei Bildwechsel beibehalten
+Show histogram	Histogramm anzeigen
+Hide histogram	Histogramm ausblenden

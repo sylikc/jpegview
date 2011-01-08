@@ -42,7 +42,7 @@ public:
 	// The pLDC object is used internally for thumbnail image creation to avoid duplication. From external,
 	// its value must be NULL.
 	CJPEGImage(int nWidth, int nHeight, void* pIJLPixels, void* pEXIFData, int nChannels, 
-		__int64 nJPEGHash, EImageFormat eImageFormat, CLocalDensityCorr* pLDC = NULL);
+		__int64 nJPEGHash, EImageFormat eImageFormat, CLocalDensityCorr* pLDC = NULL, bool bIsThumbnailImage = false);
 	~CJPEGImage(void);
 
 	// Converts the target offset from 'center of image' based format to pixel coordinate format 
@@ -62,7 +62,8 @@ public:
 	// doing any processing then.
 	void* GetDIB(CSize fullTargetSize, CSize clippingSize, CPoint targetOffset,
 		const CImageProcessingParams & imageProcParams, EProcessingFlags eProcFlags) {
-		return GetDIBInternal(fullTargetSize, clippingSize, targetOffset, imageProcParams, eProcFlags, NULL);
+		bool bNotUsed;
+		return GetDIBInternal(fullTargetSize, clippingSize, targetOffset, imageProcParams, eProcFlags, NULL, bNotUsed);
 	}
 
 	// Gets a DIB for a thumbnail of the given size. The thumbnail should not be smaller than 400 x 300 pixels
@@ -76,6 +77,12 @@ public:
 	// See GetDIB() for more information.
 	void* GetDIBUnsharpMasked(CSize clippingSize, CPoint targetOffset,
 		const CImageProcessingParams & imageProcParams, EProcessingFlags eProcFlags, const CUnsharpMaskParams & unsharpMaskParams);
+
+	// Gets histogram of the original, unprocessed image
+	const CHistogram* GetOriginalHistogram();
+
+	// Gets the histogram of the processed image - histogram is over the whole image, not only the visible section
+	const CHistogram* GetProcessedHistogram();
 
 	// Frees any resources hold to speed up GetDIBUnsharpMasked(). Subsequent calls to GetDIBUnsharpMasked() will work but may be slower.
 	void FreeUnsharpMaskResources();
@@ -252,6 +259,15 @@ private:
 	// cached thumbnail image, created on first request
 	CJPEGImage* m_pThumbnail;
 
+	// thumbnail image for histogram of the processed image
+	// this thumbnail is needed because not the whole image is processed, only the visible section,
+	// however the histogram must be calculated over the whole processed image
+	CJPEGImage* m_pHistogramThumbnail;
+
+	// Thumbnail related stuff
+	bool m_bIsThumbnailImage;
+	CHistogram* m_pCachedProcessedHistogram;
+
 	// Processed data of size m_ClippingSize, with LUT/LDC applied and without
 	// The version without LUT/LDC is used to efficiently reapply a different LUT/LDC
 	// Size of the DIBs is m_ClippingSize
@@ -306,13 +322,14 @@ private:
 	float m_fColorCorrectionFactors[6];
 	float m_fColorCorrectionFactorsNull[6];
 
-	// Internal GetDIB() implementation combining unsharp mask with GetDIB(). pUnsharpMaskParams can be null if not used. 
+	// Internal GetDIB() implementation combining unsharp mask with GetDIB(). pUnsharpMaskParams can be null if not used.
+	// bUsingOriginalDIB is output parameter and contains if the cached DIB could be used and no processing has been done
 	void* GetDIBInternal(CSize fullTargetSize, CSize clippingSize, CPoint targetOffset,
 						 const CImageProcessingParams & imageProcParams, EProcessingFlags eProcFlags,
-						 const CUnsharpMaskParams * pUnsharpMaskParams);
+						 const CUnsharpMaskParams * pUnsharpMaskParams, bool& bParametersChanged);
 
 	// Resample when panning was done, using existing data in DIBs. Old clipping rectangle is given in oldClippingRect
-	void CJPEGImage::ResampleWithPan(void* & pDIBPixels, void* & pDIBPixelsLUTProcessed, CSize fullTargetSize, 
+	void ResampleWithPan(void* & pDIBPixels, void* & pDIBPixelsLUTProcessed, CSize fullTargetSize, 
 		CSize clippingSize, CPoint targetOffset, CRect oldClippingRect,
 		EProcessingFlags eProcFlags, const CImageProcessingParams & imageProcParams, EResizeType eResizeType);
 
@@ -327,9 +344,18 @@ private:
 	// Returns a pointer to DIB to be used (either pCachedTargetDIB or pSourceDIB)
 	// If bOnlyCheck is set to true, the method does nothing but only checks if the existing processed DIB
 	// can be used (return != NULL) or not (return == NULL)
+	// The out parameter bParametersChanged returns if one of the parameters relevant for image processing has been changed since the last call
 	void* ApplyCorrectionLUTandLDC(const CImageProcessingParams & imageProcParams, EProcessingFlags eProcFlags,
 		void * & pCachedTargetDIB, CSize fullTargetSize, CPoint targetOffset, 
-		void * pSourceDIB, CSize dibSize, bool bGeometryChanged, bool bOnlyCheck, bool bCanTakeOwnershipOfSourceDIB);
+		void * pSourceDIB, CSize dibSize, bool bGeometryChanged, bool bOnlyCheck, bool bCanTakeOwnershipOfSourceDIB, bool &bParametersChanged);
+
+	void* ApplyCorrectionLUTandLDC(const CImageProcessingParams & imageProcParams, EProcessingFlags eProcFlags,
+		void * & pCachedTargetDIB, CSize fullTargetSize, CPoint targetOffset, 
+		void * pSourceDIB, CSize dibSize, bool bGeometryChanged, bool bOnlyCheck, bool bCanTakeOwnershipOfSourceDIB) {
+		bool bNotUsed;
+		return ApplyCorrectionLUTandLDC(imageProcParams, eProcFlags, pCachedTargetDIB, fullTargetSize, targetOffset, 
+			pSourceDIB, dibSize, bGeometryChanged, bOnlyCheck, bCanTakeOwnershipOfSourceDIB, bNotUsed);
+	}
 
 	// makes sure that the input image (m_pIJLPixels) is a 4 channel BGRA image (converts if necessary)
 	void ConvertSrcTo4Channels();
@@ -348,4 +374,10 @@ private:
 
 	// Called when the original pixels have changed (rotate, crop, unsharp mask), all cached pixel data gets invalid
 	void InvalidateAllCachedPixelData();
+
+	// Create a thumbnail image of this image
+	CJPEGImage* CreateThumbnailImage();
+
+	// Create histogram of the processed DIB (in original size) using the given image processing parameters
+	const CHistogram* GetHistogramOfProcessedDIB(const CImageProcessingParams & imageProcParams, EProcessingFlags eProcFlags);
 };

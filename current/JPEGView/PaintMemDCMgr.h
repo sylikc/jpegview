@@ -2,11 +2,10 @@
 
 // forward declarations
 class CPanelMgr;
-class CEXIFDisplay;
 
 #define MAX_REGIONS_CPaintMemDCMgr 5
 
-// Helps painting a panel or other region into a memory DC and then blitting it to the screen.
+// Helps painting a panel into a memory DC and then blitting it to the screen.
 // This eliminates flickering.
 class CPaintMemDCMgr {
 public:
@@ -26,19 +25,15 @@ public:
 						  float fBlendFactor);
 
 	CRect CreatePanelRegion(CPanelMgr* pPanel, float fDimFactor, bool bBlendPanel);
-	CRect CreateEXIFDisplayRegion(CEXIFDisplay* pEXIFDisplay, float fDimFactor, int nIPALeft, bool bShowFileName);
 
 	void BlitImageToMemDC(void* pDIBData, BITMAPINFO* pBitmapInfo, CPoint destination, float fBlendFactor);
 
 	void PaintMemDCToScreen();
 private:
 
-	enum EObjectType { Panel, EXIFDisplay };
-
 	struct CManagedRegion {
 	public:
-		void* DisplayObject;
-		EObjectType ObjectType;
+		CPanelMgr* DisplayRegion;
 		float DimFactor;
 		bool Blend;
 		CDC MemoryDC;

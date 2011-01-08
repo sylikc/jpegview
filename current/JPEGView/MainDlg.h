@@ -224,6 +224,7 @@ private:
 	CNavigationPanel* m_pNavPanel;
 	CWndButtonPanel* m_pWndButtonPanel;
 	CUnsharpMaskPanel* m_pUnsharpMaskPanel;
+	CEXIFDisplay* m_pEXIFDisplay;
 	CString m_sSaveDirectory;
 	CString m_sSaveExtension;
 
@@ -323,7 +324,10 @@ private:
 	static void OnRestore(CButtonCtrl & sender);
 	static void OnClose(CButtonCtrl & sender);
 
+	static void OnShowHistogram(CButtonCtrl & sender);
+
 	static void PaintZoomFitToggleBtn(const CRect& rect, CDC& dc);
 	static LPCTSTR ZoomFitToggleTooltip();
 	static LPCTSTR WindowModeTooltip();
+	static LPCTSTR ShowHistogramTooltip();
 };
