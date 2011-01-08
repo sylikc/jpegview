@@ -90,28 +90,9 @@ CRect CPaintMemDCMgr::CreatePanelRegion(CPanelMgr* pPanel, float fDimFactor, boo
 
 	CRect displayRect = pPanel->PanelRect();
 	m_managedRegions[m_nNumElems].DisplayRect = displayRect;
-	m_managedRegions[m_nNumElems].DisplayObject = pPanel;
-	m_managedRegions[m_nNumElems].ObjectType = Panel;
+	m_managedRegions[m_nNumElems].DisplayRegion = pPanel;
 	m_managedRegions[m_nNumElems].DimFactor = fDimFactor;
 	m_managedRegions[m_nNumElems].Blend = bBlendPanel;
-	m_managedRegions[m_nNumElems].OffscreenBitmap = PrepareRectForMemDCPainting(m_managedRegions[m_nNumElems].MemoryDC, m_paintDC, displayRect);
-
-	m_nNumElems++;
-	return displayRect;
-}
-
-CRect CPaintMemDCMgr::CreateEXIFDisplayRegion(CEXIFDisplay* pEXIFDisplay, float fDimFactor, int nIPALeft, bool bShowFileName) {
-	if (m_nNumElems == MAX_REGIONS_CPaintMemDCMgr) {
-		return CRect(0, 0, 0, 0);
-	}
-
-	int nYStart = bShowFileName ? 32 : 0;
-	CRect displayRect = CRect(nIPALeft, nYStart, nIPALeft + pEXIFDisplay->GetSize(m_paintDC).cx, pEXIFDisplay->GetSize(m_paintDC).cy + nYStart);
-	m_managedRegions[m_nNumElems].DisplayRect = displayRect;
-	m_managedRegions[m_nNumElems].DisplayObject = pEXIFDisplay;
-	m_managedRegions[m_nNumElems].ObjectType = EXIFDisplay;
-	m_managedRegions[m_nNumElems].DimFactor = fDimFactor;
-	m_managedRegions[m_nNumElems].Blend = false;
 	m_managedRegions[m_nNumElems].OffscreenBitmap = PrepareRectForMemDCPainting(m_managedRegions[m_nNumElems].MemoryDC, m_paintDC, displayRect);
 
 	m_nNumElems++;
@@ -124,7 +105,7 @@ void CPaintMemDCMgr::BlitImageToMemDC(void* pDIBData, BITMAPINFO* pBitmapInfo, C
 		if (m_managedRegions[i].MemoryDC.m_hDC != NULL) {
 			CRect rect = m_managedRegions[i].DisplayRect;
 			if (m_managedRegions[i].Blend) {
-				CPanelMgr* pPanel = (CPanelMgr*)(m_managedRegions[i].DisplayObject);
+				CPanelMgr* pPanel = m_managedRegions[i].DisplayRegion;
 				BitBltBlended(m_managedRegions[i].MemoryDC, m_paintDC, CSize(rect.Width(), rect.Height()), pDIBData, pBitmapInfo, 
 						  CPoint(destination.x - rect.left, destination.y - rect.top), bitmapSize, 
 						  *pPanel, CPoint(-rect.left, -rect.top), fBlendFactor);
@@ -139,18 +120,13 @@ void CPaintMemDCMgr::BlitImageToMemDC(void* pDIBData, BITMAPINFO* pBitmapInfo, C
 void CPaintMemDCMgr::PaintMemDCToScreen() {
 	for (int i = 0; i < m_nNumElems; i++) {
 		CRect rect = m_managedRegions[i].DisplayRect;
-		// Paint panel or EXIF stuff into memory DC
-		if (m_managedRegions[i].ObjectType == Panel && !m_managedRegions[i].Blend) {
-			((CPanelMgr*)(m_managedRegions[i].DisplayObject))->OnPaint(m_managedRegions[i].MemoryDC, CPoint(-rect.left, -rect.top));
-		}
-		if (m_managedRegions[i].ObjectType == EXIFDisplay) {
-			((CEXIFDisplay*)(m_managedRegions[i].DisplayObject))->Show(m_managedRegions[i].MemoryDC, 0, 0);
+		// Paint panel into memory DC
+		if (!m_managedRegions[i].Blend) {
+			m_managedRegions[i].DisplayRegion->OnPaint(m_managedRegions[i].MemoryDC, CPoint(-rect.left, -rect.top));
 		}
 		// Blit the memory DC to the screen
 		m_paintDC.BitBlt(rect.left, rect.top, rect.Width(), rect.Height(), m_managedRegions[i].MemoryDC, 0, 0, SRCCOPY);
 		// Paint tooltips
-		if (m_managedRegions[i].ObjectType == Panel) {
-			((CPanelMgr*)(m_managedRegions[i].DisplayObject))->GetTooltipMgr().OnPaint(m_paintDC);
-		}
+		m_managedRegions[i].DisplayRegion->GetTooltipMgr().OnPaint(m_paintDC);
 	}
 }

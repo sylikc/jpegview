@@ -288,6 +288,7 @@ CMainDlg::~CMainDlg() {
 	delete m_pNavPanel;
 	delete m_pWndButtonPanel;
 	delete m_pUnsharpMaskPanel;
+	delete m_pEXIFDisplay;
 	if (m_pMemDCAnimation != NULL) {
 		delete m_pMemDCAnimation;
 	}
@@ -379,6 +380,10 @@ LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam
 	m_pUnsharpMaskPanel->AddButton(CNLS::GetString(_T("Cancel")), &OnCancelUnsharpMask);
     m_pUnsharpMaskPanel->AddButton(CNLS::GetString(_T("Apply")), &OnApplyUnsharpMask);
 
+	// setup EXIF display panel
+	m_pEXIFDisplay = new CEXIFDisplay(this->m_hWnd);
+	m_pEXIFDisplay->AddUserPaintButton(&(CEXIFDisplay::PaintShowHistogramBtn), &OnShowHistogram, &ShowHistogramTooltip);
+
 	// set icons (for toolbar)
 	HICON hIcon = (HICON)::LoadImage(_Module.GetResourceInstance(), MAKEINTRESOURCE(IDR_MAINFRAME), 
 		IMAGE_ICON, ::GetSystemMetrics(SM_CXICON), ::GetSystemMetrics(SM_CYICON), LR_DEFAULTCOLOR);
@@ -462,11 +467,10 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 	// These panels and regions are handled over memory DCs to eliminate flickering
 	CPaintMemDCMgr memDCMgr(dc);
 
-	CEXIFDisplay* pEXIFDisplay = NULL;
 	if (bShowEXIFInfo) {
-		pEXIFDisplay =  new CEXIFDisplay();
-		FillEXIFDataDisplay(pEXIFDisplay);
-		excludedClippingRects.push_back(memDCMgr.CreateEXIFDisplayRegion(pEXIFDisplay, cfDimFactorEXIF, imageProcessingArea.left, m_bShowFileName));
+		m_pEXIFDisplay->SetPosition(CPoint(imageProcessingArea.left, m_bShowFileName ? 32 : 0));
+		FillEXIFDataDisplay(m_pEXIFDisplay);
+		excludedClippingRects.push_back(memDCMgr.CreatePanelRegion(m_pEXIFDisplay, cfDimFactorEXIF, false));
 	}
 	if (m_bShowIPTools) {
 		excludedClippingRects.push_back(memDCMgr.CreatePanelRegion(m_pSliderMgr, cfDimFactorIPA, false));
@@ -542,6 +546,10 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 			rectExpanded.InflateRect(1, 1);
 			dc.ExcludeClipRect(&rectExpanded);
 			excludedClippingRects.push_back(rectExpanded);
+		}
+
+		if (bShowEXIFInfo && m_pCurrentImage != NULL && m_pEXIFDisplay->GetShowHistogram()) {
+			m_pEXIFDisplay->SetHistogram(m_pCurrentImage->GetProcessedHistogram());
 		}
 
 		// Paint the DIB
@@ -694,7 +702,6 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 	}
 
 	delete pHelpDisplay;
-	delete pEXIFDisplay;
 
 	SetCursorForMoveSection();
 
@@ -819,7 +826,8 @@ bool CMainDlg::RouteMouseLButtonEventToPanels(EMouseEvent eMouseEvent, int nX, i
 	bool bEatenByIPA = m_bShowIPTools && m_pSliderMgr->OnMouseLButton(eMouseEvent, nX, nY);
 	bool bEatenByNavPanel = m_bShowNavPanel && !m_bShowIPTools && m_pNavPanel->OnMouseLButton(eMouseEvent, nX, nY);
 	bool bEatenByWndButtons = m_bShowWndButtonPanel && m_pWndButtonPanel->OnMouseLButton(eMouseEvent, nX, nY);
-	return bEatenByUnsharpMaskPanel || bEatenByIPA || bEatenByNavPanel || bEatenByWndButtons;
+	bool bEatenByEXIFDisplay = m_bShowFileInfo && m_pEXIFDisplay->OnMouseLButton(eMouseEvent, nX, nY);
+	return bEatenByUnsharpMaskPanel || bEatenByIPA || bEatenByNavPanel || bEatenByWndButtons || bEatenByEXIFDisplay;
 }
 
 LRESULT CMainDlg::OnMButtonUp(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/) {
@@ -913,6 +921,9 @@ LRESULT CMainDlg::OnMouseMove(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, B
 			}
 		}
 
+		if (m_bShowFileInfo) {
+			m_pEXIFDisplay->OnMouseMove(m_nMouseX, m_nMouseY);
+		}
 		if (m_bShowUnsharpMaskPanel) {
 			m_bMouseInNavPanel = false;
 			m_pUnsharpMaskPanel->OnMouseMove(m_nMouseX, m_nMouseY);
@@ -1631,6 +1642,12 @@ void CMainDlg::OnClose(CButtonCtrl & sender) {
 	sm_instance->ExecuteCommand(IDM_EXIT);
 }
 
+void CMainDlg::OnShowHistogram(CButtonCtrl & sender) {
+	sm_instance->m_pEXIFDisplay->SetShowHistogram(!sm_instance->m_pEXIFDisplay->GetShowHistogram());
+	sm_instance->m_pEXIFDisplay->RequestRepositioning();
+	sm_instance->Invalidate(FALSE);
+}
+
 void CMainDlg::PaintZoomFitToggleBtn(const CRect& rect, CDC& dc) {
 	if (fabs(sm_instance->m_dZoom - sm_instance->GetZoomFactorForFitToScreen(false, true)) > 0.01) {
 		CNavigationPanel::PaintZoomToFitBtn(rect, dc);
@@ -1652,6 +1669,14 @@ LPCTSTR CMainDlg::WindowModeTooltip() {
 		return CNLS::GetString(_T("Window mode"));
 	} else {
 		return CNLS::GetString(_T("Full screen mode"));
+	}
+}
+
+LPCTSTR CMainDlg::ShowHistogramTooltip() {
+	if (sm_instance->m_pEXIFDisplay->GetShowHistogram()) {
+		return CNLS::GetString(_T("Hide histogram"));
+	} else {
+		return CNLS::GetString(_T("Show histogram"));
 	}
 }
 
@@ -1744,7 +1769,7 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 		case IDM_SORT_NAME:
 			m_pFileList->SetSorting((nCommand == IDM_SORT_CREATION_DATE) ? Helpers::FS_CreationTime : 
 				(nCommand == IDM_SORT_MOD_DATE) ? Helpers::FS_LastModTime : Helpers::FS_FileName);
-			if (m_bShowHelp) {
+			if (m_bShowHelp || m_bShowFileInfo || m_bShowFileName) {
 				this->Invalidate(FALSE);
 			}
 			break;
@@ -2911,6 +2936,7 @@ void CMainDlg::AfterNewImageLoaded(bool bSynchronize) {
 	HideNavPanelTemporary();
 	ShowHideSaveDBButtons();
 	m_btnUnsharpMask->SetShow(m_pCurrentImage != NULL);
+	m_pEXIFDisplay->SetHistogram(NULL);
 	if (m_pCurrentImage != NULL && !m_pCurrentImage->IsClipboardImage() && !m_bMovieMode) {
 		m_txtParamDB->SetShow(true);
 		m_txtRename->SetShow(true);
@@ -3172,6 +3198,10 @@ LPCTSTR CMainDlg::CurrentFileName(bool bFileTitle) {
 }
 
 void CMainDlg::FillEXIFDataDisplay(CEXIFDisplay* pEXIFDisplay) {
+	pEXIFDisplay->ClearTexts();
+
+	pEXIFDisplay->SetHistogram(NULL);
+
 	CString sFileTitle;
 	if (m_pCurrentImage->IsClipboardImage()) {
 		sFileTitle = CurrentFileName(true);

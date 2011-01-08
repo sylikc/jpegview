@@ -76,6 +76,29 @@ CHistogram::CHistogram(const CJPEGImage & image, bool bUseOrigPixels) {
 	m_nRMean /= m_nTotalValues;
 }
 
+CHistogram::CHistogram(const void* pPixels, const CSize& size) {
+	memset(m_ChannelB, 0, sizeof(int)*256);
+	memset(m_ChannelG, 0, sizeof(int)*256);
+	memset(m_ChannelR, 0, sizeof(int)*256);
+	memset(m_ChannelGrey, 0, sizeof(int)*256);
+	m_nBMean = m_nGMean = m_nRMean = 0;
+	m_fNightshot = -1.0f;
+
+	const uint8* pDIBPixels = (const uint8*) pPixels;
+	int nNumPixels = size.cx * size.cy;
+	for (int j = 0; j < nNumPixels; j++) {
+		m_ChannelB[pDIBPixels[0]]++; m_nBMean += pDIBPixels[0];
+		m_ChannelG[pDIBPixels[1]]++; m_nGMean += pDIBPixels[1];
+		m_ChannelR[pDIBPixels[2]]++; m_nRMean += pDIBPixels[2];
+		m_ChannelGrey[(pDIBPixels[0]*128 + pDIBPixels[1]*640 + pDIBPixels[2]*256) >> 10]++;
+		pDIBPixels += 4;
+	}
+	m_nTotalValues = nNumPixels;
+	m_nBMean /= nNumPixels;
+	m_nGMean /= nNumPixels;
+	m_nRMean /= nNumPixels;
+}
+
 CHistogram::CHistogram(const int* pChannelB, const int* pChannelG, const int* pChannelR, const int* pChannelGrey) {
 	m_nTotalValues = 0;
 	m_fNightshot = -1.0f;

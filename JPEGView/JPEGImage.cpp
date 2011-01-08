@@ -16,7 +16,7 @@
 ///////////////////////////////////////////////////////////////////////////////////
 
 CJPEGImage::CJPEGImage(int nWidth, int nHeight, void* pIJLPixels, void* pEXIFData, int nChannels, 
-					   __int64 nJPEGHash, EImageFormat eImageFormat, CLocalDensityCorr* pLDC) {
+					   __int64 nJPEGHash, EImageFormat eImageFormat, CLocalDensityCorr* pLDC, bool bIsThumbnailImage) {
 	if (nChannels == 3 || nChannels == 4) {
 		m_pIJLPixels = pIJLPixels;
 		m_nIJLChannels = nChannels;
@@ -51,6 +51,7 @@ CJPEGImage::CJPEGImage(int nWidth, int nHeight, void* pIJLPixels, void* pEXIFDat
 	m_pDIBPixelsLUTProcessed = NULL;
 	m_pLastDIB = NULL;
 	m_pThumbnail = NULL;
+	m_pHistogramThumbnail = NULL;
 	m_pGrayImage = NULL;
 	m_pSmoothGrayImage = NULL;
 	
@@ -68,6 +69,8 @@ CJPEGImage::CJPEGImage(int nWidth, int nHeight, void* pIJLPixels, void* pEXIFDat
 	m_bInParamDB = false;
 	m_bHasZoomStoredInParamDB = false;
 	m_bUnsharpMaskParamsValid = false;
+	m_bIsThumbnailImage = bIsThumbnailImage;
+	m_pCachedProcessedHistogram = NULL;
 
 	m_bCropped = false;
 	m_nRotation = 0;
@@ -122,35 +125,17 @@ CJPEGImage::~CJPEGImage(void) {
 	m_pDimRects = NULL;
 	delete m_pThumbnail;
 	m_pThumbnail = NULL;
+	delete m_pHistogramThumbnail;
+	m_pHistogramThumbnail = NULL;
+	delete m_pCachedProcessedHistogram;
+	m_pCachedProcessedHistogram = NULL;
 }
 
 
 void* CJPEGImage::GetThumbnailDIB(CSize size, const CImageProcessingParams & imageProcParams, EProcessingFlags eProcFlags) {
+	assert(!m_bIsThumbnailImage);
 	if (m_pThumbnail == NULL) {
-		if (m_pLDC == NULL) {
-			m_pLDC = new CLocalDensityCorr(*this, true);
-		}
-		void* pPixels = NULL;
-		int nWidth, nHeight;
-		if (m_nOrigWidth*m_nOrigHeight < 120000) {
-			// take a copy of the original pixels
-			nWidth = m_nOrigWidth;
-			nHeight = m_nOrigHeight;
-			if (m_nIJLChannels == 3) {
-				pPixels = CBasicProcessing::Convert3To4Channels(m_nOrigWidth, m_nOrigHeight, m_pIJLPixels);
-			} else {
-				int nSizeBytes = m_nOrigWidth*m_nOrigHeight*4;
-				pPixels = new uint8[nSizeBytes];
-				memcpy(pPixels, m_pIJLPixels, nSizeBytes);
-			}
-		} else {
-			// take the small image from the LDC
-			CSize psiSize = m_pLDC->GetPSISize();
-			nWidth = psiSize.cx;
-			nHeight = psiSize.cy;
-			pPixels = m_pLDC->GetPSImageAsDIB();
-		}
-		m_pThumbnail = new CJPEGImage(nWidth, nHeight, pPixels, NULL, 4, -1, IF_CLIPBOARD, m_pLDC);
+		m_pThumbnail = CreateThumbnailImage();
 	}
 	return m_pThumbnail->GetDIB(size, size, CPoint(0, 0), imageProcParams, eProcFlags);
 }
@@ -158,9 +143,49 @@ void* CJPEGImage::GetThumbnailDIB(CSize size, const CImageProcessingParams & ima
 void* CJPEGImage::GetDIBUnsharpMasked(CSize clippingSize, CPoint targetOffset,
 									  const CImageProcessingParams & imageProcParams, EProcessingFlags eProcFlags, 
 									  const CUnsharpMaskParams & unsharpMaskParams) {
+    assert(!m_bIsThumbnailImage);
 	bool bUseUnsharpMask = unsharpMaskParams.Amount > 0 && unsharpMaskParams.Radius > 0;
+	bool bParametersChanged;
 	return GetDIBInternal(CSize(m_nOrigWidth, m_nOrigHeight), clippingSize, targetOffset, imageProcParams, 
-		eProcFlags, bUseUnsharpMask ? &unsharpMaskParams : NULL);
+		eProcFlags, bUseUnsharpMask ? &unsharpMaskParams : NULL, bParametersChanged);
+}
+
+const CHistogram* CJPEGImage::GetOriginalHistogram() {
+	assert(!m_bIsThumbnailImage);
+	if (m_pLDC == NULL) {
+		m_pLDC = new CLocalDensityCorr(*this, true);
+	}
+	return m_pLDC->GetHistogram();
+}
+
+const CHistogram* CJPEGImage::GetProcessedHistogram() {
+	assert(!m_bIsThumbnailImage);
+	if (m_pHistogramThumbnail == NULL) {
+		m_pHistogramThumbnail = CreateThumbnailImage();
+	}
+	return (m_imageProcParams.Contrast == -1) ? NULL : 
+		m_pHistogramThumbnail->GetHistogramOfProcessedDIB(
+		CImageProcessingParams(m_imageProcParams.Contrast, m_imageProcParams.Gamma, m_imageProcParams.Saturation,
+		0.0, m_imageProcParams.ColorCorrectionFactor, m_imageProcParams.ContrastCorrectionFactor, 
+		m_imageProcParams.LightenShadows, m_imageProcParams.DarkenHighlights, m_imageProcParams.LightenShadowSteepness, 
+		m_imageProcParams.CyanRed, m_imageProcParams.MagentaGreen, m_imageProcParams.YellowBlue), 
+		SetProcessingFlag(m_eProcFlags, PFLAG_HighQualityResampling, false));
+}
+
+const CHistogram* CJPEGImage::GetHistogramOfProcessedDIB(const CImageProcessingParams & imageProcParams, EProcessingFlags eProcFlags) {
+	assert(m_bIsThumbnailImage);
+	CSize origSize(m_nOrigWidth, m_nOrigHeight);
+	bool bParametersChanged;
+	void* pDIBPixels = GetDIBInternal(origSize, origSize, CPoint(0, 0), imageProcParams, eProcFlags, NULL, bParametersChanged);
+	if (bParametersChanged || m_pCachedProcessedHistogram == NULL) {
+		delete m_pCachedProcessedHistogram;
+		m_pCachedProcessedHistogram = NULL;
+		if (pDIBPixels == NULL) {
+			return NULL;
+		}
+		m_pCachedProcessedHistogram = new CHistogram(pDIBPixels, origSize);
+	}
+	return m_pCachedProcessedHistogram;
 }
 
 void CJPEGImage::FreeUnsharpMaskResources() {
@@ -577,7 +602,7 @@ __int64 CJPEGImage::GetUncompressedPixelHash() const {
 
 void* CJPEGImage::GetDIBInternal(CSize fullTargetSize, CSize clippingSize, CPoint targetOffset,
 						 const CImageProcessingParams & imageProcParams, EProcessingFlags eProcFlags,
-						 const CUnsharpMaskParams * pUnsharpMaskParams) {
+						 const CUnsharpMaskParams * pUnsharpMaskParams, bool &bParametersChanged) {
 
  	// Check if resampling due to bHighQualityResampling parameter change is needed
 	bool bMustResampleQuality = GetProcessingFlag(eProcFlags, PFLAG_HighQualityResampling) != GetProcessingFlag(m_eProcFlags, PFLAG_HighQualityResampling);
@@ -585,7 +610,7 @@ void* CJPEGImage::GetDIBInternal(CSize fullTargetSize, CSize clippingSize, CPoin
 	// Check if resampling due to change of geometric parameters is needed
 	bool bMustResampleGeometry = bTargetSizeChanged || clippingSize != m_ClippingSize || targetOffset != m_TargetOffset;
 	// Check if resampling due to change of processing parameters is needed
-	bool bMustResampleProcessings = fabs(imageProcParams.Sharpen - m_imageProcParams.Sharpen) > 1e-2;
+	bool bMustResampleProcessings = fabs(imageProcParams.Sharpen - m_imageProcParams.Sharpen) > 1e-2 && GetProcessingFlag(eProcFlags, PFLAG_HighQualityResampling);
 
 	EResizeType eResizeType = GetResizeType(fullTargetSize, CSize(m_nOrigWidth, m_nOrigHeight));
 
@@ -607,7 +632,7 @@ void* CJPEGImage::GetDIBInternal(CSize fullTargetSize, CSize clippingSize, CPoin
 		pDIBUnsharpMasked = ApplyUnsharpMask(pUnsharpMaskParams, bNoChangesLDCandLUTs);
 		pDIB = ApplyCorrectionLUTandLDC(imageProcParams, eProcFlags, m_pDIBPixelsLUTProcessed, 
 			fullTargetSize, targetOffset, (pDIBUnsharpMasked != NULL) ? pDIBUnsharpMasked : m_pDIBPixels, clippingSize, 
-			bMustResampleGeometry, false, pDIBUnsharpMasked != NULL);
+			bMustResampleGeometry, false, pDIBUnsharpMasked != NULL, bParametersChanged);
 	}
 	// ApplyCorrectionLUTandLDC() could have failed, then recreate the DIBs
 	if (pDIB == NULL) {
@@ -616,6 +641,8 @@ void* CJPEGImage::GetDIBInternal(CSize fullTargetSize, CSize clippingSize, CPoin
 		if (!m_bFirstReprocessing) {
 			ConvertSrcTo4Channels();
 		}
+
+		bParametersChanged = true;
 
 		assert(pDIBUnsharpMasked == NULL);
 
@@ -722,7 +749,8 @@ void* CJPEGImage::ApplyUnsharpMask(const CUnsharpMaskParams * pUnsharpMaskParams
 void* CJPEGImage::ApplyCorrectionLUTandLDC(const CImageProcessingParams & imageProcParams, EProcessingFlags eProcFlags,
 										   void * & pCachedTargetDIB, CSize fullTargetSize, CPoint targetOffset, 
 										   void * pSourceDIB, CSize dibSize,
-										   bool bGeometryChanged, bool bOnlyCheck, bool bCanTakeOwnershipOfSourceDIB) {
+										   bool bGeometryChanged, bool bOnlyCheck, bool bCanTakeOwnershipOfSourceDIB, bool &bParametersChanged) {
+
 	bool bAutoContrast = GetProcessingFlag(eProcFlags, PFLAG_AutoContrast);
 	bool bAutoContrastOld = GetProcessingFlag(m_eProcFlags, PFLAG_AutoContrast);
 	bool bAutoContrastSection = GetProcessingFlag(eProcFlags, PFLAG_AutoContrastSection) && bAutoContrast;
@@ -751,6 +779,8 @@ void* CJPEGImage::ApplyCorrectionLUTandLDC(const CImageProcessingParams & imageP
 	bool bMustReapplyLDC = bLDC && (!bLDCOld || bGeometryChanged || bLDCParametersChanged);
 	bool bMustUse3ChannelLUT = bAutoContrast || !bNoColorCastCorrection;
 	bool bUseDimming = m_pDimRects != NULL && m_bEnableDimming;
+
+	bParametersChanged = bMustReapplyLUTs || bMustReapplyLDC;
 
 	if (!bMustReapplyLUTs && !bMustReapplyLDC && pCachedTargetDIB != NULL) {
 		// consider special case that nothing is dimmed and no LUT and LDC is applied but
@@ -981,5 +1011,34 @@ void CJPEGImage::InvalidateAllCachedPixelData() {
 	m_pSmoothGrayImage = NULL;
 	delete m_pThumbnail;
 	m_pThumbnail = NULL;
+	delete m_pHistogramThumbnail;
+	m_pHistogramThumbnail = NULL;
 	m_ClippingSize = CSize(0, 0);
+}
+
+CJPEGImage* CJPEGImage::CreateThumbnailImage() {
+	if (m_pLDC == NULL) {
+		m_pLDC = new CLocalDensityCorr(*this, true);
+	}
+	void* pPixels = NULL;
+	int nWidth, nHeight;
+	if (m_nOrigWidth*m_nOrigHeight < 120000) {
+		// take a copy of the original pixels
+		nWidth = m_nOrigWidth;
+		nHeight = m_nOrigHeight;
+		if (m_nIJLChannels == 3) {
+			pPixels = CBasicProcessing::Convert3To4Channels(m_nOrigWidth, m_nOrigHeight, m_pIJLPixels);
+		} else {
+			int nSizeBytes = m_nOrigWidth*m_nOrigHeight*4;
+			pPixels = new uint8[nSizeBytes];
+			memcpy(pPixels, m_pIJLPixels, nSizeBytes);
+		}
+	} else {
+		// take the small image from the LDC
+		CSize psiSize = m_pLDC->GetPSISize();
+		nWidth = psiSize.cx;
+		nHeight = psiSize.cy;
+		pPixels = m_pLDC->GetPSImageAsDIB();
+	}
+	return new CJPEGImage(nWidth, nHeight, pPixels, NULL, 4, -1, IF_CLIPBOARD, m_pLDC, true);
 }

@@ -28,6 +28,7 @@ Bugs fixed:
 - Fixed crash when window is minimized while slideshow is playing
 - Close button is active when moving mouse to top, right corner of screen
 New features:
+- Histogram can be displayed on the information panel (below EXIF information) 
 - Updating EXIF thumbnail image when saving processed image
 - New button on navigation panel: Keep processing parameters between images
 - Changed behavior of fit to screen/actual size button, fit to screen is now default when not yet fit to screen

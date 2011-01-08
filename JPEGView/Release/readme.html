@@ -33,7 +33,7 @@
 				<td>
 					<a name="Top"></a>
 					<h1>JPEGView Readme</h1>
-					Revision: 04-July-2010
+					Revision: 08-Jan-2011
 					<a name="Introduction"></a>
 					<h2>Introduction</h2>
 					JPEGView is a viewer/editor for JPEG, BMP, PNG, GIF and TIFF images. It is designed to view images from digital cameras
@@ -162,6 +162,7 @@
 						<li>French</li>
 						<li>Korean</li>
 						<li>Romanian</li>
+						<li>Russian</li>
 					</ul>
 					By default JPEGView uses the same language as the operating system. However another language can be forced using the INI file.
 					Translations to other languages can be done very easily by providing an UTF8 coded text mapping file, see
@@ -201,7 +202,7 @@
 							<kbd>PgDn/PgUp</kbd> navigates to next/previous image (Alternative: 'forward' and 'back' mouse buttons)
 						</li>
 						<li>Mouse wheel zooms in and out</li>
-						<li>Dragging mouse while left mouse button is pressed pans image</li>
+						<li>Dragging mouse while left mouse button is pressed will pan the image</li>
 						<li>Move mouse pointer to bottom of screen for image processing, parameter DB access and file renaming</li>
 						<li>Move mouse pointer to top of screen for minimizing or closing the application</li>
 						<li>Right mouse button displays the context menu</li>
@@ -214,12 +215,13 @@
 					<img src="Navpanel.png" alt="Navigation panel" border="0"/>
 					<br/>
 					From left to right:<br/>
-					First image in folder, Previous image, Next image, Last image in folder<br/>
-					Actual image size / Fit image to screen<br/>
-					Window mode / Full screen mode<br/>
-					Rotate clockwise, Rotate counter-clockwise<br/>
-					Toggle landscape picture enhancement mode<br/>
-					Toggle display of image information (EXIF)<br/>
+					- First image in folder, Previous image, Next image, Last image in folder<br/>
+					- Actual image size / Fit image to screen<br/>
+					- Window mode / Full screen mode<br/>
+					- Rotate clockwise, Rotate counter-clockwise<br/>
+					- Keep image processing parameters and zoom/pan between images<br/>
+					- Toggle landscape picture enhancement mode<br/>
+					- Toggle display of image information (EXIF)<br/>
 
 					<h4>Full screen mode / Window mode</h4>
 					By default JPEGView starts in full screen mode on the largest monitor attached to the computer.
@@ -316,7 +318,8 @@
 					<h4>Image Information</h4>
 					<h5>Image and EXIF information</h5>
 					Use <kbd>F2</kbd> to display information about the current image, including the value of some EXIF tags, e.g. date and
-					time the image was taken and exposure information.
+					time the image was taken and exposure information. Optionally the histogram of the image can be displayed below the
+					EXIF information. The histogram is updated immediately when the image is processed.
 					<h5>File name and path</h5>
 					Use <kbd>Ctrl-F2</kbd> to display the full path and file name of the current image.
 					<h4>Zoom and Pan</h4>
@@ -571,6 +574,12 @@
 					Most image processing can be done interactively with the mouse on the processing panel that appears when the mouse
 					cursor is moved to the bottom of the screen.<br/>
 					Default settings for most of the image processing parameters can be given in the <a href="#INIFile">INI file</a>.<br/>
+					<b>Tips</b><br/>
+					<ul style="margin-top:0in;margin-bottom:0in">
+						<li>Clicking on the number on the right of the sliders will temporarily reset the value to the default value. The value remains reset
+						until the mouse button is released.</li>
+						<li>Double clicking above a slider will permanently reset its value to the default value.</li>
+					</ul>
 					<h4>Keeping parameters between images</h4>
 					By default, all image processing parameters (including zoom and pan) are reset to the default values given in the INI file
 					when the next image is displayed. Using the <kbd>F4</kbd> key, the behavior can be changed to keeping the parameters between
@@ -838,7 +847,7 @@
 
 					<a name="Copyright"></a>
 					<h2>License &amp; Copyright</h2>
-					Copyright &copy; 2006-2010 David Kleiner<br/><br/>
+					Copyright &copy; 2006-2011 David Kleiner<br/><br/>
 					This program is free software; you can redistribute it and/or modify
 					it under the terms of the GNU General Public License as published by
 					the Free Software Foundation, version 2.
@@ -879,6 +888,9 @@
 						</li>
 						<li>
 							Silviu for the Romanian translation
+						</li>
+						<li>
+							Dmitry for the Russian translation
 						</li>
 					</ul>
 					<br/><br/><b>

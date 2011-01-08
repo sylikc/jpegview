@@ -101,6 +101,7 @@ protected:
 	friend class CNavigationPanel;
 	friend class CWndButtonPanel;
 	friend class CUnsharpMaskPanel;
+	friend class CEXIFDisplay;
 
 	virtual void Draw(CDC & dc, CRect position, bool bBlack) = 0;
 	void SetPosition(CRect position) { m_position = position; }
