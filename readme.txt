@@ -28,7 +28,9 @@ Bugs fixed:
 - Fixed crash when window is minimized while slideshow is playing
 - Close button is active when moving mouse to top, right corner of screen
 New features:
-- Histogram can be displayed on the information panel (below EXIF information) 
+- Histogram can be displayed on the information panel (below EXIF information). Use ShowHistogram INI file entry
+  to set if the histogram shall be shown on the panel or not. If not shown by default it can be blended in with
+  a small button on the information panel.
 - Updating EXIF thumbnail image when saving processed image
 - New button on navigation panel: Keep processing parameters between images
 - Changed behavior of fit to screen/actual size button, fit to screen is now default when not yet fit to screen

@@ -253,3 +253,6 @@ Amount	Количество
 Threshold	Порог
 Apply	Применить
 Cancel	Отмена
+Keep processing parameters between images	Запоминать параметры обработки между изображениями
+Show histogram	Показать гистограмму
+Hide histogram	Скрыть гистограмму 

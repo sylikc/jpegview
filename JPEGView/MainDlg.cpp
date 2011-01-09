@@ -383,6 +383,7 @@ LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam
 	// setup EXIF display panel
 	m_pEXIFDisplay = new CEXIFDisplay(this->m_hWnd);
 	m_pEXIFDisplay->AddUserPaintButton(&(CEXIFDisplay::PaintShowHistogramBtn), &OnShowHistogram, &ShowHistogramTooltip);
+	m_pEXIFDisplay->SetShowHistogram(CSettingsProvider::This().ShowHistogram());
 
 	// set icons (for toolbar)
 	HICON hIcon = (HICON)::LoadImage(_Module.GetResourceInstance(), MAKEINTRESOURCE(IDR_MAINFRAME), 
