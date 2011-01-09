@@ -253,3 +253,6 @@ Amount	Mărimea
 Threshold	Pragul
 Apply	Aplică
 Cancel	Închide
+Keep processing parameters between images	Păstrează parametri de procesare între imagini
+Show histogram	Arată histograma
+Hide histogram	Ascunde histograma
