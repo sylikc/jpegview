@@ -74,6 +74,9 @@ ShowFileName=false
 ; Set to true to initially display the file info box (EXIF info if available)
 ShowFileInfo=false
 
+; Set to true to show the histogram on the file info panel by default
+ShowHistogram=false
+
 ; Set to false if the navigation panel shall not be blended to the image
 ShowNavPanel=true
 
