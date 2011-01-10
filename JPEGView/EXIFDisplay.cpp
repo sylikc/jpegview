@@ -24,8 +24,6 @@ static CRect InflateRect(const CRect& rect, float fAmount) {
 	return r;
 }
 
-bool CEXIFDisplay::m_bShowHistogram;
-
 CEXIFDisplay::CEXIFDisplay(HWND hWnd) : CPanelMgr(hWnd) {
 	m_bShowHistogram = false;
 	m_nGap = (int)(m_fDPIScale * 10);
@@ -243,14 +241,14 @@ void CEXIFDisplay::RepositionAll() {
 	}
 }
 
-void CEXIFDisplay::PaintShowHistogramBtn(const CRect& rect, CDC& dc) {
+void CEXIFDisplay::PaintShowHistogramBtn(const CRect& rect, CDC& dc, bool bShowHistogram) {
 	CRect r = InflateRect(rect, 0.3f);
 	r.OffsetRect(CPoint(0, 1));
 	CPoint p1(r.left + 1, r.top + 1);
 	CPoint p2(r.right, r.top);
 	int nMiddleX = (r.left + r.right) / 2;
 	CPoint p3(nMiddleX, r.top + (r.right - r.left) / 2);
-	if (m_bShowHistogram) {
+	if (bShowHistogram) {
 		dc.MoveTo(CPoint(p1.x, p3.y));
 		dc.LineTo(CPoint(p3.x, p1.y));
 		dc.MoveTo(CPoint(p3.x, p1.y));

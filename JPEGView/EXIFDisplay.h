@@ -33,7 +33,7 @@ public:
 	void SetHistogram(const CHistogram* pHistogram) { m_pHistogram = pHistogram; }
 
 	// Painting handlers for the buttons
-	static void PaintShowHistogramBtn(const CRect& rect, CDC& dc);
+	static void PaintShowHistogramBtn(const CRect& rect, CDC& dc, bool bShowHistogram);
 	
 protected:
 	virtual void RepositionAll();
@@ -50,7 +50,7 @@ private:
 		LPCTSTR Value;
 	};
 
-	static bool m_bShowHistogram;
+	bool m_bShowHistogram;
 	int m_nGap;
 	int m_nTab1;
 	int m_nLineHeight;
