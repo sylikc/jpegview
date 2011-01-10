@@ -327,6 +327,8 @@ private:
 	static void OnShowHistogram(CButtonCtrl & sender);
 
 	static void PaintZoomFitToggleBtn(const CRect& rect, CDC& dc);
+	static void PaintShowHistogramBtn(const CRect& rect, CDC& dc);
+
 	static LPCTSTR ZoomFitToggleTooltip();
 	static LPCTSTR WindowModeTooltip();
 	static LPCTSTR ShowHistogramTooltip();

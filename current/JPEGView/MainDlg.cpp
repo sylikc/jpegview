@@ -382,7 +382,7 @@ LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam
 
 	// setup EXIF display panel
 	m_pEXIFDisplay = new CEXIFDisplay(this->m_hWnd);
-	m_pEXIFDisplay->AddUserPaintButton(&(CEXIFDisplay::PaintShowHistogramBtn), &OnShowHistogram, &ShowHistogramTooltip);
+	m_pEXIFDisplay->AddUserPaintButton(&(CMainDlg::PaintShowHistogramBtn), &OnShowHistogram, &ShowHistogramTooltip);
 	m_pEXIFDisplay->SetShowHistogram(CSettingsProvider::This().ShowHistogram());
 
 	// set icons (for toolbar)
@@ -1655,6 +1655,10 @@ void CMainDlg::PaintZoomFitToggleBtn(const CRect& rect, CDC& dc) {
 	} else {
 		CNavigationPanel::PaintZoomTo1to1Btn(rect, dc);
 	}
+}
+
+void CMainDlg::PaintShowHistogramBtn(const CRect& rect, CDC& dc) {
+	CEXIFDisplay::PaintShowHistogramBtn(rect, dc, sm_instance->m_pEXIFDisplay->GetShowHistogram());
 }
 
 LPCTSTR CMainDlg::ZoomFitToggleTooltip() {
