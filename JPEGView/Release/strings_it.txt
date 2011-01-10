@@ -252,3 +252,6 @@ Amount	Quantità
 Threshold	Soglia
 Apply	Applica
 Cancel	Annulla
+Keep processing parameters between images	Mantieni i parametri di modifica tra le immagini
+Show histogram	Mostra istogramma
+Hide histogram	Nascondi istogramma
