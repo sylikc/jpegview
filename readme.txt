@@ -39,6 +39,7 @@ New features:
 - Image processing panel: Reset slider to default value by double-clicking above slider
 - Romanian translation (thanks to Silviu)
 - Russian translation (thanks to Dmitry)
+- Updated Spanish translation (thanks to Daniel)
 
 [1.0.21]
 Bugs fixed:

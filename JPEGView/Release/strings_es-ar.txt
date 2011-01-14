@@ -218,3 +218,41 @@ Enable/disable full screen mode	Habilitar/deshabilitar modo pantalla completa
 Full screen mode	Modo pantalla completa
 Window mode	Modo ventana
 Actual size of image	Tamaño actual de la imagen
+Save as (in screen size/resolution)	Guardar como (con el tamaño/resolución de la pantalla)
+Save processed image to JPEG file (screen size)	Guardar imagen procesada como archivo JPEG(con el tamaño/resolución de la pantalla)
+Settings/Admin	Preferencias/Administración
+Edit global settings...	Editar preferencias globales...
+Edit user settings...	Editar preferencias de usuario...
+Backup parameter DB...	Hacer respaldo de BD de parametros...
+Restore parameter DB...	Restaurar BD de parametros...
+No user INI file exits yet. Create user INI file from INI file template?	No existe todavia el fichero INI de usuario. Crearlo fichero INI de usuario desde la plantilla de fichero INI?
+Copying parameter DB to file '%s' failed. Reason: %s	La copia de la BD de parametros en el fichero '%s' falló. Razón: %s
+Select parameter DB to restore	Seleccionar BD de parametros a restaurar
+Conflicting entries in Param DB	Registros conflictivos en BD de parametros
+The imported param DB contains entries already present in active param DB.	La BD de parametros importada contiene registros que ya estan presentes en la BD de parametros activa.
+Shall existing entries be preserved (Yes) or be overriden by the imported entries (No)?	¿Conservar los registros existentes (Si) o sobreescribirlos por los registros importados (No)?
+Select file to display in 'File Open' dialog	Seleccionar archivo que aparecera en el cuadro de dialogo 'Abrir archivo'
+Crop Mode	Modo de bordes cortados
+Free	Libre
+Fixed size...	Tamaño fijo
+Set Fixed Crop Size	Establecer tamaño de corte de bordes fijo
+Width	Ancho
+Height	Alto
+Pixels	Pixeles
+Screen Pixels	Pixeles de la pantalla
+Image Pixels	Pixeles de la imagen
+Set modification date	Establecer fecha de modificación
+to current date	a la fecha actual
+to EXIF date	a la fecha del EXIF
+Mark image for toggling. Use Ctrl+Left/Ctrl+Right to toggle between marked and current image
+Saturation	Saturación
+Unsharp mask...	Máscara de desenfoque
+Apply Unsharp Mask	Aplicar máscara de desenfoque
+Radius	Radio
+Amount	Cantidad
+Threshold	Umbral
+Apply	Aplicar
+Cancel	Cancelar
+Keep processing parameters between images	Mantener parámetros de procesamiento entre imagenes
+Show histogram	Mostrar histograma
+Hide histogram	Esconder histograma
