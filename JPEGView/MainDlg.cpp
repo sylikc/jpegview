@@ -2009,20 +2009,18 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 			break;
 		case IDM_CROP_SEL:
 			if (m_pCurrentImage != NULL) {
-				CRect cropRect(max(0, min(m_cropStart.x, m_cropEnd.x)), max(0, min(m_cropStart.y, m_cropEnd.y)),
-					min(m_pCurrentImage->OrigWidth(), max(m_cropStart.x, m_cropEnd.x) + 1), min(m_pCurrentImage->OrigHeight(), max(m_cropStart.y, m_cropEnd.y) + 1));
-				m_pCurrentImage->Crop(cropRect);
+				m_pCurrentImage->Crop(GetImageCropRect());
 				this->Invalidate(FALSE);
 			}
 			break;
+		case IDM_LOSSLESS_CROP_SEL:
+			CropLossless();
+			break;
 		case IDM_COPY_SEL:
 			if (m_pCurrentImage != NULL) {
-				CRect cropRect(min(m_cropStart.x, m_cropEnd.x), min(m_cropStart.y, m_cropEnd.y),
-					max(m_cropStart.x, m_cropEnd.x) + 1, max(m_cropStart.y, m_cropEnd.y) + 1);
-
 				CClipboard::CopyFullImageToClipboard(this->m_hWnd, m_pCurrentImage, *m_pImageProcParams, 
 					CreateProcessingFlags(m_bHQResampling, m_bAutoContrast, m_bAutoContrastSection, m_bLDC, false, m_bLandscapeMode),
-					cropRect);
+					GetImageCropRect());
 				this->Invalidate(FALSE);
 			}
 			break;
@@ -2296,7 +2294,7 @@ void CMainDlg::StartCropping(int nX, int nY) {
 
 void CMainDlg::ShowCroppingRect(int nX, int nY, HDC hPaintDC, bool bShow) {
 	if (bShow) {
-		DeleteCropRect();
+		DeleteSceenCropRect();
 	}
 	float fX = (float)nX, fY = (float)nY;
 	ScreenToImage(fX, fY);
@@ -2350,7 +2348,7 @@ void CMainDlg::ShowCroppingRect(int nX, int nY, HDC hPaintDC, bool bShow) {
 }
 
 void CMainDlg::PaintCropRect(HDC hPaintDC) {
-	CRect cropRect = GetCropRect();
+	CRect cropRect = GetScreenCropRect();
 	if (!cropRect.IsRectEmpty()) {
 		HDC hDC = (hPaintDC == NULL) ? this->GetDC() : hPaintDC;
 		HPEN hPen = ::CreatePen(PS_DOT, 1, RGB(255, 255, 255));
@@ -2368,8 +2366,8 @@ void CMainDlg::PaintCropRect(HDC hPaintDC) {
 	}
 }
 
-void CMainDlg::DeleteCropRect() {
-	CRect cropRect = GetCropRect();
+void CMainDlg::DeleteSceenCropRect() {
+	CRect cropRect = GetScreenCropRect();
 	if (!cropRect.IsRectEmpty()) {
 		this->InvalidateRect(&CRect(cropRect.left-1, cropRect.top, cropRect.left+1, cropRect.bottom), FALSE);
 		this->InvalidateRect(&CRect(cropRect.right-1, cropRect.top, cropRect.right+1, cropRect.bottom), FALSE);
@@ -2382,7 +2380,7 @@ void CMainDlg::DeleteCropRect() {
 	}
 }
 
-CRect CMainDlg::GetCropRect() {
+CRect CMainDlg::GetScreenCropRect() {
 	if (m_cropEnd != CPoint(INT_MIN, INT_MIN) && m_pCurrentImage != NULL) {
 		CPoint cropStart(min(m_cropStart.x, m_cropEnd.x), min(m_cropStart.y, m_cropEnd.y));
 		CPoint cropEnd(max(m_cropStart.x, m_cropEnd.x), max(m_cropStart.y, m_cropEnd.y));
@@ -2400,11 +2398,16 @@ CRect CMainDlg::GetCropRect() {
 	}
 }
 
+CRect CMainDlg::GetImageCropRect() {
+	return CRect(max(0, min(m_cropStart.x, m_cropEnd.x)), max(0, min(m_cropStart.y, m_cropEnd.y)),
+		min(m_pCurrentImage->OrigWidth(), max(m_cropStart.x, m_cropEnd.x) + 1), min(m_pCurrentImage->OrigHeight(), max(m_cropStart.y, m_cropEnd.y) + 1));
+}
+
 void CMainDlg::EndCropping() {
 	if (m_pCurrentImage == NULL || m_cropEnd == CPoint(INT_MIN, INT_MIN) || m_cropMouse == CPoint(m_nMouseX, m_nMouseY)) {
 		m_bCropping = false;
 		m_bDoCropping = false;
-		DeleteCropRect();
+		DeleteSceenCropRect();
 		HideNavPanelTemporary();
 		InvalidateZoomNavigatorRect();
 		return;
@@ -2415,6 +2418,9 @@ void CMainDlg::EndCropping() {
 	int nMenuCmd = 0;
 	if (hMenu != NULL) {
 		HMENU hMenuTrackPopup = ::GetSubMenu(hMenu, 0);
+		if (m_pCurrentImage->GetImageFormat() != CJPEGImage::IF_JPEG) {
+			::DeleteMenu(hMenuTrackPopup, IDM_LOSSLESS_CROP_SEL, MF_BYCOMMAND);
+		}
 		TranslateMenu(hMenuTrackPopup);
 
 		CPoint posMouse(m_nMouseX, m_nMouseY);
@@ -2455,12 +2461,51 @@ void CMainDlg::EndCropping() {
 	}
 
 	if (m_bCropping && nMenuCmd != IDM_COPY_SEL && nMenuCmd != IDM_CROP_SEL) {
-		DeleteCropRect();
+		DeleteSceenCropRect();
 	}
 	m_bCropping = false;
 	m_bDoCropping = false;
 	HideNavPanelTemporary();
 	InvalidateZoomNavigatorRect();
+}
+
+void CMainDlg::CropLossless() {
+	if (m_pCurrentImage == NULL) {
+		return;
+	}
+	CRect cropRect = GetImageCropRect();
+	if (cropRect.IsRectEmpty()) {
+		return;
+	}
+	// coordinates must be multiples of 8 for lossless crop
+	cropRect.left = cropRect.left & ~7;
+	cropRect.right = (cropRect.right + 7) & ~7;
+	cropRect.top = cropRect.top & ~7;
+	cropRect.bottom = (cropRect.bottom + 7) & ~7;
+
+	CString sCurrentFile = CurrentFileName(false);
+
+
+	CFileDialog fileDlg(FALSE, _T(".jpg"), sCurrentFile, 
+			OFN_EXPLORER | OFN_ENABLESIZING | OFN_HIDEREADONLY | OFN_NOREADONLYRETURN | OFN_OVERWRITEPROMPT,
+			Helpers::CReplacePipe(CString(_T("JPEG (*.jpg;*.jpeg)|*.jpg;*.jpeg|")) +
+			CNLS::GetString(_T("All Files")) + _T("|*.*|")), m_hWnd);
+
+	CString sDimension;
+	sDimension.Format(_T(" (%d x %d)"), cropRect.Width(), cropRect.Height());
+	CString sTitle = CNLS::GetString(_T("Save cropped image")) + sDimension;
+	fileDlg.m_ofn.lpstrTitle = sTitle;
+
+	if (IDOK == fileDlg.DoModal(m_hWnd)) {
+		CString sCmd(_T("KeyCode: 0  Cmd: 'jpegtran -crop %w%x%h%+%x%+%y% -copy all -perfect %filename% \"%outfilename%\"' Flags: 'WaitForTerminate NoWindow ReloadFileList'"));
+		sCmd.Replace(_T("%outfilename%"), fileDlg.m_szFileName);
+		CUserCommand cmdCrop(sCmd);
+		if (cmdCrop.Execute(m_hWnd, CurrentFileName(false), cropRect)) {
+			if (_tcscmp(CurrentFileName(false), fileDlg.m_szFileName) == 0) {
+				ExecuteCommand(IDM_RELOAD);
+			}
+		}
+	}
 }
 
 void CMainDlg::GotoImage(EImagePosition ePos) {

@@ -35,6 +35,9 @@ public:
 	// Executes the command, the application main window and the current filename are passed
 	bool Execute(HWND hWnd, LPCTSTR sFileName) const;
 
+	// Executes the command, the application main window, the current filename and the selection are passed
+	bool Execute(HWND hWnd, LPCTSTR sFileName, const CRect& selectionRect) const;
+
 private:
 	bool m_bValid;
 	int m_nKeyCode;

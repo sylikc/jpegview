@@ -241,8 +241,10 @@ private:
 	void ShowCroppingRect(int nX, int nY, HDC hPaintDC, bool bShow);
 	void EndCropping();
 	void PaintCropRect(HDC hPaintDC);
-	void DeleteCropRect();
-	CRect GetCropRect();
+	void DeleteSceenCropRect();
+	CRect GetScreenCropRect();
+	CRect GetImageCropRect();
+	void CropLossless();
 	void GotoImage(EImagePosition ePos);
 	void GotoImage(EImagePosition ePos, int nFlags);
 	void AdjustLDC(int nMode, double dInc);
