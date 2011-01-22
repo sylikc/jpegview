@@ -272,7 +272,7 @@ CMainDlg::CMainDlg() {
 	m_cropStart = CPoint(INT_MIN, INT_MIN);
 	m_cropEnd = CPoint(INT_MIN, INT_MIN);
 	m_bInNavPanelAnimation = false;
-	m_fCurrentBlendingFactorNavPanel = CSettingsProvider::This().BlendFactorNavPanel();
+	m_fCurrentBlendingFactorNavPanel = sp.BlendFactorNavPanel();
 	m_nBlendInNavPanelCountdown = 0;
 	m_pMemDCAnimation = NULL;
 	m_hOffScreenBitmapAnimation = NULL;
