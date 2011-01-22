@@ -14,7 +14,7 @@ static BOOL CALLBACK EnumWindowsProc(HWND hwnd, LPARAM lParam) {
 	TCHAR buff[BUF_LEN + 1];
 	buff[BUF_LEN] = 0;
 	::GetWindowText(hwnd, (LPTSTR)&buff, BUF_LEN);
-	if (_tcscmp(buff, _T("JPEGView")) == 0) {
+	if (_tcsncmp(buff, _T("JPEGView"), 8) == 0) {
 		::PostMessage(hwnd, WM_ANOTHER_INSTANCE_QUIT, 0, KEY_MAGIC);
 		return FALSE;
 	}
