@@ -3,7 +3,7 @@
 // Used by JPEGView.RC
 //
 
-#define JPEGVIEW_VERSION "1, 0, 22, 0\0"
+#define JPEGVIEW_VERSION "1, 0, 23, 0\0"
 
 
 #define IDD_ABOUTBOX				100
@@ -120,6 +120,7 @@
 #define IDM_LAST			13000
 
 #define IDM_CROP_SEL		20000
+#define IDM_LOSSLESS_CROP_SEL 20010
 #define IDM_COPY_SEL		20100
 #define IDM_ZOOM_SEL		20200
 #define IDM_CROPMODE_FREE   20300

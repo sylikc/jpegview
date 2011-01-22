@@ -255,3 +255,5 @@ Cancel	Abbrechen
 Keep processing parameters between images	Eingestellte Parameter bei Bildwechsel beibehalten
 Show histogram	Histogramm anzeigen
 Hide histogram	Histogramm ausblenden
+Crop Selection Lossless...	Selektion verlustlos freistellen...
+Save cropped image	Freigestelltes Bild speichern

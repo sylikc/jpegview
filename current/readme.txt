@@ -22,6 +22,10 @@ to JPEGView\Debug
 Changelog
 *********
 
+[1.0.23]
+New features:
+- Lossless crop
+
 [1.0.22]
 Bugs fixed:
 - Copying EXIF data when saving image in screen size (Ctrl-Shift-S)
