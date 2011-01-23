@@ -1,0 +1,261 @@
+﻿//Translation Info
+//Language=Swedish
+//TranslatorName=Åke Engelbrektson
+//Contact=eson57@gmail.com
+//TranslatorURL=http://svenskasprakfiler.tejpad.se
+//LastUpdated=Jan 23, 2011
+//
+Contrast	Kontrast
+Brightness	Ljus
+Sharpen	Skärpa
+Lighten Shadows	Ljusa skuggor
+Darken Highlights	Högdagrar
+Deep Shadows	Djupa skuggor
+Color Correction	Färger
+Contrast Correction	Kontrastjustering
+Parameter DB:	Databas:
+Save to	Spara till
+Remove from	Ta bort från
+Rename:	Byt namn:
+No file or folder name was provided as command line parameter!	Ingen fil eller katalog angavs som kommandoradsparameter!
+To use JPEGView, associate JPG, JPEG and BMP files with JPEGView.	För att använda JPEGView, associera JPG-, JPEG- och BMP-filer med JPEGView.
+Press ESC to exit...	Tryck 'ESC' för att avsluta...
+The file '%s' could not be read!	Filen '%s' kunde inte läsas!
+The file '%s' does not contain a list of file names!	Filen '%s' innehåller ingen lista på filnamn!
+The directory '%s' does not contain any image files!	Katalogen '%s' innehåller inga bildfiler!
+Press any key to search the subdirectories for image files.	Tryck på valfri tangent för att söka igenom underkataloger efter bildfiler.
+JPEGView Help	JPEGView hjälp
+Current image	Aktuell bild
+Close help text display / Close JPEGView	Stäng hjälpfilen/Stäng JPEGView
+Show/hide this help text	Visa/Dölj denna hjälptext
+Show/hide picture information (EXIF data)	Visa/Dölj bildinformation (EXIF-data)
+Show/hide file name	Visa/Dölj filnamn
+Enable/disable high quality resampling	Aktivera/Inaktivera högkvalitativ omsampling
+Enable/disable keeping of geometry related (zoom/pan/rotation)	Aktivera/Inaktivera bevarande av geometrirelaterad (zoom/pan/rotation)
+and image processing (brightness/contrast/sharpen) parameters between images	och bildprocessande (ljus/kontrast/skärpa) parametrar mellan bilder.
+Enable/disable automatic contrast correction (histogram equalization)	Aktivera/Inaktivera automatisk kontrastkorrigering (histogramutjämning)
+Apply auto contrast correction using only visible section of image	Använd automatisk kontrastkorrigering med hjälp av endast synlig del av bild
+Enable/disable automatic density correction (local brightness correction)	Aktivera/Inaktivera automatisk densitetkorrigering (LDC)
+Increase/decrease lightening of shadows (LDC must be on)	Öka/Minska ljussättning av skuggor (LDC måste vara aktiverat)
+Increase/decrease darkening of highlights (LDC must be on)	Öka/Minska nedtoning av högdagrar (LDC måste vara aktiverat)
+Loop through files in current folder	Gå igenom filer i aktuell katalog
+Loop through files in current directory and all subfolders	Gå igenom filer i aktuell katalog och alla underkataloger
+Loop through files in current directory and all sibling folders (folders on same level)	Gå igenom filer i aktuell katalog och alla underkataloger (kataloger på samma nivå)
+Maximize/restore to/from virtual desktop (only for multi-monitor systems)	Maximera/Återställ till/från virtuellt skrivbord (endast för multiskärmsystem)
+Copy screen to clipboard/ Copy processed full size image to clipboard	Kopiera skärmbild till urklipp/Kopiera bearbetad fullstorleksbild till urklipp
+Open new image or slideshow file	Öppna ny bild- eller bildspelsfil
+Save processed image to JPEG file (original size)	Spara bearbetad bild som JPEG-fil (originalstorlek)
+Save (s)/ delete (d) image processing parameters in/from parameter DB	Spara(s)/Ta bort(d) berbetningsparametrar i/från databas (DB)
+Sort images by creation date, resp. modification date, resp. file name	Sortera bilder efter respektive Skapad/Senast ändrad/Filnamn
+Goto previous image	Gå till föregående bild
+Goto next image	Gå till nästa bild
+PgUp or Left	PgUp eller vänster
+PgDn or Right	PgDn eller höger
+Goto first/last image of current folder (using sort order as defined)	Gå till första/sista bilden i aktuell katalog (sorterat enligt specifikation)
+Increase/decrease brightness	Justera ljus
+Increase/decrease contrast	Justera kontrast
+Increase/decrease sharpness	 Justera skärpa
+Increase/decrease auto color cast correction amount	 Justera automatisk färgkorrigering
+Increase/decrease auto contrast correction amount	Justera automatisk kontrastkorrigering
+Enable/disable landscape picture enhancement mode	Aktivera/Inaktivera optimeringsläge för liggande bild
+Slide show with timeout of n seconds (ESC to stop)	Bildspel med n sekunders timeout (ESC för att stoppa)
+Set timeout to n/10 sec, respectively n/100 sec (Ctrl+Shift)	Bestäm timeout till n/10 sek, respektive n/100 sek (Ctrl+Shift)
+Rotate image and fit to screen	Rotera bild och anpassa till skärm
+Fit image to screen	Anpassa bild till skärm
+Zoom 1:1 (100 %)	Zoom 1:1 (100 %)
+Zoom in/Zoom out (also Ctrl+up/down)	Zoom in/Zoom ut (även Ctrl+upp/ner)
+Zoom in/out image	Zoom in/ut
+Pan image	Panoramabild
+Crop image	Beskär
+Next image	Nästa bild
+Previous image	Föregående bild
+up/down	upp/ner
+Mouse wheel	Mushjul
+Left mouse & drag	Vänster musknapp & drag
+Ctrl + Left mouse	Ctrl + Vänster musknapp
+Forward mouse button	Framåt-musknapp
+Back mouse button	Tillbaka-musknapp
+Delete current file on disk permanently	  Ta bort aktuell fil permanent
+Rotate current file on disk lossless by 90 deg (W/H must be multiple of 16)	 Rotera aktuell bild förlustfritt 90 grader (W/H måste vara multipel 16)
+Rotate current file on disk lossless by 270 deg (W/H must be multiple of 16)	 Rotera aktuell bild förlustfritt 270 grader (W/H måste vara multipel 16)
+The file is read-only!	 Filen är skrivskyddad!
+Can't rename file	 Kan inte döpa om filen
+New name contains backslash character!	 Det nya namnet innehåller snedstreck!
+Renaming file failed!	 Namnändring misslyckades!
+Reason:	Orsak:
+on	på
+off	av
+Do you really want to save the following parameters as default to the INI file	Vill du verkligen spara följande parametrar som standard?
+Auto contrast and color correction: 	Automatisk kontrast- och färgkorrektion:
+Local density correction: 	Lokal densitetkorrektion (LDC):
+Order files by: 	Sortera filer efter: 
+Creation date/time	Skapad datum/tid
+Last modification date/time	  Senast ändrad datum/tid
+File name	Filnamn
+These values will override the values from the INI file located in the program folder of JPEGView!	Dessa värden kommer att åsidosätta värdena från ini-filen i JPEGView-programmappen!
+Confirm save default parameters	Bekräfta standardparametrar
+Images	Bilder
+All Files	Alla filer
+Parameter DB file '%s' could not be opened!	Databasfilen '%s' kan inte öppnas!
+Parameter DB file '%s' is not valid (invalid header)!	Databasfilen '%s' är inte giltig !
+Cannot write to parameter DB file '%s'!	 Kan inte skriva till databasfilen '%s'!
+Cannot read from parameter DB file '%s'!	Kan inte läsa från databasfilen '%s'!
+Cannot read parameter DB file '%s' because it is too large!	  Kan inte läsa databasfilen '%s' för att den är för stor!
+The parameter DB file '%s' has been created by a newer version of JPEGView!	Databasfilen '%s' har skapats av en nyare version av JPEGView!
+The old parameter DB file '%s' could not be renamed during conversion to new format!	Den gamla databasfilen '%s' kunde inte döpas om under konvertering till nytt format!
+Parameter DB error	Databasfel
+Error saving file	Fel! Kunde inte spara fil
+Error writing file to disk!	Fel! Kunde inte skriva fil till disk
+Confirm	  Bekräfta
+Do you really want to permanently delete the file %filename%?	Vill du verkligen ta bort %filename% permanent? 
+Rotate the following file lossless by 90 deg?\n%filename%	Rotera följande bild förlustfritt 90 grader?\n%filename%
+Rotate the following file lossless by 270 deg?\n%filename%	 Rotera följande bild förlustfritt 270 grader?\n%filename%
+Open image...	Öppna bild...
+Save processed image...	Spara bearbetad bild...
+Reload image	Uppdatera bild från original
+Copy to clipboard	Kopiera till urklipp
+Copy original size image	Kopiera bild i originalstorlek
+Paste from clipboard	Klistra in från urklipp
+Batch rename/copy...	Byt namn/kopiera (Batch-läge)
+Show filename	Visa filnamn
+Navigation	Navigation
+Loop folder	Upprepa katalog
+Loop recursively	Upprepa rekursivt
+Loop siblings	Upprepa kataloger på samma nivå
+Display order	Sortera efter
+Modification date	Senast ändrad
+Creation date	Skapad
+Play folder as slideshow/movie	Visa katalog som bildspel/film
+Slideshow	Bildspel
+Movie	Film
+Waiting time	Väntetid
+Stop slide show/movie	Stoppa bildspel/film
+Rotate +90	Rotera +90
+Rotate -90	Rotera -90
+Auto correction	Automatisk bildjustering
+Local density correction	Lokal densitetkorrektion (LDC)
+Keep parameters	Bevara parametrar
+Save parameters to INI...	Spara parametrar till INI...
+Save parameters to DB	Spara parametrar till databas
+Clear parameters from DB	Ta bort parametrar från databas
+Zoom	Zoom
+Fit to screen	Anpassa till skärm
+Fill with crop	Fyll ut med beskuren bild
+Span all screens	Sträck ut över alla skärmar
+Auto zoom mode	Auto-zoom
+Fit to screen (no zoom)	Anpassa till skärm (ingen zoom)
+Fill with crop (no zoom)	Sträck ut över alla skärmar (ingen zoom)
+Exit	Avsluta
+Cyan-Red	Cyan-Röd
+Magenta-Green	Magenta-Grön
+Yellow-Blue	Gul-Blå
+C - R	C - R
+M - G	M - G
+Y - B	G - B
+Batch rename/copy of files	Byt namn/Kopiera filer (Batch-läge)
+Image files in folder	Bildfiler i katalog
+Placeholders:	Platshållare:
+Number (consecutively numbered)	Nummer (löpande numrering)
+Number with N digits	Nummer med N-siffror
+Extracted number from original file name	Nummer extraherade från ursprungligt filnamn
+Original file name (with extension)	 Ursprungligt filnamn (med filnamnstillägg)
+Original file name (without extension)	Ursprungligt filnamn (utan filnamnstillägg)
+Original file extension	 Ursprungligt filnamnstillägg
+'My Pictures' folder	'Mina bilder'
+Day / Month / Year (as numbers)	Dag/Månad/År (med siffror)
+Year short form (2 digits)	År/kortform (2 siffror)
+Month / Short form (text)	Månad/kortform (text)
+Target folders that are not yet existing are created as needed.	Målkatalog som ännu inte existerar skapas vid behov
+Date placeholders use the modification date of the image.	Datum-platshållare använder 'Senast ändrad' från bilden
+Rename/copy images to:	Byt namn/ Kopiera bilder till:
+Rename	Byt namn
+Preview	Förhandsgranskning
+Save as template	Spara som mall
+Close	Stäng
+Old name	Tidigare namn
+Date	Datum
+New name (>> : file gets copied)	Nytt namn (>> : filen kopieras)
+Select all	Markera alla
+Select none	  Avmarkera alla
+The file '%s' could not be %s.	Filen '%s' kan inte vara %s
+copied	kopierad
+renamed	  omdöpt
+Continue rename/copy?	Fortsätta byta namn/kopiera?
+Error during rename/copy	Fel vid namnbyte/kopiering
+%d file(s) renamed, %d file(s) copied, %d folder(s) created	%d  %d fil(er) omdöpta, %d fil(er) kopierade, %d katalog(er) skapad(e)	%d
+Crop Selection	Beskär
+Copy Selection to Clipboard	Kopiera markerat område till urklipp
+Zoom to Selection	Zooma in markerat område
+Pasting image from clipboard failed!	Kunde inte klistra in från urklipp!
+Image width:	Bredd:
+Image height:	Höjd:
+Acquisition date:	Anskaffningsdatum:
+Camera model:	Kameramodell:
+Exposure time (s):	Exponeringstid:
+Exposure bias (EV):	 Bias:
+Flash fired:	Blixt:
+Focal length (mm):	Brännvidd:
+F-Number:	F-Nummer:
+ISO Speed:	ISO:
+Modification date:	Senast ändrad:
+yes	ja
+no	nej
+Show navigation panel	Visa navigationspanel
+Show/hide navigation panel	 Visa/Dölj navigationspanel
+About JPEGView...	Om JPEGView...
+SIMD mode used:	SIMD-läge:
+Number of CPU cores used:	Antal processorkärnor:
+Licensed under the GNU general public license (GPL), see readme file for details:	Licensierad under GNU general public license (GPL), se readme.txt för detaljer:
+Project home page:	Projektets hemsida:
+Show first image in folder	Visa första bilden i katalogen
+Show previous image	Visa föregående bild
+Show next image	Visa nästa bild
+Show last image in folder	Visa sista bilden i katalogen
+Rotate image 90 deg clockwise	Rotera bilden 90 grader medurs
+Rotate image 90 deg counter-clockwise	Rotera bilden 90 grader moturs
+Landscape picture enhancement mode	Optimeringsläge för liggande bild
+Display image (EXIF) information	Visa bildinformation (EXIF)
+Actual size of image	Verklig bildstorlek
+Toggle between screens (only for multi-monitor systems)	Växla mellan skärmar (endast flerskärmssystem)
+Enable/disable full screen mode	Aktivera/Inaktivera helskärmsläge
+Full screen mode	Helskärmsläge
+Window mode	Fönsterläge
+Save as (in screen size/resolution)	Spara som (i skärmstorlek/-upplösning
+Save processed image to JPEG file (screen size)	Spara bearbetad bild i JPEG-format (skärmstorlek)
+Settings/Admin	Inställningar/Administration
+Edit global settings...	Redigera globala inställningar...
+Edit user settings...	Redigera användarinställningar...
+Backup parameter DB...	Säkerhetskopiera databas...
+Restore parameter DB...	Återställ databas...
+No user INI file exits yet. Create user INI file from INI file template?	Det finns ännu ingen INI-fil för användarinställningar. Vill du skapa en med hjälp av standardmallen?
+Copying parameter DB to file '%s' failed. Reason: %s	Kopiering av databas till '%s' misslyckades. Orsak: %s
+Select parameter DB to restore	Välj databas att återställa
+Conflicting entries in Param DB	Databasposter i konflikt
+The imported param DB contains entries already present in active param DB.	Den importerade databasen innehåller poster som redan finns i aktiv databas.
+Shall existing entries be preserved (Yes) or be overriden by the imported entries (No)?	Skall dom nuvarande posterna bevaras (Ja) eller skrivas över av importerade poster (Nej)?
+Select file to display in 'File Open' dialog	Välj fil att visa med 'Öppna fil'
+Crop Mode	Beskärningsalternativ
+Free	Flexibel storlek
+Fixed size...	Fixerad storlek...
+Set Fixed Crop Size	Bestäm fixerad beskärningsstorlek
+Width	Bredd
+Height	Höjd
+Pixels	Pixel
+Screen Pixels	Skärm-pixel
+Image Pixels	Bildpunkter
+Set modification date	Bestäm 'Senast ändrad'
+to current date	till aktuellt datum
+to EXIF date	till EXIF-datum
+Mark image for toggling. Use Ctrl+Left/Ctrl+Right to toggle between marked and current image	Markera bild för växling. Använd Ctrl+Vänster/Ctrl+Höger för att växla mellan markerad och aktuell bild
+Saturation	Mättnad
+Unsharp mask...	Oskärpa...
+Apply Unsharp Mask	Justera oskärpa
+Radius	Radie
+Amount	Mängd
+Threshold	Tröskelvärde
+Apply	Verkställ
+Cancel	Avbryt
+Keep processing parameters between images	Behåll berbetningsparametrar mellan bilder
+Show histogram	Visa Histogram
+Hide histogram	Dölj Histogram
+Show picture info (EXIF)	Visa bildinformation (EXIF)

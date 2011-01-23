@@ -25,6 +25,7 @@ Changelog
 [1.0.23]
 New features:
 - Lossless crop
+- Swedish translation (thanks to Åke)
 
 [1.0.22]
 Bugs fixed:
