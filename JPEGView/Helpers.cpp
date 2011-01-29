@@ -350,6 +350,59 @@ __int64 CalculateJPEGFileHash(void* pJPEGStream, int nStreamLength) {
 	return ((__int64)crcValue << 32) + sumValue;
 }
 
+CString GetJPEGComment(void* pJPEGStream, int nStreamLength) {
+	uint8* pCommentSeg = (uint8*)FindJPEGMarker(pJPEGStream, nStreamLength, 0xFE);
+	if (pCommentSeg == NULL) {
+		return CString("");
+	}
+	pCommentSeg += 2;
+	int nCommentLen = pCommentSeg[0]*256 + pCommentSeg[1] - 2;
+	if (nCommentLen <= 0) {
+		return CString("");
+	}
+
+	uint8* pComment = &(pCommentSeg[2]);
+	if (nCommentLen > 2 && (nCommentLen & 1) == 0) {
+		if (pComment[0] == 0xFF && pComment[1] == 0xFE) {
+			// UTF16 little endian
+			return CString((LPCWSTR)&(pComment[2]), (nCommentLen - 2) / 2);
+		} else if (pComment[0] == 0xFE && pComment[1] == 0xFF) {
+			// UTF16 big endian -> cannot read
+			return CString("");
+		}
+	}
+
+	// check if this is a reasonable string - it must contain enough characters between a and z and A and Z
+	if (nCommentLen < 7) {
+		return CString(""); // cannot check for such short strings, do not use
+	}
+	int nGoodChars = 0;
+	for (int i = 0; i < nCommentLen; i++) {
+		uint8 ch = pComment[i];
+		if (ch >= 'a' && ch <= 'z' ||  ch >= 'A' && ch <= 'Z' || ch == ' ') {
+			nGoodChars++;
+		}
+	}
+
+	return (nGoodChars > nCommentLen * 8 / 10) ? CString((LPCSTR)pComment, nCommentLen) : CString("");
+}
+
+void ClearJPEGComment(void* pJPEGStream, int nStreamLength) {
+	uint8* pCommentSeg = (uint8*)FindJPEGMarker(pJPEGStream, nStreamLength, 0xFE);
+	if (pCommentSeg == NULL) {
+		return;
+	}
+	pCommentSeg += 2;
+	int nCommentLen = pCommentSeg[0]*256 + pCommentSeg[1] - 2;
+	if (nCommentLen <= 0) {
+		return;
+	}
+	pCommentSeg += 2;
+	if ((uint8*)pJPEGStream + nStreamLength > pCommentSeg + nCommentLen) {
+		memset(pCommentSeg, 0, nCommentLen);
+	}
+}
+
 double GetExactTickCount() {
 	static __int64 nFrequency = -1;
 	if (nFrequency == -1) {

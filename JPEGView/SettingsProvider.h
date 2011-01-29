@@ -27,6 +27,7 @@ public:
 	bool ShowFileName() { return m_bShowFileName; }
 	bool ShowFileInfo() { return m_bShowFileInfo; }
 	bool ShowHistogram() { return m_bShowHistogram; }
+	bool ShowJPEGComments() { return m_bShowJPEGComments; }
 	bool ShowNavPanel() { return m_bShowNavPanel; }
 	bool ShowZoomNavigator() { return m_bShowZoomNavigator; }
 	bool ShowFullScreen() { return m_bShowFullScreen; }
@@ -106,6 +107,7 @@ private:
 	bool m_bShowFileName;
 	bool m_bShowFileInfo;
 	bool m_bShowHistogram;
+	bool m_bShowJPEGComments;
 	bool m_bShowNavPanel;
 	bool m_bShowZoomNavigator;
 	bool m_bShowFullScreen;

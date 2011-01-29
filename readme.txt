@@ -25,6 +25,8 @@ Changelog
 [1.0.23]
 New features:
 - Lossless crop
+- Display of JPEG comments (EXIF user comment, EXIF image description, JPEG COM marker, in this order)
+  Use INI file setting ShowJPEGComments to disable display of comments
 - Swedish translation (thanks to Åke)
 
 [1.0.22]

@@ -138,6 +138,7 @@ void CSettingsProvider::ReadWriteableINISettings() {
 	m_bShowFileName = GetBool(_T("ShowFileName"), false);
 	m_bShowFileInfo = GetBool(_T("ShowFileInfo"), false);
 	m_bShowHistogram = GetBool(_T("ShowHistogram"), false);
+	m_bShowJPEGComments = GetBool(_T("ShowJPEGComments"), true);
 	m_bShowNavPanel = GetBool(_T("ShowNavPanel"), true);
 	m_bShowZoomNavigator = GetBool(_T("ShowZoomNavigator"), true);
 	m_fBlendFactorNavPanel = (float) GetDouble(_T("BlendFactorNavPanel"), 0.5, 0.0, 1.0);

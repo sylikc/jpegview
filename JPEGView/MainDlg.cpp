@@ -3258,12 +3258,17 @@ void CMainDlg::FillEXIFDataDisplay(CEXIFDisplay* pEXIFDisplay) {
 	} else if (m_pFileList->Current() != NULL) {
 		sFileTitle.Format(_T("[%d/%d]  %s"), m_pFileList->CurrentIndex() + 1, m_pFileList->Size(), CurrentFileName(true));
 	}
+	LPCTSTR sComment = NULL;
 	pEXIFDisplay->AddTitle(sFileTitle);
 	pEXIFDisplay->AddLine(CNLS::GetString(_T("Image width:")), m_pCurrentImage->OrigWidth());
 	pEXIFDisplay->AddLine(CNLS::GetString(_T("Image height:")), m_pCurrentImage->OrigHeight());
 	if (!m_pCurrentImage->IsClipboardImage()) {
 		CEXIFReader* pEXIFReader = m_pCurrentImage->GetEXIFReader();
 		if (pEXIFReader != NULL) {
+			sComment = pEXIFReader->GetUserComment();
+			if (sComment == NULL || sComment[0] == 0) {
+				sComment = pEXIFReader->GetImageDescription();
+			}
 			if (pEXIFReader->GetAcquisitionTimePresent()) {
 				pEXIFDisplay->AddLine(CNLS::GetString(_T("Acquisition date:")), pEXIFReader->GetAcquisitionTime());
 			} else {
@@ -3299,6 +3304,13 @@ void CMainDlg::FillEXIFDataDisplay(CEXIFDisplay* pEXIFDisplay) {
 				pEXIFDisplay->AddLine(CNLS::GetString(_T("Modification date:")), *pFileTime);
 			}
 		}
+	}
+
+	if (sComment == NULL || sComment[0] == 0) {
+		sComment = m_pCurrentImage->GetJPEGComment();
+	}
+	if (CSettingsProvider::This().ShowJPEGComments() && sComment != NULL && sComment[0] != 0) {
+		pEXIFDisplay->SetComment(sComment);
 	}
 }
 

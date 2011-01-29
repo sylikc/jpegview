@@ -155,6 +155,7 @@ void CImageLoadThread::ProcessReadJPEGRequest(CRequest * request) {
 				request->Image = new CJPEGImage(nWidth, nHeight, pPixelData, 
 					pEXIFBlock, nBPP, 
 					Helpers::CalculateJPEGFileHash(pBuffer, nFileSize), CJPEGImage::IF_JPEG);
+				request->Image->SetJPEGComment(Helpers::GetJPEGComment(pBuffer, nFileSize));
 			} else {
 				// failed, try GDI+
 				delete[] pPixelData;

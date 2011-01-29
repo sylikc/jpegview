@@ -24,6 +24,8 @@ public:
 public:
 	// Camera model
 	LPCTSTR GetCameraModel() { return m_sModel; }
+	LPCTSTR GetUserComment() { return m_sUserComment; }
+	LPCTSTR GetImageDescription() { return m_sImageDescription; }
 	bool GetCameraModelPresent() { return !m_sModel.IsEmpty(); }
 	// Date-time the picture was taken
 	const SYSTEMTIME& GetAcquisitionTime() { return m_acqDate; }
@@ -69,6 +71,8 @@ public:
 
 private:
 	CString m_sModel;
+	CString m_sUserComment;
+	CString m_sImageDescription;
 	SYSTEMTIME m_acqDate;
 	Rational m_exposureTime;
 	double m_dExposureBias;
