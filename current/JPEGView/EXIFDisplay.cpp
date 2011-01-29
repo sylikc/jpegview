@@ -33,6 +33,8 @@ CEXIFDisplay::CEXIFDisplay(HWND hWnd) : CPanelMgr(hWnd) {
 	m_pos = CPoint(0, 0);
 	m_size = CSize(0, 0);
 	m_sTitle = NULL;
+	m_sComment = NULL;
+	m_nCommentHeight = 0;
 	m_hTitleFont = 0;
 	m_nNoHistogramSize = CSize(0, 0);
 	m_pHistogram = NULL;
@@ -48,6 +50,9 @@ CEXIFDisplay::~CEXIFDisplay() {
 void CEXIFDisplay::ClearTexts() {
 	delete[] m_sTitle;
 	m_sTitle = NULL;
+	delete[] m_sComment;
+	m_sComment = NULL;
+	m_nCommentHeight = 0;
 	std::list<TextLine>::iterator iter;
 	for (iter = m_lines.begin( ); iter != m_lines.end( ); iter++ ) {
 		delete[] iter->Desc;
@@ -60,6 +65,14 @@ void CEXIFDisplay::ClearTexts() {
 void CEXIFDisplay::AddTitle(LPCTSTR sTitle) {
 	delete[] m_sTitle;
 	m_sTitle = CopyStrAlloc(sTitle);
+}
+
+void CEXIFDisplay::SetComment(LPCTSTR sComment) {
+	delete[] m_sComment;
+	CString s(sComment);
+	s.TrimLeft();
+	s.TrimRight();
+	m_sComment = (s.GetLength() == 0) ? NULL : CopyStrAlloc(s);
 }
 
 void CEXIFDisplay::AddLine(LPCTSTR sDescription, LPCTSTR sValue) {
@@ -152,6 +165,13 @@ CRect CEXIFDisplay::PanelRect() {
 		m_size = CSize(nNeededWidthNoBorders + m_nGap*2 + nExpansionX, 
 			m_nTitleHeight + m_lines.size()*m_nLineHeight + m_nGap*2 + nExpansionY);
 
+		if (m_sComment != NULL) {
+			CRect rectComment(0, 0, m_size.cx - m_nGap*2, 200);
+			::DrawText(dc, m_sComment, _tcslen(m_sComment), &rectComment, DT_CALCRECT | DT_NOPREFIX | DT_WORDBREAK | DT_WORD_ELLIPSIS);
+			m_nCommentHeight = min(3 * m_nLineHeight, rectComment.Height());
+			m_size.cy += (m_nGap >> 1) + m_nCommentHeight;
+		}
+
 		m_nNoHistogramSize = CSize(m_size.cx - nExpansionX, m_size.cy - nExpansionY);
 		m_nTab1 = nMaxLenght1 + m_nGap;
 	}
@@ -182,6 +202,14 @@ void CEXIFDisplay::OnPaint(CDC & dc, const CPoint& offset) {
 	::SelectObject(dc, ::GetStockObject(DEFAULT_GUI_FONT));
 
 	int nRunningY = nY + m_nTitleHeight + m_nGap;
+
+	if (m_sComment != NULL) {
+		CRect rectComment(nX + m_nGap, nRunningY, nX + m_size.cx - m_nGap, nRunningY + m_nCommentHeight);
+		::DrawText(dc, m_sComment, _tcslen(m_sComment), &rectComment, DT_NOPREFIX | DT_WORDBREAK | DT_WORD_ELLIPSIS);
+		nRunningY += m_nCommentHeight;
+		nRunningY += m_nGap >> 1;
+	}
+
 	std::list<TextLine>::iterator iter;
 	for (iter = m_lines.begin( ); iter != m_lines.end( ); iter++ ) {
 		if (iter->Desc != NULL) {

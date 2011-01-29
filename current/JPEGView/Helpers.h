@@ -113,6 +113,12 @@ namespace Helpers {
 	// e.g. commenting the JPEG or changing some EXIF information without changing the hash.
 	__int64 CalculateJPEGFileHash(void* pJPEGStream, int nStreamLength);
 
+	// Gets the content of the JPEG comment tag, empty string if no comment
+	CString GetJPEGComment(void* pJPEGStream, int nStreamLength);
+
+	// Clears the JPEG comment (by filling with NULL characters)
+	void ClearJPEGComment(void* pJPEGStream, int nStreamLength);
+
 	// Conversion class that replaces the | by null character in a string.
 	// Caution: Uses a static buffer and can therefore only one string can be replaced concurrently
 	const int MAX_SIZE_REPLACE_PIPE = 256;

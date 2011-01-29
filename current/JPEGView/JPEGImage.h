@@ -229,6 +229,10 @@ public:
 	// Debug: Unsharp mask time of image in ms
 	double GetUnsharpMaskTickCount() { return m_dUnsharpMaskTickCount; }
 
+	// Sets and gets the JPEG comment of this image (COM marker)
+	void SetJPEGComment(LPCTSTR sComment) { m_sJPEGComment = CString(sComment); }
+	LPCTSTR GetJPEGComment() { return m_sJPEGComment; }
+
 	// Debug: Returns if this could be a night shot (heuristic, between 0 and 1)
 	float IsNightShot() const;
 
@@ -250,6 +254,7 @@ private:
 	void* m_pEXIFData;
 	int m_nEXIFSize;
 	CEXIFReader* m_pEXIFReader;
+	CString m_sJPEGComment;
 	int m_nOrigWidth, m_nOrigHeight; // these may changes by rotation
 	int m_nInitOrigWidth, m_nInitOrigHeight; // original width of image when constructed (before any rotation and crop)
 	int m_nIJLChannels;

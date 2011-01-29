@@ -72,6 +72,9 @@ static void* CompressAndSave(LPCTSTR sFileName, CJPEGImage * pImage,
 		return NULL;
 	}
 
+	// The Intel lib writes a useless comment into the JPEG stream - delete this
+	Helpers::ClearJPEGComment(pTargetStream, nJPEGStreamLen);
+
 	// If EXIF data is present, replace any JFIF block by this EXIF block to preserve the EXIF information
 	if (pImage->GetEXIFData() != NULL && bCopyEXIF) {
 		const int cnAdditionalThumbBytes = 32000;

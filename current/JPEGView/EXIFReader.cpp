@@ -54,12 +54,56 @@ static void ReadStringTag(CString & strOut, uint8* ptr, uint8* pTIFFHeader, bool
 		if (ptr != NULL && ReadUShort(ptr + 2, bLittleEndian) == 2) {
 			int nSize = ReadUInt(ptr + 4, bLittleEndian);
 			if (nSize <= 4) {
-				strOut = CString(ptr + 8);
+				strOut = CString((LPCSTR)(ptr + 8), nSize);
 			} else {
-				strOut = CString(pTIFFHeader + ReadUInt(ptr + 8, bLittleEndian));
+				strOut = CString((LPCSTR)(pTIFFHeader + ReadUInt(ptr + 8, bLittleEndian)), nSize);
 			}
 		} else {
 			strOut.Empty();
+		}
+	} catch (...) {
+		// EXIF corrupt?
+		strOut.Empty();
+	}
+}
+
+static void ReadUserCommentTag(CString & strOut, uint8* ptr, uint8* pTIFFHeader, bool bLittleEndian) {
+	try {
+		if (ptr != NULL && ReadUShort(ptr + 2, bLittleEndian) == 7) {
+			int nSize = ReadUInt(ptr + 4, bLittleEndian);
+			if (nSize > 10 && nSize <= 4096) {
+				LPCSTR sCodeDesc = (LPCSTR)(pTIFFHeader + ReadUInt(ptr + 8, bLittleEndian));
+				if (strcmp(sCodeDesc, "ASCII") == 0) {
+					strOut = CString((LPCSTR)(sCodeDesc + 8), nSize - 8);
+				} else if (strcmp(sCodeDesc, "UNICODE") == 0) {
+					bool bLE = bLittleEndian;
+					nSize -= 8;
+					sCodeDesc += 8;
+					if (sCodeDesc[0] == 0xFF && sCodeDesc[1] == 0xFE) {
+						bLE = true;
+						nSize -= 2; sCodeDesc += 2;
+					} else if (sCodeDesc[0] == 0xFE && sCodeDesc[1] == 0xFF) {
+						bLE = false;
+						nSize -= 2; sCodeDesc += 2;
+					}
+					if (bLE) {
+						strOut = CString((LPCWSTR)sCodeDesc, nSize / 2);
+					} else {
+						// swap 16 bit characters to little endian
+						char* pString = new char[nSize];
+						char* pSwap = pString;
+						memcpy(pString, sCodeDesc, nSize);
+						for (int i = 0; i < nSize / 2; i++) {
+							char t = *pSwap;
+							*pSwap = pSwap[1];
+							pSwap[1] = t;
+							pSwap += 2;
+						}
+						strOut = CString((LPCWSTR)pString, nSize / 2);
+						delete[] pString;
+					}
+				}
+			} // else comment is corrupt or too big
 		}
 	} catch (...) {
 		// EXIF corrupt?
@@ -236,6 +280,9 @@ CEXIFReader::CEXIFReader(void* pApp1Block)
 	uint8* pTagModel = FindTag(pIFD0, pLastIFD0, 0x110, bLittleEndian);
 	ReadStringTag(m_sModel, pTagModel, pTIFFHeader, bLittleEndian);
 
+	uint8* pTagImageDesc = FindTag(pIFD0, pLastIFD0, 0x10E, bLittleEndian);
+	ReadStringTag(m_sImageDescription, pTagImageDesc, pTIFFHeader, bLittleEndian);
+
 	// Add the manufacturer name if not contained in model name
 	if (!m_sModel.IsEmpty()) {
 		CString sMake;
@@ -291,6 +338,9 @@ CEXIFReader::CEXIFReader(void* pApp1Block)
 
 	uint8* pTagISOSpeed = FindTag(pEXIFIFD, pLastEXIF, 0x8827, bLittleEndian);
 	m_nISOSpeed = ReadShortTag(pTagISOSpeed, bLittleEndian);
+
+	uint8* pTagUserComment = FindTag(pEXIFIFD, pLastEXIF, 0x9286, bLittleEndian);
+	ReadUserCommentTag(m_sUserComment, pTagUserComment, pTIFFHeader, bLittleEndian);
 
 	if (nOffsetIFD1 != 0) {
 		m_pIFD1 = pTIFFHeader + nOffsetIFD1;
