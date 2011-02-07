@@ -255,6 +255,7 @@ CMainDlg::CMainDlg() {
 	m_bShowIPTools = false;
 	m_bShowWndButtonPanel = false;
 	m_bShowUnsharpMaskPanel = false;
+	m_bShowRotationPanel = false;
 	m_bMouseInNavPanel = false;
 	m_bPanMouseCursorSet = false;
 	m_bInInitialOpenFile = false;
@@ -267,6 +268,11 @@ CMainDlg::CMainDlg() {
 	m_pNavPanel = NULL;
 	m_pWndButtonPanel = NULL;
 	m_bPasteFromClipboardFailed = false;
+	m_bRotationModeAssisted = false;
+	m_bRotationShowGrid = true;
+	m_bRotationAutoCrop = true;
+	m_dRotationLQ = 0.0;
+	m_bRotating = false;
 	m_nMonitor = 0;
 
 	m_cropStart = CPoint(INT_MIN, INT_MIN);
@@ -288,6 +294,7 @@ CMainDlg::~CMainDlg() {
 	delete m_pNavPanel;
 	delete m_pWndButtonPanel;
 	delete m_pUnsharpMaskPanel;
+	delete m_pRotationPanel;
 	delete m_pEXIFDisplay;
 	if (m_pMemDCAnimation != NULL) {
 		delete m_pMemDCAnimation;
@@ -355,6 +362,7 @@ LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam
 	m_pNavPanel->AddGap(8);
 	m_pNavPanel->AddUserPaintButton(&(CNavigationPanel::PaintRotateCWBtn), &OnRotateCW, CNLS::GetString(_T("Rotate image 90 deg clockwise")));
 	m_pNavPanel->AddUserPaintButton(&(CNavigationPanel::PaintRotateCCWBtn), &OnRotateCCW, CNLS::GetString(_T("Rotate image 90 deg counter-clockwise")));
+	m_pNavPanel->AddUserPaintButton(&(CNavigationPanel::PaintFreeRotBtn), &OnRotateFree, CNLS::GetString(_T("Rotate image by user-defined angle")));
 	m_pNavPanel->AddGap(8);
 	m_btnKeepParams = m_pNavPanel->AddUserPaintButton(&(CNavigationPanel::PaintKeepParamsBtn), &OnKeepParameters, CNLS::GetString(_T("Keep processing parameters between images")));
 	m_btnLandScape = m_pNavPanel->AddUserPaintButton(&(CNavigationPanel::PaintLandscapeModeBtn), &OnLandscapeMode, CNLS::GetString(_T("Landscape picture enhancement mode")));
@@ -380,6 +388,21 @@ LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam
 	m_pUnsharpMaskPanel->AddButton(CNLS::GetString(_T("Cancel")), &OnCancelUnsharpMask);
     m_pUnsharpMaskPanel->AddButton(CNLS::GetString(_T("Apply")), &OnApplyUnsharpMask);
 
+	// setup rotation panel
+	m_pRotationPanel = new CRotationPanel(this->m_hWnd, m_pSliderMgr);
+	m_textRotationPanel = m_pRotationPanel->AddText(CNLS::GetString(_T("Rotate Image")), false, NULL);
+	m_textRotationPanel->SetBold(true);
+	m_textRotationHint = m_pRotationPanel->AddText(_T(""), false, NULL);
+	m_textRotationHint->SetAllowMultiline(true);
+	m_btnRotationShowGrid = m_pRotationPanel->AddUserPaintButton(&(CRotationPanel::PaintShowGridBtn), &OnRPShowGridLines, CNLS::GetString(_T("Show grid lines")));
+	m_btnRotationShowGrid->SetEnabled(m_bRotationShowGrid);
+	m_btnRotationAutoCrop = m_pRotationPanel->AddUserPaintButton(&(CRotationPanel::PaintAutoCropBtn), &OnRPAutoCrop, CNLS::GetString(_T("Auto crop rotated image (avoids black border)")));
+	m_btnRotationAutoCrop->SetEnabled(m_bRotationAutoCrop);
+	m_btnRotationAssisted = m_pRotationPanel->AddUserPaintButton(&(CRotationPanel::PaintAssistedModeBtn), &OnRPAssistedMode, CNLS::GetString(_T("Align image to horizontal or vertical line")));
+	UpdateAssistedRotationMode();
+	m_pRotationPanel->AddButton(CNLS::GetString(_T("Cancel")), &OnCancelRotation);
+    m_pRotationPanel->AddButton(CNLS::GetString(_T("Apply")), &OnApplyRotation);
+	
 	// setup EXIF display panel
 	m_pEXIFDisplay = new CEXIFDisplay(this->m_hWnd);
 	m_pEXIFDisplay->AddUserPaintButton(&(CMainDlg::PaintShowHistogramBtn), &OnShowHistogram, &ShowHistogramTooltip);
@@ -485,6 +508,9 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 	if (m_bShowUnsharpMaskPanel) {
 		excludedClippingRects.push_back(memDCMgr.CreatePanelRegion(m_pUnsharpMaskPanel, cfDimFactorUSMPanel, false));
 	}
+	if (m_bShowRotationPanel) {
+		excludedClippingRects.push_back(memDCMgr.CreatePanelRegion(m_pRotationPanel, cfDimFactorUSMPanel, false));
+	}
 
 	if (m_pCurrentImage == NULL) {
 		dc.FillRect(&m_clientRect, backBrush);
@@ -532,10 +558,17 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 				CreateProcessingFlags(m_bHQResampling && !m_bTemporaryLowQ, m_bAutoContrast, m_bAutoContrastSection, m_bLDC, false, m_bLandscapeMode),
 				*m_pUnsharpMaskParams);
 		} else {
-			pDIBData = m_pCurrentImage->GetDIB(newSize, clippedSize, offsetsInImage, 
-			    *m_pImageProcParams, 
-				CreateProcessingFlags(m_bHQResampling && !m_bTemporaryLowQ, 
-				m_bAutoContrast, m_bAutoContrastSection, m_bLDC, false, m_bLandscapeMode));
+			if (m_bShowRotationPanel) {
+				pDIBData = m_pCurrentImage->GetDIBRotated(newSize, clippedSize, offsetsInImage, 
+					*m_pImageProcParams, 
+					CreateProcessingFlags(false, m_bAutoContrast, m_bAutoContrastSection, m_bLDC, false, m_bLandscapeMode),
+					m_dRotationLQ, m_bRotationShowGrid);
+			} else {
+				pDIBData = m_pCurrentImage->GetDIB(newSize, clippedSize, offsetsInImage, 
+					*m_pImageProcParams, 
+					CreateProcessingFlags(m_bHQResampling && !m_bTemporaryLowQ, 
+					m_bAutoContrast, m_bAutoContrastSection, m_bLDC, false, m_bLandscapeMode));
+			}
 		}
 
 		// Zoom navigator - check if visible and create exclusion rectangle
@@ -602,7 +635,7 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 	if (bShowZoomNavigator && m_pCurrentImage != NULL) {
 		CZoomNavigator::PaintZoomNavigator(m_pCurrentImage, visRectZoomNavigator, rectZoomNavigator,
 			CPoint(m_nMouseX, m_nMouseY), *m_pImageProcParams,
-			CreateProcessingFlags(true, m_bAutoContrast, false, m_bLDC, false, m_bLandscapeMode), dc);
+			CreateProcessingFlags(!m_bShowRotationPanel, m_bAutoContrast, false, m_bLDC, false, m_bLandscapeMode), m_bShowRotationPanel ? m_dRotationLQ : 0.0, dc);
 	} else {
 		CZoomNavigator::ClearLastPanRectPoint();
 	}
@@ -702,6 +735,10 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 		PaintCropRect(dc);
 	}
 
+	if (m_bRotating && m_bRotationModeAssisted) {
+		PaintRotationLine(dc);
+	}
+
 	delete pHelpDisplay;
 
 	SetCursorForMoveSection();
@@ -759,8 +796,8 @@ LRESULT CMainDlg::OnLButtonDown(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam,
 	if (!bEatenByPanel) {
 		bool bCtrl = (::GetKeyState(VK_CONTROL) & 0x8000) != 0;
 		bool bDraggingRequired = m_virtualImageSize.cx > m_clientRect.Width() || m_virtualImageSize.cy > m_clientRect.Height();
-		if (bCtrl || !bDraggingRequired) {
-			if (!m_bShowUnsharpMaskPanel && !m_bDontStartCropOnNextClick) {
+		if (!m_bShowRotationPanel && (bCtrl || !bDraggingRequired)) {
+			if (!IsModalPanelShown() && !m_bDontStartCropOnNextClick) {
 				StartCropping(pointClicked.x, pointClicked.y);
 			}
 		} else {
@@ -773,11 +810,15 @@ LRESULT CMainDlg::OnLButtonDown(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam,
 				EndDragging();
 				CZoomNavigator::ClearLastPanRectPoint();
 				this->UpdateWindow(); // force repainting to update zoom navigator
+				StartDragging(pointClicked.x, pointClicked.y, bClickInZoomNavigatorThumbnail);
+			} else if (m_bShowRotationPanel) {
+				StartRotating(pointClicked.x, pointClicked.y);
+			} else {
+				StartDragging(pointClicked.x, pointClicked.y, bClickInZoomNavigatorThumbnail);
 			}
-			StartDragging(pointClicked.x, pointClicked.y, bClickInZoomNavigatorThumbnail);
 		}
 	}
-	bool bMouseInNavPanel = !m_bShowUnsharpMaskPanel && m_pNavPanel->PanelRect().PtInRect(pointClicked);
+	bool bMouseInNavPanel = !IsModalPanelShown() && m_pNavPanel->PanelRect().PtInRect(pointClicked);
 	if (bMouseInNavPanel && !m_bMouseInNavPanel) {
 		m_bMouseInNavPanel = true;
 		m_pNavPanel->GetTooltipMgr().EnableTooltips(true);
@@ -801,12 +842,14 @@ LRESULT CMainDlg::OnMButtonDown(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam,
 }
 
 LRESULT CMainDlg::OnLButtonUp(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, BOOL& /*bHandled*/) {
-	if (m_bDragging || m_bCropping) {
+	if (m_bDragging || m_bCropping || m_bRotating) {
 		if (m_bDragging) {
 			CZoomNavigator::ClearLastPanRectPoint();
 			EndDragging();
 		} else if (m_bCropping) {
 			EndCropping();
+		} else if (m_bRotating) {
+			EndRotating();
 		}
 	} else {
 		RouteMouseLButtonEventToPanels(MouseEvent_BtnUp, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
@@ -816,7 +859,7 @@ LRESULT CMainDlg::OnLButtonUp(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, B
 }
 
 LRESULT CMainDlg::OnLButtonDblClk(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, BOOL& /*bHandled*/) {
-	if (!m_bDragging && !m_bCropping) {
+	if (!m_bDragging && !m_bCropping && !m_bRotating) {
 		RouteMouseLButtonEventToPanels(MouseEvent_BtnDblClk, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
 	}
 	return 0;
@@ -824,11 +867,12 @@ LRESULT CMainDlg::OnLButtonDblClk(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lPara
 
 bool CMainDlg::RouteMouseLButtonEventToPanels(EMouseEvent eMouseEvent, int nX, int nY) {
 	bool bEatenByUnsharpMaskPanel = m_bShowUnsharpMaskPanel && m_pUnsharpMaskPanel->OnMouseLButton(eMouseEvent, nX, nY);
+	bool bEatenByRotationPanel = m_bShowRotationPanel && m_pRotationPanel->OnMouseLButton(eMouseEvent, nX, nY);
 	bool bEatenByIPA = m_bShowIPTools && m_pSliderMgr->OnMouseLButton(eMouseEvent, nX, nY);
 	bool bEatenByNavPanel = m_bShowNavPanel && !m_bShowIPTools && m_pNavPanel->OnMouseLButton(eMouseEvent, nX, nY);
 	bool bEatenByWndButtons = m_bShowWndButtonPanel && m_pWndButtonPanel->OnMouseLButton(eMouseEvent, nX, nY);
 	bool bEatenByEXIFDisplay = m_bShowFileInfo && m_pEXIFDisplay->OnMouseLButton(eMouseEvent, nX, nY);
-	return bEatenByUnsharpMaskPanel || bEatenByIPA || bEatenByNavPanel || bEatenByWndButtons || bEatenByEXIFDisplay;
+	return bEatenByUnsharpMaskPanel || bEatenByRotationPanel || bEatenByIPA || bEatenByNavPanel || bEatenByWndButtons || bEatenByEXIFDisplay;
 }
 
 LRESULT CMainDlg::OnMButtonUp(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/) {
@@ -838,7 +882,7 @@ LRESULT CMainDlg::OnMButtonUp(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*
 }
 
 LRESULT CMainDlg::OnXButtonDown(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOOL& /*bHandled*/) {
-	if (!m_bShowUnsharpMaskPanel) {
+	if (!IsModalPanelShown()) {
 		if (GET_XBUTTON_WPARAM(wParam) == XBUTTON1) {
 			GotoImage(POS_Next);
 		} else {
@@ -868,7 +912,7 @@ LRESULT CMainDlg::OnMouseMove(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, B
 	// Start timer to fade out nav panel if no mouse movement
 	if ((m_nMouseX != nOldMouseX || m_nMouseY != nOldMouseY) && !m_bPanMouseCursorSet) {
 		::KillTimer(this->m_hWnd, NAVPANEL_START_ANI_TIMER_EVENT_ID);
-		if (!m_bShowIPTools && !m_bShowUnsharpMaskPanel) {
+		if (!m_bShowIPTools && !IsModalPanelShown()) {
 			if (!m_bInNavPanelAnimation) {
 				::SetTimer(this->m_hWnd, NAVPANEL_START_ANI_TIMER_EVENT_ID, 2000, NULL);
 			} else {
@@ -893,8 +937,10 @@ LRESULT CMainDlg::OnMouseMove(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, B
 		if (m_nMouseX >= m_clientRect.Width() - 1 || m_nMouseX <= 0 || m_nMouseY >= m_clientRect.Height() - 1 || m_nMouseY <= 0 ) {
 			::SetTimer(this->m_hWnd, AUTOSCROLL_TIMER_EVENT_ID, AUTOSCROLL_TIMEOUT, NULL);
 		}
+	} else if (m_bRotating) {
+		DoRotating();
 	} else {
-		if (m_clientRect.Width() >= 800 && !m_bShowUnsharpMaskPanel) { 
+		if (m_clientRect.Width() >= 800 && !IsModalPanelShown()) { 
 			if (!m_bShowIPTools) {
 				int nIPAreaStart= m_clientRect.bottom - m_pSliderMgr->SliderAreaHeight();
 				if (m_bShowNavPanel) {
@@ -928,6 +974,9 @@ LRESULT CMainDlg::OnMouseMove(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, B
 		if (m_bShowUnsharpMaskPanel) {
 			m_bMouseInNavPanel = false;
 			m_pUnsharpMaskPanel->OnMouseMove(m_nMouseX, m_nMouseY);
+		} else if (m_bShowRotationPanel) {
+			m_bMouseInNavPanel = false;
+			m_pRotationPanel->OnMouseMove(m_nMouseX, m_nMouseY);
 		} else {
 			if (m_bShowNavPanel && !m_bShowIPTools) {
 				bool bMouseInNavPanel = m_pNavPanel->PanelRect().PtInRect(CPoint(m_nMouseX, m_nMouseY));
@@ -989,7 +1038,7 @@ LRESULT CMainDlg::OnMouseMove(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, B
 LRESULT CMainDlg::OnMouseWheel(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOOL& /*bHandled*/) {
 	bool bCtrl = (::GetKeyState(VK_CONTROL) & 0x8000) != 0;
 	int nDelta = GET_WHEEL_DELTA_WPARAM(wParam);
-	if (!bCtrl && CSettingsProvider::This().NavigateWithMouseWheel() && !m_bShowUnsharpMaskPanel) {
+	if (!bCtrl && CSettingsProvider::This().NavigateWithMouseWheel() && !IsModalPanelShown()) {
 		if (nDelta < 0) {
 			GotoImage(POS_Next);
 		} else if (nDelta > 0) {
@@ -1015,6 +1064,13 @@ LRESULT CMainDlg::OnKeyDown(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOO
 			m_dAlternateUSMAmount = m_pUnsharpMaskParams->Amount;
 			m_pUnsharpMaskParams->Amount = dTemp;
 			Invalidate();
+			return 1;
+		}
+		return 0; // no other keys are recogized in this mode
+	}
+	if (m_bShowRotationPanel) {
+		if (wParam == VK_ESCAPE) {
+			TerminateRotationPanel();
 			return 1;
 		}
 		return 0; // no other keys are recogized in this mode
@@ -1258,7 +1314,7 @@ LRESULT CMainDlg::OnKeyDown(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOO
 }
 
 LRESULT CMainDlg::OnSysKeyDown(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOOL& /*bHandled*/) {
-	if (m_bShowUnsharpMaskPanel) {
+	if (IsModalPanelShown()) {
 		return 1;
 	}
 	bool bShift = (::GetKeyState(VK_SHIFT) & 0x8000) != 0;
@@ -1292,7 +1348,7 @@ LRESULT CMainDlg::OnJPEGLoaded(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, 
 
 LRESULT CMainDlg::OnDropFiles(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOOL& /*bHandled*/) {
 	HDROP hDrop = (HDROP) wParam;
-	if (hDrop != NULL && !m_bShowUnsharpMaskPanel) {
+	if (hDrop != NULL && !IsModalPanelShown()) {
 		const int BUFF_SIZE = 512;
 		TCHAR buff[BUFF_SIZE];
 		if (::DragQueryFile(hDrop, 0, (LPTSTR) &buff, BUFF_SIZE - 1) > 0) {
@@ -1423,7 +1479,7 @@ static void TranslateMenu(HMENU hMenu) {
 }
 
 LRESULT CMainDlg::OnContextMenu(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, BOOL& /*bHandled*/) {
-	if (m_bShowUnsharpMaskPanel) {
+	if (IsModalPanelShown()) {
 		return 1;
 	}
 	int nX = GET_X_LPARAM(lParam);
@@ -1557,6 +1613,33 @@ void CMainDlg::OnApplyUnsharpMask(CButtonCtrl & sender) {
 	sm_instance->TerminateUnsharpMaskPanel();
 }
 
+void CMainDlg::OnRPShowGridLines(CButtonCtrl & sender) {
+	sm_instance->m_bRotationShowGrid = !sm_instance->m_bRotationShowGrid;
+	sm_instance->m_btnRotationShowGrid->SetEnabled(sm_instance->m_bRotationShowGrid);
+	sm_instance->Invalidate();
+}
+
+void CMainDlg::OnRPAutoCrop(CButtonCtrl & sender) {
+	sm_instance->m_bRotationAutoCrop = !sm_instance->m_bRotationAutoCrop;
+	sm_instance->m_btnRotationAutoCrop->SetEnabled(sm_instance->m_bRotationAutoCrop);
+}
+
+void CMainDlg::OnRPAssistedMode(CButtonCtrl & sender) {
+	sm_instance->m_bRotationModeAssisted = !sm_instance->m_bRotationModeAssisted;
+	sm_instance->UpdateAssistedRotationMode();
+}
+
+void CMainDlg::OnCancelRotation(CButtonCtrl & sender) {
+	sm_instance->TerminateRotationPanel();
+}
+
+void CMainDlg::OnApplyRotation(CButtonCtrl & sender) {
+	HCURSOR hOldCursor = ::SetCursor(::LoadCursor(NULL, MAKEINTRESOURCE(IDC_WAIT)));
+	sm_instance->ApplyRotation();
+	::SetCursor(hOldCursor);
+	sm_instance->TerminateRotationPanel();
+}
+
 void CMainDlg::OnSaveToDB(CButtonCtrl & sender) {
 	sm_instance->ExecuteCommand(IDM_SAVE_PARAM_DB);
 }
@@ -1617,6 +1700,12 @@ void CMainDlg::OnRotateCW(CButtonCtrl & sender) {
 
 void CMainDlg::OnRotateCCW(CButtonCtrl & sender) {
 	sm_instance->ExecuteCommand(IDM_ROTATE_270);
+}
+
+void CMainDlg::OnRotateFree(CButtonCtrl & sender) {
+	if (sm_instance->m_pCurrentImage != NULL) {
+		sm_instance->StartRotationPanel();
+	}
 }
 
 void CMainDlg::OnShowInfo(CButtonCtrl & sender) {
@@ -3541,7 +3630,7 @@ bool CMainDlg::IsNavPanelVisible() {
 }
 
 void CMainDlg::StartNavPanelAnimation(bool bFadeOut, bool bFast) {
-	if (m_bShowUnsharpMaskPanel) return;
+	if (IsModalPanelShown()) return;
 	if (!m_bInNavPanelAnimation) {
 		m_bFadeOut = bFadeOut;
 		if (!bFadeOut) {
@@ -3666,6 +3755,7 @@ void CMainDlg::StartUnsharpMaskPanel() {
 	ResetZoomTo100Percents();
 	m_bMouseOn = bOldMouseOn;
 	m_bShowUnsharpMaskPanel = true;
+	m_bShowRotationPanel = false;
 	m_bShowHelp = false;
 	m_bShowIPTools = false;
 	m_bOldShowNavPanel = m_bShowNavPanel;
@@ -3675,4 +3765,117 @@ void CMainDlg::StartUnsharpMaskPanel() {
 	StopTimer();
 	StopMovieMode();
 	Invalidate();
+}
+
+void CMainDlg::TerminateRotationPanel() {
+	m_bShowRotationPanel = false;
+	m_bShowNavPanel = m_bOldShowNavPanel;
+	m_dRotationLQ = 0.0;
+	Invalidate();
+}
+
+void CMainDlg::StartRotationPanel() {
+	bool bOldMouseOn = m_bMouseOn;
+	m_bMouseOn = false;
+	m_bMouseOn = bOldMouseOn;
+	m_bShowRotationPanel = true;
+	m_bShowUnsharpMaskPanel = false;
+	m_bShowHelp = false;
+	m_bShowIPTools = false;
+	m_bOldShowNavPanel = m_bShowNavPanel;
+	m_bShowNavPanel = false;
+	m_bShowWndButtonPanel = false;
+	EndNavPanelAnimation();
+	StopTimer();
+	StopMovieMode();
+	Invalidate();
+}
+
+void CMainDlg::UpdateAssistedRotationMode() {
+	m_textRotationHint->SetText(CNLS::GetString(m_bRotationModeAssisted ? 
+		_T("Use the mouse to draw a line that shall be horizontal or vertical.") : 
+		_T("Rotate the image by dragging with the mouse.")));
+	::InvalidateRect(m_hWnd, &m_textRotationHint->GetPosition(), FALSE);
+	m_btnRotationAssisted->SetEnabled(m_bRotationModeAssisted);
+	if (m_bRotationShowGrid == m_bRotationModeAssisted) {
+		m_bRotationShowGrid = !m_bRotationModeAssisted;
+		m_btnRotationShowGrid->SetEnabled(m_bRotationShowGrid);
+		Invalidate();
+	}
+}
+
+void CMainDlg::StartRotating(int nX, int nY) {
+	if (m_pCurrentImage != NULL) {
+		m_bRotating = true;
+		float fX = (float)nX, fY = (float)nY;
+		ScreenToImage(fX, fY);
+		m_rotationStartX = fX;
+		m_rotationStartY = fY;
+		m_dRotatonLQStart = m_dRotationLQ;
+	}
+}
+
+void CMainDlg::DoRotating() {
+	const double PI = 3.141592653;
+	if (m_pCurrentImage != NULL) {
+		if (!m_bRotationModeAssisted) {
+			float fX = (float)m_nMouseX, fY = (float)m_nMouseY;
+			ScreenToImage(fX, fY);
+			float fCenterX = m_pCurrentImage->OrigWidth() * 0.5f;
+			float fCenterY = m_pCurrentImage->OrigHeight() * 0.5f;
+			double dAngleStart = atan2(m_rotationStartY - fCenterY, m_rotationStartX - fCenterX);
+			double dAngleEnd = atan2(fY - fCenterY, fX - fCenterX);
+			m_dRotationLQ = fmod(m_dRotatonLQStart + dAngleEnd - dAngleStart, 2 * PI);
+			UpdateRotationPanelTitle();
+		}
+		Invalidate();
+	}
+}
+
+void CMainDlg::EndRotating() {
+	const float PI = 3.141592653f;
+	m_bRotating = false;
+	if (m_bRotationModeAssisted) {
+		float fX = m_rotationStartX, fY = m_rotationStartY;
+		ImageToScreen(fX, fY);
+		float fDX = (m_nMouseX > fX) ? m_nMouseX - fX : fX - m_nMouseX;
+		float fDY = (m_nMouseX > fX) ? m_nMouseY - fY : fY - m_nMouseY;
+		if (fabs(fDX) > 2 || fabs(fDY) > 2) {
+			float fAngle = atan2(fDY, fDX);
+			if (fabs(fAngle) > PI * 0.25f) {
+				m_dRotationLQ -= (fAngle + PI * 0.5f);
+			} else {
+				m_dRotationLQ -= fAngle;
+			}
+			UpdateRotationPanelTitle();
+		}
+		Invalidate();
+	}
+}
+
+void CMainDlg::ApplyRotation() {
+	if (m_pCurrentImage == NULL) {
+		return;
+	}
+	m_pCurrentImage->RotateOriginalPixels(m_dRotationLQ, m_bRotationAutoCrop);
+	Invalidate();
+}
+
+void CMainDlg::PaintRotationLine(HDC hPaintDC) {
+	float fX = m_rotationStartX, fY = m_rotationStartY;
+	ImageToScreen(fX, fY);
+	HPEN hPen = ::CreatePen(PS_SOLID, 3, RGB(255, 0, 0));
+	HGDIOBJ hOldPen = ::SelectObject(hPaintDC, hPen);
+	::MoveToEx(hPaintDC, Helpers::RoundToInt(fX), Helpers::RoundToInt(fY), NULL); 
+	::LineTo(hPaintDC, m_nMouseX, m_nMouseY);
+	::SelectObject(hPaintDC, hOldPen);
+	::DeleteObject(hPen);
+}
+
+void CMainDlg::UpdateRotationPanelTitle() {
+	const int BUFF_SIZE = 24;
+	double dAngleDeg = 360 * m_dRotationLQ / (2 * 3.141592653);
+	TCHAR buff[BUFF_SIZE];
+	_stprintf_s(buff, BUFF_SIZE, _T("  %.1f °"), dAngleDeg);
+	m_textRotationPanel->SetText(CString(CNLS::GetString(_T("Rotate Image"))) + buff);
 }

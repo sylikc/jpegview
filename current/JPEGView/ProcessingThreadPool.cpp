@@ -138,6 +138,13 @@ void CProcessingThread::DoProcess(CProcessingRequest* pRequest, int nOffsetY, in
 				pReq->Channels);
 			break;
 		}
+		case CProcessingRequest::RotateImage: {
+			CRequestRotate* pReq = (CRequestRotate*)pRequest;
+			CBasicProcessing::RotateHQ_Core(CPoint(pReq->FullTargetOffset.x, pReq->FullTargetOffset.y + nOffsetY),
+				CSize(pReq->FullTargetSize.cx, nSizeY), pReq->Rotation, pReq->SourceSize, pReq->SourcePixels, 
+				(uint8*)pReq->TargetPixels + pReq->FullTargetSize.cx * 4 * nOffsetY, pReq->Channels);
+			break;
+		}
 	}
 }
 

@@ -94,7 +94,11 @@ public:
 	// The method is inplace and changes the input DIB
 	static void DimRectangle32bpp(int nWidth, int nHeight, void* pDIBPixels, CRect rect, float fDimValue);
 
-	// Downsampling using point sampling (line removal). Point sampling is fast but produces aliasing artefacts.
+	// Fills a rectangle in the DIB with the given color
+	// The method is inplace and changes the input DIB
+	static void FillRectangle32bpp(int nWidth, int nHeight, void* pDIBPixels, CRect rect, COLORREF color);
+
+	// Resampling of image using point sampling (line removal). Point sampling is fast but produces aliasing artefacts.
 	// fullTargetSize: Size of target image (unclipped)
 	// fullTargetOffset: Offset for start of clipping window (in the region given by fullTargetSize)
 	// clippedTargetSize: Size of clipped window - returned DIB has this size
@@ -102,13 +106,14 @@ public:
 	// pIJLPixels: Source image
 	// nChannels: number of channels (bytes) in source image, must be 3 or 4
 	// Returns a 32 bpp DIB of size clippedTargetSize
-	static void* SampleDownFast(CSize fullTargetSize, CPoint fullTargetOffset, CSize clippedTargetSize, 
-		CSize sourceSize, const void* pIJLPixels, int nChannels);
+	static void* PointSample(CSize fullTargetSize, CPoint fullTargetOffset, CSize clippedTargetSize, 
+						     CSize sourceSize, const void* pIJLPixels, int nChannels);
 
-	// Upsampling using point sampling (line duplication).
-	// See SampleDownFast() for parameters
-	static void* SampleUpFast(CSize fullTargetSize, CPoint fullTargetOffset, CSize clippedTargetSize, 
-		CSize sourceSize, const void* pIJLPixels, int nChannels);
+	// Rotate image and resample using point sampling (line removal).
+	// dRotation: Rotation angle in radians
+	// See PointSample() for other parameters
+	static void* PointSampleWithRotation(CSize fullTargetSize, CPoint fullTargetOffset, CSize clippedTargetSize, 
+										 CSize sourceSize, double dRotation, const void* pIJLPixels, int nChannels);
 
 	// High quality downsampling to target size, using a set of down-sampling kernels that
 	// do some sharpening during down-sampling if desired. Note that the filter type can only
@@ -131,6 +136,16 @@ public:
 	// See SampleDownFast() for parameters
 	static void* SampleUp_HQ_SSE_MMX(CSize fullTargetSize, CPoint fullTargetOffset, CSize clippedTargetSize,
 		CSize sourceSize, const void* pIJLPixels, int nChannels, bool bSSE);
+
+	// Bicubic rotation around image center
+	// targetOffset: Offset for start of clipping window (in the region given by sourceSize)
+	// targetSize: Size of target image - returned DIB has this size
+	// dRotation: rotation angle in radians
+	// sourceSize: Size of source image
+	// pSourcePixels: Source image
+	// nChannels: number of channels (bytes) in source image, must be 3 or 4
+	// Returns a 32 bpp DIB of size targetSize
+	static void* RotateHQ(CPoint targetOffset, CSize targetSize, double dRotation, CSize sourceSize, const void* pSourcePixels, int nChannels);
 
 	// Gauss filtering of a 16 bpp 1 channel image. Out of the image with size fullSize, the rectangle rect at position offset is filtered
 	static int16* GaussFilter16bpp1Channel(CSize fullSize, CPoint offset, CSize rect, double dRadius, const int16* pPixels);
@@ -165,4 +180,6 @@ private:
 	static void* UnsharpMask_Core(CSize fullSize, CPoint offset, CSize rect, double dAmount, const int16* pThresholdLUT,
 								  const int16* pGrayImage, const int16* pSmoothedGrayImage, const void* pSourcePixels, void* pTargetPixels, int nChannels);
 
+	static void* RotateHQ_Core(CPoint targetOffset, CSize targetSize, double dRotation, CSize sourceSize, 
+							   const void* pSourcePixels, void* pTargetPixels, int nChannels);
 };

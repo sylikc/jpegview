@@ -87,7 +87,8 @@ public:
 	CRect GetPosition() const { return m_position; }
 	virtual CSize GetMinSize() = 0;
 	bool IsShown() const { return m_bShow; }
-	void SetShow(bool bShow);
+	void SetShow(bool bShow) { SetShow(bShow, true); }
+	void SetShow(bool bShow, bool bInvalidate);
 	void SetTooltip(LPCTSTR sTooltipText);
 	void SetTooltipHandler(TooltipHandler ttHandler);
 
@@ -96,16 +97,10 @@ public:
 	virtual bool OnMouseMove(int nX, int nY) = 0;
 	virtual void OnPaint(CDC & dc, const CPoint& offset);
 	
-protected:
-	friend class CSliderMgr;
-	friend class CNavigationPanel;
-	friend class CWndButtonPanel;
-	friend class CUnsharpMaskPanel;
-	friend class CEXIFDisplay;
-
-	virtual void Draw(CDC & dc, CRect position, bool bBlack) = 0;
 	void SetPosition(CRect position) { m_position = position; }
-
+protected:
+	virtual void Draw(CDC & dc, CRect position, bool bBlack) = 0;
+	
 	CPanelMgr* m_pMgr;
 	bool m_bShow;
 	bool m_bHighlight;
@@ -142,7 +137,7 @@ public:
 
 	// sets the text of the text control
 	void SetText(LPCTSTR sText);
-	// gets the width of the text in pixels
+	// gets the width of the text in pixels. In case of multiline, the returned size is the singleline size.
 	int GetTextLabelWidth() const { return m_textSize.cx; }
 	// gets if the text is editable
 	bool IsEditable() const { return m_bEditable; }
@@ -152,7 +147,9 @@ public:
 	bool IsBold() const { return m_bBold; }
 	// sets if the text is editable
 	void SetEditable(bool bEditable);
-	// sets the maximal text width in pixels
+	// sets if the text can be multiline
+	void SetAllowMultiline(bool bMultiline) { m_bAllowMultiline = bMultiline; }
+	// sets the maximal text width in pixels in the edit mode. Ignored when m_bEditable == false
 	void SetMaxTextWidth(int nMaxWidth) { m_nMaxTextWidth = nMaxWidth; }
 	// Sets this text as right aligned on the right border of the screen (true) or left aligned (default, false)
 	void SetRightAligned(bool bValue) { m_bRightAligned = bValue; }
@@ -183,6 +180,7 @@ private:
 	bool m_bEditable;
 	bool m_bRightAligned;
 	bool m_bBold;
+	bool m_bAllowMultiline;
 	CEdit* m_pEdit;
 	TextChangedHandler* m_textChangedHandler;
 	HFONT m_hBoldFont;
@@ -203,6 +201,8 @@ public:
 
 	// extends the active area of the button over the normal position
 	void SetExtendedActiveArea(CRect rect) { m_extendedArea = rect; }
+
+	bool IsUserPaintButton() { return m_paintHandler != NULL; }
 
 public:
 	virtual CSize GetMinSize();
@@ -326,6 +326,9 @@ public:
 	// Gets the manager for all tooltips
 	CTooltipMgr& GetTooltipMgr() { return m_tooltipMgr; }
 
+	// Paints a frame around the panel
+	void PaintFrameAroundPanel(CDC & dc, const CRect& rect, const CPoint& offset);
+
 protected:
 	// recalculates the layout
 	virtual void RepositionAll() = 0;
@@ -395,6 +398,7 @@ public:
 	static void PaintWindowModeBtn(const CRect& rect, CDC& dc);
 	static void PaintRotateCWBtn(const CRect& rect, CDC& dc);
 	static void PaintRotateCCWBtn(const CRect& rect, CDC& dc);
+	static void PaintFreeRotBtn(const CRect& rect, CDC& dc);
 	static void PaintInfoBtn(const CRect& rect, CDC& dc);
 	static void PaintKeepParamsBtn(const CRect& rect, CDC& dc);
 	static void PaintLandscapeModeBtn(const CRect& rect, CDC& dc);
@@ -456,4 +460,29 @@ private:
 	CRect m_clientRect;
 	int m_nWidth, m_nHeight;
 	int m_nMaxSliderWidth;
+};
+
+class CRotationPanel : public CPanelMgr {
+public:
+	// The panel is on the given window on top border of the given slider manager
+	CRotationPanel(HWND hWnd, CSliderMgr* pSliderMgr);
+
+	virtual CRect PanelRect();
+	virtual bool OnMouseLButton(EMouseEvent eMouseEvent, int nX, int nY);
+	virtual void RequestRepositioning();
+	virtual void OnPaint(CDC & dc, const CPoint& offset);
+
+	// Painting handlers for the buttons
+	static void PaintShowGridBtn(const CRect& rect, CDC& dc);
+	static void PaintAutoCropBtn(const CRect& rect, CDC& dc);
+	static void PaintAssistedModeBtn(const CRect& rect, CDC& dc);
+protected:
+	virtual void RepositionAll();
+
+private:
+
+	CSliderMgr* m_pSliderMgr;
+	CRect m_clientRect;
+	int m_nWidth, m_nHeight;
+	int m_nButtonSize;
 };

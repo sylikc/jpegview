@@ -257,3 +257,10 @@ Show histogram	Histogramm anzeigen
 Hide histogram	Histogramm ausblenden
 Crop Selection Lossless...	Selektion verlustlos freistellen...
 Save cropped image	Freigestelltes Bild speichern
+Rotate image by user-defined angle	Bild um benutzerdefinierten Winkel drehen
+Rotate Image	Bild rotieren
+Show grid lines	Gitterlinien anzeigen
+Auto crop rotated image (avoids black border)	Rotiertes Bild freistellen (verhindert schwarzen Rahmen)
+Align image to horizontal or vertical line	Bild an horizontaler oder vertikaler Linie ausrichten
+Use the mouse to draw a line that shall be horizontal or vertical.	Benutzen Sie die Maus um eine Linie zu zeichnen, welche horizontal oder vertikal ausgerichtet sein soll.
+Rotate the image by dragging with the mouse.	Rotieren Sie das Bild durch Klicken und Ziehen mit der Maus.

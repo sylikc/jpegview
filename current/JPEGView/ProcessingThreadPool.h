@@ -14,7 +14,8 @@ public:
 		Downsampling,
 		LDCAndLUT,
 		Gauss,
-		UnsharpMask
+		UnsharpMask,
+		RotateImage
 	};
 
 	CProcessingRequest(ERequest eRequest, const void* pSourcePixels, CSize sourceSize, void* pTargetPixels,
@@ -110,6 +111,19 @@ public:
 	const int16* ThresholdLUT;
 	const int16* GrayImage;
 	const int16* SmoothedGrayImage;
+	int Channels;
+};
+
+class CRequestRotate : public CProcessingRequest {
+public:
+	CRequestRotate(const void* pSourcePixels, CPoint targetOffset, CSize targetSize, double dRotation, 
+		CSize sourceSize, void* pTargetPixels, int nChannels)
+			: CProcessingRequest(RotateImage, pSourcePixels, sourceSize, pTargetPixels, targetSize, targetOffset, targetSize) {
+		Rotation = dRotation;
+		Channels = nChannels;
+	}
+
+	double Rotation;
 	int Channels;
 };
 
