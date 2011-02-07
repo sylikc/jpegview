@@ -15,12 +15,17 @@
 #define NAV_PANEL_GAP 5
 #define WNDBUTTON_PANEL_HEIGHT 24
 #define WNDBUTTON_BORDER 1
-#define USM_PANEL_BORDER 12
+#define PANEL_BORDER 12
+#define PANEL_GAPTITLE 10
 #define USM_PANEL_ADDX 40
-#define USM_PANEL_GAPTITLE 10
 #define USM_PANEL_GAPSLIDER 7
 #define USM_PANEL_GAPBUTTONY 4
 #define USM_PANEL_GAPBUTTONX 12
+#define ROTATION_PANEL_WIDTH 360
+#define ROTATION_PANEL_HEIGHT 100
+#define ROTATION_PANEL_BUTTON_SIZE 21
+#define ROTATION_PANEL_GAPBUTTONX1 6
+#define ROTATION_PANEL_GAPBUTTONX2 12
 #define WINPROP_THIS _T("JV_THIS")
 
 /////////////////////////////////////////////////////////////////////////////////////////////
@@ -322,6 +327,17 @@ void CPanelMgr::ReleaseMouse(CUICtrl* pCtrl) {
 	if (pCtrl == m_pCtrlCaptureMouse) m_pCtrlCaptureMouse = NULL;
 }
 
+void CPanelMgr::PaintFrameAroundPanel(CDC & dc, const CRect& rect, const CPoint& offset) {
+	HPEN hPen = ::CreatePen(PS_SOLID, 1, CSettingsProvider::This().ColorGUI());
+	HPEN hOldPen = dc.SelectPen(hPen);;
+	dc.SelectStockBrush(HOLLOW_BRUSH);
+	CRect rectCopy = rect;
+	rectCopy.OffsetRect(offset);
+	dc.Rectangle(rectCopy);
+	dc.SelectPen(hOldPen);
+	::DeleteObject(hPen);
+}
+
 /////////////////////////////////////////////////////////////////////////////////////////////
 // CSliderMgr
 /////////////////////////////////////////////////////////////////////////////////////////////
@@ -474,10 +490,10 @@ void CSliderMgr::RepositionAll() {
 				// Special behaviour if not enough room - remove labels for editable texts
 				if (pTextCtrl->IsEditable() && pLastTextCtrl != NULL && !pLastTextCtrl->IsEditable()) {
 					if (nX + nTextWidth > nXLimitScreen) {
-						pLastTextCtrl->m_bShow = false;
+						pLastTextCtrl->SetShow(false, false);
 						nX -= pLastTextCtrl->GetPosition().Width();
 					} else {
-						pLastTextCtrl->m_bShow = true;
+						pLastTextCtrl->SetShow(true, false);
 					}
 				}
 				if (pTextCtrl->IsRightAligned()) {
@@ -490,9 +506,9 @@ void CSliderMgr::RepositionAll() {
 				}
 				// only show editable control if large enough
 				if (pTextCtrl->IsEditable()) {
-					pTextCtrl->m_bShow = (nTextWidth > 40);
+					pTextCtrl->SetShow(nTextWidth > 40, false);
 				} else {
-					pTextCtrl->m_bShow = (nTextWidth > 0);
+					pTextCtrl->SetShow(nTextWidth > 0, false);
 				}
 				pTextCtrl->SetPosition(CRect(nX, nY, nX + nTextWidth, nY + m_nSliderHeight));
 				pTextCtrl->SetMaxTextWidth(nXLimitScreen - nX);
@@ -737,6 +753,22 @@ void CNavigationPanel::PaintRotateCCWBtn(const CRect& rect, CDC& dc) {
 	dc.LineTo(nX+2, r.bottom);
 }
 
+void CNavigationPanel::PaintFreeRotBtn(const CRect& rect, CDC& dc) {
+	CRect r = InflateRect(rect, 0.32f);
+	r.OffsetRect(0, -1);
+
+	int nArrowStart = (int)(r.Width()*0.6f);
+	int nArrowLen = (int)(nArrowStart*0.68f);
+	int nX = (r.right + r.left) >> 1;
+	dc.Arc(r.left, r.top, r.right, r.bottom, nX, r.bottom, nX - 2, r.top);
+	dc.MoveTo(nX, r.bottom - 1);
+	dc.LineTo(nX - nArrowStart, r.bottom - 1);
+	dc.MoveTo(nX - nArrowStart, r.bottom - 1);
+	dc.LineTo(nX - nArrowStart + nArrowLen, r.bottom - 1 + nArrowLen);
+	dc.MoveTo(nX - nArrowStart, r.bottom - 1);
+	dc.LineTo(nX - nArrowStart + nArrowLen, r.bottom - 1 - nArrowLen);
+}
+
 void CNavigationPanel::PaintKeepParamsBtn(const CRect& rect, CDC& dc) {
 	CRect r = InflateRect(rect, 0.25f);
 	int nX = (int)(r.Width()*0.28f);
@@ -922,8 +954,8 @@ CRect CUnsharpMaskPanel::PanelRect() {
 			}
 		}
 		m_nHeight -= nLastMinSize; // last button height added twice - subtract again one
-		m_nWidth += (int)(m_fDPIScale*(2*USM_PANEL_BORDER + USM_PANEL_ADDX));
-		m_nHeight += (int)(m_fDPIScale*(2*USM_PANEL_BORDER + USM_PANEL_GAPTITLE + 3*USM_PANEL_GAPSLIDER + USM_PANEL_GAPBUTTONY));
+		m_nWidth += (int)(m_fDPIScale*(2*PANEL_BORDER + USM_PANEL_ADDX));
+		m_nHeight += (int)(m_fDPIScale*(2*PANEL_BORDER + PANEL_GAPTITLE + 3*USM_PANEL_GAPSLIDER + USM_PANEL_GAPBUTTONY));
 	}
 	CRect sliderRect = m_pSliderMgr->PanelRect();
 	m_clientRect = CRect(CPoint((sliderRect.right + sliderRect.left) / 2 - m_nWidth / 2, sliderRect.bottom - m_nHeight - 30),
@@ -945,7 +977,7 @@ void CUnsharpMaskPanel::RequestRepositioning() {
 
 void CUnsharpMaskPanel::RepositionAll() {
 	PanelRect();
-	int nOffset = (int)(m_fDPIScale*USM_PANEL_BORDER);
+	int nOffset = (int)(m_fDPIScale*PANEL_BORDER);
 	int nStartX = m_clientRect.left + nOffset;
 	int nStartY = m_clientRect.top + nOffset;
 	bool bStartButtons = true;
@@ -955,7 +987,7 @@ void CUnsharpMaskPanel::RepositionAll() {
 		if (pText != NULL) {
 			pText->SetPosition(CRect(CPoint(nStartX, nStartY), pText->GetMinSize()));
 			nStartY += pText->GetMinSize().cy;
-			nStartY += (int)(m_fDPIScale*USM_PANEL_GAPTITLE);
+			nStartY += (int)(m_fDPIScale*PANEL_GAPTITLE);
 		} else {
 			CSliderDouble* pSlider = dynamic_cast<CSliderDouble*>(*iter);
 			if (pSlider != NULL) {
@@ -967,7 +999,7 @@ void CUnsharpMaskPanel::RepositionAll() {
 				CButtonCtrl* pButton = dynamic_cast<CButtonCtrl*>(*iter);
 				if (pButton != NULL) {
 					if (bStartButtons) {
-						nStartX = m_clientRect.right - (int)(m_fDPIScale*USM_PANEL_BORDER);
+						nStartX = m_clientRect.right - (int)(m_fDPIScale*PANEL_BORDER);
 						nStartY += (int)(m_fDPIScale*USM_PANEL_GAPBUTTONY);
 					}
 					pButton->SetPosition(CRect(CPoint(nStartX - pButton->GetMinSize().cx, nStartY), pButton->GetMinSize()));
@@ -982,14 +1014,135 @@ void CUnsharpMaskPanel::RepositionAll() {
 
 void CUnsharpMaskPanel::OnPaint(CDC & dc, const CPoint& offset) {
 	CPanelMgr::OnPaint(dc, offset);
-	HPEN hPen = ::CreatePen(PS_SOLID, 1, CSettingsProvider::This().ColorGUI());
-	HPEN hOldPen = dc.SelectPen(hPen);;
-	dc.SelectStockBrush(HOLLOW_BRUSH);
-	CRect rect = m_clientRect;
-	rect.OffsetRect(offset);
-	dc.Rectangle(rect);
-	dc.SelectPen(hOldPen);
-	::DeleteObject(hPen);
+	PaintFrameAroundPanel(dc, m_clientRect, offset);
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+// CRotationPanel
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+CRotationPanel::CRotationPanel(HWND hWnd, CSliderMgr* pSliderMgr) : CPanelMgr(hWnd) {
+	m_pSliderMgr = pSliderMgr;
+	m_clientRect = CRect(0, 0, 0, 0);
+	m_nWidth = (int)(ROTATION_PANEL_WIDTH*m_fDPIScale);
+	m_nHeight = (int)(ROTATION_PANEL_HEIGHT*m_fDPIScale);
+	m_nButtonSize = (int)(ROTATION_PANEL_BUTTON_SIZE*m_fDPIScale);
+}
+
+CRect CRotationPanel::PanelRect() {
+	CRect sliderRect = m_pSliderMgr->PanelRect();
+	m_clientRect = CRect(CPoint((sliderRect.right + sliderRect.left) / 2 - m_nWidth / 2, sliderRect.bottom - m_nHeight - 30),
+		CSize(m_nWidth, m_nHeight));
+	return m_clientRect;
+}
+
+bool CRotationPanel::OnMouseLButton(EMouseEvent eMouseEvent, int nX, int nY) {
+	bool bHandled = CPanelMgr::OnMouseLButton(eMouseEvent, nX, nY);
+	if (m_clientRect.PtInRect(CPoint(nX, nY))) {
+		return true;
+	}
+	return bHandled;
+}
+
+void CRotationPanel::RequestRepositioning() {
+}
+
+void CRotationPanel::RepositionAll() {
+	PanelRect();
+	int nOffset = (int)(m_fDPIScale*PANEL_BORDER);
+	int nStartX = m_clientRect.left + nOffset;
+	int nStartY = m_clientRect.top + nOffset;
+	int nStartYHint = 0;
+	bool bFirstText = true;
+	bool bFirstToolButton = true;
+	bool bFirstTextButton = true;
+	CTextCtrl* pTextHint = NULL;
+	std::list<CUICtrl*>::iterator iter;
+	for (iter = m_ctrlList.begin( ); iter != m_ctrlList.end( ); iter++ ) {
+		CTextCtrl* pText = dynamic_cast<CTextCtrl*>(*iter);
+		if (pText != NULL) {
+			if (bFirstText) {
+				pText->SetPosition(CRect(CPoint(nStartX, nStartY), pText->GetMinSize()));
+				nStartY += pText->GetMinSize().cy;
+				bFirstText = false;
+			} else {
+				nStartYHint = nStartY;
+				pTextHint = pText; // layout as last
+			}
+		} else {
+			CButtonCtrl* pButton = dynamic_cast<CButtonCtrl*>(*iter);
+			if (pButton != NULL) {
+				if (pButton->IsUserPaintButton()) {
+					if (bFirstToolButton) {
+						nStartX = m_clientRect.left + (int)(m_fDPIScale*PANEL_BORDER);
+						nStartY = m_clientRect.bottom - (int)(m_fDPIScale*PANEL_BORDER) - m_nButtonSize;
+						bFirstToolButton = false;
+					}
+					pButton->SetPosition(CRect(CPoint(nStartX, nStartY), CSize(m_nButtonSize, m_nButtonSize)));
+					nStartX += m_nButtonSize;
+					nStartX += (int)(m_fDPIScale*ROTATION_PANEL_GAPBUTTONX1);
+				} else {
+					if (bFirstTextButton) {
+						nStartX = m_clientRect.right - (int)(m_fDPIScale*PANEL_BORDER);
+						nStartY = m_clientRect.bottom - (int)(m_fDPIScale*PANEL_BORDER) - pButton->GetMinSize().cy;
+						bFirstTextButton = false;
+					}
+					pButton->SetPosition(CRect(CPoint(nStartX - pButton->GetMinSize().cx, nStartY), pButton->GetMinSize()));
+					nStartX -= pButton->GetMinSize().cx;
+					nStartX -= (int)(m_fDPIScale*ROTATION_PANEL_GAPBUTTONX2);
+				}
+			}
+		}
+	}
+	if (pTextHint != NULL) {
+		CPoint topLeft(m_clientRect.left + (int)(m_fDPIScale*PANEL_BORDER), nStartYHint + (int)(m_nButtonSize * 0.2f));
+		CPoint bottomRight(m_clientRect.right - (int)(m_fDPIScale*PANEL_BORDER),
+			m_clientRect.bottom - (int)(m_fDPIScale*PANEL_BORDER) - (int)(m_nButtonSize * 1.2f));
+		pTextHint->SetPosition(CRect(topLeft, bottomRight));
+	}
+}
+
+void CRotationPanel::OnPaint(CDC & dc, const CPoint& offset) {
+	CPanelMgr::OnPaint(dc, offset);
+	PaintFrameAroundPanel(dc, m_clientRect, offset);
+}
+
+void CRotationPanel::PaintShowGridBtn(const CRect& rect, CDC& dc) {
+	CRect r = InflateRect(rect, 0.2f);
+
+	int nDelta = r.Width() / 3;
+	dc.MoveTo(r.left + nDelta, r.top);
+	dc.LineTo(r.left + nDelta, r.bottom);
+	dc.MoveTo(r.left + nDelta*2, r.top);
+	dc.LineTo(r.left + nDelta*2, r.bottom);
+	dc.MoveTo(r.left, r.top + nDelta);
+	dc.LineTo(r.right, r.top + nDelta);
+	dc.MoveTo(r.left, r.top + nDelta*2);
+	dc.LineTo(r.right, r.top + nDelta*2);
+	dc.Rectangle(r);
+}
+
+void CRotationPanel::PaintAutoCropBtn(const CRect& rect, CDC& dc) {
+	CRect r = InflateRect(rect, 0.35f);
+	dc.Rectangle(r);
+	dc.MoveTo(r.left + 1, r.bottom + 2);
+	dc.LineTo(r.left - 3, r.top);
+	dc.LineTo(r.right - 1, r.top - 3);
+	dc.LineTo(r.right + 2, r.bottom - 1);
+	dc.LineTo(r.left + 1, r.bottom + 2);
+}
+
+void CRotationPanel::PaintAssistedModeBtn(const CRect& rect, CDC& dc) {
+	CRect r = InflateRect(rect, 0.25f);
+
+	int nAw = r.Width() / 3;
+	dc.MoveTo(r.left, r.top);
+	dc.LineTo(r.right, r.bottom);
+	dc.MoveTo(r.left, r.bottom - nAw);
+	dc.LineTo(r.left, r.bottom);
+	dc.LineTo(r.left + nAw + 1, r.bottom);
+	dc.MoveTo(r.left, r.bottom);
+	dc.LineTo(r.left + nAw + 2, r.bottom - nAw - 2);
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////
@@ -1019,10 +1172,12 @@ void CUICtrl::OnPaint(CDC & dc, const CPoint& offset) {
 	pos.OffsetRect(0, -1); Draw(dc, pos, false);
 }
 
-void CUICtrl::SetShow(bool bShow) { 
+void CUICtrl::SetShow(bool bShow, bool bInvalidate) { 
 	if (bShow != m_bShow) {
 		m_bShow = bShow;
-		::InvalidateRect(m_pMgr->GetHWND(), &m_position, FALSE); // trigger redraw of area
+		if (m_pMgr != NULL && bInvalidate) {
+			::InvalidateRect(m_pMgr->GetHWND(), &m_position, FALSE); // trigger redraw of area
+		}
 	}
 }
 
@@ -1043,6 +1198,7 @@ CTextCtrl::CTextCtrl(CPanelMgr* pPanelMgr, LPCTSTR sTextInit, bool bEditable,
 	 m_bEditable = bEditable;
 	 m_bRightAligned = false;
 	 m_bBold = false;
+	 m_bAllowMultiline = false;
 	 m_textChangedHandler = textChangedHandler;
 	 m_textSize = CSize(0, 0);
 	 m_nMaxTextWidth = 200;
@@ -1181,7 +1337,14 @@ void CTextCtrl::Draw(CDC & dc, CRect position, bool bBlack) {
 	dc.SetBkMode(TRANSPARENT);
 	dc.SetTextColor(bBlack ? 0 : m_bHighlight ? CSettingsProvider::This().ColorHighlight() : CSettingsProvider::This().ColorGUI());
 	unsigned int nAlignment = m_bRightAligned ? DT_RIGHT : DT_LEFT;
-	dc.DrawText(m_sText, m_sText.GetLength(), &position, nAlignment | DT_VCENTER | DT_SINGLELINE | DT_WORD_ELLIPSIS | DT_NOPREFIX);
+	unsigned int nMultiline = m_bAllowMultiline ? DT_WORDBREAK : DT_SINGLELINE | DT_WORD_ELLIPSIS;
+	unsigned int nFlags = nAlignment | DT_VCENTER | nMultiline | DT_NOPREFIX;
+	if (m_bAllowMultiline) {
+		CRect pos(position);
+		int nHeight = dc.DrawText(m_sText, m_sText.GetLength(), &pos, nFlags | DT_CALCRECT);
+		position.OffsetRect(0, (position.Height() - nHeight) / 2);
+	}
+	dc.DrawText(m_sText, m_sText.GetLength(), &position, nFlags);
 	dc.SelectStockFont(DEFAULT_GUI_FONT);
 }
 

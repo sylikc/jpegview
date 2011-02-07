@@ -12,6 +12,19 @@
 #include <assert.h>
 
 ///////////////////////////////////////////////////////////////////////////////////
+// Static helpers
+///////////////////////////////////////////////////////////////////////////////////
+
+static void RotateInplace(const CSize& imageSize, double& dX, double& dY, double dAngle) {
+	dX -= (imageSize.cx - 1) * 0.5;
+	dY -= (imageSize.cy - 1) * 0.5;
+	double dXr = cos(dAngle) * dX - sin(dAngle) * dY;
+	double dYr = sin(dAngle) * dX + cos(dAngle) * dY;
+	dX = dXr;
+	dY = dYr;
+}
+
+///////////////////////////////////////////////////////////////////////////////////
 // Public interface
 ///////////////////////////////////////////////////////////////////////////////////
 
@@ -66,6 +79,7 @@ CJPEGImage::CJPEGImage(int nWidth, int nHeight, void* pIJLPixels, void* pEXIFDat
 	m_pDimRects = 0;
 	m_nNumDimRects = 0;
 	m_bEnableDimming = true;
+	m_bShowGrid = false;
 	m_bInParamDB = false;
 	m_bHasZoomStoredInParamDB = false;
 	m_bUnsharpMaskParamsValid = false;
@@ -82,6 +96,7 @@ CJPEGImage::CJPEGImage(int nWidth, int nHeight, void* pIJLPixels, void* pEXIFDat
 	m_FullTargetSize = CSize(0, 0);
 	m_ClippingSize = CSize(0, 0);
 	m_TargetOffset = CPoint(0, 0);
+	m_dRotationLQ = 0.0;
 
 	// Create the LDC object on the image
 	m_pLDC = (pLDC == NULL) ? (new CLocalDensityCorr(*this, true)) : pLDC;
@@ -140,6 +155,14 @@ void* CJPEGImage::GetThumbnailDIB(CSize size, const CImageProcessingParams & ima
 	return m_pThumbnail->GetDIB(size, size, CPoint(0, 0), imageProcParams, eProcFlags);
 }
 
+void* CJPEGImage::GetThumbnailDIBRotated(CSize size, const CImageProcessingParams & imageProcParams, EProcessingFlags eProcFlags, double dRotation) {
+	assert(!m_bIsThumbnailImage);
+	if (m_pThumbnail == NULL) {
+		m_pThumbnail = CreateThumbnailImage();
+	}
+	return m_pThumbnail->GetDIBRotated(size, size, CPoint(0, 0), imageProcParams, eProcFlags, dRotation, false);
+}
+
 void* CJPEGImage::GetDIBUnsharpMasked(CSize clippingSize, CPoint targetOffset,
 									  const CImageProcessingParams & imageProcParams, EProcessingFlags eProcFlags, 
 									  const CUnsharpMaskParams & unsharpMaskParams) {
@@ -147,7 +170,7 @@ void* CJPEGImage::GetDIBUnsharpMasked(CSize clippingSize, CPoint targetOffset,
 	bool bUseUnsharpMask = unsharpMaskParams.Amount > 0 && unsharpMaskParams.Radius > 0;
 	bool bParametersChanged;
 	return GetDIBInternal(CSize(m_nOrigWidth, m_nOrigHeight), clippingSize, targetOffset, imageProcParams, 
-		eProcFlags, bUseUnsharpMask ? &unsharpMaskParams : NULL, bParametersChanged);
+		eProcFlags, bUseUnsharpMask ? &unsharpMaskParams : NULL, 0.0, false, bParametersChanged);
 }
 
 const CHistogram* CJPEGImage::GetOriginalHistogram() {
@@ -176,7 +199,7 @@ const CHistogram* CJPEGImage::GetHistogramOfProcessedDIB(const CImageProcessingP
 	assert(m_bIsThumbnailImage);
 	CSize origSize(m_nOrigWidth, m_nOrigHeight);
 	bool bParametersChanged;
-	void* pDIBPixels = GetDIBInternal(origSize, origSize, CPoint(0, 0), imageProcParams, eProcFlags, NULL, bParametersChanged);
+	void* pDIBPixels = GetDIBInternal(origSize, origSize, CPoint(0, 0), imageProcParams, eProcFlags, NULL, 0.0, false, bParametersChanged);
 	if (bParametersChanged || m_pCachedProcessedHistogram == NULL) {
 		delete m_pCachedProcessedHistogram;
 		m_pCachedProcessedHistogram = NULL;
@@ -212,10 +235,76 @@ void CJPEGImage::ApplyUnsharpMaskToOriginalPixels(const CUnsharpMaskParams & uns
 	m_dUnsharpMaskTickCount = Helpers::GetExactTickCount() - dStartTime;
 }
 
+void CJPEGImage::RotateOriginalPixels(double dRotation, bool bAutoCrop) {
+	InvalidateAllCachedPixelData();
+
+	double dCoords[] = { 0, 0, m_nOrigWidth - 1, 0, m_nOrigWidth - 1, m_nOrigHeight - 1, 0, m_nOrigHeight - 1 };
+	double dXMin = HUGE_VAL, dXMax = -HUGE_VAL;
+	double dYMin = HUGE_VAL, dYMax = -HUGE_VAL;
+	for (int i = 0; i < 4; i++) {
+		RotateInplace(CSize(m_nOrigWidth, m_nOrigHeight), dCoords[i*2], dCoords[i*2 + 1], m_dRotationLQ);
+		dXMin = min(dXMin, dCoords[i*2]);
+		dXMax = max(dXMax, dCoords[i*2]);
+		dYMin = min(dYMin, dCoords[i*2+1]);
+		dYMax = max(dYMax, dCoords[i*2+1]);
+	}
+
+	double dCenterX = (m_nOrigWidth - 1) * 0.5;
+	double dCenterY = (m_nOrigHeight - 1) * 0.5;
+
+	int nXStart, nXEnd;
+	int nYStart, nYEnd;
+
+	if (bAutoCrop) {
+		// Calculate the maximum enclosed rectangle by intersecting the diagonal lines of the bounding box with the rotated rectangle sides
+		double dBestX = (dXMax - dXMin) * 0.5;
+		double dBestY = (dYMax - dYMin) * 0.5;
+		double dBestDistance = dBestX*dBestX + dBestY*dBestY;
+		for (int nSign = -1; nSign < 2; nSign += 2) {
+			for (int i = 0; i < 4; i++) {
+				int j = (i + 1) % 4;
+				double dV1x = dCoords[j*2] - dCoords[i*2];
+				double dV1y = dCoords[j*2 + 1] - dCoords[i*2 + 1];
+				double dNumerator = dCoords[i*2] * dYMin - dCoords[i*2 + 1] * nSign * dXMax;
+				double dDenumerator = dV1y * nSign * dXMax - dV1x * dYMin;
+				double dT = dNumerator / dDenumerator;
+				if (dT > -1e-8 && dT -1 < 1e-8) {
+					double dX = dCoords[i*2] + dT * dV1x;
+					double dY = dCoords[i*2 + 1] + dT * dV1y;
+					double dDist = dX*dX + dY*dY;
+					if (dDist < dBestDistance) {
+						dBestDistance = dDist;
+						dBestX = dX;
+						dBestY = dY;
+					}
+				}
+			}
+		}
+		nXStart = Helpers::RoundToInt(-fabs(dBestX) + dCenterX);
+		nXEnd = Helpers::RoundToInt(fabs(dBestX) + dCenterX);
+		nYStart = Helpers::RoundToInt(-fabs(dBestY) + dCenterY);
+		nYEnd = Helpers::RoundToInt(fabs(dBestY) + dCenterY);
+	} else {
+		nXStart = (int)(dXMin + dCenterX);
+		nXEnd = (int)(dXMax + dCenterX + 0.999);
+		nYStart = (int)(dYMin + dCenterY);
+		nYEnd = (int)(dYMax + dCenterY + 0.999);
+	}
+
+	CSize newSize(nXEnd - nXStart + 1, nYEnd - nYStart + 1);
+	void* pRotatedPixels = CBasicProcessing::RotateHQ(CPoint(nXStart, nYStart), newSize, dRotation, CSize(m_nOrigWidth, m_nOrigHeight), m_pIJLPixels, m_nIJLChannels);
+	delete[] m_pIJLPixels;
+
+	m_nOrigWidth = newSize.cx;
+	m_nOrigHeight = newSize.cy;
+	m_nIJLChannels = 4;
+	m_pIJLPixels = pRotatedPixels;
+}
 
 void CJPEGImage::ResampleWithPan(void* & pDIBPixels, void* & pDIBPixelsLUTProcessed, CSize fullTargetSize, 
 								 CSize clippingSize, CPoint targetOffset, CRect oldClippingRect,
-								 EProcessingFlags eProcFlags, const CImageProcessingParams & imageProcParams, EResizeType eResizeType) {
+								 EProcessingFlags eProcFlags, const CImageProcessingParams & imageProcParams, 
+								 double dRotation, EResizeType eResizeType) {
 	CPoint oldOffset = oldClippingRect.TopLeft();
 	CSize oldSize = oldClippingRect.Size();
 	CRect newClippingRect = CRect(targetOffset, clippingSize);
@@ -254,7 +343,7 @@ void CJPEGImage::ResampleWithPan(void* & pDIBPixels, void* & pDIBPixelsLUTProces
 
 		if (targetRect.top > 0) {
 			CSize clipSize(clippingSize.cx, targetRect.top);
-			void* pTop = Resample(fullTargetSize, clipSize, targetOffset, eProcFlags, imageProcParams.Sharpen, eResizeType);
+			void* pTop = Resample(fullTargetSize, clipSize, targetOffset, eProcFlags, imageProcParams.Sharpen, dRotation, eResizeType);
 			
 			if (!bCanUseLUTProcDIB) {
 				CBasicProcessing::CopyRect32bpp(pPannedPixels, pTop,
@@ -274,7 +363,7 @@ void CJPEGImage::ResampleWithPan(void* & pDIBPixels, void* & pDIBPixelsLUTProces
 		if (targetRect.bottom < clippingSize.cy) {
 			CSize clipSize(clippingSize.cx, clippingSize.cy -  targetRect.bottom);
 			CPoint offset(targetOffset.x, targetOffset.y + targetRect.bottom);
-			void* pBottom = Resample(fullTargetSize, clipSize, offset, eProcFlags, imageProcParams.Sharpen, eResizeType);
+			void* pBottom = Resample(fullTargetSize, clipSize, offset, eProcFlags, imageProcParams.Sharpen, dRotation, eResizeType);
 			
 			if (!bCanUseLUTProcDIB) {
 				CBasicProcessing::CopyRect32bpp(pPannedPixels, pBottom,
@@ -293,7 +382,7 @@ void CJPEGImage::ResampleWithPan(void* & pDIBPixels, void* & pDIBPixelsLUTProces
 		}
 		if (targetRect.left > 0) {
 			CSize clipSize(targetRect.left, clippingSize.cy);
-			void* pLeft = Resample(fullTargetSize, clipSize, targetOffset, eProcFlags, imageProcParams.Sharpen, eResizeType);
+			void* pLeft = Resample(fullTargetSize, clipSize, targetOffset, eProcFlags, imageProcParams.Sharpen, dRotation, eResizeType);
 			
 			if (!bCanUseLUTProcDIB) {
 				CBasicProcessing::CopyRect32bpp(pPannedPixels, pLeft,
@@ -313,7 +402,7 @@ void CJPEGImage::ResampleWithPan(void* & pDIBPixels, void* & pDIBPixelsLUTProces
 		if (targetRect.right < clippingSize.cx) {
 			CSize clipSize(clippingSize.cx -  targetRect.right, clippingSize.cy);
 			CPoint offset(targetOffset.x + targetRect.right, targetOffset.y);
-			void* pRight = Resample(fullTargetSize, clipSize, offset, eProcFlags, imageProcParams.Sharpen, eResizeType);
+			void* pRight = Resample(fullTargetSize, clipSize, offset, eProcFlags, imageProcParams.Sharpen, dRotation, eResizeType);
 			
 			if (!bCanUseLUTProcDIB) {
 				CBasicProcessing::CopyRect32bpp(pPannedPixels, pRight,
@@ -340,7 +429,7 @@ void CJPEGImage::ResampleWithPan(void* & pDIBPixels, void* & pDIBPixelsLUTProces
 }
 
 void* CJPEGImage::Resample(CSize fullTargetSize, CSize clippingSize, CPoint targetOffset, 
-						  EProcessingFlags eProcFlags, double dSharpen, EResizeType eResizeType) {
+						  EProcessingFlags eProcFlags, double dSharpen, double dRotation, EResizeType eResizeType) {
 	Helpers::CPUType cpu = CSettingsProvider::This().AlgorithmImplementation();
 	EFilterType filter = CSettingsProvider::This().DownsamplingFilter();
 
@@ -364,11 +453,12 @@ void* CJPEGImage::Resample(CSize fullTargetSize, CSize clippingSize, CPoint targ
 			}
 		}
 	} else {
-		if (eResizeType == UpSample) {
-			return CBasicProcessing::SampleUpFast(fullTargetSize, targetOffset, clippingSize, 
-				CSize(m_nOrigWidth, m_nOrigHeight), m_pIJLPixels, m_nIJLChannels);
+		bool bHasRotation = fabs(dRotation) > 1e-3;
+		if (bHasRotation) {
+			return CBasicProcessing::PointSampleWithRotation(fullTargetSize, targetOffset, clippingSize, 
+				CSize(m_nOrigWidth, m_nOrigHeight), dRotation, m_pIJLPixels, m_nIJLChannels);
 		} else {
-			return CBasicProcessing::SampleDownFast(fullTargetSize, targetOffset, clippingSize, 
+			return CBasicProcessing::PointSample(fullTargetSize, targetOffset, clippingSize, 
 				CSize(m_nOrigWidth, m_nOrigHeight), m_pIJLPixels, m_nIJLChannels);
 		}
 	}
@@ -405,7 +495,7 @@ void CJPEGImage::Rotate(int nRotation) {
 	}
 	m_nRotation = (m_nRotation + nRotation) % 360;
 
-	m_dLastOpTickCount = Helpers::GetExactTickCount() - dStartTickCount; 
+	m_dLastOpTickCount = Helpers::GetExactTickCount() - dStartTickCount;
 }
 
 void CJPEGImage::Crop(CRect cropRect) {
@@ -478,7 +568,7 @@ void* CJPEGImage::DIBPixelsLastProcessed(bool bGenerateDIBIfNeeded) {
 void CJPEGImage::VerifyDIBPixelsCreated() {
 	if (m_pDIBPixels == NULL) {
 		EResizeType eResizeType = GetResizeType(m_FullTargetSize, CSize(m_nOrigWidth, m_nOrigHeight));
-		m_pDIBPixels = Resample(m_FullTargetSize, m_ClippingSize, m_TargetOffset, m_eProcFlags, m_imageProcParams.Sharpen, eResizeType);
+		m_pDIBPixels = Resample(m_FullTargetSize, m_ClippingSize, m_TargetOffset, m_eProcFlags, m_imageProcParams.Sharpen, m_dRotationLQ, eResizeType);
 	}
 }
 
@@ -602,15 +692,21 @@ __int64 CJPEGImage::GetUncompressedPixelHash() const {
 
 void* CJPEGImage::GetDIBInternal(CSize fullTargetSize, CSize clippingSize, CPoint targetOffset,
 						 const CImageProcessingParams & imageProcParams, EProcessingFlags eProcFlags,
-						 const CUnsharpMaskParams * pUnsharpMaskParams, bool &bParametersChanged) {
+						 const CUnsharpMaskParams * pUnsharpMaskParams, double dRotation, bool bShowGrid, bool &bParametersChanged) {
+
+	if (fabs(dRotation) > 1e-6 && GetProcessingFlag(eProcFlags, PFLAG_HighQualityResampling)) {
+		assert(false);
+	}
 
  	// Check if resampling due to bHighQualityResampling parameter change is needed
 	bool bMustResampleQuality = GetProcessingFlag(eProcFlags, PFLAG_HighQualityResampling) != GetProcessingFlag(m_eProcFlags, PFLAG_HighQualityResampling);
 	bool bTargetSizeChanged = fullTargetSize != m_FullTargetSize;
+	bool bMustResampleRotation = fabs(dRotation - m_dRotationLQ) > 1e-3;
 	// Check if resampling due to change of geometric parameters is needed
-	bool bMustResampleGeometry = bTargetSizeChanged || clippingSize != m_ClippingSize || targetOffset != m_TargetOffset;
+	bool bMustResampleGeometry = bTargetSizeChanged || clippingSize != m_ClippingSize || targetOffset != m_TargetOffset || bMustResampleRotation;
 	// Check if resampling due to change of processing parameters is needed
 	bool bMustResampleProcessings = fabs(imageProcParams.Sharpen - m_imageProcParams.Sharpen) > 1e-2 && GetProcessingFlag(eProcFlags, PFLAG_HighQualityResampling);
+	bool bShowGridChanged = m_bShowGrid != bShowGrid;
 
 	EResizeType eResizeType = GetResizeType(fullTargetSize, CSize(m_nOrigWidth, m_nOrigHeight));
 
@@ -619,8 +715,16 @@ void* CJPEGImage::GetDIBInternal(CSize fullTargetSize, CSize clippingSize, CPoin
 	m_FullTargetSize = fullTargetSize;
 	m_ClippingSize = clippingSize;
 	m_TargetOffset = targetOffset;
+	m_dRotationLQ = dRotation;
+	m_bShowGrid = bShowGrid;
 
 	double dStartTickCount = Helpers::GetExactTickCount();
+
+	if (bShowGridChanged) {
+		delete[] m_pDIBPixels; m_pDIBPixels = NULL;
+		delete[] m_pDIBPixelsLUTProcessed; m_pDIBPixelsLUTProcessed = NULL;
+		m_pLastDIB = NULL;
+	}
 
 	// Check if only the LUT must be reapplied but no resampling (resampling is much slower than the LUTs)
 	void * pDIB = NULL;
@@ -647,11 +751,11 @@ void* CJPEGImage::GetDIBInternal(CSize fullTargetSize, CSize clippingSize, CPoin
 		assert(pDIBUnsharpMasked == NULL);
 
 		// If we only pan, we can resample far more efficiently by only calculating the newly visible areas
-		bool bPanningOnly = !m_bFirstReprocessing && !bMustResampleProcessings && !bTargetSizeChanged && !bMustResampleQuality;
+		bool bPanningOnly = !m_bFirstReprocessing && !bMustResampleProcessings && !bTargetSizeChanged && !bMustResampleQuality && !bMustResampleRotation && !bShowGrid;
 		m_bFirstReprocessing = false;
 		if (bPanningOnly && pUnsharpMaskParams == NULL) {
 			ResampleWithPan(m_pDIBPixels, m_pDIBPixelsLUTProcessed, fullTargetSize, clippingSize, targetOffset, 
-				oldClippingRect, eProcFlags, imageProcParams, eResizeType);
+				oldClippingRect, eProcFlags, imageProcParams, dRotation, eResizeType);
 			delete[] m_pGrayImage; m_pGrayImage = NULL;
 			delete[] m_pSmoothGrayImage; m_pSmoothGrayImage = NULL;
 		} else {
@@ -663,7 +767,7 @@ void* CJPEGImage::GetDIBInternal(CSize fullTargetSize, CSize clippingSize, CPoin
 
 		// both DIBs are NULL, do normal resampling
 		if (m_pDIBPixels == NULL && m_pDIBPixelsLUTProcessed == NULL) {
-			m_pDIBPixels = Resample(fullTargetSize, clippingSize, targetOffset, eProcFlags, imageProcParams.Sharpen, eResizeType);
+			m_pDIBPixels = Resample(fullTargetSize, clippingSize, targetOffset, eProcFlags, imageProcParams.Sharpen, dRotation, eResizeType);
 		}
 
 		// if ResampleWithPan() has preseved this DIB, we can reuse it
@@ -778,7 +882,7 @@ void* CJPEGImage::ApplyCorrectionLUTandLDC(const CImageProcessingParams & imageP
 		fabs(imageProcParams.LightenShadowSteepness - m_imageProcParams.LightenShadowSteepness) > 1e-4 ;
 	bool bMustReapplyLDC = bLDC && (!bLDCOld || bGeometryChanged || bLDCParametersChanged);
 	bool bMustUse3ChannelLUT = bAutoContrast || !bNoColorCastCorrection;
-	bool bUseDimming = m_pDimRects != NULL && m_bEnableDimming;
+	bool bUseDimming = m_bShowGrid || (m_pDimRects != NULL && m_bEnableDimming);
 
 	bParametersChanged = bMustReapplyLUTs || bMustReapplyLDC;
 
@@ -891,6 +995,9 @@ void* CJPEGImage::ApplyCorrectionLUTandLDC(const CImageProcessingParams & imageP
 			CBasicProcessing::DimRectangle32bpp(dibSize.cx, dibSize.cy, pCachedTargetDIB, 
 				m_pDimRects[i].Rect, m_pDimRects[i].Factor);
 		}
+	}
+	if (m_bShowGrid) {
+		DrawGridLines(pCachedTargetDIB, dibSize);
 	}
 
 	return pCachedTargetDIB;
@@ -1042,3 +1149,23 @@ CJPEGImage* CJPEGImage::CreateThumbnailImage() {
 	}
 	return new CJPEGImage(nWidth, nHeight, pPixels, NULL, 4, -1, IF_CLIPBOARD, m_pLDC, true);
 }
+
+void CJPEGImage::DrawGridLines(void * pDIB, const CSize& dibSize) {
+	const int cnNumGridLines = 8;
+	const float cfDimFactor = 0.8f;
+	int nGridLinesX = min(cnNumGridLines, dibSize.cx / 40);
+	int nGridLinesY = min(cnNumGridLines, dibSize.cy / 40);
+	if (nGridLinesX > 0) {
+		for (int i = 0; i <= nGridLinesX; i++) {
+			int nX = i * (dibSize.cx - 1) / nGridLinesX;
+			CBasicProcessing::FillRectangle32bpp(dibSize.cx, dibSize.cy, pDIB, CRect(nX, 0, nX + 1, dibSize.cy), RGB(192, 192, 192));
+		}
+	}
+	if (nGridLinesY > 0) {
+		for (int i = 0; i <= nGridLinesY; i++) {
+			int nY = i * (dibSize.cy - 1) / nGridLinesY;
+			CBasicProcessing::FillRectangle32bpp(dibSize.cx, dibSize.cy, pDIB, CRect(0, nY, dibSize.cx, nY + 1), RGB(192, 192, 192));
+		}
+	}
+}
+

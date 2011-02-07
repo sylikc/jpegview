@@ -32,6 +32,25 @@ static void NormalizeFilter(int16* pFilter, int nLen) {
 	}
 }
 
+// Filter is normalized in fixed point format, sum of elements is FP_ONE
+// nFrac is fractional part (sub-pixel offset), coded in [0..65535] --> [0...1]
+static void GetBicubicFilter(uint16 nFrac, int16* pFilter) {
+	const int BICUBIC_FILTER_LEN = 4;
+	double dFrac = nFrac*(1.0/65535.0);
+	double dFilter[BICUBIC_FILTER_LEN];
+	double dSum = 0.0;
+	for (int i = 0; i < BICUBIC_FILTER_LEN; i++) {
+		dFilter[i] = CResizeFilter::EvaluateCubicFilterKernel(dFrac, i);
+		dSum += dFilter[i];
+	}
+	for (int i = 0; i < BICUBIC_FILTER_LEN; i++) {
+		pFilter[i] = round(CResizeFilter::FP_ONE * dFilter[i] / dSum);
+	}
+
+	NormalizeFilter(pFilter, BICUBIC_FILTER_LEN);
+}
+
+
 //////////////////////////////////////////////////////////////////////////////////////
 // Public
 //////////////////////////////////////////////////////////////////////////////////////
@@ -71,6 +90,16 @@ bool CResizeFilter::ParametersMatch(int nSourceSize, int nTargetSize, double dSh
 			return true;
 	} else {
 		return false;
+	}
+}
+
+void CResizeFilter::GetBicubicFilterKernels(int nNumKernels, int16* pKernels) {
+	uint32 nIncFrac = 65535/(nNumKernels - 1);
+	uint32 nKFrac = 0;
+	for (int i = 0; i < nNumKernels; i++) {
+		int16* pThisKernel = &(pKernels[i * 4]);
+		GetBicubicFilter((uint16)nKFrac, pThisKernel);
+		nKFrac += nIncFrac;
 	}
 }
 
@@ -313,16 +342,16 @@ static double inline EvaluateKernel(double dX, double dSharpen, EFilterType eFil
 // Evaluation of filter kernel using an integration over the source pixel width.
 // This implements a convolution of a box filter with the filter kernel.
 // Note that dX is given in the source pixel space
-double CResizeFilter::EvaluateKernelIntegrated(double dX, EFilterType eFilter) {
-	double dXScaled = dX*m_dMultX;
+double CResizeFilter::EvaluateKernelIntegrated(double dX, EFilterType eFilter, double dMultX, double dSharpen) {
+	double dXScaled = dX*dMultX;
 
 	// take integral of target function from [dX - 0.5, dX + 0.5]
 	const double NUM_STEPS = 32;
-	double dStartX = dXScaled - m_dMultX*0.5;
-	double dStepX = m_dMultX*(1.0/(NUM_STEPS - 1));
+	double dStartX = dXScaled - dMultX*0.5;
+	double dStepX = dMultX*(1.0/(NUM_STEPS - 1));
 	double dSum = 0.0;
 	for (int i = 0; i < NUM_STEPS; i++) {
-		dSum += EvaluateKernel(dStartX, m_dSharpen, eFilter);
+		dSum += EvaluateKernel(dStartX, dSharpen, eFilter);
 		dStartX += dStepX;
 	}
 	return dSum;
@@ -364,7 +393,7 @@ int16* CResizeFilter::GetFilter(uint16 nFrac, EFilterType eFilter) {
 		} else if (eFilter == Filter_Downsampling_No_Aliasing) {
 			dFilter[i] = EvaluateKernel(m_dMultX*(-m_nFilterOffset + i - dFrac), m_dSharpen, eFilter);
 		} else {
-			dFilter[i] = EvaluateKernelIntegrated(-m_nFilterOffset + i - dFrac, eFilter);
+			dFilter[i] = EvaluateKernelIntegrated(-m_nFilterOffset + i - dFrac, eFilter, m_dMultX, m_dSharpen);
 		}
 		dSum += dFilter[i];
 	}

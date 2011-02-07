@@ -63,11 +63,22 @@ public:
 	void* GetDIB(CSize fullTargetSize, CSize clippingSize, CPoint targetOffset,
 		const CImageProcessingParams & imageProcParams, EProcessingFlags eProcFlags) {
 		bool bNotUsed;
-		return GetDIBInternal(fullTargetSize, clippingSize, targetOffset, imageProcParams, eProcFlags, NULL, bNotUsed);
+		return GetDIBInternal(fullTargetSize, clippingSize, targetOffset, imageProcParams, eProcFlags, NULL, 0.0, false, bNotUsed);
+	}
+
+	// Gets resampled and processed DIB image (up or downsampled), also including a low quality rotation.
+	// PFLAG_HighQualityResampling must not be set when calling this method 
+	void* GetDIBRotated(CSize fullTargetSize, CSize clippingSize, CPoint targetOffset,
+		const CImageProcessingParams & imageProcParams, EProcessingFlags eProcFlags, double dRotation, bool bShowGrid) {
+		bool bNotUsed;
+		return GetDIBInternal(fullTargetSize, clippingSize, targetOffset, imageProcParams, eProcFlags, NULL, dRotation, bShowGrid, bNotUsed);
 	}
 
 	// Gets a DIB for a thumbnail of the given size. The thumbnail should not be smaller than 400 x 300 pixels
 	void* GetThumbnailDIB(CSize size, const CImageProcessingParams & imageProcParams, EProcessingFlags eProcFlags);
+
+	// Same as above but with low quality rotation
+	void* GetThumbnailDIBRotated(CSize size, const CImageProcessingParams & imageProcParams, EProcessingFlags eProcFlags, double dRotation);
 
 	// Performs unsharp masking to a section in the original image, then apply image processing as requested and
 	// return resulting DIB. The returned DIB is always in original image resolution. The original
@@ -90,6 +101,11 @@ public:
 	// Apply unsharp masking to the original image pixels. Cannot be undone except by reloading the image from disc.
 	void ApplyUnsharpMaskToOriginalPixels(const CUnsharpMaskParams & unsharpMaskParams);
 
+	// Rotate original pixels by given angle (in radians). The original pixels are replaced by this operation.
+	// If autocrop is enabled, the maximum defined rectangular area is cropped, else black borders are added to the image.
+	// In all cases the size of the image in pixels is change by rotation
+	void RotateOriginalPixels(double dRotation, bool bAutoCrop);
+
 	// Gets the hash value of the pixels, for JPEGs it on the compressed pixels
 	__int64 GetPixelHash() const { return m_nPixelHash; }
 
@@ -111,7 +127,7 @@ public:
 	// Declare the generated DIB as invalid - forcing it to be regenerated on next access
 	void SetDIBInvalid() { m_ClippingSize = CSize(0, 0); }
 
-	// Verify that the image is currently rotated by the given angle and rotate the image if not
+	// Verify that the image is currently rotated by the given angle and rotate the image if not. nRotation must be 0, 90, 180, 270
 	void VerifyRotation(int nRotation);
 
 	// Rotate the image clockwise by 90, 180 or 270 degrees. All other angles are invalid.
@@ -306,6 +322,7 @@ private:
 	CSize m_FullTargetSize; 
 	CSize m_ClippingSize; // this is the size of the DIB
 	CPoint m_TargetOffset;
+	double m_dRotationLQ; // low quality rotation angle
 
 	bool m_bInParamDB; // true if image found in param DB
 	bool m_bHasZoomStoredInParamDB; // true if image in param DB and entry contains zoom and offset values
@@ -313,6 +330,7 @@ private:
 	CDimRect* m_pDimRects;
 	int m_nNumDimRects;
 	bool m_bEnableDimming;
+	bool m_bShowGrid;
 
 	double m_dLastOpTickCount;
 	double m_dLoadTickCount;
@@ -327,20 +345,21 @@ private:
 	float m_fColorCorrectionFactors[6];
 	float m_fColorCorrectionFactorsNull[6];
 
-	// Internal GetDIB() implementation combining unsharp mask with GetDIB(). pUnsharpMaskParams can be null if not used.
+	// Internal GetDIB() implementation combining unsharp mask and (low quality= rotation with GetDIB(). pUnsharpMaskParams can be null if not used.
 	// bUsingOriginalDIB is output parameter and contains if the cached DIB could be used and no processing has been done
+	// When dRotation is not 0.0, PFLAG_HighQualityResampling must not be set
 	void* GetDIBInternal(CSize fullTargetSize, CSize clippingSize, CPoint targetOffset,
 						 const CImageProcessingParams & imageProcParams, EProcessingFlags eProcFlags,
-						 const CUnsharpMaskParams * pUnsharpMaskParams, bool& bParametersChanged);
+						 const CUnsharpMaskParams * pUnsharpMaskParams, double dRotation, bool bShowGrid, bool& bParametersChanged);
 
 	// Resample when panning was done, using existing data in DIBs. Old clipping rectangle is given in oldClippingRect
 	void ResampleWithPan(void* & pDIBPixels, void* & pDIBPixelsLUTProcessed, CSize fullTargetSize, 
 		CSize clippingSize, CPoint targetOffset, CRect oldClippingRect,
-		EProcessingFlags eProcFlags, const CImageProcessingParams & imageProcParams, EResizeType eResizeType);
+		EProcessingFlags eProcFlags, const CImageProcessingParams & imageProcParams, double dRotation, EResizeType eResizeType);
 
 	// Resample to given target size. Returns resampled DIB
 	void* Resample(CSize fullTargetSize, CSize clippingSize, CPoint targetOffset, 
-		EProcessingFlags eProcFlags, double dSharpen, EResizeType eResizeType);
+		EProcessingFlags eProcFlags, double dSharpen, double dRotation, EResizeType eResizeType);
 
 	// Apply the given unsharp mask to m_pDIBPixels (can be null to not apply an unsharp mask, then NULL is returned)
 	void* ApplyUnsharpMask(const CUnsharpMaskParams * pUnsharpMaskParams, bool bNoChangesLDCandLUT);
@@ -385,4 +404,6 @@ private:
 
 	// Create histogram of the processed DIB (in original size) using the given image processing parameters
 	const CHistogram* GetHistogramOfProcessedDIB(const CImageProcessingParams & imageProcParams, EProcessingFlags eProcFlags);
+
+	void DrawGridLines(void * pDIB, const CSize& dibSize);
 };

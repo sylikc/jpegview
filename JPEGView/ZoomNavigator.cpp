@@ -2,6 +2,7 @@
 #include "ZoomNavigator.h"
 #include "JPEGImage.h"
 #include "Helpers.h"
+#include <math.h>
 
 static const int cnThumbWL = 320;
 static const int cnThumbHL = 240;
@@ -48,9 +49,11 @@ CRect CZoomNavigator::GetNavigatorRect(CJPEGImage* pImage, const CRect& panelRec
 void CZoomNavigator::PaintZoomNavigator(CJPEGImage* pImage, const CRectF& visRect, const CRect& navigatorRect,
 										const CPoint& mousePt,
 										const CImageProcessingParams& processingParams,
-										EProcessingFlags eFlags, CPaintDC& dc) {
+										EProcessingFlags eFlags, double dRotation, CPaintDC& dc) {
 	
-	void* pDIBData = pImage->GetThumbnailDIB(navigatorRect.Size(), processingParams, eFlags);
+	void* pDIBData = (fabs(dRotation) > 1e-3) ?
+		pImage->GetThumbnailDIBRotated(navigatorRect.Size(), processingParams, eFlags, dRotation) :
+		pImage->GetThumbnailDIB(navigatorRect.Size(), processingParams, eFlags);
 
 	// Paint the DIB
 	if (pDIBData != NULL) {

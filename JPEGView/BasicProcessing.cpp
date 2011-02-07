@@ -302,7 +302,7 @@ void* CBasicProcessing::ApplyLDC32bpp(CSize fullTargetSize, CPoint fullTargetOff
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////
-// Dimming of part of image
+// Dimming of part of image and drawing of rectangles
 /////////////////////////////////////////////////////////////////////////////////////////////
 
 void CBasicProcessing::DimRectangle32bpp(int nWidth, int nHeight, void* pDIBPixels, CRect rect, float fDimValue) {
@@ -323,6 +323,24 @@ void CBasicProcessing::DimRectangle32bpp(int nWidth, int nHeight, void* pDIBPixe
 		for (int i = 0; i < rectTarget.Width(); i++) {
 			uint32 nPixel = *pLine;
 			*pLine++ = alphaLUT[nPixel & 0xFF] + 256*alphaLUT[(nPixel >> 8) & 0xFF] + 65536*alphaLUT[(nPixel >> 16) & 0xFF];
+		}
+		pSrc += nWidth;
+	}
+}
+
+void CBasicProcessing::FillRectangle32bpp(int nWidth, int nHeight, void* pDIBPixels, CRect rect, COLORREF color) {
+	CRect rectTarget;
+	rectTarget.IntersectRect(CRect(0, 0, nWidth, nHeight), rect);
+	if (pDIBPixels == NULL || rectTarget.IsRectEmpty()) {
+		return;
+	}
+
+	uint32* pSrc = (uint32*) pDIBPixels + rectTarget.top*nWidth + rectTarget.left;
+	for (int j = 0; j < rectTarget.Height(); j++) {
+		uint32* pLine = pSrc;
+		for (int i = 0; i < rectTarget.Width(); i++) {
+			uint32 nPixel = *pLine;
+			*pLine++ = color;
 		}
 		pSrc += nWidth;
 	}
@@ -548,10 +566,10 @@ void* CBasicProcessing::Crop32bpp(int nWidth, int nHeight, const void* pDIBPixel
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////
-// Simple point sampling resize methods
+// Simple point sampling resize and rotation methods
 /////////////////////////////////////////////////////////////////////////////////////////////
 
-static void* PointSample(CSize fullTargetSize, CPoint fullTargetOffset, CSize clippedTargetSize, 
+void* CBasicProcessing::PointSample(CSize fullTargetSize, CPoint fullTargetOffset, CSize clippedTargetSize, 
 						 CSize sourceSize, const void* pIJLPixels, int nChannels) {
  	if (fullTargetSize.cx < 1 || fullTargetSize.cy < 1 ||
 		clippedTargetSize.cx < 1 || clippedTargetSize.cy < 1 ||
@@ -607,14 +625,258 @@ static void* PointSample(CSize fullTargetSize, CPoint fullTargetOffset, CSize cl
 	return pDIB;
 }
 
-void* CBasicProcessing::SampleDownFast(CSize fullTargetSize, CPoint fullTargetOffset, CSize clippedTargetSize, 
-									   CSize sourceSize, const void* pIJLPixels, int nChannels) {
-	return PointSample(fullTargetSize, fullTargetOffset, clippedTargetSize, sourceSize, pIJLPixels, nChannels);
+static void RotateInplace(double& dX, double& dY, double dAngle) {
+	double dXr = cos(dAngle) * dX - sin(dAngle) * dY;
+	double dYr = sin(dAngle) * dX + cos(dAngle) * dY;
+	dX = dXr;
+	dY = dYr;
 }
 
-void* CBasicProcessing::SampleUpFast(CSize fullTargetSize, CPoint fullTargetOffset, CSize clippedTargetSize, 
-									 CSize sourceSize, const void* pIJLPixels, int nChannels) {
-	return PointSample(fullTargetSize, fullTargetOffset, clippedTargetSize, sourceSize, pIJLPixels, nChannels);
+void* CBasicProcessing::PointSampleWithRotation(CSize fullTargetSize, CPoint fullTargetOffset, CSize clippedTargetSize, 
+						 CSize sourceSize, double dRotation, const void* pIJLPixels, int nChannels) {
+ 	if (fullTargetSize.cx < 1 || fullTargetSize.cy < 1 ||
+		clippedTargetSize.cx < 1 || clippedTargetSize.cy < 1 ||
+		fullTargetOffset.x < 0 || fullTargetOffset.x < 0 ||
+		clippedTargetSize.cx + fullTargetOffset.x > fullTargetSize.cx ||
+		clippedTargetSize.cy + fullTargetOffset.y > fullTargetSize.cy ||
+		pIJLPixels == NULL || (nChannels != 3 && nChannels != 4)) {
+		return NULL;
+	}
+
+	uint8* pDIB = new uint8[clippedTargetSize.cx*4 * clippedTargetSize.cy];
+
+	double dFirstX = -(sourceSize.cx - 1) * 0.5;
+	double dFirstY = -(sourceSize.cy - 1) * 0.5;
+	double dIncX1 = dFirstX + ((fullTargetSize.cx == 1) ? 0 : (double)(sourceSize.cx - 1)/(fullTargetSize.cx - 1));
+	double dIncY1 = dFirstY;
+	double dIncX2 = dFirstX;
+	double dIncY2 = dFirstY + ((fullTargetSize.cy == 1) ? 0 : (double)(sourceSize.cy - 1)/(fullTargetSize.cy - 1));
+	RotateInplace(dFirstX, dFirstY, -dRotation);
+	RotateInplace(dIncX1, dIncY1, -dRotation);
+	RotateInplace(dIncX2, dIncY2, -dRotation);
+	dIncX1 = dIncX1 - dFirstX;
+	dIncY1 = dIncY1 - dFirstY;
+	dIncX2 = dIncX2 - dFirstX;
+	dIncY2 = dIncY2 - dFirstY;
+
+	int32 nFirstX = Helpers::RoundToInt(65536 * (dFirstX + (sourceSize.cx - 1) * 0.5));
+	int32 nFirstY = Helpers::RoundToInt(65536 * (dFirstY + (sourceSize.cy - 1) * 0.5));
+	int32 nIncrementX1 = Helpers::RoundToInt(65536 * dIncX1);
+	int32 nIncrementY1 = Helpers::RoundToInt(65536 * dIncY1);
+	int32 nIncrementX2 = Helpers::RoundToInt(65536 * dIncX2);
+	int32 nIncrementY2 = Helpers::RoundToInt(65536 * dIncY2);
+
+	int nPaddedSourceWidth = Helpers::DoPadding(sourceSize.cx * nChannels, 4);
+	const uint8* pSrc = NULL;
+	uint8* pDst = pDIB;
+	int32 nX = nFirstX + fullTargetOffset.x * nIncrementX1 + fullTargetOffset.y * nIncrementX2;
+	int32 nY = nFirstY + fullTargetOffset.x * nIncrementY1 + fullTargetOffset.y * nIncrementY2;
+	for (int j = 0; j < clippedTargetSize.cy; j++) {
+		int nCurX = nX;
+		int nCurY = nY;
+		if (nChannels == 3) {
+			for (int i = 0; i < clippedTargetSize.cx; i++) {
+				int32 nCurRealX = nCurX >> 16;
+				int32 nCurRealY = nCurY >> 16;
+				if (nCurRealX >= 0 && nCurRealX < sourceSize.cx && nCurRealY >= 0 && nCurRealY < sourceSize.cy) {
+					pSrc = (uint8*)pIJLPixels + nPaddedSourceWidth * nCurRealY + nCurRealX * 3;
+					uint32 d = i*4;
+					pDst[d] = pSrc[0];
+					pDst[d+1] = pSrc[1];
+					pDst[d+2] = pSrc[2];
+					pDst[d+3] = 0;
+				} else {
+					*((uint32*)pDst + i) = 0;
+				}
+				nCurX += nIncrementX1;
+				nCurY += nIncrementY1;
+			}
+		} else {
+			for (int i = 0; i < clippedTargetSize.cx; i++) {
+				int32 nCurRealX = nCurX >> 16;
+				int32 nCurRealY = nCurY >> 16;
+				if (nCurRealX >= 0 && nCurRealX < sourceSize.cx && nCurRealY >= 0 && nCurRealY < sourceSize.cy) {
+					pSrc = (uint8*)pIJLPixels + nPaddedSourceWidth * nCurRealY + nCurRealX * 4;
+					*((uint32*)pDst + i) = *((uint32*)pSrc);
+				} else {
+					*((uint32*)pDst + i) = 0;
+				}
+				nCurX += nIncrementX1;
+				nCurY += nIncrementY1;
+			}
+		}
+		pDst += clippedTargetSize.cx*4;
+		nX += nIncrementX2;
+		nY += nIncrementY2;
+	}
+	return pDIB;
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+// High quality rotation using bicubic sampling
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+#define NUM_KERNELS_LOG2 6
+#define NUM_KERNELS_BICUBIC 65
+#define FP_HALF 8192
+
+// Bicubic resampling of one pixel at pSource (in 3 or 4 channel format) into one destination pixel in 32 bit format
+// The fractional part of the pixel position is given in .16 fixed point format
+// pKernels contains NUM_KERNELS_BICUBIC precalculated bicubic filter kernels each of lenght 4, applied with offset -1 to the source pixels
+static void InterpolateBicubic(const uint8* pSource, uint8* pDest, int16* pKernels, int32 nFracX, int32 nFracY, int nPaddedSourceWidth, int nChannels) {
+	int16* pKernelX = &(pKernels[4*(nFracX >> (16 - NUM_KERNELS_LOG2))]);
+	int16* pKernelY = &(pKernels[4*(nFracY >> (16 - NUM_KERNELS_LOG2))]);
+	int nChannels2 = nChannels * 2;
+	for (int i = 0; i < nChannels; i++) {
+		const uint8* pSrc = pSource;
+		pSrc -= nPaddedSourceWidth;
+
+		int32 nSum1 = pSrc[-nChannels] * pKernelX[0] + pSrc[0] * pKernelX[1] + pSrc[nChannels] * pKernelX[2] + pSrc[nChannels2] * pKernelX[3] + FP_HALF;
+		pSrc += nPaddedSourceWidth;
+		int32 nSum2 = pSrc[-nChannels] * pKernelX[0] + pSrc[0] * pKernelX[1] + pSrc[nChannels] * pKernelX[2] + pSrc[nChannels2] * pKernelX[3] + FP_HALF;
+		pSrc += nPaddedSourceWidth;
+		int32 nSum3 = pSrc[-nChannels] * pKernelX[0] + pSrc[0] * pKernelX[1] + pSrc[nChannels] * pKernelX[2] + pSrc[nChannels2] * pKernelX[3] + FP_HALF;
+		pSrc += nPaddedSourceWidth;
+		int32 nSum4 = pSrc[-nChannels] * pKernelX[0] + pSrc[0] * pKernelX[1] + pSrc[nChannels] * pKernelX[2] + pSrc[nChannels2] * pKernelX[3] + FP_HALF;
+
+		int32 nSum = (nSum1 >> 14) * pKernelY[0] + (nSum2 >> 14) * pKernelY[1] + (nSum3 >> 14) * pKernelY[2] + (nSum4 >> 14) * pKernelY[3] + FP_HALF;
+		nSum = nSum >> 14;
+		*pDest++ = min(255, max(0, nSum));
+		pSource++;
+	}
+	if (nChannels == 3) *pDest = 0;
+}
+
+static inline void Get4Pixels(const uint8* pSrc, uint8 dest[4], int nFrom, int nTo, int nChannels) {
+	int nC = -nChannels;
+	for (int i = 0; i < 4; i++) {
+		dest[i] = (i >= nFrom + 1 && i <= nTo + 1) ? pSrc[nC] : 0;
+		nC += nChannels;
+	}
+}
+
+// Same as method above but with border handling, assuming that the filter kernels are only evaluated from nXFrom to nXTo and nYFrom to nYTo
+// Pixels that are outside this range are assumed to have value zero
+static void InterpolateBicubicBorder(const uint8* pSource, uint8* pDest, int16* pKernels, 
+									 int32 nFracX, int32 nFracY, int nXFrom, int nXTo, int nYFrom, int nYTo, int nPaddedSourceWidth, int nChannels) {
+	int16* pKernelX = &(pKernels[4*(nFracX >> (16 - NUM_KERNELS_LOG2))]);
+	int16* pKernelY = &(pKernels[4*(nFracY >> (16 - NUM_KERNELS_LOG2))]);
+	for (int i = 0; i < nChannels; i++) {
+		const uint8* pSrc = pSource;
+		pSrc -= nPaddedSourceWidth;
+
+		uint8 pixels[4];
+
+		int32 nSum1 = 0;
+		if (nYFrom <= -1) {
+			Get4Pixels(pSrc, pixels, nXFrom, nXTo, nChannels); 
+			nSum1 = pixels[0] * pKernelX[0] + pixels[1] * pKernelX[1] + pixels[2] * pKernelX[2] + pixels[3] * pKernelX[3] + FP_HALF;
+		}
+		pSrc += nPaddedSourceWidth;
+		int nSum2 = 0;
+		if (nYFrom <= 0 && nYTo >= 0) {
+			Get4Pixels(pSrc, pixels, nXFrom, nXTo, nChannels); 
+			nSum2 = pixels[0] * pKernelX[0] + pixels[1] * pKernelX[1] + pixels[2] * pKernelX[2] + pixels[3] * pKernelX[3] + FP_HALF;
+		}
+		pSrc += nPaddedSourceWidth;
+		int32 nSum3 = 0;
+		if (nYFrom <= 1 && nYTo >= 1) {
+			Get4Pixels(pSrc, pixels, nXFrom, nXTo, nChannels); 
+			nSum3 = pixels[0] * pKernelX[0] + pixels[1] * pKernelX[1] + pixels[2] * pKernelX[2] + pixels[3] * pKernelX[3] + FP_HALF;
+		}
+		pSrc += nPaddedSourceWidth;
+		int32 nSum4 = 0;
+		if (nYTo >= 2) {
+			Get4Pixels(pSrc, pixels, nXFrom, nXTo, nChannels); 
+			nSum4 = pixels[0] * pKernelX[0] + pixels[1] * pKernelX[1] + pixels[2] * pKernelX[2] + pixels[3] * pKernelX[3] + FP_HALF;
+		}
+
+		int32 nSum = (nSum1 >> 14) * pKernelY[0] + (nSum2 >> 14) * pKernelY[1] + (nSum3 >> 14) * pKernelY[2] + (nSum4 >> 14) * pKernelY[3] + FP_HALF;
+		nSum = nSum >> 14;
+
+		*pDest++ = min(255, max(0, nSum));
+		pSource++;
+	}
+	if (nChannels == 3) *pDest = 0;
+}
+
+void* CBasicProcessing::RotateHQ_Core(CPoint targetOffset, CSize targetSize, double dRotation, CSize sourceSize, 
+									  const void* pSourcePixels, void* pTargetPixels, int nChannels){
+
+	double dFirstX = -(sourceSize.cx - 1) * 0.5;
+	double dFirstY = -(sourceSize.cy - 1) * 0.5;
+	double dIncX1 = dFirstX + ((targetSize.cx == 1) ? 0 : 1);
+	double dIncY1 = dFirstY;
+	double dIncX2 = dFirstX;
+	double dIncY2 = dFirstY + ((targetSize.cy == 1) ? 0 : 1);
+	RotateInplace(dFirstX, dFirstY, -dRotation);
+	RotateInplace(dIncX1, dIncY1, -dRotation);
+	RotateInplace(dIncX2, dIncY2, -dRotation);
+	dIncX1 = dIncX1 - dFirstX;
+	dIncY1 = dIncY1 - dFirstY;
+	dIncX2 = dIncX2 - dFirstX;
+	dIncY2 = dIncY2 - dFirstY;
+
+	int32 nFirstX = Helpers::RoundToInt(65536 * (dFirstX + (sourceSize.cx - 1) * 0.5));
+	int32 nFirstY = Helpers::RoundToInt(65536 * (dFirstY + (sourceSize.cy - 1) * 0.5));
+	int32 nIncrementX1 = Helpers::RoundToInt(65536 * dIncX1);
+	int32 nIncrementY1 = Helpers::RoundToInt(65536 * dIncY1);
+	int32 nIncrementX2 = Helpers::RoundToInt(65536 * dIncX2);
+	int32 nIncrementY2 = Helpers::RoundToInt(65536 * dIncY2);
+
+	int16* pKernels = new int16[NUM_KERNELS_BICUBIC * 4];
+	CResizeFilter::GetBicubicFilterKernels(NUM_KERNELS_BICUBIC, pKernels);
+
+	int nPaddedSourceWidth = Helpers::DoPadding(sourceSize.cx * nChannels, 4);
+	const uint8* pSrc = NULL;
+	uint8* pDst = (uint8*)pTargetPixels;
+	int32 nX = nFirstX + targetOffset.x * nIncrementX1 + targetOffset.y * nIncrementX2;
+	int32 nY = nFirstY + targetOffset.x * nIncrementY1 + targetOffset.y * nIncrementY2;
+	for (int j = 0; j < targetSize.cy; j++) {
+		int nCurX = nX;
+		int nCurY = nY;
+		for (int i = 0; i < targetSize.cx; i++) {
+			int32 nCurRealX = nCurX >> 16;
+			int32 nCurRealY = nCurY >> 16;
+			int32 nFracX = nCurX & 0xFFFF;
+			int32 nFracY = nCurY & 0xFFFF;
+			if (nCurRealX >= -1 && nCurRealX <= sourceSize.cx && nCurRealY >= -1 && nCurRealY <= sourceSize.cy) {
+				pSrc = (uint8*)pSourcePixels + nPaddedSourceWidth * nCurRealY + nCurRealX * nChannels;
+				if (nCurRealX > 0 && nCurRealX < sourceSize.cx - 2 && nCurRealY > 0 && nCurRealY < sourceSize.cy - 2) {
+					InterpolateBicubic(pSrc, pDst + i*4, pKernels, nFracX, nFracY, nPaddedSourceWidth, nChannels);
+				} else {
+					int nXFrom = (nCurRealX > 0) ? -1 : -nCurRealX;
+					int nXTo = (nCurRealX < sourceSize.cx - 2) ? 2 : sourceSize.cx - nCurRealX - 1;
+					int nYFrom = (nCurRealY > 0) ? -1 : -nCurRealY;
+					int nYTo = (nCurRealY < sourceSize.cy - 2) ? 2 : sourceSize.cy - nCurRealY - 1;
+					InterpolateBicubicBorder(pSrc, pDst + i*4, pKernels, nFracX, nFracY, nXFrom, nXTo, nYFrom, nYTo, nPaddedSourceWidth, nChannels);
+				}
+			} else {
+				*((uint32*)pDst + i) = 0;
+			}
+			nCurX += nIncrementX1;
+			nCurY += nIncrementY1;
+		}
+		pDst += targetSize.cx*4;
+		nX += nIncrementX2;
+		nY += nIncrementY2;
+	}
+	delete[] pKernels;
+	return pTargetPixels;
+}
+
+void* CBasicProcessing::RotateHQ(CPoint targetOffset, CSize targetSize, double dRotation, CSize sourceSize, const void* pSourcePixels, int nChannels) {
+	 if (pSourcePixels == NULL || (nChannels != 3 && nChannels != 4)) {
+		return NULL;
+	}
+
+	uint8* pTargetPixels = new uint8[targetSize.cx * 4 * targetSize.cy];
+
+	CProcessingThreadPool& threadPool = CProcessingThreadPool::This();
+	CRequestRotate request(pSourcePixels, targetOffset, targetSize, dRotation, sourceSize, pTargetPixels, nChannels);
+	threadPool.Process(&request);
+
+	return pTargetPixels;
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////

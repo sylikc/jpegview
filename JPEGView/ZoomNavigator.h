@@ -37,7 +37,7 @@ public:
 	static void PaintZoomNavigator(CJPEGImage* pImage, const CRectF& visRect, const CRect& navigatorRect,
 		const CPoint& mousePt,
 		const CImageProcessingParams& processingParams,
-		EProcessingFlags eFlags, CPaintDC& dc);
+		EProcessingFlags eFlags, double dRotation, CPaintDC& dc);
 
 	// Paints the pan rectangle
 	static void PaintPanRectangle(CDC& dc, const CPoint& centerPt);

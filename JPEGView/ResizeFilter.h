@@ -56,6 +56,13 @@ public:
 	// Object must have been created with XMM support
 	const XMMFilterKernelBlock& GetXMMFilterKernels() const { assert(m_bXMMCalculated); return m_kernelsXMM; }
 
+	// Get bicubic filter kernels for fractional positions. These kernels have length 4 and must be applied with offset -1 to current integer position.
+	// E.g. when requesting 33 kernels, the kernel for fractional position 0.5 is starting at pKernel[4 * 16]
+	static void GetBicubicFilterKernels(int nNumKernels, int16* pKernels);
+
+	static double EvaluateKernelIntegrated(double dX, EFilterType eFilter, double dMultX, double dSharpen);
+	static double EvaluateCubicFilterKernel(double dFrac, int nKernelElement);
+
 private:
 	friend class CResizeFilterCache;
 
@@ -79,8 +86,6 @@ private:
 	bool ParametersMatch(int nSourceSize, int nTargetSize, double dSharpen, EFilterType eFilter, bool bXMM);
 
 	void CalculateFilterParams(EFilterType eFilter);
-	double EvaluateKernelIntegrated(double dX, EFilterType eFilter);
-	double EvaluateCubicFilterKernel(double dFrac, int nKernelElement);
 	int16* GetFilter(uint16 nFrac, EFilterType eFilter);
 };
 

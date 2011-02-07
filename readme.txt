@@ -24,6 +24,11 @@ Changelog
 
 [1.0.23]
 New features:
+- New image processing: Rotation by arbitrary angle
+  Using a button on the navigation panel, the image can be rotated with the mouse by a user-defined angle.
+  The preview of rotation is real-time and uses simple point-sampling. When the rotation is applied to the
+  image, bicubic interpolation is done, providing a good quality rotated image.
+  Note that this processing cannot be stored in the parameter DB.
 - Lossless crop
 - Display of JPEG comments (EXIF user comment, EXIF image description, JPEG COM marker, in this order)
   Use INI file setting ShowJPEGComments to disable display of comments
