@@ -23,6 +23,8 @@ Changelog
 *********
 
 [1.0.23]
+Bugs fixed:
+- Fixed crash on startup when ShowFullScreen=true in INI file
 New features:
 - New image processing: Rotation by arbitrary angle
   Using a button on the navigation panel, the image can be rotated with the mouse by a user-defined angle.

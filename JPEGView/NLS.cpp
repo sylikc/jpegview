@@ -28,10 +28,8 @@ void CNLS::ReadStringTable(LPCTSTR sFileName) {
 
 	const int FILE_BUFF_SIZE = 32000;
 	TCHAR* pLineBuff = new TCHAR[FILE_BUFF_SIZE];
-	pLineBuff[0] = 0; pLineBuff[1] = 0;
-	pLineBuff[FILE_BUFF_SIZE-1] = 0; pLineBuff[FILE_BUFF_SIZE-2] = 0;
+	memset(pLineBuff, 0, FILE_BUFF_SIZE * sizeof(TCHAR));
 	size_t nReadBytes = fread(pLineBuff, 1, FILE_BUFF_SIZE*sizeof(TCHAR), fptr);
-	((wchar_t*)pLineBuff)[nReadBytes/2 - 1] = 0;
 
 #ifndef _UNICODE
 	// Convert from Unicode to MBCS if needed

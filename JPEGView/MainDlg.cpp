@@ -264,9 +264,6 @@ CMainDlg::CMainDlg() {
 	m_storedWindowPlacement.length = sizeof(WINDOWPLACEMENT);
 	memset(&m_storedWindowPlacement2, 0, sizeof(WINDOWPLACEMENT));
 	m_storedWindowPlacement2.length = sizeof(WINDOWPLACEMENT);
-	m_pSliderMgr = NULL;
-	m_pNavPanel = NULL;
-	m_pWndButtonPanel = NULL;
 	m_bPasteFromClipboardFailed = false;
 	m_bRotationModeAssisted = false;
 	m_bRotationShowGrid = true;
@@ -274,6 +271,31 @@ CMainDlg::CMainDlg() {
 	m_dRotationLQ = 0.0;
 	m_bRotating = false;
 	m_nMonitor = 0;
+	m_monitorRect = CRect(0, 0, 0, 0);
+	m_bMouseOn = false;
+
+	m_pSliderMgr = NULL;
+	m_btnUnsharpMask = NULL;
+	m_btnSaveToDB = NULL;
+	m_btnRemoveFromDB = NULL;
+	m_txtFileName = NULL;
+	m_txtParamDB = NULL;
+	m_txtRename = NULL;
+	m_txtAcqDate = NULL;
+	m_btnInfo = NULL;
+	m_btnKeepParams = NULL;
+	m_btnLandScape = NULL;
+	m_btnWindowMode = NULL;
+	m_textRotationPanel = NULL;
+	m_textRotationHint = NULL;
+	m_btnRotationShowGrid = NULL;
+	m_btnRotationAutoCrop = NULL;
+	m_btnRotationAssisted = NULL;
+	m_pNavPanel = NULL;
+	m_pWndButtonPanel = NULL;
+	m_pUnsharpMaskPanel = NULL;
+	m_pRotationPanel = NULL;
+	m_pEXIFDisplay = NULL;
 
 	m_cropStart = CPoint(INT_MIN, INT_MIN);
 	m_cropEnd = CPoint(INT_MIN, INT_MIN);
@@ -282,6 +304,7 @@ CMainDlg::CMainDlg() {
 	m_nBlendInNavPanelCountdown = 0;
 	m_pMemDCAnimation = NULL;
 	m_hOffScreenBitmapAnimation = NULL;
+	m_fScaling = 1.0f;
 }
 
 CMainDlg::~CMainDlg() {
@@ -455,6 +478,7 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 		s_bFirst = false;
 		if (m_sStartupFile.GetLength() == 0) {
 			m_bInInitialOpenFile = true;
+
 			if (!OpenFile(true)) {
 				EndDialog(0);
 			}
@@ -3012,7 +3036,9 @@ void CMainDlg::MouseOn() {
 	if (!m_bMouseOn) {
 		::ShowCursor(TRUE);
 		m_bMouseOn = true;
-		this->InvalidateRect(m_pNavPanel->PanelRect(), FALSE);
+		if (m_pNavPanel != NULL) {
+		  this->InvalidateRect(m_pNavPanel->PanelRect(), FALSE);
+		}
 	}
 }
 
@@ -3788,6 +3814,7 @@ void CMainDlg::StartRotationPanel() {
 	EndNavPanelAnimation();
 	StopTimer();
 	StopMovieMode();
+	UpdateRotationPanelTitle();
 	Invalidate();
 }
 
@@ -3842,8 +3869,9 @@ void CMainDlg::EndRotating() {
 		float fDY = (m_nMouseX > fX) ? m_nMouseY - fY : fY - m_nMouseY;
 		if (fabs(fDX) > 2 || fabs(fDY) > 2) {
 			float fAngle = atan2(fDY, fDX);
+			float fInvSignAngle = (fAngle < 0) ? 1.0f : -1.0f;
 			if (fabs(fAngle) > PI * 0.25f) {
-				m_dRotationLQ -= (fAngle + PI * 0.5f);
+				m_dRotationLQ -= (fAngle + fInvSignAngle * PI * 0.5f);
 			} else {
 				m_dRotationLQ -= fAngle;
 			}
