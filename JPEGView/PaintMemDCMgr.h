@@ -1,7 +1,7 @@
 #pragma once
 
 // forward declarations
-class CPanelMgr;
+class CPanel;
 
 #define MAX_REGIONS_CPaintMemDCMgr 5
 
@@ -21,10 +21,10 @@ public:
 
 	// Blits the DIB data section to target DC using blending with painted version of given panel
 	static void CPaintMemDCMgr::BitBltBlended(CDC & dc, CDC & paintDC, const CSize& dcSize, void* pDIBData, BITMAPINFO* pbmInfo, 
-						  const CPoint& dibStart, const CSize& dibSize, CPanelMgr& panel, const CPoint& offsetPanel,
+						  const CPoint& dibStart, const CSize& dibSize, CPanel& panel, const CPoint& offsetPanel,
 						  float fBlendFactor);
 
-	CRect CreatePanelRegion(CPanelMgr* pPanel, float fDimFactor, bool bBlendPanel);
+	CRect CreatePanelRegion(CPanel* pPanel, float fDimFactor, bool bBlendPanel);
 
 	void BlitImageToMemDC(void* pDIBData, BITMAPINFO* pBitmapInfo, CPoint destination, float fBlendFactor);
 
@@ -33,7 +33,7 @@ private:
 
 	struct CManagedRegion {
 	public:
-		CPanelMgr* DisplayRegion;
+		CPanel* DisplayRegion;
 		float DimFactor;
 		bool Blend;
 		CDC MemoryDC;

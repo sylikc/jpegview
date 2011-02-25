@@ -1,15 +1,20 @@
 #pragma once
 
 #include "EXIFReader.h"
-#include "GUIControls.h"
+#include "Panel.h"
 
 class CHistogram;
 
 // Displays EXIF information on the screen (used when F2 is pressed)
-class CEXIFDisplay : public CPanelMgr
+class CEXIFDisplay : public CPanel
 {
 public:
-	CEXIFDisplay(HWND hWnd);
+	// IDs of the controls on this panel
+	enum {
+		ID_btnShowHideHistogram
+	};
+public:
+	CEXIFDisplay(HWND hWnd, INotifiyMouseCapture* pNotifyMouseCapture);
 	~CEXIFDisplay();
 
 	// Methods to create the information lines
@@ -33,9 +38,6 @@ public:
 
 	void SetHistogram(const CHistogram* pHistogram) { m_pHistogram = pHistogram; }
 
-	// Painting handlers for the buttons
-	static void PaintShowHistogramBtn(const CRect& rect, CDC& dc, bool bShowHistogram);
-	
 protected:
 	virtual void RepositionAll();
 
@@ -67,4 +69,7 @@ private:
 	const CHistogram* m_pHistogram;
 
 	void PaintHistogram(CDC & dc, int nXStart, int nYBaseLine);
+
+	static void PaintShowHistogramBtn(void* pContext, const CRect& rect, CDC& dc);
+	static LPCTSTR ShowHistogramTooltip(void* pContext);
 };

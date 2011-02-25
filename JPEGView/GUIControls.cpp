@@ -1,35 +1,14 @@
 #include "StdAfx.h"
 #include "GUIControls.h"
-#include "Helpers.h"
+#include "Panel.h"
+#include "HelpersGUI.h"
 #include "SettingsProvider.h"
 #include <math.h>
 
-#define SLIDER_WIDTH 130
-#define MIN_SLIDER_WIDTH 40
-#define SLIDER_HEIGHT 30
-#define WIDTH_ADD_PIXELS 63
-#define SLIDER_GAP 23
-#define SCREEN_Y_OFFSET 5
-#define NAV_PANEL_HEIGHT 32
-#define NAV_PANEL_BORDER 6
-#define NAV_PANEL_GAP 5
-#define WNDBUTTON_PANEL_HEIGHT 24
-#define WNDBUTTON_BORDER 1
-#define PANEL_BORDER 12
-#define PANEL_GAPTITLE 10
-#define USM_PANEL_ADDX 40
-#define USM_PANEL_GAPSLIDER 7
-#define USM_PANEL_GAPBUTTONY 4
-#define USM_PANEL_GAPBUTTONX 12
-#define ROTATION_PANEL_WIDTH 360
-#define ROTATION_PANEL_HEIGHT 100
-#define ROTATION_PANEL_BUTTON_SIZE 21
-#define ROTATION_PANEL_GAPBUTTONX1 6
-#define ROTATION_PANEL_GAPBUTTONX2 12
 #define WINPROP_THIS _T("JV_THIS")
 
 /////////////////////////////////////////////////////////////////////////////////////////////
-// static helper functions
+// Helpers
 /////////////////////////////////////////////////////////////////////////////////////////////
 
 static CSize GetTextRect(HWND hWnd, LPCTSTR sText) {
@@ -47,1110 +26,12 @@ static CSize GetTextRect(CDC & dc, LPCTSTR sText) {
 	return textlen;
 }
 
-// Gets the screen size of the screen containing the point with given virtual desktop coordinates
-static CSize GetScreenSize(int nX, int nY) {
-	HMONITOR hMonitor = ::MonitorFromPoint(CPoint(nX, nY), MONITOR_DEFAULTTONEAREST);
-	MONITORINFO monitorInfo;
-	monitorInfo.cbSize = sizeof(MONITORINFO);
-	if (::GetMonitorInfo(hMonitor, &monitorInfo)) {
-		return CSize(monitorInfo.rcMonitor.right - monitorInfo.rcMonitor.left, monitorInfo.rcMonitor.bottom - monitorInfo.rcMonitor.top);
-	} else {
-		return CSize(::GetSystemMetrics(SM_CXSCREEN), ::GetSystemMetrics(SM_CYSCREEN));
-	}
-}
-
-/////////////////////////////////////////////////////////////////////////////////////////////
-// Tooltip support
-/////////////////////////////////////////////////////////////////////////////////////////////
-
-CTooltip::CTooltip(HWND hWnd, const CUICtrl* pBoundCtrl, LPCTSTR sTooltip) : 
-	m_hWnd(hWnd), m_pBoundCtrl(pBoundCtrl), m_sTooltip(sTooltip), m_TooltipRect(0, 0, 0, 0), m_oldRectBoundCtrl(0, 0, 0, 0) {
-	m_ttHandler = NULL;
-}
-
-CTooltip::CTooltip(HWND hWnd, const CUICtrl* pBoundCtrl, TooltipHandler ttHandler) :
-	m_hWnd(hWnd), m_pBoundCtrl(pBoundCtrl), m_TooltipRect(0, 0, 0, 0) {
-	m_ttHandler = ttHandler;
-}
-
-const CString& CTooltip::GetTooltip() const {
-	if (m_ttHandler != NULL) {
-		LPCTSTR sNewTooltip = m_ttHandler();
-		if (m_sTooltip != sNewTooltip) {
-			const_cast<CTooltip*>(this)->m_sTooltip = sNewTooltip;
-			const_cast<CTooltip*>(this)->m_TooltipRect = CRect(0, 0, 0, 0);
-		}
-	}
-	return m_sTooltip;
-}
-
-void CTooltip::Paint(CDC & dc) const {
-	const CString& sTooltip = GetTooltip();
-	CRect tooltipRect = GetTooltipRect();
-	CBrush brush;
-	brush.CreateSolidBrush(RGB(255, 255, 200));
-	dc.SelectBrush(brush);
-	dc.SelectStockPen(BLACK_PEN);
-	dc.Rectangle(tooltipRect.left, tooltipRect.top, tooltipRect.right, tooltipRect.bottom);
-	dc.SetTextColor(RGB(0, 0, 0));
-	dc.SetBkColor(RGB(255, 255, 200));
-	dc.SelectStockFont(DEFAULT_GUI_FONT);
-	tooltipRect.OffsetRect(0, 2);
-	dc.DrawText(sTooltip, sTooltip.GetLength(), tooltipRect, DT_CENTER | DT_VCENTER | DT_NOPREFIX);
-	dc.SelectStockBrush(BLACK_BRUSH);
-}
-
-CRect CTooltip::GetTooltipRect() const {
-	GetTooltip();
-	if (m_pBoundCtrl->GetPosition() != m_oldRectBoundCtrl || m_TooltipRect.IsRectEmpty()) {
-		const_cast<CTooltip*>(this)->m_oldRectBoundCtrl = m_pBoundCtrl->GetPosition();
-		const_cast<CTooltip*>(this)->m_TooltipRect = CalculateTooltipRect();
-	}
-	return m_TooltipRect;
-}
-
-CRect CTooltip::CalculateTooltipRect() const {
-	HDC dc = ::GetDC(m_hWnd);
-	::SelectObject(dc, (HGDIOBJ)::GetStockObject(DEFAULT_GUI_FONT));
-	CRect rectText(0, 0, 400, 0);
-	const CString& sTooltip = GetTooltip();
-	::DrawText(dc, sTooltip, sTooltip.GetLength(), &rectText, DT_CENTER | DT_VCENTER | DT_CALCRECT | DT_NOPREFIX);
-	::ReleaseDC(m_hWnd, dc);
-
-	CRect boundRect = m_pBoundCtrl->GetPosition();
-	int nLeft = boundRect.CenterPoint().x - rectText.Width()/2;
-	int nTop = boundRect.bottom + 6;
-	return CRect(nLeft, nTop, nLeft + rectText.Width() + 8, nTop + rectText.Height() + 5);
-}
-
-CTooltipMgr::CTooltipMgr(HWND hWnd) {
-	m_hWnd = hWnd;
-	m_pActiveTooltip = NULL;
-	m_pMouseOnTooltip = NULL;
-	m_pBlockedTooltip = NULL;
-	m_bEnableTooltips = true;
-}
-
-void CTooltipMgr::OnMouseLButton(EMouseEvent eMouseEvent, int nX, int nY) {
-	if (eMouseEvent == MouseEvent_BtnDown) {
-		m_pBlockedTooltip = m_pMouseOnTooltip;
-		RemoveActiveTooltip();
-	}
-}
-
-void CTooltipMgr::OnMouseMove(int nX, int nY) {
-	// Find the control the mouse is currently on
-	CTooltip* pMouseOnTooltip = NULL;
-	std::list<CTooltip*>::const_iterator iter;
-	for (iter = m_TooltipList.begin( ); iter != m_TooltipList.end( ); iter++ ) {
-		const CUICtrl* pCtrl = (*iter)->GetBoundCtrl();
-		if (pCtrl->IsShown() && pCtrl->GetPosition().PtInRect(CPoint(nX, nY))) {
-			pMouseOnTooltip = *iter;
-			break;
-		}
-	}
-	if (pMouseOnTooltip != m_pMouseOnTooltip) {
-		m_pBlockedTooltip = NULL; // unblock showing tooltips when leaving current control
-		RemoveActiveTooltip();
-		m_pMouseOnTooltip = pMouseOnTooltip;
-		m_pActiveTooltip = pMouseOnTooltip;
-		if (m_pActiveTooltip != NULL && m_bEnableTooltips) {
-			CRect rect(m_pActiveTooltip->GetTooltipRect());
-			::InvalidateRect(m_hWnd, &rect, FALSE);
-		}
-	}
-}
-
-void CTooltipMgr::OnPaint(CDC & dc) {
-	if (m_pActiveTooltip != NULL && m_bEnableTooltips) {
-		m_pActiveTooltip->Paint(dc);
-	}
-}
-
-void CTooltipMgr::AddTooltip(CUICtrl* pBoundCtrl, CTooltip* tooltip) {
-	std::list<CTooltip*>::const_iterator iter;
-	for (iter = m_TooltipList.begin( ); iter != m_TooltipList.end( ); iter++ ) {
-		if ((*iter)->GetBoundCtrl() == pBoundCtrl) {
-			m_TooltipList.remove(*iter);
-			delete *iter;
-			break;
-		}
-	}
-	if (tooltip != NULL) {
-		m_TooltipList.push_back(tooltip);
-	}
-}
-
-void CTooltipMgr::AddTooltip(CUICtrl* pBoundCtrl, LPCTSTR sTooltip) {
-	if (sTooltip != NULL && sTooltip[0] != 0) {
-		AddTooltip(pBoundCtrl, new CTooltip(m_hWnd, pBoundCtrl, sTooltip));
-	} else {
-		AddTooltip(pBoundCtrl, (CTooltip*)NULL);
-	}
-}
-
-void CTooltipMgr::AddTooltipHandler(CUICtrl* pBoundCtrl, TooltipHandler ttHandler) {
-	AddTooltip(pBoundCtrl, new CTooltip(m_hWnd, pBoundCtrl, ttHandler));
-}
-
-void CTooltipMgr::RemoveActiveTooltip() {
-	if (m_pActiveTooltip != NULL && m_bEnableTooltips) {
-		CRect rect(m_pActiveTooltip->GetTooltipRect());
-		::InvalidateRect(m_hWnd, &rect, FALSE);
-	}
-	m_pActiveTooltip = NULL;
-}
-
-void CTooltipMgr::EnableTooltips(bool bEnable) {
-	if (bEnable != m_bEnableTooltips) {
-		m_bEnableTooltips = bEnable;
-		if (m_pActiveTooltip != NULL) {
-			CRect rect(m_pActiveTooltip->GetTooltipRect());
-			::InvalidateRect(m_hWnd, &rect, FALSE);
-		}
-	}
-}
-
-/////////////////////////////////////////////////////////////////////////////////////////////
-// CPanelMgr
-/////////////////////////////////////////////////////////////////////////////////////////////
-
-CPanelMgr::CPanelMgr(HWND hWnd) : m_tooltipMgr(hWnd) {
-	m_hWnd = hWnd;
-	m_fDPIScale = Helpers::ScreenScaling;
-	m_pCtrlCaptureMouse = NULL;
-}
-
-CPanelMgr::~CPanelMgr(void) {
-	std::list<CUICtrl*>::iterator iter;
-	for (iter = m_ctrlList.begin( ); iter != m_ctrlList.end( ); iter++ ) {
-		delete *iter;
-	}
-	m_ctrlList.clear();
-}
-
-void CPanelMgr::AddSlider(LPCTSTR sName, double* pdValue, bool* pbEnable, 
-						  double dMin, double dMax, double dDefaultValue, bool bAllowPreviewAndReset, bool bLogarithmic, bool bInvert, int nWidth) {
-	CSliderDouble* pSlider = new CSliderDouble(this, sName, nWidth, pdValue, pbEnable, dMin, dMax, dDefaultValue, 
-		bAllowPreviewAndReset, bLogarithmic, bInvert);
-	m_ctrlList.push_back(pSlider);
-}
-
-CTextCtrl* CPanelMgr::AddText(LPCTSTR sTextInit, bool bEditable, TextChangedHandler textChangedHandler) {
-	CTextCtrl* pTextCtrl = new CTextCtrl(this, sTextInit, bEditable, textChangedHandler);
-	m_ctrlList.push_back(pTextCtrl);
-	return pTextCtrl;
-}
-
-CButtonCtrl* CPanelMgr::AddButton(LPCTSTR sButtonText, ButtonPressedHandler buttonPressedHandler) {
-	CButtonCtrl* pButtonCtrl = new CButtonCtrl(this, sButtonText, buttonPressedHandler);
-	m_ctrlList.push_back(pButtonCtrl);
-	return pButtonCtrl;
-}
-
-CButtonCtrl* CPanelMgr::AddUserPaintButton(PaintHandler paintHandler, ButtonPressedHandler buttonPressedHandler, 
-										   LPCTSTR sTooltip) {
-	CButtonCtrl* pButtonCtrl = new CButtonCtrl(this, paintHandler, buttonPressedHandler);
-	if (sTooltip != NULL) {
-		pButtonCtrl->SetTooltip(sTooltip);
-	}
-	m_ctrlList.push_back(pButtonCtrl);
-	return pButtonCtrl;
-}
-
-CButtonCtrl* CPanelMgr::AddUserPaintButton(PaintHandler paintHandler, ButtonPressedHandler buttonPressedHandler, TooltipHandler ttHandler) {
-	CButtonCtrl* pButtonCtrl = new CButtonCtrl(this, paintHandler, buttonPressedHandler);
-	pButtonCtrl->SetTooltipHandler(ttHandler);
-	m_ctrlList.push_back(pButtonCtrl);
-	return pButtonCtrl;
-}
-
-void CPanelMgr::ShowHideSlider(bool bShow, double* pdValue) {
-	std::list<CUICtrl*>::iterator iter;
-	for (iter = m_ctrlList.begin( ); iter != m_ctrlList.end( ); iter++ ) {
-		CSliderDouble* pSlider = dynamic_cast<CSliderDouble*>(*iter);
-		if (pSlider != NULL) {
-			if (pSlider->GetValuePtr() == pdValue) {
-				pSlider->SetShow(bShow);
-			}
-		}
-	}
-}
-
-bool CPanelMgr::OnMouseLButton(EMouseEvent eMouseEvent, int nX, int nY) {
-	m_tooltipMgr.OnMouseLButton(eMouseEvent, nX, nY);
-
-	bool bHandled = false;
-	CUICtrl* ctrlCapturedMouse = m_pCtrlCaptureMouse;
-	std::list<CUICtrl*>::iterator iter;
-	for (iter = m_ctrlList.begin( ); iter != m_ctrlList.end( ); iter++ ) {
-		if ((*iter)->IsShown() && (ctrlCapturedMouse == NULL || *iter == ctrlCapturedMouse)) {
-			if ((*iter)->OnMouseLButton(eMouseEvent, nX, nY)) {
-				bHandled = true;
-			}
-		}
-	}
-	return bHandled;
-}
-
-bool CPanelMgr::OnMouseMove(int nX, int nY) {
-	m_tooltipMgr.OnMouseMove(nX, nY);
-
-	bool bHandled = false;
-	CUICtrl* ctrlCapturedMouse = m_pCtrlCaptureMouse;
-	std::list<CUICtrl*>::iterator iter;
-	for (iter = m_ctrlList.begin( ); iter != m_ctrlList.end( ); iter++ ) {
-		if ((*iter)->IsShown() && (ctrlCapturedMouse == NULL || *iter == ctrlCapturedMouse)) {
-			if ((*iter)->OnMouseMove(nX, nY)) {
-				bHandled = true;
-			}
-		}
-	}
-	return bHandled;
-}
-
-void CPanelMgr::OnPaint(CDC & dc, const CPoint& offset) {
-	RepositionAll();
-	std::list<CUICtrl*>::iterator iter;
-	for (iter = m_ctrlList.begin( ); iter != m_ctrlList.end( ); iter++ ) {
-		if ((*iter)->IsShown()) {
-			(*iter)->OnPaint(dc, offset);
-		}
-	}
-}
-
-void CPanelMgr::CaptureMouse(CUICtrl* pCtrl) {
-	if (m_pCtrlCaptureMouse == NULL) m_pCtrlCaptureMouse = pCtrl;
-}
-
-void CPanelMgr::ReleaseMouse(CUICtrl* pCtrl) {
-	if (pCtrl == m_pCtrlCaptureMouse) m_pCtrlCaptureMouse = NULL;
-}
-
-void CPanelMgr::PaintFrameAroundPanel(CDC & dc, const CRect& rect, const CPoint& offset) {
-	HPEN hPen = ::CreatePen(PS_SOLID, 1, CSettingsProvider::This().ColorGUI());
-	HPEN hOldPen = dc.SelectPen(hPen);;
-	dc.SelectStockBrush(HOLLOW_BRUSH);
-	CRect rectCopy = rect;
-	rectCopy.OffsetRect(offset);
-	dc.Rectangle(rectCopy);
-	dc.SelectPen(hOldPen);
-	::DeleteObject(hPen);
-}
-
-/////////////////////////////////////////////////////////////////////////////////////////////
-// CSliderMgr
-/////////////////////////////////////////////////////////////////////////////////////////////
-
-CSliderMgr::CSliderMgr(HWND hWnd) : CPanelMgr(hWnd) {
-	// slider width is smaller for very small screens
-	::GetClientRect(hWnd, &m_clientRect);
-	DetermineSliderWidth();
-	m_nSliderHeight = (int)(SLIDER_HEIGHT*m_fDPIScale);
-	m_nSliderGap = (int) (SLIDER_GAP*m_fDPIScale);
-	m_nTotalAreaHeight = m_nSliderHeight*3 + SCREEN_Y_OFFSET;
-	m_sliderAreaRect = CRect(0, 0, 0, 0);
-
-	m_nYStart = 0xFFFF;
-	m_nTotalSliders = 0;
-}
-
-void CSliderMgr::DetermineSliderWidth() {
-	m_nSliderWidth = (int)(SLIDER_WIDTH*m_fDPIScale);
-	int nNeededSpace = (int)(1200*m_fDPIScale);
-	if (m_clientRect.Width() < nNeededSpace) {
-		int nNeededGain = nNeededSpace - m_clientRect.Width();
-		m_nSliderWidth = m_nSliderWidth - nNeededGain/4;
-		m_nSliderWidth = max(MIN_SLIDER_WIDTH, m_nSliderWidth);
-	}
-
-	m_nNoLabelWidth = m_nSliderWidth + (int)(WIDTH_ADD_PIXELS*m_fDPIScale);
-}
-
-bool CSliderMgr::OnMouseLButton(EMouseEvent eMouseEvent, int nX, int nY) {
-	bool bHandled = CPanelMgr::OnMouseLButton(eMouseEvent, nX, nY);
-	if (nY > m_nYStart) {
-		return true;
-	}
-	return bHandled;
-}
-
-CRect CSliderMgr::PanelRect() {
-	CRect clientRect;
-	::GetClientRect(m_hWnd, &clientRect);
-
-	// Check if client rectangle unchanged - no repositioning needed
-	if (m_clientRect == clientRect) {
-		return m_sliderAreaRect;
-	}
-	m_clientRect = clientRect;
-
-	CRect wndRect;
-	::GetWindowRect(m_hWnd, &wndRect);
-	int nYStart = clientRect.Height() - m_nTotalAreaHeight;
-	int nXStart = 0;
-
-	// Place on second monitor if its height is larger
-	CSize sizeScreen = GetScreenSize(wndRect.left + 10, wndRect.top + nYStart);
-	if (sizeScreen.cy < clientRect.Height() - 5) {
-		CSize sizeScreen2 = GetScreenSize(wndRect.left + sizeScreen.cx + 10, wndRect.top + nYStart);
-		if (sizeScreen2.cy > sizeScreen.cy) {
-			nXStart += sizeScreen.cx;
-			sizeScreen = sizeScreen2;
-		}
-	}
-
-	// Get the new width of the sliders and modify all existing sliders
-	DetermineSliderWidth();
-	std::list<CUICtrl*>::iterator iter;
-	for (iter = m_ctrlList.begin( ); iter != m_ctrlList.end( ); iter++ ) {
-		CSliderDouble* pSlider = dynamic_cast<CSliderDouble*>(*iter);
-		if (pSlider != NULL) {
-			pSlider->SetSliderLen(m_nSliderWidth);
-		}
-	}
-
-	m_sliderAreaRect = CRect(nXStart, nYStart, min(clientRect.Width(), sizeScreen.cx) + nXStart, nYStart + m_nTotalAreaHeight);
-	return m_sliderAreaRect;
-}
-
-void CSliderMgr::AddSlider(LPCTSTR sName, double* pdValue, bool* pbEnable, 
-						   double dMin, double dMax, double dDefaultValue, bool bAllowPreviewAndReset, bool bLogarithmic, bool bInvert) {
-	CPanelMgr::AddSlider(sName, pdValue, pbEnable, dMin, dMax, dDefaultValue, bAllowPreviewAndReset, bLogarithmic, bInvert, m_nSliderWidth);
-	m_nTotalSliders++;
-}
-
-void CSliderMgr::RepositionAll() {
-	const int X_OFFSET = 5;
-
-	CRect sliderAreaRect = PanelRect();
-	int nXStart = sliderAreaRect.left + X_OFFSET;
-	int nYStart = sliderAreaRect.top;
-
-	// Place at bottom of window, grouping sliders in three rows and n-columns,
-	// add remaining controls afterwards
-	
-	m_nYStart = nYStart;
-	int nXLimitScreen = sliderAreaRect.right;
-	int nX = nXStart, nY = nYStart + 2*m_nSliderHeight;
-	int nSliderIdx = 0;
-	int nTotalSliderIdx = 0;
-	int nSliderEndX = 0;
-	int nNumRightAligned = 0;
-	int nXButtonStart, nXButton2Start;
-	bool bFirstButton = true;
-	CSliderDouble* pSliderColumn[3];
-	CTextCtrl* pLastTextCtrl = NULL;
-	std::list<CUICtrl*>::iterator iter;
-	for (iter = m_ctrlList.begin( ); iter != m_ctrlList.end( ); iter++ ) {
-		CSliderDouble* pSlider = dynamic_cast<CSliderDouble*>(*iter);
-		if (pSlider != NULL) {
-			nTotalSliderIdx++;
-			pSliderColumn[nSliderIdx] = pSlider;
-			nSliderIdx++;
-			if (nSliderIdx == 3 || nTotalSliderIdx >= m_nTotalSliders - 1) {
-				int nTotalWidth = 0;
-				for (int i = 0; i < nSliderIdx; i++) {
-					nTotalWidth = max(nTotalWidth, pSliderColumn[i]->GetNameLabelWidth());
-				}
-				nTotalWidth += m_nNoLabelWidth;
-				nSliderEndX = nX + nTotalWidth;
-				// the last slider is 'Sharpen', only show if we have enough space
-				if (nTotalSliderIdx == m_nTotalSliders) {
-					bool bShowSharpen = nXLimitScreen - nSliderEndX > (int)(150*m_fDPIScale);
-					pSlider->m_bShow = bShowSharpen;
-					if (!bShowSharpen) nSliderEndX -= nTotalWidth;
-				}
-				for (int i = 0; i < nSliderIdx; i++) {
-					pSliderColumn[i]->SetPosition(CRect(nX, nYStart + i*m_nSliderHeight, nX + nTotalWidth - m_nSliderGap, nYStart + (i+1)*m_nSliderHeight));
-				}
-				if (nTotalSliderIdx == m_nTotalSliders - 1) {
-					nXButtonStart = nX;
-				}
-				if (nTotalSliderIdx == m_nTotalSliders) {
-					nXButton2Start = nX;
-					nX = nXButtonStart;
-					nY = nYStart + 2*m_nSliderHeight;
-				} else {
-					nX += nTotalWidth;
-					nSliderIdx = 0;
-				}
-			}
-		} else {
-			CTextCtrl* pTextCtrl = dynamic_cast<CTextCtrl*>(*iter);
-			if (pTextCtrl != NULL) {
-				int nTextWidth = pTextCtrl->GetTextLabelWidth() + 16;
-
-				if (pTextCtrl->IsRightAligned()) {
-					nX = nSliderEndX;
-					nY = nYStart + nNumRightAligned*m_nSliderHeight;
-					nNumRightAligned++;
-				}
-
-				// Special behaviour if not enough room - remove labels for editable texts
-				if (pTextCtrl->IsEditable() && pLastTextCtrl != NULL && !pLastTextCtrl->IsEditable()) {
-					if (nX + nTextWidth > nXLimitScreen) {
-						pLastTextCtrl->SetShow(false, false);
-						nX -= pLastTextCtrl->GetPosition().Width();
-					} else {
-						pLastTextCtrl->SetShow(true, false);
-					}
-				}
-				if (pTextCtrl->IsRightAligned()) {
-					nTextWidth = nXLimitScreen - nX - 10;
-				} else {
-					// limit text on screen boundary
-					if (nX + nTextWidth >= nXLimitScreen) {
-						nTextWidth = nXLimitScreen - nX - 1;
-					}
-				}
-				// only show editable control if large enough
-				if (pTextCtrl->IsEditable()) {
-					pTextCtrl->SetShow(nTextWidth > 40, false);
-				} else {
-					pTextCtrl->SetShow(nTextWidth > 0, false);
-				}
-				pTextCtrl->SetPosition(CRect(nX, nY, nX + nTextWidth, nY + m_nSliderHeight));
-				pTextCtrl->SetMaxTextWidth(nXLimitScreen - nX);
-				nX += nTextWidth;
-				
-			} else {
-				CButtonCtrl* pButtonCtrl = dynamic_cast<CButtonCtrl*>(*iter);
-				if (pButtonCtrl != NULL) {
-					int nButtonWidth = pButtonCtrl->GetMinSize().cx;
-					int nButtonHeigth = pButtonCtrl->GetMinSize().cy;
-					int nStartY = nY + ((m_nSliderHeight - nButtonHeigth) >> 1);
-					if (bFirstButton) {
-						bFirstButton = false;
-						int nXf = nXButton2Start;
-						int nYf = nYStart + m_nSliderHeight + ((m_nSliderHeight - nButtonHeigth) >> 1);
-						pButtonCtrl->SetPosition(CRect(nXf, nYf, nXf + nButtonWidth, nYf + nButtonHeigth));
-					} else {
-						pButtonCtrl->SetPosition(CRect(nX, nStartY, nX + nButtonWidth, nStartY + nButtonHeigth));
-						nX += nButtonWidth + 16;
-					}
-				}
-			}
-			pLastTextCtrl = pTextCtrl;
-		}
-	}
-}
-
-/////////////////////////////////////////////////////////////////////////////////////////////
-// CNavigationPanel
-/////////////////////////////////////////////////////////////////////////////////////////////
-
-CNavigationPanel::CNavigationPanel(HWND hWnd, CSliderMgr* pSliderMgr) : CPanelMgr(hWnd) {
-	m_pSliderMgr = pSliderMgr;
-	m_clientRect = CRect(0, 0, 0, 0);
-	m_nWidth = 0;
-	m_nHeight = (int)(NAV_PANEL_HEIGHT*m_fDPIScale);
-	m_nBorder = (int)(NAV_PANEL_BORDER*m_fDPIScale);
-	m_nGap = (int)(NAV_PANEL_GAP*m_fDPIScale);
-}
-
-void CNavigationPanel::AddGap(int nGap) {
-	CGapCtrl* pGapCtrl = new CGapCtrl(this, nGap);
-	m_ctrlList.push_back(pGapCtrl);
-}
-
-CRect CNavigationPanel::PanelRect() {
-	if (m_nWidth == 0) {
-		int nNumButtons = 0;
-		int nTotalGap = 0;
-		std::list<CUICtrl*>::iterator iter;
-		for (iter = m_ctrlList.begin( ); iter != m_ctrlList.end( ); iter++ ) {
-			if (dynamic_cast<CButtonCtrl*>(*iter) != NULL) {
-				nNumButtons++;
-			} else {
-				CGapCtrl* pGapCtrl = dynamic_cast<CGapCtrl*>(*iter);
-				if (pGapCtrl != NULL) {
-					nTotalGap += (int)(pGapCtrl->GapWidth()*m_fDPIScale);
-				}
-			}
-		}
-		int nButtonSize = m_nHeight - m_nBorder;
-		m_nWidth = m_nBorder * 2 + (nNumButtons - 1) * m_nGap + nNumButtons * nButtonSize + nTotalGap;
-	}
-
-	CRect sliderRect = m_pSliderMgr->PanelRect();
-	m_clientRect = CRect(CPoint((sliderRect.right + sliderRect.left - m_nWidth)/2, 
-		((sliderRect.Width() < 800) ? (sliderRect.bottom - 26) : sliderRect.top) - m_nHeight),
-		CSize(m_nWidth, m_nHeight));
-	return m_clientRect;
-}
-
-bool CNavigationPanel::OnMouseLButton(EMouseEvent eMouseEvent, int nX, int nY) {
-	bool bHandled = CPanelMgr::OnMouseLButton(eMouseEvent, nX, nY);
-	if (m_clientRect.PtInRect(CPoint(nX, nY))) {
-		return true;
-	}
-	return bHandled;
-}
-
-void CNavigationPanel::RequestRepositioning() {
-	RepositionAll();
-}
-
-void CNavigationPanel::RepositionAll() {
-	m_clientRect = PanelRect();
-	int nButtonSize = m_nHeight - m_nBorder;
-	int nStartX = m_clientRect.left + m_nBorder;
-	int nStartY = m_clientRect.top + m_nBorder/2;
-	std::list<CUICtrl*>::iterator iter;
-	for (iter = m_ctrlList.begin( ); iter != m_ctrlList.end( ); iter++ ) {
-		CButtonCtrl* pButton = dynamic_cast<CButtonCtrl*>(*iter);
-		if (pButton != NULL) {
-			pButton->SetPosition(CRect(CPoint(nStartX, nStartY), CSize(nButtonSize, nButtonSize)));
-			nStartX += nButtonSize + m_nGap;
-		} else {
-			CGapCtrl* pGap = dynamic_cast<CGapCtrl*>(*iter);
-			if (pGap != NULL) {
-				nStartX += (int)(pGap->GapWidth()*m_fDPIScale);
-			}
-		}
-	}
-}
-
-static CRect InflateRect(const CRect& rect, float fAmount) {
-	CRect r(rect);
-	int nAmount = (int)(fAmount * r.Width());
-	r.InflateRect(-nAmount, -nAmount);
-	return r;
-}
-
-void CNavigationPanel::PaintHomeBtn(const CRect& rect, CDC& dc) {
-	CRect r = InflateRect(rect, 0.3f);
-	
-	dc.MoveTo(r.left, r.top);
-	dc.LineTo(r.left, r.bottom);
-
-	int nX = r.left + (int)(r.Width()*0.4f);
-
-	dc.MoveTo(nX, r.top);
-	dc.LineTo(nX, r.bottom);
-
-	dc.MoveTo(r.right, r.top+1);
-	dc.LineTo(nX + 3, (r.bottom + r.top)/2);
-	dc.LineTo(r.right+1, r.bottom);
-}
-
-void CNavigationPanel::PaintPrevBtn(const CRect& rect, CDC& dc) {
-	CRect r = InflateRect(rect, 0.3f);
-
-	int nX = r.left + (int)(r.Width()*0.2f);
-
-	dc.MoveTo(nX, r.top);
-	dc.LineTo(nX, r.bottom);
-
-	int nX2 = nX + r.Height()/2 + 2;
-	dc.MoveTo(nX2, r.top+1);
-	dc.LineTo(nX + 3, (r.bottom + r.top)/2);
-	dc.LineTo(nX2+1, r.bottom);
-}
-
-void CNavigationPanel::PaintNextBtn(const CRect& rect, CDC& dc) {
-	CRect r = InflateRect(rect, 0.3f);
-
-	int nX = r.left + (int)(r.Width()*0.2f);
-	int nX2 = nX + r.Height()/2;
-
-	dc.MoveTo(nX+1, r.top+1);
-	dc.LineTo(nX2, (r.bottom + r.top)/2);
-	dc.LineTo(nX, r.bottom);
-
-	dc.MoveTo(nX2 + 3, r.top);
-	dc.LineTo(nX2 + 3, r.bottom);
-}
-
-void CNavigationPanel::PaintEndBtn(const CRect& rect, CDC& dc) {
-	CRect r = InflateRect(rect, 0.3f);
-
-	int nX = r.left + r.Height()/2;
-
-	dc.MoveTo(r.left+1, r.top+1);
-	dc.LineTo(nX, (r.bottom + r.top)/2);
-	dc.LineTo(r.left, r.bottom);
-
-	dc.MoveTo(nX + 3, r.top);
-	dc.LineTo(nX + 3, r.bottom);
-
-	int nX2 = nX + 3 + (int)(r.Width()*0.4f);
-
-	dc.MoveTo(nX2, r.top);
-	dc.LineTo(nX2, r.bottom);
-}
-
-void CNavigationPanel::PaintZoomToFitBtn(const CRect& rect, CDC& dc) {
-	CRect r = InflateRect(rect, 0.25f);
-
-	int nW = r.Width()/3;
-	int nD = r.Width()/2 - 1;
-
-	for (int i = 0; i < 4; i++) {
-		int nX = (i < 2) ? r.left : r.right;
-		int nXP = (i < 2) ? nW : -nW;
-		int nXD = (i < 2) ? nD : -nD;
-		int nXA = (i < 2) ? 1 : -1;
-		int nY = (i & 1) ? r.bottom : r.top;
-		int nYP = (i & 1) ? -nW : nW;
-		int nYD = (i & 1) ? -nD : nD;
-		dc.MoveTo(nX, nY+nYP);
-		dc.LineTo(nX, nY);
-		dc.LineTo(nX+nXP+nXA, nY);
-		dc.MoveTo(nX, nY);
-		dc.LineTo(nX+nXD, nY+nYD);
-	}
-}
-
-void CNavigationPanel::PaintZoomTo1to1Btn(const CRect& rect, CDC& dc) {
-	CFont font;
-	font.CreatePointFont(80, _T("MS Sans Serif"), dc, true, false);
-	HFONT oldFont = dc.SelectFont(font);
-	dc.DrawText(_T("1:1"), 3, (LPRECT)&rect, DT_CENTER | DT_VCENTER | DT_SINGLELINE | DT_NOCLIP);
-	dc.SelectFont(oldFont);
-}
-
-void CNavigationPanel::PaintWindowModeBtn(const CRect& rect, CDC& dc) {
-	CRect r = InflateRect(rect, 0.25f);
-
-	dc.SelectStockBrush(HOLLOW_BRUSH);
-	dc.Rectangle(&r);
-	int nTop = r.top + r.Height()/4;
-	dc.MoveTo(r.left + 1, nTop);
-	dc.LineTo(r.right, nTop);
-}
-
-void CNavigationPanel::PaintRotateCWBtn(const CRect& rect, CDC& dc) {
-	CRect r = InflateRect(rect, 0.3f);
-
-	int nX = r.left + (int)(r.Width()*0.65f);
-
-	dc.MoveTo(r.left-2, r.bottom);
-	dc.LineTo(nX, r.bottom);
-	dc.LineTo(nX, r.bottom - (int)(r.Height()*0.4f));
-	dc.LineTo(r.left-2, r.bottom);
-
-	dc.MoveTo(nX+2, r.bottom);
-	dc.LineTo(r.right+2, r.bottom);
-	dc.LineTo(nX+2, r.top);
-	dc.LineTo(nX+2, r.bottom);
-}
-
-void CNavigationPanel::PaintRotateCCWBtn(const CRect& rect, CDC& dc) {
-	CRect r = InflateRect(rect, 0.3f);
-
-	int nX = r.left + (int)(r.Width()*0.33f);
-
-	dc.MoveTo(r.left-2, r.bottom);
-	dc.LineTo(nX, r.bottom);
-	dc.LineTo(nX, r.top);
-	dc.LineTo(r.left-2, r.bottom);
-
-	dc.MoveTo(nX+2, r.bottom);
-	dc.LineTo(r.right+2, r.bottom);
-	dc.LineTo(nX+2, r.bottom - (int)(r.Height()*0.4f));
-	dc.LineTo(nX+2, r.bottom);
-}
-
-void CNavigationPanel::PaintFreeRotBtn(const CRect& rect, CDC& dc) {
-	CRect r = InflateRect(rect, 0.32f);
-	r.OffsetRect(0, -1);
-
-	int nArrowStart = (int)(r.Width()*0.6f);
-	int nArrowLen = (int)(nArrowStart*0.68f);
-	int nX = (r.right + r.left) >> 1;
-	dc.Arc(r.left, r.top, r.right, r.bottom, nX, r.bottom, nX - 2, r.top);
-	dc.MoveTo(nX, r.bottom - 1);
-	dc.LineTo(nX - nArrowStart, r.bottom - 1);
-	dc.MoveTo(nX - nArrowStart, r.bottom - 1);
-	dc.LineTo(nX - nArrowStart + nArrowLen, r.bottom - 1 + nArrowLen);
-	dc.MoveTo(nX - nArrowStart, r.bottom - 1);
-	dc.LineTo(nX - nArrowStart + nArrowLen, r.bottom - 1 - nArrowLen);
-}
-
-void CNavigationPanel::PaintKeepParamsBtn(const CRect& rect, CDC& dc) {
-	CRect r = InflateRect(rect, 0.25f);
-	int nX = (int)(r.Width()*0.28f);
-	int nY = r.bottom - (int)(r.Height()*0.25f);
-	int nXM = (r.left + r.right) >> 1;
-
-	dc.SelectStockBrush(HOLLOW_BRUSH);
-	dc.Rectangle(r.left + nX, r.top, r.right - nX, nY);
-	dc.MoveTo(r.left + nX, nY - nX);
-	dc.LineTo(r.right - nX, nY - nX);
-	dc.MoveTo(nXM, nY);
-	dc.LineTo(nXM, r.bottom + 1);
-}
-
-void CNavigationPanel::PaintLandscapeModeBtn(const CRect& rect, CDC& dc) {
-	CRect r = InflateRect(rect, 0.3f);
-
-	CPoint p1(r.left-1, r.bottom);
-	dc.MoveTo(p1);
-	CPoint p2(r.left + (int)(r.Width()*0.25f), r.top + (int)(r.Height()*0.1f));
-	dc.LineTo(p2);
-	CPoint p3(r.left + (int)(r.Width()*0.5f), r.top + (int)(r.Height()*0.8f));
-	dc.LineTo(p3);
-	dc.LineTo(r.left + (int)(r.Width()*0.75f), r.top + (int)(r.Height()*0.5f));
-	dc.LineTo(r.right+1, r.bottom);
-	dc.LineTo(r.left-1, r.bottom);
-
-	int nRad = (int)(r.Width()*0.25f + 0.5f);
-	dc.Ellipse(r.right - nRad - 1, r.top - nRad + 1, r.right + nRad - 1, r.top + nRad + 1);
-	//dc.Arc(p2.x - nRad, p2.y - nRad, p2.x + nRad, p2.y + nRad, p3.x, p3.y, p1.x, p1.y);
-}
-
-void CNavigationPanel::PaintInfoBtn(const CRect& rect, CDC& dc) {
-	CFont font;
-	font.CreatePointFont(160, _T("Times New Roman"), dc, false, true);
-	HFONT oldFont = dc.SelectFont(font);
-	dc.DrawText(_T("i"), 1, (LPRECT)&rect, DT_CENTER | DT_VCENTER | DT_SINGLELINE | DT_NOCLIP);
-	dc.SelectFont(oldFont);
-}
-
-/////////////////////////////////////////////////////////////////////////////////////////////
-// CWndButtonPanel
-/////////////////////////////////////////////////////////////////////////////////////////////
-
-CWndButtonPanel::CWndButtonPanel(HWND hWnd, CSliderMgr* pSliderMgr) : CPanelMgr(hWnd) {
-	m_pSliderMgr = pSliderMgr;
-	m_clientRect = CRect(0, 0, 0, 0);
-	m_nWidth = 0;
-	m_nHeight = (int)(WNDBUTTON_PANEL_HEIGHT*m_fDPIScale);
-}
-
-CRect CWndButtonPanel::PanelRect() {
-	if (m_nWidth == 0) {
-		int nButtonSize = m_nHeight - 4 * WNDBUTTON_BORDER;
-		m_nWidth = 4 * WNDBUTTON_BORDER + (m_ctrlList.size() - 1) * WNDBUTTON_BORDER * 3 + m_ctrlList.size() * nButtonSize;
-	}
-
-	CRect sliderRect = m_pSliderMgr->PanelRect();
-	m_clientRect = CRect(CPoint(sliderRect.right - m_nWidth, 0),
-		CSize(m_nWidth, m_nHeight));
-	return m_clientRect;
-}
-
-bool CWndButtonPanel::OnMouseLButton(EMouseEvent eMouseEvent, int nX, int nY) {
-	bool bHandled = CPanelMgr::OnMouseLButton(eMouseEvent, nX, nY);
-	if (m_clientRect.PtInRect(CPoint(nX, nY))) {
-		return true;
-	}
-	return bHandled;
-}
-
-void CWndButtonPanel::RequestRepositioning() {
-	RepositionAll();
-}
-
-void CWndButtonPanel::RepositionAll() {
-	m_clientRect = PanelRect();
-	int nButtonSize = m_nHeight - 4 * WNDBUTTON_BORDER;
-	int nStartX = m_clientRect.right - m_nWidth + WNDBUTTON_BORDER * 2;
-	int nStartY = WNDBUTTON_BORDER * 2;
-	std::list<CUICtrl*>::iterator iter;
-	for (iter = m_ctrlList.begin( ); iter != m_ctrlList.end( ); iter++ ) {
-		CButtonCtrl* pButton = dynamic_cast<CButtonCtrl*>(*iter);
-		if (pButton != NULL) {
-			pButton->SetPosition(CRect(CPoint(nStartX, nStartY), CSize(nButtonSize, nButtonSize)));
-			nStartX += nButtonSize + WNDBUTTON_BORDER * 3;
-		}
-	}
-}
-
-void CWndButtonPanel::PaintMinimizeBtn(const CRect& rect, CDC& dc) {
-	CRect r = InflateRect(rect, 0.3f);
-	CPoint p1(r.left, r.bottom-1);
-	dc.MoveTo(p1);
-	CPoint p2(r.right, r.bottom-1);
-	dc.LineTo(p2);
-	CPoint p3(r.left, r.bottom);
-	dc.MoveTo(p3);
-	CPoint p4(r.right, r.bottom);
-	dc.LineTo(p4);
-}
-
-void CWndButtonPanel::PaintRestoreBtn(const CRect& rect, CDC& dc) {
-	CRect r = InflateRect(rect, 0.25f);
-	int nXt = rect.left + (int)(rect.Width()*0.7f);
-	int nYt = rect.top + (int)(rect.Height()*0.4f);
-	dc.Rectangle(r.left, nYt, nXt, r.bottom);
-	CPoint p1(r.left+1, nYt+1);
-	dc.MoveTo(p1);
-	CPoint p2(nXt-1, nYt+1);
-	dc.LineTo(p2);
-	int nXm = (r.left + nXt) >> 1;
-	int nYm = (nYt + r.bottom) >> 1;
-	CPoint p11(nXm, r.top);
-	dc.MoveTo(p11);
-	CPoint p12(r.right, r.top);
-	dc.LineTo(p12);
-	CPoint p21(nXm, r.top-1);
-	dc.MoveTo(p21);
-	CPoint p22(r.right, r.top-1);
-	dc.LineTo(p22);
-	CPoint p31(r.right, r.top-1);
-	dc.MoveTo(p31);
-	CPoint p32(r.right, nYm);
-	dc.LineTo(p32);
-	CPoint p41(r.right-2, nYm);
-	dc.LineTo(p41);
-}
-
-void CWndButtonPanel::PaintCloseBtn(const CRect& rect, CDC& dc) {
-	CRect r = InflateRect(rect, 0.25f);
-
-	CPoint p1(r.left, r.top);
-	dc.MoveTo(p1);
-	CPoint p2(r.right, r.bottom);
-	dc.LineTo(p2);
-	CPoint p3(r.right, r.top);
-	dc.MoveTo(p3);
-	CPoint p4(r.left, r.bottom);
-	dc.LineTo(p4);
-	CPoint p11(r.left, r.top+1);
-	dc.MoveTo(p11);
-	CPoint p21(r.right-1, r.bottom);
-	dc.LineTo(p21);
-	CPoint p51(r.left+1, r.top);
-	dc.MoveTo(p51);
-	CPoint p52(r.right, r.bottom-1);
-	dc.LineTo(p52);
-	CPoint p31(r.right, r.top+1);
-	dc.MoveTo(p31);
-	CPoint p41(r.left+1, r.bottom);
-	dc.LineTo(p41);
-	CPoint p61(r.right-1, r.top);
-	dc.MoveTo(p61);
-	CPoint p62(r.left, r.bottom-1);
-	dc.LineTo(p62);
-}
-
-/////////////////////////////////////////////////////////////////////////////////////////////
-// CUnsharpMaskPanel
-/////////////////////////////////////////////////////////////////////////////////////////////
-
-CUnsharpMaskPanel::CUnsharpMaskPanel(HWND hWnd, CSliderMgr* pSliderMgr) : CPanelMgr(hWnd) {
-	m_pSliderMgr = pSliderMgr;
-	m_clientRect = CRect(0, 0, 0, 0);
-	m_nWidth = 0;
-	m_nHeight = 0;
-	m_nMaxSliderWidth = 0;
-}
-
-CRect CUnsharpMaskPanel::PanelRect() {
-	if (m_nWidth == 0) {
-		m_nHeight = 0;
-		int nLastMinSize = 0;
-		std::list<CUICtrl*>::iterator iter;
-		for (iter = m_ctrlList.begin( ); iter != m_ctrlList.end( ); iter++ ) {
-			CSize minSize = (*iter)->GetMinSize();
-			m_nWidth = max(m_nWidth, minSize.cx);
-			m_nHeight += minSize.cy;
-			nLastMinSize = minSize.cy;
-			if (dynamic_cast<CSliderDouble*>(*iter) != NULL) {
-				m_nMaxSliderWidth = max(m_nMaxSliderWidth, minSize.cx);
-			}
-		}
-		m_nHeight -= nLastMinSize; // last button height added twice - subtract again one
-		m_nWidth += (int)(m_fDPIScale*(2*PANEL_BORDER + USM_PANEL_ADDX));
-		m_nHeight += (int)(m_fDPIScale*(2*PANEL_BORDER + PANEL_GAPTITLE + 3*USM_PANEL_GAPSLIDER + USM_PANEL_GAPBUTTONY));
-	}
-	CRect sliderRect = m_pSliderMgr->PanelRect();
-	m_clientRect = CRect(CPoint((sliderRect.right + sliderRect.left) / 2 - m_nWidth / 2, sliderRect.bottom - m_nHeight - 30),
-		CSize(m_nWidth, m_nHeight));
-	return m_clientRect;
-}
-
-bool CUnsharpMaskPanel::OnMouseLButton(EMouseEvent eMouseEvent, int nX, int nY) {
-	bool bHandled = CPanelMgr::OnMouseLButton(eMouseEvent, nX, nY);
-	if (m_clientRect.PtInRect(CPoint(nX, nY))) {
-		return true;
-	}
-	return bHandled;
-}
-
-void CUnsharpMaskPanel::RequestRepositioning() {
-	m_nWidth = 0;
-}
-
-void CUnsharpMaskPanel::RepositionAll() {
-	PanelRect();
-	int nOffset = (int)(m_fDPIScale*PANEL_BORDER);
-	int nStartX = m_clientRect.left + nOffset;
-	int nStartY = m_clientRect.top + nOffset;
-	bool bStartButtons = true;
-	std::list<CUICtrl*>::iterator iter;
-	for (iter = m_ctrlList.begin( ); iter != m_ctrlList.end( ); iter++ ) {
-		CTextCtrl* pText = dynamic_cast<CTextCtrl*>(*iter);
-		if (pText != NULL) {
-			pText->SetPosition(CRect(CPoint(nStartX, nStartY), pText->GetMinSize()));
-			nStartY += pText->GetMinSize().cy;
-			nStartY += (int)(m_fDPIScale*PANEL_GAPTITLE);
-		} else {
-			CSliderDouble* pSlider = dynamic_cast<CSliderDouble*>(*iter);
-			if (pSlider != NULL) {
-				pSlider->SetPosition(CRect(CPoint((m_clientRect.left + m_clientRect.right)/2 - m_nMaxSliderWidth/2, nStartY), 
-					CSize(m_nMaxSliderWidth, pSlider->GetMinSize().cy)));
-				nStartY += pSlider->GetMinSize().cy;
-				nStartY += (int)(m_fDPIScale*USM_PANEL_GAPSLIDER);
-			} else {
-				CButtonCtrl* pButton = dynamic_cast<CButtonCtrl*>(*iter);
-				if (pButton != NULL) {
-					if (bStartButtons) {
-						nStartX = m_clientRect.right - (int)(m_fDPIScale*PANEL_BORDER);
-						nStartY += (int)(m_fDPIScale*USM_PANEL_GAPBUTTONY);
-					}
-					pButton->SetPosition(CRect(CPoint(nStartX - pButton->GetMinSize().cx, nStartY), pButton->GetMinSize()));
-					nStartX -= pButton->GetMinSize().cx;
-					nStartX -= (int)(m_fDPIScale*USM_PANEL_GAPBUTTONX);
-					bStartButtons = false;
-				}
-			}
-		}
-	}
-}
-
-void CUnsharpMaskPanel::OnPaint(CDC & dc, const CPoint& offset) {
-	CPanelMgr::OnPaint(dc, offset);
-	PaintFrameAroundPanel(dc, m_clientRect, offset);
-}
-
-/////////////////////////////////////////////////////////////////////////////////////////////
-// CRotationPanel
-/////////////////////////////////////////////////////////////////////////////////////////////
-
-CRotationPanel::CRotationPanel(HWND hWnd, CSliderMgr* pSliderMgr) : CPanelMgr(hWnd) {
-	m_pSliderMgr = pSliderMgr;
-	m_clientRect = CRect(0, 0, 0, 0);
-	m_nWidth = (int)(ROTATION_PANEL_WIDTH*m_fDPIScale);
-	m_nHeight = (int)(ROTATION_PANEL_HEIGHT*m_fDPIScale);
-	m_nButtonSize = (int)(ROTATION_PANEL_BUTTON_SIZE*m_fDPIScale);
-}
-
-CRect CRotationPanel::PanelRect() {
-	CRect sliderRect = m_pSliderMgr->PanelRect();
-	m_clientRect = CRect(CPoint((sliderRect.right + sliderRect.left) / 2 - m_nWidth / 2, sliderRect.bottom - m_nHeight - 30),
-		CSize(m_nWidth, m_nHeight));
-	return m_clientRect;
-}
-
-bool CRotationPanel::OnMouseLButton(EMouseEvent eMouseEvent, int nX, int nY) {
-	bool bHandled = CPanelMgr::OnMouseLButton(eMouseEvent, nX, nY);
-	if (m_clientRect.PtInRect(CPoint(nX, nY))) {
-		return true;
-	}
-	return bHandled;
-}
-
-void CRotationPanel::RequestRepositioning() {
-}
-
-void CRotationPanel::RepositionAll() {
-	PanelRect();
-	int nOffset = (int)(m_fDPIScale*PANEL_BORDER);
-	int nStartX = m_clientRect.left + nOffset;
-	int nStartY = m_clientRect.top + nOffset;
-	int nStartYHint = 0;
-	bool bFirstText = true;
-	bool bFirstToolButton = true;
-	bool bFirstTextButton = true;
-	CTextCtrl* pTextHint = NULL;
-	std::list<CUICtrl*>::iterator iter;
-	for (iter = m_ctrlList.begin( ); iter != m_ctrlList.end( ); iter++ ) {
-		CTextCtrl* pText = dynamic_cast<CTextCtrl*>(*iter);
-		if (pText != NULL) {
-			if (bFirstText) {
-				pText->SetPosition(CRect(CPoint(nStartX, nStartY), pText->GetMinSize()));
-				nStartY += pText->GetMinSize().cy;
-				bFirstText = false;
-			} else {
-				nStartYHint = nStartY;
-				pTextHint = pText; // layout as last
-			}
-		} else {
-			CButtonCtrl* pButton = dynamic_cast<CButtonCtrl*>(*iter);
-			if (pButton != NULL) {
-				if (pButton->IsUserPaintButton()) {
-					if (bFirstToolButton) {
-						nStartX = m_clientRect.left + (int)(m_fDPIScale*PANEL_BORDER);
-						nStartY = m_clientRect.bottom - (int)(m_fDPIScale*PANEL_BORDER) - m_nButtonSize;
-						bFirstToolButton = false;
-					}
-					pButton->SetPosition(CRect(CPoint(nStartX, nStartY), CSize(m_nButtonSize, m_nButtonSize)));
-					nStartX += m_nButtonSize;
-					nStartX += (int)(m_fDPIScale*ROTATION_PANEL_GAPBUTTONX1);
-				} else {
-					if (bFirstTextButton) {
-						nStartX = m_clientRect.right - (int)(m_fDPIScale*PANEL_BORDER);
-						nStartY = m_clientRect.bottom - (int)(m_fDPIScale*PANEL_BORDER) - pButton->GetMinSize().cy;
-						bFirstTextButton = false;
-					}
-					pButton->SetPosition(CRect(CPoint(nStartX - pButton->GetMinSize().cx, nStartY), pButton->GetMinSize()));
-					nStartX -= pButton->GetMinSize().cx;
-					nStartX -= (int)(m_fDPIScale*ROTATION_PANEL_GAPBUTTONX2);
-				}
-			}
-		}
-	}
-	if (pTextHint != NULL) {
-		CPoint topLeft(m_clientRect.left + (int)(m_fDPIScale*PANEL_BORDER), nStartYHint + (int)(m_nButtonSize * 0.2f));
-		CPoint bottomRight(m_clientRect.right - (int)(m_fDPIScale*PANEL_BORDER),
-			m_clientRect.bottom - (int)(m_fDPIScale*PANEL_BORDER) - (int)(m_nButtonSize * 1.2f));
-		pTextHint->SetPosition(CRect(topLeft, bottomRight));
-	}
-}
-
-void CRotationPanel::OnPaint(CDC & dc, const CPoint& offset) {
-	CPanelMgr::OnPaint(dc, offset);
-	PaintFrameAroundPanel(dc, m_clientRect, offset);
-}
-
-void CRotationPanel::PaintShowGridBtn(const CRect& rect, CDC& dc) {
-	CRect r = InflateRect(rect, 0.2f);
-
-	int nDelta = r.Width() / 3;
-	dc.MoveTo(r.left + nDelta, r.top);
-	dc.LineTo(r.left + nDelta, r.bottom);
-	dc.MoveTo(r.left + nDelta*2, r.top);
-	dc.LineTo(r.left + nDelta*2, r.bottom);
-	dc.MoveTo(r.left, r.top + nDelta);
-	dc.LineTo(r.right, r.top + nDelta);
-	dc.MoveTo(r.left, r.top + nDelta*2);
-	dc.LineTo(r.right, r.top + nDelta*2);
-	dc.Rectangle(r);
-}
-
-void CRotationPanel::PaintAutoCropBtn(const CRect& rect, CDC& dc) {
-	CRect r = InflateRect(rect, 0.35f);
-	dc.Rectangle(r);
-	dc.MoveTo(r.left + 1, r.bottom + 2);
-	dc.LineTo(r.left - 3, r.top);
-	dc.LineTo(r.right - 1, r.top - 3);
-	dc.LineTo(r.right + 2, r.bottom - 1);
-	dc.LineTo(r.left + 1, r.bottom + 2);
-}
-
-void CRotationPanel::PaintAssistedModeBtn(const CRect& rect, CDC& dc) {
-	CRect r = InflateRect(rect, 0.25f);
-
-	int nAw = r.Width() / 3;
-	dc.MoveTo(r.left, r.top);
-	dc.LineTo(r.right, r.bottom);
-	dc.MoveTo(r.left, r.bottom - nAw);
-	dc.LineTo(r.left, r.bottom);
-	dc.LineTo(r.left + nAw + 1, r.bottom);
-	dc.MoveTo(r.left, r.bottom);
-	dc.LineTo(r.left + nAw + 2, r.bottom - nAw - 2);
-}
-
 /////////////////////////////////////////////////////////////////////////////////////////////
 // CUICtrl
 /////////////////////////////////////////////////////////////////////////////////////////////
 
-CUICtrl::CUICtrl(CPanelMgr* pPanelMgr) { 
-	m_pMgr = pPanelMgr; 
+CUICtrl::CUICtrl(CPanel* pPanel) { 
+	m_pPanel = pPanel; 
 	m_bShow = true; 
 	m_bHighlight = false; 
 	m_position = CRect(0, 0, 0, 0);
@@ -1175,31 +56,32 @@ void CUICtrl::OnPaint(CDC & dc, const CPoint& offset) {
 void CUICtrl::SetShow(bool bShow, bool bInvalidate) { 
 	if (bShow != m_bShow) {
 		m_bShow = bShow;
-		if (m_pMgr != NULL && bInvalidate) {
-			::InvalidateRect(m_pMgr->GetHWND(), &m_position, FALSE); // trigger redraw of area
+		if (m_pPanel != NULL && bInvalidate) {
+			::InvalidateRect(m_pPanel->GetHWND(), &m_position, FALSE); // trigger redraw of area
 		}
 	}
 }
 
 void CUICtrl::SetTooltip(LPCTSTR sTooltipText) {
-	m_pMgr->GetTooltipMgr().AddTooltip(this, sTooltipText);
+	m_pPanel->GetTooltipMgr().AddTooltip(this, sTooltipText);
 }
 
-void CUICtrl::SetTooltipHandler(TooltipHandler ttHandler) {
-	m_pMgr->GetTooltipMgr().AddTooltipHandler(this, ttHandler);
+void CUICtrl::SetTooltipHandler(TooltipHandler ttHandler, void* pContext) {
+	m_pPanel->GetTooltipMgr().AddTooltipHandler(this, ttHandler, pContext);
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 // CTextCtrl
 /////////////////////////////////////////////////////////////////////////////////////////////
 
-CTextCtrl::CTextCtrl(CPanelMgr* pPanelMgr, LPCTSTR sTextInit, bool bEditable, 
-					 TextChangedHandler textChangedHandler) : CUICtrl(pPanelMgr) {
+CTextCtrl::CTextCtrl(CPanel* pPanel, LPCTSTR sTextInit, bool bEditable, 
+					 TextChangedHandler* textChangedHandler, void* pContext) : CUICtrl(pPanel) {
 	 m_bEditable = bEditable;
 	 m_bRightAligned = false;
 	 m_bBold = false;
 	 m_bAllowMultiline = false;
 	 m_textChangedHandler = textChangedHandler;
+	 m_pContext = pContext;
 	 m_textSize = CSize(0, 0);
 	 m_nMaxTextWidth = 200;
 	 m_pEdit = NULL;
@@ -1215,8 +97,8 @@ CTextCtrl::~CTextCtrl() {
 
 void CTextCtrl::SetText(LPCTSTR sText) {
 	m_sText = sText;
-	m_textSize = GetTextRectangle(m_pMgr->GetHWND(), m_sText);
-	m_pMgr->RequestRepositioning();
+	m_textSize = GetTextRectangle(m_pPanel->GetHWND(), m_sText);
+	m_pPanel->RequestRepositioning();
 	TerminateEditMode(false);
 }
 
@@ -1227,8 +109,8 @@ void CTextCtrl::SetEditable(bool bEditable) {
 
 void CTextCtrl::SetBold(bool bValue) {
 	m_bBold = bValue;
-	m_textSize = GetTextRectangle(m_pMgr->GetHWND(), m_sText);
-	m_pMgr->RequestRepositioning();
+	m_textSize = GetTextRectangle(m_pPanel->GetHWND(), m_sText);
+	m_pPanel->RequestRepositioning();
 }
 
 void CTextCtrl::TerminateEditMode(bool bAcceptNewName) {
@@ -1239,20 +121,20 @@ void CTextCtrl::TerminateEditMode(bool bAcceptNewName) {
 		::SetWindowLong(m_pEdit->m_hWnd, GWL_WNDPROC, (LONG) m_OrigEditProc); 
 		m_pEdit->DestroyWindow();
 		delete m_pEdit;
-		::SetFocus(m_pMgr->GetHWND());
+		::SetFocus(m_pPanel->GetHWND());
 		m_pEdit = NULL;
 		if (bAcceptNewName) {
 			if (_tcscmp(newName, m_sText) != 0) {
 				bool bSetNewName = true;
 				if (m_textChangedHandler != NULL) {
-					bSetNewName = m_textChangedHandler(*this, newName);
+					bSetNewName = m_textChangedHandler(m_pContext, *this, newName);
 				}
 				if (bSetNewName) SetText(newName);
 			}
 		}
 		CRect rect(m_position);
 		rect.right = rect.left + m_textSize.cx + 20;
-		::InvalidateRect(m_pMgr->GetHWND(), &rect, FALSE);
+		::InvalidateRect(m_pPanel->GetHWND(), &rect, FALSE);
 	}
 }
 
@@ -1268,7 +150,7 @@ bool CTextCtrl::OnMouseLButton(EMouseEvent eMouseEvent, int nX, int nY) {
 				rectEdit.top += nDiff + 1;
 				rectEdit.bottom -= nDiff - 1;
 				m_pEdit = new CEdit();
-				m_pEdit->Create(m_pMgr->GetHWND(), _U_RECT(&rectEdit), 0, WS_BORDER | WS_CHILD | ES_AUTOHSCROLL, 0);
+				m_pEdit->Create(m_pPanel->GetHWND(), _U_RECT(&rectEdit), 0, WS_BORDER | WS_CHILD | ES_AUTOHSCROLL, 0);
 				
 				// Subclass edit control to capture the ESC and ENTER keys
 				// ms-help://MS.VSExpressCC.v80/MS.VSIPCC.v80/MS.PSDKSVR2003R2.1033/winui/winui/windowsuserinterface/windowing/windowprocedures/usingwindowprocedures.htm
@@ -1295,11 +177,11 @@ bool CTextCtrl::OnMouseMove(int nX, int nY) {
 		if (m_position.PtInRect(mousePos)) {
 			if (!m_bHighlight) {
 				m_bHighlight = true;
-				::InvalidateRect(m_pMgr->GetHWND(), &m_position, FALSE);
+				::InvalidateRect(m_pPanel->GetHWND(), &m_position, FALSE);
 			}
 		} else if (m_bHighlight) {
 			m_bHighlight = false;
-			::InvalidateRect(m_pMgr->GetHWND(), &m_position, FALSE);
+			::InvalidateRect(m_pPanel->GetHWND(), &m_position, FALSE);
 		}
 	}
 
@@ -1309,7 +191,7 @@ bool CTextCtrl::OnMouseMove(int nX, int nY) {
 void CTextCtrl::CreateBoldFont(CDC & dc) {
 	if (m_hBoldFont == NULL) {
 		dc.SelectStockFont(DEFAULT_GUI_FONT);
-		m_hBoldFont = Helpers::CreateBoldFontOfSelectedFont(dc);
+		m_hBoldFont = HelpersGUI::CreateBoldFontOfSelectedFont(dc);
 	}
 }
 
@@ -1372,32 +254,38 @@ LRESULT APIENTRY CTextCtrl::EditSubclassProc(HWND hwnd, UINT uMsg, WPARAM wParam
 // CButtonCtrl
 /////////////////////////////////////////////////////////////////////////////////////////////
 
-CButtonCtrl::CButtonCtrl(CPanelMgr* pPanelMgr, LPCTSTR sButtonText, 
-						 ButtonPressedHandler buttonPressedHandler) : CUICtrl(pPanelMgr) {
-	 m_sText = sButtonText;
-	 m_paintHandler = NULL;
-	 m_buttonPressedHandler = buttonPressedHandler;
-	 m_textSize = GetTextRect(m_pMgr->GetHWND(), m_sText);
-	 m_bDragging = false;
-	 m_bEnabled = false;
-	 m_extendedArea = CRect(0, 0, 0, 0);
-}
-
-CButtonCtrl::CButtonCtrl(CPanelMgr* pPanelMgr, PaintHandler paintHandler, ButtonPressedHandler buttonPressedHandler) 
- : CUICtrl(pPanelMgr) {
-	m_paintHandler = paintHandler;
+CButtonCtrl::CButtonCtrl(CPanel* pPanel, LPCTSTR sButtonText, 
+						 ButtonPressedHandler* buttonPressedHandler, void* pContext, int nParameter) : CUICtrl(pPanel) {
+	m_sText = sButtonText;
+	m_paintHandler = NULL;
+	m_pPaintContext = NULL;
 	m_buttonPressedHandler = buttonPressedHandler;
-	m_textSize = CSize(0, 0);
+	m_pContext = pContext;
+	m_nParameter = nParameter;
+	m_textSize = GetTextRect(m_pPanel->GetHWND(), m_sText);
 	m_bDragging = false;
-	m_bEnabled = false;
+	m_bActive = false;
 	m_extendedArea = CRect(0, 0, 0, 0);
 }
 
-void CButtonCtrl::SetEnabled(bool bEnabled) {
-	if (bEnabled != m_bEnabled) {
-		m_bEnabled = bEnabled;
+CButtonCtrl::CButtonCtrl(CPanel* pPanel, PaintHandler* paintHandler, ButtonPressedHandler* buttonPressedHandler,
+						 void* pPaintContext, void* pContext, int nParameter) : CUICtrl(pPanel) {
+	m_paintHandler = paintHandler;
+	m_pPaintContext = pPaintContext;
+	m_buttonPressedHandler = buttonPressedHandler;
+	m_pContext = pContext;
+	m_nParameter = nParameter;
+	m_textSize = CSize(0, 0);
+	m_bDragging = false;
+	m_bActive = false;
+	m_extendedArea = CRect(0, 0, 0, 0);
+}
+
+void CButtonCtrl::SetActive(bool bActive) {
+	if (bActive != m_bActive) {
+		m_bActive = bActive;
 		if (this->m_bShow) {
-			::InvalidateRect(m_pMgr->GetHWND(), &m_position, FALSE);
+			::InvalidateRect(m_pPanel->GetHWND(), &m_position, FALSE);
 		}
 	}
 }
@@ -1413,21 +301,22 @@ bool CButtonCtrl::OnMouseLButton(EMouseEvent eMouseEvent, int nX, int nY) {
 		m_position.right + m_extendedArea.right, m_position.bottom + m_extendedArea.bottom);
 	if (extendedPosition.PtInRect(mousePos)) {
 		if (eMouseEvent == MouseEvent_BtnDown) {
-			m_pMgr->CaptureMouse(this);
+			m_pPanel->CaptureMouse(this);
 			m_bDragging = true;
-			::InvalidateRect(m_pMgr->GetHWND(), &m_position, FALSE);
+			::InvalidateRect(m_pPanel->GetHWND(), &m_position, FALSE);
 			return true;
 		}
 		if (eMouseEvent == MouseEvent_BtnUp && m_buttonPressedHandler != NULL) {
-			m_buttonPressedHandler(*this);
+			m_buttonPressedHandler(m_pContext, m_nParameter, *this);
 			bRetVal = true;
 		}
 	}
 	
 	if (m_bDragging) {
-		m_pMgr->ReleaseMouse(this);
+		m_pPanel->ReleaseMouse(this);
 		m_bDragging = false;
-		::InvalidateRect(m_pMgr->GetHWND(), &m_position, FALSE);
+		::InvalidateRect(m_pPanel->GetHWND(), &m_position, FALSE);
+		bRetVal = true; // eat this event when the mouse was captured
 	}
 	return bRetVal;
 }
@@ -1439,11 +328,11 @@ bool CButtonCtrl::OnMouseMove(int nX, int nY) {
 	if (extendedPosition.PtInRect(mousePos)) {
 		if (!m_bHighlight) {
 			m_bHighlight = true;
-			::InvalidateRect(m_pMgr->GetHWND(), &m_position, FALSE);
+			::InvalidateRect(m_pPanel->GetHWND(), &m_position, FALSE);
 		}
 	} else if (m_bHighlight) {
 		m_bHighlight = false;
-		::InvalidateRect(m_pMgr->GetHWND(), &m_position, FALSE);
+		::InvalidateRect(m_pPanel->GetHWND(), &m_position, FALSE);
 	}
 
 	return false;
@@ -1456,14 +345,14 @@ void CButtonCtrl::Draw(CDC & dc, CRect position, bool bBlack) {
 	if (bBlack) {
 		dc.SelectStockPen(BLACK_PEN);
 	} else {
-		hPen = ::CreatePen(PS_SOLID, 1, (m_bDragging && m_bHighlight) ? CSettingsProvider::This().ColorHighlight() : m_bEnabled ? CSettingsProvider::This().ColorSelected() : CSettingsProvider::This().ColorGUI());
+		hPen = ::CreatePen(PS_SOLID, 1, (m_bDragging && m_bHighlight) ? CSettingsProvider::This().ColorHighlight() : m_bActive ? CSettingsProvider::This().ColorSelected() : CSettingsProvider::This().ColorGUI());
 		hOldPen = dc.SelectPen(hPen);
 	}
 	dc.Rectangle(position);
 	if (m_sText.GetLength() > 0) {
 		dc.SelectStockFont(DEFAULT_GUI_FONT);
 		dc.SetBkMode(TRANSPARENT);
-		dc.SetTextColor(bBlack ? 0 : m_bHighlight ? CSettingsProvider::This().ColorHighlight() : m_bEnabled ? CSettingsProvider::This().ColorSelected() : CSettingsProvider::This().ColorGUI());
+		dc.SetTextColor(bBlack ? 0 : m_bHighlight ? CSettingsProvider::This().ColorHighlight() : m_bActive ? CSettingsProvider::This().ColorSelected() : CSettingsProvider::This().ColorGUI());
 		dc.DrawText(m_sText, m_sText.GetLength(), &position, DT_CENTER | DT_VCENTER | DT_SINGLELINE | DT_WORD_ELLIPSIS | DT_NOPREFIX);
 	} else if (m_paintHandler != NULL) {
 		if (m_bHighlight && !bBlack) {
@@ -1471,8 +360,8 @@ void CButtonCtrl::Draw(CDC & dc, CRect position, bool bBlack) {
 			dc.SelectPen(hPen2);
 		}
 		dc.SetBkMode(TRANSPARENT);
-		dc.SetTextColor(bBlack ? 0 : m_bHighlight ? CSettingsProvider::This().ColorHighlight() : m_bEnabled ? CSettingsProvider::This().ColorSelected() : CSettingsProvider::This().ColorGUI());
-		m_paintHandler(position, dc);
+		dc.SetTextColor(bBlack ? 0 : m_bHighlight ? CSettingsProvider::This().ColorHighlight() : m_bActive ? CSettingsProvider::This().ColorSelected() : CSettingsProvider::This().ColorGUI());
+		m_paintHandler(m_pPaintContext, position, dc);
 	}
 	if (!bBlack) {
 		dc.SelectPen(hOldPen);
@@ -1487,7 +376,7 @@ void CButtonCtrl::Draw(CDC & dc, CRect position, bool bBlack) {
 // CSliderDouble
 /////////////////////////////////////////////////////////////////////////////////////////////
 
-CSliderDouble::CSliderDouble(CPanelMgr* pMgr, LPCTSTR sName, int nSliderLen, double* pdValue, bool* pbEnable,
+CSliderDouble::CSliderDouble(CPanel* pMgr, LPCTSTR sName, int nSliderLen, double* pdValue, bool* pbEnable,
 		double dMin, double dMax, double dDefaultValue, bool bAllowPreviewAndReset, bool bLogarithmic, bool bInvert) : CUICtrl(pMgr) {
 	m_sName = sName;
 	m_nSliderLen = nSliderLen;
@@ -1503,11 +392,12 @@ CSliderDouble::CSliderDouble(CPanelMgr* pMgr, LPCTSTR sName, int nSliderLen, dou
 	m_nSign = bInvert ? -1 : +1;
 	m_bDragging = false;
 	m_bHighlightCheck = false;
+	m_bHighlight = false;
 	m_bHighlightNumber = false;
 	m_bNumberClicked = false;
 	m_bAllowPreviewAndReset = bAllowPreviewAndReset;
 
-	CPaintDC dc(m_pMgr->GetHWND());
+	CPaintDC dc(m_pPanel->GetHWND());
 	m_nNumberWidth = GetTextRect(dc, _T("--X.XX")).cx;
 	m_textSize = GetTextRect(dc, sName);
 	m_nSliderHeight = m_nNumberWidth/6;
@@ -1523,11 +413,13 @@ bool CSliderDouble::OnMouseLButton(EMouseEvent eMouseEvent, int nX, int nY) {
 	CPoint mousePos(nX, nY);
 
 	m_bNumberClicked = false;
+	bool bEatEvent = false;
 
 	if (eMouseEvent == MouseEvent_BtnDown) {
-		if (m_position.PtInRect(mousePos)) m_pMgr->CaptureMouse(this);
+		if (m_position.PtInRect(mousePos) || m_sliderRect.PtInRect(mousePos)) m_pPanel->CaptureMouse(this);
 	} else if (eMouseEvent == MouseEvent_BtnUp) {
-		m_pMgr->ReleaseMouse(this);
+		m_pPanel->ReleaseMouse(this);
+		bEatEvent = true;
 	}
 
 	if (eMouseEvent == MouseEvent_BtnUp && m_bDragging) {
@@ -1539,7 +431,7 @@ bool CSliderDouble::OnMouseLButton(EMouseEvent eMouseEvent, int nX, int nY) {
 		return true;
 	} else if (m_pEnable && eMouseEvent == MouseEvent_BtnUp && m_checkRectFull.PtInRect(mousePos)) {
 		*m_pEnable = !(*m_pEnable);
-		::InvalidateRect(m_pMgr->GetHWND(), NULL, FALSE); // trigger redraw of window
+		::InvalidateRect(m_pPanel->GetHWND(), NULL, FALSE); // trigger redraw of window
 	} else if (eMouseEvent == MouseEvent_BtnDblClk) {
 		CRect resetRect(m_sliderRect.left, m_position.top, m_sliderRect.right, m_sliderRect.top);
 		if ((!m_pEnable || *m_pEnable) && resetRect.PtInRect(mousePos)) {
@@ -1554,7 +446,7 @@ bool CSliderDouble::OnMouseLButton(EMouseEvent eMouseEvent, int nX, int nY) {
 		return true;
 	}
 
-	return false;
+	return bEatEvent;
 }
 
 bool CSliderDouble::OnMouseMove(int nX, int nY) {
@@ -1564,11 +456,11 @@ bool CSliderDouble::OnMouseMove(int nX, int nY) {
 		if (m_checkRectFull.PtInRect(mousePos)) {
 			if (!m_bHighlightCheck) {
 				m_bHighlightCheck = true;
-				::InvalidateRect(m_pMgr->GetHWND(), &m_checkRectFull, FALSE);
+				::InvalidateRect(m_pPanel->GetHWND(), &m_checkRectFull, FALSE);
 			}
 		} else if (m_bHighlightCheck) {
 			m_bHighlightCheck = false;
-			::InvalidateRect(m_pMgr->GetHWND(), &m_checkRectFull, FALSE);
+			::InvalidateRect(m_pPanel->GetHWND(), &m_checkRectFull, FALSE);
 		}
 	}
 
@@ -1583,23 +475,23 @@ bool CSliderDouble::OnMouseMove(int nX, int nY) {
 				m_bHighlight = true;
 				CRect invRect(&m_sliderRect);
 				invRect.OffsetRect(0, -8);
-				::InvalidateRect(m_pMgr->GetHWND(), &invRect, FALSE);
+				::InvalidateRect(m_pPanel->GetHWND(), &invRect, FALSE);
 			}
 		} else if (m_bHighlight) {
 			m_bHighlight = false;
 			CRect invRect(&m_sliderRect);
 			invRect.OffsetRect(0, -8);
-			::InvalidateRect(m_pMgr->GetHWND(), &invRect, FALSE);
+			::InvalidateRect(m_pPanel->GetHWND(), &invRect, FALSE);
 		}
 		CRect numberRect(m_sliderRect.right + 2, m_position.top, m_position.right, m_position.bottom);
 		if (numberRect.PtInRect(mousePos)) {
 			if (!m_bHighlightNumber && abs(*m_pValue - m_dDefaultValue) > 5e-3) {
 				m_bHighlightNumber = true;
-				::InvalidateRect(m_pMgr->GetHWND(), &numberRect, FALSE);
+				::InvalidateRect(m_pPanel->GetHWND(), &numberRect, FALSE);
 			}
 		} else if (m_bHighlightNumber && !m_bNumberClicked) {
 			m_bHighlightNumber = false;
-			::InvalidateRect(m_pMgr->GetHWND(), &numberRect, FALSE);
+			::InvalidateRect(m_pPanel->GetHWND(), &numberRect, FALSE);
 		}
 	}
 
@@ -1704,7 +596,7 @@ void CSliderDouble::SetValue(double dValue) {
 	double dOldValue = *m_pValue;
 	*m_pValue = dValue;
 	if (dOldValue != *m_pValue) {
-		::InvalidateRect(m_pMgr->GetHWND(), NULL, FALSE);
+		::InvalidateRect(m_pPanel->GetHWND(), NULL, FALSE);
 	}
 }
 

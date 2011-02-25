@@ -425,6 +425,40 @@ bool CParameterDB::MergeParamDB(LPCTSTR sParamDBName) {
 	return SaveToFile(-1, dummy); // this saves all entries
 }
 
+void CParameterDB::BackupParamDB(HWND hWnd) {
+	CFileDialog fileDlg(FALSE, _T(".db"), _T("ParamDBBackup.db"), 
+			OFN_EXPLORER | OFN_ENABLESIZING | OFN_HIDEREADONLY | OFN_NOREADONLYRETURN,
+			Helpers::CReplacePipe(CString(_T("Param DB (*.db)|*.db|")) +
+			CNLS::GetString(_T("All Files")) + _T("|*.*|")), hWnd);
+	TCHAR buff[MAX_PATH];
+	::SHGetFolderPath(NULL, CSIDL_PERSONAL, NULL, SHGFP_TYPE_CURRENT, buff);
+	fileDlg.m_ofn.lpstrInitialDir = buff;
+	if (IDOK == fileDlg.DoModal(hWnd)) {
+		if (!::CopyFile(GetParamDBName(), fileDlg.m_szFileName, TRUE)) {
+			LPTSTR lpMsgBuf = NULL;
+			::FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM, NULL, ::GetLastError(),
+				MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPTSTR) &lpMsgBuf, 0, NULL);
+			CString sMsg; sMsg.Format(CNLS::GetString(_T("Copying parameter DB to file '%s' failed. Reason: %s")), fileDlg.m_szFileName, lpMsgBuf);
+			::MessageBox(hWnd, sMsg, _T("JPEGView"), MB_OK | MB_ICONERROR);
+			::LocalFree(lpMsgBuf);
+		}
+	}
+}
+
+void CParameterDB::RestoreParamDB(HWND hWnd) {
+	CFileDialog fileDlg(TRUE, _T(".db"), _T("ParamDBBackup.db"), 
+		OFN_EXPLORER | OFN_ENABLESIZING | OFN_HIDEREADONLY,
+		Helpers::CReplacePipe(CString(_T("Param DB (*.db)|*.db|")) +
+		CNLS::GetString(_T("All Files")) + _T("|*.*|")), hWnd);
+	TCHAR buff[MAX_PATH];
+	::SHGetFolderPath(NULL, CSIDL_PERSONAL, NULL, SHGFP_TYPE_CURRENT, buff);
+	fileDlg.m_ofn.lpstrInitialDir = buff;
+	fileDlg.m_ofn.lpstrTitle = CNLS::GetString(_T("Select parameter DB to restore"));
+	if (IDOK == fileDlg.DoModal(hWnd)) {
+		MergeParamDB(fileDlg.m_szFileName);
+	}
+}
+
 /////////////////////////////////////////////////////////////////////////////////////////////
 // Private
 /////////////////////////////////////////////////////////////////////////////////////////////

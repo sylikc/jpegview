@@ -59,7 +59,7 @@ void CPaintMemDCMgr::BitBltBlended(CDC & dc, CDC & paintDC, const CSize& dcSize,
 
 // Blits the DIB data section to target DC using blending with painted version of given panel
 void CPaintMemDCMgr::BitBltBlended(CDC & dc, CDC & paintDC, const CSize& dcSize, void* pDIBData, BITMAPINFO* pbmInfo, 
-						  const CPoint& dibStart, const CSize& dibSize, CPanelMgr& panel, const CPoint& offsetPanel,
+						  const CPoint& dibStart, const CSize& dibSize, CPanel& panel, const CPoint& offsetPanel,
 						  float fBlendFactor) {
 	int nW = dcSize.cx;
 	int nH = dcSize.cy;
@@ -83,7 +83,7 @@ void CPaintMemDCMgr::BitBltBlended(CDC & dc, CDC & paintDC, const CSize& dcSize,
 	dc.AlphaBlend(0, 0, nW, nH, memDCPanel, 0, 0, nW, nH, blendFunc);
 }
 
-CRect CPaintMemDCMgr::CreatePanelRegion(CPanelMgr* pPanel, float fDimFactor, bool bBlendPanel) {
+CRect CPaintMemDCMgr::CreatePanelRegion(CPanel* pPanel, float fDimFactor, bool bBlendPanel) {
 	if (m_nNumElems == MAX_REGIONS_CPaintMemDCMgr) {
 		return CRect(0, 0, 0, 0);
 	}
@@ -105,7 +105,7 @@ void CPaintMemDCMgr::BlitImageToMemDC(void* pDIBData, BITMAPINFO* pBitmapInfo, C
 		if (m_managedRegions[i].MemoryDC.m_hDC != NULL) {
 			CRect rect = m_managedRegions[i].DisplayRect;
 			if (m_managedRegions[i].Blend) {
-				CPanelMgr* pPanel = m_managedRegions[i].DisplayRegion;
+				CPanel* pPanel = m_managedRegions[i].DisplayRegion;
 				BitBltBlended(m_managedRegions[i].MemoryDC, m_paintDC, CSize(rect.Width(), rect.Height()), pDIBData, pBitmapInfo, 
 						  CPoint(destination.x - rect.left, destination.y - rect.top), bitmapSize, 
 						  *pPanel, CPoint(-rect.left, -rect.top), fBlendFactor);

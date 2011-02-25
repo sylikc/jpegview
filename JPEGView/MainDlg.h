@@ -7,19 +7,22 @@
 #include "MessageDef.h"
 #include "ProcessParams.h"
 #include "Helpers.h"
+#include "CropCtl.h"
 
 class CFileList;
 class CJPEGProvider;
 class CJPEGImage;
-class CSliderMgr;
-class CNavigationPanel;
-class CWndButtonPanel;
-class CUnsharpMaskPanel;
-class CRotationPanel;
 class CButtonCtrl;
 class CTextCtrl;
-class CEXIFDisplay;
-class CHelpDisplay;
+class CPanelMgr;
+class CEXIFDisplayCtl;
+class CImageProcPanelCtl;
+class CNavigationPanelCtl;
+class CRotationPanelCtl;
+class CUnsharpMaskPanelCtl;
+class CWndButtonPanelCtl;
+class CZoomNavigatorCtl;
+class CCropCtl;
 
 enum EMouseEvent;
 
@@ -28,6 +31,17 @@ class CMainDlg : public CDialogImpl<CMainDlg>
 {
 public:
 	enum { IDD = IDD_MAINDLG };
+
+	// Used in GotoImage() call
+	enum EImagePosition {
+		POS_First,
+		POS_Last,
+		POS_Next,
+		POS_Previous,
+		POS_Current,
+		POS_Clipboard,
+		POS_Toggle
+	};
 
 	CMainDlg();
 	~CMainDlg();
@@ -94,42 +108,86 @@ public:
 	LRESULT OnAnotherInstanceStarted(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, BOOL& /*bHandled*/);
 
 	// Called by main()
-	void SetStartupFile(LPCTSTR sStartupFile);
+	void SetStartupFile(LPCTSTR sStartupFile) { m_sStartupFile = sStartupFile; }
+
+	HWND GetHWND() { return m_hWnd; }
+	bool IsShowFileName() { return m_bShowFileName; }
+	bool IsShowHelp() { return m_bShowHelp; }
+	bool IsInMovieMode() { return m_bMovieMode; }
+	bool IsFullScreenMode() { return m_bFullScreenMode; }
+	bool IsLandscapeMode() { return m_bLandscapeMode; }
+	bool IsHQResampling() { return m_bHQResampling; }
+	bool IsAutoContrast() { return m_bAutoContrast; }
+	bool IsAutoContrastSection() { return m_bAutoContrastSection; }
+	bool IsLDC() { return m_bLDC; }
+	bool IsKeepParams() { return m_bKeepParams; }
+	bool IsSpanVirtualDesktop() { return m_bSpanVirtualDesktop; }
+	bool IsCropping() { return m_pCropCtl->IsCropping(); }
+	bool IsDoCropping() { return m_pCropCtl->IsDoCropping(); }
+	bool IsDoDragging() { return m_bDoDragging; }
+	bool IsInZooming() { return m_bInZooming; }
+	bool IsShowZoomFactor() { return m_bShowZoomFactor; }
+	bool IsPanMouseCursorSet() { return m_bPanMouseCursorSet; }
+	bool IsMouseOn() { return m_bMouseOn; }
+	CPoint GetMousePos() { return CPoint(m_nMouseX, m_nMouseY); }
+	double GetZoom() { return m_dZoom; }
+	CJPEGImage* GetCurrentImage() { return m_pCurrentImage; }
+	CPanelMgr* GetPanelMgr() { return m_pPanelMgr; }
+	LPCTSTR CurrentFileName(bool bFileTitle);
+	CFileList* GetFileList() { return m_pFileList; }
+	CNavigationPanelCtl* GetNavPanelCtl() { return m_pNavPanelCtl; }
+	CEXIFDisplayCtl* GetEXIFDisplayCtl() { return m_pEXIFDisplayCtl; }
+	CUnsharpMaskPanelCtl* GetUnsharpMaskPanelCtl() { return m_pUnsharpMaskPanelCtl; }
+	CImageProcPanelCtl* GetImageProcPanelCtl() { return m_pImageProcPanelCtl; }
+	CRotationPanelCtl* GetRotationPanelCtl() { return m_pRotationPanelCtl; }
+	CZoomNavigatorCtl* GetZoomNavigatorCtl() { return m_pZoomNavigatorCtl; }
+	CCropCtl* GetCropCtl() { return m_pCropCtl; }
+	const CRect& ClientRect() { return m_clientRect; }
+	const CRect& MonitorRect() { return m_monitorRect; }
+	const CSize& VirtualImageSize() { return m_virtualImageSize; }
+	CJPEGProvider* GetJPEGProvider() { return m_pJPEGProvider; }
+
+	void UpdateWindowTitle();
+	void MouseOff();
+	void MouseOn();
+	void GotoImage(EImagePosition ePos);
+	void ResetZoomTo100Percents(bool bZoomToMouse);
+	void ResetZoomToFitScreen(bool bFillWithCrop, bool bAllowEnlarge);
+	bool PerformPan(int dx, int dy, bool bAbsolute);
+	void StartDragging(int nX, int nY, bool bDragWithZoomNavigator);
+	void DoDragging();
+	void EndDragging();
+	void SetCursorForMoveSection();
+	bool ScreenToImage(float & fX, float & fY); 
+	bool ImageToScreen(float & fX, float & fY);
+	void ExecuteCommand(int nCommand);
+	bool PrepareForModalPanel(); // returns if navigation panel was enabled, turns it off
+	int TrackPopupMenu(CPoint pos, HMENU hMenu);
+
+	static void OnExecuteCommand(void* pContext, int nParameter, CButtonCtrl & sender);
+	static void ToggleWindowMode(CMainDlg* pMainDlg, CButtonCtrl & sender, bool bSetCursor);
+	static bool IsCurrentImageFitToScreen(void* pContext);
 
 private:
 
-	// Used in GotoImage() call
-	enum EImagePosition {
-		POS_First,
-		POS_Last,
-		POS_Next,
-		POS_Previous,
-		POS_Current,
-		POS_Clipboard,
-		POS_Toggle
-	};
-
-	static CMainDlg* sm_instance; // single instance of the main dialog
-
-	CString m_sStartupFile;
+	CString m_sStartupFile; // file passed on command line
 	CFileList* m_pFileList; // used for navigation
 	CJPEGProvider * m_pJPEGProvider; // reads JPEG files (read ahead)
 	CJPEGImage * m_pCurrentImage; // currently displayed image
 
-	// DPI scaling factor
+	// DPI scaling factor, 1.0 for 96 DPI
 	float m_fScaling;
 	
 	// Current parameter set
-	int m_nRotation;
+	int m_nRotation; // this can only be 0, 90, 180 or 270
 	bool m_bUserZoom;
-	bool m_bUserPan;
+	bool m_bUserPan; // user has zoomed and panned away from default values
 	double m_dZoom;
-	double m_dZoomAtResizeStart;
+	double m_dZoomAtResizeStart; // zoom factor when user started resizing JPEGView main window
 	double m_dZoomMult;
 	Helpers::EAutoZoomMode m_eAutoZoomMode;
 
 	CImageProcessingParams* m_pImageProcParams;
-	CUnsharpMaskParams* m_pUnsharpMaskParams;
 	bool m_bHQResampling;
 	bool m_bAutoContrast;
 	bool m_bAutoContrastSection;
@@ -151,27 +209,9 @@ private:
 	bool m_bCurrentImageIsSpecialProcessing;
 	double m_dCurrentInitialLightenShadows;
 
-	// cropping
-	CPoint m_cropStart;
-	CPoint m_cropEnd;
-
-	// navigation panel animation
-	bool m_bInNavPanelAnimation;
-	bool m_bFadeOut;
-	float m_fCurrentBlendingFactorNavPanel;
-	int m_nBlendInNavPanelCountdown;
-	CDC* m_pMemDCAnimation;
-	HBITMAP m_hOffScreenBitmapAnimation;
-
 	bool m_bPasteFromClipboardFailed;
 	bool m_bDragging;
 	bool m_bDoDragging;
-	bool m_bDraggingWithZoomNavigator;
-	bool m_bCropping;
-	bool m_bDoCropping;
-	bool m_bDontStartCropOnNextClick;
-	bool m_bBlockPaintCropRect;
-	CPoint m_cropMouse;
 	bool m_bMovieMode;
 	bool m_bProcFlagsTouched;
 	EProcessingFlags m_eProcFlagsBeforeMovie;
@@ -180,7 +220,6 @@ private:
 	int m_nOffsetY;
 	int m_nCapturedX, m_nCapturedY;
 	int m_nMouseX, m_nMouseY;
-	bool m_bShowFileInfo;
 	bool m_bShowFileName;
 	bool m_bShowHelp;
 	bool m_bFullScreenMode;
@@ -188,61 +227,30 @@ private:
 	int m_nCurrentTimeout;
 	POINT m_startMouse;
 	CSize m_virtualImageSize;
-	CPoint m_capturedPosZoomNavSection;
 	bool m_bInZooming;
 	bool m_bTemporaryLowQ;
 	bool m_bShowZoomFactor;
 	bool m_bSearchSubDirsOnEnter;
 	bool m_bSpanVirtualDesktop;
-	bool m_bShowIPTools;
-	bool m_bShowNavPanel;
-	bool m_bOldShowNavPanel;
-	bool m_bShowWndButtonPanel;
-	bool m_bShowUnsharpMaskPanel;
-	bool m_bShowRotationPanel;
-	bool m_bMouseInNavPanel;
 	bool m_bPanMouseCursorSet;
 	bool m_bMouseOn;
 	bool m_bInInitialOpenFile;
-	double m_dCropRatio;
-	double m_dAlternateUSMAmount;
-	bool m_bRotationModeAssisted;
-	bool m_bRotationShowGrid;
-	bool m_bRotationAutoCrop;
-	double m_dRotationLQ;
-	double m_dRotatonLQStart;
-	bool m_bRotating;
-	float m_rotationStartX;
-	float m_rotationStartY;
 	int m_nMonitor;
 	WINDOWPLACEMENT m_storedWindowPlacement;
 	WINDOWPLACEMENT m_storedWindowPlacement2;
 	CRect m_monitorRect;
 	CRect m_clientRect;
-	CSliderMgr * m_pSliderMgr;
-	CButtonCtrl* m_btnUnsharpMask;
-	CButtonCtrl* m_btnSaveToDB;
-	CButtonCtrl* m_btnRemoveFromDB;
-	CTextCtrl* m_txtFileName;
-	CTextCtrl* m_txtParamDB;
-	CTextCtrl* m_txtRename;
-	CTextCtrl* m_txtAcqDate;
-	CButtonCtrl* m_btnInfo;
-	CButtonCtrl* m_btnKeepParams;
-	CButtonCtrl* m_btnLandScape;
-	CButtonCtrl* m_btnWindowMode;
-	CTextCtrl* m_textRotationPanel;
-	CTextCtrl* m_textRotationHint;
-	CButtonCtrl* m_btnRotationShowGrid;
-	CButtonCtrl* m_btnRotationAutoCrop;
-	CButtonCtrl* m_btnRotationAssisted;
-	CNavigationPanel* m_pNavPanel;
-	CWndButtonPanel* m_pWndButtonPanel;
-	CUnsharpMaskPanel* m_pUnsharpMaskPanel;
-	CRotationPanel* m_pRotationPanel;
-	CEXIFDisplay* m_pEXIFDisplay;
 	CString m_sSaveDirectory;
 	CString m_sSaveExtension;
+	CCropCtl* m_pCropCtl;
+	CZoomNavigatorCtl* m_pZoomNavigatorCtl;
+	CImageProcPanelCtl* m_pImageProcPanelCtl;
+	CNavigationPanelCtl* m_pNavPanelCtl;
+	CEXIFDisplayCtl* m_pEXIFDisplayCtl;
+	CWndButtonPanelCtl* m_pWndButtonPanelCtl;
+	CUnsharpMaskPanelCtl* m_pUnsharpMaskPanelCtl;
+	CRotationPanelCtl* m_pRotationPanelCtl;
+	CPanelMgr* m_pPanelMgr;
 
 	bool OpenFile(bool bFullScreen);
 	void OpenFile(LPCTSTR sFileName);
@@ -250,120 +258,29 @@ private:
 	bool SaveImageNoPrompt(LPCTSTR sFileName, bool bFullSize);
 	void BatchCopy();
 	void HandleUserCommands(uint32 virtualKeyCode);
-	void StartDragging(int nX, int nY, bool bDragWithZoomNavigator);
-	void DoDragging();
-	void EndDragging();
-	void StartCropping(int nX, int nY);
-	void ShowCroppingRect(int nX, int nY, HDC hPaintDC, bool bShow);
-	void EndCropping();
-	void PaintCropRect(HDC hPaintDC);
-	void DeleteSceenCropRect();
-	CRect GetScreenCropRect();
-	CRect GetImageCropRect();
-	void CropLossless();
-	void GotoImage(EImagePosition ePos);
 	void GotoImage(EImagePosition ePos, int nFlags);
 	void AdjustLDC(int nMode, double dInc);
 	void AdjustGamma(double dFactor);
 	void AdjustContrast(double dInc);
 	void AdjustSharpen(double dInc);
-	void PerformZoom(double dValue, bool bExponent);
-	bool PerformPan(int dx, int dy, bool bAbsolute);
+	void PerformZoom(double dValue, bool bExponent, bool bZoomToMouse);
 	void ZoomToSelection();
 	void LimitOffsets(const CRect & rect, const CSize & size);
 	double GetZoomFactorForFitToScreen(bool bFillWithCrop, bool bAllowEnlarge);
-	void ResetZoomToFitScreen(bool bFillWithCrop, bool bAllowEnlarge);
-	void ResetZoomTo100Percents();
 	CProcessParams CreateProcessParams();
 	void ResetParamsToDefault();
-	void StartTimer(int nMilliSeconds);
-	void StopTimer(void);
+	void StartSlideShowTimer(int nMilliSeconds);
+	void StopSlideShowTimer(void);
 	void StartMovieMode(double dFPS);
 	void StopMovieMode();
 	void StartLowQTimer(int nTimeout);
-	void StartNavPanelTimer(int nTimeout);
-	void MouseOff();
-	void MouseOn();
 	void InitParametersForNewImage();
-	void ExecuteCommand(int nCommand);
-	void DrawTextBordered(CPaintDC& dc, LPCTSTR sText, const CRect& rect, UINT nFormat);
 	void ExchangeProcessingParams();
 	void SaveParameters();
-	void ShowHideSaveDBButtons();
 	void AfterNewImageLoaded(bool bSynchronize);
-	bool RenameCurrentFile(LPCTSTR sNewFileTitle);
 	int Scale(int nValue) { return (int)(m_fScaling*nValue); }
 	CRect ScreenToDIB(const CSize& sizeDIB, const CRect& rect);
-	bool ScreenToImage(float & fX, float & fY); 
-	bool ImageToScreen(float & fX, float & fY);
-	LPCTSTR CurrentFileName(bool bFileTitle);
-	void FillEXIFDataDisplay(CEXIFDisplay* pEXIFDisplay);
-	void GenerateHelpDisplay(CHelpDisplay & helpDisplay);
-	void InvalidateZoomNavigatorRect();
-	bool IsZoomNavigatorCurrentlyShown();
-	bool IsPointInZoomNavigatorThumbnail(const CPoint& pt);
-	void SetCursorForMoveSection();
 	void ToggleMonitor();
 	CRect GetZoomTextRect(CRect imageProcessingArea);
 	void EditINIFile(bool bGlobalINI);
-	void BackupParamDB();
-	void RestoreParamDB();
-	void SetWindowTitle();
-	bool IsNavPanelVisible();
-	void StartNavPanelAnimation(bool bFadeOut, bool bFast);
-	void DoNavPanelAnimation();
-	void EndNavPanelAnimation();
-	void HideNavPanelTemporary();
-	void ShowHideIPTools(bool bShow);
-	void TerminateUnsharpMaskPanel();
-	void StartUnsharpMaskPanel();
-	void TerminateRotationPanel();
-	void StartRotationPanel();
-	bool RouteMouseLButtonEventToPanels(EMouseEvent eMouseEvent, int nX, int nY);
-	bool IsModalPanelShown() { return m_bShowUnsharpMaskPanel || m_bShowRotationPanel; }
-	void UpdateAssistedRotationMode();
-	void StartRotating(int nX, int nY);
-	void DoRotating();
-	void EndRotating();
-	void ApplyRotation();
-	void PaintRotationLine(HDC hPaintDC);
-	void UpdateRotationPanelTitle();
-
-	static void OnUnsharpMask(CButtonCtrl & sender);
-	static void OnCancelUnsharpMask(CButtonCtrl & sender);
-	static void OnApplyUnsharpMask(CButtonCtrl & sender);
-	static void OnRPShowGridLines(CButtonCtrl & sender);
-	static void OnRPAutoCrop(CButtonCtrl & sender);
-	static void OnRPAssistedMode(CButtonCtrl & sender);
-	static void OnCancelRotation(CButtonCtrl & sender);
-	static void OnApplyRotation(CButtonCtrl & sender);
-	static void OnSaveToDB(CButtonCtrl & sender);
-	static void OnRemoveFromDB(CButtonCtrl & sender);
-	static bool OnRenameFile(CTextCtrl & sender, LPCTSTR sChangedText);
-	static void OnHome(CButtonCtrl & sender);
-	static void OnPrev(CButtonCtrl & sender);
-	static void OnNext(CButtonCtrl & sender);
-	static void OnEnd(CButtonCtrl & sender);
-	static void OnToggleZoomFit(CButtonCtrl & sender);
-	static void OnToggleWindowMode(CButtonCtrl & sender);
-	static void OnRotateCW(CButtonCtrl & sender);
-	static void OnRotateCCW(CButtonCtrl & sender);
-	static void OnRotateFree(CButtonCtrl & sender);
-	static void OnShowInfo(CButtonCtrl & sender);
-	static void OnKeepParameters(CButtonCtrl & sender);
-	static void OnLandscapeMode(CButtonCtrl & sender);
-	static void ToggleWindowMode(bool bSetCursor);
-
-	static void OnMinimize(CButtonCtrl & sender);
-	static void OnRestore(CButtonCtrl & sender);
-	static void OnClose(CButtonCtrl & sender);
-
-	static void OnShowHistogram(CButtonCtrl & sender);
-
-	static void PaintZoomFitToggleBtn(const CRect& rect, CDC& dc);
-	static void PaintShowHistogramBtn(const CRect& rect, CDC& dc);
-
-	static LPCTSTR ZoomFitToggleTooltip();
-	static LPCTSTR WindowModeTooltip();
-	static LPCTSTR ShowHistogramTooltip();
 };

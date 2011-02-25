@@ -101,6 +101,10 @@ public:
 	// Merges the given parameter DB with the current paramter DB
 	bool MergeParamDB(LPCTSTR sParamDBName);
 
+	// Backup and restore parameter DB to file - file is selected on file open - file save dialog
+	void BackupParamDB(HWND hWnd);
+	void RestoreParamDB(HWND hWnd);
+
 private:
 	CParameterDB(void);
 	~CParameterDB(void);

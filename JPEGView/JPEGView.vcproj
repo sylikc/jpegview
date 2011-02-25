@@ -203,27 +203,11 @@
 			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm"
 			>
 			<File
-				RelativePath=".\AboutDlg.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\BasicProcessing.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\BatchCopyDlg.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\Clipboard.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\CropSizeDlg.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\EXIFDisplay.cpp"
 				>
 			</File>
 			<File
@@ -235,19 +219,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\FileOpenDialog.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\GUIControls.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\HelpDisplay.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\Helpers.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\HelpersGUI.cpp"
 				>
 			</File>
 			<File
@@ -279,19 +255,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\MainDlg.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\MultiMonitorSupport.cpp"
 				>
 			</File>
 			<File
 				RelativePath=".\NLS.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\PaintMemDCMgr.cpp"
 				>
 			</File>
 			<File
@@ -350,37 +318,141 @@
 				RelativePath=".\XMMImage.cpp"
 				>
 			</File>
-			<File
-				RelativePath=".\ZoomNavigator.cpp"
+			<Filter
+				Name="GUI"
 				>
-			</File>
+				<File
+					RelativePath=".\EXIFDisplay.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\GUIControls.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\HelpDisplay.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\ImageProcessingPanel.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\NavigationPanel.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\PaintMemDCMgr.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Panel.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\RotationPanel.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Tooltip.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\UnsharpMaskPanel.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\WndButtonPanel.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\ZoomNavigator.cpp"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Panels"
+				>
+				<File
+					RelativePath=".\EXIFDisplayCtl.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\HelpDisplayCtl.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\ImageProcPanelCtl.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\NavigationPanelCtl.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\PanelController.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\PanelMgr.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\RotationPanelCtl.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\UnsharpMaskPanelCtl.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\WndButtonPanelCtl.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\ZoomNavigatorCtl.cpp"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Dialogs"
+				>
+				<File
+					RelativePath=".\AboutDlg.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\BatchCopyDlg.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\CropCtl.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\CropSizeDlg.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\FileOpenDialog.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\MainDlg.cpp"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl;inc"
 			>
 			<File
-				RelativePath=".\AboutDlg.h"
-				>
-			</File>
-			<File
 				RelativePath=".\BasicProcessing.h"
 				>
 			</File>
 			<File
-				RelativePath=".\BatchCopyDlg.h"
-				>
-			</File>
-			<File
 				RelativePath=".\Clipboard.h"
-				>
-			</File>
-			<File
-				RelativePath=".\CropSizeDlg.h"
-				>
-			</File>
-			<File
-				RelativePath=".\EXIFDisplay.h"
 				>
 			</File>
 			<File
@@ -392,19 +464,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\FileOpenDialog.h"
-				>
-			</File>
-			<File
-				RelativePath=".\GUIControls.h"
-				>
-			</File>
-			<File
-				RelativePath=".\HelpDisplay.h"
-				>
-			</File>
-			<File
 				RelativePath=".\Helpers.h"
+				>
+			</File>
+			<File
+				RelativePath=".\HelpersGUI.h"
 				>
 			</File>
 			<File
@@ -436,10 +500,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\MainDlg.h"
-				>
-			</File>
-			<File
 				RelativePath=".\MessageDef.h"
 				>
 			</File>
@@ -449,10 +509,6 @@
 			</File>
 			<File
 				RelativePath=".\NLS.h"
-				>
-			</File>
-			<File
-				RelativePath=".\PaintMemDCMgr.h"
 				>
 			</File>
 			<File
@@ -476,10 +532,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\resource.h"
-				>
-			</File>
-			<File
 				RelativePath=".\SaveImage.h"
 				>
 			</File>
@@ -489,6 +541,10 @@
 			</File>
 			<File
 				RelativePath=".\stdafx.h"
+				>
+			</File>
+			<File
+				RelativePath=".\TimerEventIDs.h"
 				>
 			</File>
 			<File
@@ -503,10 +559,130 @@
 				RelativePath=".\XMMImage.h"
 				>
 			</File>
-			<File
-				RelativePath=".\ZoomNavigator.h"
+			<Filter
+				Name="GUI"
 				>
-			</File>
+				<File
+					RelativePath=".\EXIFDisplay.h"
+					>
+				</File>
+				<File
+					RelativePath=".\GUIControls.h"
+					>
+				</File>
+				<File
+					RelativePath=".\HelpDisplay.h"
+					>
+				</File>
+				<File
+					RelativePath=".\ImageProcessingPanel.h"
+					>
+				</File>
+				<File
+					RelativePath=".\NavigationPanel.h"
+					>
+				</File>
+				<File
+					RelativePath=".\PaintMemDCMgr.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Panel.h"
+					>
+				</File>
+				<File
+					RelativePath=".\RotationPanel.h"
+					>
+				</File>
+				<File
+					RelativePath=".\UnsharpMaskPanel.h"
+					>
+				</File>
+				<File
+					RelativePath=".\WndButtonPanel.h"
+					>
+				</File>
+				<File
+					RelativePath=".\ZoomNavigator.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Panels"
+				>
+				<File
+					RelativePath=".\EXIFDisplayCtl.h"
+					>
+				</File>
+				<File
+					RelativePath=".\HelpDisplayCtl.h"
+					>
+				</File>
+				<File
+					RelativePath=".\ImageProcPanelCtl.h"
+					>
+				</File>
+				<File
+					RelativePath=".\NavigationPanelCtl.h"
+					>
+				</File>
+				<File
+					RelativePath=".\PanelController.h"
+					>
+				</File>
+				<File
+					RelativePath=".\PanelMgr.h"
+					>
+				</File>
+				<File
+					RelativePath=".\RotationPanelCtl.h"
+					>
+				</File>
+				<File
+					RelativePath=".\UnsharpMaskPanelCtl.h"
+					>
+				</File>
+				<File
+					RelativePath=".\WndButtonPanelCtl.h"
+					>
+				</File>
+				<File
+					RelativePath=".\ZoomNavigatorCtl.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Dialogs"
+				>
+				<File
+					RelativePath=".\AboutDlg.h"
+					>
+				</File>
+				<File
+					RelativePath=".\BatchCopyDlg.h"
+					>
+				</File>
+				<File
+					RelativePath=".\CropCtl.h"
+					>
+				</File>
+				<File
+					RelativePath=".\CropSizeDlg.h"
+					>
+				</File>
+				<File
+					RelativePath=".\FileOpenDialog.h"
+					>
+				</File>
+				<File
+					RelativePath=".\MainDlg.h"
+					>
+				</File>
+				<File
+					RelativePath=".\resource.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Resource Files"

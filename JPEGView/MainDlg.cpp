@@ -16,22 +16,30 @@
 #include "MultiMonitorSupport.h"
 #include "HistogramCorr.h"
 #include "UserCommand.h"
-#include "HelpDisplay.h"
 #include "Clipboard.h"
 #include "FileOpenDialog.h"
-#include "GUIControls.h"
 #include "ParameterDB.h"
 #include "SaveImage.h"
 #include "NLS.h"
+#include "HelpersGUI.h"
+#include "TimerEventIDs.h"
 #include "BatchCopyDlg.h"
 #include "ResizeFilter.h"
 #include "EXIFReader.h"
-#include "EXIFDisplay.h"
 #include "AboutDlg.h"
 #include "CropSizeDlg.h"
 #include "ProcessingThreadPool.h"
-#include "ZoomNavigator.h"
 #include "PaintMemDCMgr.h"
+#include "PanelMgr.h"
+#include "ZoomNavigatorCtl.h"
+#include "ImageProcPanelCtl.h"
+#include "WndButtonPanelCtl.h"
+#include "RotationPanelCtl.h"
+#include "UnsharpMaskPanelCtl.h"
+#include "EXIFDisplayCtl.h"
+#include "NavigationPanelCtl.h"
+#include "HelpDisplayCtl.h"
+#include "NavigationPanel.h"
 
 //////////////////////////////////////////////////////////////////////////////////////////////
 // Constants
@@ -43,17 +51,8 @@ static const double SHARPEN_INC = 0.05; // increment for sharpen value
 static const double LDC_INC = 0.1; // increment for LDC (lighten shadows and darken highlights)
 static const int NUM_THREADS = 1; // number of readahead threads to use
 static const int READ_AHEAD_BUFFERS = 2; // number of readahead buffers to use (NUM_THREADS+1 is a good choice)
-static const int SLIDESHOW_TIMER_EVENT_ID = 1; // Slideshow timer ID
-static const int ZOOM_TIMER_EVENT_ID = 2; // Zoom refinement timer ID
-static const int ZOOM_TEXT_TIMER_EVENT_ID = 3; // Zoom label timer ID
-static const int AUTOSCROLL_TIMER_EVENT_ID = 4; // when cropping, auto scroll timer ID
-static const int NAVPANEL_TIMER_EVENT_ID = 5; // to show nav panel
-static const int NAVPANEL_ANI_TIMER_EVENT_ID = 6; // animation timer for navigation panel
-static const int NAVPANEL_START_ANI_TIMER_EVENT_ID = 7; // animation start timer for navigation panel
-static const int IPPANEL_TIMER_EVENT_ID = 8; // to show image processing panel in window mode
 static const int ZOOM_TIMEOUT = 200; // refinement done after this many milliseconds
 static const int ZOOM_TEXT_TIMEOUT = 1000; // zoom label disappears after this many milliseconds
-static const int AUTOSCROLL_TIMEOUT = 20; // autoscroll time in ms
 
 static const int DARKEN_HIGHLIGHTS = 0; // used in AdjustLDC() call
 static const int BRIGHTEN_SHADOWS = 1; // used in AdjustLDC() call
@@ -68,15 +67,6 @@ static const bool SHOW_TIMING_INFO = false; // Set to true for debugging
 static const int NO_REQUEST = 1; // used in GotoImage() method
 static const int NO_REMOVE_KEY_MSG = 2; // used in GotoImage() method
 static const int KEEP_PARAMETERS = 4; // used in GotoImage() method
-
-// Dim factor (0..1) for image processing area, 1 means black, 0 means no dimming
-static const float cfDimFactorIPA = 0.5f;
-static const float cfDimFactorEXIF = 0.5f;
-static const float cfDimFactorNavPanel = 0.5f;
-static const float cfDimFactorWndButtons = 0.1f;
-static const float cfDimFactorUSMPanel = 0.5f;
-
-CMainDlg * CMainDlg::sm_instance = NULL;
 
 //////////////////////////////////////////////////////////////////////////////////////////////
 // Helpers
@@ -188,10 +178,8 @@ CMainDlg::CMainDlg() {
 	CNLS::ReadStringTable(sNLSFile);
 
 	m_bLandscapeMode = false;
-	sm_instance = this;
 	m_pImageProcParams = new CImageProcessingParams(GetDefaultProcessingParams());
 	InitFromProcessingFlags(GetDefaultProcessingFlags(m_bLandscapeMode), m_bHQResampling, m_bAutoContrast, m_bAutoContrastSection, m_bLDC, m_bLandscapeMode);
-	m_pUnsharpMaskParams = new CUnsharpMaskParams(CSettingsProvider::This().UnsharpMaskParams());
 
 	// Initialize second parameter set using hard coded values, turning off all corrections except sharpening
 	m_pImageProcParams2 = new CImageProcessingParams(GetNoProcessingParams()); 
@@ -207,8 +195,6 @@ CMainDlg::CMainDlg() {
 	m_dCurrentInitialLightenShadows = -1;
 
 	m_bShowFileName = sp.ShowFileName();
-	m_bShowFileInfo = sp.ShowFileInfo();
-	m_bShowNavPanel = sp.ShowNavPanel();
 	m_bKeepParams = sp.KeepParams();
 	m_eAutoZoomMode = sp.AutoZoomMode();
 
@@ -231,11 +217,6 @@ CMainDlg::CMainDlg() {
 	m_dZoomMult = -1.0;
 	m_bDragging = false;
 	m_bDoDragging = false;
-	m_bDraggingWithZoomNavigator = false;
-	m_bCropping = false;
-	m_bDoCropping = false;
-	m_bDontStartCropOnNextClick = false;
-	m_bBlockPaintCropRect = false;
 	m_nOffsetX = 0;
 	m_nOffsetY = 0;
 	m_nCapturedX = m_nCapturedY = 0;
@@ -246,65 +227,31 @@ CMainDlg::CMainDlg() {
 	m_nCurrentTimeout = 0;
 	m_startMouse.x = m_startMouse.y = -1;
 	m_virtualImageSize = CSize(-1, -1);
-	m_capturedPosZoomNavSection = CPoint(0, 0);
 	m_bInZooming = false;
 	m_bTemporaryLowQ = false;
 	m_bShowZoomFactor = false;
 	m_bSearchSubDirsOnEnter = false;
 	m_bSpanVirtualDesktop = false;
-	m_bShowIPTools = false;
-	m_bShowWndButtonPanel = false;
-	m_bShowUnsharpMaskPanel = false;
-	m_bShowRotationPanel = false;
-	m_bMouseInNavPanel = false;
 	m_bPanMouseCursorSet = false;
 	m_bInInitialOpenFile = false;
-	m_dCropRatio = 0;
-	m_dAlternateUSMAmount = 0;
 	m_storedWindowPlacement.length = sizeof(WINDOWPLACEMENT);
 	memset(&m_storedWindowPlacement2, 0, sizeof(WINDOWPLACEMENT));
 	m_storedWindowPlacement2.length = sizeof(WINDOWPLACEMENT);
 	m_bPasteFromClipboardFailed = false;
-	m_bRotationModeAssisted = false;
-	m_bRotationShowGrid = true;
-	m_bRotationAutoCrop = true;
-	m_dRotationLQ = 0.0;
-	m_bRotating = false;
 	m_nMonitor = 0;
 	m_monitorRect = CRect(0, 0, 0, 0);
 	m_bMouseOn = false;
-
-	m_pSliderMgr = NULL;
-	m_btnUnsharpMask = NULL;
-	m_btnSaveToDB = NULL;
-	m_btnRemoveFromDB = NULL;
-	m_txtFileName = NULL;
-	m_txtParamDB = NULL;
-	m_txtRename = NULL;
-	m_txtAcqDate = NULL;
-	m_btnInfo = NULL;
-	m_btnKeepParams = NULL;
-	m_btnLandScape = NULL;
-	m_btnWindowMode = NULL;
-	m_textRotationPanel = NULL;
-	m_textRotationHint = NULL;
-	m_btnRotationShowGrid = NULL;
-	m_btnRotationAutoCrop = NULL;
-	m_btnRotationAssisted = NULL;
-	m_pNavPanel = NULL;
-	m_pWndButtonPanel = NULL;
-	m_pUnsharpMaskPanel = NULL;
-	m_pRotationPanel = NULL;
-	m_pEXIFDisplay = NULL;
-
-	m_cropStart = CPoint(INT_MIN, INT_MIN);
-	m_cropEnd = CPoint(INT_MIN, INT_MIN);
-	m_bInNavPanelAnimation = false;
-	m_fCurrentBlendingFactorNavPanel = sp.BlendFactorNavPanel();
-	m_nBlendInNavPanelCountdown = 0;
-	m_pMemDCAnimation = NULL;
-	m_hOffScreenBitmapAnimation = NULL;
 	m_fScaling = 1.0f;
+
+	m_pPanelMgr = new CPanelMgr();
+	m_pZoomNavigatorCtl = NULL;
+	m_pEXIFDisplayCtl = NULL;
+	m_pWndButtonPanelCtl = NULL;
+	m_pRotationPanelCtl = NULL;
+	m_pUnsharpMaskPanelCtl = NULL;
+	m_pImageProcPanelCtl = NULL;
+	m_pNavPanelCtl = NULL;
+	m_pCropCtl = new CCropCtl(this);
 }
 
 CMainDlg::~CMainDlg() {
@@ -312,124 +259,56 @@ CMainDlg::~CMainDlg() {
 	delete m_pJPEGProvider;
 	delete m_pImageProcParams;
 	delete m_pImageProcParamsKept;
-	delete m_pUnsharpMaskParams;
-	delete m_pSliderMgr;
-	delete m_pNavPanel;
-	delete m_pWndButtonPanel;
-	delete m_pUnsharpMaskPanel;
-	delete m_pRotationPanel;
-	delete m_pEXIFDisplay;
-	if (m_pMemDCAnimation != NULL) {
-		delete m_pMemDCAnimation;
-	}
-	if (m_hOffScreenBitmapAnimation != NULL) {
-		::DeleteObject(m_hOffScreenBitmapAnimation);
-	}
-	m_bInNavPanelAnimation = false;
+	delete m_pZoomNavigatorCtl;
+	delete m_pCropCtl;
+	delete m_pPanelMgr; // this will delete all panel controllers and all panels
 }
 
 LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/)
 {	
 	::SetWindowLong(m_hWnd, GWL_STYLE, WS_VISIBLE);
 
-	SetWindowTitle();
+	UpdateWindowTitle();
 
 	// get the scaling of the screen (DPI) compared to 96 DPI (design value)
 	CPaintDC dc(this->m_hWnd);
 	m_fScaling = ::GetDeviceCaps(dc, LOGPIXELSX)/96.0f;
-	Helpers::ScreenScaling = m_fScaling;
+	HelpersGUI::ScreenScaling = m_fScaling;
 
 	// place window on monitor as requested in INI file
 	m_nMonitor = CSettingsProvider::This().DisplayMonitor();
 	m_monitorRect = CMultiMonitorSupport::GetMonitorRect(m_nMonitor);
 	if (CSettingsProvider::This().ShowFullScreen()) {
 		SetWindowPos(HWND_TOP, &m_monitorRect, SWP_NOZORDER);
-	} else {
-		ExecuteCommand(IDM_FULL_SCREEN_MODE_AFTER_STARTUP);
 	}
 	this->GetClientRect(&m_clientRect);
 
-	// Configure the image processing area at bottom of screen
-	m_pSliderMgr = new CSliderMgr(this->m_hWnd);
-	m_pSliderMgr->AddSlider(CNLS::GetString(_T("Contrast")), &(m_pImageProcParams->Contrast), NULL, -0.5, 0.5, 0.0, true, false, false);
-	m_pSliderMgr->AddSlider(CNLS::GetString(_T("Brightness")), &(m_pImageProcParams->Gamma), NULL, 0.5, 2.0, 1.0, true, true, true);
-	m_pSliderMgr->AddSlider(CNLS::GetString(_T("Saturation")), &(m_pImageProcParams->Saturation), NULL, 0.0, 2.0, 1.0, true, false, false);
-	m_pSliderMgr->AddSlider(CNLS::GetString(_T("C - R")), &(m_pImageProcParams->CyanRed), NULL, -1.0, 1.0, 0.0, true, false, false);
-	m_pSliderMgr->AddSlider(CNLS::GetString(_T("M - G")), &(m_pImageProcParams->MagentaGreen), NULL, -1.0, 1.0, 0.0, true, false, false);
-	m_pSliderMgr->AddSlider(CNLS::GetString(_T("Y - B")), &(m_pImageProcParams->YellowBlue), NULL, -1.0, 1.0, 0.0, true, false, false);
-	m_pSliderMgr->AddSlider(CNLS::GetString(_T("Lighten Shadows")), &(m_pImageProcParams->LightenShadows), &m_bLDC, 0.0, 1.0, 0.0, true, false, false);
-	m_pSliderMgr->AddSlider(CNLS::GetString(_T("Darken Highlights")), &(m_pImageProcParams->DarkenHighlights), &m_bLDC, 0.0, 1.0, 0.0, true, false, false);
-	m_pSliderMgr->AddSlider(CNLS::GetString(_T("Deep Shadows")), &(m_pImageProcParams->LightenShadowSteepness), &m_bLDC, 0.0, 1.0, 0.0, true, false, false);
-	m_pSliderMgr->AddSlider(CNLS::GetString(_T("Color Correction")), &(m_pImageProcParams->ColorCorrectionFactor), &m_bAutoContrast, -0.5, 0.5, 0.0, true, false, false);
-	m_pSliderMgr->AddSlider(CNLS::GetString(_T("Contrast Correction")), &(m_pImageProcParams->ContrastCorrectionFactor), &m_bAutoContrast, 0.0, 1.0, 0.0, true, false, false);
-	m_pSliderMgr->AddSlider(CNLS::GetString(_T("Sharpen")), &(m_pImageProcParams->Sharpen), NULL, 0.0, 0.5, 0.0, false, false, false);
-	m_btnUnsharpMask = m_pSliderMgr->AddButton(CNLS::GetString(_T("Unsharp mask...")), &OnUnsharpMask);
-	m_txtParamDB = m_pSliderMgr->AddText(CNLS::GetString(_T("Parameter DB:")), false, NULL);
-	m_btnSaveToDB = m_pSliderMgr->AddButton(CNLS::GetString(_T("Save to")), &OnSaveToDB);
-	m_btnRemoveFromDB = m_pSliderMgr->AddButton(CNLS::GetString(_T("Remove from")), &OnRemoveFromDB);
-	m_txtRename = m_pSliderMgr->AddText(CNLS::GetString(_T("Rename:")), false, NULL);
-	m_txtFileName = m_pSliderMgr->AddText(NULL, true, &OnRenameFile);
-	m_txtAcqDate = m_pSliderMgr->AddText(NULL, false, NULL);
-	m_txtAcqDate->SetRightAligned(true);
+	// Create image processing panel at bottom of screen
+	m_pImageProcPanelCtl = new CImageProcPanelCtl(this, m_pImageProcParams, &m_bLDC, &m_bAutoContrast);
+	m_pPanelMgr->AddPanelController(m_pImageProcPanelCtl);
 
-	// setup navigation panel
-	m_pNavPanel = new CNavigationPanel(this->m_hWnd, m_pSliderMgr);
-	m_pNavPanel->AddUserPaintButton(&(CNavigationPanel::PaintHomeBtn), &OnHome, CNLS::GetString(_T("Show first image in folder")));
-	m_pNavPanel->AddUserPaintButton(&(CNavigationPanel::PaintPrevBtn), &OnPrev, CNLS::GetString(_T("Show previous image")));
-	m_pNavPanel->AddGap(4);
-	m_pNavPanel->AddUserPaintButton(&(CNavigationPanel::PaintNextBtn), &OnNext, CNLS::GetString(_T("Show next image")));
-	m_pNavPanel->AddUserPaintButton(&(CNavigationPanel::PaintEndBtn), &OnEnd, CNLS::GetString(_T("Show last image in folder")));
-	m_pNavPanel->AddGap(8);
-	m_pNavPanel->AddUserPaintButton(&(CMainDlg::PaintZoomFitToggleBtn), &OnToggleZoomFit, &(CMainDlg::ZoomFitToggleTooltip));
-	m_btnWindowMode = m_pNavPanel->AddUserPaintButton(&(CNavigationPanel::PaintWindowModeBtn), &OnToggleWindowMode, &(CMainDlg::WindowModeTooltip));
-	m_pNavPanel->AddGap(8);
-	m_pNavPanel->AddUserPaintButton(&(CNavigationPanel::PaintRotateCWBtn), &OnRotateCW, CNLS::GetString(_T("Rotate image 90 deg clockwise")));
-	m_pNavPanel->AddUserPaintButton(&(CNavigationPanel::PaintRotateCCWBtn), &OnRotateCCW, CNLS::GetString(_T("Rotate image 90 deg counter-clockwise")));
-	m_pNavPanel->AddUserPaintButton(&(CNavigationPanel::PaintFreeRotBtn), &OnRotateFree, CNLS::GetString(_T("Rotate image by user-defined angle")));
-	m_pNavPanel->AddGap(8);
-	m_btnKeepParams = m_pNavPanel->AddUserPaintButton(&(CNavigationPanel::PaintKeepParamsBtn), &OnKeepParameters, CNLS::GetString(_T("Keep processing parameters between images")));
-	m_btnLandScape = m_pNavPanel->AddUserPaintButton(&(CNavigationPanel::PaintLandscapeModeBtn), &OnLandscapeMode, CNLS::GetString(_T("Landscape picture enhancement mode")));
-	m_pNavPanel->AddGap(16);
-	m_btnInfo = m_pNavPanel->AddUserPaintButton(&(CNavigationPanel::PaintInfoBtn), &OnShowInfo, CNLS::GetString(_T("Display image (EXIF) information")));
+	// Create window button panel (on top, right)
+	m_pWndButtonPanelCtl = new CWndButtonPanelCtl(this, m_pImageProcPanelCtl->GetPanel());
+	m_pPanelMgr->AddPanelController(m_pWndButtonPanelCtl);
 
-	// setup window button panel (on top, right)
-	m_pWndButtonPanel = new CWndButtonPanel(this->m_hWnd, m_pSliderMgr);
-	CButtonCtrl* pMinimizeBtn = m_pWndButtonPanel->AddUserPaintButton(&(CWndButtonPanel::PaintMinimizeBtn), &OnMinimize, (LPCTSTR)NULL);
-	pMinimizeBtn->SetExtendedActiveArea(CRect(0, -2, 0, 0));
-	CButtonCtrl* pRestoreBtn = m_pWndButtonPanel->AddUserPaintButton(&(CWndButtonPanel::PaintRestoreBtn), &OnRestore, (LPCTSTR)NULL);
-	pRestoreBtn->SetExtendedActiveArea(CRect(0, -2, 0, 0));
-	CButtonCtrl* pCloseBtn = m_pWndButtonPanel->AddUserPaintButton(&(CWndButtonPanel::PaintCloseBtn), &OnClose, (LPCTSTR)NULL);
-	pCloseBtn->SetExtendedActiveArea(CRect(0, -2, 2, 0)); // extend to make sure that moving mouse to top, right screen corner closes the application
+	// Create EXIF display panel
+	m_pEXIFDisplayCtl = new CEXIFDisplayCtl(this, m_pImageProcPanelCtl->GetPanel());
+	m_pPanelMgr->AddPanelController(m_pEXIFDisplayCtl);
 
-	// setup unsharp mask panel
-	m_pUnsharpMaskPanel = new CUnsharpMaskPanel(this->m_hWnd, m_pSliderMgr);
-	CTextCtrl* pTextUSM = m_pUnsharpMaskPanel->AddText(CNLS::GetString(_T("Apply Unsharp Mask")), false, NULL);
-	pTextUSM->SetBold(true);
-	m_pUnsharpMaskPanel->AddSlider(CNLS::GetString(_T("Radius")), &(m_pUnsharpMaskParams->Radius), NULL, 0.0, 5.0, 1.0, true, false, false, 200);
-	m_pUnsharpMaskPanel->AddSlider(CNLS::GetString(_T("Amount")), &(m_pUnsharpMaskParams->Amount), NULL, 0.0, 10.0, 0.0, true, false, false, 200);
-	m_pUnsharpMaskPanel->AddSlider(CNLS::GetString(_T("Threshold")), &(m_pUnsharpMaskParams->Threshold), NULL, 0, 20, 4.0, true, false, false, 200);
-	m_pUnsharpMaskPanel->AddButton(CNLS::GetString(_T("Cancel")), &OnCancelUnsharpMask);
-    m_pUnsharpMaskPanel->AddButton(CNLS::GetString(_T("Apply")), &OnApplyUnsharpMask);
+	// Create unsharp mask panel
+	m_pUnsharpMaskPanelCtl = new CUnsharpMaskPanelCtl(this, m_pImageProcPanelCtl->GetPanel());
+	m_pPanelMgr->AddPanelController(m_pUnsharpMaskPanelCtl);
 
-	// setup rotation panel
-	m_pRotationPanel = new CRotationPanel(this->m_hWnd, m_pSliderMgr);
-	m_textRotationPanel = m_pRotationPanel->AddText(CNLS::GetString(_T("Rotate Image")), false, NULL);
-	m_textRotationPanel->SetBold(true);
-	m_textRotationHint = m_pRotationPanel->AddText(_T(""), false, NULL);
-	m_textRotationHint->SetAllowMultiline(true);
-	m_btnRotationShowGrid = m_pRotationPanel->AddUserPaintButton(&(CRotationPanel::PaintShowGridBtn), &OnRPShowGridLines, CNLS::GetString(_T("Show grid lines")));
-	m_btnRotationShowGrid->SetEnabled(m_bRotationShowGrid);
-	m_btnRotationAutoCrop = m_pRotationPanel->AddUserPaintButton(&(CRotationPanel::PaintAutoCropBtn), &OnRPAutoCrop, CNLS::GetString(_T("Auto crop rotated image (avoids black border)")));
-	m_btnRotationAutoCrop->SetEnabled(m_bRotationAutoCrop);
-	m_btnRotationAssisted = m_pRotationPanel->AddUserPaintButton(&(CRotationPanel::PaintAssistedModeBtn), &OnRPAssistedMode, CNLS::GetString(_T("Align image to horizontal or vertical line")));
-	UpdateAssistedRotationMode();
-	m_pRotationPanel->AddButton(CNLS::GetString(_T("Cancel")), &OnCancelRotation);
-    m_pRotationPanel->AddButton(CNLS::GetString(_T("Apply")), &OnApplyRotation);
-	
-	// setup EXIF display panel
-	m_pEXIFDisplay = new CEXIFDisplay(this->m_hWnd);
-	m_pEXIFDisplay->AddUserPaintButton(&(CMainDlg::PaintShowHistogramBtn), &OnShowHistogram, &ShowHistogramTooltip);
-	m_pEXIFDisplay->SetShowHistogram(CSettingsProvider::This().ShowHistogram());
+	// Create rotation panel
+	m_pRotationPanelCtl = new CRotationPanelCtl(this, m_pImageProcPanelCtl->GetPanel());
+	m_pPanelMgr->AddPanelController(m_pRotationPanelCtl);
+
+	// Create navigation panel
+	m_pNavPanelCtl = new CNavigationPanelCtl(this, m_pImageProcPanelCtl->GetPanel(), &m_bFullScreenMode);
+	m_pPanelMgr->AddPanelController(m_pNavPanelCtl);
+
+	// Create zoom navigator
+	m_pZoomNavigatorCtl = new CZoomNavigatorCtl(this, m_pImageProcPanelCtl->GetPanel());
 
 	// set icons (for toolbar)
 	HICON hIcon = (HICON)::LoadImage(_Module.GetResourceInstance(), MAKEINTRESOURCE(IDR_MAINFRAME), 
@@ -446,6 +325,10 @@ LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam
 	// intitialize navigation with startup file (and folder)
 	m_pFileList = new CFileList(m_sStartupFile, CSettingsProvider::This().Sorting());
 	m_pFileList->SetNavigationMode(CSettingsProvider::This().Navigation());
+
+	if (!CSettingsProvider::This().ShowFullScreen()) {
+		ExecuteCommand(IDM_FULL_SCREEN_MODE_AFTER_STARTUP);
+	}
 
 	// create thread pool for processing requests on multiple CPU cores
 	CProcessingThreadPool::This().CreateThreadPoolThreads();
@@ -489,54 +372,27 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 	CPaintDC dc(m_hWnd);
 
 	this->GetClientRect(&m_clientRect);
-	CRect imageProcessingArea = m_pSliderMgr->PanelRect();
-	bool bNavPanelVisible = IsNavPanelVisible();
-	bool bShowZoomNavigator = false;
-	bool bShowEXIFInfo = m_bShowFileInfo && m_pCurrentImage != NULL;
+	CRect imageProcessingArea = m_pImageProcPanelCtl->PanelRect();
 	CRectF visRectZoomNavigator(0.0f, 0.0f, 1.0f, 1.0f);
-	CRect rectZoomNavigator(0, 0, 0, 0);
-	CRect helpDisplayRect = (m_clientRect.Width() > m_monitorRect.Width()) ? m_monitorRect : m_clientRect;
 	CBrush backBrush;
 	backBrush.CreateSolidBrush(CSettingsProvider::This().ColorBackground());
 
 	// Exclude the help display from clipping area to reduce flickering
-	CHelpDisplay* pHelpDisplay = NULL;
+	CHelpDisplayCtl* pHelpDisplayCtl = NULL;
 	std::list<CRect> excludedClippingRects;
 	if (m_bShowHelp) {
-		pHelpDisplay = new CHelpDisplay(dc);
-		GenerateHelpDisplay(*pHelpDisplay);
-		CSize helpRectSize = pHelpDisplay->GetSize();
-		CRect rectHelpDisplay = CRect(CPoint(helpDisplayRect.Width()/2 - helpRectSize.cx/2, 
-			helpDisplayRect.Height()/2 - helpRectSize.cy/2), helpRectSize);
-		dc.ExcludeClipRect(&rectHelpDisplay);
-		excludedClippingRects.push_back(rectHelpDisplay);
+		pHelpDisplayCtl = new CHelpDisplayCtl(this, dc, m_pImageProcParams);
+		CRect hdRect = pHelpDisplayCtl->PanelRect();
+		dc.ExcludeClipRect(&hdRect);
+		excludedClippingRects.push_back(hdRect);
 	}
 
-	// These panels and regions are handled over memory DCs to eliminate flickering
+	// Panels are handled over memory DCs to eliminate flickering
 	CPaintMemDCMgr memDCMgr(dc);
 
-	if (bShowEXIFInfo) {
-		m_pEXIFDisplay->SetPosition(CPoint(imageProcessingArea.left, m_bShowFileName ? 32 : 0));
-		FillEXIFDataDisplay(m_pEXIFDisplay);
-		excludedClippingRects.push_back(memDCMgr.CreatePanelRegion(m_pEXIFDisplay, cfDimFactorEXIF, false));
-	}
-	if (m_bShowIPTools) {
-		excludedClippingRects.push_back(memDCMgr.CreatePanelRegion(m_pSliderMgr, cfDimFactorIPA, false));
-	}
-	if (bNavPanelVisible) {
-		excludedClippingRects.push_back(memDCMgr.CreatePanelRegion(m_pNavPanel, cfDimFactorNavPanel, !m_bMouseInNavPanel));
-	}
-	if (m_bShowWndButtonPanel) {
-		excludedClippingRects.push_back(memDCMgr.CreatePanelRegion(m_pWndButtonPanel, cfDimFactorWndButtons, false));
-	}
-	if (m_bShowUnsharpMaskPanel) {
-		excludedClippingRects.push_back(memDCMgr.CreatePanelRegion(m_pUnsharpMaskPanel, cfDimFactorUSMPanel, false));
-	}
-	if (m_bShowRotationPanel) {
-		excludedClippingRects.push_back(memDCMgr.CreatePanelRegion(m_pRotationPanel, cfDimFactorUSMPanel, false));
-	}
-
 	if (m_pCurrentImage == NULL) {
+		m_pPanelMgr->OnPrePaint(dc);
+		m_pPanelMgr->PrepareMemDCMgr(memDCMgr, excludedClippingRects);
 		dc.FillRect(&m_clientRect, backBrush);
 	} else {
 		// do this as very first - may changes size of image
@@ -576,71 +432,36 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 		CPoint offsetsInImage = m_pCurrentImage->ConvertOffset(newSize, clippedSize, offsets);
 
 		void* pDIBData;
-		if (m_bShowUnsharpMaskPanel) {
-			pDIBData = m_pCurrentImage->GetDIBUnsharpMasked(clippedSize, offsetsInImage, 
-			    *m_pImageProcParams, 
-				CreateProcessingFlags(m_bHQResampling && !m_bTemporaryLowQ, m_bAutoContrast, m_bAutoContrastSection, m_bLDC, false, m_bLandscapeMode),
-				*m_pUnsharpMaskParams);
+		if (m_pUnsharpMaskPanelCtl->IsVisible()) {
+			pDIBData = m_pUnsharpMaskPanelCtl->GetUSMDIBForPreview(clippedSize, offsetsInImage, 
+			    *m_pImageProcParams, CreateProcessingFlags(m_bHQResampling && !m_bTemporaryLowQ, m_bAutoContrast, m_bAutoContrastSection, m_bLDC, false, m_bLandscapeMode));
+		} else if (m_pRotationPanelCtl->IsVisible()) {
+			pDIBData = m_pRotationPanelCtl->GetRotatedDIBForPreview(newSize, clippedSize, offsetsInImage, 
+				*m_pImageProcParams, CreateProcessingFlags(false, m_bAutoContrast, m_bAutoContrastSection, m_bLDC, false, m_bLandscapeMode));
 		} else {
-			if (m_bShowRotationPanel) {
-				pDIBData = m_pCurrentImage->GetDIBRotated(newSize, clippedSize, offsetsInImage, 
-					*m_pImageProcParams, 
-					CreateProcessingFlags(false, m_bAutoContrast, m_bAutoContrastSection, m_bLDC, false, m_bLandscapeMode),
-					m_dRotationLQ, m_bRotationShowGrid);
-			} else {
-				pDIBData = m_pCurrentImage->GetDIB(newSize, clippedSize, offsetsInImage, 
-					*m_pImageProcParams, 
-					CreateProcessingFlags(m_bHQResampling && !m_bTemporaryLowQ, 
-					m_bAutoContrast, m_bAutoContrastSection, m_bLDC, false, m_bLandscapeMode));
-			}
+			pDIBData = m_pCurrentImage->GetDIB(newSize, clippedSize, offsetsInImage, 
+				*m_pImageProcParams, 
+				CreateProcessingFlags(m_bHQResampling && !m_bTemporaryLowQ, 
+				m_bAutoContrast, m_bAutoContrastSection, m_bLDC, false, m_bLandscapeMode));
 		}
 
 		// Zoom navigator - check if visible and create exclusion rectangle
-		bShowZoomNavigator = IsZoomNavigatorCurrentlyShown();
-		if (bShowZoomNavigator) {
-			rectZoomNavigator = CZoomNavigator::GetNavigatorRect(m_pCurrentImage, imageProcessingArea);
-			visRectZoomNavigator = CZoomNavigator::GetVisibleRect(newSize, clippedSize, offsetsInImage);
-			CRect rectExpanded(rectZoomNavigator);
-			rectExpanded.InflateRect(1, 1);
-			dc.ExcludeClipRect(&rectExpanded);
-			excludedClippingRects.push_back(rectExpanded);
+		if (m_pZoomNavigatorCtl->IsVisible()) {
+			visRectZoomNavigator = m_pZoomNavigatorCtl->GetVisibleRect(newSize, clippedSize, offsetsInImage);
+			CRect zmRect = m_pZoomNavigatorCtl->PanelRect();
+			dc.ExcludeClipRect(&zmRect);
+			excludedClippingRects.push_back(zmRect);
 		}
 
-		if (bShowEXIFInfo && m_pCurrentImage != NULL && m_pEXIFDisplay->GetShowHistogram()) {
-			m_pEXIFDisplay->SetHistogram(m_pCurrentImage->GetProcessedHistogram());
-		}
+		m_pPanelMgr->OnPrePaint(dc);
+		m_pPanelMgr->PrepareMemDCMgr(memDCMgr, excludedClippingRects);
 
 		// Paint the DIB
 		if (pDIBData != NULL) {
 			BITMAPINFO bmInfo;
-			memset(&bmInfo, 0, sizeof(BITMAPINFO));
-			bmInfo.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
-			bmInfo.bmiHeader.biWidth = clippedSize.cx;
-			bmInfo.bmiHeader.biHeight = -clippedSize.cy;
-			bmInfo.bmiHeader.biPlanes = 1;
-			bmInfo.bmiHeader.biBitCount = 32;
-			bmInfo.bmiHeader.biCompression = BI_RGB;
-			int xDest = (m_clientRect.Width() - clippedSize.cx) / 2;
-			int yDest = (m_clientRect.Height() - clippedSize.cy) / 2;
-			dc.SetDIBitsToDevice(xDest, yDest, clippedSize.cx, clippedSize.cy, 0, 0, 0, clippedSize.cy, pDIBData, 
-				&bmInfo, DIB_RGB_COLORS);
-
-			// remaining client area is painted black
-			if (clippedSize.cx < m_clientRect.Width()) {
-				CRect r(0, 0, xDest, m_clientRect.Height());
-				dc.FillRect(&r, backBrush);
-				CRect rr(xDest+clippedSize.cx, 0, m_clientRect.Width(), m_clientRect.Height());
-				dc.FillRect(&rr, backBrush);
-			}
-			if (clippedSize.cy < m_clientRect.Height()) {
-				CRect r(0, 0, m_clientRect.Width(), yDest);
-				dc.FillRect(&r, backBrush);
-				CRect rr(0, yDest+clippedSize.cy, m_clientRect.Width(), m_clientRect.Height());
-				dc.FillRect(&rr, backBrush);
-			}
-
+			CPoint ptDIBStart = HelpersGUI::DrawDIB32bppWithBlackBorders(dc, bmInfo, pDIBData, backBrush, m_clientRect, clippedSize);
 			// The DIB is also blitted into the memory DCs of the panels
-			memDCMgr.BlitImageToMemDC(pDIBData, &bmInfo, CPoint(xDest, yDest), m_fCurrentBlendingFactorNavPanel);
+			memDCMgr.BlitImageToMemDC(pDIBData, &bmInfo, ptDIBStart, m_pNavPanelCtl->CurrentBlendingFactor());
 		}
 	}
 
@@ -656,13 +477,9 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 	}
 
 	// paint zoom navigator
-	if (bShowZoomNavigator && m_pCurrentImage != NULL) {
-		CZoomNavigator::PaintZoomNavigator(m_pCurrentImage, visRectZoomNavigator, rectZoomNavigator,
-			CPoint(m_nMouseX, m_nMouseY), *m_pImageProcParams,
-			CreateProcessingFlags(!m_bShowRotationPanel, m_bAutoContrast, false, m_bLDC, false, m_bLandscapeMode), m_bShowRotationPanel ? m_dRotationLQ : 0.0, dc);
-	} else {
-		CZoomNavigator::ClearLastPanRectPoint();
-	}
+	m_pZoomNavigatorCtl->OnPaint(dc, visRectZoomNavigator, m_pImageProcParams,
+		CreateProcessingFlags(!m_pRotationPanelCtl->IsVisible(), m_bAutoContrast, false, m_bLDC, false, m_bLandscapeMode), 
+		m_pRotationPanelCtl->IsVisible() ? m_pRotationPanelCtl->GetLQRotationAngle() : 0.0);
 
 	dc.SelectStockFont(SYSTEM_FONT);
 	dc.SetBkMode(TRANSPARENT);
@@ -677,7 +494,7 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 		} else if (m_pFileList->Current() != NULL) {
 			sFileName.Format(_T("[%d/%d]  %s"), m_pFileList->CurrentIndex() + 1, m_pFileList->Size(), m_pFileList->Current());
 		}
-		DrawTextBordered(dc, sFileName, CRect(Scale(2) + imageProcessingArea.left, 0, imageProcessingArea.right, Scale(30)), DT_LEFT); 
+		HelpersGUI::DrawTextBordered(dc, sFileName, CRect(Scale(2) + imageProcessingArea.left, 0, imageProcessingArea.right, Scale(30)), DT_LEFT); 
 	}
 
 	// Display errors and warnings
@@ -746,24 +563,19 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 		TCHAR buff[32];
 		_stprintf_s(buff, 32, _T("%d %%"), int(m_dZoom*100 + 0.5));
 		dc.SetTextColor(CSettingsProvider::This().ColorGUI());
-		DrawTextBordered(dc, buff, GetZoomTextRect(imageProcessingArea), DT_RIGHT);
+		HelpersGUI::DrawTextBordered(dc, buff, GetZoomTextRect(imageProcessingArea), DT_RIGHT);
 	}
 
 	// Display the help screen
-	if (pHelpDisplay != NULL) {
-		pHelpDisplay->Show(CRect(CPoint(0, 0), CSize(helpDisplayRect.Width(), helpDisplayRect.Height())));
+	if (pHelpDisplayCtl != NULL) {
+		pHelpDisplayCtl->Show();
 	}
 
-	if (m_bDoCropping && m_bCropping && !m_bBlockPaintCropRect) {
-		ShowCroppingRect(m_nMouseX, m_nMouseY, NULL, false);
-		PaintCropRect(dc);
-	}
+	// let crop controller and panels paint its stuff
+	m_pCropCtl->OnPaint(dc);
+	m_pPanelMgr->OnPostPaint(dc);
 
-	if (m_bRotating && m_bRotationModeAssisted) {
-		PaintRotationLine(dc);
-	}
-
-	delete pHelpDisplay;
+	delete pHelpDisplayCtl;
 
 	SetCursorForMoveSection();
 
@@ -776,9 +588,7 @@ LRESULT CMainDlg::OnSize(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BO
 	this->Invalidate(FALSE);
 	if (m_clientRect.Width() < 800) {
 		m_bShowHelp = false;
-		if (m_bShowIPTools) {
-			ShowHideIPTools(false);
-		}
+		m_pImageProcPanelCtl->SetVisible(false);
 	}
 	m_nMouseX = m_nMouseY = -1;
 
@@ -814,42 +624,24 @@ LRESULT CMainDlg::OnLButtonDown(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam,
 	this->SetCapture();
 	SetCursorForMoveSection();
 	CPoint pointClicked(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
-	bool bEatenByPanel = RouteMouseLButtonEventToPanels(MouseEvent_BtnDown, pointClicked.x, pointClicked.y);
+	bool bShowRotationPanel = m_pRotationPanelCtl->IsVisible();
+	bool bEatenByPanel = m_pPanelMgr->OnMouseLButton(MouseEvent_BtnDown, pointClicked.x, pointClicked.y);
 
-	// If the panels do not eat up the event, start dragging
 	if (!bEatenByPanel) {
 		bool bCtrl = (::GetKeyState(VK_CONTROL) & 0x8000) != 0;
 		bool bDraggingRequired = m_virtualImageSize.cx > m_clientRect.Width() || m_virtualImageSize.cy > m_clientRect.Height();
-		if (!m_bShowRotationPanel && (bCtrl || !bDraggingRequired)) {
-			if (!IsModalPanelShown() && !m_bDontStartCropOnNextClick) {
-				StartCropping(pointClicked.x, pointClicked.y);
-			}
-		} else {
-			// Check if clicking in thumbnail image
-			bool bClickInZoomNavigatorThumbnail = IsPointInZoomNavigatorThumbnail(pointClicked);
-			if (bClickInZoomNavigatorThumbnail) {
-				CPoint centerOfVisibleRect = CZoomNavigator::LastVisibleRect().CenterPoint();
-				StartDragging(pointClicked.x + (centerOfVisibleRect.x - pointClicked.x), pointClicked.y + (centerOfVisibleRect.y - pointClicked.y), true);
-				DoDragging();
-				EndDragging();
-				CZoomNavigator::ClearLastPanRectPoint();
-				this->UpdateWindow(); // force repainting to update zoom navigator
-				StartDragging(pointClicked.x, pointClicked.y, bClickInZoomNavigatorThumbnail);
-			} else if (m_bShowRotationPanel) {
-				StartRotating(pointClicked.x, pointClicked.y);
+		if (!bShowRotationPanel && (bCtrl || !bDraggingRequired)) {
+			m_pCropCtl->StartCropping(pointClicked.x, pointClicked.y);
+		} else if (!m_pZoomNavigatorCtl->OnMouseLButton(MouseEvent_BtnDown, pointClicked.x, pointClicked.y)) {
+			if (bShowRotationPanel) {
+				m_pRotationPanelCtl->StartRotating(pointClicked.x, pointClicked.y);
 			} else {
-				StartDragging(pointClicked.x, pointClicked.y, bClickInZoomNavigatorThumbnail);
+				StartDragging(pointClicked.x, pointClicked.y, false);
 			}
 		}
 	}
-	bool bMouseInNavPanel = !IsModalPanelShown() && m_pNavPanel->PanelRect().PtInRect(pointClicked);
-	if (bMouseInNavPanel && !m_bMouseInNavPanel) {
-		m_bMouseInNavPanel = true;
-		m_pNavPanel->GetTooltipMgr().EnableTooltips(true);
-		this->InvalidateRect(m_pNavPanel->PanelRect(), FALSE);
-	}
 
-	m_bDontStartCropOnNextClick = false;
+	m_pCropCtl->ResetStartCropOnNextClick();
 	return 0;
 }
 
@@ -866,37 +658,22 @@ LRESULT CMainDlg::OnMButtonDown(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam,
 }
 
 LRESULT CMainDlg::OnLButtonUp(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, BOOL& /*bHandled*/) {
-	if (m_bDragging || m_bCropping || m_bRotating) {
-		if (m_bDragging) {
-			CZoomNavigator::ClearLastPanRectPoint();
-			EndDragging();
-		} else if (m_bCropping) {
-			EndCropping();
-		} else if (m_bRotating) {
-			EndRotating();
-		}
+	if (m_bDragging) {
+		EndDragging();
+	} else if (m_pCropCtl->IsCropping()) {
+		m_pCropCtl->EndCropping();
 	} else {
-		RouteMouseLButtonEventToPanels(MouseEvent_BtnUp, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+		m_pPanelMgr->OnMouseLButton(MouseEvent_BtnUp, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
 	}
 	::ReleaseCapture();
 	return 0;
 }
 
 LRESULT CMainDlg::OnLButtonDblClk(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, BOOL& /*bHandled*/) {
-	if (!m_bDragging && !m_bCropping && !m_bRotating) {
-		RouteMouseLButtonEventToPanels(MouseEvent_BtnDblClk, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+	if (!m_bDragging && !m_pCropCtl->IsCropping()) {
+		m_pPanelMgr->OnMouseLButton(MouseEvent_BtnDblClk, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
 	}
 	return 0;
-}
-
-bool CMainDlg::RouteMouseLButtonEventToPanels(EMouseEvent eMouseEvent, int nX, int nY) {
-	bool bEatenByUnsharpMaskPanel = m_bShowUnsharpMaskPanel && m_pUnsharpMaskPanel->OnMouseLButton(eMouseEvent, nX, nY);
-	bool bEatenByRotationPanel = m_bShowRotationPanel && m_pRotationPanel->OnMouseLButton(eMouseEvent, nX, nY);
-	bool bEatenByIPA = m_bShowIPTools && m_pSliderMgr->OnMouseLButton(eMouseEvent, nX, nY);
-	bool bEatenByNavPanel = m_bShowNavPanel && !m_bShowIPTools && m_pNavPanel->OnMouseLButton(eMouseEvent, nX, nY);
-	bool bEatenByWndButtons = m_bShowWndButtonPanel && m_pWndButtonPanel->OnMouseLButton(eMouseEvent, nX, nY);
-	bool bEatenByEXIFDisplay = m_bShowFileInfo && m_pEXIFDisplay->OnMouseLButton(eMouseEvent, nX, nY);
-	return bEatenByUnsharpMaskPanel || bEatenByRotationPanel || bEatenByIPA || bEatenByNavPanel || bEatenByWndButtons || bEatenByEXIFDisplay;
 }
 
 LRESULT CMainDlg::OnMButtonUp(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/) {
@@ -906,7 +683,7 @@ LRESULT CMainDlg::OnMButtonUp(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*
 }
 
 LRESULT CMainDlg::OnXButtonDown(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOOL& /*bHandled*/) {
-	if (!IsModalPanelShown()) {
+	if (!m_pPanelMgr->IsModalPanelShown()) {
 		if (GET_XBUTTON_WPARAM(wParam) == XBUTTON1) {
 			GotoImage(POS_Next);
 		} else {
@@ -933,128 +710,13 @@ LRESULT CMainDlg::OnMouseMove(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, B
 		}
 	}
 
-	// Start timer to fade out nav panel if no mouse movement
-	if ((m_nMouseX != nOldMouseX || m_nMouseY != nOldMouseY) && !m_bPanMouseCursorSet) {
-		::KillTimer(this->m_hWnd, NAVPANEL_START_ANI_TIMER_EVENT_ID);
-		if (!m_bShowIPTools && !IsModalPanelShown()) {
-			if (!m_bInNavPanelAnimation) {
-				::SetTimer(this->m_hWnd, NAVPANEL_START_ANI_TIMER_EVENT_ID, 2000, NULL);
-			} else {
-				// Mouse moved - fade in navigation panel
-				if (m_bMouseOn) {
-					if (m_nBlendInNavPanelCountdown >= 5) {
-						StartNavPanelAnimation(false, true);
-						m_nBlendInNavPanelCountdown = 0;
-					} else {
-						m_nBlendInNavPanelCountdown++;
-					}
-				}
-			}
-		}
-	}
-
-	// Do dragging if needed or turn on/off image processing controls if in lower area of screen
+	// Do dragging or cropping when needed, else pass event to panel manager and zoom navigator
 	if (m_bDragging) {
 		DoDragging();
-	} else if (m_bCropping) {
-		ShowCroppingRect(m_nMouseX, m_nMouseY, NULL, true);
-		if (m_nMouseX >= m_clientRect.Width() - 1 || m_nMouseX <= 0 || m_nMouseY >= m_clientRect.Height() - 1 || m_nMouseY <= 0 ) {
-			::SetTimer(this->m_hWnd, AUTOSCROLL_TIMER_EVENT_ID, AUTOSCROLL_TIMEOUT, NULL);
-		}
-	} else if (m_bRotating) {
-		DoRotating();
-	} else {
-		if (m_clientRect.Width() >= 800 && !IsModalPanelShown()) { 
-			if (!m_bShowIPTools) {
-				int nIPAreaStart= m_clientRect.bottom - m_pSliderMgr->SliderAreaHeight();
-				if (m_bShowNavPanel) {
-					CRect rectNavPanel = m_pNavPanel->PanelRect();
-					if (m_nMouseX > rectNavPanel.left && m_nMouseX < rectNavPanel.right) {
-						nIPAreaStart += m_pSliderMgr->SliderAreaHeight()/2;
-					}
-				}
-				if (!m_bFullScreenMode) {
-					::KillTimer(m_hWnd, IPPANEL_TIMER_EVENT_ID);
-				}
-				if (m_nMouseY > nIPAreaStart) {
-					if (!m_bFullScreenMode) {
-						::SetTimer(m_hWnd, IPPANEL_TIMER_EVENT_ID, 50, NULL);
-					} else if (nOldMouseY != 0 && !m_bShowIPTools && m_nMouseY > nIPAreaStart) {	
-						ShowHideIPTools(true);
-					}
-				}
-			} else {
-				if (!m_pSliderMgr->OnMouseMove(m_nMouseX, m_nMouseY)) {
-					if (m_nMouseY < m_pNavPanel->PanelRect().top) {
-						ShowHideIPTools(false);
-					}
-				}
-			}
-		}
-
-		if (m_bShowFileInfo) {
-			m_pEXIFDisplay->OnMouseMove(m_nMouseX, m_nMouseY);
-		}
-		if (m_bShowUnsharpMaskPanel) {
-			m_bMouseInNavPanel = false;
-			m_pUnsharpMaskPanel->OnMouseMove(m_nMouseX, m_nMouseY);
-		} else if (m_bShowRotationPanel) {
-			m_bMouseInNavPanel = false;
-			m_pRotationPanel->OnMouseMove(m_nMouseX, m_nMouseY);
-		} else {
-			if (m_bShowNavPanel && !m_bShowIPTools) {
-				bool bMouseInNavPanel = m_pNavPanel->PanelRect().PtInRect(CPoint(m_nMouseX, m_nMouseY));
-				if (!bMouseInNavPanel && m_bMouseInNavPanel) {
-					m_bMouseInNavPanel = false;
-					m_pNavPanel->GetTooltipMgr().EnableTooltips(false);
-					this->InvalidateRect(m_pNavPanel->PanelRect(), FALSE);
-				} else if (bMouseInNavPanel && !m_bMouseInNavPanel) {
-					StartNavPanelTimer(50);
-				}
-				m_pNavPanel->OnMouseMove(m_nMouseX, m_nMouseY);
-			} else {
-				m_pNavPanel->GetTooltipMgr().EnableTooltips(false);
-				m_bMouseInNavPanel = false;
-			}
-
-			if (!m_bShowWndButtonPanel) {
-				if (m_bFullScreenMode) {
-					int nWndBtnAreaStart = m_pWndButtonPanel->ButtonPanelHeight();
-					if (nOldMouseY != 0 && nOldMouseY > nWndBtnAreaStart && m_nMouseY <= nWndBtnAreaStart) {
-						m_bShowWndButtonPanel = true;
-						this->InvalidateRect(m_pWndButtonPanel->PanelRect(), FALSE);
-					}
-				}
-			} else {
-				if (!m_pWndButtonPanel->OnMouseMove(m_nMouseX, m_nMouseY)) {
-					if (m_nMouseY > m_pWndButtonPanel->ButtonPanelHeight()*2) {
-						m_bShowWndButtonPanel = false;
-						this->InvalidateRect(m_pWndButtonPanel->PanelRect(), FALSE);
-						m_pWndButtonPanel->GetTooltipMgr().RemoveActiveTooltip();
-					}
-				}
-			}
-		}
-
-		CRect zoomHotArea = CZoomNavigator::GetNavigatorBound(m_pSliderMgr->PanelRect());
-		BOOL bMouseInHotArea = zoomHotArea.PtInRect(CPoint(m_nMouseX, m_nMouseY));
-		if (bMouseInHotArea && CSettingsProvider::This().ShowZoomNavigator()) {
-			MouseOn();
-			SetCursorForMoveSection();
-		}
-		if (bMouseInHotArea != zoomHotArea.PtInRect(CPoint(nOldMouseX, nOldMouseY))) {
-			InvalidateZoomNavigatorRect();
-		}
-		if (m_nMouseX != nOldMouseX || m_nMouseY != nOldMouseY) {
-			if (IsPointInZoomNavigatorThumbnail(CPoint(m_nMouseX, m_nMouseY))) {
-				CDC dc(this->GetDC());
-				CZoomNavigator::PaintPanRectangle(dc, CPoint(-1, -1));
-				CZoomNavigator::PaintPanRectangle(dc, CPoint(m_nMouseX, m_nMouseY));
-				StartNavPanelAnimation(true, true);
-			} else if (CZoomNavigator::LastPanRectPoint() != CPoint(-1, -1)) {
-				CZoomNavigator::PaintPanRectangle(CDC(this->GetDC()), CPoint(-1, -1));
-			}
-		}
+	} else if (m_pCropCtl->IsCropping()) {
+		m_pCropCtl->DoCropping(m_nMouseX, m_nMouseY);
+	} else if (!m_pPanelMgr->OnMouseMove(m_nMouseX, m_nMouseY)) {
+		m_pZoomNavigatorCtl->OnMouseMove(nOldMouseX, nOldMouseY);
 	}
 	return 0;
 }
@@ -1062,14 +724,14 @@ LRESULT CMainDlg::OnMouseMove(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, B
 LRESULT CMainDlg::OnMouseWheel(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOOL& /*bHandled*/) {
 	bool bCtrl = (::GetKeyState(VK_CONTROL) & 0x8000) != 0;
 	int nDelta = GET_WHEEL_DELTA_WPARAM(wParam);
-	if (!bCtrl && CSettingsProvider::This().NavigateWithMouseWheel() && !IsModalPanelShown()) {
+	if (!bCtrl && CSettingsProvider::This().NavigateWithMouseWheel() && !m_pPanelMgr->IsModalPanelShown()) {
 		if (nDelta < 0) {
 			GotoImage(POS_Next);
 		} else if (nDelta > 0) {
 			GotoImage(POS_Previous);
 		}
-	} else if (m_dZoom > 0 && !m_bShowUnsharpMaskPanel) {
-		PerformZoom(double(nDelta)/WHEEL_DELTA, true);
+	} else if (m_dZoom > 0 && !m_pUnsharpMaskPanelCtl->IsVisible()) {
+		PerformZoom(double(nDelta)/WHEEL_DELTA, true, m_bMouseOn);
 	}
 	return 0;
 }
@@ -1078,26 +740,8 @@ LRESULT CMainDlg::OnKeyDown(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOO
 	bool bCtrl = (::GetKeyState(VK_CONTROL) & 0x8000) != 0;
 	bool bShift = (::GetKeyState(VK_SHIFT) & 0x8000) != 0;
 	bool bAlt = (::GetKeyState(VK_MENU) & 0x8000) != 0;
-	if (m_bShowUnsharpMaskPanel) {
-		if (wParam == VK_ESCAPE) {
-			TerminateUnsharpMaskPanel();
-			return 1;
-		}
-		if (wParam == 'A' && bCtrl) {
-			double dTemp = m_dAlternateUSMAmount;
-			m_dAlternateUSMAmount = m_pUnsharpMaskParams->Amount;
-			m_pUnsharpMaskParams->Amount = dTemp;
-			Invalidate();
-			return 1;
-		}
-		return 0; // no other keys are recogized in this mode
-	}
-	if (m_bShowRotationPanel) {
-		if (wParam == VK_ESCAPE) {
-			TerminateRotationPanel();
-			return 1;
-		}
-		return 0; // no other keys are recogized in this mode
+	if (m_pPanelMgr->OnKeyDown((unsigned int)wParam, bShift, bAlt, bCtrl)) {
+		return 1; // a panel has handled the key
 	}
 	bool bHandled = false;
 	if (wParam == VK_ESCAPE) {
@@ -1151,7 +795,7 @@ LRESULT CMainDlg::OnKeyDown(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOO
 		} else if (bShift) {
 			AdjustGamma(1.0/GAMMA_FACTOR);
 		} else {
-			PerformZoom(1, true);
+			PerformZoom(1, true, m_bMouseOn);
 		}
 	} else if (wParam == VK_MINUS) {
 		bHandled = true;
@@ -1166,7 +810,7 @@ LRESULT CMainDlg::OnKeyDown(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOO
 		} else if (bShift) {
 			AdjustGamma(GAMMA_FACTOR);
 		} else {
-			PerformZoom(-1, true);
+			PerformZoom(-1, true, m_bMouseOn);
 		}
 	} else if (wParam == VK_F2) {
 		bHandled = true;
@@ -1232,7 +876,7 @@ LRESULT CMainDlg::OnKeyDown(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOO
 		if (fabs(m_dZoom - 1) < 0.01) {
 			ResetZoomToFitScreen(false, true);
 		} else {
-			ResetZoomTo100Percents();
+			ResetZoomTo100Percents(m_bMouseOn);
 		}
 	} else if (wParam == VK_RETURN) {
 		bHandled = true;
@@ -1242,7 +886,7 @@ LRESULT CMainDlg::OnKeyDown(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOO
 		ExecuteCommand((wParam == VK_DOWN) ? IDM_ROTATE_90 : IDM_ROTATE_270);
 	} else if ((wParam == VK_DOWN || wParam == VK_UP) && bCtrl) {
 		bHandled = true;
-		PerformZoom((wParam == VK_DOWN) ? -1 : +1, true);
+		PerformZoom((wParam == VK_DOWN) ? -1 : +1, true, m_bMouseOn);
 	} else if (bCtrl && wParam == 'A') {
 		bHandled = true;
 		ExchangeProcessingParams();
@@ -1338,7 +982,7 @@ LRESULT CMainDlg::OnKeyDown(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOO
 }
 
 LRESULT CMainDlg::OnSysKeyDown(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOOL& /*bHandled*/) {
-	if (IsModalPanelShown()) {
+	if (m_pPanelMgr->IsModalPanelShown()) {
 		return 1;
 	}
 	bool bShift = (::GetKeyState(VK_SHIFT) & 0x8000) != 0;
@@ -1372,7 +1016,7 @@ LRESULT CMainDlg::OnJPEGLoaded(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, 
 
 LRESULT CMainDlg::OnDropFiles(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOOL& /*bHandled*/) {
 	HDROP hDrop = (HDROP) wParam;
-	if (hDrop != NULL && !IsModalPanelShown()) {
+	if (hDrop != NULL && !m_pPanelMgr->IsModalPanelShown()) {
 		const int BUFF_SIZE = 512;
 		TCHAR buff[BUFF_SIZE];
 		if (::DragQueryFile(hDrop, 0, (LPTSTR) &buff, BUFF_SIZE - 1) > 0) {
@@ -1414,34 +1058,11 @@ LRESULT CMainDlg::OnTimer(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOOL&
 				this->Invalidate(FALSE);
 			}
 		}
-	} else if (wParam == NAVPANEL_TIMER_EVENT_ID) {
-		::KillTimer(this->m_hWnd, NAVPANEL_TIMER_EVENT_ID);
-		if (!m_bShowIPTools) {
-			bool bMouseInNavPanel = m_pNavPanel->PanelRect().PtInRect(CPoint(m_nMouseX, m_nMouseY));
-			if (bMouseInNavPanel && !m_bMouseInNavPanel) {
-				m_bMouseInNavPanel = true;
-				m_pNavPanel->GetTooltipMgr().EnableTooltips(true);
-				this->InvalidateRect(m_pNavPanel->PanelRect(), FALSE);
-				EndNavPanelAnimation();
-			}
-		}
-	} else if (wParam == NAVPANEL_START_ANI_TIMER_EVENT_ID) {
-		::KillTimer(this->m_hWnd, NAVPANEL_START_ANI_TIMER_EVENT_ID);
-		if (m_bShowNavPanel && !m_bMouseInNavPanel) {
-			StartNavPanelAnimation(true, false);
-		}
-	} else if (wParam == NAVPANEL_ANI_TIMER_EVENT_ID) {
-		DoNavPanelAnimation();
-	} else if (wParam == IPPANEL_TIMER_EVENT_ID) {
-		::KillTimer(m_hWnd, IPPANEL_TIMER_EVENT_ID);
-		if (mousePos.y > m_clientRect.bottom - m_pSliderMgr->SliderAreaHeight() && mousePos.y < m_clientRect.Height() - 1) {
-			ShowHideIPTools(true);
-		}
 	} else if (wParam == ZOOM_TEXT_TIMER_EVENT_ID) {
 		m_bShowZoomFactor = false;
 		::KillTimer(this->m_hWnd, ZOOM_TEXT_TIMER_EVENT_ID);
-		InvalidateZoomNavigatorRect();
-		CRect imageProcArea = m_pSliderMgr->PanelRect();
+		m_pZoomNavigatorCtl->InvalidateZoomNavigatorRect();
+		CRect imageProcArea = m_pImageProcPanelCtl->PanelRect();
 		this->InvalidateRect(GetZoomTextRect(imageProcArea), FALSE);
 	} else if (wParam == AUTOSCROLL_TIMER_EVENT_ID) {
 		if (mousePos.x < m_clientRect.Width() - 1 && mousePos.x > 0 && mousePos.y < m_clientRect.Height() - 1 && mousePos.y > 0 ) {
@@ -1461,49 +1082,17 @@ LRESULT CMainDlg::OnTimer(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOOL&
 		if (mousePos.y >= m_clientRect.Height() - 1) {
 			nPanY = -PAN_DIST;
 		}
-		if (m_bCropping) {
+		if (m_pCropCtl->IsCropping()) {
 			this->PerformPan(nPanX, nPanY, false);
 		}
+	} else {
+		m_pPanelMgr->OnTimer((int)wParam);
 	}
 	return 0;
 }
 
-// translate menu
-static void TranslateMenu(HMENU hMenu) {
-	int nMenuItemCount = ::GetMenuItemCount(hMenu);
-	for (int i = 0; i < nMenuItemCount; i++) {
-		const int TEXT_BUFF_LEN = 128;
-		TCHAR menuText[TEXT_BUFF_LEN];
-		::GetMenuString(hMenu, i, (LPTSTR)&menuText, TEXT_BUFF_LEN, MF_BYPOSITION);
-		menuText[TEXT_BUFF_LEN-1] = 0;
-		TCHAR* pTab = _tcschr(menuText, _T('\t'));
-		if (pTab != NULL) {
-			*pTab = 0;
-			pTab++;
-		}
-		CString sNewMenuText = CNLS::GetString(menuText);
-		if (sNewMenuText != menuText) {
-			if (pTab != NULL) {
-				sNewMenuText += _T('\t');
-				sNewMenuText += pTab;
-			}
-			MENUITEMINFO menuInfo;
-			memset(&menuInfo , 0, sizeof(MENUITEMINFO));
-			menuInfo.cbSize = sizeof(MENUITEMINFO);
-			menuInfo.fMask = MIIM_STRING;
-			menuInfo.dwTypeData = (LPTSTR)(LPCTSTR)sNewMenuText;
-			::SetMenuItemInfo(hMenu, i, TRUE, &menuInfo);
-		}
-
-		HMENU hSubMenu = ::GetSubMenu(hMenu, i);
-		if (hSubMenu != NULL) {
-			TranslateMenu(hSubMenu);
-		}
-	}
-}
-
 LRESULT CMainDlg::OnContextMenu(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, BOOL& /*bHandled*/) {
-	if (IsModalPanelShown()) {
+	if (m_pPanelMgr->IsModalPanelShown()) {
 		return 1;
 	}
 	int nX = GET_X_LPARAM(lParam);
@@ -1515,11 +1104,11 @@ LRESULT CMainDlg::OnContextMenu(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam,
 	if (hMenu == NULL) return 1;
 
 	HMENU hMenuTrackPopup = ::GetSubMenu(hMenu, 0);
-	TranslateMenu(hMenuTrackPopup);
+	HelpersGUI::TranslateMenuStrings(hMenuTrackPopup);
 	
-	if (m_bShowFileInfo) ::CheckMenuItem(hMenuTrackPopup, IDM_SHOW_FILEINFO, MF_CHECKED);
+	if (m_pEXIFDisplayCtl->IsActive()) ::CheckMenuItem(hMenuTrackPopup, IDM_SHOW_FILEINFO, MF_CHECKED);
 	if (m_bShowFileName) ::CheckMenuItem(hMenuTrackPopup, IDM_SHOW_FILENAME, MF_CHECKED);
-	if (m_bShowNavPanel) ::CheckMenuItem(hMenuTrackPopup, IDM_SHOW_NAVPANEL, MF_CHECKED);
+	if (m_pNavPanelCtl->IsActive()) ::CheckMenuItem(hMenuTrackPopup, IDM_SHOW_NAVPANEL, MF_CHECKED);
 	if (m_bAutoContrast) ::CheckMenuItem(hMenuTrackPopup, IDM_AUTO_CORRECTION, MF_CHECKED);
 	if (m_bLDC) ::CheckMenuItem(hMenuTrackPopup, IDM_LDC, MF_CHECKED);
 	if (m_bKeepParams) ::CheckMenuItem(hMenuTrackPopup, IDM_KEEP_PARAMETERS, MF_CHECKED);
@@ -1584,11 +1173,7 @@ LRESULT CMainDlg::OnContextMenu(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam,
 		::DeleteMenu(hMenuTrackPopup, 0, MF_BYPOSITION);
 	}
 
-	m_bInTrackPopupMenu = true;
-	int nMenuCmd = ::TrackPopupMenu(hMenuTrackPopup, TPM_LEFTALIGN | TPM_RIGHTBUTTON | TPM_NONOTIFY | TPM_RETURNCMD, 
-		nX, nY, 0, this->m_hWnd, NULL);
-	m_bInTrackPopupMenu = false;
-
+	int nMenuCmd = TrackPopupMenu(CPoint(nX, nY), hMenuTrackPopup);
 	ExecuteCommand(nMenuCmd);
 
 	::DestroyMenu(hMenu);
@@ -1618,184 +1203,29 @@ LRESULT CMainDlg::OnCancel(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*/, BOO
 	return 0;
 }
 
-// Handlers for image processing UI controls
+///////////////////////////////////////////////////////////////////////////////////
+// Static helpers for being called from UI controls
+///////////////////////////////////////////////////////////////////////////////////
 
-void CMainDlg::OnUnsharpMask(CButtonCtrl & sender) {
-	if (sm_instance->m_pCurrentImage != NULL) {
-		sm_instance->StartUnsharpMaskPanel();
-	}
+void CMainDlg::OnExecuteCommand(void* pContext, int nParameter, CButtonCtrl & sender) {
+	((CMainDlg*)pContext)->ExecuteCommand(nParameter);
 }
 
-void CMainDlg::OnCancelUnsharpMask(CButtonCtrl & sender) {
-	sm_instance->TerminateUnsharpMaskPanel();
-}
+void CMainDlg::ToggleWindowMode(CMainDlg* pMainDlg, CButtonCtrl & sender, bool bSetCursor) {
+	pMainDlg->ExecuteCommand(IDM_FULL_SCREEN_MODE);
 
-void CMainDlg::OnApplyUnsharpMask(CButtonCtrl & sender) {
-	HCURSOR hOldCursor = ::SetCursor(::LoadCursor(NULL, MAKEINTRESOURCE(IDC_WAIT)));
-	sm_instance->m_pCurrentImage->ApplyUnsharpMaskToOriginalPixels(*(sm_instance->m_pUnsharpMaskParams));
-	::SetCursor(hOldCursor);
-	sm_instance->TerminateUnsharpMaskPanel();
-}
-
-void CMainDlg::OnRPShowGridLines(CButtonCtrl & sender) {
-	sm_instance->m_bRotationShowGrid = !sm_instance->m_bRotationShowGrid;
-	sm_instance->m_btnRotationShowGrid->SetEnabled(sm_instance->m_bRotationShowGrid);
-	sm_instance->Invalidate();
-}
-
-void CMainDlg::OnRPAutoCrop(CButtonCtrl & sender) {
-	sm_instance->m_bRotationAutoCrop = !sm_instance->m_bRotationAutoCrop;
-	sm_instance->m_btnRotationAutoCrop->SetEnabled(sm_instance->m_bRotationAutoCrop);
-}
-
-void CMainDlg::OnRPAssistedMode(CButtonCtrl & sender) {
-	sm_instance->m_bRotationModeAssisted = !sm_instance->m_bRotationModeAssisted;
-	sm_instance->UpdateAssistedRotationMode();
-}
-
-void CMainDlg::OnCancelRotation(CButtonCtrl & sender) {
-	sm_instance->TerminateRotationPanel();
-}
-
-void CMainDlg::OnApplyRotation(CButtonCtrl & sender) {
-	HCURSOR hOldCursor = ::SetCursor(::LoadCursor(NULL, MAKEINTRESOURCE(IDC_WAIT)));
-	sm_instance->ApplyRotation();
-	::SetCursor(hOldCursor);
-	sm_instance->TerminateRotationPanel();
-}
-
-void CMainDlg::OnSaveToDB(CButtonCtrl & sender) {
-	sm_instance->ExecuteCommand(IDM_SAVE_PARAM_DB);
-}
-
-void CMainDlg::OnRemoveFromDB(CButtonCtrl & sender) {
-	sm_instance->ExecuteCommand(IDM_CLEAR_PARAM_DB);
-}
-
-bool CMainDlg::OnRenameFile(CTextCtrl & sender, LPCTSTR sChangedText) {
-	return sm_instance->RenameCurrentFile(sChangedText);
-}
-
-// Handlers for the navigation panel UI controls
-
-void CMainDlg::OnHome(CButtonCtrl & sender) {
-	sm_instance->GotoImage(POS_First);
-}
-
-void CMainDlg::OnPrev(CButtonCtrl & sender) {
-	sm_instance->ExecuteCommand(IDM_PREV);
-}
-
-void CMainDlg::OnNext(CButtonCtrl & sender) {
-	sm_instance->ExecuteCommand(IDM_NEXT);
-}
-
-void CMainDlg::OnEnd(CButtonCtrl & sender) {
-	sm_instance->GotoImage(POS_Last);
-}
-
-void CMainDlg::OnToggleZoomFit(CButtonCtrl & sender) {
-	if (fabs(sm_instance->m_dZoom - sm_instance->GetZoomFactorForFitToScreen(false, true)) > 0.01) {
-		sm_instance->ResetZoomToFitScreen(false, true);
-	} else {
-		sm_instance->ResetZoomTo100Percents();
-	}
-}
-
-void CMainDlg::OnToggleWindowMode(CButtonCtrl & sender) {
-	ToggleWindowMode(true);
-}
-
-void CMainDlg::ToggleWindowMode(bool bSetCursor) {
-	sm_instance->ExecuteCommand(IDM_FULL_SCREEN_MODE);
-
-	sm_instance->m_pNavPanel->RequestRepositioning();
+	pMainDlg->m_pNavPanelCtl->GetPanel()->RequestRepositioning();
 	if (bSetCursor) {
-		CRect rect = sm_instance->m_btnWindowMode->GetPosition();
+		CRect rect = sender.GetPosition();
 		CPoint ptWnd = rect.CenterPoint();
-		::ClientToScreen(sm_instance->m_hWnd, &ptWnd);
+		::ClientToScreen(pMainDlg->m_hWnd, &ptWnd);
 		::SetCursorPos(ptWnd.x, ptWnd.y);
 	}
 }
 
-void CMainDlg::OnRotateCW(CButtonCtrl & sender) {
-	sm_instance->ExecuteCommand(IDM_ROTATE_90);
-}
-
-void CMainDlg::OnRotateCCW(CButtonCtrl & sender) {
-	sm_instance->ExecuteCommand(IDM_ROTATE_270);
-}
-
-void CMainDlg::OnRotateFree(CButtonCtrl & sender) {
-	if (sm_instance->m_pCurrentImage != NULL) {
-		sm_instance->StartRotationPanel();
-	}
-}
-
-void CMainDlg::OnShowInfo(CButtonCtrl & sender) {
-	sm_instance->ExecuteCommand(IDM_SHOW_FILEINFO);
-}
-
-void CMainDlg::OnKeepParameters(CButtonCtrl & sender) {
-	sm_instance->ExecuteCommand(IDM_KEEP_PARAMETERS);
-}
-
-void CMainDlg::OnLandscapeMode(CButtonCtrl & sender) {
-	sm_instance->ExecuteCommand(IDM_LANDSCAPE_MODE);
-}
-
-void CMainDlg::OnMinimize(CButtonCtrl & sender) {
-	sm_instance->ExecuteCommand(IDM_MINIMIZE);
-}
-
-void CMainDlg::OnRestore(CButtonCtrl & sender) {
-	ToggleWindowMode(false);
-}
-
-void CMainDlg::OnClose(CButtonCtrl & sender) {
-	sm_instance->ExecuteCommand(IDM_EXIT);
-}
-
-void CMainDlg::OnShowHistogram(CButtonCtrl & sender) {
-	sm_instance->m_pEXIFDisplay->SetShowHistogram(!sm_instance->m_pEXIFDisplay->GetShowHistogram());
-	sm_instance->m_pEXIFDisplay->RequestRepositioning();
-	sm_instance->Invalidate(FALSE);
-}
-
-void CMainDlg::PaintZoomFitToggleBtn(const CRect& rect, CDC& dc) {
-	if (fabs(sm_instance->m_dZoom - sm_instance->GetZoomFactorForFitToScreen(false, true)) > 0.01) {
-		CNavigationPanel::PaintZoomToFitBtn(rect, dc);
-	} else {
-		CNavigationPanel::PaintZoomTo1to1Btn(rect, dc);
-	}
-}
-
-void CMainDlg::PaintShowHistogramBtn(const CRect& rect, CDC& dc) {
-	CEXIFDisplay::PaintShowHistogramBtn(rect, dc, sm_instance->m_pEXIFDisplay->GetShowHistogram());
-}
-
-LPCTSTR CMainDlg::ZoomFitToggleTooltip() {
-	if (fabs(sm_instance->m_dZoom - sm_instance->GetZoomFactorForFitToScreen(false, true)) > 0.01) {
-		return CNLS::GetString(_T("Fit image to screen"));
-	} else {
-		return CNLS::GetString(_T("Actual size of image"));
-	}
-}
-
-LPCTSTR CMainDlg::WindowModeTooltip() {
-	if (sm_instance->m_bFullScreenMode) {
-		return CNLS::GetString(_T("Window mode"));
-	} else {
-		return CNLS::GetString(_T("Full screen mode"));
-	}
-}
-
-LPCTSTR CMainDlg::ShowHistogramTooltip() {
-	if (sm_instance->m_pEXIFDisplay->GetShowHistogram()) {
-		return CNLS::GetString(_T("Hide histogram"));
-	} else {
-		return CNLS::GetString(_T("Show histogram"));
-	}
+bool CMainDlg::IsCurrentImageFitToScreen(void* pContext) {
+	CMainDlg* pThis = (CMainDlg*)pContext;
+	return fabs(pThis->m_dZoom - pThis->GetZoomFactorForFitToScreen(false, true)) <= 0.01;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////
@@ -1842,28 +1272,15 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 			}
 			break;
 		case IDM_SHOW_FILEINFO:
-			m_bShowFileInfo = !m_bShowFileInfo;
-			m_btnInfo->SetEnabled(m_bShowFileInfo);
-			this->Invalidate(FALSE);
+			m_pEXIFDisplayCtl->SetActive(!m_pEXIFDisplayCtl->IsActive());
+			m_pNavPanelCtl->GetNavPanel()->GetBtnShowInfo()->SetActive(m_pEXIFDisplayCtl->IsActive());
 			break;
 		case IDM_SHOW_FILENAME:
 			m_bShowFileName = !m_bShowFileName;
 			this->Invalidate(FALSE);
 			break;
 		case IDM_SHOW_NAVPANEL:
-			m_bShowNavPanel = !m_bShowNavPanel;
-			if (m_bShowNavPanel && !m_bShowIPTools) {
-				EndNavPanelAnimation();
-				::KillTimer(this->m_hWnd, NAVPANEL_START_ANI_TIMER_EVENT_ID);
-				MouseOn();
-			} else {
-				m_pNavPanel->GetTooltipMgr().RemoveActiveTooltip();
-			}
-			if (m_bShowHelp) {
-				this->Invalidate(FALSE);
-			} else {
-				this->InvalidateRect(m_pNavPanel->PanelRect(), FALSE);
-			}
+			m_pNavPanelCtl->SetActive(!m_pNavPanelCtl->IsActive());
 			break;
 		case IDM_NEXT:
 			GotoImage(POS_Next);
@@ -1887,7 +1304,7 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 		case IDM_SORT_NAME:
 			m_pFileList->SetSorting((nCommand == IDM_SORT_CREATION_DATE) ? Helpers::FS_CreationTime : 
 				(nCommand == IDM_SORT_MOD_DATE) ? Helpers::FS_LastModTime : Helpers::FS_FileName);
-			if (m_bShowHelp || m_bShowFileInfo || m_bShowFileName) {
+			if (m_bShowHelp || m_pEXIFDisplayCtl->IsActive() || m_bShowFileName) {
 				this->Invalidate(FALSE);
 			}
 			break;
@@ -1926,7 +1343,7 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 					// these parameters need to be updated when image is reused from cache
 					m_pCurrentImage->SetInitialParameters(*m_pImageProcParams, procFlags, m_nRotation, m_dZoom, CPoint(m_nOffsetX, m_nOffsetY));
 					m_pCurrentImage->SetIsInParamDB(true);
-					ShowHideSaveDBButtons();
+					m_pImageProcPanelCtl->ShowHideSaveDBButtons();
 				}
 			}
 			break;
@@ -1944,7 +1361,7 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 					m_nRotation = m_pCurrentImage->GetInitialRotation();
 					m_dZoom = -1;
 					m_pCurrentImage->SetIsInParamDB(false);
-					ShowHideSaveDBButtons();
+					m_pImageProcPanelCtl->ShowHideSaveDBButtons();
 					this->Invalidate(FALSE);
 				}
 			}
@@ -1972,7 +1389,7 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 			break;
 		case IDM_LANDSCAPE_MODE:
 			m_bLandscapeMode = !m_bLandscapeMode;
-			m_btnLandScape->SetEnabled(m_bLandscapeMode);
+			m_pNavPanelCtl->GetNavPanel()->GetBtnLandscapeMode()->SetActive(m_bLandscapeMode);
 			if (m_bLandscapeMode) {
 				*m_pImageProcParams = _SetLandscapeModeParams(true, *m_pImageProcParams);
 				if (m_pCurrentImage != NULL) {
@@ -1994,7 +1411,7 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 			break;
 		case IDM_KEEP_PARAMETERS:
 			m_bKeepParams = !m_bKeepParams;
-			m_btnKeepParams->SetEnabled(m_bKeepParams);
+			m_pNavPanelCtl->GetNavPanel()->GetBtnKeepParams()->SetActive(m_bKeepParams);
 			if (m_bKeepParams) {
 				*m_pImageProcParamsKept = *m_pImageProcParams;
 				m_eProcessingFlagsKept = CreateProcessingFlags(m_bHQResampling, m_bAutoContrast, false, m_bLDC, m_bKeepParams, m_bLandscapeMode);
@@ -2002,8 +1419,8 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 				m_dZoomKept = m_bUserZoom ? m_dZoom : -1;
 				m_offsetKept = m_bUserPan ? CPoint(m_nOffsetX, m_nOffsetY) : CPoint(0, 0);
 			}
-			ShowHideSaveDBButtons();
-			if (m_bShowHelp || m_bShowIPTools) {
+			m_pImageProcPanelCtl->ShowHideSaveDBButtons();
+			if (m_bShowHelp) {
 				this->Invalidate(FALSE);
 			}
 			break;
@@ -2035,7 +1452,7 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 		case IDM_FULL_SCREEN_MODE_AFTER_STARTUP:
 			m_bFullScreenMode = !m_bFullScreenMode;
 			if (!m_bFullScreenMode) {
-				m_bShowWndButtonPanel = false;
+				m_pWndButtonPanelCtl->SetVisible(false);
 				CRect windowRect;
 				this->SetWindowLongW(GWL_STYLE, this->GetWindowLongW(GWL_STYLE) | WS_OVERLAPPEDWINDOW | WS_VISIBLE);
 				if (::IsRectEmpty(&(m_storedWindowPlacement2.rcNormalPosition))) {
@@ -2073,19 +1490,19 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 			this->SetWindowPos(NULL, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_NOCOPYBITS | SWP_FRAMECHANGED);
 			break;
 		case IDM_ZOOM_400:
-			PerformZoom(4.0, false);
+			PerformZoom(4.0, false, m_bMouseOn);
 			break;
 		case IDM_ZOOM_200:
-			PerformZoom(2.0, false);
+			PerformZoom(2.0, false, m_bMouseOn);
 			break;
 		case IDM_ZOOM_100:
-			ResetZoomTo100Percents();
+			ResetZoomTo100Percents(m_bMouseOn);
 			break;
 		case IDM_ZOOM_50:
-			PerformZoom(0.5, false);
+			PerformZoom(0.5, false, m_bMouseOn);
 			break;
 		case IDM_ZOOM_25:
-			PerformZoom(0.25, false);
+			PerformZoom(0.25, false, m_bMouseOn);
 			break;
 		case IDM_AUTO_ZOOM_FIT_NO_ZOOM:
 		case IDM_AUTO_ZOOM_FILL_NO_ZOOM:
@@ -2100,10 +1517,10 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 			EditINIFile(nCommand == IDM_EDIT_GLOBAL_CONFIG);
 			break;
 		case IDM_BACKUP_PARAMDB:
-			BackupParamDB();
+			CParameterDB::This().BackupParamDB(m_hWnd);
 			break;
 		case IDM_RESTORE_PARAMDB:
-			RestoreParamDB();
+			CParameterDB::This().RestoreParamDB(m_hWnd);
 			break;
 		case IDM_ABOUT:
 			{
@@ -2122,46 +1539,46 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 			break;
 		case IDM_CROP_SEL:
 			if (m_pCurrentImage != NULL) {
-				m_pCurrentImage->Crop(GetImageCropRect());
+				m_pCurrentImage->Crop(m_pCropCtl->GetImageCropRect());
 				this->Invalidate(FALSE);
 			}
 			break;
 		case IDM_LOSSLESS_CROP_SEL:
-			CropLossless();
+			m_pCropCtl->CropLossless();
 			break;
 		case IDM_COPY_SEL:
 			if (m_pCurrentImage != NULL) {
 				CClipboard::CopyFullImageToClipboard(this->m_hWnd, m_pCurrentImage, *m_pImageProcParams, 
 					CreateProcessingFlags(m_bHQResampling, m_bAutoContrast, m_bAutoContrastSection, m_bLDC, false, m_bLandscapeMode),
-					GetImageCropRect());
+					m_pCropCtl->GetImageCropRect());
 				this->Invalidate(FALSE);
 			}
 			break;
 		case IDM_CROPMODE_FREE:
-			m_dCropRatio = 0;
+			m_pCropCtl->SetCropRatio(0);
 			break;
 		case IDM_CROPMODE_FIXED_SIZE:
 			{
 				CCropSizeDlg dlgSetCropSize;
 				dlgSetCropSize.DoModal();
 			}
-			m_dCropRatio = -1;
+			m_pCropCtl->SetCropRatio(-1);
 			break;
 		case IDM_CROPMODE_5_4:
-			m_dCropRatio = 1.25;
+			m_pCropCtl->SetCropRatio(1.25);
 			break;
 		case IDM_CROPMODE_4_3:
-			m_dCropRatio = 1.333333333333333333;
+			m_pCropCtl->SetCropRatio(1.333333333333333333);
 			break;
 		case IDM_CROPMODE_3_2:
-			m_dCropRatio = 1.5;
+			m_pCropCtl->SetCropRatio(1.5);
 			break;
 		case IDM_CROPMODE_16_9:
-			m_dCropRatio = 1.777777777777777778;
+			m_pCropCtl->SetCropRatio(1.777777777777777778);
 			break;
 		case IDM_CROPMODE_16_10:
-			m_dCropRatio = 1.6;
-		break;
+			m_pCropCtl->SetCropRatio(1.6);
+			break;
 		case IDM_TOUCH_IMAGE:
 		case IDM_TOUCH_IMAGE_EXIF:
 			if (m_pCurrentImage != NULL) {
@@ -2183,7 +1600,7 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 					::SetFileTime(hFile, NULL, NULL, &ft);
 					::CloseHandle(hFile);
 					m_pFileList->ModificationTimeChanged();
-					if (m_bShowFileInfo) {
+					if (m_pEXIFDisplayCtl->IsActive()) {
 						this->Invalidate(FALSE);
 					}
 				}
@@ -2350,14 +1767,13 @@ void CMainDlg::HandleUserCommands(uint32 virtualKeyCode) {
 void CMainDlg::StartDragging(int nX, int nY, bool bDragWithZoomNavigator) {
 	m_startMouse.x = m_startMouse.y = -1;
 	m_bDragging = true;
-	m_bDraggingWithZoomNavigator = bDragWithZoomNavigator;
-	if (m_bDraggingWithZoomNavigator) {
-		m_capturedPosZoomNavSection = CZoomNavigator::LastVisibleRect().TopLeft();
+	if (bDragWithZoomNavigator) {
+		m_pZoomNavigatorCtl->StartDragging(nX, nY);
 	}
 	m_nCapturedX = nX;
 	m_nCapturedY = nY;
 	SetCursorForMoveSection();
-	StartNavPanelAnimation(true, true);
+	m_pNavPanelCtl->StartNavPanelAnimation(true, true);
 }
 
 void CMainDlg::DoDragging() {
@@ -2367,13 +1783,8 @@ void CMainDlg::DoDragging() {
 		if (!m_bDoDragging && (nXDelta != 0 || nYDelta != 0)) {
 			m_bDoDragging = true;
 		}
-		if (m_bDraggingWithZoomNavigator) {
-			int nNewX = m_capturedPosZoomNavSection.x + nXDelta;
-			int nNewY = m_capturedPosZoomNavSection.y + nYDelta;
-			CRect fullRect = CZoomNavigator::GetNavigatorRect(m_pCurrentImage, m_pSliderMgr->PanelRect());
-			CPoint newOffsets = CJPEGImage::ConvertOffset(fullRect.Size(), CZoomNavigator::LastVisibleRect().Size(), CPoint(nNewX - fullRect.left, nNewY - fullRect.top));
-			PerformPan((int)(newOffsets.x * (float)m_virtualImageSize.cx/fullRect.Width()), 
-				(int)(newOffsets.y * (float)m_virtualImageSize.cy/fullRect.Height()), true);
+		if (m_pZoomNavigatorCtl->IsDragging()) {
+			m_pZoomNavigatorCtl->DoDragging(nXDelta, nYDelta);
 		} else {
 			if (PerformPan(nXDelta, nYDelta, false)) {
 				m_nCapturedX = m_nMouseX;
@@ -2386,239 +1797,12 @@ void CMainDlg::DoDragging() {
 void CMainDlg::EndDragging() {
 	m_bDragging = false;
 	m_bDoDragging = false;
-	m_bDraggingWithZoomNavigator = false;
+	m_pZoomNavigatorCtl->EndDragging();
 	if (m_pCurrentImage != NULL) {
 		m_pCurrentImage->VerifyDIBPixelsCreated();
 	}
-	this->InvalidateRect(m_pNavPanel->PanelRect(), FALSE);
-	InvalidateZoomNavigatorRect();
+	this->InvalidateRect(m_pNavPanelCtl->PanelRect(), FALSE);
 	SetCursorForMoveSection();
-}
-
-
-void CMainDlg::StartCropping(int nX, int nY) {
-	m_bCropping = true;
-	float fX = (float)nX, fY = (float)nY;
-	ScreenToImage(fX, fY);
-	m_cropStart = CPoint((int)fX, (int) fY);
-	m_cropMouse = CPoint(nX, nY);
-	m_cropEnd = CPoint(INT_MIN, INT_MIN);
-}
-
-void CMainDlg::ShowCroppingRect(int nX, int nY, HDC hPaintDC, bool bShow) {
-	if (bShow) {
-		DeleteSceenCropRect();
-	}
-	float fX = (float)nX, fY = (float)nY;
-	ScreenToImage(fX, fY);
-
-	CPoint newCropEnd = CPoint((int)fX, (int) fY);
-	if (m_dCropRatio > 0) {
-		// fixed ratio crop mode
-		int w = abs(m_cropStart.x - newCropEnd.x);
-		int h = abs(m_cropStart.y - newCropEnd.y);
-		double dRatio = (h < w) ? 1.0/m_dCropRatio : m_dCropRatio;
-		int newH = (int)(w * dRatio + 0.5);
-		int newW = (int)(h * (1.0/dRatio) + 0.5);
-		if (w > h) {
-			if (m_cropStart.y > newCropEnd.y) {
-				newCropEnd = CPoint(newCropEnd.x, m_cropStart.y - newH);
-			} else {
-				newCropEnd = CPoint(newCropEnd.x, m_cropStart.y + newH);
-			}
-		} else {
-			if (m_cropStart.x > newCropEnd.x) {
-				newCropEnd = CPoint(m_cropStart.x - newW, newCropEnd.y);
-			} else {
-				newCropEnd = CPoint(m_cropStart.x + newW, newCropEnd.y);
-			}
-		}
-	} else if (m_dCropRatio < 0) {
-		// fixed size crop mode
-		CSize cropSize = CCropSizeDlg::GetCropSize();
-		m_cropStart = CPoint((int)fX, (int) fY);
-		if (CCropSizeDlg::UseScreenPixels() && m_pCurrentImage != NULL) {
-			double dZoom = m_dZoom;
-			if (dZoom < 0.0) {
-				dZoom = (double)m_virtualImageSize.cx/m_pCurrentImage->OrigWidth();
-			}
-			newCropEnd = CPoint(m_cropStart.x + (int)(cropSize.cx/dZoom + 0.5) - 1, m_cropStart.y + (int)(cropSize.cy/dZoom + 0.5) - 1);
-		} else {
-			newCropEnd = CPoint((int)fX + cropSize.cx - 1, (int)fY + cropSize.cy - 1);
-		}
-	}
-
-	if (m_bCropping) {
-		m_bDoCropping = true;
-	}
-	if (bShow && m_cropEnd == CPoint(INT_MIN, INT_MIN)) {
-		this->InvalidateRect(m_pNavPanel->PanelRect(), FALSE);
-	}
-	m_cropEnd = newCropEnd;
-	if (bShow) {
-		PaintCropRect(hPaintDC);
-	}
-}
-
-void CMainDlg::PaintCropRect(HDC hPaintDC) {
-	CRect cropRect = GetScreenCropRect();
-	if (!cropRect.IsRectEmpty()) {
-		HDC hDC = (hPaintDC == NULL) ? this->GetDC() : hPaintDC;
-		HPEN hPen = ::CreatePen(PS_DOT, 1, RGB(255, 255, 255));
-		HGDIOBJ hOldPen = ::SelectObject(hDC, hPen);
-		::SelectObject(hDC, ::GetStockObject(HOLLOW_BRUSH));
-		::SetBkMode(hDC, OPAQUE);
-		::SetBkColor(hDC, 0);
-		::Rectangle(hDC, cropRect.left, cropRect.top, cropRect.right, cropRect.bottom);
-
-		::SelectObject(hDC, hOldPen);
-		::DeleteObject(hPen);
-		if (hPaintDC == NULL) {
-			this->ReleaseDC(hDC);
-		}
-	}
-}
-
-void CMainDlg::DeleteSceenCropRect() {
-	CRect cropRect = GetScreenCropRect();
-	if (!cropRect.IsRectEmpty()) {
-		this->InvalidateRect(&CRect(cropRect.left-1, cropRect.top, cropRect.left+1, cropRect.bottom), FALSE);
-		this->InvalidateRect(&CRect(cropRect.right-1, cropRect.top, cropRect.right+1, cropRect.bottom), FALSE);
-		this->InvalidateRect(&CRect(cropRect.left, cropRect.top-1, cropRect.right, cropRect.top+1), FALSE);
-		this->InvalidateRect(&CRect(cropRect.left, cropRect.bottom-1, cropRect.right, cropRect.bottom+1), FALSE);
-		bool bOldFlag = m_bBlockPaintCropRect;
-		m_bBlockPaintCropRect = true;
-		this->UpdateWindow();
-		m_bBlockPaintCropRect = bOldFlag;
-	}
-}
-
-CRect CMainDlg::GetScreenCropRect() {
-	if (m_cropEnd != CPoint(INT_MIN, INT_MIN) && m_pCurrentImage != NULL) {
-		CPoint cropStart(min(m_cropStart.x, m_cropEnd.x), min(m_cropStart.y, m_cropEnd.y));
-		CPoint cropEnd(max(m_cropStart.x, m_cropEnd.x), max(m_cropStart.y, m_cropEnd.y));
-
-		float fXStart = (float)cropStart.x;
-		float fYStart = (float)cropStart.y;
-		ImageToScreen(fXStart, fYStart);
-		float fXEnd = cropEnd.x + 0.999f;
-		float fYEnd = cropEnd.y + 0.999f;
-		ImageToScreen(fXEnd, fYEnd);
-		return CRect((int)fXStart, (int)fYStart, (int)fXEnd, (int)fYEnd);
-
-	} else {
-		return CRect(0, 0, 0, 0);
-	}
-}
-
-CRect CMainDlg::GetImageCropRect() {
-	return CRect(max(0, min(m_cropStart.x, m_cropEnd.x)), max(0, min(m_cropStart.y, m_cropEnd.y)),
-		min(m_pCurrentImage->OrigWidth(), max(m_cropStart.x, m_cropEnd.x) + 1), min(m_pCurrentImage->OrigHeight(), max(m_cropStart.y, m_cropEnd.y) + 1));
-}
-
-void CMainDlg::EndCropping() {
-	if (m_pCurrentImage == NULL || m_cropEnd == CPoint(INT_MIN, INT_MIN) || m_cropMouse == CPoint(m_nMouseX, m_nMouseY)) {
-		m_bCropping = false;
-		m_bDoCropping = false;
-		DeleteSceenCropRect();
-		HideNavPanelTemporary();
-		InvalidateZoomNavigatorRect();
-		return;
-	}
-
-	// Display the crop menu
-	HMENU hMenu = ::LoadMenu(_Module.m_hInst, _T("CropMenu"));
-	int nMenuCmd = 0;
-	if (hMenu != NULL) {
-		HMENU hMenuTrackPopup = ::GetSubMenu(hMenu, 0);
-		if (m_pCurrentImage->GetImageFormat() != CJPEGImage::IF_JPEG) {
-			::DeleteMenu(hMenuTrackPopup, IDM_LOSSLESS_CROP_SEL, MF_BYCOMMAND);
-		}
-		TranslateMenu(hMenuTrackPopup);
-
-		CPoint posMouse(m_nMouseX, m_nMouseY);
-		this->ClientToScreen(&posMouse);
-		m_bInTrackPopupMenu = true;
-
-		HMENU hMenuCropMode = ::GetSubMenu(hMenuTrackPopup, SUBMENU_POS_CROPMODE);
-		if (abs(m_dCropRatio - 1.25) < 0.001) {
-			::CheckMenuItem(hMenuCropMode,  IDM_CROPMODE_5_4, MF_CHECKED);
-		} else if (abs(m_dCropRatio - 1.3333) < 0.001) {
-			::CheckMenuItem(hMenuCropMode,  IDM_CROPMODE_4_3, MF_CHECKED);
-		} else if (abs(m_dCropRatio - 1.5) < 0.001) {
-			::CheckMenuItem(hMenuCropMode,  IDM_CROPMODE_3_2, MF_CHECKED);
-		} else if (abs(m_dCropRatio - 1.7777) < 0.001) {
-			::CheckMenuItem(hMenuCropMode,  IDM_CROPMODE_16_9, MF_CHECKED);
-		} else if (abs(m_dCropRatio - 1.6) < 0.001) {
-			::CheckMenuItem(hMenuCropMode,  IDM_CROPMODE_16_10, MF_CHECKED);
-		} else if (m_dCropRatio < 0) {
-			::CheckMenuItem(hMenuCropMode,  IDM_CROPMODE_FIXED_SIZE, MF_CHECKED);
-		} else {
-			::CheckMenuItem(hMenuCropMode,  IDM_CROPMODE_FREE, MF_CHECKED);
-		}
-		nMenuCmd = ::TrackPopupMenu(hMenuTrackPopup, TPM_LEFTALIGN | TPM_RIGHTBUTTON | TPM_NONOTIFY | TPM_RETURNCMD, 
-			posMouse.x, posMouse.y, 0, this->m_hWnd, NULL);
-		m_bInTrackPopupMenu = false;
-
-		if (m_bCropping) {
-			ExecuteCommand(nMenuCmd);
-		}
-
-		::DestroyMenu(hMenu);
-
-		// Hack: When context menu was canceled by clicking outside of menu, the main window gets a mouse click event and a mouse move event.
-		// This would start another crop what is not desired.
-		if (nMenuCmd == 0) {
-			m_bDontStartCropOnNextClick = true;
-		}
-	}
-
-	if (m_bCropping && nMenuCmd != IDM_COPY_SEL && nMenuCmd != IDM_CROP_SEL) {
-		DeleteSceenCropRect();
-	}
-	m_bCropping = false;
-	m_bDoCropping = false;
-	HideNavPanelTemporary();
-	InvalidateZoomNavigatorRect();
-}
-
-void CMainDlg::CropLossless() {
-	if (m_pCurrentImage == NULL) {
-		return;
-	}
-	CRect cropRect = GetImageCropRect();
-	if (cropRect.IsRectEmpty()) {
-		return;
-	}
-	// coordinates must be multiples of 8 for lossless crop
-	cropRect.left = cropRect.left & ~7;
-	cropRect.right = (cropRect.right + 7) & ~7;
-	cropRect.top = cropRect.top & ~7;
-	cropRect.bottom = (cropRect.bottom + 7) & ~7;
-
-	CString sCurrentFile = CurrentFileName(false);
-
-
-	CFileDialog fileDlg(FALSE, _T(".jpg"), sCurrentFile, 
-			OFN_EXPLORER | OFN_ENABLESIZING | OFN_HIDEREADONLY | OFN_NOREADONLYRETURN | OFN_OVERWRITEPROMPT,
-			Helpers::CReplacePipe(CString(_T("JPEG (*.jpg;*.jpeg)|*.jpg;*.jpeg|")) +
-			CNLS::GetString(_T("All Files")) + _T("|*.*|")), m_hWnd);
-
-	CString sDimension;
-	sDimension.Format(_T(" (%d x %d)"), cropRect.Width(), cropRect.Height());
-	CString sTitle = CNLS::GetString(_T("Save cropped image")) + sDimension;
-	fileDlg.m_ofn.lpstrTitle = sTitle;
-
-	if (IDOK == fileDlg.DoModal(m_hWnd)) {
-		CString sCmd(_T("KeyCode: 0  Cmd: 'jpegtran -crop %w%x%h%+%x%+%y% -copy all -perfect %filename% \"%outfilename%\"' Flags: 'WaitForTerminate NoWindow ReloadFileList'"));
-		sCmd.Replace(_T("%outfilename%"), fileDlg.m_szFileName);
-		CUserCommand cmdCrop(sCmd);
-		if (cmdCrop.Execute(m_hWnd, CurrentFileName(false), cropRect)) {
-			if (_tcscmp(CurrentFileName(false), fileDlg.m_szFileName) == 0) {
-				ExecuteCommand(IDM_RELOAD);
-			}
-		}
-	}
 }
 
 void CMainDlg::GotoImage(EImagePosition ePos) {
@@ -2629,7 +1813,7 @@ void CMainDlg::GotoImage(EImagePosition ePos, int nFlags) {
 	// Timer handling for slideshows
 	if (ePos == POS_Next) {
 		if (m_nCurrentTimeout > 0) {
-			StartTimer(m_nCurrentTimeout);
+			StartSlideShowTimer(m_nCurrentTimeout);
 		}
 	} else {
 		StopMovieMode();
@@ -2651,7 +1835,7 @@ void CMainDlg::GotoImage(EImagePosition ePos, int nFlags) {
 		m_pJPEGProvider->ClearRequest(m_pCurrentImage);
 	}
 	m_pCurrentImage = NULL;
-	m_bCropping = false; // cancel any running crop
+	m_pCropCtl->CancelCropping(); // cancel any running crop
 	
 	CJPEGProvider::EReadAheadDirection eDirection = CJPEGProvider::FORWARD;
 	switch (ePos) {
@@ -2738,7 +1922,7 @@ void CMainDlg::AdjustSharpen(double dInc) {
 	this->Invalidate(FALSE);
 }
 
-void CMainDlg::PerformZoom(double dValue, bool bExponent) {
+void CMainDlg::PerformZoom(double dValue, bool bExponent, bool bZoomToMouse) {
 	double dOldZoom = m_dZoom;
 	m_bUserZoom = true;
 	if (bExponent) {
@@ -2772,15 +1956,15 @@ void CMainDlg::PerformZoom(double dValue, bool bExponent) {
 		nNewYSize = (int)(m_pCurrentImage->OrigHeight() * m_dZoom + 0.5);
 	}
 
-	if (m_bMouseOn) {
-		// cursor visible - zoom to mouse
+	if (bZoomToMouse) {
+		// zoom to mouse
 		int nOldX = nOldXSize/2 - m_clientRect.Width()/2 + m_nMouseX - m_nOffsetX;
 		int nOldY = nOldYSize/2 - m_clientRect.Height()/2 + m_nMouseY - m_nOffsetY;
 		double dFac = m_dZoom/dOldZoom;
 		m_nOffsetX = Helpers::RoundToInt(nNewXSize/2 - m_clientRect.Width()/2 + m_nMouseX - nOldX*dFac);
 		m_nOffsetY = Helpers::RoundToInt(nNewYSize/2 - m_clientRect.Height()/2 + m_nMouseY - nOldY*dFac);
 	} else {
-		// cursor not visible - zoom to center
+		// zoom to center
 		m_nOffsetX = (int) (m_nOffsetX*m_dZoom/dOldZoom);
 		m_nOffsetY = (int) (m_nOffsetY*m_dZoom/dOldZoom);
 	}
@@ -2811,50 +1995,17 @@ bool CMainDlg::PerformPan(int dx, int dy, bool bAbsolute) {
 }
 
 void CMainDlg::ZoomToSelection() {
-	CRect zoomRect(max(0, min(m_cropStart.x, m_cropEnd.x)), max(0, min(m_cropStart.y, m_cropEnd.y)),
-		min(m_pCurrentImage->OrigWidth(), max(m_cropStart.x, m_cropEnd.x)), min(m_pCurrentImage->OrigHeight(), max(m_cropStart.y, m_cropEnd.y)));
+	CRect zoomRect(m_pCropCtl->GetImageCropRect());
 	if (zoomRect.Width() > 0 && zoomRect.Height() > 0 && m_pCurrentImage != NULL) {
 		float fZoom;
 		CPoint offsets;
 		Helpers::GetZoomParameters(fZoom, offsets, CSize(m_pCurrentImage->OrigWidth(), m_pCurrentImage->OrigHeight()), 
 			m_clientRect.Size(), zoomRect);
 		if (fZoom > 0) {
-			PerformZoom(fZoom, false);
+			PerformZoom(fZoom, false, m_bMouseOn);
 			m_nOffsetX = offsets.x;
 			m_nOffsetY = offsets.y;
 			m_bUserPan = true;
-		}
-	}
-}
-
-void CMainDlg::SetStartupFile(LPCTSTR sStartupFile) { 
-	m_sStartupFile = sStartupFile;
-	if (m_sStartupFile.GetLength() == 0) {
-		return;
-	}
-
-	// Extract the startup file or directory from the command line parameter string
-	int nHyphen = m_sStartupFile.Find(_T('"'));
-	if (nHyphen == -1) {
-		// not enclosed with "", use part until first space is found
-		int nSpace = m_sStartupFile.Find(_T(' '));
-		if (nSpace > 0) {
-			m_sStartupFile = m_sStartupFile.Left(nSpace);
-		}
-	} else {
-		// enclosed in "", take first string enclosed in ""
-		int nHyphenNext = m_sStartupFile.Find(_T('"'), nHyphen + 1);
-		if (nHyphenNext > nHyphen) {
-			m_sStartupFile = m_sStartupFile.Mid(nHyphen + 1, nHyphenNext - nHyphen - 1);
-		}
-	}
-	// if it's a directory, add a trailing backslash
-	if (m_sStartupFile.GetLength() > 0) {
-		DWORD nAttributes = ::GetFileAttributes(m_sStartupFile);
-		if (nAttributes != INVALID_FILE_ATTRIBUTES && (nAttributes & FILE_ATTRIBUTE_DIRECTORY) != 0) {
-			if (m_sStartupFile[m_sStartupFile.GetLength() -1] != _T('\\')) {
-				m_sStartupFile += _T('\\');
-			}
 		}
 	}
 }
@@ -2892,9 +2043,9 @@ void CMainDlg::ResetZoomToFitScreen(bool bFillWithCrop, bool bAllowEnlarge) {
 	}
 }
 
-void CMainDlg::ResetZoomTo100Percents() {
+void CMainDlg::ResetZoomTo100Percents(bool bZoomToMouse) {
 	if (m_pCurrentImage != NULL && fabs(m_dZoom - 1) > 0.01) {
-		PerformZoom(1.0, false);
+		PerformZoom(1.0, false, bZoomToMouse);
 	}
 }
 
@@ -2937,13 +2088,13 @@ void CMainDlg::ResetParamsToDefault() {
 	InitFromProcessingFlags(GetDefaultProcessingFlags(m_bLandscapeMode), m_bHQResampling, m_bAutoContrast, m_bAutoContrastSection, m_bLDC, m_bLandscapeMode);
 }
 
-void CMainDlg::StartTimer(int nMilliSeconds) {
+void CMainDlg::StartSlideShowTimer(int nMilliSeconds) {
 	m_nCurrentTimeout = nMilliSeconds;
 	::SetTimer(this->m_hWnd, SLIDESHOW_TIMER_EVENT_ID, nMilliSeconds, NULL);
-	EndNavPanelAnimation();
+	m_pNavPanelCtl->EndNavPanelAnimation();
 }
 
-void CMainDlg::StopTimer(void) {
+void CMainDlg::StopSlideShowTimer(void) {
 	if (m_nCurrentTimeout > 0) {
 		m_nCurrentTimeout = 0;
 		::KillTimer(this->m_hWnd, SLIDESHOW_TIMER_EVENT_ID);
@@ -2972,9 +2123,9 @@ void CMainDlg::StartMovieMode(double dFPS) {
 		m_bLandscapeMode = false;
 	}
 	m_bMovieMode = true;
-	StartTimer(Helpers::RoundToInt(1000.0/dFPS));
+	StartSlideShowTimer(Helpers::RoundToInt(1000.0/dFPS));
 	AfterNewImageLoaded(false);
-	this->InvalidateRect(m_pNavPanel->PanelRect(), FALSE);
+	this->InvalidateRect(m_pNavPanelCtl->PanelRect(), FALSE);
 }
 
 void CMainDlg::StopMovieMode() {
@@ -3001,7 +2152,7 @@ void CMainDlg::StopMovieMode() {
 		}
 		m_bMovieMode = false;
 		m_bProcFlagsTouched = false;
-		StopTimer();
+		StopSlideShowTimer();
 		AfterNewImageLoaded(false);
 		this->Invalidate(FALSE);
 	}
@@ -3013,22 +2164,17 @@ void CMainDlg::StartLowQTimer(int nTimeout) {
 	::SetTimer(this->m_hWnd, ZOOM_TIMER_EVENT_ID, nTimeout, NULL);
 }
 
-void CMainDlg::StartNavPanelTimer(int nTimeout) {
-	::KillTimer(this->m_hWnd, NAVPANEL_TIMER_EVENT_ID);
-	::SetTimer(this->m_hWnd, NAVPANEL_TIMER_EVENT_ID, nTimeout, NULL);
-}
-
 void CMainDlg::MouseOff() {
 	if (m_bMouseOn) {
-		if (m_nMouseY < m_clientRect.bottom - m_pSliderMgr->SliderAreaHeight() && 
-			!m_bInTrackPopupMenu && !m_pNavPanel->PanelRect().PtInRect(CPoint(m_nMouseX, m_nMouseY))) {
+		if (m_nMouseY < m_clientRect.bottom - m_pImageProcPanelCtl->PanelRect().Height() && 
+			!m_bInTrackPopupMenu && !m_pNavPanelCtl->PanelRect().PtInRect(CPoint(m_nMouseX, m_nMouseY))) {
 			if (m_bFullScreenMode) {
 				while (::ShowCursor(FALSE) >= 0);
 			}
 			m_startMouse.x = m_startMouse.y = -1;
 			m_bMouseOn = false;
 		}
-		this->InvalidateRect(m_pNavPanel->PanelRect(), FALSE);
+		this->InvalidateRect(m_pNavPanelCtl->PanelRect(), FALSE);
 	}
 }
 
@@ -3036,8 +2182,8 @@ void CMainDlg::MouseOn() {
 	if (!m_bMouseOn) {
 		::ShowCursor(TRUE);
 		m_bMouseOn = true;
-		if (m_pNavPanel != NULL) {
-		  this->InvalidateRect(m_pNavPanel->PanelRect(), FALSE);
+		if (m_pNavPanelCtl != NULL) { // can be called very early
+		  this->InvalidateRect(m_pNavPanelCtl->PanelRect(), FALSE);
 		}
 	}
 }
@@ -3056,28 +2202,6 @@ void CMainDlg::InitParametersForNewImage() {
 	m_bInZooming = m_bTemporaryLowQ = m_bShowZoomFactor = false;
 }
 
-void CMainDlg::DrawTextBordered(CPaintDC& dc, LPCTSTR sText, const CRect& rect, UINT nFormat) {
-	static HFONT hFont = 0;
-	if (hFont == 0) {
-		// Use cleartype here, this improves the readability
-		hFont = ::CreateFont(16, 0, 0, 0, FW_BOLD, FALSE, FALSE, FALSE, DEFAULT_CHARSET, OUT_DEFAULT_PRECIS,
-			CLIP_DEFAULT_PRECIS, CLEARTYPE_QUALITY, VARIABLE_PITCH, _T("Arial"));
-	}
-
-	HFONT hOldFont = dc.SelectFont(hFont);
-	COLORREF oldColor = dc.SetTextColor(RGB(0, 0, 0));
-	CRect textRect = rect;
-	textRect.InflateRect(-1, -1);
-	textRect.OffsetRect(-1, 0); dc.DrawText(sText, -1, &textRect, nFormat | DT_NOPREFIX);
-	textRect.OffsetRect(2, 0); dc.DrawText(sText, -1, &textRect, nFormat | DT_NOPREFIX);
-	textRect.OffsetRect(-1, -1); dc.DrawText(sText, -1, &textRect, nFormat | DT_NOPREFIX);
-	textRect.OffsetRect(0, 2); dc.DrawText(sText, -1, &textRect, nFormat | DT_NOPREFIX);
-	textRect.OffsetRect(0, -1);
-	dc.SetTextColor(oldColor);
-	dc.DrawText(sText, -1, &textRect, nFormat | DT_NOPREFIX);
-	dc.SelectFont(hOldFont);
-}
-
 void CMainDlg::ExchangeProcessingParams() {
 	bool bOldAutoContrastSection = m_bAutoContrastSection;
 	CImageProcessingParams tempParams = *m_pImageProcParams;
@@ -3090,41 +2214,10 @@ void CMainDlg::ExchangeProcessingParams() {
 	this->Invalidate(FALSE);
 }
 
-void CMainDlg::ShowHideSaveDBButtons() {
-	m_btnSaveToDB->SetShow(m_pCurrentImage != NULL && !m_pCurrentImage->IsClipboardImage() && !m_bMovieMode && !m_bKeepParams);
-	m_btnRemoveFromDB->SetShow(m_pCurrentImage != NULL && !m_bMovieMode && !m_bKeepParams && 
-		m_pCurrentImage->IsInParamDB());
-}
-
 void CMainDlg::AfterNewImageLoaded(bool bSynchronize) {
-	SetWindowTitle();
-	HideNavPanelTemporary();
-	ShowHideSaveDBButtons();
-	m_btnUnsharpMask->SetShow(m_pCurrentImage != NULL);
-	m_pEXIFDisplay->SetHistogram(NULL);
-	if (m_pCurrentImage != NULL && !m_pCurrentImage->IsClipboardImage() && !m_bMovieMode) {
-		m_txtParamDB->SetShow(true);
-		m_txtRename->SetShow(true);
-		LPCTSTR sCurrentFileTitle = m_pFileList->CurrentFileTitle();
-		if (sCurrentFileTitle != NULL) {
-			m_txtFileName->SetText(sCurrentFileTitle);
-		} else {
-			m_txtFileName->SetText(_T(""));
-		}
-		m_txtFileName->SetEditable(!m_pFileList->IsSlideShowList());
-		CEXIFReader* pEXIF = m_pCurrentImage->GetEXIFReader();
-		if (pEXIF != NULL && pEXIF->GetAcquisitionTime().wYear > 1600) {
-			m_txtAcqDate->SetText(CString(_T("* ")) + Helpers::SystemTimeToString(pEXIF->GetAcquisitionTime()));
-		} else {
-			m_txtAcqDate->SetText(_T(""));
-		}
-	} else {
-		m_txtAcqDate->SetText(_T(""));
-		m_txtFileName->SetText(_T(""));
-		m_txtFileName->SetEditable(false);
-		m_txtParamDB->SetShow(false);
-		m_txtRename->SetShow(false);
-	}
+	UpdateWindowTitle();
+	m_pNavPanelCtl->HideNavPanelTemporary();
+	m_pPanelMgr->AfterNewImageLoaded();
 	if (bSynchronize) {
 		// after loading an image, the per image processing parameters must be synchronized with
 		// the current processing parameters
@@ -3170,138 +2263,17 @@ void CMainDlg::AfterNewImageLoaded(bool bSynchronize) {
 	}
 }
 
-bool CMainDlg::RenameCurrentFile(LPCTSTR sNewFileTitle) {
-	LPCTSTR sCurrentFileName = m_pFileList->Current();
-	if (sCurrentFileName == NULL) {
-		return false;
-	}
-
-	DWORD nAttributes = ::GetFileAttributes(sCurrentFileName);
-	if (nAttributes & FILE_ATTRIBUTE_READONLY) {
-		::MessageBox(this->m_hWnd, CNLS::GetString(_T("The file is read-only!")), CNLS::GetString(_T("Can't rename file")), MB_OK | MB_ICONSTOP);
-		return false;
-	}
-	if (_tcschr(sNewFileTitle, _T('\\')) != NULL) {
-		::MessageBox(this->m_hWnd, CNLS::GetString(_T("New name contains backslash character!")), CNLS::GetString(_T("Can't rename file")), MB_OK | MB_ICONSTOP);
-		return false;
-	}
-
-	CString sNewFileName = sNewFileTitle;
-	if (_tcschr(sNewFileTitle, _T('.')) == NULL) {
-		// no ending given, take the one from original file
-		LPCTSTR sEndingOld = _tcsrchr(sCurrentFileName, _T('.'));
-		if (sEndingOld != NULL) {
-			sNewFileName += sEndingOld;
-		}
-	}
-	LPCTSTR sPosOld = _tcsrchr(sCurrentFileName, _T('\\'));
-	int nNumChrDir = (sPosOld == NULL) ? 0 : (sPosOld - sCurrentFileName);
-	sNewFileName = CString(sCurrentFileName, nNumChrDir) + _T('\\') + sNewFileName;
-
-	// Rename the file
-	if (!::MoveFileEx(sCurrentFileName, sNewFileName, 0)) {
-		CString sError(CNLS::GetString(_T("Renaming file failed!")));
-		DWORD lastError = ::GetLastError();
-		LPTSTR lpMsgBuf = NULL;
-		::FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM, NULL, lastError,
-			MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPTSTR) &lpMsgBuf, 0, NULL);
-		sError += _T("\n");
-		sError += CNLS::GetString(_T("Reason: "));
-		sError += lpMsgBuf;
-		LocalFree(lpMsgBuf);
-		::MessageBox(this->m_hWnd, sError, CNLS::GetString(_T("Can't rename file")), MB_OK | MB_ICONSTOP);
-		return false;
-	}
-
-	// Set new name
-	LPCTSTR sNewFinalFileTitle = _tcsrchr(sNewFileName, _T('\\'));
-	m_txtFileName->SetText((sNewFinalFileTitle == NULL) ? sNewFileName : sNewFinalFileTitle+1);
-
-	// Tell that file was renamed to JPEG Provider and file list
-	CString sCurFileName(sCurrentFileName); // copy, ptr will be replaced
-	m_pFileList->FileHasRenamed(sCurFileName, sNewFileName);
-	m_pJPEGProvider->FileHasRenamed(sCurFileName, sNewFileName);
-
-	// Needs to update filename
-	if (m_bShowFileInfo || m_bShowFileName || m_bShowHelp) {
-		this->Invalidate(FALSE);
-	}
-	SetWindowTitle();
-	return false;
-}
-
-static void AddFlagText(CString& sText, LPCTSTR sFlagText, bool bFlag) {
-	sText += sFlagText;
-	if (bFlag) {
-		sText += CNLS::GetString(_T("on"));
-	} else {
-		sText += CNLS::GetString(_T("off"));
-	}
-	sText += _T('\n');
-}
-
 void CMainDlg::SaveParameters() {
 	if (m_bMovieMode) {
 		return;
 	}
 
-	const int BUFF_SIZE = 256;
-	TCHAR buff[BUFF_SIZE];
-	CString sText = CString(CNLS::GetString(_T("Do you really want to save the following parameters as default to the INI file"))) + _T('\n') +
-					Helpers::JPEGViewAppDataPath() + _T("JPEGView.ini ?\n\n");
-	_stprintf_s(buff, BUFF_SIZE, CString(CNLS::GetString(_T("Contrast"))) + _T(": %.2f\n"), m_pImageProcParams->Contrast);
-	sText += buff;
-	_stprintf_s(buff, BUFF_SIZE, CString(CNLS::GetString(_T("Brightness"))) + _T(": %.2f\n"), m_pImageProcParams->Gamma);
-	sText += buff;
-	_stprintf_s(buff, BUFF_SIZE, CString(CNLS::GetString(_T("Saturation"))) + _T(": %.2f\n"), m_pImageProcParams->Saturation);
-	sText += buff;
-	_stprintf_s(buff, BUFF_SIZE, CString(CNLS::GetString(_T("Sharpen"))) + _T(": %.2f\n"), m_pImageProcParams->Sharpen);
-	sText += buff;
-	_stprintf_s(buff, BUFF_SIZE, CString(CNLS::GetString(_T("Cyan-Red"))) + _T(": %.2f\n"), m_pImageProcParams->CyanRed);
-	sText += buff;
-	_stprintf_s(buff, BUFF_SIZE, CString(CNLS::GetString(_T("Magenta-Green"))) + _T(": %.2f\n"), m_pImageProcParams->MagentaGreen);
-	sText += buff;
-	_stprintf_s(buff, BUFF_SIZE, CString(CNLS::GetString(_T("Yellow-Blue"))) + _T(": %.2f\n"), m_pImageProcParams->YellowBlue);
-	sText += buff;
-	if (m_bLDC) {
-		_stprintf_s(buff, BUFF_SIZE, CString(CNLS::GetString(_T("Lighten Shadows"))) + _T(": %.2f\n"), m_pImageProcParams->LightenShadows);
-		sText += buff;
-		_stprintf_s(buff, BUFF_SIZE, CString(CNLS::GetString(_T("Darken Highlights"))) + _T(": %.2f\n"), m_pImageProcParams->DarkenHighlights);
-		sText += buff;
-		_stprintf_s(buff, BUFF_SIZE, CString(CNLS::GetString(_T("Deep Shadows"))) + _T(": %.2f\n"), m_pImageProcParams->LightenShadowSteepness);
-		sText += buff;
-	}
-	AddFlagText(sText, CNLS::GetString(_T("Auto contrast and color correction: ")), m_bAutoContrast);
-	AddFlagText(sText, CNLS::GetString(_T("Local density correction: ")), m_bLDC);
-	sText += CNLS::GetString(_T("Order files by: "));
-	if (m_pFileList->GetSorting() == Helpers::FS_CreationTime) {
-		sText += CNLS::GetString(_T("Creation date/time"));
-	} else if (m_pFileList->GetSorting() == Helpers::FS_LastModTime) {
-		sText += CNLS::GetString(_T("Last modification date/time"));
-	} else {
-		sText += CNLS::GetString(_T("File name"));
-	}
-	sText += _T("\n");
-	sText += CNLS::GetString(_T("Auto zoom mode")); sText += _T(": ");
-	if (m_eAutoZoomMode == Helpers::ZM_FillScreen) {
-		sText += CNLS::GetString(_T("Fill with crop"));
-	} else if (m_eAutoZoomMode == Helpers::ZM_FillScreenNoZoom) {
-		sText += CNLS::GetString(_T("Fill with crop (no zoom)"));
-	} else if (m_eAutoZoomMode == Helpers::ZM_FitToScreen) {
-		sText += CNLS::GetString(_T("Fit to screen"));
-	} else {
-		sText += CNLS::GetString(_T("Fit to screen (no zoom)"));
-	}
-	sText += _T("\n");
-	sText += CNLS::GetString(_T("Show navigation panel")); sText += _T(": ");
-	sText += m_bShowNavPanel ? CNLS::GetString(_T("yes")) : CNLS::GetString(_T("no"));
-	sText += _T("\n\n");
-	sText += CNLS::GetString(_T("These values will override the values from the INI file located in the program folder of JPEGView!"));
+	EProcessingFlags eFlags = CreateProcessingFlags(m_bHQResampling, m_bAutoContrast, m_bAutoContrastSection, m_bLDC, m_bKeepParams, m_bLandscapeMode);
+	CString sText = HelpersGUI::GetINIFileSaveConfirmationText(*m_pImageProcParams, eFlags,
+		m_pFileList->GetSorting(), m_eAutoZoomMode, m_pNavPanelCtl->IsActive());
 
 	if (IDYES == this->MessageBox(sText, CNLS::GetString(_T("Confirm save default parameters")), MB_YESNO | MB_ICONQUESTION)) {
-		CSettingsProvider::This().SaveSettings(*m_pImageProcParams, 
-			CreateProcessingFlags(m_bHQResampling, m_bAutoContrast, 
-			m_bAutoContrastSection, m_bLDC, m_bKeepParams, m_bLandscapeMode), m_pFileList->GetSorting(), m_eAutoZoomMode, m_bShowNavPanel);
+		CSettingsProvider::This().SaveSettings(*m_pImageProcParams, eFlags, m_pFileList->GetSorting(), m_eAutoZoomMode, m_pNavPanelCtl->IsActive());
 	}
 }
 
@@ -3335,7 +2307,6 @@ bool CMainDlg::ImageToScreen(float & fX, float & fY) {
 	if (m_pCurrentImage == NULL) {
 		return false;
 	}
-
 	m_pCurrentImage->OrigToDIB(fX, fY);
 
 	int nOffsetX = (m_pCurrentImage->DIBWidth() - m_clientRect.Width())/2;
@@ -3352,194 +2323,14 @@ LPCTSTR CMainDlg::CurrentFileName(bool bFileTitle) {
 		return _T("Clipboard Image");
 	}
 	if (m_pFileList != NULL) {
-		if (bFileTitle) {
-			return m_pFileList->CurrentFileTitle();
-		} else {
-			return m_pFileList->Current();
-		}
+		return bFileTitle ? m_pFileList->CurrentFileTitle() : m_pFileList->Current();
 	} else {
 		return NULL;
 	}
 }
 
-void CMainDlg::FillEXIFDataDisplay(CEXIFDisplay* pEXIFDisplay) {
-	pEXIFDisplay->ClearTexts();
-
-	pEXIFDisplay->SetHistogram(NULL);
-
-	CString sFileTitle;
-	if (m_pCurrentImage->IsClipboardImage()) {
-		sFileTitle = CurrentFileName(true);
-	} else if (m_pFileList->Current() != NULL) {
-		sFileTitle.Format(_T("[%d/%d]  %s"), m_pFileList->CurrentIndex() + 1, m_pFileList->Size(), CurrentFileName(true));
-	}
-	LPCTSTR sComment = NULL;
-	pEXIFDisplay->AddTitle(sFileTitle);
-	pEXIFDisplay->AddLine(CNLS::GetString(_T("Image width:")), m_pCurrentImage->OrigWidth());
-	pEXIFDisplay->AddLine(CNLS::GetString(_T("Image height:")), m_pCurrentImage->OrigHeight());
-	if (!m_pCurrentImage->IsClipboardImage()) {
-		CEXIFReader* pEXIFReader = m_pCurrentImage->GetEXIFReader();
-		if (pEXIFReader != NULL) {
-			sComment = pEXIFReader->GetUserComment();
-			if (sComment == NULL || sComment[0] == 0) {
-				sComment = pEXIFReader->GetImageDescription();
-			}
-			if (pEXIFReader->GetAcquisitionTimePresent()) {
-				pEXIFDisplay->AddLine(CNLS::GetString(_T("Acquisition date:")), pEXIFReader->GetAcquisitionTime());
-			} else {
-				const FILETIME* pFileTime = m_pFileList->CurrentModificationTime();
-				if (pFileTime != NULL) {
-					pEXIFDisplay->AddLine(CNLS::GetString(_T("Modification date:")), *pFileTime);
-				}
-			}
-			if (pEXIFReader->GetCameraModelPresent()) {
-				pEXIFDisplay->AddLine(CNLS::GetString(_T("Camera model:")), pEXIFReader->GetCameraModel());
-			}
-			if (pEXIFReader->GetExposureTimePresent()) {
-				pEXIFDisplay->AddLine(CNLS::GetString(_T("Exposure time (s):")), pEXIFReader->GetExposureTime());
-			}
-			if (pEXIFReader->GetExposureBiasPresent()) {
-				pEXIFDisplay->AddLine(CNLS::GetString(_T("Exposure bias (EV):")), pEXIFReader->GetExposureBias(), 2);
-			}
-			if (pEXIFReader->GetFlashFiredPresent()) {
-				pEXIFDisplay->AddLine(CNLS::GetString(_T("Flash fired:")), pEXIFReader->GetFlashFired() ? CNLS::GetString(_T("yes")) : CNLS::GetString(_T("no")));
-			}
-			if (pEXIFReader->GetFocalLengthPresent()) {
-				pEXIFDisplay->AddLine(CNLS::GetString(_T("Focal length (mm):")), pEXIFReader->GetFocalLength(), 1);
-			}
-			if (pEXIFReader->GetFNumberPresent()) {
-				pEXIFDisplay->AddLine(CNLS::GetString(_T("F-Number:")), pEXIFReader->GetFNumber(), 1);
-			}
-			if (pEXIFReader->GetISOSpeedPresent()) {
-				pEXIFDisplay->AddLine(CNLS::GetString(_T("ISO Speed:")), (int)pEXIFReader->GetISOSpeed());
-			}
-		} else {
-			const FILETIME* pFileTime = m_pFileList->CurrentModificationTime();
-			if (pFileTime != NULL) {
-				pEXIFDisplay->AddLine(CNLS::GetString(_T("Modification date:")), *pFileTime);
-			}
-		}
-	}
-
-	if (sComment == NULL || sComment[0] == 0) {
-		sComment = m_pCurrentImage->GetJPEGComment();
-	}
-	if (CSettingsProvider::This().ShowJPEGComments() && sComment != NULL && sComment[0] != 0) {
-		pEXIFDisplay->SetComment(sComment);
-	}
-}
-
-void CMainDlg::GenerateHelpDisplay(CHelpDisplay & helpDisplay) {
-	helpDisplay.AddTitle(CNLS::GetString(_T("JPEGView Help")));
-	LPCTSTR sTitle = CurrentFileName(true);
-	if (sTitle != NULL && m_pCurrentImage != NULL) {
-		double fMPix = double(m_pCurrentImage->OrigWidth() * m_pCurrentImage->OrigHeight())/(1000000);
-		TCHAR buff[256];
-		_stprintf_s(buff, 256, _T("%s (%d x %d   %.1f MPixel)"), sTitle, m_pCurrentImage->OrigWidth(), m_pCurrentImage->OrigHeight(), fMPix);
-		helpDisplay.AddLine(CNLS::GetString(_T("Current image")), buff);
-	}
-	helpDisplay.AddLine(_T("Esc"), CNLS::GetString(_T("Close help text display / Close JPEGView")));
-	helpDisplay.AddLine(_T("F1"), CNLS::GetString(_T("Show/hide this help text")));
-	helpDisplay.AddLineInfo(_T("F2"), m_bShowFileInfo, CNLS::GetString(_T("Show/hide picture information (EXIF data)")));
-	helpDisplay.AddLineInfo(_T("Ctrl+F2"), m_bShowFileName, CNLS::GetString(_T("Show/hide file name")));
-	helpDisplay.AddLineInfo(_T("F11"), m_bShowNavPanel, CNLS::GetString(_T("Show/hide navigation panel")));
-	helpDisplay.AddLineInfo(_T("F3"), m_bHQResampling, CNLS::GetString(_T("Enable/disable high quality resampling")));
-	helpDisplay.AddLineInfo(_T("F4"), m_bKeepParams, CNLS::GetString(_T("Enable/disable keeping of geometry related (zoom/pan/rotation)")));
-	helpDisplay.AddLineInfo(_T(""),  LPCTSTR(NULL), CNLS::GetString(_T("and image processing (brightness/contrast/sharpen) parameters between images")));
-	helpDisplay.AddLineInfo(_T("F5"), m_bAutoContrast, CNLS::GetString(_T("Enable/disable automatic contrast correction (histogram equalization)")));
-	helpDisplay.AddLineInfo(_T("Shift+F5"), m_bAutoContrastSection, CNLS::GetString(_T("Apply auto contrast correction using only visible section of image")));
-	helpDisplay.AddLineInfo(_T("F6"), m_bLDC, CNLS::GetString(_T("Enable/disable automatic density correction (local brightness correction)")));
-	TCHAR buffLS[16]; _stprintf_s(buffLS, 16, _T("%.2f"), m_pImageProcParams->LightenShadows);
-	helpDisplay.AddLineInfo(_T("Ctrl/Alt+F6"), buffLS, CNLS::GetString(_T("Increase/decrease lightening of shadows (LDC must be on)")));
-	TCHAR buffDH[16]; _stprintf_s(buffDH, 16, _T("%.2f"), m_pImageProcParams->DarkenHighlights);
-	helpDisplay.AddLineInfo(_T("C/A+Shift+F6"), buffDH, CNLS::GetString(_T("Increase/decrease darkening of highlights (LDC must be on)")));
-	helpDisplay.AddLineInfo(_T("Ctrl+L"), m_bLandscapeMode, CNLS::GetString(_T("Enable/disable landscape picture enhancement mode")));
-	helpDisplay.AddLineInfo(_T("F7"), m_pFileList->GetNavigationMode() == Helpers::NM_LoopDirectory, CNLS::GetString(_T("Loop through files in current folder")));
-	helpDisplay.AddLineInfo(_T("F8"), m_pFileList->GetNavigationMode() == Helpers::NM_LoopSubDirectories, CNLS::GetString(_T("Loop through files in current directory and all subfolders")));
-	helpDisplay.AddLineInfo(_T("F9"), m_pFileList->GetNavigationMode() == Helpers::NM_LoopSameDirectoryLevel, CNLS::GetString(_T("Loop through files in current directory and all sibling folders (folders on same level)")));
-	helpDisplay.AddLineInfo(_T("F12"), m_bSpanVirtualDesktop, CNLS::GetString(_T("Maximize/restore to/from virtual desktop (only for multi-monitor systems)")));
-	helpDisplay.AddLineInfo(_T("Ctrl+F12"), LPCTSTR(NULL), CNLS::GetString(_T("Toggle between screens (only for multi-monitor systems)")));
-	helpDisplay.AddLineInfo(_T("Ctrl+W"), m_bFullScreenMode, CNLS::GetString(_T("Enable/disable full screen mode")));
-	helpDisplay.AddLine(_T("Ctrl+M"), CNLS::GetString(_T("Mark image for toggling. Use Ctrl+Left/Ctrl+Right to toggle between marked and current image")));
-	helpDisplay.AddLine(_T("Ctrl+C/Ctrl+X"), CNLS::GetString(_T("Copy screen to clipboard/ Copy processed full size image to clipboard")));
-	helpDisplay.AddLine(_T("Ctrl+O"), CNLS::GetString(_T("Open new image or slideshow file")));
-	helpDisplay.AddLine(_T("Ctrl+S"), CNLS::GetString(_T("Save processed image to JPEG file (original size)")));
-	helpDisplay.AddLine(_T("Ctrl+Shift+S"), CNLS::GetString(_T("Save processed image to JPEG file (screen size)")));
-	helpDisplay.AddLine(_T("s/d"), CNLS::GetString(_T("Save (s)/ delete (d) image processing parameters in/from parameter DB")));
-	helpDisplay.AddLineInfo(_T("c/m/n"), 
-		(m_pFileList->GetSorting() == Helpers::FS_LastModTime) ? _T("m") :
-		(m_pFileList->GetSorting() == Helpers::FS_FileName) ? _T("n") : _T("c"), 
-		CNLS::GetString(_T("Sort images by creation date, resp. modification date, resp. file name")));
-	helpDisplay.AddLine(CNLS::GetString(_T("PgUp or Left")), CNLS::GetString(_T("Goto previous image")));
-	helpDisplay.AddLine(CNLS::GetString(_T("PgDn or Right")), CNLS::GetString(_T("Goto next image")));
-	helpDisplay.AddLine(_T("Home/End"), CNLS::GetString(_T("Goto first/last image of current folder (using sort order as defined)")));
-	TCHAR buff[16]; _stprintf_s(buff, 16, _T("%.2f"), m_pImageProcParams->Gamma);
-	helpDisplay.AddLineInfo(_T("Shift +/-"), buff, CNLS::GetString(_T("Increase/decrease brightness")));
-	TCHAR buff1[16]; _stprintf_s(buff1, 16, _T("%.2f"), m_pImageProcParams->Contrast);
-	helpDisplay.AddLineInfo(_T("Ctrl +/-"), buff1, CNLS::GetString(_T("Increase/decrease contrast")));
-	TCHAR buff2[16]; _stprintf_s(buff2, 16, _T("%.2f"), m_pImageProcParams->Sharpen);
-	helpDisplay.AddLineInfo(_T("Alt +/-"), buff2, CNLS::GetString(_T("Increase/decrease sharpness")));
-	TCHAR buff3[16]; _stprintf_s(buff3, 16, _T("%.2f"), m_pImageProcParams->ColorCorrectionFactor);
-	helpDisplay.AddLineInfo(_T("Alt+Ctrl +/-"), buff3, CNLS::GetString(_T("Increase/decrease auto color cast correction amount")));
-	TCHAR buff4[16]; _stprintf_s(buff4, 16, _T("%.2f"), m_pImageProcParams->ContrastCorrectionFactor);
-	helpDisplay.AddLineInfo(_T("Ctrl+Shift +/-"), buff4, CNLS::GetString(_T("Increase/decrease auto contrast correction amount")));
-	helpDisplay.AddLine(_T("1 .. 9"), CNLS::GetString(_T("Slide show with timeout of n seconds (ESC to stop)")));
-	helpDisplay.AddLineInfo(_T("Ctrl[+Shift] 1 .. 9"),  LPCTSTR(NULL), CNLS::GetString(_T("Set timeout to n/10 sec, respectively n/100 sec (Ctrl+Shift)")));
-	helpDisplay.AddLine(CNLS::GetString(_T("up/down")), CNLS::GetString(_T("Rotate image and fit to screen")));
-	helpDisplay.AddLine(_T("Return"), CNLS::GetString(_T("Fit image to screen")));
-	helpDisplay.AddLine(_T("Space"), CNLS::GetString(_T("Zoom 1:1 (100 %)")));
-	TCHAR buff5[16]; _stprintf_s(buff5, 16, _T("%.0f %%"), m_dZoom*100);
-	helpDisplay.AddLineInfo(_T("+/-"), buff5, CNLS::GetString(_T("Zoom in/Zoom out (also Ctrl+up/down)")));
-	helpDisplay.AddLine(CNLS::GetString(_T("Mouse wheel")), CNLS::GetString(_T("Zoom in/out image")));
-	helpDisplay.AddLine(CNLS::GetString(_T("Left mouse & drag")), CNLS::GetString(_T("Pan image")));
-	helpDisplay.AddLine(CNLS::GetString(_T("Ctrl + Left mouse")), CNLS::GetString(_T("Crop image")));
-	helpDisplay.AddLine(CNLS::GetString(_T("Forward mouse button")), CNLS::GetString(_T("Next image")));
-	helpDisplay.AddLine(CNLS::GetString(_T("Back mouse button")), CNLS::GetString(_T("Previous image")));
-	std::list<CUserCommand*>::iterator iter;
-	std::list<CUserCommand*> & userCmdList = CSettingsProvider::This().UserCommandList();
-	for (iter = userCmdList.begin( ); iter != userCmdList.end( ); iter++ ) {
-		if (!(*iter)->HelpText().IsEmpty()) {
-			helpDisplay.AddLine((*iter)->HelpKey(), CNLS::GetString((*iter)->HelpText()));
-		}
-	}
-}
-
-void CMainDlg::InvalidateZoomNavigatorRect() {
-	bool bShowZoomNavigator = m_pCurrentImage != NULL && CSettingsProvider::This().ShowZoomNavigator();
-	if (bShowZoomNavigator) {
-		CRect rectZoomNavigator = CZoomNavigator::GetNavigatorRect(m_pCurrentImage, m_pSliderMgr->PanelRect());
-		rectZoomNavigator.InflateRect(1, 1);
-		this->InvalidateRect(rectZoomNavigator, FALSE);
-	}
-}
-
-bool CMainDlg::IsZoomNavigatorCurrentlyShown() {
-	bool bShowZoomNavigator = m_pCurrentImage != NULL && CSettingsProvider::This().ShowZoomNavigator();
-	if (bShowZoomNavigator) {
-		if (m_bDraggingWithZoomNavigator) {
-			return true;
-		}
-		CSize clippedSize(min(m_clientRect.Width(), m_virtualImageSize.cx), min(m_clientRect.Height(), m_virtualImageSize.cy));
-		bShowZoomNavigator = (m_virtualImageSize.cx > clippedSize.cx || m_virtualImageSize.cy > clippedSize.cy);
-		if (bShowZoomNavigator) {
-			CRect navBoundRect = CZoomNavigator::GetNavigatorBound(m_pSliderMgr->PanelRect());
-			bShowZoomNavigator = m_bDoDragging || m_bInZooming || m_bShowZoomFactor || 
-				(!m_bCropping && navBoundRect.PtInRect(CPoint(m_nMouseX, m_nMouseY)));
-		}
-	}
-	return bShowZoomNavigator;
-}
-
-bool CMainDlg::IsPointInZoomNavigatorThumbnail(const CPoint& pt) {
-	if (IsZoomNavigatorCurrentlyShown() && m_pCurrentImage != NULL) {
-		CRect thumbnailRect = CZoomNavigator::GetNavigatorRect(m_pCurrentImage, m_pSliderMgr->PanelRect());
-		return thumbnailRect.PtInRect(pt);
-	}
-	return false;
-}
-
 void CMainDlg::SetCursorForMoveSection() {
-	if (IsPointInZoomNavigatorThumbnail(CPoint(m_nMouseX, m_nMouseY)) || m_bDragging) {
+	if (m_pZoomNavigatorCtl->IsPointInZoomNavigatorThumbnail(CPoint(m_nMouseX, m_nMouseY)) || m_bDragging) {
 		::SetCursor(::LoadCursor(NULL, MAKEINTRESOURCE(IDC_SIZEALL)));
 		m_bPanMouseCursorSet = true;
 	} else if (m_bPanMouseCursorSet) {
@@ -3572,11 +2363,11 @@ void CMainDlg::ToggleMonitor() {
 CRect CMainDlg::GetZoomTextRect(CRect imageProcessingArea) {
 	int nZoomTextRectBottomOffset = (m_clientRect.Width() < 800) ? 25 : ZOOM_TEXT_RECT_OFFSET;
 	int nStartX = imageProcessingArea.right - Scale(ZOOM_TEXT_RECT_WIDTH + ZOOM_TEXT_RECT_OFFSET);
-	if (m_bShowIPTools) {
-		nStartX = max(nStartX, m_btnUnsharpMask->GetPosition().right);
+	if (m_pImageProcPanelCtl->IsVisible()) {
+		nStartX = max(nStartX, m_pImageProcPanelCtl->GetUnsharpMaskButtonRect().right);
 	}
 	int nEndX = nStartX + Scale(ZOOM_TEXT_RECT_WIDTH);
-	if (m_bShowIPTools) {
+	if (m_pImageProcPanelCtl->IsVisible()) {
 		nEndX = min(nEndX, imageProcessingArea.right - 2);
 	}
 	return CRect(nStartX, 
@@ -3601,41 +2392,7 @@ void CMainDlg::EditINIFile(bool bGlobalINI) {
 	::ShellExecute(m_hWnd, _T("open"), _T("notepad.exe"), sINIFileName, NULL, SW_SHOW);
 }
 
-void CMainDlg::BackupParamDB() {
-	CFileDialog fileDlg(FALSE, _T(".db"), _T("ParamDBBackup.db"), 
-			OFN_EXPLORER | OFN_ENABLESIZING | OFN_HIDEREADONLY | OFN_NOREADONLYRETURN,
-			Helpers::CReplacePipe(CString(_T("Param DB (*.db)|*.db|")) +
-			CNLS::GetString(_T("All Files")) + _T("|*.*|")), m_hWnd);
-	TCHAR buff[MAX_PATH];
-	::SHGetFolderPath(NULL, CSIDL_PERSONAL, NULL, SHGFP_TYPE_CURRENT, buff);
-	fileDlg.m_ofn.lpstrInitialDir = buff;
-	if (IDOK == fileDlg.DoModal(m_hWnd)) {
-		if (!::CopyFile(CParameterDB::This().GetParamDBName(), fileDlg.m_szFileName, TRUE)) {
-			LPTSTR lpMsgBuf = NULL;
-			::FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM, NULL, ::GetLastError(),
-				MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPTSTR) &lpMsgBuf, 0, NULL);
-			CString sMsg; sMsg.Format(CNLS::GetString(_T("Copying parameter DB to file '%s' failed. Reason: %s")), fileDlg.m_szFileName, lpMsgBuf);
-			::MessageBox(m_hWnd, sMsg, _T("JPEGView"), MB_OK | MB_ICONERROR);
-			::LocalFree(lpMsgBuf);
-		}
-	}
-}
-
-void CMainDlg::RestoreParamDB() {
-	CFileDialog fileDlg(TRUE, _T(".db"), _T("ParamDBBackup.db"), 
-		OFN_EXPLORER | OFN_ENABLESIZING | OFN_HIDEREADONLY,
-		Helpers::CReplacePipe(CString(_T("Param DB (*.db)|*.db|")) +
-		CNLS::GetString(_T("All Files")) + _T("|*.*|")), m_hWnd);
-	TCHAR buff[MAX_PATH];
-	::SHGetFolderPath(NULL, CSIDL_PERSONAL, NULL, SHGFP_TYPE_CURRENT, buff);
-	fileDlg.m_ofn.lpstrInitialDir = buff;
-	fileDlg.m_ofn.lpstrTitle = CNLS::GetString(_T("Select parameter DB to restore"));
-	if (IDOK == fileDlg.DoModal(m_hWnd)) {
-		CParameterDB::This().MergeParamDB(fileDlg.m_szFileName);
-	}
-}
-
-void CMainDlg::SetWindowTitle() {
+void CMainDlg::UpdateWindowTitle() {
 	LPCTSTR sCurrentFileName = CurrentFileName(true);
 	if (sCurrentFileName == NULL || m_pCurrentImage == NULL) {
 		this->SetWindowText(_T("JPEGView"));
@@ -3649,261 +2406,21 @@ void CMainDlg::SetWindowTitle() {
 	}
 }
 
-bool CMainDlg::IsNavPanelVisible() {
-	bool bMouseInNavPanel = m_bMouseInNavPanel && !m_bShowIPTools;
-	return m_bShowNavPanel && !(m_fCurrentBlendingFactorNavPanel <= 0.0f && !bMouseInNavPanel) &&
-		!m_bMovieMode && !m_bDoCropping && (m_bMouseOn || bMouseInNavPanel);
-}
-
-void CMainDlg::StartNavPanelAnimation(bool bFadeOut, bool bFast) {
-	if (IsModalPanelShown()) return;
-	if (!m_bInNavPanelAnimation) {
-		m_bFadeOut = bFadeOut;
-		if (!bFadeOut) {
-			return; // already visible, do nothing
-		}
-		m_bInNavPanelAnimation = true;
-		m_fCurrentBlendingFactorNavPanel = CSettingsProvider::This().BlendFactorNavPanel();
-		::SetTimer(this->m_hWnd, NAVPANEL_ANI_TIMER_EVENT_ID, bFast ? 20 : 100, NULL);
-	} else if (m_bFadeOut != bFadeOut) {
-		m_bFadeOut = bFadeOut;
-		::KillTimer(this->m_hWnd, NAVPANEL_ANI_TIMER_EVENT_ID);
-		::SetTimer(this->m_hWnd, NAVPANEL_ANI_TIMER_EVENT_ID, bFast ? 20 : 100, NULL);
-	}
-}
-
-void CMainDlg::DoNavPanelAnimation() {
-	bool bDoAnimation = true;
-	if (!m_bInNavPanelAnimation || m_pCurrentImage == NULL || m_bShowHelp) {
-		bDoAnimation = false;
-	} else {
-		if (!IsNavPanelVisible()) {
-			bDoAnimation = false;
-		} else if ((m_bFadeOut && m_fCurrentBlendingFactorNavPanel <= 0) || (!m_bFadeOut && m_fCurrentBlendingFactorNavPanel >= CSettingsProvider::This().BlendFactorNavPanel())) {
-			bDoAnimation = false;
-		}
-	}
-
-	bool bTerminate = false;
-	if (m_bFadeOut) {
-		m_fCurrentBlendingFactorNavPanel = max(0.0f, m_fCurrentBlendingFactorNavPanel - 0.02f);
-	} else {
-		m_fCurrentBlendingFactorNavPanel = min(CSettingsProvider::This().BlendFactorNavPanel(), m_fCurrentBlendingFactorNavPanel + 0.06f);
-		bTerminate = m_fCurrentBlendingFactorNavPanel >= CSettingsProvider::This().BlendFactorNavPanel();
-	}
-
-	if (bDoAnimation) {
-		CRect rectNavPanel = m_pNavPanel->PanelRect();
-		CDC screenDC = GetDC();
-		void* pDIBData = m_pCurrentImage->DIBPixelsLastProcessed(false);
-		if (pDIBData != NULL) {
-			if (m_pMemDCAnimation == NULL) {
-				m_pMemDCAnimation = new CDC();
-				CDC screenDC = GetDC();
-				m_hOffScreenBitmapAnimation = CPaintMemDCMgr::PrepareRectForMemDCPainting(*m_pMemDCAnimation, screenDC, m_pNavPanel->PanelRect());
-			}
-
-			CBrush backBrush;
-			backBrush.CreateSolidBrush(CSettingsProvider::This().ColorBackground());
-			m_pMemDCAnimation->FillRect(CRect(0, 0, rectNavPanel.Width(), rectNavPanel.Height()), backBrush);
-
-			BITMAPINFO bmInfo;
-			memset(&bmInfo, 0, sizeof(BITMAPINFO));
-			bmInfo.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
-			bmInfo.bmiHeader.biWidth = m_pCurrentImage->DIBWidth();
-			bmInfo.bmiHeader.biHeight = -m_pCurrentImage->DIBHeight();
-			bmInfo.bmiHeader.biPlanes = 1;
-			bmInfo.bmiHeader.biBitCount = 32;
-			bmInfo.bmiHeader.biCompression = BI_RGB;
-			int xDest = (m_clientRect.Width() - m_pCurrentImage->DIBWidth()) / 2;
-			int yDest = (m_clientRect.Height() - m_pCurrentImage->DIBHeight()) / 2;
-			CPaintMemDCMgr::BitBltBlended(*m_pMemDCAnimation, screenDC, CSize(rectNavPanel.Width(), rectNavPanel.Height()), pDIBData, &bmInfo, 
-								  CPoint(xDest - rectNavPanel.left, yDest - rectNavPanel.top), CSize(m_pCurrentImage->DIBWidth(), m_pCurrentImage->DIBHeight()), 
-								  *m_pNavPanel, CPoint(-rectNavPanel.left, -rectNavPanel.top), m_fCurrentBlendingFactorNavPanel);
-			screenDC.BitBlt(rectNavPanel.left, rectNavPanel.top, rectNavPanel.Width(), rectNavPanel.Height(), *m_pMemDCAnimation, 0, 0, SRCCOPY);
-		}
-	}
-	if (bTerminate) {
-		EndNavPanelAnimation();
-	}
-}
-
-void CMainDlg::EndNavPanelAnimation() {
-	if (m_bInNavPanelAnimation) {
-		::KillTimer(this->m_hWnd, NAVPANEL_ANI_TIMER_EVENT_ID);
-		m_bInNavPanelAnimation = false;
-		m_fCurrentBlendingFactorNavPanel = CSettingsProvider::This().BlendFactorNavPanel();
-		if (m_pMemDCAnimation != NULL) {
-			delete m_pMemDCAnimation;
-			m_pMemDCAnimation = NULL;
-			::DeleteObject(m_hOffScreenBitmapAnimation);
-			m_hOffScreenBitmapAnimation = NULL;
-		}
-		
-	}
-	::KillTimer(this->m_hWnd, NAVPANEL_START_ANI_TIMER_EVENT_ID);
-	::SetTimer(this->m_hWnd, NAVPANEL_START_ANI_TIMER_EVENT_ID, 2000, NULL);
-}
-
-void CMainDlg::HideNavPanelTemporary() {
-	if (!m_bMouseInNavPanel || m_bShowIPTools || m_bCropping) {
-		m_bInNavPanelAnimation = true;
-		m_fCurrentBlendingFactorNavPanel = 0.0;
-		this->InvalidateRect(m_pNavPanel->PanelRect(), FALSE);
-		m_bFadeOut = true;
-	}
-}
-
-void CMainDlg::ShowHideIPTools(bool bShow) {
-	m_bShowIPTools = bShow;
-	this->InvalidateRect(m_pSliderMgr->PanelRect(), FALSE);
-	this->InvalidateRect(m_pNavPanel->PanelRect(), FALSE);
-	if (!bShow) {
-		m_pSliderMgr->GetTooltipMgr().RemoveActiveTooltip();
-	}
-	if (bShow) {
-		StartNavPanelAnimation(true, true);
-	} else {
-		StartNavPanelAnimation(false, true);
-	}
-}
-
-void CMainDlg::TerminateUnsharpMaskPanel() {
-	m_bShowUnsharpMaskPanel = false;
-	m_bShowNavPanel = m_bOldShowNavPanel;
-	m_pCurrentImage->FreeUnsharpMaskResources();
-	Invalidate();
-}
-
-void CMainDlg::StartUnsharpMaskPanel() {
-	bool bOldMouseOn = m_bMouseOn;
-	m_bMouseOn = false;
-	ResetZoomTo100Percents();
-	m_bMouseOn = bOldMouseOn;
-	m_bShowUnsharpMaskPanel = true;
-	m_bShowRotationPanel = false;
+bool CMainDlg::PrepareForModalPanel() {
 	m_bShowHelp = false;
-	m_bShowIPTools = false;
-	m_bOldShowNavPanel = m_bShowNavPanel;
-	m_bShowNavPanel = false;
-	m_bShowWndButtonPanel = false;
-	EndNavPanelAnimation();
-	StopTimer();
+	m_pImageProcPanelCtl->SetVisible(false);
+	m_pWndButtonPanelCtl->SetVisible(false);
+	bool bOldShowNavPanel = m_pNavPanelCtl->IsActive();
+	m_pNavPanelCtl->SetActive(false);
+	StopSlideShowTimer();
 	StopMovieMode();
-	Invalidate();
+	return bOldShowNavPanel;
 }
 
-void CMainDlg::TerminateRotationPanel() {
-	m_bShowRotationPanel = false;
-	m_bShowNavPanel = m_bOldShowNavPanel;
-	m_dRotationLQ = 0.0;
-	Invalidate();
-}
-
-void CMainDlg::StartRotationPanel() {
-	bool bOldMouseOn = m_bMouseOn;
-	m_bMouseOn = false;
-	m_bMouseOn = bOldMouseOn;
-	m_bShowRotationPanel = true;
-	m_bShowUnsharpMaskPanel = false;
-	m_bShowHelp = false;
-	m_bShowIPTools = false;
-	m_bOldShowNavPanel = m_bShowNavPanel;
-	m_bShowNavPanel = false;
-	m_bShowWndButtonPanel = false;
-	EndNavPanelAnimation();
-	StopTimer();
-	StopMovieMode();
-	UpdateRotationPanelTitle();
-	Invalidate();
-}
-
-void CMainDlg::UpdateAssistedRotationMode() {
-	m_textRotationHint->SetText(CNLS::GetString(m_bRotationModeAssisted ? 
-		_T("Use the mouse to draw a line that shall be horizontal or vertical.") : 
-		_T("Rotate the image by dragging with the mouse.")));
-	::InvalidateRect(m_hWnd, &m_textRotationHint->GetPosition(), FALSE);
-	m_btnRotationAssisted->SetEnabled(m_bRotationModeAssisted);
-	if (m_bRotationShowGrid == m_bRotationModeAssisted) {
-		m_bRotationShowGrid = !m_bRotationModeAssisted;
-		m_btnRotationShowGrid->SetEnabled(m_bRotationShowGrid);
-		Invalidate();
-	}
-}
-
-void CMainDlg::StartRotating(int nX, int nY) {
-	if (m_pCurrentImage != NULL) {
-		m_bRotating = true;
-		float fX = (float)nX, fY = (float)nY;
-		ScreenToImage(fX, fY);
-		m_rotationStartX = fX;
-		m_rotationStartY = fY;
-		m_dRotatonLQStart = m_dRotationLQ;
-	}
-}
-
-void CMainDlg::DoRotating() {
-	const double PI = 3.141592653;
-	if (m_pCurrentImage != NULL) {
-		if (!m_bRotationModeAssisted) {
-			float fX = (float)m_nMouseX, fY = (float)m_nMouseY;
-			ScreenToImage(fX, fY);
-			float fCenterX = m_pCurrentImage->OrigWidth() * 0.5f;
-			float fCenterY = m_pCurrentImage->OrigHeight() * 0.5f;
-			double dAngleStart = atan2(m_rotationStartY - fCenterY, m_rotationStartX - fCenterX);
-			double dAngleEnd = atan2(fY - fCenterY, fX - fCenterX);
-			m_dRotationLQ = fmod(m_dRotatonLQStart + dAngleEnd - dAngleStart, 2 * PI);
-			UpdateRotationPanelTitle();
-		}
-		Invalidate();
-	}
-}
-
-void CMainDlg::EndRotating() {
-	const float PI = 3.141592653f;
-	m_bRotating = false;
-	if (m_bRotationModeAssisted) {
-		float fX = m_rotationStartX, fY = m_rotationStartY;
-		ImageToScreen(fX, fY);
-		float fDX = (m_nMouseX > fX) ? m_nMouseX - fX : fX - m_nMouseX;
-		float fDY = (m_nMouseX > fX) ? m_nMouseY - fY : fY - m_nMouseY;
-		if (fabs(fDX) > 2 || fabs(fDY) > 2) {
-			float fAngle = atan2(fDY, fDX);
-			float fInvSignAngle = (fAngle < 0) ? 1.0f : -1.0f;
-			if (fabs(fAngle) > PI * 0.25f) {
-				m_dRotationLQ -= (fAngle + fInvSignAngle * PI * 0.5f);
-			} else {
-				m_dRotationLQ -= fAngle;
-			}
-			UpdateRotationPanelTitle();
-		}
-		Invalidate();
-	}
-}
-
-void CMainDlg::ApplyRotation() {
-	if (m_pCurrentImage == NULL) {
-		return;
-	}
-	m_pCurrentImage->RotateOriginalPixels(m_dRotationLQ, m_bRotationAutoCrop);
-	Invalidate();
-}
-
-void CMainDlg::PaintRotationLine(HDC hPaintDC) {
-	float fX = m_rotationStartX, fY = m_rotationStartY;
-	ImageToScreen(fX, fY);
-	HPEN hPen = ::CreatePen(PS_SOLID, 3, RGB(255, 0, 0));
-	HGDIOBJ hOldPen = ::SelectObject(hPaintDC, hPen);
-	::MoveToEx(hPaintDC, Helpers::RoundToInt(fX), Helpers::RoundToInt(fY), NULL); 
-	::LineTo(hPaintDC, m_nMouseX, m_nMouseY);
-	::SelectObject(hPaintDC, hOldPen);
-	::DeleteObject(hPen);
-}
-
-void CMainDlg::UpdateRotationPanelTitle() {
-	const int BUFF_SIZE = 24;
-	double dAngleDeg = 360 * m_dRotationLQ / (2 * 3.141592653);
-	TCHAR buff[BUFF_SIZE];
-	_stprintf_s(buff, BUFF_SIZE, _T("  %.1f °"), dAngleDeg);
-	m_textRotationPanel->SetText(CString(CNLS::GetString(_T("Rotate Image"))) + buff);
+int CMainDlg::TrackPopupMenu(CPoint pos, HMENU hMenu) {
+	m_bInTrackPopupMenu = true;
+	int nMenuCmd = ::TrackPopupMenu(hMenu, TPM_LEFTALIGN | TPM_RIGHTBUTTON | TPM_NONOTIFY | TPM_RETURNCMD, 
+		pos.x, pos.y, 0, this->m_hWnd, NULL);
+	m_bInTrackPopupMenu = false;
+	return nMenuCmd;
 }
