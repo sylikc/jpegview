@@ -1,5 +1,6 @@
 #include "StdAfx.h"
 #include "Helpers.h"
+#include "NLS.h"
 #include <math.h>
 
 namespace Helpers {
@@ -71,6 +72,13 @@ CSize GetImageRect(int nWidth, int nHeight, int nScreenWidth, int nScreenHeight,
 	return CSize((int)(nWidth*dZoom + 0.5), (int)(nHeight*dZoom + 0.5));
 }
 
+CRect InflateRect(const CRect& rect, float fAmount) {
+	CRect r(rect);
+	int nAmount = (int)(fAmount * r.Width());
+	r.InflateRect(-nAmount, -nAmount);
+	return r;
+}
+
 void GetZoomParameters(float & fZoom, CPoint & offsets, CSize imageSize, CSize windowSize, CRect zoomRect) {
 	int nZoomWidth = zoomRect.Width();
 	int nZoomHeight = zoomRect.Height();
@@ -95,21 +103,6 @@ void GetZoomParameters(float & fZoom, CPoint & offsets, CSize imageSize, CSize w
 	int nOffsetY = Helpers::RoundToInt(fZoom*imageSize.cy*0.5 - fZoom*nZoomRectMiddleY);
 
 	offsets = CPoint(nOffsetX, nOffsetY);
-}
-
-HFONT CreateBoldFontOfSelectedFont(CDC & dc) {
-	TCHAR buff[LF_FACESIZE];
-	if (::GetTextFace(dc, LF_FACESIZE, buff) != 0) {
-		TEXTMETRIC textMetrics;
-		::GetTextMetrics(dc, &textMetrics);
-		LOGFONT logFont;
-		memset(&logFont, 0, sizeof(LOGFONT));
-		logFont.lfHeight = textMetrics.tmHeight;
-		logFont.lfWeight = FW_BOLD;
-		_tcsncpy_s(logFont.lfFaceName, LF_FACESIZE, buff, LF_FACESIZE);  
-		return ::CreateFontIndirect(&logFont);
-	}
-	return NULL;
 }
 
 CPUType ProbeCPU(void) {

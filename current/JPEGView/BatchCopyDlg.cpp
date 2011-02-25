@@ -3,6 +3,7 @@
 #include "FileList.h"
 #include "SettingsProvider.h"
 #include "NLS.h"
+#include "HelpersGUI.h"
 
 ///////////////////////////////////////////////////////////////////////////////////
 // Helpers
@@ -127,9 +128,9 @@ LRESULT CBatchCopyDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*l
 	m_edtPattern.SetWindowText(CSettingsProvider::This().CopyRenamePattern());
 	DWORD nNewStyle = LVS_EX_FULLROWSELECT | LVS_EX_GRIDLINES | LVS_EX_CHECKBOXES;
 	m_lvFiles.SetExtendedListViewStyle(nNewStyle, nNewStyle);
-	m_lvFiles.InsertColumn(0, CNLS::GetString(_T("Old name")), LVCFMT_LEFT, (int)(Helpers::ScreenScaling*160));
-	m_lvFiles.InsertColumn(1, CNLS::GetString(_T("Date")), LVCFMT_LEFT, (int)(Helpers::ScreenScaling*130));
-	m_lvFiles.InsertColumn(2, CNLS::GetString(_T("New name (>> : file gets copied)")), LVCFMT_LEFT, (int)(Helpers::ScreenScaling*600));
+	m_lvFiles.InsertColumn(0, CNLS::GetString(_T("Old name")), LVCFMT_LEFT, (int)(HelpersGUI::ScreenScaling*160));
+	m_lvFiles.InsertColumn(1, CNLS::GetString(_T("Date")), LVCFMT_LEFT, (int)(HelpersGUI::ScreenScaling*130));
+	m_lvFiles.InsertColumn(2, CNLS::GetString(_T("New name (>> : file gets copied)")), LVCFMT_LEFT, (int)(HelpersGUI::ScreenScaling*600));
 
 	m_nNumFiles = CreateItemList();
 

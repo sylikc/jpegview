@@ -4,6 +4,25 @@
 #include "SettingsProvider.h"
 #include "Helpers.h"
 
+//////////////////////////////////////////////////////////////////////////////////////////////
+// Helpers
+//////////////////////////////////////////////////////////////////////////////////////////////
+
+static LPCTSTR GetSIMDModeString() {
+	Helpers::CPUType cpuType = Helpers::ProbeCPU();
+	if (cpuType == Helpers::CPU_MMX) {
+		return _T("64 bit MMX");
+	} else if (cpuType == Helpers::CPU_SSE) {
+		return _T("128 bit SSE2");
+	} else {
+		return _T("Generic CPU");
+	}
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////
+// CAboutDlg
+//////////////////////////////////////////////////////////////////////////////////////////////
+
 CAboutDlg::CAboutDlg(void) {
 }
 
@@ -26,15 +45,8 @@ LRESULT CAboutDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lPara
 	m_btnClose.Attach(GetDlgItem(IDC_CLOSE));
 
 	m_lblVersion.SetWindowText(CString(_T("JPEGView ")) + JPEGVIEW_VERSION);
-	LPCTSTR sSIMDMode;
-	if (Helpers::ProbeCPU() == Helpers::CPU_MMX) {
-		sSIMDMode = _T("64 bit MMX");
-	} else if (Helpers::ProbeCPU() == Helpers::CPU_SSE) {
-		sSIMDMode = _T("128 bit SSE2");
-	} else {
-		sSIMDMode = _T("Generic CPU");
-	}
-	m_lblSIMD.SetWindowText(CString(CNLS::GetString(_T("SIMD mode used:"))) + _T(" ") + sSIMDMode);
+
+	m_lblSIMD.SetWindowText(CString(CNLS::GetString(_T("SIMD mode used:"))) + _T(" ") + GetSIMDModeString());
 	TCHAR sNumCores[16];
 	_sntprintf_s(sNumCores, 16, 16, _T("%d"), CSettingsProvider::This().NumberOfCoresToUse());
 	m_lblNumCores.SetWindowText(CString(CNLS::GetString(_T("Number of CPU cores used:"))) + _T(" ") + sNumCores);

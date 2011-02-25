@@ -7,6 +7,8 @@
 #include "MainDlg.h"
 #include <gdiplus.h>
 
+// _CrtDumpMemoryLeaks
+
 CAppModule _Module;
 
 static BOOL CALLBACK EnumWindowsProc(HWND hwnd, LPARAM lParam) {
@@ -19,6 +21,39 @@ static BOOL CALLBACK EnumWindowsProc(HWND hwnd, LPARAM lParam) {
 		return FALSE;
 	}
 	return TRUE;
+}
+
+static CString ParseCommandLineForStartupFile(LPCTSTR sCommandLine) { 
+	CString sStartupFile = sCommandLine;
+	if (sStartupFile.GetLength() == 0) {
+		return sStartupFile;
+	}
+
+	// Extract the startup file or directory from the command line parameter string
+	int nHyphen = sStartupFile.Find(_T('"'));
+	if (nHyphen == -1) {
+		// not enclosed with "", use part until first space is found
+		int nSpace = sStartupFile.Find(_T(' '));
+		if (nSpace > 0) {
+			sStartupFile = sStartupFile.Left(nSpace);
+		} // else we use the whole command line (as there is no space character in it)
+	} else {
+		// enclosed in "", take first string enclosed in ""
+		int nHyphenNext = sStartupFile.Find(_T('"'), nHyphen + 1);
+		if (nHyphenNext > nHyphen) {
+			sStartupFile = sStartupFile.Mid(nHyphen + 1, nHyphenNext - nHyphen - 1);
+		}
+	}
+	// if it's a directory, add a trailing backslash
+	if (sStartupFile.GetLength() > 0) {
+		DWORD nAttributes = ::GetFileAttributes(sStartupFile);
+		if (nAttributes != INVALID_FILE_ATTRIBUTES && (nAttributes & FILE_ATTRIBUTE_DIRECTORY) != 0) {
+			if (sStartupFile[sStartupFile.GetLength() -1] != _T('\\')) {
+				sStartupFile += _T('\\');
+			}
+		}
+	}
+	return sStartupFile;
 }
 
 int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR lpstrCmdLine, int /*nCmdShow*/)
@@ -54,7 +89,7 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR lp
 
 		CMainDlg dlgMain;
 
-		dlgMain.SetStartupFile(lpstrCmdLine);
+		dlgMain.SetStartupFile(ParseCommandLineForStartupFile(lpstrCmdLine));
 		try {
 			nRet = dlgMain.DoModal();
 			::ShowCursor(TRUE);

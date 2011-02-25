@@ -32,9 +32,6 @@ namespace Helpers {
 		ZM_FillScreen
 	};
 
-	// Scaling factor from screen DPI, 96 dpi -> 1.0, 120 dpi -> 1.2
-	extern float ScreenScaling;
-
 	// Maximum and minimum allowed zoom factors for images
 	const double ZoomMax = 16.0;
 	const double ZoomMin = 0.1;
@@ -60,11 +57,11 @@ namespace Helpers {
 	// Gets the image size to be used when fitting the image to screen according to the auto zoom mode given
 	CSize GetImageRect(int nWidth, int nHeight, int nScreenWidth, int nScreenHeight, EAutoZoomMode eAutoZoomMode, double & dZoom);
 
+	// Inflate rectangle by given factor
+	CRect InflateRect(const CRect& rect, float fAmount);
+
 	// Gets the parameters for zooming the given zoom rectangle in an image of given size to a given window size.
 	void GetZoomParameters(float & fZoom, CPoint & offsets, CSize imageSize, CSize windowSize, CRect zoomRect);
-
-	// Creates a bold version of the font that is selected in the given DC
-	HFONT CreateBoldFontOfSelectedFont(CDC & dc);
 
 	// Tests if the CPU supports SSE or MMX(2)
 	CPUType ProbeCPU(void);
@@ -101,7 +98,7 @@ namespace Helpers {
 		return (padvalue - ((value & (padvalue - 1)))) & (padvalue - 1);
 	}
 
-	// calculate CRT table
+	// calculate CRC table
 	void CalcCRCTable(unsigned int crc_table[256]);
 
 	// Finds a JPEG marker (beginning with 0xFF) in a JPEG stream. 

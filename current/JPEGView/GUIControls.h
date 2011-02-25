@@ -1,6 +1,6 @@
 #pragma once
 
-// CSliderMgr.OnMouseLButton uses this enum
+// CUICtrl.OnMouseLButton uses this enum
 enum EMouseEvent {
 	MouseEvent_BtnDown,
 	MouseEvent_BtnUp,
@@ -9,32 +9,34 @@ enum EMouseEvent {
 
 class CTextCtrl;
 class CButtonCtrl;
-class CPanelMgr;
-class CSliderMgr;
+class CPanel;
 class CUICtrl;
 
 // Defines a handler procedure called by CTextCtrl when the text has changed
 // If true is returned, the text shall be set to the new text, if false, the text remains (or is set
 // by the handler procedure)
-typedef bool TextChangedHandler(CTextCtrl & sender, LPCTSTR sChangedText);
+typedef bool TextChangedHandler(void* pContext, CTextCtrl & sender, LPCTSTR sChangedText);
 
 // Defines a handler procedure called by CButtonCtrl when the button is pressed
-typedef void ButtonPressedHandler(CButtonCtrl & sender);
+typedef void ButtonPressedHandler(void* pContext, int nParameter, CButtonCtrl & sender);
 
 // Defines a handler procedure for painting a user painted button
-typedef void PaintHandler(const CRect& rect, CDC& dc);
+typedef void PaintHandler(void* pContext, const CRect& rect, CDC& dc);
 
 // Defines a handler procedure for returning a tooltip for a button
-typedef LPCTSTR TooltipHandler();
+typedef LPCTSTR TooltipHandler(void* pContext);
+
+// Defines a method to decide something (returns a boolean)
+typedef bool DecisionMethod(void* pContext);
 
 //-------------------------------------------------------------------------------------------------
 // Tooltip support
 
-// Tooltip class, draws the tooltip centered below the anchor rectangle
+// Tooltip class, draws the tooltip centered below the anchor rectangle (given by bounding box of pBoundCtrl)
 class CTooltip {
 public:
 	CTooltip(HWND hWnd, const CUICtrl* pBoundCtrl, LPCTSTR sTooltip);
-	CTooltip(HWND hWnd, const CUICtrl* pBoundCtrl, TooltipHandler ttHandler);
+	CTooltip(HWND hWnd, const CUICtrl* pBoundCtrl, TooltipHandler ttHandler, void* pContext = NULL);
 
 	const CUICtrl* GetBoundCtrl() const { return m_pBoundCtrl; }
 	const CString& GetTooltip() const;
@@ -45,12 +47,14 @@ private:
 	HWND m_hWnd;
 	const CUICtrl* m_pBoundCtrl;
 	TooltipHandler* m_ttHandler;
+	void* m_pContext;
 	CString m_sTooltip;
 	CRect m_TooltipRect;
 	CRect m_oldRectBoundCtrl;
 
 	CRect CalculateTooltipRect() const;
 };
+//-------------------------------------------------------------------------------------------------
 
 // Tooltip manager
 class CTooltipMgr {
@@ -64,7 +68,7 @@ public:
 
 	void AddTooltip(CUICtrl* pBoundCtrl, CTooltip* tooltip); // takes ownership of the tooltip
 	void AddTooltip(CUICtrl* pBoundCtrl, LPCTSTR sTooltip);
-	void AddTooltipHandler(CUICtrl* pBoundCtrl, TooltipHandler ttHandler);
+	void AddTooltipHandler(CUICtrl* pBoundCtrl, TooltipHandler ttHandler, void* pContext = NULL);
 	void RemoveActiveTooltip();
 	void EnableTooltips(bool bEnable); // default is true
 private:
@@ -82,7 +86,7 @@ private:
 // Base class for UI controls
 class CUICtrl {
 public:
-	CUICtrl(CPanelMgr* pPanelMgr);
+	CUICtrl(CPanel* pPanel);
 	
 	CRect GetPosition() const { return m_position; }
 	virtual CSize GetMinSize() = 0;
@@ -90,7 +94,7 @@ public:
 	void SetShow(bool bShow) { SetShow(bShow, true); }
 	void SetShow(bool bShow, bool bInvalidate);
 	void SetTooltip(LPCTSTR sTooltipText);
-	void SetTooltipHandler(TooltipHandler ttHandler);
+	void SetTooltipHandler(TooltipHandler ttHandler, void* pContext = NULL);
 
 public:
 	virtual bool OnMouseLButton(EMouseEvent eMouseEvent, int nX, int nY) = 0;
@@ -101,7 +105,7 @@ public:
 protected:
 	virtual void Draw(CDC & dc, CRect position, bool bBlack) = 0;
 	
-	CPanelMgr* m_pMgr;
+	CPanel* m_pPanel;
 	bool m_bShow;
 	bool m_bHighlight;
 	CRect m_position;
@@ -113,7 +117,7 @@ protected:
 // Represents some extra gap between UI elements
 class CGapCtrl : public CUICtrl {
 public:
-	CGapCtrl(CPanelMgr* pPanelMgr, int nGap) : CUICtrl(pPanelMgr) { m_nGap = nGap; m_bShow = false; }
+	CGapCtrl(CPanel* pPanel, int nGap) : CUICtrl(pPanel) { m_nGap = nGap; m_bShow = false; }
 
 	virtual CSize GetMinSize() { return CSize(m_nGap, 0); }
 	virtual bool OnMouseLButton(EMouseEvent eMouseEvent, int nX, int nY) { return false; }
@@ -132,8 +136,10 @@ private:
 // Control for showing static or editable text
 class CTextCtrl : public CUICtrl {
 public:
-	CTextCtrl(CPanelMgr* pPanelMgr, LPCTSTR sTextInit, bool bEditable, TextChangedHandler textChangedHandler);
+	CTextCtrl(CPanel* pPanel, LPCTSTR sTextInit, bool bEditable, TextChangedHandler* textChangedHandler = NULL, void* pContext = NULL);
 	~CTextCtrl();
+
+	void SetTextChangedHandler(TextChangedHandler* textChangedHandler, void* pContext) { m_textChangedHandler = textChangedHandler; m_pContext = pContext; }
 
 	// sets the text of the text control
 	void SetText(LPCTSTR sText);
@@ -183,6 +189,7 @@ private:
 	bool m_bAllowMultiline;
 	CEdit* m_pEdit;
 	TextChangedHandler* m_textChangedHandler;
+	void* m_pContext;
 	HFONT m_hBoldFont;
 };
 
@@ -191,13 +198,20 @@ private:
 // Control for showing a button
 class CButtonCtrl : public CUICtrl {
 public:
-	CButtonCtrl(CPanelMgr* pPanelMgr, LPCTSTR sButtonText, ButtonPressedHandler buttonPressedHandler);
-	CButtonCtrl(CPanelMgr* pPanelMgr, PaintHandler paintHandler, ButtonPressedHandler buttonPressedHandler);
+	CButtonCtrl(CPanel* pPanel, LPCTSTR sButtonText, ButtonPressedHandler* buttonPressedHandler = NULL, void* pContext = NULL, int nParameter = 0);
+	CButtonCtrl(CPanel* pPanel, PaintHandler* paintHandler, ButtonPressedHandler* buttonPressedHandler = NULL, void* pPaintContext = NULL, void* pContext = NULL, int nParameter = 0);
+
+	void SetButtonPressedHandler(ButtonPressedHandler* buttonPressedHandler, void* pContext, int nParameter = 0, bool bActive = false) { 
+		m_buttonPressedHandler = buttonPressedHandler; 
+		m_pContext = pContext; 
+		m_nParameter = nParameter;
+		SetActive(bActive); }
 
 	// gets the width of the button text in pixels
 	int GetTextLabelWidth() const { return m_textSize.cx; }
 
-	void SetEnabled(bool bEnabled);
+	// Sets if the button is active (highlighted)
+	void SetActive(bool bActive);
 
 	// extends the active area of the button over the normal position
 	void SetExtendedActiveArea(CRect rect) { m_extendedArea = rect; }
@@ -216,10 +230,13 @@ private:
 	CString m_sText;
 	CSize m_textSize;
 	bool m_bDragging;
-	bool m_bEnabled;
+	bool m_bActive;
 	CRect m_extendedArea;
 	ButtonPressedHandler* m_buttonPressedHandler;
+	void* m_pContext;
+	int m_nParameter;
 	PaintHandler* m_paintHandler;
+	void* m_pPaintContext;
 };
 
 //-------------------------------------------------------------------------------------------------
@@ -227,7 +244,7 @@ private:
 // Transparent slider control allowing to select a value in a range
 class CSliderDouble : public CUICtrl {
 public:
-	CSliderDouble(CPanelMgr* pMgr, LPCTSTR sName, int nSliderLen, double* pdValue, bool* pbEnable,
+	CSliderDouble(CPanel* pMgr, LPCTSTR sName, int nSliderLen, double* pdValue, bool* pbEnable,
 		double dMin, double dMax, double dDefaultValue, bool bAllowPreviewAndReset, bool bLogarithmic, bool bInvert);
 
 	double* GetValuePtr() { return m_pValue; }
@@ -235,15 +252,13 @@ public:
 
 public:
 	virtual CSize GetMinSize();
+	void SetSliderLen(int nSliderLen) { m_nSliderLen = nSliderLen; }
 	virtual bool OnMouseLButton(EMouseEvent eMouseEvent, int nX, int nY);
 	virtual bool OnMouseMove(int nX, int nY);
 	virtual void OnPaint(CDC & dc, const CPoint& offset);
 
 protected:
-	friend class CSliderMgr;
-
 	virtual void Draw(CDC & dc, CRect position, bool bBlack);
-	void SetSliderLen(int nSliderLen) { m_nSliderLen = nSliderLen; }
 
 private:
 	CString m_sName;
@@ -274,215 +289,4 @@ private:
 	void SetValue(double dValue);
 	int ValueToSliderPos(double dValue, int nSliderStart, int nSliderEnd);
 	double SliderPosToValue(int nSliderPos, int nSliderStart, int nSliderEnd);
-};
-
-//-------------------------------------------------------------------------------------------------
-
-
-// Manages and lay-outs the UI controls on a panel
-class CPanelMgr {
-public:
-	// The UI controls are created on the given window
-	CPanelMgr(HWND hWnd);
-	virtual ~CPanelMgr(void);
-
-	// Get size and position of the panel
-	virtual CRect PanelRect() = 0;
-
-	// Add a slider, controlling the value pdValue and labeled sName.
-	void AddSlider(LPCTSTR sName, double* pdValue, bool* pbEnable, 
-				double dMin, double dMax, double dDefaultValue, bool bAllowPreviewAndReset, bool bLogarithmic, bool bInvert, int nWidth);
-	// Show/hide a slider, identified by its controlled value
-	void ShowHideSlider(bool bShow, double* pdValue);
-
-	// Adds a text control to the slider area. The text can be editable or static. The handler
-	// procedure gets called for editable texts when the text has been changed. It must be null when
-	// bEditable is false.
-	CTextCtrl* AddText(LPCTSTR sTextInit, bool bEditable, TextChangedHandler textChangedHandler);
-
-	// Adds a button to the slider area. The given handler procedure is called when the button is pressed.
-	CButtonCtrl* AddButton(LPCTSTR sButtonText, ButtonPressedHandler buttonPressedHandler);
-
-	// Adds a user painted button
-	CButtonCtrl* AddUserPaintButton(PaintHandler paintHandler, ButtonPressedHandler buttonPressedHandler, LPCTSTR sTooltip);
-	CButtonCtrl* AddUserPaintButton(PaintHandler paintHandler, ButtonPressedHandler buttonPressedHandler, TooltipHandler ttHandler);
-
-	// Mouse events must be passed to the panel using the two methods below.
-	// The mouse event is consumed by a UI control if the return value is true.
-	virtual bool OnMouseLButton(EMouseEvent eMouseEvent, int nX, int nY);
-	virtual bool OnMouseMove(int nX, int nY);
-	// Must be called when painting the panel (hWnd given in constructor)
-	virtual void OnPaint(CDC & dc, const CPoint& offset);
-
-	// Gets the HWND all UI controls are placed on
-	HWND GetHWND() const { return m_hWnd; }
-
-	void CaptureMouse(CUICtrl* pCtrl);
-	void ReleaseMouse(CUICtrl* pCtrl);
-
-	// Request recalculation of the layout
-	virtual void RequestRepositioning() = 0;
-
-	// Gets the manager for all tooltips
-	CTooltipMgr& GetTooltipMgr() { return m_tooltipMgr; }
-
-	// Paints a frame around the panel
-	void PaintFrameAroundPanel(CDC & dc, const CRect& rect, const CPoint& offset);
-
-protected:
-	// recalculates the layout
-	virtual void RepositionAll() = 0;
-
-	HWND m_hWnd;
-	float m_fDPIScale;
-	std::list<CUICtrl*> m_ctrlList;
-	CUICtrl* m_pCtrlCaptureMouse;
-	CTooltipMgr m_tooltipMgr;
-};
-
-// Manages a set of sliders and other controls by placing them on the bottom of the screen and
-// routing events to the sliders, buttons, etc.
-class CSliderMgr : public CPanelMgr {
-public:
-	// The sliders are placed on the given window (at bottom)
-	CSliderMgr(HWND hWnd);
-
-	// height of slider area
-	int SliderAreaHeight() const { return m_nTotalAreaHeight; }
-	virtual CRect PanelRect();
-
-	void AddSlider(LPCTSTR sName, double* pdValue, bool* pbEnable, 
-		 double dMin, double dMax, double dDefaultValue, bool bAllowPreviewAndReset, bool bLogarithmic, bool bInvert);
-
-	virtual bool OnMouseLButton(EMouseEvent eMouseEvent, int nX, int nY);
-
-	// Request recalculation of the layout
-	virtual void RequestRepositioning() { m_clientRect = CRect(0, 0, 0, 0); }
-
-protected:
-	virtual void RepositionAll();
-
-private:
-	void DetermineSliderWidth();
-
-	int m_nSliderWidth;
-	int m_nSliderHeight;
-	int m_nNoLabelWidth;
-	int m_nSliderGap;
-	int m_nTotalAreaHeight;
-	int m_nYStart;
-	CRect m_clientRect;
-	CRect m_sliderAreaRect;
-	int m_nTotalSliders;
-};
-
-// Navigation panel containing buttons and sliders
-class CNavigationPanel : public CPanelMgr {
-public:
-	// The panel is on the given window on top of the given slider manager
-	CNavigationPanel(HWND hWnd, CSliderMgr* pSliderMgr);
-
-	void AddGap(int nGap);
-
-	virtual CRect PanelRect();
-	virtual bool OnMouseLButton(EMouseEvent eMouseEvent, int nX, int nY);
-	virtual void RequestRepositioning();
-
-	// Painting handlers for the buttons
-	static void PaintHomeBtn(const CRect& rect, CDC& dc);
-	static void PaintPrevBtn(const CRect& rect, CDC& dc);
-	static void PaintNextBtn(const CRect& rect, CDC& dc);
-	static void PaintEndBtn(const CRect& rect, CDC& dc);
-	static void PaintZoomToFitBtn(const CRect& rect, CDC& dc);
-	static void PaintZoomTo1to1Btn(const CRect& rect, CDC& dc);
-	static void PaintWindowModeBtn(const CRect& rect, CDC& dc);
-	static void PaintRotateCWBtn(const CRect& rect, CDC& dc);
-	static void PaintRotateCCWBtn(const CRect& rect, CDC& dc);
-	static void PaintFreeRotBtn(const CRect& rect, CDC& dc);
-	static void PaintInfoBtn(const CRect& rect, CDC& dc);
-	static void PaintKeepParamsBtn(const CRect& rect, CDC& dc);
-	static void PaintLandscapeModeBtn(const CRect& rect, CDC& dc);
-
-protected:
-	virtual void RepositionAll();
-
-private:
-
-	CSliderMgr* m_pSliderMgr;
-	CRect m_clientRect;
-	int m_nWidth, m_nHeight;
-	int m_nBorder;
-	int m_nGap;
-};
-
-// Window button panel
-class CWndButtonPanel : public CPanelMgr {
-public:
-	// The panel is on the given window on top border of the given slider manager
-	CWndButtonPanel(HWND hWnd, CSliderMgr* pSliderMgr);
-
-	virtual CRect PanelRect();
-	int ButtonPanelHeight() { return m_nHeight; }
-	virtual bool OnMouseLButton(EMouseEvent eMouseEvent, int nX, int nY);
-	virtual void RequestRepositioning();
-
-	// Painting handlers for the buttons
-	static void PaintMinimizeBtn(const CRect& rect, CDC& dc);
-	static void PaintRestoreBtn(const CRect& rect, CDC& dc);
-	static void PaintCloseBtn(const CRect& rect, CDC& dc);
-
-protected:
-	virtual void RepositionAll();
-
-private:
-
-	CSliderMgr* m_pSliderMgr;
-	CRect m_clientRect;
-	int m_nWidth, m_nHeight;
-};
-
-class CUnsharpMaskPanel : public CPanelMgr {
-public:
-	// The panel is on the given window on top border of the given slider manager
-	CUnsharpMaskPanel(HWND hWnd, CSliderMgr* pSliderMgr);
-
-	virtual CRect PanelRect();
-	virtual bool OnMouseLButton(EMouseEvent eMouseEvent, int nX, int nY);
-	virtual void RequestRepositioning();
-	virtual void OnPaint(CDC & dc, const CPoint& offset);
-
-protected:
-	virtual void RepositionAll();
-
-private:
-
-	CSliderMgr* m_pSliderMgr;
-	CRect m_clientRect;
-	int m_nWidth, m_nHeight;
-	int m_nMaxSliderWidth;
-};
-
-class CRotationPanel : public CPanelMgr {
-public:
-	// The panel is on the given window on top border of the given slider manager
-	CRotationPanel(HWND hWnd, CSliderMgr* pSliderMgr);
-
-	virtual CRect PanelRect();
-	virtual bool OnMouseLButton(EMouseEvent eMouseEvent, int nX, int nY);
-	virtual void RequestRepositioning();
-	virtual void OnPaint(CDC & dc, const CPoint& offset);
-
-	// Painting handlers for the buttons
-	static void PaintShowGridBtn(const CRect& rect, CDC& dc);
-	static void PaintAutoCropBtn(const CRect& rect, CDC& dc);
-	static void PaintAssistedModeBtn(const CRect& rect, CDC& dc);
-protected:
-	virtual void RepositionAll();
-
-private:
-
-	CSliderMgr* m_pSliderMgr;
-	CRect m_clientRect;
-	int m_nWidth, m_nHeight;
-	int m_nButtonSize;
 };

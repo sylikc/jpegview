@@ -1,6 +1,6 @@
 #include "StdAfx.h"
 #include "HelpDisplay.h"
-#include "Helpers.h"
+#include "HelpersGUI.h"
 #include "NLS.h"
 
 static const int MAX_BUFF = 6000;
@@ -11,7 +11,7 @@ static const COLORREF colorInfo = RGB(0, 128, 0);
 static const COLORREF colorInfoLight = RGB(160, 0, 0);
 
 CHelpDisplay::CHelpDisplay(CPaintDC & dc) : m_dc(dc) {
-	m_fScaling = Helpers::ScreenScaling;
+	m_fScaling = HelpersGUI::ScreenScaling;
 	CSize size;
 	dc.SelectStockFont(SYSTEM_FONT);
 	dc.GetTextExtent(_T("teststring"), 10, &size);

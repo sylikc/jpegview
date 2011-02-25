@@ -1,7 +1,9 @@
 #include "StdAfx.h"
 #include "EXIFDisplay.h"
 #include "Helpers.h"
+#include "HelpersGUI.h"
 #include "HistogramCorr.h"
+#include "NLS.h"
 #include <math.h>
 
 #define BUTTON_SIZE 18
@@ -24,7 +26,7 @@ static CRect InflateRect(const CRect& rect, float fAmount) {
 	return r;
 }
 
-CEXIFDisplay::CEXIFDisplay(HWND hWnd) : CPanelMgr(hWnd) {
+CEXIFDisplay::CEXIFDisplay(HWND hWnd, INotifiyMouseCapture* pNotifyMouseCapture) : CPanel(hWnd, pNotifyMouseCapture, true, true) {
 	m_bShowHistogram = false;
 	m_nGap = (int)(m_fDPIScale * 10);
 	m_nTab1 = 0;
@@ -38,6 +40,8 @@ CEXIFDisplay::CEXIFDisplay(HWND hWnd) : CPanelMgr(hWnd) {
 	m_hTitleFont = 0;
 	m_nNoHistogramSize = CSize(0, 0);
 	m_pHistogram = NULL;
+
+	AddUserPaintButton(ID_btnShowHideHistogram, &ShowHistogramTooltip, &PaintShowHistogramBtn, NULL, this, this);
 }
 
 CEXIFDisplay::~CEXIFDisplay() {
@@ -118,7 +122,7 @@ CRect CEXIFDisplay::PanelRect() {
 	if (m_nLineHeight == 0) {
 		CDC dc(::GetDC(m_hWnd));
 		::SelectObject(dc, ::GetStockObject(DEFAULT_GUI_FONT));
-		m_hTitleFont = Helpers::CreateBoldFontOfSelectedFont(dc);
+		m_hTitleFont = HelpersGUI::CreateBoldFontOfSelectedFont(dc);
 
 		if (m_hTitleFont != 0) {
 			::SelectObject(dc, m_hTitleFont);
@@ -184,7 +188,7 @@ void CEXIFDisplay::RequestRepositioning() {
 }
 
 void CEXIFDisplay::OnPaint(CDC & dc, const CPoint& offset) {
-	CPanelMgr::OnPaint(dc, offset);
+	CPanel::OnPaint(dc, offset);
 
 	int nX = m_pos.x + offset.x;
 	int nY = m_pos.y + offset.y;
@@ -221,12 +225,8 @@ void CEXIFDisplay::OnPaint(CDC & dc, const CPoint& offset) {
 		nRunningY += m_nLineHeight;
 	}
 
-	HPEN hPen = ::CreatePen(PS_SOLID, 1, RGB(255, 255, 255));
-	HGDIOBJ hOldPen = ::SelectObject(dc, hPen);
-	::SelectObject(dc, ::GetStockObject(HOLLOW_BRUSH));
-	::Rectangle(dc, nX, nY, nX + m_size.cx, nY + m_size.cy);
-
 	if (m_bShowHistogram) {
+		::SelectObject(dc, ::GetStockObject(WHITE_PEN));
 		int nHistogramYBase = nY + m_size.cy - m_nGap;
 		int nHistogramXBase = nX + (m_size.cx - 256) / 2;
 		dc.MoveTo(nHistogramXBase, nHistogramYBase);
@@ -235,9 +235,6 @@ void CEXIFDisplay::OnPaint(CDC & dc, const CPoint& offset) {
 			PaintHistogram(dc, nHistogramXBase, nHistogramYBase);
 		}
 	}
-
-	::SelectObject(dc, hOldPen);
-	::DeleteObject(hPen);
 }
 
 void CEXIFDisplay::PaintHistogram(CDC & dc, int nXStart, int nYBaseLine) {
@@ -262,21 +259,22 @@ void CEXIFDisplay::PaintHistogram(CDC & dc, int nXStart, int nYBaseLine) {
 void CEXIFDisplay::RepositionAll() {
 	CRect panelRect = PanelRect();
 
-	if (m_ctrlList.size() > 0) {
+	CUICtrl* pButton = GetControl(ID_btnShowHideHistogram);
+	if (pButton != NULL) {
 		int nButtonSize = (int)(m_fDPIScale * BUTTON_SIZE);
-		CUICtrl*& pButton = m_ctrlList.front();
 		pButton->SetPosition(CRect(CPoint(panelRect.left + m_nNoHistogramSize.cx - m_nGap - nButtonSize, panelRect.top + m_nNoHistogramSize.cy - m_nGap - nButtonSize), CSize(nButtonSize, nButtonSize)));
 	}
 }
 
-void CEXIFDisplay::PaintShowHistogramBtn(const CRect& rect, CDC& dc, bool bShowHistogram) {
+void CEXIFDisplay::PaintShowHistogramBtn(void* pContext, const CRect& rect, CDC& dc) {
+	CEXIFDisplay* pThis = (CEXIFDisplay*)pContext;
 	CRect r = InflateRect(rect, 0.3f);
 	r.OffsetRect(CPoint(0, 1));
 	CPoint p1(r.left + 1, r.top + 1);
 	CPoint p2(r.right, r.top);
 	int nMiddleX = (r.left + r.right) / 2;
 	CPoint p3(nMiddleX, r.top + (r.right - r.left) / 2);
-	if (bShowHistogram) {
+	if (pThis->GetShowHistogram()) {
 		dc.MoveTo(CPoint(p1.x, p3.y));
 		dc.LineTo(CPoint(p3.x, p1.y));
 		dc.MoveTo(CPoint(p3.x, p1.y));
@@ -288,4 +286,14 @@ void CEXIFDisplay::PaintShowHistogramBtn(const CRect& rect, CDC& dc, bool bShowH
 		dc.LineTo(p2);
 	}
 }
+
+LPCTSTR CEXIFDisplay::ShowHistogramTooltip(void* pContext) {
+	CEXIFDisplay* pThis = (CEXIFDisplay*)pContext;
+	if (pThis->GetShowHistogram()) {
+		return CNLS::GetString(_T("Hide histogram"));
+	} else {
+		return CNLS::GetString(_T("Show histogram"));
+	}
+}
+
 

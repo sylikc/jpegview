@@ -10,7 +10,7 @@ public:
 	friend class CProcessingThread;
 
 	// Note for all methods: The caller gets ownership of the returned image and is responsible to delete 
-	// this pointer if when no longer used.
+	// this pointer when no longer used.
 
 	// Note on DIBs: The rows of DIBs are padded to the next 4 byte boundary. For 32 bpp DIBs this is
 	// implicitely true (no padding needed), for other types the padding must be considered.
@@ -95,10 +95,10 @@ public:
 	static void DimRectangle32bpp(int nWidth, int nHeight, void* pDIBPixels, CRect rect, float fDimValue);
 
 	// Fills a rectangle in the DIB with the given color
-	// The method is inplace and changes the input DIB
+	// The method is inplace and changes the input DIB. Clipping of rect against DIB size is done.
 	static void FillRectangle32bpp(int nWidth, int nHeight, void* pDIBPixels, CRect rect, COLORREF color);
 
-	// Resampling of image using point sampling (line removal). Point sampling is fast but produces aliasing artefacts.
+	// Resampling of image using point sampling (no interpolation). Point sampling is fast but produces aliasing artefacts.
 	// fullTargetSize: Size of target image (unclipped)
 	// fullTargetOffset: Offset for start of clipping window (in the region given by fullTargetSize)
 	// clippedTargetSize: Size of clipped window - returned DIB has this size
@@ -109,7 +109,7 @@ public:
 	static void* PointSample(CSize fullTargetSize, CPoint fullTargetOffset, CSize clippedTargetSize, 
 						     CSize sourceSize, const void* pIJLPixels, int nChannels);
 
-	// Rotate image and resample using point sampling (line removal).
+	// Rotate image and resample using point sampling (no interpolation). Rotation is around image center.
 	// dRotation: Rotation angle in radians
 	// See PointSample() for other parameters
 	static void* PointSampleWithRotation(CSize fullTargetSize, CPoint fullTargetOffset, CSize clippedTargetSize, 
@@ -137,7 +137,7 @@ public:
 	static void* SampleUp_HQ_SSE_MMX(CSize fullTargetSize, CPoint fullTargetOffset, CSize clippedTargetSize,
 		CSize sourceSize, const void* pIJLPixels, int nChannels, bool bSSE);
 
-	// Bicubic rotation around image center
+	// Rotation around image center using bicubic interpolation
 	// targetOffset: Offset for start of clipping window (in the region given by sourceSize)
 	// targetSize: Size of target image - returned DIB has this size
 	// dRotation: rotation angle in radians
@@ -147,7 +147,7 @@ public:
 	// Returns a 32 bpp DIB of size targetSize
 	static void* RotateHQ(CPoint targetOffset, CSize targetSize, double dRotation, CSize sourceSize, const void* pSourcePixels, int nChannels);
 
-	// Gauss filtering of a 16 bpp 1 channel image. Out of the image with size fullSize, the rectangle rect at position offset is filtered
+	// Gauss filtering of a 16 bpp 1 channel image. In the image with size fullSize, the rectangle rect at position offset is filtered
 	static int16* GaussFilter16bpp1Channel(CSize fullSize, CPoint offset, CSize rect, double dRadius, const int16* pPixels);
 
 	// Apply unsharp masking to the given source image (3 or 4 channels) and store result in pTargetPixels. pTargetPixels and pSourcePixels

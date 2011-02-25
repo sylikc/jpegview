@@ -23,41 +23,41 @@ struct CRectF {
 class CZoomNavigator
 {
 public:
+	CZoomNavigator();
+
 	// Gets the visible rectangle in float coordinates (normalized to 0..1) relative to full image
 	static CRectF GetVisibleRect(CSize sizeFull, CSize sizeClipped, CPoint offset);
 
-	// Gets the position of the navigator rectangle (thumbnail image rect), relative to the image processing
-	// panel rectangle
+	// Gets the position of the navigator rectangle (thumbnail image rect) în client coordinates.
+	// The zoom navigator is placed relative to the image processing panel rectangle (panelRect)
 	static CRect GetNavigatorRect(CJPEGImage* pImage, const CRect& panelRect);
 
 	// Gets the maximal bounds of the navigator
 	static CRect GetNavigatorBound(const CRect& panelRect);
 
 	// Paints the zoom navigator
-	static void PaintZoomNavigator(CJPEGImage* pImage, const CRectF& visRect, const CRect& navigatorRect,
+	void PaintZoomNavigator(CJPEGImage* pImage, const CRectF& visRect, const CRect& navigatorRect,
 		const CPoint& mousePt,
 		const CImageProcessingParams& processingParams,
 		EProcessingFlags eFlags, double dRotation, CPaintDC& dc);
 
 	// Paints the pan rectangle
-	static void PaintPanRectangle(CDC& dc, const CPoint& centerPt);
+	void PaintPanRectangle(CDC& dc, const CPoint& centerPt);
 
 	// Rectangle of the visible image section in pixels
-	static CRect LastVisibleRect() { return sm_lastSectionRect; }
+	CRect LastVisibleRect() { return m_lastSectionRect; }
 
 	// Last dotted pan rectangle in pixels
-	static CPoint LastPanRectPoint() { return sm_lastPanRectPoint; }
+	CPoint LastPanRectPoint() { return m_lastPanRectPoint; }
 
 	// Last navigator rectangle in pixels
-	static CRect LastNavigatorRect() { return sm_lastNavigatorRect; }
+	CRect LastNavigatorRect() { return m_lastNavigatorRect; }
 
 	// Prevents painting of the dotted pan rectangle
-	static void ClearLastPanRectPoint() { sm_lastPanRectPoint = CPoint(-1, -1); }
-private:
-	CZoomNavigator(void);
-	~CZoomNavigator(void);
+	void ClearLastPanRectPoint() { m_lastPanRectPoint = CPoint(-1, -1); }
 
-	static CRect sm_lastSectionRect;
-	static CRect sm_lastNavigatorRect;
-	static CPoint sm_lastPanRectPoint;
+private:
+	CRect m_lastSectionRect;
+	CRect m_lastNavigatorRect;
+	CPoint m_lastPanRectPoint;
 };

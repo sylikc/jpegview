@@ -9,6 +9,10 @@
 #include "EXIFReader.h"
 #include <gdiplus.h>
 
+//////////////////////////////////////////////////////////////////////////////////////////////
+// Helpers
+//////////////////////////////////////////////////////////////////////////////////////////////
+
 // Gets the image format given a file name (uses the file extension)
 static CJPEGImage::EImageFormat GetImageFormat(LPCTSTR sFileName) {
 	LPCTSTR sEnding = _tcsrchr(sFileName, _T('.'));
@@ -198,6 +202,10 @@ static bool SaveGDIPlus(LPCTSTR sFileName, CJPEGImage::EImageFormat eFileFormat,
 	delete pBitmap;
 	return bOk;
 }
+
+//////////////////////////////////////////////////////////////////////////////////////////////
+// CSaveImage
+//////////////////////////////////////////////////////////////////////////////////////////////
 
 bool CSaveImage::SaveImage(LPCTSTR sFileName, CJPEGImage * pImage, const CImageProcessingParams& procParams,
 						   EProcessingFlags eFlags, bool bFullSize) {
