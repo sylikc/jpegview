@@ -12,6 +12,10 @@ public:
 	CPaintMemDCMgr(CPaintDC& paintDC);
 	~CPaintMemDCMgr();
 
+	// Excludes, respectively includes the given list of rectangles into the clipping region
+	static void ExcludeFromClippingRegion(CDC & paintDC, const std::list<CRect>& listExcludedRects);
+	static void IncludeIntoClippingRegion(CDC & paintDC, const std::list<CRect>& listExcludedRects);
+
 	// Prepares a memory DC of given size by creating the backing store bitmap and clearing it
 	static HBITMAP PrepareRectForMemDCPainting(CDC & memDC, CDC & paintDC, const CRect& rect);
 

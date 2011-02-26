@@ -72,6 +72,30 @@ CSize GetImageRect(int nWidth, int nHeight, int nScreenWidth, int nScreenHeight,
 	return CSize((int)(nWidth*dZoom + 0.5), (int)(nHeight*dZoom + 0.5));
 }
 
+CSize GetVirtualImageSize(CSize originalImageSize, CSize screenSize, EAutoZoomMode eAutoZoomMode, double & dZoom) {
+	CSize newSize;
+	if (dZoom < 0.0) {
+		// zoom not set, interpret as 'fit to screen'
+		// ---------------------------------------------
+		newSize = Helpers::GetImageRect(originalImageSize.cx, originalImageSize.cy, screenSize.cx, screenSize.cy, eAutoZoomMode, dZoom);
+	} else {
+		// zoom set, use this value for the new size
+		// ---------------------------------------------
+		newSize = CSize((int)(originalImageSize.cx * dZoom + 0.5), (int)(originalImageSize.cy * dZoom + 0.5));
+	}
+	newSize.cx = max(1, min(65535, newSize.cx));
+	newSize.cy = max(1, min(65535, newSize.cy));
+	return newSize;
+}
+
+CPoint LimitOffsets(const CPoint& offsets, const CSize & rectSize, const CSize & outerRect) {
+	int nMaxOffsetX = (outerRect.cx - rectSize.cx)/2;
+	nMaxOffsetX = max(0, nMaxOffsetX);
+	int nMaxOffsetY = (outerRect.cy - rectSize.cy)/2;
+	nMaxOffsetY = max(0, nMaxOffsetY);
+	return CPoint(max(-nMaxOffsetX, min(+nMaxOffsetX, offsets.x)), max(-nMaxOffsetY, min(+nMaxOffsetY, offsets.y)));
+}
+
 CRect InflateRect(const CRect& rect, float fAmount) {
 	CRect r(rect);
 	int nAmount = (int)(fAmount * r.Width());

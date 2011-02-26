@@ -19,9 +19,25 @@ CPaintMemDCMgr::~CPaintMemDCMgr() {
 	}
 }
 
-HBITMAP CPaintMemDCMgr::PrepareRectForMemDCPainting(CDC & memDC, CDC & paintDC, const CRect& rect) {
-	paintDC.ExcludeClipRect(&rect);
+void CPaintMemDCMgr::ExcludeFromClippingRegion(CDC & paintDC, const std::list<CRect>& listExcludedRects) {
+	std::list<CRect>::const_iterator iter;
+	for (iter = listExcludedRects.begin( ); iter != listExcludedRects.end( ); iter++ ) {
+		CRect rect = *iter;
+		paintDC.ExcludeClipRect(&rect);
+	}
+}
 
+void CPaintMemDCMgr::IncludeIntoClippingRegion(CDC & paintDC, const std::list<CRect>& listExcludedRects) {
+	std::list<CRect>::const_iterator iter;
+	for (iter = listExcludedRects.begin(); iter != listExcludedRects.end(); iter++) {
+		CRect rect = *iter;
+		CRgn rgn;
+		rgn.CreateRectRgn(rect.left, rect.top, rect.right, rect.bottom);
+		paintDC.SelectClipRgn(rgn, RGN_OR);
+	}
+}
+
+HBITMAP CPaintMemDCMgr::PrepareRectForMemDCPainting(CDC & memDC, CDC & paintDC, const CRect& rect) {
 	CBrush backBrush;
 	backBrush.CreateSolidBrush(CSettingsProvider::This().ColorBackground());
 

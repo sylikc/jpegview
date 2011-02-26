@@ -1,5 +1,6 @@
 #include "StdAfx.h"
 #include "NLS.h"
+#include "SettingsProvider.h"
 
 stdext::hash_map<LPCTSTR, LPCTSTR, CNLS::CStringHashCompare> CNLS::sm_texts;
 bool CNLS::sm_bTableRead = false;
@@ -18,6 +19,25 @@ size_t CNLS::CStringHashCompare::operator( )( const LPCTSTR& Key ) const {
 // compare function
 bool CNLS::CStringHashCompare::operator( )( const LPCTSTR& _Key1, const LPCTSTR& _Key2 ) const {
 	return _tcscmp(_Key1, _Key2) < 0;
+}
+
+CString CNLS::GetStringTableFileName(LPCTSTR sLanguageCode) {
+	CString sNLSFile;
+	TCHAR buff[16], buff2[16];
+	if (_tcscmp(sLanguageCode, _T("auto")) == 0) {
+		LCID threadLocale = ::GetThreadLocale();
+		::GetLocaleInfo(threadLocale, LOCALE_SISO639LANGNAME, (LPTSTR) &buff, sizeof(buff));
+		::GetLocaleInfo(threadLocale, LOCALE_SISO3166CTRYNAME, (LPTSTR) &buff2, sizeof(buff2));
+		sLanguageCode = buff;
+		sNLSFile = CString(CSettingsProvider::This().GetEXEPath()) + _T("strings_") + sLanguageCode + "-" + buff2 + _T(".txt");
+		if (::GetFileAttributes(sNLSFile) == INVALID_FILE_ATTRIBUTES) {
+			sNLSFile.Empty();
+		}
+	}
+	if (sNLSFile.IsEmpty()) {
+		sNLSFile = CString(CSettingsProvider::This().GetEXEPath()) + _T("strings_") + sLanguageCode + _T(".txt");
+	}
+	return sNLSFile;
 }
 
 void CNLS::ReadStringTable(LPCTSTR sFileName) {

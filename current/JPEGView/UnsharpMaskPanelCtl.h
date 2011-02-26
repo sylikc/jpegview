@@ -22,6 +22,7 @@ public:
 
 	virtual bool OnKeyDown(unsigned int nVirtualKey, bool bShift, bool bAlt, bool bCtrl);
 
+	// Gets preview DIB of unsharp masked image. Returned DIB has size clippingSize
 	void* GetUSMDIBForPreview(CSize clippingSize, CPoint offset, const CImageProcessingParams & imageProcParams, EProcessingFlags eProcFlags);
 
 private:

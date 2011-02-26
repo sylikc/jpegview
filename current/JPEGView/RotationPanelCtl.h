@@ -5,7 +5,7 @@
 
 class CRotationPanel;
 
-// Implements functionality of the rotation panel
+// Implements functionality of the rotation panel (this is a modal panel)
 class CRotationPanelCtl : public CPanelController
 {
 public:
@@ -25,12 +25,13 @@ public:
 	virtual bool OnKeyDown(unsigned int nVirtualKey, bool bShift, bool bAlt, bool bCtrl);
 	virtual void OnPostPaintMainDlg(HDC hPaintDC);
 
+	// Gets a rotated DIB with the current rotation angle(GetLQRotationAngle) using point sampling
+	// The returned DIB has size clippingSize.
 	void* GetRotatedDIBForPreview(CSize fullTargetSize, CSize clippingSize, CPoint targetOffset,
 		const CImageProcessingParams & imageProcParams, EProcessingFlags eProcFlags);
 
+	// Gets current rotation angle (in radians). Rotation is around image center
 	double GetLQRotationAngle() { return m_dRotationLQ; }
-
-	void StartRotating(int nX, int nY);
 
 private:
 	bool m_bVisible;
@@ -49,6 +50,7 @@ private:
 	void TerminateRotationPanel();
 	void StartRotationPanel();
 	void UpdateAssistedRotationMode();
+	void StartRotating(int nX, int nY);
 	void DoRotating();
 	void EndRotating();
 	void ApplyRotation();

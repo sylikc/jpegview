@@ -7,6 +7,9 @@ using namespace stdext;
 class CNLS
 {
 public:
+	// Gets the file name of the string table to use for the given ISO 639 language code 
+	static CString GetStringTableFileName(LPCTSTR sLanguageCode);
+
 	// Reads the string table mapping strings from English to target language
 	static void ReadStringTable(LPCTSTR sFileName);
 

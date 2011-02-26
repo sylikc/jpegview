@@ -5,6 +5,7 @@
 class CFileOpenDialog : public CFileDialog
 {
 public:
+	// The file extensions must be separated by pipe (|)
 	CFileOpenDialog(HWND parentWindow, LPCTSTR sInitialFileName, LPCTSTR sFileEndings, bool bFullScreen);
 
 	BEGIN_MSG_MAP(CFileOpenDialog)

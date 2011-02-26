@@ -21,7 +21,7 @@ CCropCtl::CCropCtl(CMainDlg* pMainDlg) {
 	m_bDoCropping = false;
 	m_bDontStartCropOnNextClick = false;
 	m_bBlockPaintCropRect = false;
-	m_dCropRatio = 0;
+	m_dCropRectAspectRatio = 0;
 	m_cropStart = CPoint(INT_MIN, INT_MIN);
 	m_cropEnd = CPoint(INT_MIN, INT_MIN);
 	m_cropMouse = CPoint(INT_MIN, INT_MIN);
@@ -33,6 +33,37 @@ void CCropCtl::OnPaint(CPaintDC& dc) {
 		ShowCroppingRect(mousePos.x, mousePos.y, NULL, false);
 		PaintCropRect(dc);
 	}
+}
+
+bool CCropCtl::OnTimer(int nTimerId) {
+	if (nTimerId == AUTOSCROLL_TIMER_EVENT_ID) {
+		CPoint mousePos;
+		::GetCursorPos(&mousePos);
+		::ScreenToClient(m_pMainDlg->GetHWND(), &mousePos);
+		const CRect& clientRect = m_pMainDlg->ClientRect();
+		if (mousePos.x < clientRect.Width() - 1 && mousePos.x > 0 && mousePos.y < clientRect.Height() - 1 && mousePos.y > 0 ) {
+			::KillTimer(m_pMainDlg->GetHWND(), AUTOSCROLL_TIMER_EVENT_ID);
+		}
+		const int PAN_DIST = 25;
+		int nPanX = 0, nPanY = 0;
+		if (mousePos.x <= 0) {
+			nPanX = PAN_DIST;
+		}
+		if (mousePos.y <= 0) {
+			nPanY = PAN_DIST;
+		}
+		if (mousePos.x >= clientRect.Width() - 1) {
+			nPanX = -PAN_DIST;
+		}
+		if (mousePos.y >= clientRect.Height() - 1) {
+			nPanY = -PAN_DIST;
+		}
+		if (IsCropping()) {
+			m_pMainDlg->PerformPan(nPanX, nPanY, false);
+		}
+		return true;
+	}
+	return false;
 }
 
 void CCropCtl::StartCropping(int nX, int nY) {
@@ -78,17 +109,17 @@ void CCropCtl::EndCropping() {
 		m_pMainDlg->ClientToScreen(&posMouse);
 
 		HMENU hMenuCropMode = ::GetSubMenu(hMenuTrackPopup, SUBMENU_POS_CROPMODE);
-		if (abs(m_dCropRatio - 1.25) < 0.001) {
+		if (abs(m_dCropRectAspectRatio - 1.25) < 0.001) {
 			::CheckMenuItem(hMenuCropMode,  IDM_CROPMODE_5_4, MF_CHECKED);
-		} else if (abs(m_dCropRatio - 1.3333) < 0.001) {
+		} else if (abs(m_dCropRectAspectRatio - 1.3333) < 0.001) {
 			::CheckMenuItem(hMenuCropMode,  IDM_CROPMODE_4_3, MF_CHECKED);
-		} else if (abs(m_dCropRatio - 1.5) < 0.001) {
+		} else if (abs(m_dCropRectAspectRatio - 1.5) < 0.001) {
 			::CheckMenuItem(hMenuCropMode,  IDM_CROPMODE_3_2, MF_CHECKED);
-		} else if (abs(m_dCropRatio - 1.7777) < 0.001) {
+		} else if (abs(m_dCropRectAspectRatio - 1.7777) < 0.001) {
 			::CheckMenuItem(hMenuCropMode,  IDM_CROPMODE_16_9, MF_CHECKED);
-		} else if (abs(m_dCropRatio - 1.6) < 0.001) {
+		} else if (abs(m_dCropRectAspectRatio - 1.6) < 0.001) {
 			::CheckMenuItem(hMenuCropMode,  IDM_CROPMODE_16_10, MF_CHECKED);
-		} else if (m_dCropRatio < 0) {
+		} else if (m_dCropRectAspectRatio < 0) {
 			::CheckMenuItem(hMenuCropMode,  IDM_CROPMODE_FIXED_SIZE, MF_CHECKED);
 		} else {
 			::CheckMenuItem(hMenuCropMode,  IDM_CROPMODE_FREE, MF_CHECKED);
@@ -125,11 +156,11 @@ void CCropCtl::ShowCroppingRect(int nX, int nY, HDC hPaintDC, bool bShow) {
 	m_pMainDlg->ScreenToImage(fX, fY);
 
 	CPoint newCropEnd = CPoint((int)fX, (int) fY);
-	if (m_dCropRatio > 0) {
+	if (m_dCropRectAspectRatio > 0) {
 		// fixed ratio crop mode
 		int w = abs(m_cropStart.x - newCropEnd.x);
 		int h = abs(m_cropStart.y - newCropEnd.y);
-		double dRatio = (h < w) ? 1.0/m_dCropRatio : m_dCropRatio;
+		double dRatio = (h < w) ? 1.0/m_dCropRectAspectRatio : m_dCropRectAspectRatio;
 		int newH = (int)(w * dRatio + 0.5);
 		int newW = (int)(h * (1.0/dRatio) + 0.5);
 		if (w > h) {
@@ -145,7 +176,7 @@ void CCropCtl::ShowCroppingRect(int nX, int nY, HDC hPaintDC, bool bShow) {
 				newCropEnd = CPoint(m_cropStart.x + newW, newCropEnd.y);
 			}
 		}
-	} else if (m_dCropRatio < 0) {
+	} else if (m_dCropRectAspectRatio < 0) {
 		// fixed size crop mode
 		CSize cropSize = CCropSizeDlg::GetCropSize();
 		m_cropStart = CPoint((int)fX, (int) fY);
