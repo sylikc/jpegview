@@ -110,6 +110,7 @@ public:
 	// Called by main()
 	void SetStartupFile(LPCTSTR sStartupFile) { m_sStartupFile = sStartupFile; }
 
+	// Called by the different controller classes
 	HWND GetHWND() { return m_hWnd; }
 	bool IsShowFileName() { return m_bShowFileName; }
 	bool IsShowHelp() { return m_bShowHelp; }
@@ -141,6 +142,7 @@ public:
 	CImageProcPanelCtl* GetImageProcPanelCtl() { return m_pImageProcPanelCtl; }
 	CRotationPanelCtl* GetRotationPanelCtl() { return m_pRotationPanelCtl; }
 	CZoomNavigatorCtl* GetZoomNavigatorCtl() { return m_pZoomNavigatorCtl; }
+	CWndButtonPanelCtl* GetWndButtonPanelCtl() { return m_pWndButtonPanelCtl; }
 	CCropCtl* GetCropCtl() { return m_pCropCtl; }
 	const CRect& ClientRect() { return m_clientRect; }
 	const CRect& MonitorRect() { return m_monitorRect; }
@@ -164,6 +166,7 @@ public:
 	bool PrepareForModalPanel(); // returns if navigation panel was enabled, turns it off
 	int TrackPopupMenu(CPoint pos, HMENU hMenu);
 
+	// Called by button clicked handlers - must be static
 	static void OnExecuteCommand(void* pContext, int nParameter, CButtonCtrl & sender);
 	static void ToggleWindowMode(CMainDlg* pMainDlg, CButtonCtrl & sender, bool bSetCursor);
 	static bool IsCurrentImageFitToScreen(void* pContext);
@@ -216,8 +219,7 @@ private:
 	bool m_bProcFlagsTouched;
 	EProcessingFlags m_eProcFlagsBeforeMovie;
 	bool m_bInTrackPopupMenu;
-	int m_nOffsetX;
-	int m_nOffsetY;
+	CPoint m_offsets; // Note: These offsets are center of image based
 	int m_nCapturedX, m_nCapturedY;
 	int m_nMouseX, m_nMouseY;
 	bool m_bShowFileName;
@@ -265,7 +267,6 @@ private:
 	void AdjustSharpen(double dInc);
 	void PerformZoom(double dValue, bool bExponent, bool bZoomToMouse);
 	void ZoomToSelection();
-	void LimitOffsets(const CRect & rect, const CSize & size);
 	double GetZoomFactorForFitToScreen(bool bFillWithCrop, bool bAllowEnlarge);
 	CProcessParams CreateProcessParams();
 	void ResetParamsToDefault();

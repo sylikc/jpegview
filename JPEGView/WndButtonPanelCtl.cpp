@@ -18,6 +18,10 @@ CWndButtonPanelCtl::~CWndButtonPanelCtl() {
 	m_pWndButtonPanel = NULL;
 }
 
+bool CWndButtonPanelCtl::IsVisible() { 
+	return m_bVisible && m_pMainDlg->IsFullScreenMode(); 
+}
+
 void CWndButtonPanelCtl::SetVisible(bool bVisible) { 
 	if (m_bVisible != bVisible) {
 		m_bVisible = bVisible;
@@ -48,6 +52,14 @@ bool CWndButtonPanelCtl::OnMouseMove(int nX, int nY) {
 	m_nOldMouseY = nY;
 	return bHandled;
 }
+
+bool CWndButtonPanelCtl::IsPointInWndButtonPanel(CPoint pt) {
+	if (IsVisible()) {
+		return PanelRect().PtInRect(pt);
+	}
+	return false;
+}
+
 
 void CWndButtonPanelCtl::OnRestore(void* pContext, int nParameter, CButtonCtrl & sender) {
 	CMainDlg::ToggleWindowMode(((CWndButtonPanelCtl*)pContext)->m_pMainDlg, sender, false);

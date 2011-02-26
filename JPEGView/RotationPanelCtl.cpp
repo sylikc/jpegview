@@ -5,6 +5,8 @@
 #include "RotationPanelCtl.h"
 #include "RotationPanel.h"
 #include "NavigationPanelCtl.h"
+#include "ZoomNavigatorCtl.h"
+#include "WndButtonPanelCtl.h"
 #include "NLS.h"
 #include "Helpers.h"
 #include <math.h>
@@ -57,11 +59,20 @@ void CRotationPanelCtl::SetActive(bool bActive) {
 }
 
 bool CRotationPanelCtl::OnMouseLButton(EMouseEvent eMouseEvent, int nX, int nY) {
-	if (m_bVisible && m_bRotating && eMouseEvent == MouseEvent_BtnUp) {
+	if (eMouseEvent == MouseEvent_BtnUp && m_bRotating) {
 		EndRotating();
 		return true;
 	}
-	return CPanelController::OnMouseLButton(eMouseEvent, nX, nY);
+	if (CPanelController::OnMouseLButton(eMouseEvent, nX, nY)) {
+		return true;
+	}
+	if (eMouseEvent == MouseEvent_BtnDown && 
+		!m_pMainDlg->GetZoomNavigatorCtl()->IsPointInZoomNavigatorThumbnail(CPoint(nX, nY)) &&
+		!m_pMainDlg->GetWndButtonPanelCtl()->IsPointInWndButtonPanel(CPoint(nX, nY))) {
+		StartRotating(nX, nY);
+		return true;
+	}
+	return false;
 }
 
 bool CRotationPanelCtl::OnMouseMove(int nX, int nY) {
@@ -83,6 +94,7 @@ bool CRotationPanelCtl::OnKeyDown(unsigned int nVirtualKey, bool bShift, bool bA
 
 void CRotationPanelCtl::OnPostPaintMainDlg(HDC hPaintDC) {
 	if (m_bRotating && m_bRotationModeAssisted) {
+		// Draw the red line in assistet rotation mode
 		float fX = m_rotationStartX, fY = m_rotationStartY;
 		m_pMainDlg->ImageToScreen(fX, fY);
 		HPEN hPen = ::CreatePen(PS_SOLID, 3, RGB(255, 0, 0));

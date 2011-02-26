@@ -51,11 +51,22 @@ namespace Helpers {
 	// or 'fill with crop' method. If 'fill with crop' is used, the bLimitAR can be set to avoid
 	// filling when to less pixels remain visible
 	// Outputs also the zoom factor to resize to this new size.
+	// nWidth, nHeight are the original image width and height
 	CSize GetImageRect(int nWidth, int nHeight, int nScreenWidth, int nScreenHeight, 
 		bool bAllowZoomIn, bool bFillCrop, bool bLimitAR, double & dZoom);
 
 	// Gets the image size to be used when fitting the image to screen according to the auto zoom mode given
 	CSize GetImageRect(int nWidth, int nHeight, int nScreenWidth, int nScreenHeight, EAutoZoomMode eAutoZoomMode, double & dZoom);
+
+	// If dZoom > 0: Gets the virtual image size when applying the given zoom factor
+	// If dZoom < 0: Gets the image size to fit the image to the given screen size, using the given auto zoom mode.
+	//               dZoom is filled with the used zoom factor to resize to this new size in this case.
+	// The returned size is limited to 65535 in cx and cy
+	CSize GetVirtualImageSize(CSize originalImageSize, CSize screenSize, EAutoZoomMode eAutoZoomMode, double & dZoom);
+
+	// Limits the given center based offsets so that the rectangle created by the offset and the given rectSize is totally inside of outerRect
+	// outerRect has top,left coordinates 0/0
+	CPoint LimitOffsets(const CPoint& offsets, const CSize & rectSize, const CSize & outerRect);
 
 	// Inflate rectangle by given factor
 	CRect InflateRect(const CRect& rect, float fAmount);

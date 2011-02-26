@@ -158,24 +158,8 @@ CMainDlg::CMainDlg() {
 
 	CResizeFilterCache::This(); // Access before multiple threads are created
 
-	// Read the string table for the current thread language if any is present
-	LPCTSTR sLanguageCode = sp.Language();
-	CString sNLSFile;
-	TCHAR buff[16], buff2[16];
-	if (_tcscmp(sLanguageCode, _T("auto")) == 0) {
-		LCID threadLocale = ::GetThreadLocale();
-		::GetLocaleInfo(threadLocale, LOCALE_SISO639LANGNAME, (LPTSTR) &buff, sizeof(buff));
-		::GetLocaleInfo(threadLocale, LOCALE_SISO3166CTRYNAME, (LPTSTR) &buff2, sizeof(buff2));
-		sLanguageCode = buff;
-		sNLSFile = CString(sp.GetEXEPath()) + _T("strings_") + sLanguageCode + "-" + buff2 + _T(".txt");
-		if (::GetFileAttributes(sNLSFile) == INVALID_FILE_ATTRIBUTES) {
-			sNLSFile.Empty();
-		}
-	}
-	if (sNLSFile.IsEmpty()) {
-		sNLSFile = CString(sp.GetEXEPath()) + _T("strings_") + sLanguageCode + _T(".txt");
-	}
-	CNLS::ReadStringTable(sNLSFile);
+	// Read the string table for the requested language if one is present
+	CNLS::ReadStringTable(CNLS::GetStringTableFileName(sp.Language()));
 
 	m_bLandscapeMode = false;
 	m_pImageProcParams = new CImageProcessingParams(GetDefaultProcessingParams());
@@ -217,8 +201,7 @@ CMainDlg::CMainDlg() {
 	m_dZoomMult = -1.0;
 	m_bDragging = false;
 	m_bDoDragging = false;
-	m_nOffsetX = 0;
-	m_nOffsetY = 0;
+	m_offsets = CPoint(0, 0);
 	m_nCapturedX = m_nCapturedY = 0;
 	m_nMouseX = m_nMouseY = 0;
 	m_bShowHelp = false;
@@ -287,10 +270,6 @@ LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam
 	m_pImageProcPanelCtl = new CImageProcPanelCtl(this, m_pImageProcParams, &m_bLDC, &m_bAutoContrast);
 	m_pPanelMgr->AddPanelController(m_pImageProcPanelCtl);
 
-	// Create window button panel (on top, right)
-	m_pWndButtonPanelCtl = new CWndButtonPanelCtl(this, m_pImageProcPanelCtl->GetPanel());
-	m_pPanelMgr->AddPanelController(m_pWndButtonPanelCtl);
-
 	// Create EXIF display panel
 	m_pEXIFDisplayCtl = new CEXIFDisplayCtl(this, m_pImageProcPanelCtl->GetPanel());
 	m_pPanelMgr->AddPanelController(m_pEXIFDisplayCtl);
@@ -306,6 +285,10 @@ LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam
 	// Create navigation panel
 	m_pNavPanelCtl = new CNavigationPanelCtl(this, m_pImageProcPanelCtl->GetPanel(), &m_bFullScreenMode);
 	m_pPanelMgr->AddPanelController(m_pNavPanelCtl);
+
+	// Create window button panel (on top, right)
+	m_pWndButtonPanelCtl = new CWndButtonPanelCtl(this, m_pImageProcPanelCtl->GetPanel());
+	m_pPanelMgr->AddPanelController(m_pWndButtonPanelCtl);
 
 	// Create zoom navigator
 	m_pZoomNavigatorCtl = new CZoomNavigatorCtl(this, m_pImageProcPanelCtl->GetPanel());
@@ -382,9 +365,7 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 	std::list<CRect> excludedClippingRects;
 	if (m_bShowHelp) {
 		pHelpDisplayCtl = new CHelpDisplayCtl(this, dc, m_pImageProcParams);
-		CRect hdRect = pHelpDisplayCtl->PanelRect();
-		dc.ExcludeClipRect(&hdRect);
-		excludedClippingRects.push_back(hdRect);
+		excludedClippingRects.push_back(pHelpDisplayCtl->PanelRect());
 	}
 
 	// Panels are handled over memory DCs to eliminate flickering
@@ -393,6 +374,7 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 	if (m_pCurrentImage == NULL) {
 		m_pPanelMgr->OnPrePaint(dc);
 		m_pPanelMgr->PrepareMemDCMgr(memDCMgr, excludedClippingRects);
+		memDCMgr.ExcludeFromClippingRegion(dc, excludedClippingRects);
 		dc.FillRect(&m_clientRect, backBrush);
 	} else {
 		// do this as very first - may changes size of image
@@ -409,27 +391,15 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 			m_dZoomMult = (n == 0) ? 1.1 : exp(log(1/dZoomToFit)/n);
 		}
 
-		// find out the size of the bitmap to request
-		CSize newSize;
-		if (m_dZoom < 0.0) {
-			// zoom not set, interpret as 'fit to screen'
-			// ---------------------------------------------
-			newSize = Helpers::GetImageRect(m_pCurrentImage->OrigWidth(), m_pCurrentImage->OrigHeight(), 
-				m_clientRect.Width(), m_clientRect.Height(), m_eAutoZoomMode, m_dZoom);
-		} else {
-			// zoom set, use this value for the new size
-			// ---------------------------------------------
-			newSize = CSize((int)(m_pCurrentImage->OrigWidth() * m_dZoom + 0.5), (int)(m_pCurrentImage->OrigHeight() * m_dZoom + 0.5));
-		}
-		newSize.cx = max(1, min(65535, newSize.cx));
-		newSize.cy = max(1, min(65535, newSize.cy));
-		LimitOffsets(m_clientRect, newSize);
+		// find out the new vitual image size and the size of the bitmap to request
+		CSize newSize = Helpers::GetVirtualImageSize(CSize(m_pCurrentImage->OrigWidth(), m_pCurrentImage->OrigHeight()),
+			m_clientRect.Size(), m_eAutoZoomMode, m_dZoom);
 		m_virtualImageSize = newSize;
+		m_offsets = Helpers::LimitOffsets(m_offsets, m_clientRect.Size(), newSize);
 
 		// Clip to client rectangle and request the DIB
 		CSize clippedSize(min(m_clientRect.Width(), newSize.cx), min(m_clientRect.Height(), newSize.cy));
-		CPoint offsets(m_nOffsetX, m_nOffsetY);
-		CPoint offsetsInImage = m_pCurrentImage->ConvertOffset(newSize, clippedSize, offsets);
+		CPoint offsetsInImage = m_pCurrentImage->ConvertOffset(newSize, clippedSize, m_offsets);
 
 		void* pDIBData;
 		if (m_pUnsharpMaskPanelCtl->IsVisible()) {
@@ -441,20 +411,18 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 		} else {
 			pDIBData = m_pCurrentImage->GetDIB(newSize, clippedSize, offsetsInImage, 
 				*m_pImageProcParams, 
-				CreateProcessingFlags(m_bHQResampling && !m_bTemporaryLowQ, 
-				m_bAutoContrast, m_bAutoContrastSection, m_bLDC, false, m_bLandscapeMode));
+				CreateProcessingFlags(m_bHQResampling && !m_bTemporaryLowQ, m_bAutoContrast, m_bAutoContrastSection, m_bLDC, false, m_bLandscapeMode));
 		}
 
 		// Zoom navigator - check if visible and create exclusion rectangle
 		if (m_pZoomNavigatorCtl->IsVisible()) {
 			visRectZoomNavigator = m_pZoomNavigatorCtl->GetVisibleRect(newSize, clippedSize, offsetsInImage);
-			CRect zmRect = m_pZoomNavigatorCtl->PanelRect();
-			dc.ExcludeClipRect(&zmRect);
-			excludedClippingRects.push_back(zmRect);
+			excludedClippingRects.push_back(m_pZoomNavigatorCtl->PanelRect());
 		}
 
 		m_pPanelMgr->OnPrePaint(dc);
 		m_pPanelMgr->PrepareMemDCMgr(memDCMgr, excludedClippingRects);
+		memDCMgr.ExcludeFromClippingRegion(dc, excludedClippingRects);
 
 		// Paint the DIB
 		if (pDIBData != NULL) {
@@ -465,16 +433,8 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 		}
 	}
 
-	// Restore the old clipping region if changed
-	if (excludedClippingRects.size() > 0) {
-		std::list<CRect>::iterator iter;
-		for (iter = excludedClippingRects.begin(); iter != excludedClippingRects.end(); iter++) {
-			CRect clippingRect = *iter;
-			CRgn rgn;
-			rgn.CreateRectRgn(clippingRect.left, clippingRect.top, clippingRect.right, clippingRect.bottom);
-			dc.SelectClipRgn(rgn, RGN_OR);
-		}
-	}
+	// Restore the old clipping region by adding the excluded rectangles again
+	memDCMgr.IncludeIntoClippingRegion(dc, excludedClippingRects);
 
 	// paint zoom navigator
 	m_pZoomNavigatorCtl->OnPaint(dc, visRectZoomNavigator, m_pImageProcParams,
@@ -529,20 +489,6 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 			dc.DrawText(buff, -1, &rectText, DT_CENTER | DT_WORDBREAK | DT_NOPREFIX);
 		}
 	}
-
-	// Show info about nightshot/sunset detection
-#ifdef _DEBUG
-	if (m_pCurrentImage != NULL) {
-		dc.SetBkMode(OPAQUE);
-		TCHAR sNS[32];
-		_stprintf_s(sNS, 32, _T("Nightshot: %.2f"), m_pCurrentImage->IsNightShot());
-		dc.TextOut(500, 5, sNS);
-
-		_stprintf_s(sNS, 32, _T("Sunset: %.2f"), m_pCurrentImage->IsSunset());
-		dc.TextOut(620, 5, sNS);
-		dc.SetBkMode(TRANSPARENT);
-	}
-#endif
 
 	// Now blit the memory DCs of the panels to the screen
 	memDCMgr.PaintMemDCToScreen();
@@ -630,14 +576,10 @@ LRESULT CMainDlg::OnLButtonDown(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam,
 	if (!bEatenByPanel) {
 		bool bCtrl = (::GetKeyState(VK_CONTROL) & 0x8000) != 0;
 		bool bDraggingRequired = m_virtualImageSize.cx > m_clientRect.Width() || m_virtualImageSize.cy > m_clientRect.Height();
-		if (!bShowRotationPanel && (bCtrl || !bDraggingRequired)) {
+		if ((bCtrl || !bDraggingRequired) && !bShowRotationPanel) {
 			m_pCropCtl->StartCropping(pointClicked.x, pointClicked.y);
-		} else if (!m_pZoomNavigatorCtl->OnMouseLButton(MouseEvent_BtnDown, pointClicked.x, pointClicked.y)) {
-			if (bShowRotationPanel) {
-				m_pRotationPanelCtl->StartRotating(pointClicked.x, pointClicked.y);
-			} else {
-				StartDragging(pointClicked.x, pointClicked.y, false);
-			}
+		} else if (!m_pZoomNavigatorCtl->OnMouseLButton(MouseEvent_BtnDown, pointClicked.x, pointClicked.y) && !bShowRotationPanel) {
+			StartDragging(pointClicked.x, pointClicked.y, false);
 		}
 	}
 
@@ -1031,9 +973,6 @@ LRESULT CMainDlg::OnDropFiles(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, B
 }
 
 LRESULT CMainDlg::OnTimer(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOOL& /*bHandled*/) {
-	CPoint mousePos;
-	::GetCursorPos(&mousePos);
-	::ScreenToClient(m_hWnd, &mousePos);
 	if (wParam == SLIDESHOW_TIMER_EVENT_ID && m_nCurrentTimeout > 0) {
 		// Remove all timer messages for slideshow events that accumulated in the queue
 		MSG msg;
@@ -1064,29 +1003,10 @@ LRESULT CMainDlg::OnTimer(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOOL&
 		m_pZoomNavigatorCtl->InvalidateZoomNavigatorRect();
 		CRect imageProcArea = m_pImageProcPanelCtl->PanelRect();
 		this->InvalidateRect(GetZoomTextRect(imageProcArea), FALSE);
-	} else if (wParam == AUTOSCROLL_TIMER_EVENT_ID) {
-		if (mousePos.x < m_clientRect.Width() - 1 && mousePos.x > 0 && mousePos.y < m_clientRect.Height() - 1 && mousePos.y > 0 ) {
-			::KillTimer(this->m_hWnd, AUTOSCROLL_TIMER_EVENT_ID);
-		}
-		const int PAN_DIST = 25;
-		int nPanX = 0, nPanY = 0;
-		if (mousePos.x <= 0) {
-			nPanX = PAN_DIST;
-		}
-		if (mousePos.y <= 0) {
-			nPanY = PAN_DIST;
-		}
-		if (mousePos.x >= m_clientRect.Width() - 1) {
-			nPanX = -PAN_DIST;
-		}
-		if (mousePos.y >= m_clientRect.Height() - 1) {
-			nPanY = -PAN_DIST;
-		}
-		if (m_pCropCtl->IsCropping()) {
-			this->PerformPan(nPanX, nPanY, false);
-		}
 	} else {
-		m_pPanelMgr->OnTimer((int)wParam);
+		if (!m_pCropCtl->OnTimer((int)wParam)) {
+			m_pPanelMgr->OnTimer((int)wParam);
+		}
 	}
 	return 0;
 }
@@ -1336,12 +1256,12 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 				newEntry.InitFromProcessParams(*m_pImageProcParams, procFlags, m_nRotation);
 				if ((m_bUserZoom || m_bUserPan) && !m_pCurrentImage->IsCropped()) {
 					newEntry.InitGeometricParams(CSize(m_pCurrentImage->OrigWidth(), m_pCurrentImage->OrigHeight()),
-						m_dZoom, CPoint(m_nOffsetX, m_nOffsetY), CSize(m_clientRect.Width(), m_clientRect.Height()));
+						m_dZoom, m_offsets, m_clientRect.Size());
 				}
 				newEntry.SetHash(m_pCurrentImage->GetPixelHash());
 				if (CParameterDB::This().AddEntry(newEntry)) {
 					// these parameters need to be updated when image is reused from cache
-					m_pCurrentImage->SetInitialParameters(*m_pImageProcParams, procFlags, m_nRotation, m_dZoom, CPoint(m_nOffsetX, m_nOffsetY));
+					m_pCurrentImage->SetInitialParameters(*m_pImageProcParams, procFlags, m_nRotation, m_dZoom, m_offsets);
 					m_pCurrentImage->SetIsInParamDB(true);
 					m_pImageProcPanelCtl->ShowHideSaveDBButtons();
 				}
@@ -1417,7 +1337,7 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 				m_eProcessingFlagsKept = CreateProcessingFlags(m_bHQResampling, m_bAutoContrast, false, m_bLDC, m_bKeepParams, m_bLandscapeMode);
 				m_nRotationKept = m_nRotation;
 				m_dZoomKept = m_bUserZoom ? m_dZoom : -1;
-				m_offsetKept = m_bUserPan ? CPoint(m_nOffsetX, m_nOffsetY) : CPoint(0, 0);
+				m_offsetKept = m_bUserPan ? m_offsets : CPoint(0, 0);
 			}
 			m_pImageProcPanelCtl->ShowHideSaveDBButtons();
 			if (m_bShowHelp) {
@@ -1452,7 +1372,6 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 		case IDM_FULL_SCREEN_MODE_AFTER_STARTUP:
 			m_bFullScreenMode = !m_bFullScreenMode;
 			if (!m_bFullScreenMode) {
-				m_pWndButtonPanelCtl->SetVisible(false);
 				CRect windowRect;
 				this->SetWindowLongW(GWL_STYLE, this->GetWindowLongW(GWL_STYLE) | WS_OVERLAPPEDWINDOW | WS_VISIBLE);
 				if (::IsRectEmpty(&(m_storedWindowPlacement2.rcNormalPosition))) {
@@ -1555,29 +1474,29 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 			}
 			break;
 		case IDM_CROPMODE_FREE:
-			m_pCropCtl->SetCropRatio(0);
+			m_pCropCtl->SetCropRectAR(0);
 			break;
 		case IDM_CROPMODE_FIXED_SIZE:
 			{
 				CCropSizeDlg dlgSetCropSize;
 				dlgSetCropSize.DoModal();
 			}
-			m_pCropCtl->SetCropRatio(-1);
+			m_pCropCtl->SetCropRectAR(-1);
 			break;
 		case IDM_CROPMODE_5_4:
-			m_pCropCtl->SetCropRatio(1.25);
+			m_pCropCtl->SetCropRectAR(1.25);
 			break;
 		case IDM_CROPMODE_4_3:
-			m_pCropCtl->SetCropRatio(1.333333333333333333);
+			m_pCropCtl->SetCropRectAR(1.333333333333333333);
 			break;
 		case IDM_CROPMODE_3_2:
-			m_pCropCtl->SetCropRatio(1.5);
+			m_pCropCtl->SetCropRectAR(1.5);
 			break;
 		case IDM_CROPMODE_16_9:
-			m_pCropCtl->SetCropRatio(1.777777777777777778);
+			m_pCropCtl->SetCropRectAR(1.777777777777777778);
 			break;
 		case IDM_CROPMODE_16_10:
-			m_pCropCtl->SetCropRatio(1.6);
+			m_pCropCtl->SetCropRectAR(1.6);
 			break;
 		case IDM_TOUCH_IMAGE:
 		case IDM_TOUCH_IMAGE_EXIF:
@@ -1958,15 +1877,15 @@ void CMainDlg::PerformZoom(double dValue, bool bExponent, bool bZoomToMouse) {
 
 	if (bZoomToMouse) {
 		// zoom to mouse
-		int nOldX = nOldXSize/2 - m_clientRect.Width()/2 + m_nMouseX - m_nOffsetX;
-		int nOldY = nOldYSize/2 - m_clientRect.Height()/2 + m_nMouseY - m_nOffsetY;
+		int nOldX = nOldXSize/2 - m_clientRect.Width()/2 + m_nMouseX - m_offsets.x;
+		int nOldY = nOldYSize/2 - m_clientRect.Height()/2 + m_nMouseY - m_offsets.y;
 		double dFac = m_dZoom/dOldZoom;
-		m_nOffsetX = Helpers::RoundToInt(nNewXSize/2 - m_clientRect.Width()/2 + m_nMouseX - nOldX*dFac);
-		m_nOffsetY = Helpers::RoundToInt(nNewYSize/2 - m_clientRect.Height()/2 + m_nMouseY - nOldY*dFac);
+		m_offsets.x = Helpers::RoundToInt(nNewXSize/2 - m_clientRect.Width()/2 + m_nMouseX - nOldX*dFac);
+		m_offsets.y = Helpers::RoundToInt(nNewYSize/2 - m_clientRect.Height()/2 + m_nMouseY - nOldY*dFac);
 	} else {
 		// zoom to center
-		m_nOffsetX = (int) (m_nOffsetX*m_dZoom/dOldZoom);
-		m_nOffsetY = (int) (m_nOffsetY*m_dZoom/dOldZoom);
+		m_offsets.x = (int) (m_offsets.x*m_dZoom/dOldZoom);
+		m_offsets.y = (int) (m_offsets.y*m_dZoom/dOldZoom);
 	}
 
 	m_bInZooming = true;
@@ -1980,11 +1899,9 @@ bool CMainDlg::PerformPan(int dx, int dy, bool bAbsolute) {
 	if ((m_virtualImageSize.cx > 0 && m_virtualImageSize.cx > m_clientRect.Width()) ||
 		(m_virtualImageSize.cy > 0 && m_virtualImageSize.cy > m_clientRect.Height())) {
 		if (bAbsolute) {
-			m_nOffsetX = dx;
-			m_nOffsetY = dy;
+			m_offsets = CPoint(dx, dy);
 		} else {
-			m_nOffsetX += dx;
-			m_nOffsetY += dy;
+			m_offsets = CPoint(m_offsets.x + dx, m_offsets.y + dy);
 		}
 		m_bUserPan = true;
 
@@ -2003,20 +1920,10 @@ void CMainDlg::ZoomToSelection() {
 			m_clientRect.Size(), zoomRect);
 		if (fZoom > 0) {
 			PerformZoom(fZoom, false, m_bMouseOn);
-			m_nOffsetX = offsets.x;
-			m_nOffsetY = offsets.y;
+			m_offsets = offsets;
 			m_bUserPan = true;
 		}
 	}
-}
-
-void CMainDlg::LimitOffsets(const CRect & rect, const CSize & size) {
-	int nMaxOffsetX = (size.cx - rect.Width())/2;
-	nMaxOffsetX = max(0, nMaxOffsetX);
-	int nMaxOffsetY = (size.cy - rect.Height())/2;
-	nMaxOffsetY = max(0, nMaxOffsetY);
-	m_nOffsetX = max(-nMaxOffsetX, min(+nMaxOffsetX, m_nOffsetX));
-	m_nOffsetY = max(-nMaxOffsetY, min(+nMaxOffsetY, m_nOffsetY));
 }
 
 double CMainDlg::GetZoomFactorForFitToScreen(bool bFillWithCrop, bool bAllowEnlarge) {
@@ -2060,7 +1967,7 @@ CProcessParams CMainDlg::CreateProcessParams() {
 		m_eProcessingFlagsKept = CreateProcessingFlags(m_bHQResampling, m_bAutoContrast, false, m_bLDC, m_bKeepParams, m_bLandscapeMode);
 		m_nRotationKept = m_nRotation;
 		m_dZoomKept = m_bUserZoom ? m_dZoom : -1;
-		m_offsetKept = m_bUserPan ? CPoint(m_nOffsetX, m_nOffsetY) : CPoint(0, 0);
+		m_offsetKept = m_bUserPan ? m_offsets : CPoint(0, 0);
 
 		return CProcessParams(m_clientRect.Width(), m_clientRect.Height(), m_nRotationKept, 
 			m_dZoomKept,
@@ -2081,7 +1988,7 @@ void CMainDlg::ResetParamsToDefault() {
 	CSettingsProvider& sp = CSettingsProvider::This();
 	m_nRotation = 0;
 	m_dZoom = m_dZoomMult = -1.0;
-	m_nOffsetX = m_nOffsetY = 0;
+	m_offsets = CPoint(0, 0);
 	m_bUserZoom = false;
 	m_bUserPan = false;
 	*m_pImageProcParams = GetDefaultProcessingParams();
@@ -2236,9 +2143,7 @@ void CMainDlg::AfterNewImageLoaded(bool bSynchronize) {
 
 				m_nRotation = m_pCurrentImage->GetInitialRotation();
 				m_dZoom = m_pCurrentImage->GetInititialZoom();
-				CPoint offsets = m_pCurrentImage->GetInitialOffsets();
-				m_nOffsetX = offsets.x;
-				m_nOffsetY = offsets.y;
+				m_offsets = m_pCurrentImage->GetInitialOffsets();
 
 				if (m_pCurrentImage->HasZoomStoredInParamDB()) {
 					m_bUserZoom = m_bUserPan = true;
@@ -2409,7 +2314,6 @@ void CMainDlg::UpdateWindowTitle() {
 bool CMainDlg::PrepareForModalPanel() {
 	m_bShowHelp = false;
 	m_pImageProcPanelCtl->SetVisible(false);
-	m_pWndButtonPanelCtl->SetVisible(false);
 	bool bOldShowNavPanel = m_pNavPanelCtl->IsActive();
 	m_pNavPanelCtl->SetActive(false);
 	StopSlideShowTimer();
