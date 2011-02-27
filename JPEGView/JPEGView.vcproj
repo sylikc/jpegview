@@ -211,6 +211,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\EXIFHelpers.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\EXIFReader.cpp"
 				>
 			</File>
@@ -453,6 +457,10 @@
 			</File>
 			<File
 				RelativePath=".\Clipboard.h"
+				>
+			</File>
+			<File
+				RelativePath=".\EXIFHelpers.h"
 				>
 			</File>
 			<File

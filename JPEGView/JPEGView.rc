@@ -172,6 +172,7 @@ BEGIN
         BEGIN
           MENUITEM "to current date\tCtrl-Shift-M",	IDM_TOUCH_IMAGE
 		  MENUITEM "to EXIF date\tCtrl-Shift-E",	IDM_TOUCH_IMAGE_EXIF
+		  MENUITEM "to EXIF date (all files in folder)",	IDM_TOUCH_IMAGE_EXIF_FOLDER
         END
 	  MENUITEM SEPARATOR
 	  MENUITEM "Copy to clipboard\tCtrl-C",		IDM_COPY

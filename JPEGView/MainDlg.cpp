@@ -26,6 +26,7 @@
 #include "BatchCopyDlg.h"
 #include "ResizeFilter.h"
 #include "EXIFReader.h"
+#include "EXIFHelpers.h"
 #include "AboutDlg.h"
 #include "CropSizeDlg.h"
 #include "ProcessingThreadPool.h"
@@ -1501,27 +1502,34 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 		case IDM_TOUCH_IMAGE:
 		case IDM_TOUCH_IMAGE_EXIF:
 			if (m_pCurrentImage != NULL) {
-				if ((nCommand == IDM_TOUCH_IMAGE_EXIF) && (m_pCurrentImage->GetEXIFReader() == NULL || !m_pCurrentImage->GetEXIFReader()->GetAcquisitionTimePresent())) {
-					break; // cannot use EXIF date in this case, do nothing
-				}
 				LPCTSTR strFileName = CurrentFileName(false);
-				HANDLE hFile = ::CreateFile(strFileName, GENERIC_WRITE, FILE_SHARE_READ, NULL, OPEN_EXISTING, 0, NULL);
-				if (hFile != INVALID_HANDLE_VALUE) {
-					FILETIME ft;
+				bool bOk;
+				if (nCommand == IDM_TOUCH_IMAGE_EXIF) {
+					bOk = EXIFHelpers::SetModificationDateToEXIF(strFileName, m_pCurrentImage);
+				} else {
 					SYSTEMTIME st;
-					if (nCommand == IDM_TOUCH_IMAGE) {
-						::GetSystemTime(&st);              // gets current time
-					} else {
-						// get date from EXIF
-						st = m_pCurrentImage->GetEXIFReader()->GetAcquisitionTime();
-					}
-					::SystemTimeToFileTime(&st, &ft);  // converts to file time format
-					::SetFileTime(hFile, NULL, NULL, &ft);
-					::CloseHandle(hFile);
+					::GetSystemTime(&st);  // gets current time
+					bOk = EXIFHelpers::SetModificationDate(strFileName, st);
+				}
+				if (bOk) {
 					m_pFileList->ModificationTimeChanged();
 					if (m_pEXIFDisplayCtl->IsActive()) {
 						this->Invalidate(FALSE);
 					}
+				}
+			}
+			break;
+		case IDM_TOUCH_IMAGE_EXIF_FOLDER:
+			if (m_pCurrentImage != NULL && m_pFileList->CurrentDirectory() != NULL) {
+				EXIFHelpers::EXIFResult result = EXIFHelpers::SetModificationDateToEXIFAllFiles(m_pFileList->CurrentDirectory());
+				TCHAR buff1[128];
+				_stprintf_s(buff1, 128, CNLS::GetString(_T("Number of JPEG files in folder: %d")), result.NumberOfSucceededFiles + result.NumberOfFailedFiles);
+				TCHAR buff2[256];
+				_stprintf_s(buff2, 256, CNLS::GetString(_T("EXIF date successfully set on %d images, failed on %d images")), result.NumberOfSucceededFiles, result.NumberOfFailedFiles);
+				::MessageBox(m_hWnd, CString(buff1) + _T('\n') + buff2, _T("JPEGView"), MB_OK | MB_ICONINFORMATION);
+				m_pFileList->Reload();
+				if (m_pEXIFDisplayCtl->IsActive()) {
+					this->Invalidate(FALSE);
 				}
 			}
 			break;

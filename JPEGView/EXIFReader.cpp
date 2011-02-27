@@ -204,7 +204,7 @@ static double ReadDoubleTag(uint8* ptr, uint8* pTIFFHeader, bool bLittleEndian) 
 	return CEXIFReader::UNKNOWN_DOUBLE_VALUE;
 }
 
-static void ParseDateString(SYSTEMTIME & date, const CString& str) {
+bool CEXIFReader::ParseDateString(SYSTEMTIME & date, const CString& str) {
 	int nYear, nMonth, nDay, nHour, nMin, nSec;
 	if (_stscanf(str, _T("%d:%d:%d %d:%d:%d"), &nYear, &nMonth, &nDay, &nHour, &nMin, &nSec) == 6) {
 		date.wYear = nYear;
@@ -215,7 +215,9 @@ static void ParseDateString(SYSTEMTIME & date, const CString& str) {
 		date.wSecond = nSec;
 		date.wMilliseconds = 0;
 		date.wDayOfWeek = 0;
+		return true;
 	}
+	return false;
 }
 
 CEXIFReader::CEXIFReader(void* pApp1Block) 

@@ -21,6 +21,9 @@ public:
 	CEXIFReader(void* pApp1Block);
 	~CEXIFReader(void);
 
+	// Parse date string in the EXIF date/time format
+	static bool ParseDateString(SYSTEMTIME & date, const CString& str);
+
 public:
 	// Camera model
 	LPCTSTR GetCameraModel() { return m_sModel; }
