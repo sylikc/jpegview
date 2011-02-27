@@ -6,6 +6,7 @@
 #include "UnsharpMaskPanel.h"
 #include "NavigationPanelCtl.h"
 #include "SettingsProvider.h"
+#include "NLS.h"
 
 CUnsharpMaskPanelCtl::CUnsharpMaskPanelCtl(CMainDlg* pMainDlg, CPanel* pImageProcPanel) : CPanelController(pMainDlg, true) {
 	m_bVisible = false;
@@ -90,7 +91,10 @@ void CUnsharpMaskPanelCtl::OnCancelUnsharpMask(void* pContext, int nParameter, C
 void CUnsharpMaskPanelCtl::OnApplyUnsharpMask(void* pContext, int nParameter, CButtonCtrl & sender) {
 	CUnsharpMaskPanelCtl* pThis = (CUnsharpMaskPanelCtl*)pContext;
 	HCURSOR hOldCursor = ::SetCursor(::LoadCursor(NULL, MAKEINTRESOURCE(IDC_WAIT)));
-	pThis->CurrentImage()->ApplyUnsharpMaskToOriginalPixels(*(pThis->m_pUnsharpMaskParams));
+	if (!pThis->CurrentImage()->ApplyUnsharpMaskToOriginalPixels(*(pThis->m_pUnsharpMaskParams))) {
+		::MessageBox(pThis->m_pMainDlg->GetHWND(), CNLS::GetString(_T("The operation failed because not enough memory is available!")),
+			_T("JPEGView"), MB_ICONSTOP | MB_OK);
+	}
 	::SetCursor(hOldCursor);
 	pThis->TerminateUnsharpMaskPanel();
 }

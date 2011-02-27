@@ -23,6 +23,9 @@ public:
 	// Marks the request for deletion - only call once with given handle
 	CJPEGImage* GetLoadedImage(int nHandle);
 
+	// Gets if the request failed because not enough memory is available
+	bool IsRequestFailedOutOfMemory(int nHandle);
+
 	// Gets the request handle value used for the last request
 	static LONG GetCurHandleValue() { return m_curHandle; }
 
@@ -37,6 +40,7 @@ private:
 			TargetWnd = wndTarget;
 			RequestHandle = ::InterlockedIncrement(&m_curHandle);
 			Image = NULL;
+			OutOfMemory = false;
 		}
 
 		CString FileName;
@@ -44,6 +48,7 @@ private:
 		int RequestHandle;
 		CJPEGImage* Image;
 		CProcessParams ProcessParams;
+		bool OutOfMemory;
 	};
 
 	static volatile LONG m_curHandle;
@@ -55,5 +60,5 @@ private:
 	static void ProcessReadBMPRequest(CRequest * request);
 	static void ProcessReadGDIPlusRequest(CRequest * request);
 	static void SetFileDependentProcessParams(CRequest * request);
-	static void ProcessImageAfterLoad(CRequest * request);
+	static bool ProcessImageAfterLoad(CRequest * request);
 };

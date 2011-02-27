@@ -64,8 +64,9 @@ static int GetJFIFBlockLength(unsigned char* pJPEGStream) {
 static void* CompressAndSave(LPCTSTR sFileName, CJPEGImage * pImage, 
 							 void* pData, int nWidth, int nHeight, int nQuality, int& nJPEGStreamLen, bool bCopyEXIF, bool bDeleteThumbnail) {
 	nJPEGStreamLen = 0;
+	bool bOutOfMemory;
 	unsigned char* pTargetStream = (unsigned char*) Jpeg::Compress(pData, nWidth, nHeight, 3, 
-		nJPEGStreamLen, nQuality);
+		nJPEGStreamLen, bOutOfMemory, nQuality);
 	if (pTargetStream == NULL) {
 		return NULL;
 	}
@@ -98,7 +99,7 @@ static void* CompressAndSave(LPCTSTR sFileName, CJPEGImage * pImage,
 			void* pDIBThumb = GetThumbnailDIB(pImage, sizeThumb);
 			if (pDIBThumb != NULL) {
 				int nJPEGThumbStreamLen;
-				unsigned char* pJPEGThumb = (unsigned char*) Jpeg::Compress(pDIBThumb, sizeThumb.cx, sizeThumb.cy, 3, nJPEGThumbStreamLen, 70);
+				unsigned char* pJPEGThumb = (unsigned char*) Jpeg::Compress(pDIBThumb, sizeThumb.cx, sizeThumb.cy, 3, nJPEGThumbStreamLen, bOutOfMemory, 70);
 				if (pJPEGThumb != NULL) {
 					int nThumbJFIFLen = GetJFIFBlockLength(pJPEGThumb);
 					nEXIFBlockLenCorrection = nJPEGThumbStreamLen - nThumbJFIFLen - exifReader.GetJPEGThumbStreamLen();

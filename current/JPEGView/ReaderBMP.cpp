@@ -34,10 +34,14 @@ static void ReadUInt(FILE* file, uint32* pUInt) {
 	fread(pUInt, sizeof(uint32), 1, file);
 }
 
-CJPEGImage* CReaderBMP::ReadBmpImage(LPCTSTR strFileName) {
+CJPEGImage* CReaderBMP::ReadBmpImage(LPCTSTR strFileName, bool& bOutOfMemory) {
 	BMHEADER header;
 	BMINFOHEADER infoheader;
 	FILE *fptr;
+
+	const int MAX_FILE_SIZE_BYTES = 100 * 1024 * 1024; // 100 MB
+
+	bOutOfMemory = false;
 
 	/* Open file */
 	if ((fptr = _tfopen(strFileName,_T("rb"))) == NULL) {
@@ -87,12 +91,18 @@ CJPEGImage* CReaderBMP::ReadBmpImage(LPCTSTR strFileName) {
 	int bytesPerPixel = infoheader.bits/8;
 	int paddedWidth = Helpers::DoPadding(infoheader.width*bytesPerPixel, 4);
 	int fileSizeBytes = infoheader.height*paddedWidth;
-	if (fileSizeBytes <= 0 || fileSizeBytes > 80000000) {
+	if (fileSizeBytes <= 0 || fileSizeBytes > MAX_FILE_SIZE_BYTES) {
 		fclose(fptr);
+		bOutOfMemory = fileSizeBytes > MAX_FILE_SIZE_BYTES;
 		return NULL; // corrupt or manipulated header
 	}
 
-	uint8* pDest = new uint8[fileSizeBytes];
+	uint8* pDest = new(std::nothrow) uint8[fileSizeBytes];
+	if (pDest == NULL) {
+		fclose(fptr);
+		bOutOfMemory = true;
+		return NULL;
+	}
 	uint8* pStart = bFlipped ? pDest + paddedWidth*(infoheader.height-1) : pDest;
 	for (int nLine = 0; nLine < infoheader.height; nLine++) {
 		if (paddedWidth != fread(pStart, 1, paddedWidth, fptr)) {
@@ -112,10 +122,12 @@ CJPEGImage* CReaderBMP::ReadBmpImage(LPCTSTR strFileName) {
 	}
 
 	// The CJPEGImage object gets ownership of the memory in pDest
-	CJPEGImage* pImage = new CJPEGImage(infoheader.width, infoheader.height, pDest, NULL, infoheader.bits/8, 
+	CJPEGImage* pImage = (pDest == NULL) ? NULL : new CJPEGImage(infoheader.width, infoheader.height, pDest, NULL, infoheader.bits/8, 
 		0, CJPEGImage::IF_WindowsBMP);
 
 	fclose(fptr);
+
+	bOutOfMemory = pImage == NULL;
 
 	return pImage;
 }

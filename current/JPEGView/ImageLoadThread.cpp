@@ -75,6 +75,21 @@ CJPEGImage* CImageLoadThread::GetLoadedImage(int nHandle) {
 	return imageFound;
 }
 
+bool CImageLoadThread::IsRequestFailedOutOfMemory(int nHandle) {
+	bool bFailedMemory = false;
+	::EnterCriticalSection(&m_csList);
+	std::list<CRequestBase*>::iterator iter;
+	for (iter = m_requestList.begin( ); iter != m_requestList.end( ); iter++ ) {
+		CRequest* pRequest = (CRequest*)(*iter);
+		if (pRequest->RequestHandle == nHandle) {
+			bFailedMemory = pRequest->OutOfMemory;
+			break;
+		}
+	}
+	::LeaveCriticalSection(&m_csList);
+	return bFailedMemory;
+}
+
 /////////////////////////////////////////////////////////////////////////////////////////////
 // Protected
 /////////////////////////////////////////////////////////////////////////////////////////////
@@ -98,7 +113,11 @@ void CImageLoadThread::ProcessRequest(CRequestBase& request) {
 	// then process the image if read was successful
 	if (rq.Image != NULL) {
 		rq.Image->SetLoadTickCount(Helpers::GetExactTickCount() - dStartTime); 
-		ProcessImageAfterLoad(&rq);
+		if (!ProcessImageAfterLoad(&rq)) {
+			delete rq.Image;
+			rq.Image = NULL;
+			rq.OutOfMemory = true;
+		}
 	}
 }
 
@@ -137,14 +156,21 @@ void CImageLoadThread::ProcessReadJPEGRequest(CRequest * request) {
 		// Don't read too huge files...
 		unsigned int nFileSize = ::GetFileSize(hFile, NULL);
 		if (nFileSize > MAX_JPEG_FILE_SIZE) {
+			request->OutOfMemory = true;
 			::CloseHandle(hFile);
 			return;
 		}
 		unsigned int nNumBytesRead;
-		pBuffer = new char[nFileSize];
+		pBuffer = new(std::nothrow) char[nFileSize];
+		if (pBuffer == NULL) {
+			request->OutOfMemory = true;
+			::CloseHandle(hFile);
+			return;
+		}
 		if (::ReadFile(hFile, pBuffer, nFileSize, (LPDWORD) &nNumBytesRead, NULL) && nNumBytesRead == nFileSize) {
 			int nWidth, nHeight, nBPP;
-			void* pPixelData = Jpeg::ReadImage(nWidth, nHeight, nBPP, pBuffer, nFileSize);
+			bool bOutOfMemory;
+			void* pPixelData = Jpeg::ReadImage(nWidth, nHeight, nBPP, bOutOfMemory, pBuffer, nFileSize);
 			// Color and b/w JPEG is supported
 			if (pPixelData != NULL && (nBPP == 3 || nBPP == 1)) {
 				uint8* pEXIFBlock = (uint8*)Helpers::FindJPEGMarker(pBuffer, nFileSize, 0xE1);
@@ -156,6 +182,8 @@ void CImageLoadThread::ProcessReadJPEGRequest(CRequest * request) {
 					pEXIFBlock, nBPP, 
 					Helpers::CalculateJPEGFileHash(pBuffer, nFileSize), CJPEGImage::IF_JPEG);
 				request->Image->SetJPEGComment(Helpers::GetJPEGComment(pBuffer, nFileSize));
+			} else if (bOutOfMemory) {
+				request->OutOfMemory = true;
 			} else {
 				// failed, try GDI+
 				delete[] pPixelData;
@@ -171,8 +199,11 @@ void CImageLoadThread::ProcessReadJPEGRequest(CRequest * request) {
 }
 
 void CImageLoadThread::ProcessReadBMPRequest(CRequest * request) {
-	request->Image = CReaderBMP::ReadBmpImage(request->FileName);
-	if (request->Image == NULL) {
+	bool bOutOfMemory;
+	request->Image = CReaderBMP::ReadBmpImage(request->FileName, bOutOfMemory);
+	if (bOutOfMemory) {
+		request->OutOfMemory = true;
+	} else if (request->Image == NULL) {
 		// probabely one of the bitmap formats that can not be read directly, try with GDI+
 		ProcessReadGDIPlusRequest(request);
 	}
@@ -225,18 +256,28 @@ void CImageLoadThread::ProcessReadGDIPlusRequest(CRequest * request) {
 			pBmGraphics->FillRectangle(&bkBrush, 0, 0, pBmTarget->GetWidth(), pBmTarget->GetHeight());
 			pBmGraphics->DrawImage(pBitmap, 0, 0, pBmTarget->GetWidth(), pBmTarget->GetHeight());
 			pBitmapToUse = pBmTarget;
+			if (pBmGraphics->GetLastStatus() == Gdiplus::OutOfMemory) {
+				request->OutOfMemory = true;
+				delete pBmGraphics; delete pBmTarget; delete pBitmap;
+				return;
+			}
 		} else {
 			pBitmapToUse = pBitmap;
 		}
 
 		Gdiplus::Rect bmRect(0, 0, pBitmap->GetWidth(), pBitmap->GetHeight());
 		Gdiplus::BitmapData bmData;
-		if (pBitmapToUse->LockBits(&bmRect, Gdiplus::ImageLockModeRead, PixelFormat32bppRGB, &bmData) == Gdiplus::Ok) {
+		if (!request->OutOfMemory && pBitmapToUse->LockBits(&bmRect, Gdiplus::ImageLockModeRead, PixelFormat32bppRGB, &bmData) == Gdiplus::Ok) {
 			assert(bmData.PixelFormat == PixelFormat32bppRGB);
-			request->Image = new CJPEGImage(bmRect.Width, bmRect.Height, 
-				CBasicProcessing::ConvertGdiplus32bppRGB(bmRect.Width, bmRect.Height, bmData.Stride, bmData.Scan0), 
-				NULL, 4, 0, GetBitmapFormat(pBitmap));
+			void* pDIB = CBasicProcessing::ConvertGdiplus32bppRGB(bmRect.Width, bmRect.Height, bmData.Stride, bmData.Scan0);
+			if (pDIB == NULL) {
+				request->OutOfMemory = true;
+			} else {
+				request->Image = new CJPEGImage(bmRect.Width, bmRect.Height, pDIB, NULL, 4, 0, GetBitmapFormat(pBitmap));
+			}
 			pBitmapToUse->UnlockBits(&bmData);
+		} else {
+			request->OutOfMemory = true;
 		}
 
 		if (pBmGraphics != NULL && pBmTarget != NULL) {
@@ -248,12 +289,15 @@ void CImageLoadThread::ProcessReadGDIPlusRequest(CRequest * request) {
 	
 }
 
-void CImageLoadThread::ProcessImageAfterLoad(CRequest * request) {
+bool CImageLoadThread::ProcessImageAfterLoad(CRequest * request) {
 	// set process parameters depending on filename
 	request->Image->SetFileDependentProcessParams(request->FileName, &(request->ProcessParams));
 
 	// First do rotation, this maybe modifies the width and height
-	request->Image->VerifyRotation(request->ProcessParams.Rotation);
+	if (!request->Image->VerifyRotation(request->ProcessParams.Rotation)) {
+		return false;
+	}
+
 	int nWidth = request->Image->OrigWidth();
 	int nHeight = request->Image->OrigHeight();
 
@@ -277,6 +321,6 @@ void CImageLoadThread::ProcessImageAfterLoad(CRequest * request) {
 
 	// this will process the image
 	CPoint offsetInImage = request->Image->ConvertOffset(newSize, clippedSize, request->ProcessParams.Offsets);
-	request->Image->GetDIB(newSize, clippedSize, offsetInImage,
+	return NULL != request->Image->GetDIB(newSize, clippedSize, offsetInImage,
 		request->ProcessParams.ImageProcParams, request->ProcessParams.ProcFlags);
 }

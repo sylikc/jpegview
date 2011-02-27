@@ -64,9 +64,8 @@ CJPEGImage* CClipboard::PasteImageFromClipboard(HWND hWnd, const CImageProcessin
 				Gdiplus::BitmapData bmData;
 				if (pBitmap->LockBits(&bmRect, Gdiplus::ImageLockModeRead, PixelFormat32bppRGB, &bmData) == Gdiplus::Ok) {
 					assert(bmData.PixelFormat == PixelFormat32bppRGB);
-					pImage = new CJPEGImage(bmRect.Width, bmRect.Height, 
-						CBasicProcessing::ConvertGdiplus32bppRGB(bmRect.Width, bmRect.Height, bmData.Stride, bmData.Scan0), 
-						NULL, 4, 0, CJPEGImage::IF_CLIPBOARD);
+					void* pDIB = CBasicProcessing::ConvertGdiplus32bppRGB(bmRect.Width, bmRect.Height, bmData.Stride, bmData.Scan0);
+					pImage = (pDIB == NULL) ? NULL : new CJPEGImage(bmRect.Width, bmRect.Height, pDIB, NULL, 4, 0, CJPEGImage::IF_CLIPBOARD);
 					pBitmap->UnlockBits(&bmData);
 				}
 			}
