@@ -24,7 +24,11 @@ Changelog
 
 [1.0.23]
 Bugs fixed:
-- Fixed crash on startup when ShowFullScreen=true in INI file
+- Improved memory handling for very large images. Read ahead turned off for very large images.
+  Also improved memory footprint for processing large images by stripwise processing.
+  Note that images > 100 MPixel still fail loading in most cases (tested with XP and 2GB memory)
+- When out of memory, image loading fails with error message instead of crashing
+- Set file modification time to EXIF time now correctly considers time zone
 New features:
 - New image processing: Rotation by arbitrary angle
   Using a button on the navigation panel, the image can be rotated with the mouse by a user-defined angle.
@@ -34,6 +38,12 @@ New features:
 - Lossless crop
 - Display of JPEG comments (EXIF user comment, EXIF image description, JPEG COM marker, in this order)
   Use INI file setting ShowJPEGComments to disable display of comments
+- Set modification time to EXIF time for all files in folder
+
+[1.0.22.1]
+Bugs fixed:
+- Fixed crash on startup when ShowFullScreen=true in INI file
+New features:
 - Swedish translation (thanks to Åke)
 
 [1.0.22]

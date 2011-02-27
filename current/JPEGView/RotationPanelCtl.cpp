@@ -108,7 +108,8 @@ void CRotationPanelCtl::OnPostPaintMainDlg(HDC hPaintDC) {
 
 void* CRotationPanelCtl::GetRotatedDIBForPreview(CSize fullTargetSize, CSize clippingSize, CPoint targetOffset,
 												 const CImageProcessingParams & imageProcParams, EProcessingFlags eProcFlags) {
-	return CurrentImage()->GetDIBRotated(fullTargetSize, clippingSize, targetOffset, imageProcParams, eProcFlags, m_dRotationLQ, m_bRotationShowGrid);
+	return CurrentImage()->GetDIBRotated(fullTargetSize, clippingSize, targetOffset, imageProcParams, 
+		SetProcessingFlag(eProcFlags, PFLAG_LDC, false), m_dRotationLQ, m_bRotationShowGrid);
 }
 
 void CRotationPanelCtl::StartRotationPanel() {
