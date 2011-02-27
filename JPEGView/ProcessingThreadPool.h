@@ -27,6 +27,7 @@ public:
 		FullTargetSize = fullTargetSize;
 		FullTargetOffset = fullTargetOffset;
 		ClippedTargetSize = clippedTargetSize;
+		Success = true;
 	}
 
 	ERequest Request;
@@ -36,6 +37,7 @@ public:
 	CSize FullTargetSize;
 	CPoint FullTargetOffset;
 	CSize ClippedTargetSize;
+	bool Success;
 };
 
 // Request for upsampling or downsampling
@@ -152,7 +154,7 @@ public:
 
 	// Processes the request on all thread pool threads and the current thread.
 	// Note that the method does NOT take ownership of the passed object.
-	void Process(CProcessingRequest* pRequest);
+	bool Process(CProcessingRequest* pRequest);
 private:
 	static CProcessingThreadPool* sm_instance;
 

@@ -6,7 +6,7 @@ class CJPEGImage;
 class CReaderBMP
 {
 public:
-	static CJPEGImage* ReadBmpImage(LPCTSTR strFileName);
+	static CJPEGImage* ReadBmpImage(LPCTSTR strFileName, bool& bOutOfMemory);
 private:
 	CReaderBMP(void);
 };

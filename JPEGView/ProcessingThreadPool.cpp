@@ -34,7 +34,7 @@ void CProcessingThreadPool::StopAllThreads() {
 	m_threads = NULL;
 }
 
-void CProcessingThreadPool::Process(CProcessingRequest* pRequest) {
+bool CProcessingThreadPool::Process(CProcessingRequest* pRequest) {
 	int nTargetCX = pRequest->ClippedTargetSize.cx;
 	int nTargetCY = pRequest->ClippedTargetSize.cy;
 	if (m_nNumThreads == 0) {
@@ -69,6 +69,7 @@ void CProcessingThreadPool::Process(CProcessingRequest* pRequest) {
 			delete [] pAllWrappedRequests;
 		}
 	}
+	return pRequest->Success;
 }
 
 CProcessingThreadPool::CProcessingThreadPool(void) {
@@ -82,69 +83,92 @@ void CProcessingThread::StartProcesss(CWrappedRequest* pRequest) {
 }
 
 void CProcessingThread::DoProcess(CProcessingRequest* pRequest, int nOffsetY, int nSizeY) {
-	switch (pRequest->Request) {
-		case CProcessingRequest::Upsampling: {
-			CRequestUpDownSampling* pReq = (CRequestUpDownSampling*)pRequest;
-			CBasicProcessing::SampleUp_HQ_SSE_MMX_Core(pReq->FullTargetSize, 
-				CPoint(pReq->FullTargetOffset.x, pReq->FullTargetOffset.y + nOffsetY), 
-				CSize(pReq->ClippedTargetSize.cx, nSizeY),
-				pReq->SourceSize, pReq->SourcePixels, 
-				pReq->Channels, pReq->SSE, 
-				(uint8*)(pReq->TargetPixels) + pReq->ClippedTargetSize.cx * 4 * nOffsetY);
-			break;
-		} 
-		case CProcessingRequest::Downsampling: {
-			CRequestUpDownSampling* pReq = (CRequestUpDownSampling*)pRequest;
-			CBasicProcessing::SampleDown_HQ_SSE_MMX_Core(pReq->FullTargetSize, 
-				CPoint(pReq->FullTargetOffset.x, pReq->FullTargetOffset.y + nOffsetY), 
-				CSize(pReq->ClippedTargetSize.cx, nSizeY),
-				pReq->SourceSize, pReq->SourcePixels, 
-				pReq->Channels, pReq->Sharpen, 
-				pReq->Filter, pReq->SSE, 
-				(uint8*)(pReq->TargetPixels) + pReq->ClippedTargetSize.cx * 4 * nOffsetY);
-			break;
-		} 
-		case CProcessingRequest::LDCAndLUT: {
-			CRequestLDC* pReq = (CRequestLDC*)pRequest;
-			CBasicProcessing::ApplyLDC32bpp_Core(pReq->FullTargetSize,
-				CPoint(pReq->FullTargetOffset.x, pReq->FullTargetOffset.y + nOffsetY),
-				CSize(pReq->ClippedTargetSize.cx, nSizeY),
-				pReq->LDCMapSize, 
-				(const uint32*)(pReq->SourcePixels) + pReq->ClippedTargetSize.cx * nOffsetY, 
-				pReq->SatLUTs, pReq->LUT, pReq->LDCMap,
-				pReq->BlackPt, pReq->WhitePt, pReq->BlackPtSteepness,
-				(uint32*)(pReq->TargetPixels) + pReq->ClippedTargetSize.cx * nOffsetY);
+	// Processing is done in strips to reduce memory consumption and increase cache hit rate. The following constant gives the number of
+	// pixels to process per strip
+	const uint32 MAX_SRC_PIXELS_PER_STRIP = 1024 * 100;
+	uint32 nNumberOfPixelsInSource = (uint32)((pRequest->SourceSize.cx * (double)pRequest->ClippedTargetSize.cx / pRequest->FullTargetSize.cx) *
+		(pRequest->SourceSize.cy * (double)nSizeY / pRequest->FullTargetSize.cy));
+	uint32 nStrips = 1 + nNumberOfPixelsInSource / MAX_SRC_PIXELS_PER_STRIP;
+	uint32 nStripHeight = nSizeY / nStrips;
+	if (nStrips > 1) {
+		nStripHeight = nStripHeight & ~7; // must be dividable by 8, except last strip
+		nStripHeight = max(nStripHeight, 16);
+	}
+	int nSizeProcessed = 0;
+	int nCurrentSizeY = nStripHeight;
+	while (nSizeProcessed < nSizeY) {
+		void* pTarget = NULL;
+		int nCurrentOffsetY = nOffsetY + nSizeProcessed;
+		switch (pRequest->Request) {
+			case CProcessingRequest::Upsampling: {
+				CRequestUpDownSampling* pReq = (CRequestUpDownSampling*)pRequest;
+				pTarget = CBasicProcessing::SampleUp_HQ_SSE_MMX_Core(pReq->FullTargetSize, 
+					CPoint(pReq->FullTargetOffset.x, pReq->FullTargetOffset.y + nCurrentOffsetY), 
+					CSize(pReq->ClippedTargetSize.cx, nCurrentSizeY),
+					pReq->SourceSize, pReq->SourcePixels, 
+					pReq->Channels, pReq->SSE, 
+					(uint8*)(pReq->TargetPixels) + pReq->ClippedTargetSize.cx * 4 * nCurrentOffsetY);
+				break;
+			} 
+			case CProcessingRequest::Downsampling: {
+				CRequestUpDownSampling* pReq = (CRequestUpDownSampling*)pRequest;
+				pTarget = CBasicProcessing::SampleDown_HQ_SSE_MMX_Core(pReq->FullTargetSize, 
+					CPoint(pReq->FullTargetOffset.x, pReq->FullTargetOffset.y + nCurrentOffsetY), 
+					CSize(pReq->ClippedTargetSize.cx, nCurrentSizeY),
+					pReq->SourceSize, pReq->SourcePixels, 
+					pReq->Channels, pReq->Sharpen, 
+					pReq->Filter, pReq->SSE, 
+					(uint8*)(pReq->TargetPixels) + pReq->ClippedTargetSize.cx * 4 * nCurrentOffsetY);
+				break;
+			} 
+			case CProcessingRequest::LDCAndLUT: {
+				CRequestLDC* pReq = (CRequestLDC*)pRequest;
+				pTarget = CBasicProcessing::ApplyLDC32bpp_Core(pReq->FullTargetSize,
+					CPoint(pReq->FullTargetOffset.x, pReq->FullTargetOffset.y + nCurrentOffsetY),
+					CSize(pReq->ClippedTargetSize.cx, nCurrentSizeY),
+					pReq->LDCMapSize, 
+					(const uint32*)(pReq->SourcePixels) + pReq->ClippedTargetSize.cx * nCurrentOffsetY, 
+					pReq->SatLUTs, pReq->LUT, pReq->LDCMap,
+					pReq->BlackPt, pReq->WhitePt, pReq->BlackPtSteepness,
+					(uint32*)(pReq->TargetPixels) + pReq->ClippedTargetSize.cx * nCurrentOffsetY);
+				break;
+			}
+			case CProcessingRequest::Gauss: {
+				CRequestGauss* pReq = (CRequestGauss*)pRequest;
+				pTarget = CBasicProcessing::GaussFilter16bpp1Channel_Core(pReq->SourceSize,
+					CPoint(pReq->FullTargetOffset.x, pReq->FullTargetOffset.y + nCurrentOffsetY),
+					CSize(pReq->FullTargetSize.cx, nCurrentSizeY),
+					pReq->FullTargetSize.cy,
+					pReq->Radius,
+					(int16*)(pReq->SourcePixels),
+					(int16*)(pReq->TargetPixels) + nCurrentOffsetY);
+				break;
+			}
+			case CProcessingRequest::UnsharpMask: {
+				CRequestUnsharpMask* pReq = (CRequestUnsharpMask*)pRequest;
+				pTarget = CBasicProcessing::UnsharpMask_Core(pReq->SourceSize,
+					CPoint(pReq->FullTargetOffset.x, pReq->FullTargetOffset.y + nCurrentOffsetY),
+					CSize(pReq->FullTargetSize.cx, nCurrentSizeY),
+					pReq->Amount,
+					pReq->ThresholdLUT, pReq->GrayImage, pReq->SmoothedGrayImage,
+					pReq->SourcePixels, pReq->TargetPixels,
+					pReq->Channels);
+				break;
+			}
+			case CProcessingRequest::RotateImage: {
+				CRequestRotate* pReq = (CRequestRotate*)pRequest;
+				pTarget = CBasicProcessing::RotateHQ_Core(CPoint(pReq->FullTargetOffset.x, pReq->FullTargetOffset.y + nCurrentOffsetY),
+					CSize(pReq->FullTargetSize.cx, nCurrentSizeY), pReq->Rotation, pReq->SourceSize, pReq->SourcePixels, 
+					(uint8*)pReq->TargetPixels + pReq->FullTargetSize.cx * 4 * nCurrentOffsetY, pReq->Channels);
+				break;
+			}
+		}
+		if (pTarget == NULL) {
+			pRequest->Success = false;
 			break;
 		}
-		case CProcessingRequest::Gauss: {
-			CRequestGauss* pReq = (CRequestGauss*)pRequest;
-			CBasicProcessing::GaussFilter16bpp1Channel_Core(pReq->SourceSize,
-				CPoint(pReq->FullTargetOffset.x, pReq->FullTargetOffset.y + nOffsetY),
-				CSize(pReq->FullTargetSize.cx, nSizeY),
-				pReq->FullTargetSize.cy,
-				pReq->Radius,
-				(int16*)(pReq->SourcePixels),
-				(int16*)(pReq->TargetPixels) + nOffsetY);
-			break;
-		}
-		case CProcessingRequest::UnsharpMask: {
-			CRequestUnsharpMask* pReq = (CRequestUnsharpMask*)pRequest;
-			CBasicProcessing::UnsharpMask_Core(pReq->SourceSize,
-				CPoint(pReq->FullTargetOffset.x, pReq->FullTargetOffset.y + nOffsetY),
-				CSize(pReq->FullTargetSize.cx, nSizeY),
-				pReq->Amount,
-				pReq->ThresholdLUT, pReq->GrayImage, pReq->SmoothedGrayImage,
-				pReq->SourcePixels, pReq->TargetPixels,
-				pReq->Channels);
-			break;
-		}
-		case CProcessingRequest::RotateImage: {
-			CRequestRotate* pReq = (CRequestRotate*)pRequest;
-			CBasicProcessing::RotateHQ_Core(CPoint(pReq->FullTargetOffset.x, pReq->FullTargetOffset.y + nOffsetY),
-				CSize(pReq->FullTargetSize.cx, nSizeY), pReq->Rotation, pReq->SourceSize, pReq->SourcePixels, 
-				(uint8*)pReq->TargetPixels + pReq->FullTargetSize.cx * 4 * nOffsetY, pReq->Channels);
-			break;
-		}
+		nSizeProcessed += nCurrentSizeY;
+		nCurrentSizeY = min(nStripHeight, nSizeY - nSizeProcessed);
 	}
 }
 

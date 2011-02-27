@@ -28,10 +28,13 @@
 void * Jpeg::ReadImage(int &width,
                        int &height,
                        int &nchannels,
+					   bool &outOfMemory,
                        const void *buffer,
                        int sizebytes)
 {
   const int MAX_PIXELS = 1024*1024*100; // 100 MPixel
+
+  outOfMemory = false;
 
   JPEG_CORE_PROPERTIES jcprops;
   if ( ijlInit(&jcprops) != IJL_OK )
@@ -50,6 +53,7 @@ void * Jpeg::ReadImage(int &width,
   width  = jcprops.JPGWidth;
   height = jcprops.JPGHeight;
   if (abs(width*height) > MAX_PIXELS) {
+    outOfMemory = true;
     ijlFree(&jcprops);
     return 0;
   }
@@ -57,9 +61,9 @@ void * Jpeg::ReadImage(int &width,
   mode = IJL_JBUFF_READWHOLEIMAGE;
   nchannels = jcprops.JPGChannels;
   int nPad = (4 - (width * nchannels) & 3) & 3;
-  unsigned char * pixbuff = new unsigned char[(width + nPad)*height*nchannels];
-  if ( !pixbuff )
-  {
+  unsigned char * pixbuff = new(std::nothrow) unsigned char[(width + nPad)*height*nchannels];
+  if ( pixbuff == NULL ) {
+    outOfMemory = true;
     ijlFree(&jcprops);
     return 0;
   }  
@@ -101,8 +105,10 @@ void * Jpeg::Compress(const void *source,
                       int height,
                       int nchannels,
                       int &len,
+                      bool &outOfMemory,
                       int quality)
 {
+  outOfMemory = false;
   JPEG_CORE_PROPERTIES jcprops;  
   if ( ijlInit(&jcprops) != IJL_OK )
   {
@@ -133,7 +139,12 @@ void * Jpeg::Compress(const void *source,
     jcprops.DIBSubsampling = (IJL_DIBSUBSAMPLING) 0;
   }  
   int size = (width*nchannels+nPad)*height;  
-  unsigned char * buffer = new unsigned char[size];  
+  unsigned char * buffer = new(std::nothrow) unsigned char[size];
+  if ( buffer == NULL ) {
+    outOfMemory = true;
+    ijlFree(&jcprops);
+    return 0;
+  }
   jcprops.JPGSizeBytes = size;
   jcprops.JPGBytes     = buffer;  
   jcprops.jquality = quality;

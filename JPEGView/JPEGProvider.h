@@ -44,6 +44,9 @@ public:
 	// Any references to CJPEGImage objects get invalid by this call.
 	void ClearAllRequests();
 
+	// Free as much memory as possible by clearing all requests that are not in use. Returns if some memory could be freed.
+	bool FreeAllPossibleMemory();
+
 	// Tells the provider that a file has been renamed externally
 	void FileHasRenamed(LPCTSTR sOldFileName, LPCTSTR sNewFileName);
 
@@ -61,6 +64,7 @@ private:
 		bool InUse;
 		bool Deleted;
 		bool ReadAhead;
+		bool OutOfMemory;
 		int AccessTimeStamp;
 		CImageLoadThread* HandlingThread;
 		HANDLE EventFinished;
@@ -73,6 +77,7 @@ private:
 			InUse = false;
 			Deleted = false;
 			ReadAhead = false;
+			OutOfMemory = false;
 			AccessTimeStamp = -1;
 			HandlingThread = NULL;
 			EventFinished = ::CreateEvent(NULL, TRUE, FALSE, NULL);
@@ -96,8 +101,11 @@ private:
 	void GetLoadedImageFromWorkThread(CImageRequest* pRequest);
 	CImageLoadThread* SearchThread(void);
 	void RemoveUnusedImages(bool bRemoveAlsoReadAhead);
+	CImageRequest* StartRequestAndWaitUntilReady(LPCTSTR sFileName, const CProcessParams & processParams);
 	CImageRequest* StartNewRequest(LPCTSTR sFileName, const CProcessParams & processParams);
 	void StartNewRequestBundle(CFileList* pFileList, EReadAheadDirection eDirection, const CProcessParams & processParams, int nNumRequests);
 	CImageRequest* FindRequest(LPCTSTR strFileName);
 	void ClearOldestReadAhead();
+	void DeleteElementAt(std::list<CImageRequest*>::iterator iteratorAt);
+	void DeleteElement(CImageRequest* pRequest);
 };

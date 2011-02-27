@@ -11,6 +11,9 @@ public:
 
 	// Note for all methods: The caller gets ownership of the returned image and is responsible to delete 
 	// this pointer when no longer used.
+	
+	// Note for all methods: If there is not enough memory to allocate a new image, all methods return a null pointer
+	// No exception is thrown in this case.
 
 	// Note on DIBs: The rows of DIBs are padded to the next 4 byte boundary. For 32 bpp DIBs this is
 	// implicitely true (no padding needed), for other types the padding must be considered.

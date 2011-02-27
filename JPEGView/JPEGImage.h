@@ -99,12 +99,14 @@ public:
 	void FreeUnsharpMaskResources();
 
 	// Apply unsharp masking to the original image pixels. Cannot be undone except by reloading the image from disc.
-	void ApplyUnsharpMaskToOriginalPixels(const CUnsharpMaskParams & unsharpMaskParams);
+	// Returns false if not enough memory to perform the operation
+	bool ApplyUnsharpMaskToOriginalPixels(const CUnsharpMaskParams & unsharpMaskParams);
 
 	// Rotate original pixels by given angle (in radians). The original pixels are replaced by this operation.
 	// If autocrop is enabled, the maximum defined rectangular area is cropped, else black borders are added to the image.
 	// In all cases the size of the image in pixels is change by rotation
-	void RotateOriginalPixels(double dRotation, bool bAutoCrop);
+	// Returns false if not enough memory to perform the operation
+	bool RotateOriginalPixels(double dRotation, bool bAutoCrop);
 
 	// Gets the hash value of the pixels, for JPEGs it on the compressed pixels
 	__int64 GetPixelHash() const { return m_nPixelHash; }
@@ -128,15 +130,15 @@ public:
 	void SetDIBInvalid() { m_ClippingSize = CSize(0, 0); }
 
 	// Verify that the image is currently rotated by the given angle and rotate the image if not. nRotation must be 0, 90, 180, 270
-	void VerifyRotation(int nRotation);
+	bool VerifyRotation(int nRotation);
 
 	// Rotate the image clockwise by 90, 180 or 270 degrees. All other angles are invalid.
 	// Applies to original image!
-	void Rotate(int nRotation);
+	bool Rotate(int nRotation);
 
 	// Crops the image. 
 	// Applies to original image!
-	void Crop(CRect cropRect);
+	bool Crop(CRect cropRect);
 
 	// Returns if this image has been cropped or not
 	bool IsCropped() { return m_bCropped; }
@@ -382,7 +384,7 @@ private:
 	}
 
 	// makes sure that the input image (m_pIJLPixels) is a 4 channel BGRA image (converts if necessary)
-	void ConvertSrcTo4Channels();
+	bool ConvertSrcTo4Channels();
 
 	// Gets the processing flags according to the inclusion/exclusion list in INI file
 	EProcessingFlags GetProcFlagsIncludeExcludeFolders(LPCTSTR sFileName, EProcessingFlags procFlags) const;

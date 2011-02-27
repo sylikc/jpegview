@@ -41,6 +41,7 @@ CJPEGImage* CJPEGProvider::RequestJPEG(CFileList* pFileList, EReadAheadDirection
 	CImageRequest* pRequest = FindRequest(strFileName);
 	bool bDirectionChanged = eDirection != m_eOldDirection || eDirection == TOGGLE;
 	bool bRemoveAlsoReadAhead = bDirectionChanged;
+	bool bWasOutOfMemory = false;
 	m_eOldDirection = eDirection;
 
 	if (pRequest == NULL) {
@@ -74,12 +75,23 @@ CJPEGImage* CJPEGProvider::RequestJPEG(CFileList* pFileList, EReadAheadDirection
 	pRequest->InUse = true;
 	pRequest->AccessTimeStamp = m_nCurrentTimeStamp++;
 
+	if (pRequest->OutOfMemory) {
+		// The request could not be satisfied because the system is out of memory.
+		// Clear all memory and try again - maybe some readahead requests can be deleted
+		::OutputDebugStr(_T("Retrying request because out of memory: ")); ::OutputDebugStr(pRequest->FileName); ::OutputDebugStr(_T("\n"));
+		bWasOutOfMemory = true;
+		if (FreeAllPossibleMemory()) {
+			DeleteElement(pRequest);
+			pRequest = StartRequestAndWaitUntilReady(strFileName, processParams);
+		}
+	}
+
 	// cleanup stuff no longer used
 	RemoveUnusedImages(bRemoveAlsoReadAhead);
 	ClearOldestReadAhead();
 
-	// check if we shall start new requests
-	if (m_requestList.size() < (unsigned int)m_nNumBuffers && !bDirectionChanged) {
+	// check if we shall start new requests (don't start another request if we are short of memory!)
+	if (m_requestList.size() < (unsigned int)m_nNumBuffers && !bDirectionChanged && !bWasOutOfMemory) {
 		StartNewRequestBundle(pFileList, eDirection, processParams, m_nNumThread);
 	}
 
@@ -114,6 +126,21 @@ void CJPEGProvider::ClearAllRequests() {
 	}
 }
 
+bool CJPEGProvider::FreeAllPossibleMemory() {
+	bool bCouldFreeMemory = false;
+	std::list<CImageRequest*>::iterator iter;
+	for (iter = m_requestList.begin( ); iter != m_requestList.end( ); iter++ ) {
+		CImageRequest* pRequest = *iter;
+		if (!pRequest->InUse && pRequest->Ready) {
+			DeleteElementAt(iter);
+			FreeAllPossibleMemory();
+			bCouldFreeMemory = true;
+			break;
+		}
+	}
+	return bCouldFreeMemory;
+}
+
 void CJPEGProvider::FileHasRenamed(LPCTSTR sOldFileName, LPCTSTR sNewFileName) {
 	std::list<CImageRequest*>::iterator iter;
 	for (iter = m_requestList.begin( ); iter != m_requestList.end( ); iter++ ) {
@@ -133,9 +160,7 @@ bool CJPEGProvider::ClearRequest(CJPEGImage* pImage) {
 		if ((*iter)->Image == pImage) {
 			// images that are not ready cannot be removed yet
 			if ((*iter)->Ready) {
-				delete (*iter)->Image;
-				delete *iter;
-				m_requestList.erase(iter);
+				DeleteElementAt(iter);
 				bErased = true;
 			} else {
 				(*iter)->Deleted = true;
@@ -170,6 +195,13 @@ CJPEGProvider::CImageRequest* CJPEGProvider::FindRequest(LPCTSTR strFileName) {
 	return NULL;
 }
 
+CJPEGProvider::CImageRequest* CJPEGProvider::StartRequestAndWaitUntilReady(LPCTSTR sFileName, const CProcessParams & processParams) {
+	CImageRequest* pRequest = StartNewRequest(sFileName, processParams);
+	::WaitForSingleObject(pRequest->EventFinished, INFINITE);
+	GetLoadedImageFromWorkThread(pRequest);
+	return pRequest;
+}
+
 void CJPEGProvider::StartNewRequestBundle(CFileList* pFileList, EReadAheadDirection eDirection, 
 										  const CProcessParams & processParams, int nNumRequests) {
 	if (nNumRequests == 0 || pFileList == NULL) {
@@ -198,6 +230,7 @@ void CJPEGProvider::GetLoadedImageFromWorkThread(CImageRequest* pRequest) {
 	if (pRequest->HandlingThread != NULL) {
 		::OutputDebugStr(_T("Finished request: ")); ::OutputDebugStr(pRequest->FileName); ::OutputDebugStr(_T("\n"));
 		pRequest->Image = pRequest->HandlingThread->GetLoadedImage(pRequest->Handle);
+		pRequest->OutOfMemory = pRequest->HandlingThread->IsRequestFailedOutOfMemory(pRequest->Handle);
 		pRequest->Ready = true;
 		pRequest->HandlingThread = NULL;
 	}
@@ -245,9 +278,7 @@ void CJPEGProvider::RemoveUnusedImages(bool bRemoveAlsoReadAhead) {
 				// the read ahead image is not used.
 				if ((*iter)->AccessTimeStamp == nTimeStampToRemove) {
 					::OutputDebugStr(_T("Delete request: ")); ::OutputDebugStr((*iter)->FileName); ::OutputDebugStr(_T("\n"));
-					delete (*iter)->Image;
-					delete *iter;
-					m_requestList.erase(iter);
+					DeleteElementAt(iter);
 					bRemoved = true;
 					break;
 				}
@@ -288,4 +319,16 @@ void CJPEGProvider::ClearOldestReadAhead() {
 			ClearOldestReadAhead();
 		}
 	}
+}
+
+void CJPEGProvider::DeleteElementAt(std::list<CImageRequest*>::iterator iteratorAt) {
+	delete (*iteratorAt)->Image;
+	delete *iteratorAt;
+	m_requestList.erase(iteratorAt);
+}
+
+void CJPEGProvider::DeleteElement(CImageRequest* pRequest) {
+	delete pRequest->Image;
+	delete pRequest;
+	m_requestList.remove(pRequest);
 }

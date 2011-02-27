@@ -25,6 +25,7 @@ public:
 	static void * ReadImage(int &width,   // width of the image loaded.
                          int &height,  // height of the image loaded.
                          int &bpp,     // BYTES (not bits) PER PIXEL.
+						 bool &outOfMemory, // set to true when no memory to read image
                          const void *buffer, // memory address containing jpeg compressed data.
                          int sizebytes); // size of jpeg compressed data.
 
@@ -34,6 +35,7 @@ public:
                          int height, // height of image in pixels.
                          int bpp, // *BYTES* per pixel of image 1 or 3
                          int &len, // returns length of compressed data
+						 bool &outOfMemory, // returns if out of memory
                          int quality=75); // image quality as a percentage
 
 };
