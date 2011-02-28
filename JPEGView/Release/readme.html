@@ -19,8 +19,19 @@
 					&nbsp;&nbsp;<a href="#GettingStarted">Getting started</a><br/>
 					&nbsp;&nbsp;<a href="#NavPanel">Navigation panel</a><br/>
 					&nbsp;&nbsp;<a href="#Viewing">Viewing images</a><br/>
-					&nbsp;&nbsp;<a href="#SlideShow">Slideshow lists</a><br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;<a href="#Navigation">Navigation</a><br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;<a href="#ImageInfo">Image Information</a><br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;<a href="#ZoomPan">Zoom and Pan</a><br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;<a href="#AutoScaleMode">Auto Scale Mode</a><br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;<a href="#Rotate">Rotate</a><br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;<a href="#Crop">Crop</a><br/>
+					&nbsp;&nbsp;<a href="#SlideShow">Slideshows and Movies</a><br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;<a href="#Slideshows">Slideshows</a><br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;<a href="#Movies">Movies</a><br/>
 					&nbsp;&nbsp;<a href="#Processing">Processing images</a><br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;<a href="#Processing">Available processings</a><br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;<a href="#KeepingParams">Keeping parameters between images</a><br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;<a href="#Comparing">Comparing to original image</a><br/>
 					&nbsp;&nbsp;<a href="#Saving">Saving and renaming images</a><br/>
 					&nbsp;&nbsp;<a href="#Clipboard">Clipboard</a><br/>
 					<a href="#ParameterDB">Parameter Database</a><br/>
@@ -33,7 +44,7 @@
 				<td>
 					<a name="Top"></a>
 					<h1>JPEGView Readme</h1>
-					Revision: 08-Jan-2011
+					Revision: 28-Feb-2011
 					<a name="Introduction"></a>
 					<h2>Introduction</h2>
 					JPEGView is a viewer/editor for JPEG, BMP, PNG, GIF and TIFF images. It is designed to view images from digital cameras
@@ -63,7 +74,7 @@
 						<li>
 							Small and fast
 							<ul style="margin-top:0in;margin-bottom:0in">
-								<li>Executable is only 400 KB</li>
+								<li>Executable is only 512 KB</li>
 								<li>C++/MMX/SSE code</li>
 								<li>Support for multiple CPU cores to speedup processing</li>
 								<li>Minimal dependencies on external libraries</li>
@@ -86,7 +97,8 @@
 								<li>Local brightness correction to lighten shadows and darken highlights</li>
 								<li>Automatic color and contrast correction</li>
 								<li>Rotation in 90 deg steps</li>
-								<li>Crop image</li>
+								<li>Free image rotation for horizon correction</li>
+								<li>Crop image (also lossless for JPEGs)</li>
 								<li>Landscape picture improvement mode</li>
 							</ul>
 						</li>
@@ -220,6 +232,7 @@
 					- Actual image size / Fit image to screen<br/>
 					- Window mode / Full screen mode<br/>
 					- Rotate clockwise, Rotate counter-clockwise<br/>
+					- Rotate image by any angle, e.g. to perform horizon correction<br/>
 					- Keep image processing parameters and zoom/pan between images<br/>
 					- Toggle landscape picture enhancement mode<br/>
 					- Toggle display of image information (EXIF)<br/>
@@ -237,6 +250,7 @@
 
 					<a name="Viewing"></a>
 					<h3>Viewing Images</h3>
+					<a name="Navigation"></a>
 					<h4>Navigation</h4>
 					To navigate between images, the following commands are supported:
 					<ul style="margin-top:0in;margin-bottom:0in">
@@ -316,6 +330,7 @@
 						</li>
 					</ul>
 					The default ordering can be changed in the  <a href="#INIFile">INI file</a>.<br/>
+					<a name="ImageInfo"></a>
 					<h4>Image Information</h4>
 					<h5>Image and EXIF information</h5>
 					Use <kbd>F2</kbd> to display information about the current image, including the value of some EXIF tags, e.g. date and
@@ -323,6 +338,7 @@
 					EXIF information. The histogram is updated immediately when the image is processed.
 					<h5>File name and path</h5>
 					Use <kbd>Ctrl-F2</kbd> to display the full path and file name of the current image.
+					<a name="ZoomPan"></a>
 					<h4>Zoom and Pan</h4>
 					Images can be zoomed and panned interactively. While zooming, a lower quality image processing mode is used. The
 					image will be processed automatically with the high quality resize filters as soon as no zoom command is received for
@@ -367,6 +383,7 @@
 					(depending on resize-factor) Lanczos-like filter kernel. This kernel produces only a small amout of aliasing while
 					preserving or even slightly enhancing the sharpness of the image. You can see the difference to simple point sampling when
 					pressing <kbd>F3</kbd> what toggles between point sampling and filter based sampling.
+					<a name="AutoScaleMode"></a>
 					<h4>Auto Scale Mode</h4>
 					The auto scale mode determines how images are fitted to the screen. The default auto scale mode is read from the
 					INI file, however the mode can also be changed during runtime with the context menu, submenu 'Auto scale mode'.<br/>
@@ -396,11 +413,13 @@
 							black borders.
 						</li>
 					</ul>
+					<a name="Rotate"></a>
 					<h4>Rotate</h4>
 					With the <kbd>'Arrow down'</kbd> and <kbd>'Arrow up'</kbd> keys, the current image can be rotated clockwise, respectively
 					counter-clockwise. Note that JPEGView looks for the rotation tag in the EXIF data to rotate the image automatically. Some
 					cameras have an orientation sensor and set this tag.<br/>
 					To rotate a JPEG image lossless on disk, use the <kbd>R</kbd> and <kbd>T</kbd> keys.
+					<a name="Crop"></a>
 					<h4>Crop</h4>
 					When the <kbd>Ctrl</kbd> key and the left mouse button are pressed and the mouse is dragged, a selection on the image can be
 					defined. After having defined a selection, a context menu provides the following commands:
@@ -410,6 +429,11 @@
 							Crops the image selection and re-applies all image processing with the current parameters to the cropped image.
 							When the color and contrast correction is active, the cropped image may looks different afterwards. Note that a crop
 							operation cannot be stored to the parameter DB.
+						</li>
+						<li>
+							Lossless crop (for JPEG images only)<br/>
+							Crops the image selection without recompression of the JPEG image. The cropped image must be stored as a new JPEG file.
+							Note that lossless crop cannot be more exact than to 8 pixel boundaries due to the structure of JPEG images. 
 						</li>
 						<li>
 							Copy image selection to clipboard<br/>
@@ -449,6 +473,7 @@
 					path marker. Starting from the path marker, the parser searches forward for an end marker (newline, " or &lt;) and
 					everything after that end marker until end of line is also ignored.<br/>
 					A slide show file list is a sort of virtual folder containing all images listed in the slide show file.
+					<a name="Slideshows"></a>
 					<h4>Using Slide Shows</h4>
 					The following commands can be used to control a slide show:
 					<ul style="margin-top:0in;margin-bottom:0in">
@@ -468,6 +493,7 @@
 					If the current context is a folder and not a slide show list, the slideshow is performed with the images
 					in the folder. The folder navigation mode and the sorting order are taken into account in this case - with
 					a slide show list they have no effect.
+					<a name="Movies"></a>
 					<h4>Playing Image Series as Movie</h4>
 					The slide show feature can be used to play a series of images in a folder or given by a text file as a movie:
 					<ul style="margin-top:0in;margin-bottom:0in">
@@ -542,6 +568,17 @@
 							Note that unsharp masking is previewed always in 100 % zoom.
 						</li>
 						<li>
+							<b>Free Rotate</b><br/>
+							Keyboard: <kbd>none</kbd><br/>
+							Mouse: Use navigation panel, 'Free Rotate' button.<br/>
+							In preview mode the image can be rotated with the mouse in real time, but with low quality. Grid lines help performing horizon correction.
+							Alternatively, horizon correction can be done by drawing a line along the horizon or along a vertical structure. The rotation angle will be calculated so
+							that this line is exactly horizontal, respecitively vertical.
+							Activate this mode with the right most tool button on the panel.<br/>
+							Press the 'Apply' button to apply the rotation to the original image with high quality (bicubic interpolation). By default the
+							rotated image is cropped automatically to avoid black borders. This behavior can be changed with the middle tool button on the rotation panel.
+						</li>
+						<li>
 							<b>Color balance</b><br/>
 							Mouse: Use processing panel<br/>
 							Changes the color balance of the image by changing the cyan-red, magenta-green and yellow-blue
@@ -581,12 +618,14 @@
 						until the mouse button is released.</li>
 						<li>Double clicking above a slider will permanently reset its value to the default value.</li>
 					</ul>
+					<a name="KeepingParams"></a>
 					<h4>Keeping parameters between images</h4>
 					By default, all image processing parameters (including zoom and pan) are reset to the default values given in the INI file
 					when the next image is displayed. Using the <kbd>F4</kbd> key, the behavior can be changed to keeping the parameters between
 					images. Pressing <kbd>F4</kbd> again will toggle back to not-keeping the parameters.<br/>
 					<b>Note:</b> While keeping parameters mode is active, the parameter DB cannot be used. Parameter DB values are ignored while
 					this mode is active.
+					<a name="Comparing"></a>
 					<h4>Comparing processed image with original image</h4>
 					When JPEGView displays a new image, it creates a second set of image processing parameters and initializes it with zero,
 					meaning that the original, unprocessed image will be displayed when this set is applied.
@@ -612,7 +651,7 @@
 					Use this setting with care, be aware of the risk!<br/>
 				<b>EXIF information</b><br/>
 					EXIF information is copied to the target JPEG image if it was present in the source JPEG image. An embedded thumbnail image
-					is not touched - neither rotation nor image processing will be applied to the thumbnail image.<br/>
+					is updated - rotation and image processing is applied to the thumbnail image.<br/>
 
 					<h4>Renaming images</h4>
 					On the processing panel, images can be renamed by clicking on the file name with the mouse. To
@@ -710,7 +749,7 @@
 							The visible section is stored resolution independent - the same section will be displayed on a monitor with a higher
 							resolution (but the zoom factor will be different then).
 						</li>
-						<li>Rotation of image</li>
+						<li>Rotation of image (only 90 deg step rotation, not the free angle rotation)</li>
 						<li>Contrast value</li>
 						<li>Brightness value</li>
 						<li>Saturation value</li>
