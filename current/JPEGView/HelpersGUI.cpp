@@ -176,4 +176,36 @@ CString GetINIFileSaveConfirmationText(const CImageProcessingParams& procParams,
 	return sText;
 }
 
+void DrawImageLoadErrorText(CPaintDC& dc, const CRect& clientRect, LPCTSTR sFailedFileName, int nFileLoadError) {
+	bool bOutOfMemory = nFileLoadError & FileLoad_OutOfMemory;
+	nFileLoadError &= ~FileLoad_OutOfMemory;
+
+	const int BUF_LEN = 512;
+	TCHAR buff[BUF_LEN];
+	buff[0] = 0;
+	CRect rectText(0, clientRect.Height()/2 - (int)(ScreenScaling*40), clientRect.Width(), clientRect.Height());
+	switch (nFileLoadError) {
+		case FileLoad_PasteFromClipboardFailed:
+			_tcsncpy_s(buff, BUF_LEN, CNLS::GetString(_T("Pasting image from clipboard failed!")), BUF_LEN);
+			break;
+		case FileLoad_LoadError:
+			_stprintf_s(buff, BUF_LEN, CNLS::GetString(_T("The file '%s' could not be read!")), sFailedFileName);
+			break;
+		case FileLoad_SlideShowListInvalid:
+			_stprintf_s(buff, BUF_LEN, CNLS::GetString(_T("The file '%s' does not contain a list of file names!")), sFailedFileName);
+			break;
+		case FileLoad_NoFilesInDirectory:
+			_stprintf_s(buff, BUF_LEN, CString(CNLS::GetString(_T("The directory '%s' does not contain any image files!")))  + _T('\n') +
+				CNLS::GetString(_T("Press any key to search the subdirectories for image files.")), sFailedFileName);
+			break;
+		default:
+			return;
+	}
+	if (bOutOfMemory) {
+		_tcscat_s(buff, BUF_LEN, _T("\n"));
+		_tcscat_s(buff, BUF_LEN, CNLS::GetString(_T("Reason: Not enough memory available")));
+	}
+	dc.DrawText(buff, -1, &rectText, DT_CENTER | DT_WORDBREAK | DT_NOPREFIX);
+}
+
 }

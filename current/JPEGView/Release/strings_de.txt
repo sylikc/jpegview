@@ -264,7 +264,8 @@ Auto crop rotated image (avoids black border)	Rotiertes Bild freistellen (verhin
 Align image to horizontal or vertical line	Bild an horizontaler oder vertikaler Linie ausrichten
 Use the mouse to draw a line that shall be horizontal or vertical.	Benutzen Sie die Maus um eine Linie zu zeichnen, welche horizontal oder vertikal ausgerichtet sein soll.
 Rotate the image by dragging with the mouse.	Rotieren Sie das Bild durch Klicken und Ziehen mit der Maus.
-The operation failed because not enough memory is available!	Die Operation ist fehlgeschlagen da nicht genug Speicher vorhanden ist!
+The operation failed because not enough memory is available!	Die Operation ist fehlgeschlagen da nicht genug Speicher verfügbar ist!
 to EXIF date (all files in folder)	auf EXIF Datum (alle Dateien im Ordner)
 Number of JPEG files in folder: %d	Anzahl JPEG Bilder im Ordner: %d
 EXIF date successfully set on %d images, failed on %d images	EXIF Datum erfolgreich gesetzt auf %d Bildern, fehlgeschlagen auf %d Bildern
+Reason: Not enough memory available	Ursache: Nicht genug Speicher verfügbar

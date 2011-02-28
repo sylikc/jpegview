@@ -177,6 +177,8 @@ private:
 	CFileList* m_pFileList; // used for navigation
 	CJPEGProvider * m_pJPEGProvider; // reads JPEG files (read ahead)
 	CJPEGImage * m_pCurrentImage; // currently displayed image
+	bool m_bOutOfMemoryLastImage; // true if the last image could not be requested because not enough memory
+	int m_nLastLoadError; // one of HelpersGUI::EFileLoadError
 
 	// DPI scaling factor, 1.0 for 96 DPI
 	float m_fScaling;
@@ -212,7 +214,6 @@ private:
 	bool m_bCurrentImageIsSpecialProcessing;
 	double m_dCurrentInitialLightenShadows;
 
-	bool m_bPasteFromClipboardFailed;
 	bool m_bDragging;
 	bool m_bDoDragging;
 	bool m_bMovieMode;
@@ -232,11 +233,9 @@ private:
 	bool m_bInZooming;
 	bool m_bTemporaryLowQ;
 	bool m_bShowZoomFactor;
-	bool m_bSearchSubDirsOnEnter;
 	bool m_bSpanVirtualDesktop;
 	bool m_bPanMouseCursorSet;
 	bool m_bMouseOn;
-	bool m_bInInitialOpenFile;
 	int m_nMonitor;
 	WINDOWPLACEMENT m_storedWindowPlacement;
 	WINDOWPLACEMENT m_storedWindowPlacement2;
@@ -284,4 +283,5 @@ private:
 	void ToggleMonitor();
 	CRect GetZoomTextRect(CRect imageProcessingArea);
 	void EditINIFile(bool bGlobalINI);
+	int GetLoadErrorAfterOpenFile();
 };

@@ -28,7 +28,7 @@ public:
 	// strFileName is normally pFileList->Current(), however it is possible to request other files and
 	// set the pFileList parameter to NULL to prevent read ahead.
 	CJPEGImage* RequestJPEG(CFileList* pFileList, EReadAheadDirection eDirection, LPCTSTR strFileName, 
-		const CProcessParams & processParams);
+		const CProcessParams & processParams, bool& bOutOfMemory);
 
 	// Notifies that this image is no longer used. The provider may decides to keep the image.
 	// In all cases, accessing the image after having called this method is illegal.

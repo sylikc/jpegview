@@ -189,6 +189,8 @@ CMainDlg::CMainDlg() {
 	m_pFileList = NULL;
 	m_pJPEGProvider = NULL;
 	m_pCurrentImage = NULL;
+	m_bOutOfMemoryLastImage = false;
+	m_nLastLoadError = HelpersGUI::FileLoad_Ok;
 
 	m_eProcFlagsBeforeMovie = PFLAG_None;
 	m_nRotation = 0;
@@ -214,14 +216,11 @@ CMainDlg::CMainDlg() {
 	m_bInZooming = false;
 	m_bTemporaryLowQ = false;
 	m_bShowZoomFactor = false;
-	m_bSearchSubDirsOnEnter = false;
 	m_bSpanVirtualDesktop = false;
 	m_bPanMouseCursorSet = false;
-	m_bInInitialOpenFile = false;
 	m_storedWindowPlacement.length = sizeof(WINDOWPLACEMENT);
 	memset(&m_storedWindowPlacement2, 0, sizeof(WINDOWPLACEMENT));
 	m_storedWindowPlacement2.length = sizeof(WINDOWPLACEMENT);
-	m_bPasteFromClipboardFailed = false;
 	m_nMonitor = 0;
 	m_monitorRect = CRect(0, 0, 0, 0);
 	m_bMouseOn = false;
@@ -320,7 +319,8 @@ LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam
 	// create JPEG provider and request first image
 	m_pJPEGProvider = new CJPEGProvider(this->m_hWnd, NUM_THREADS, READ_AHEAD_BUFFERS);	
 	m_pCurrentImage = m_pJPEGProvider->RequestJPEG(m_pFileList, CJPEGProvider::FORWARD,
-		m_pFileList->Current(), CreateProcessParams());
+		m_pFileList->Current(), CreateProcessParams(), m_bOutOfMemoryLastImage);
+	m_nLastLoadError = GetLoadErrorAfterOpenFile();
 	AfterNewImageLoaded(true); // synchronize to per image parameters
 
 	m_bLockPaint = false;
@@ -344,12 +344,9 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 	if (s_bFirst) {
 		s_bFirst = false;
 		if (m_sStartupFile.GetLength() == 0) {
-			m_bInInitialOpenFile = true;
-
 			if (!OpenFile(true)) {
 				EndDialog(0);
 			}
-			m_bInInitialOpenFile = false;
 		}
 	}
 
@@ -461,34 +458,12 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 	// Display errors and warnings
 	if (m_sStartupFile.IsEmpty()) {
 		CRect rectText(0, m_clientRect.Height()/2 - Scale(40), m_clientRect.Width(), m_clientRect.Height());
-		CString sText = m_bInInitialOpenFile ? CNLS::GetString(_T("Select file to display in 'File Open' dialog")) :
-			CString(CNLS::GetString(_T("No file or folder name was provided as command line parameter!"))) + _T('\n') +
-			CNLS::GetString(_T("To use JPEGView, associate JPG, JPEG and BMP files with JPEGView.")) + _T('\n') +
-			CNLS::GetString(_T("Press ESC to exit..."));
-		dc.DrawText(sText, -1, &rectText, DT_CENTER | DT_WORDBREAK | DT_NOPREFIX);
+		dc.DrawText(CNLS::GetString(_T("Select file to display in 'File Open' dialog")), -1, &rectText, DT_CENTER | DT_WORDBREAK | DT_NOPREFIX);
 	} else if (m_pCurrentImage == NULL) {
-		const int BUF_LEN = 512;
-		TCHAR buff[BUF_LEN];
-		CRect rectText(0, m_clientRect.Height()/2 - Scale(40), m_clientRect.Width(), m_clientRect.Height());
-		LPCTSTR sCurrentFile = CurrentFileName(false);
-		if (sCurrentFile != NULL) {
-			if (m_bPasteFromClipboardFailed) {
-				_tcsncpy_s(buff, BUF_LEN, CNLS::GetString(_T("Pasting image from clipboard failed!")), BUF_LEN);
-			} else {
-				_stprintf_s(buff, BUF_LEN, CNLS::GetString(_T("The file '%s' could not be read!")), sCurrentFile);
-			}
-			dc.DrawText(buff, -1, &rectText, DT_CENTER | DT_WORDBREAK | DT_NOPREFIX);
-		} else {
-			if (m_pFileList->IsSlideShowList()) {
-				_stprintf_s(buff, BUF_LEN, CNLS::GetString(_T("The file '%s' does not contain a list of file names!")),  
-					m_sStartupFile);
-			} else {
-				_stprintf_s(buff, BUF_LEN, CString(CNLS::GetString(_T("The directory '%s' does not contain any image files!")))  + _T('\n') +
-					CNLS::GetString(_T("Press any key to search the subdirectories for image files.")), m_pFileList->CurrentDirectory());
-				m_bSearchSubDirsOnEnter = true;
-			}
-			dc.DrawText(buff, -1, &rectText, DT_CENTER | DT_WORDBREAK | DT_NOPREFIX);
-		}
+		HelpersGUI::DrawImageLoadErrorText(dc, m_clientRect,
+			(m_nLastLoadError == HelpersGUI::FileLoad_SlideShowListInvalid) ? m_sStartupFile :
+			(m_nLastLoadError == HelpersGUI::FileLoad_NoFilesInDirectory) ? m_pFileList->CurrentDirectory() : CurrentFileName(false),
+			m_nLastLoadError + (m_bOutOfMemoryLastImage ? HelpersGUI::FileLoad_OutOfMemory : 0));
 	}
 
 	// Now blit the memory DCs of the panels to the screen
@@ -704,9 +679,8 @@ LRESULT CMainDlg::OnKeyDown(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOO
 			m_bShowHelp = false;
 		}
 		this->Invalidate(FALSE);
-	} else if (!bCtrl && m_bSearchSubDirsOnEnter) {
+	} else if (!bCtrl && m_nLastLoadError == HelpersGUI::FileLoad_NoFilesInDirectory) {
 		// search in subfolders if initially provider directory has no images
-		m_bSearchSubDirsOnEnter = false;
 		bHandled = true;
 		m_pFileList->SetNavigationMode(Helpers::NM_LoopSubDirectories);
 		GotoImage(POS_Next);
@@ -1558,11 +1532,10 @@ void CMainDlg::OpenFile(LPCTSTR sFileName) {
 	m_pJPEGProvider->NotifyNotUsed(m_pCurrentImage);
 	m_pJPEGProvider->ClearAllRequests();
 	m_pCurrentImage = m_pJPEGProvider->RequestJPEG(m_pFileList, CJPEGProvider::FORWARD,
-		m_pFileList->Current(), CreateProcessParams());
+		m_pFileList->Current(), CreateProcessParams(), m_bOutOfMemoryLastImage);
+	m_nLastLoadError = GetLoadErrorAfterOpenFile();
 	AfterNewImageLoaded(true);
 	m_startMouse.x = m_startMouse.y = -1;
-	m_bSearchSubDirsOnEnter = false;
-	m_bPasteFromClipboardFailed = false;
 	m_sSaveDirectory = _T("");
 	MouseOff();
 	this->Invalidate(FALSE);
@@ -1801,13 +1774,14 @@ void CMainDlg::GotoImage(EImagePosition ePos, int nFlags) {
 		m_pCurrentImage = CClipboard::PasteImageFromClipboard(m_hWnd, procParams.ImageProcParams, procParams.ProcFlags);
 		if (m_pCurrentImage != NULL) {
 			m_pCurrentImage->SetFileDependentProcessParams(_T("_cbrd_"), &procParams);
+			m_nLastLoadError = HelpersGUI::FileLoad_Ok;
 		} else {
-			m_bPasteFromClipboardFailed = true;
+			m_nLastLoadError = HelpersGUI::FileLoad_PasteFromClipboardFailed;
 		}
 	} else {
 		m_pCurrentImage = m_pJPEGProvider->RequestJPEG(m_pFileList, eDirection,  
-			m_pFileList->Current(), procParams);
-		m_bPasteFromClipboardFailed = false;
+			m_pFileList->Current(), procParams, m_bOutOfMemoryLastImage);
+		m_nLastLoadError = (m_pCurrentImage == NULL) ? HelpersGUI::FileLoad_LoadError : HelpersGUI::FileLoad_Ok;
 	}
 	AfterNewImageLoaded((nFlags & KEEP_PARAMETERS) == 0);
 
@@ -2335,4 +2309,17 @@ int CMainDlg::TrackPopupMenu(CPoint pos, HMENU hMenu) {
 		pos.x, pos.y, 0, this->m_hWnd, NULL);
 	m_bInTrackPopupMenu = false;
 	return nMenuCmd;
+}
+
+int CMainDlg::GetLoadErrorAfterOpenFile() {
+	if (m_pCurrentImage == NULL) {
+		if (CurrentFileName(false) == NULL) {
+			if (m_pFileList->IsSlideShowList()) {
+				return HelpersGUI::FileLoad_SlideShowListInvalid;
+			}
+			return HelpersGUI::FileLoad_NoFilesInDirectory;
+		}
+		return HelpersGUI::FileLoad_LoadError;
+	}
+	return HelpersGUI::FileLoad_Ok;
 }
