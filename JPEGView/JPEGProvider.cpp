@@ -32,8 +32,9 @@ CJPEGProvider::~CJPEGProvider(void) {
 }
 
 CJPEGImage* CJPEGProvider::RequestJPEG(CFileList* pFileList, EReadAheadDirection eDirection, 
-									   LPCTSTR strFileName, const CProcessParams & processParams) {
+									   LPCTSTR strFileName, const CProcessParams & processParams, bool& bOutOfMemory) {
 	if (strFileName == NULL) {
+		bOutOfMemory = false;
 		return NULL;
 	}
 
@@ -95,6 +96,7 @@ CJPEGImage* CJPEGProvider::RequestJPEG(CFileList* pFileList, EReadAheadDirection
 		StartNewRequestBundle(pFileList, eDirection, processParams, m_nNumThread);
 	}
 
+	bOutOfMemory = pRequest->OutOfMemory;
 	return pRequest->Image;
 }
 

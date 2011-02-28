@@ -7,6 +7,16 @@ class CImageProcessingParams;
 
 namespace HelpersGUI {
 
+	// Errors that occur during loading a file or pasting from clipboard
+	enum EFileLoadError {
+		FileLoad_Ok = 0,
+		FileLoad_PasteFromClipboardFailed = 1,
+		FileLoad_LoadError = 2,
+		FileLoad_SlideShowListInvalid = 3,
+		FileLoad_NoFilesInDirectory = 4,
+		FileLoad_OutOfMemory = 65536 // can be combined with other error codes
+	};
+
 	// Scaling factor from screen DPI, 96 dpi -> 1.0, 120 dpi -> 1.2
 	extern float ScreenScaling;
 
@@ -30,4 +40,7 @@ namespace HelpersGUI {
 									 EProcessingFlags eProcFlags, Helpers::ESorting eFileSorting,
 									 Helpers::EAutoZoomMode eAutoZoomMode,
 									 bool bShowNavPanel);
+
+	// Draws an error text for the given file loading error (combination of EFileLoadError codes)
+	void DrawImageLoadErrorText(CPaintDC& dc, const CRect& clientRect, LPCTSTR sFailedFileName, int nFileLoadError);
 }
