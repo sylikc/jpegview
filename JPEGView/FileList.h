@@ -48,7 +48,7 @@ public:
 	// (must end with backslash in this case) or a text file containing file names to display.
 	// Supported text files are ANSI, Unicode or UTF-8.
 	// nLevel is increased when recursively create lists for sub-folders
-	CFileList(const CString & sInitialFile, Helpers::ESorting eInitialSorting, int nLevel = 0);
+	CFileList(const CString & sInitialFile, Helpers::ESorting eInitialSorting, bool bWrapAroundFolder, int nLevel = 0);
 	~CFileList();
 
 	// Gets a list of all supported file endings, separated by semicolon
@@ -115,6 +115,7 @@ private:
 
 	bool m_bDeleteHistory;
 	bool m_bIsSlideShowList;
+	bool m_bWrapAroundFolder;
 	int m_nLevel;
 	CString m_sInitialFile;
 	CString m_sDirectory;
