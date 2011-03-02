@@ -723,7 +723,7 @@ void* CJPEGImage::GetDIBInternal(CSize fullTargetSize, CSize clippingSize, CPoin
  	// Check if resampling due to bHighQualityResampling parameter change is needed
 	bool bMustResampleQuality = GetProcessingFlag(eProcFlags, PFLAG_HighQualityResampling) != GetProcessingFlag(m_eProcFlags, PFLAG_HighQualityResampling);
 	bool bTargetSizeChanged = fullTargetSize != m_FullTargetSize;
-	bool bMustResampleRotation = fabs(dRotation - m_dRotationLQ) > 1e-3;
+	bool bMustResampleRotation = fabs(dRotation - m_dRotationLQ) > 1e-6;
 	// Check if resampling due to change of geometric parameters is needed
 	bool bMustResampleGeometry = bTargetSizeChanged || clippingSize != m_ClippingSize || targetOffset != m_TargetOffset || bMustResampleRotation;
 	// Check if resampling due to change of processing parameters is needed

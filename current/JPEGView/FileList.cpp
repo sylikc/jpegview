@@ -164,10 +164,11 @@ static const int cnNumEndings = 7;
 static const TCHAR* csFileEndings[cnNumEndings] = {_T("jpg"), _T("jpeg"), _T("bmp"), _T("png"), 
 	_T("tif"), _T("tiff"), _T("gif")};
 
-CFileList::CFileList(const CString & sInitialFile, Helpers::ESorting eInitialSorting, int nLevel) {
+CFileList::CFileList(const CString & sInitialFile, Helpers::ESorting eInitialSorting, bool bWrapAroundFolder, int nLevel) {
 	CFileDesc::SetSorting(eInitialSorting);
 
 	m_bDeleteHistory = true;
+	m_bWrapAroundFolder = bWrapAroundFolder;
 	m_sInitialFile = sInitialFile;
 	m_nLevel = nLevel;
 	m_next = m_prev = NULL;
@@ -278,15 +279,16 @@ CFileList* CFileList::Next() {
 		}
 		if (iterTemp == m_iterStart) {
 			// we are finished with this folder
+			if (!m_bWrapAroundFolder && sm_eMode == Helpers::NM_LoopDirectory) {
+				return this;
+			}
 			CFileList* pNextList = WrapToNextImage();
 			if (pNextList == NULL) {
 				// no next found, go to source of the prev->prev chain
 				pNextList = this;
 				while (pNextList->m_prev != NULL) pNextList = pNextList->m_prev;
 				if (pNextList != this) {
-					this->NextInFolder(); // go to next on this folder (we will not come back with Prev here)
-					pNextList->NextInFolder(); // go to next here, it stands on m_iterStart
-					return pNextList;
+					return this; // stop here, do not wrap around
 				}
 			}
 			if (pNextList != this) {
@@ -309,6 +311,9 @@ CFileList* CFileList::Prev() {
 	m_nMarkedIndexShow = -1;
 	if (m_iter == m_iterStart) {
 		if (sm_eMode == Helpers::NM_LoopDirectory) {
+			if (!m_bWrapAroundFolder) {
+				return this;
+			}
 			if (m_iter == m_fileList.begin()) {
 				MoveIterToLast();
 			} else {
@@ -426,6 +431,7 @@ void CFileList::SetNavigationMode(Helpers::ENavigationMode eMode) {
 	sm_eMode = eMode;
 	DeleteHistory();
 	m_nLevel = 0;
+	m_iterStart = m_iter;
 }
 
 void CFileList::MarkCurrentFile() {
@@ -649,7 +655,7 @@ CFileList* CFileList::TryCreateFileList(const CString& directory, int nNewLevel)
 		pList = pList->m_prev;
 	}
 
-	CFileList* pNewList = new CFileList(directory, CFileDesc::GetSorting(), nNewLevel);
+	CFileList* pNewList = new CFileList(directory, CFileDesc::GetSorting(), m_bWrapAroundFolder, nNewLevel);
 	if (pNewList->m_fileList.size() > 0) {
 		pNewList->m_prev = this;
 		m_next = pNewList;

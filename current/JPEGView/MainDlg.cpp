@@ -306,7 +306,7 @@ LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam
 	::ShowCursor(m_bMouseOn);
 
 	// intitialize navigation with startup file (and folder)
-	m_pFileList = new CFileList(m_sStartupFile, CSettingsProvider::This().Sorting());
+	m_pFileList = new CFileList(m_sStartupFile, CSettingsProvider::This().Sorting(), CSettingsProvider::This().WrapAroundFolder());
 	m_pFileList->SetNavigationMode(CSettingsProvider::This().Navigation());
 
 	if (!CSettingsProvider::This().ShowFullScreen()) {
@@ -1526,7 +1526,7 @@ void CMainDlg::OpenFile(LPCTSTR sFileName) {
 	Helpers::ESorting eOldSorting = m_pFileList->GetSorting();
 	delete m_pFileList;
 	m_sStartupFile = sFileName;
-	m_pFileList = new CFileList(m_sStartupFile, eOldSorting);
+	m_pFileList = new CFileList(m_sStartupFile, eOldSorting, CSettingsProvider::This().WrapAroundFolder());
 	// free current image and all read ahead images
 	InitParametersForNewImage();
 	m_pJPEGProvider->NotifyNotUsed(m_pCurrentImage);

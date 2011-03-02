@@ -39,6 +39,8 @@ New features:
 - Display of JPEG comments (EXIF user comment, EXIF image description, JPEG COM marker, in this order)
   Use INI file setting ShowJPEGComments to disable display of comments
 - Set modification time to EXIF time for all files in folder
+- New INI file setting: WrapAroundFolder.  Can be set to false to disable cyclic navigation
+  within a folder (going from last to first image)
 
 [1.0.22.1]
 Bugs fixed:
