@@ -256,3 +256,17 @@ Cancel	Отмена
 Keep processing parameters between images	Запоминать параметры обработки между изображениями
 Show histogram	Показать гистограмму
 Hide histogram	Скрыть гистограмму 
+Crop Selection Lossless...	Обрезать выделенное без потерь...
+Save cropped image	Сохранить обрезанное изображение
+Rotate image by user-defined angle	Повернуть изображение на указанный угол
+Rotate Image	Повернуть изображение
+Show grid lines	Показывать линии сетки
+Auto crop rotated image (avoids black border)	Автоматически обрезать изображение при повороте (устранять чёрные поля)
+Align image to horizontal or vertical line	Выровнять изображение по горизонтальной или вертикальной линии
+Use the mouse to draw a line that shall be horizontal or vertical.	Проведите мышью линию, которая должна стать горизонтальной или вертикальной.
+Rotate the image by dragging with the mouse.	Поверните изображение, потянув его мышью.
+The operation failed because not enough memory is available!	Ошибка операции: недостаточно памяти.
+to EXIF date (all files in folder)	по дате в EXIF (все файлы в папке)
+Number of JPEG files in folder: %d	Файлов JPEG в папке: %d
+EXIF date successfully set on %d images, failed on %d images	EXIF-дата успешно установлена для %d шт. изображений (для %d шт. - не установлена)
+Reason: Not enough memory available	Причина: недостаточно памяти

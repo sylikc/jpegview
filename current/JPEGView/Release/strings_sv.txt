@@ -3,7 +3,7 @@
 //TranslatorName=Åke Engelbrektson
 //Contact=eson57@gmail.com
 //TranslatorURL=http://svenskasprakfiler.tejpad.se
-//LastUpdated=Jan 23, 2011
+//LastUpdated=Mar 01, 2011
 //
 Contrast	Kontrast
 Brightness	Ljus
@@ -259,3 +259,17 @@ Keep processing parameters between images	Behåll berbetningsparametrar mellan b
 Show histogram	Visa Histogram
 Hide histogram	Dölj Histogram
 Show picture info (EXIF)	Visa bildinformation (EXIF)
+Crop Selection Lossless...	Beskär förlustfritt...
+Save cropped image	Spara beskuren bild
+Rotate image by user-defined angle	Rotera bild till anpassad vinkel
+Rotate Image	Rotera bild
+Show grid lines	Visa stödlinjer
+Auto crop rotated image (avoids black border)	Beskär roterad bild automatiskt (förebygger svart kant)
+Align image to horizontal or vertical line	Justera bildposition efter horisontell eller vertikal linje
+Use the mouse to draw a line that shall be horizontal or vertical.	Rita en horisontell eler vertikal linje med musen.
+Rotate the image by dragging with the mouse.	Rotera bilden genom att dra med musen
+The operation failed because not enough memory is available!	Åtgärden misslyckades, eftersom det inte finns tillräckligt med ledigt minne tillgängligt.
+to EXIF date (all files in folder)	till EXIF-data (alla filer i katalogen)
+Number of JPEG files in folder: %d	Antal JPEG-filer i katalogen: %d
+EXIF date successfully set on %d images, failed on %d images	EXIF-data applicerat på %d bilder, misslyckades med %d bilder
+Reason: Not enough memory available	Orsak: För lite tillgängligt minne

@@ -254,3 +254,17 @@ Cancel	Cancelar
 Keep processing parameters between images	Mantener parámetros de procesamiento entre imagenes
 Show histogram	Mostrar histograma
 Hide histogram	Esconder histograma
+Crop Selection Lossless...	Crop Selection Lossless...
+Save cropped image	Guardar imagen sin bordes
+Rotate image by user-defined angle	Rotar imagen en un angulo definido por el usuario
+Rotate Image	Rotar imagen
+Show grid lines	Mostrar cuadricula
+Auto crop rotated image (avoids black border)	Eliminar automaticamente bordes en la imagen rotada (evita bordes negros)
+Align image to horizontal or vertical line	Alinear imagen a una linea horizontal o vertical
+Use the mouse to draw a line that shall be horizontal or vertical.	Usar el raton para dibujar una linea que sera horizontal o vertical.
+Rotate the image by dragging with the mouse.	Rotar imagen arrastrando el raton.
+The operation failed because not enough memory is available!	¡La operacion fallo porque no habia suficiente memoria disponible!
+to EXIF date (all files in folder)	a fecha EXIF (todos los archivos en la carpeta)
+Number of JPEG files in folder: %d	Numero de archivos JPEG en la carpeta: %d
+EXIF date successfully set on %d images, failed on %d images	Fecha EXIF establecida correctamente en %d imagenes, fallado en %d imagenes
+Reason: Not enough memory available	Razon: No hay suficiente memoria disponible

@@ -256,3 +256,17 @@ Cancel	Închide
 Keep processing parameters between images	Păstrează parametri de procesare între imagini
 Show histogram	Arată histograma
 Hide histogram	Ascunde histograma
+Crop Selection Lossless...	Tăiați selecția fără pierderi...
+Save cropped image	Salvați imaginea tăiată
+Rotate image by user-defined angle	Rotiți imaginea cu unghiul definit de utilizator
+Rotate Image	Rotiți imaginea
+Show grid lines	Afișează grila de linii
+Auto crop rotated image (avoids black border)	Tăiați automat imaginea rotită (Evitați bordura neagră)
+Align image to horizontal or vertical line	Aliniați imaginea la liniile orizontale sau verticale
+Use the mouse to draw a line that shall be horizontal or vertical.	Folosiți mouse-ul pentru a desena o linie orizontală sau verticală.
+Rotate the image by dragging with the mouse.	Rotiți imaginea prin tragerea cu mouse-ul.
+The operation failed because not enough memory is available!	Operațiunea a eșuat datorită faptului că nu este suficientă memorie disponibilă!
+to EXIF date (all files in folder)	la datele EXIF (toate fișierele din folder)
+Number of JPEG files in folder: %d	Numărul de fișiere JPEG din folder:
+EXIF date successfully set on %d images, failed on %d images	Datele EXIF setate cu succes la %d imagini, eroare la %d imagini
+Reason: Not enough memory available	Motivul: Nu este suficientă memorie disponibilă
