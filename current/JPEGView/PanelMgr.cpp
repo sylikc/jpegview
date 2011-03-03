@@ -27,7 +27,10 @@ void CPanelMgr::PrepareMemDCMgr(CPaintMemDCMgr& memDCMgr, std::list<CRect>& list
 	std::list<CPanelController*>::iterator iter;
 	for (iter = m_panelControllers.begin( ); iter != m_panelControllers.end( ); iter++ ) {
 		if ((*iter)->IsVisible()) {
-			listExcludedRects.push_back(memDCMgr.CreatePanelRegion((*iter)->GetPanel(), (*iter)->DimFactor(), (*iter)->BlendPanel()));
+			CRect rectPanel = (*iter)->PanelRect();
+			if (rectPanel.IntersectRect(rectPanel, &(memDCMgr.GetPaintDC().m_ps.rcPaint))) {
+				listExcludedRects.push_back(memDCMgr.CreatePanelRegion((*iter)->GetPanel(), (*iter)->DimFactor(), (*iter)->BlendPanel()));
+			}
 		}
 	}
 }

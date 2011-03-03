@@ -12,6 +12,8 @@ public:
 	CPaintMemDCMgr(CPaintDC& paintDC);
 	~CPaintMemDCMgr();
 
+	CPaintDC& GetPaintDC() { return m_paintDC; }
+
 	// Excludes, respectively includes the given list of rectangles into the clipping region
 	static void ExcludeFromClippingRegion(CDC & paintDC, const std::list<CRect>& listExcludedRects);
 	static void IncludeIntoClippingRegion(CDC & paintDC, const std::list<CRect>& listExcludedRects);
