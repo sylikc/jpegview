@@ -119,14 +119,16 @@ public:
 class CRequestRotate : public CProcessingRequest {
 public:
 	CRequestRotate(const void* pSourcePixels, CPoint targetOffset, CSize targetSize, double dRotation, 
-		CSize sourceSize, void* pTargetPixels, int nChannels)
+		CSize sourceSize, void* pTargetPixels, int nChannels, COLORREF backColor)
 			: CProcessingRequest(RotateImage, pSourcePixels, sourceSize, pTargetPixels, targetSize, targetOffset, targetSize) {
 		Rotation = dRotation;
 		Channels = nChannels;
+		BackColor = backColor;
 	}
 
 	double Rotation;
 	int Channels;
+	COLORREF BackColor;
 };
 
 // A processing request wrapped into another request

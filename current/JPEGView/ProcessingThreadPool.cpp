@@ -159,7 +159,7 @@ void CProcessingThread::DoProcess(CProcessingRequest* pRequest, int nOffsetY, in
 				CRequestRotate* pReq = (CRequestRotate*)pRequest;
 				pTarget = CBasicProcessing::RotateHQ_Core(CPoint(pReq->FullTargetOffset.x, pReq->FullTargetOffset.y + nCurrentOffsetY),
 					CSize(pReq->FullTargetSize.cx, nCurrentSizeY), pReq->Rotation, pReq->SourceSize, pReq->SourcePixels, 
-					(uint8*)pReq->TargetPixels + pReq->FullTargetSize.cx * 4 * nCurrentOffsetY, pReq->Channels);
+					(uint8*)pReq->TargetPixels + pReq->FullTargetSize.cx * 4 * nCurrentOffsetY, pReq->Channels, pReq->BackColor);
 				break;
 			}
 		}

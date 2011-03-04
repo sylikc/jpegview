@@ -114,9 +114,10 @@ public:
 
 	// Rotate image and resample using point sampling (no interpolation). Rotation is around image center.
 	// dRotation: Rotation angle in radians
+	// backColor: color to fill background of rotated image
 	// See PointSample() for other parameters
 	static void* PointSampleWithRotation(CSize fullTargetSize, CPoint fullTargetOffset, CSize clippedTargetSize, 
-										 CSize sourceSize, double dRotation, const void* pIJLPixels, int nChannels);
+										 CSize sourceSize, double dRotation, const void* pIJLPixels, int nChannels, COLORREF backColor);
 
 	// High quality downsampling to target size, using a set of down-sampling kernels that
 	// do some sharpening during down-sampling if desired. Note that the filter type can only
@@ -147,8 +148,10 @@ public:
 	// sourceSize: Size of source image
 	// pSourcePixels: Source image
 	// nChannels: number of channels (bytes) in source image, must be 3 or 4
+	// backColor: color to fill background of rotated image
 	// Returns a 32 bpp DIB of size targetSize
-	static void* RotateHQ(CPoint targetOffset, CSize targetSize, double dRotation, CSize sourceSize, const void* pSourcePixels, int nChannels);
+	static void* RotateHQ(CPoint targetOffset, CSize targetSize, double dRotation, CSize sourceSize, 
+		const void* pSourcePixels, int nChannels, COLORREF backColor);
 
 	// Gauss filtering of a 16 bpp 1 channel image. In the image with size fullSize, the rectangle rect at position offset is filtered
 	static int16* GaussFilter16bpp1Channel(CSize fullSize, CPoint offset, CSize rect, double dRadius, const int16* pPixels);
@@ -184,5 +187,5 @@ private:
 								  const int16* pGrayImage, const int16* pSmoothedGrayImage, const void* pSourcePixels, void* pTargetPixels, int nChannels);
 
 	static void* RotateHQ_Core(CPoint targetOffset, CSize targetSize, double dRotation, CSize sourceSize, 
-							   const void* pSourcePixels, void* pTargetPixels, int nChannels);
+							   const void* pSourcePixels, void* pTargetPixels, int nChannels, COLORREF backColor);
 };
