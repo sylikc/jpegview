@@ -662,10 +662,10 @@ void* CBasicProcessing::PointSampleWithRotation(CSize fullTargetSize, CPoint ful
 	uint32 nBackColor = (GetRValue(backColor) << 16) + (GetGValue(backColor) << 8) + GetBValue(backColor);
 	double dFirstX = -(sourceSize.cx - 1) * 0.5;
 	double dFirstY = -(sourceSize.cy - 1) * 0.5;
-	double dIncX1 = dFirstX + ((fullTargetSize.cx == 1) ? 0 : (double)(sourceSize.cx - 1)/(fullTargetSize.cx - 1));
+	double dIncX1 = dFirstX + ((fullTargetSize.cx == 1) ? 0 : (double)(sourceSize.cx)/(fullTargetSize.cx - 1));
 	double dIncY1 = dFirstY;
 	double dIncX2 = dFirstX;
-	double dIncY2 = dFirstY + ((fullTargetSize.cy == 1) ? 0 : (double)(sourceSize.cy - 1)/(fullTargetSize.cy - 1));
+	double dIncY2 = dFirstY + ((fullTargetSize.cy == 1) ? 0 : (double)(sourceSize.cy)/(fullTargetSize.cy - 1));
 	RotateInplace(dFirstX, dFirstY, -dRotation);
 	RotateInplace(dIncX1, dIncY1, -dRotation);
 	RotateInplace(dIncX2, dIncY2, -dRotation);
