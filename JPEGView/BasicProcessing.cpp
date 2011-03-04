@@ -646,7 +646,7 @@ static void RotateInplace(double& dX, double& dY, double dAngle) {
 }
 
 void* CBasicProcessing::PointSampleWithRotation(CSize fullTargetSize, CPoint fullTargetOffset, CSize clippedTargetSize, 
-						 CSize sourceSize, double dRotation, const void* pIJLPixels, int nChannels) {
+						 CSize sourceSize, double dRotation, const void* pIJLPixels, int nChannels, COLORREF backColor) {
  	if (fullTargetSize.cx < 1 || fullTargetSize.cy < 1 ||
 		clippedTargetSize.cx < 1 || clippedTargetSize.cy < 1 ||
 		fullTargetOffset.x < 0 || fullTargetOffset.x < 0 ||
@@ -659,6 +659,7 @@ void* CBasicProcessing::PointSampleWithRotation(CSize fullTargetSize, CPoint ful
 	uint8* pDIB = new(std::nothrow) uint8[clippedTargetSize.cx*4 * clippedTargetSize.cy];
 	if (pDIB == NULL) return NULL;
 
+	uint32 nBackColor = (GetRValue(backColor) << 16) + (GetGValue(backColor) << 8) + GetBValue(backColor);
 	double dFirstX = -(sourceSize.cx - 1) * 0.5;
 	double dFirstY = -(sourceSize.cy - 1) * 0.5;
 	double dIncX1 = dFirstX + ((fullTargetSize.cx == 1) ? 0 : (double)(sourceSize.cx - 1)/(fullTargetSize.cx - 1));
@@ -700,7 +701,7 @@ void* CBasicProcessing::PointSampleWithRotation(CSize fullTargetSize, CPoint ful
 					pDst[d+2] = pSrc[2];
 					pDst[d+3] = 0;
 				} else {
-					*((uint32*)pDst + i) = 0;
+					*((uint32*)pDst + i) = nBackColor;
 				}
 				nCurX += nIncrementX1;
 				nCurY += nIncrementY1;
@@ -713,7 +714,7 @@ void* CBasicProcessing::PointSampleWithRotation(CSize fullTargetSize, CPoint ful
 					pSrc = (uint8*)pIJLPixels + nPaddedSourceWidth * nCurRealY + nCurRealX * 4;
 					*((uint32*)pDst + i) = *((uint32*)pSrc);
 				} else {
-					*((uint32*)pDst + i) = 0;
+					*((uint32*)pDst + i) = nBackColor;
 				}
 				nCurX += nIncrementX1;
 				nCurY += nIncrementY1;
@@ -761,10 +762,10 @@ static void InterpolateBicubic(const uint8* pSource, uint8* pDest, int16* pKerne
 	if (nChannels == 3) *pDest = 0;
 }
 
-static inline void Get4Pixels(const uint8* pSrc, uint8 dest[4], int nFrom, int nTo, int nChannels) {
+static inline void Get4Pixels(const uint8* pSrc, uint8 dest[4], int nFrom, int nTo, int nChannels, uint32 nFill) {
 	int nC = -nChannels;
 	for (int i = 0; i < 4; i++) {
-		dest[i] = (i >= nFrom + 1 && i <= nTo + 1) ? pSrc[nC] : 0;
+		dest[i] = (i >= nFrom + 1 && i <= nTo + 1) ? pSrc[nC] : (uint8)nFill;
 		nC += nChannels;
 	}
 }
@@ -772,36 +773,40 @@ static inline void Get4Pixels(const uint8* pSrc, uint8 dest[4], int nFrom, int n
 // Same as method above but with border handling, assuming that the filter kernels are only evaluated from nXFrom to nXTo and nYFrom to nYTo
 // Pixels that are outside this range are assumed to have value zero
 static void InterpolateBicubicBorder(const uint8* pSource, uint8* pDest, int16* pKernels, 
-									 int32 nFracX, int32 nFracY, int nXFrom, int nXTo, int nYFrom, int nYTo, int nPaddedSourceWidth, int nChannels) {
+									 int32 nFracX, int32 nFracY, int nXFrom, int nXTo, int nYFrom, int nYTo, int nPaddedSourceWidth, int nChannels, uint32 nBackColor) {
 	int16* pKernelX = &(pKernels[4*(nFracX >> (16 - NUM_KERNELS_LOG2))]);
 	int16* pKernelY = &(pKernels[4*(nFracY >> (16 - NUM_KERNELS_LOG2))]);
+	uint32 nBackColorShifted = nBackColor;
 	for (int i = 0; i < nChannels; i++) {
 		const uint8* pSrc = pSource;
 		pSrc -= nPaddedSourceWidth;
+		uint32 nFill = nBackColorShifted & 0xFF;
+		int32 nFillShifted = nFill << 14;
+		nBackColorShifted = nBackColorShifted >> 8;
 
 		uint8 pixels[4];
 
-		int32 nSum1 = 0;
+		int32 nSum1 = nFillShifted;
 		if (nYFrom <= -1) {
-			Get4Pixels(pSrc, pixels, nXFrom, nXTo, nChannels); 
+			Get4Pixels(pSrc, pixels, nXFrom, nXTo, nChannels, nFill); 
 			nSum1 = pixels[0] * pKernelX[0] + pixels[1] * pKernelX[1] + pixels[2] * pKernelX[2] + pixels[3] * pKernelX[3] + FP_HALF;
 		}
 		pSrc += nPaddedSourceWidth;
-		int nSum2 = 0;
+		int nSum2 = nFillShifted;
 		if (nYFrom <= 0 && nYTo >= 0) {
-			Get4Pixels(pSrc, pixels, nXFrom, nXTo, nChannels); 
+			Get4Pixels(pSrc, pixels, nXFrom, nXTo, nChannels, nFill); 
 			nSum2 = pixels[0] * pKernelX[0] + pixels[1] * pKernelX[1] + pixels[2] * pKernelX[2] + pixels[3] * pKernelX[3] + FP_HALF;
 		}
 		pSrc += nPaddedSourceWidth;
-		int32 nSum3 = 0;
+		int32 nSum3 = nFillShifted;
 		if (nYFrom <= 1 && nYTo >= 1) {
-			Get4Pixels(pSrc, pixels, nXFrom, nXTo, nChannels); 
+			Get4Pixels(pSrc, pixels, nXFrom, nXTo, nChannels, nFill); 
 			nSum3 = pixels[0] * pKernelX[0] + pixels[1] * pKernelX[1] + pixels[2] * pKernelX[2] + pixels[3] * pKernelX[3] + FP_HALF;
 		}
 		pSrc += nPaddedSourceWidth;
-		int32 nSum4 = 0;
+		int32 nSum4 = nFillShifted;
 		if (nYTo >= 2) {
-			Get4Pixels(pSrc, pixels, nXFrom, nXTo, nChannels); 
+			Get4Pixels(pSrc, pixels, nXFrom, nXTo, nChannels, nFill); 
 			nSum4 = pixels[0] * pKernelX[0] + pixels[1] * pKernelX[1] + pixels[2] * pKernelX[2] + pixels[3] * pKernelX[3] + FP_HALF;
 		}
 
@@ -815,7 +820,7 @@ static void InterpolateBicubicBorder(const uint8* pSource, uint8* pDest, int16* 
 }
 
 void* CBasicProcessing::RotateHQ_Core(CPoint targetOffset, CSize targetSize, double dRotation, CSize sourceSize, 
-									  const void* pSourcePixels, void* pTargetPixels, int nChannels){
+									  const void* pSourcePixels, void* pTargetPixels, int nChannels, COLORREF backColor){
 
 	double dFirstX = -(sourceSize.cx - 1) * 0.5;
 	double dFirstY = -(sourceSize.cy - 1) * 0.5;
@@ -841,6 +846,7 @@ void* CBasicProcessing::RotateHQ_Core(CPoint targetOffset, CSize targetSize, dou
 	int16* pKernels = new int16[NUM_KERNELS_BICUBIC * 4];
 	CResizeFilter::GetBicubicFilterKernels(NUM_KERNELS_BICUBIC, pKernels);
 
+	uint32 nBackColor = (GetRValue(backColor) << 16) + (GetGValue(backColor) << 8) + GetBValue(backColor);
 	int nPaddedSourceWidth = Helpers::DoPadding(sourceSize.cx * nChannels, 4);
 	const uint8* pSrc = NULL;
 	uint8* pDst = (uint8*)pTargetPixels;
@@ -863,10 +869,10 @@ void* CBasicProcessing::RotateHQ_Core(CPoint targetOffset, CSize targetSize, dou
 					int nXTo = (nCurRealX < sourceSize.cx - 2) ? 2 : sourceSize.cx - nCurRealX - 1;
 					int nYFrom = (nCurRealY > 0) ? -1 : -nCurRealY;
 					int nYTo = (nCurRealY < sourceSize.cy - 2) ? 2 : sourceSize.cy - nCurRealY - 1;
-					InterpolateBicubicBorder(pSrc, pDst + i*4, pKernels, nFracX, nFracY, nXFrom, nXTo, nYFrom, nYTo, nPaddedSourceWidth, nChannels);
+					InterpolateBicubicBorder(pSrc, pDst + i*4, pKernels, nFracX, nFracY, nXFrom, nXTo, nYFrom, nYTo, nPaddedSourceWidth, nChannels, nBackColor);
 				}
 			} else {
-				*((uint32*)pDst + i) = 0;
+				*((uint32*)pDst + i) = nBackColor;
 			}
 			nCurX += nIncrementX1;
 			nCurY += nIncrementY1;
@@ -879,7 +885,7 @@ void* CBasicProcessing::RotateHQ_Core(CPoint targetOffset, CSize targetSize, dou
 	return pTargetPixels;
 }
 
-void* CBasicProcessing::RotateHQ(CPoint targetOffset, CSize targetSize, double dRotation, CSize sourceSize, const void* pSourcePixels, int nChannels) {
+void* CBasicProcessing::RotateHQ(CPoint targetOffset, CSize targetSize, double dRotation, CSize sourceSize, const void* pSourcePixels, int nChannels, COLORREF backColor) {
 	 if (pSourcePixels == NULL || (nChannels != 3 && nChannels != 4)) {
 		return NULL;
 	}
@@ -888,7 +894,7 @@ void* CBasicProcessing::RotateHQ(CPoint targetOffset, CSize targetSize, double d
 	if (pTargetPixels == NULL) return NULL;
 
 	CProcessingThreadPool& threadPool = CProcessingThreadPool::This();
-	CRequestRotate request(pSourcePixels, targetOffset, targetSize, dRotation, sourceSize, pTargetPixels, nChannels);
+	CRequestRotate request(pSourcePixels, targetOffset, targetSize, dRotation, sourceSize, pTargetPixels, nChannels, backColor);
 	bool bSuccess = threadPool.Process(&request);
 
 	return bSuccess ? pTargetPixels : NULL;

@@ -291,14 +291,15 @@ bool CJPEGImage::RotateOriginalPixels(double dRotation, bool bAutoCrop) {
 		nYStart = Helpers::RoundToInt(-fabs(dBestY) + dCenterY);
 		nYEnd = Helpers::RoundToInt(fabs(dBestY) + dCenterY);
 	} else {
-		nXStart = (int)(dXMin + dCenterX);
+		nXStart = (int)(dXMin + dCenterX - 0.999);
 		nXEnd = (int)(dXMax + dCenterX + 0.999);
-		nYStart = (int)(dYMin + dCenterY);
+		nYStart = (int)(dYMin + dCenterY - 0.999);
 		nYEnd = (int)(dYMax + dCenterY + 0.999);
 	}
 
 	CSize newSize(nXEnd - nXStart + 1, nYEnd - nYStart + 1);
-	void* pRotatedPixels = CBasicProcessing::RotateHQ(CPoint(nXStart, nYStart), newSize, dRotation, CSize(m_nOrigWidth, m_nOrigHeight), m_pIJLPixels, m_nIJLChannels);
+	void* pRotatedPixels = CBasicProcessing::RotateHQ(CPoint(nXStart, nYStart), newSize, dRotation, 
+		CSize(m_nOrigWidth, m_nOrigHeight), m_pIJLPixels, m_nIJLChannels, CSettingsProvider::This().ColorBackground());
 	if (pRotatedPixels == NULL) return false;
 	delete[] m_pIJLPixels;
 
@@ -464,7 +465,7 @@ void* CJPEGImage::Resample(CSize fullTargetSize, CSize clippingSize, CPoint targ
 		bool bHasRotation = fabs(dRotation) > 1e-3;
 		if (bHasRotation) {
 			return CBasicProcessing::PointSampleWithRotation(fullTargetSize, targetOffset, clippingSize, 
-				CSize(m_nOrigWidth, m_nOrigHeight), dRotation, m_pIJLPixels, m_nIJLChannels);
+				CSize(m_nOrigWidth, m_nOrigHeight), dRotation, m_pIJLPixels, m_nIJLChannels, CSettingsProvider::This().ColorBackground());
 		} else {
 			return CBasicProcessing::PointSample(fullTargetSize, targetOffset, clippingSize, 
 				CSize(m_nOrigWidth, m_nOrigHeight), m_pIJLPixels, m_nIJLChannels);
