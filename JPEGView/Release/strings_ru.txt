@@ -1,7 +1,7 @@
 ﻿// This file must be encoded with UTF-8 (e.g. with Windows Notepad)
 // Filename is 'strings_%languagecode%.txt' where %languagecode% is the ISO 639 language code e.g. 'fr' for French
 // Format is: English string<tab>Translated string<newline>
-// Translated by Dmitry Yerokhin (erodim@mail.ru), September 28, 2010
+// Translated by Dmitry Yerokhin (erodim@mail.ru), March 4, 2011
 Contrast	Контрастность
 Brightness	Яркость
 Sharpen	Резкость
@@ -10,12 +10,12 @@ Darken Highlights	Притемнить света
 Deep Shadows	Глубокие тени
 Color Correction	Коррекция цвета
 Contrast Correction	Коррекция контрастности
-Parameter DB:	БД параметров:
-Save to	Сохранить в
-Remove from	Удалить из
+Parameter DB:	Параметры:
+Save to	Сохранить в БД
+Remove from	Удалить из БД
 Rename:	Переименовать:
-No file or folder name was provided as command line parameter!	В командной строке не указано имя ни файла, ни папки
-To use JPEGView, associate JPG, JPEG and BMP files with JPEGView.	Для использования программы JPEGView ассоциируйте её с файлами JPG, JPEG и BMP.
+No file or folder name was provided as command line parameter!	В командной строке не указано имя файла или папки
+To use JPEGView, associate JPG, JPEG and BMP files with JPEGView.	Для удобства использования JPEGView ассоциируйте программу с файлами JPG, JPEG и BMP.
 Press ESC to exit...	Нажмите ESC для выхода...
 The file '%s' could not be read!	Невозможно прочитать файл '%s'.
 The file '%s' does not contain a list of file names!	В файле '%s' нет списка имён файлов.
@@ -77,7 +77,7 @@ Rotate current file on disk lossless by 90 deg (W/H must be multiple of 16)	По
 Rotate current file on disk lossless by 270 deg (W/H must be multiple of 16)	Повернуть текущий файл на диске без потерь на 90° влево (Ш/В должны быть кратны 16)
 The file is read-only!	Этот файл только для чтения!
 Can't rename file	Невозможно переименовать файл
-New name contains backslash character!	В новом имени содержится символ обратной косой черты (\).
+New name contains backslash character!	В новом имени содержится обратная косая черта (\).
 Renaming file failed!	Ошибка при переименовании файла.
 Reason: 	Причина: 
 on	вкл.
@@ -89,7 +89,7 @@ Order files by: 	Сортировка файлов:
 Creation date/time	Дата/время создания
 Last modification date/time	Дата/время изменения
 File name	Имя файла
-These values will override the values from the INI file located in the program folder of JPEGView!	Эти значения переопределят установки в INI-файле, расположенном в папке с JPEGView.
+These values will override the values from the INI file located in the program folder of JPEGView!	Эти значения переопределят установки в INI-файле в папке с JPEGView.
 Confirm save default parameters	Сохранить параметры по умолчанию?
 Images	Изображения
 All Files	Все файлы
@@ -97,7 +97,7 @@ Parameter DB file '%s' could not be opened!	Невозможно открыть 
 Parameter DB file '%s' is not valid (invalid header)!	Неверный файл '%s' с БД параметров (недопустимый заголовок).
 Cannot write to parameter DB file '%s'!	Невозможно выполнить запись в файл '%s' с БД параметров.
 Cannot read from parameter DB file '%s'!	Невозможно выполнить из файла '%s' с БД параметров.
-Cannot read parameter DB file '%s' because it is too large!	Невозможно прочитать файл '%s' в БД параметров: он слишком велик.
+Cannot read parameter DB file '%s' because it is too large!	Невозможно прочитать файл '%s' с БД параметров: он слишком велик.
 The parameter DB file '%s' has been created by a newer version of JPEGView!	Файл '%s' с БД параметров создан более новой версией JPEGView.
 The old parameter DB file '%s' could not be renamed during conversion to new format!	Не удалось переименовать старый файл '%s' с БД параметров при преобразовании в новый формат.
 Parameter DB error	Ошибка в БД параметров
@@ -249,13 +249,13 @@ Saturation	Насыщенность
 Unsharp mask...	Нерезкая маска...
 Apply Unsharp Mask	Применить нерезкую маску
 Radius	Радиус
-Amount	Количество
+Amount	Величина
 Threshold	Порог
 Apply	Применить
 Cancel	Отмена
 Keep processing parameters between images	Запоминать параметры обработки между изображениями
 Show histogram	Показать гистограмму
-Hide histogram	Скрыть гистограмму 
+Hide histogram	Скрыть гистограмму
 Crop Selection Lossless...	Обрезать выделенное без потерь...
 Save cropped image	Сохранить обрезанное изображение
 Rotate image by user-defined angle	Повернуть изображение на указанный угол
