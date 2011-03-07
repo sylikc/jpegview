@@ -255,3 +255,17 @@ Cancel	Annuler
 Keep processing parameters between images	Conserver les paramètres lors du changement de l‘image
 Show histogram	Afficher l'histogramme
 Hide histogram	Masquer l'histogramme
+Crop Selection Lossless...	Rogner la sélection sans pertes...
+Save cropped image	Enregistrer l'image rognée
+Rotate image by user-defined angle	Tourner l'image d'un angle au choix
+Rotate Image	Tourner l'image
+Show grid lines	Afficher la réticule
+Auto crop rotated image (avoids black border)	Rognage automatique de l'image tournée (evitant les bords noirs)
+Align image to horizontal or vertical line	Aligner l'image avec une ligne horizontale ou verticale
+Use the mouse to draw a line that shall be horizontal or vertical.	Utilisez la souris pour dessiner une ligne horizontale ou verticale.	
+Rotate the image by dragging with the mouse.	Clickez avec la souris et déplacez la dans la direction dan laquelle vous souhaitez tourner l'image.
+The operation failed because not enough memory is available!	Mémoire insuffisante pour effectuer l'opération!
+to EXIF date (all files in folder)	à la date EXIF (tous les fichiers dans le dossier)
+Number of JPEG files in folder: %d	Nombre d'images JPEG dans le dossier: %d
+EXIF date successfully set on %d images, failed on %d images	Date EXIF a pu être defini avec succès sur %d images. Pour %d images la date EXIF n'a pas pu être défini.
+Reason: Not enough memory available	Raison: mémoire insuffisante
