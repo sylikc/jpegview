@@ -24,13 +24,13 @@ CNavigationPanelCtl::CNavigationPanelCtl(CMainDlg* pMainDlg, CPanel* pImageProcP
 	m_hOffScreenBitmapAnimation = NULL;
 	m_pPanel = m_pNavPanel = new CNavigationPanel(pMainDlg->m_hWnd, this, pImageProcPanel, pFullScreenMode, &(CMainDlg::IsCurrentImageFitToScreen), pMainDlg);
 	m_pNavPanel->GetBtnHome()->SetButtonPressedHandler(&OnGotoImage, this, CMainDlg::POS_First);
-	m_pNavPanel->GetBtnPrev()->SetButtonPressedHandler(&CMainDlg::OnExecuteCommand, pMainDlg, IDM_PREV);
-	m_pNavPanel->GetBtnNext()->SetButtonPressedHandler(&CMainDlg::OnExecuteCommand, pMainDlg, IDM_NEXT);
+	m_pNavPanel->GetBtnPrev()->SetButtonPressedHandler(&OnGotoImage, this, CMainDlg::POS_Previous);
+	m_pNavPanel->GetBtnNext()->SetButtonPressedHandler(&OnGotoImage, this, CMainDlg::POS_Next);
 	m_pNavPanel->GetBtnEnd()->SetButtonPressedHandler(&OnGotoImage, this, CMainDlg::POS_Last);
 	m_pNavPanel->GetBtnFitToScreen()->SetButtonPressedHandler(&OnToggleZoomFit, this);
 	m_pNavPanel->GetBtnWindowMode()->SetButtonPressedHandler(&OnToggleWindowMode, this);
-	m_pNavPanel->GetBtnRotateCW()->SetButtonPressedHandler(&CMainDlg::OnExecuteCommand, pMainDlg, IDM_ROTATE_90);
-	m_pNavPanel->GetBtnRotateCCW()->SetButtonPressedHandler(&CMainDlg::OnExecuteCommand, pMainDlg, IDM_ROTATE_270);
+	m_pNavPanel->GetBtnRotateCW()->SetButtonPressedHandler(&OnRotate, this, IDM_ROTATE_90);
+	m_pNavPanel->GetBtnRotateCCW()->SetButtonPressedHandler(&OnRotate, this, IDM_ROTATE_270);
 	m_pNavPanel->GetBtnRotateFree()->SetButtonPressedHandler(&OnRotateFree, this);
 	m_pNavPanel->GetBtnKeepParams()->SetButtonPressedHandler(&CMainDlg::OnExecuteCommand, pMainDlg, IDM_KEEP_PARAMETERS, pMainDlg->IsKeepParams());
 	m_pNavPanel->GetBtnLandscapeMode()->SetButtonPressedHandler(&CMainDlg::OnExecuteCommand, pMainDlg, IDM_LANDSCAPE_MODE, pMainDlg->IsLandscapeMode());
@@ -270,9 +270,24 @@ void CNavigationPanelCtl::HideNavPanelTemporary() {
 	}
 }
 
+void CNavigationPanelCtl::MoveMouseCursorToButton(CButtonCtrl & sender) {
+	GetPanel()->RequestRepositioning();
+	CRect rect = sender.GetPosition();
+	CPoint ptWnd = rect.CenterPoint();
+	::ClientToScreen(m_pMainDlg->GetHWND(), &ptWnd);
+	::SetCursorPos(ptWnd.x, ptWnd.y);
+}
+
 void CNavigationPanelCtl::OnGotoImage(void* pContext, int nParameter, CButtonCtrl & sender) {
 	CNavigationPanelCtl* pThis = (CNavigationPanelCtl*)pContext;
 	pThis->m_pMainDlg->GotoImage((CMainDlg::EImagePosition)nParameter);
+	pThis->MoveMouseCursorToButton(sender);
+}
+
+void CNavigationPanelCtl::OnRotate(void* pContext, int nParameter, CButtonCtrl & sender) {
+	CNavigationPanelCtl* pThis = (CNavigationPanelCtl*)pContext;
+	pThis->m_pMainDlg->ExecuteCommand(nParameter);
+	pThis->MoveMouseCursorToButton(sender);
 }
 
 void CNavigationPanelCtl::OnToggleZoomFit(void* pContext, int nParameter, CButtonCtrl & sender) {
@@ -286,7 +301,8 @@ void CNavigationPanelCtl::OnToggleZoomFit(void* pContext, int nParameter, CButto
 
 void CNavigationPanelCtl::OnToggleWindowMode(void* pContext, int nParameter, CButtonCtrl & sender) {
 	CNavigationPanelCtl* pThis = (CNavigationPanelCtl*)pContext;
-	CMainDlg::ToggleWindowMode(pThis->m_pMainDlg, sender, true);
+	pThis->m_pMainDlg->ExecuteCommand(IDM_FULL_SCREEN_MODE);
+	pThis->MoveMouseCursorToButton(sender);
 }
 
 void CNavigationPanelCtl::OnRotateFree(void* pContext, int nParameter, CButtonCtrl & sender) {

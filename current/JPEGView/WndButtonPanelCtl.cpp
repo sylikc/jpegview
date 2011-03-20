@@ -9,7 +9,7 @@ CWndButtonPanelCtl::CWndButtonPanelCtl(CMainDlg* pMainDlg, CPanel* pImageProcPan
 	m_nOldMouseY = 0;
 	m_pPanel = m_pWndButtonPanel = new CWndButtonPanel(pMainDlg->GetHWND(), this, pImageProcPanel);
 	m_pWndButtonPanel->GetBtnMinimize()->SetButtonPressedHandler(&(CMainDlg::OnExecuteCommand), pMainDlg, IDM_MINIMIZE);
-	m_pWndButtonPanel->GetBtnRestore()->SetButtonPressedHandler(&OnRestore, this);
+	m_pWndButtonPanel->GetBtnRestore()->SetButtonPressedHandler(&(CMainDlg::OnExecuteCommand), pMainDlg, IDM_FULL_SCREEN_MODE);
 	m_pWndButtonPanel->GetBtnClose()->SetButtonPressedHandler(&(CMainDlg::OnExecuteCommand), pMainDlg, IDM_EXIT);;
 }
 
@@ -58,9 +58,4 @@ bool CWndButtonPanelCtl::IsPointInWndButtonPanel(CPoint pt) {
 		return PanelRect().PtInRect(pt);
 	}
 	return false;
-}
-
-
-void CWndButtonPanelCtl::OnRestore(void* pContext, int nParameter, CButtonCtrl & sender) {
-	CMainDlg::ToggleWindowMode(((CWndButtonPanelCtl*)pContext)->m_pMainDlg, sender, false);
 }

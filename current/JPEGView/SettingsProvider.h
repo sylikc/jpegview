@@ -31,6 +31,7 @@ public:
 	bool ShowNavPanel() { return m_bShowNavPanel; }
 	bool ShowZoomNavigator() { return m_bShowZoomNavigator; }
 	bool ShowFullScreen() { return m_bShowFullScreen; }
+	bool AutoFullScreen() { return m_bAutoFullScreen; }
 	float BlendFactorNavPanel() { return m_fBlendFactorNavPanel; }
 	bool KeepParams() { return m_bKeepParams; }
 	LPCTSTR Language() { return m_sLanguage; }
@@ -62,6 +63,7 @@ public:
 	LPCTSTR LDCInclude() { return m_sLDCInclude; }
 	LPCTSTR CopyRenamePattern() { return m_sCopyRenamePattern; }
 	CRect DefaultWindowRect() { return m_defaultWindowRect; }
+	bool DefaultWndToImage() { return m_bDefaultWndToImage; }
 	bool DefaultMaximized() { return m_bDefaultMaximized; }
 	CSize DefaultFixedCropSize() { return m_DefaultFixedCropSize; }
 	COLORREF ColorBackground() { return m_colorBackground; }
@@ -112,6 +114,7 @@ private:
 	bool m_bShowNavPanel;
 	bool m_bShowZoomNavigator;
 	bool m_bShowFullScreen;
+	bool m_bAutoFullScreen;
 	float m_fBlendFactorNavPanel;
 	bool m_bKeepParams;
 	CString m_sLanguage;
@@ -144,6 +147,7 @@ private:
 	CString m_sCopyRenamePattern;
 	CRect m_defaultWindowRect;
 	bool m_bDefaultMaximized;
+	bool m_bDefaultWndToImage;
 	CSize m_DefaultFixedCropSize;
 	COLORREF m_colorBackground;
 	COLORREF m_colorGUI;

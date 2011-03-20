@@ -1,6 +1,8 @@
 #include "StdAfx.h"
 #include "Helpers.h"
 #include "NLS.h"
+#include "JPEGImage.h"
+#include "MultiMonitorSupport.h"
 #include <math.h>
 
 namespace Helpers {
@@ -51,7 +53,14 @@ CSize GetImageRect(int nWidth, int nHeight, int nScreenWidth, int nScreenHeight,
 	}
 	dZoom = 1.0/dAR;
 	dZoom = min(ZoomMax, dZoom);
-	return CSize((int)(nWidth/dAR + 0.5), (int)(nHeight/dAR + 0.5));
+	CSize size((int)(nWidth/dAR + 0.5), (int)(nHeight/dAR + 0.5));
+	if (abs(size.cx - nScreenWidth) <= 1 && abs(size.cy - nScreenHeight) <= 1) {
+		// allow 1 pixel tolerance to screen size - prefer screen size in this case to prevent another resize operation to fit image
+		dZoom = (nScreenWidth > nScreenHeight) ? (double)nScreenWidth/nWidth : (double)nScreenHeight/nHeight;
+		dZoom = min(ZoomMax, dZoom);
+		return CSize(nScreenWidth, nScreenHeight);
+	}
+	return size;
 }
 
 CString SystemTimeToString(const SYSTEMTIME &time) {
@@ -434,6 +443,53 @@ double GetExactTickCount() {
 		::QueryPerformanceCounter((LARGE_INTEGER*)&nCounter);
 		return (1000*(double)nCounter)/nFrequency;
 	}
+}
+
+CRect GetWindowRectMatchingImageSize(HWND hWnd, int nMinWidth, int nMinHeight, CJPEGImage* pImage, bool bForceCenterWindow) {
+	int nOrigWidth = (pImage == NULL) ? ::GetSystemMetrics(SM_CXSCREEN) / 2 : pImage->OrigWidth();
+	int nOrigHeight = (pImage == NULL) ? ::GetSystemMetrics(SM_CYSCREEN) / 2 : pImage->OrigHeight();
+	int nBorderWidth = ::GetSystemMetrics(SM_CXSIZEFRAME) * 2;
+	int nBorderHeight = ::GetSystemMetrics(SM_CYSIZEFRAME) * 2 + ::GetSystemMetrics(SM_CYCAPTION);
+	int nRequiredWidth = nBorderWidth + nOrigWidth;
+	int nRequiredHeight = nBorderHeight + nOrigHeight;
+	CRect workingArea = CMultiMonitorSupport::GetWorkingRect(hWnd);
+	if (nRequiredWidth > workingArea.Width() || nRequiredHeight > workingArea.Height()) {
+		double dZoom;
+		CSize imageRect = Helpers::GetImageRect(nOrigWidth, nOrigHeight, workingArea.Width() - nBorderWidth, workingArea.Height() - nBorderHeight, 
+			false, false, false, dZoom);
+		nRequiredWidth = imageRect.cx + nBorderWidth;
+		nRequiredHeight = imageRect.cy + nBorderHeight;
+	}
+	nRequiredWidth = max(nMinWidth, nRequiredWidth);
+	nRequiredHeight = max(nMinHeight, nRequiredHeight);
+	CRect wndRect;
+	::GetWindowRect(hWnd, &wndRect);
+	int nNewLeft = wndRect.CenterPoint().x - nRequiredWidth / 2;
+	int nNewTop = wndRect.CenterPoint().y - nRequiredHeight / 2;
+	nNewLeft = max(workingArea.left, min(workingArea.right - nRequiredWidth, nNewLeft));
+	nNewTop = max(workingArea.top, min(workingArea.bottom - nRequiredHeight, nNewTop));
+	CRect windowRect;
+	if (!bForceCenterWindow) {
+		return CRect(CPoint(nNewLeft, nNewTop), CSize(nRequiredWidth, nRequiredHeight));
+	} else {
+		return CRect(CPoint(workingArea.left + (workingArea.Width() - nRequiredWidth) / 2, workingArea.top + (workingArea.Height() - nRequiredHeight) / 2), CSize(nRequiredWidth, nRequiredHeight));
+	}
+}
+
+bool CanDisplayImageWithoutResize(HWND hWnd, CJPEGImage* pImage) {
+	if (pImage == NULL) {
+		return true;
+	}
+	CRect workingArea = CMultiMonitorSupport::GetWorkingRect(hWnd);
+	int nBorderWidth = ::GetSystemMetrics(SM_CXSIZEFRAME) * 2;
+	int nBorderHeight = ::GetSystemMetrics(SM_CYSIZEFRAME) * 2 + ::GetSystemMetrics(SM_CYCAPTION);
+	return pImage->OrigWidth() + nBorderWidth <= workingArea.Width() && pImage->OrigHeight() + nBorderHeight <= workingArea.Height();
+}
+
+CSize GetMaxClientSize(HWND hWnd) {
+	CRect workingArea = CMultiMonitorSupport::GetWorkingRect(hWnd);
+	return CSize(workingArea.Width() - 2 * ::GetSystemMetrics(SM_CXSIZEFRAME), 
+		workingArea.Height() - 2 * ::GetSystemMetrics(SM_CYSIZEFRAME) - ::GetSystemMetrics(SM_CYCAPTION));
 }
 
 }

@@ -298,6 +298,11 @@ bool CImageLoadThread::ProcessImageAfterLoad(CRequest * request) {
 		return false;
 	}
 
+	// Do nothing if processing after load turned off
+	if (GetProcessingFlag(request->ProcessParams.ProcFlags, PFLAG_NoProcessingAfterLoad)) {
+		return true;
+	}
+
 	int nWidth = request->Image->OrigWidth();
 	int nHeight = request->Image->OrigHeight();
 
