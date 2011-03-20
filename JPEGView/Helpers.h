@@ -1,5 +1,7 @@
 #pragma once
 
+class CJPEGImage;
+
 namespace Helpers {
 
 	// Capabilities of CPU
@@ -73,6 +75,15 @@ namespace Helpers {
 
 	// Gets the parameters for zooming the given zoom rectangle in an image of given size to a given window size.
 	void GetZoomParameters(float & fZoom, CPoint & offsets, CSize imageSize, CSize windowSize, CRect zoomRect);
+
+	// Gets a window rectangle (in screen coordinates) that fits the given image
+	CRect GetWindowRectMatchingImageSize(HWND hWnd, int nMinWidth, int nMinHeight, CJPEGImage* pImage, bool bForceCenterWindow);
+
+	// Gets if the given image can be displayed without sampling down the image.
+	bool CanDisplayImageWithoutResize(HWND hWnd, CJPEGImage* pImage);
+
+	// Gets the maximum client size for a framed window that fits into the working area of the screen the given window is placed on
+	CSize GetMaxClientSize(HWND hWnd);
 
 	// Tests if the CPU supports SSE or MMX(2)
 	CPUType ProbeCPU(void);

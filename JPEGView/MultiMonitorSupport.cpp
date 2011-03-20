@@ -1,5 +1,6 @@
 #include "StdAfx.h"
 #include "MultiMonitorSupport.h"
+#include "SettingsProvider.h"
 
 struct EnumMonitorParams {
 	EnumMonitorParams(int nIndexMonitor) {
@@ -75,4 +76,37 @@ CRect CMultiMonitorSupport::GetMonitorRect(int nIndex) {
 	} else {
 		return params.rectMonitor;
 	}
+}
+
+CRect CMultiMonitorSupport::GetWorkingRect(HWND hWnd) {
+	HMONITOR hMonitor = ::MonitorFromWindow(hWnd, MONITOR_DEFAULTTOPRIMARY);
+	MONITORINFO monitorInfo;
+	monitorInfo.cbSize = sizeof(MONITORINFO);
+	::GetMonitorInfo(hMonitor, &monitorInfo);
+	return CRect(monitorInfo.rcWork);
+}
+
+CRect CMultiMonitorSupport::GetDefaultWindowRect() {
+	CRect windowRect = CSettingsProvider::This().DefaultWindowRect();
+	CRect rectAllScreens = CMultiMonitorSupport::GetVirtualDesktop();
+	if (windowRect.IsRectEmpty() || !rectAllScreens.IntersectRect(&rectAllScreens, &windowRect)) {
+		CRect monitorRect = CMultiMonitorSupport::GetMonitorRect(CSettingsProvider::This().DisplayMonitor());
+		int nDesiredWidth = monitorRect.Width()*2/3;
+		int nDesiredHeight = nDesiredWidth*3/4;
+		nDesiredWidth += ::GetSystemMetrics(SM_CXSIZEFRAME) * 2;
+		nDesiredHeight += ::GetSystemMetrics(SM_CYSIZEFRAME) * 2 + ::GetSystemMetrics(SM_CYCAPTION);
+		windowRect = CRect(CPoint(monitorRect.left + (monitorRect.Width() - nDesiredWidth) / 2, monitorRect.top + (monitorRect.Height() - nDesiredHeight) / 2), CSize(nDesiredWidth, nDesiredHeight));
+	}
+	return windowRect;
+}
+
+CRect CMultiMonitorSupport::GetDefaultClientRectInWindowMode(bool bAutoFitWndToImage) {
+	if (bAutoFitWndToImage) {
+		CRect monitorRect = CMultiMonitorSupport::GetMonitorRect(CSettingsProvider::This().DisplayMonitor());
+		return CRect(0, 0, monitorRect.Width(), monitorRect.Height());
+	}
+	CRect wndRect = CMultiMonitorSupport::GetDefaultWindowRect();
+	int nBorderWidth = ::GetSystemMetrics(SM_CXSIZEFRAME) * 2;
+	int nBorderHeight = ::GetSystemMetrics(SM_CYSIZEFRAME) * 2 + ::GetSystemMetrics(SM_CYCAPTION);
+	return CRect(0, 0, wndRect.Width() - nBorderWidth, wndRect.Height() - nBorderHeight);
 }

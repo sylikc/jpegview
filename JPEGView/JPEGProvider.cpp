@@ -212,7 +212,14 @@ void CJPEGProvider::StartNewRequestBundle(CFileList* pFileList, EReadAheadDirect
 	for (int i = 0; i < nNumRequests; i++) {
 		LPCTSTR sFileName = pFileList->PeekNextPrev(i + 1, eDirection == FORWARD, eDirection == TOGGLE);
 		if (sFileName != NULL && FindRequest(sFileName) == NULL) {
-			StartNewRequest(sFileName, processParams);
+			if (GetProcessingFlag(PFLAG_NoProcessingAfterLoad, processParams.ProcFlags)) {
+				// The read ahead threads need this flag to be deleted - we can speculatively process the image with good hit rate
+				CProcessParams paramsCopied = processParams;
+				paramsCopied.ProcFlags = SetProcessingFlag(paramsCopied.ProcFlags, PFLAG_NoProcessingAfterLoad, false);
+				StartNewRequest(sFileName, paramsCopied);
+			} else {
+				StartNewRequest(sFileName, processParams);
+			}
 		}
 	}
 }

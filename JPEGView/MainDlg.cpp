@@ -46,6 +46,9 @@
 // Constants
 //////////////////////////////////////////////////////////////////////////////////////////////
 
+static const int MIN_WND_WIDTH = 400;
+static const int MIN_WND_HEIGHT = 300;
+
 static const double GAMMA_FACTOR = 1.02; // multiplicator for gamma value
 static const double CONTRAST_INC = 0.03; // increment for contrast value
 static const double SHARPEN_INC = 0.05; // increment for sharpen value
@@ -200,6 +203,7 @@ CMainDlg::CMainDlg() {
 	m_bMovieMode = false;
 	m_bProcFlagsTouched = false;
 	m_bInTrackPopupMenu = false;
+	m_bResizeForNewImage = false;
 	m_dZoom = -1.0;
 	m_dZoomMult = -1.0;
 	m_bDragging = false;
@@ -208,7 +212,8 @@ CMainDlg::CMainDlg() {
 	m_nCapturedX = m_nCapturedY = 0;
 	m_nMouseX = m_nMouseY = 0;
 	m_bShowHelp = false;
-	m_bFullScreenMode = true;
+	m_bAutoFitWndToImage = sp.AutoFullScreen();
+	m_bFullScreenMode = sp.ShowFullScreen() && !m_bAutoFitWndToImage;
 	m_bLockPaint = true;
 	m_nCurrentTimeout = 0;
 	m_startMouse.x = m_startMouse.y = -1;
@@ -261,10 +266,12 @@ LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam
 	// place window on monitor as requested in INI file
 	m_nMonitor = CSettingsProvider::This().DisplayMonitor();
 	m_monitorRect = CMultiMonitorSupport::GetMonitorRect(m_nMonitor);
-	if (CSettingsProvider::This().ShowFullScreen()) {
+	if (m_bFullScreenMode) {
 		SetWindowPos(HWND_TOP, &m_monitorRect, SWP_NOZORDER);
+		this->GetClientRect(&m_clientRect);
+	} else {
+		m_clientRect = CMultiMonitorSupport::GetDefaultClientRectInWindowMode(m_bAutoFitWndToImage);
 	}
-	this->GetClientRect(&m_clientRect);
 
 	// Create image processing panel at bottom of screen
 	m_pImageProcPanelCtl = new CImageProcPanelCtl(this, m_pImageProcParams, &m_bLDC, &m_bAutoContrast);
@@ -302,26 +309,35 @@ LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam
 	SetIcon(hIconSmall, FALSE);
 
 	// turn on/off mouse coursor
-	m_bMouseOn = !CSettingsProvider::This().ShowFullScreen();
+	m_bMouseOn = !m_bFullScreenMode;
 	::ShowCursor(m_bMouseOn);
 
 	// intitialize navigation with startup file (and folder)
 	m_pFileList = new CFileList(m_sStartupFile, CSettingsProvider::This().Sorting(), CSettingsProvider::This().WrapAroundFolder());
 	m_pFileList->SetNavigationMode(CSettingsProvider::This().Navigation());
 
-	if (!CSettingsProvider::This().ShowFullScreen()) {
-		ExecuteCommand(IDM_FULL_SCREEN_MODE_AFTER_STARTUP);
-	}
-
 	// create thread pool for processing requests on multiple CPU cores
 	CProcessingThreadPool::This().CreateThreadPoolThreads();
 
-	// create JPEG provider and request first image
-	m_pJPEGProvider = new CJPEGProvider(this->m_hWnd, NUM_THREADS, READ_AHEAD_BUFFERS);	
+	// create JPEG provider and request first image - do no processing yet if not in fullscreen mode (as we do not know the size yet)
+	m_pJPEGProvider = new CJPEGProvider(m_hWnd, NUM_THREADS, READ_AHEAD_BUFFERS);	
 	m_pCurrentImage = m_pJPEGProvider->RequestJPEG(m_pFileList, CJPEGProvider::FORWARD,
-		m_pFileList->Current(), CreateProcessParams(), m_bOutOfMemoryLastImage);
+		m_pFileList->Current(), CreateProcessParams(!m_bFullScreenMode), m_bOutOfMemoryLastImage);
 	m_nLastLoadError = GetLoadErrorAfterOpenFile();
-	AfterNewImageLoaded(true); // synchronize to per image parameters
+	CheckIfApplyAutoFitWndToImage();
+	AfterNewImageLoaded(true, true); // synchronize to per image parameters
+
+	if (!m_bFullScreenMode) {
+		// Window mode, set correct window size
+		this->SetWindowLongW(GWL_STYLE, this->GetWindowLongW(GWL_STYLE) | WS_OVERLAPPEDWINDOW | WS_VISIBLE);
+		if (!IsAdjustWindowToImage()) {
+			CRect windowRect = CMultiMonitorSupport::GetDefaultWindowRect();
+			this->SetWindowPos(HWND_TOP, windowRect.left, windowRect.top, windowRect.Width(), windowRect.Height(), SWP_NOZORDER | SWP_NOCOPYBITS);
+		}
+		if (CSettingsProvider::This().DefaultMaximized()) {
+			this->ShowWindow(SW_MAXIMIZE);
+		}
+	}
 
 	m_bLockPaint = false;
 
@@ -344,7 +360,7 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 	if (s_bFirst) {
 		s_bFirst = false;
 		if (m_sStartupFile.GetLength() == 0) {
-			if (!OpenFile(true)) {
+			if (!OpenFile(true, true)) {
 				EndDialog(0);
 			}
 		}
@@ -391,7 +407,7 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 
 		// find out the new vitual image size and the size of the bitmap to request
 		CSize newSize = Helpers::GetVirtualImageSize(CSize(m_pCurrentImage->OrigWidth(), m_pCurrentImage->OrigHeight()),
-			m_clientRect.Size(), m_eAutoZoomMode, m_dZoom);
+			m_clientRect.Size(), IsAdjustWindowToImage() ? Helpers::ZM_FitToScreenNoZoom : m_eAutoZoomMode, m_dZoom);
 		m_virtualImageSize = newSize;
 		m_offsets = Helpers::LimitOffsets(m_offsets, m_clientRect.Size(), newSize);
 
@@ -505,7 +521,7 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 }
 
 LRESULT CMainDlg::OnSize(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/) {
-	bool bKeepFitToScreen = fabs(m_dZoom - GetZoomFactorForFitToScreen(false, false)) < 0.01;
+	bool bKeepFitToScreen = !m_bResizeForNewImage && fabs(m_dZoom - GetZoomFactorForFitToScreen(false, false)) < 0.01;
 	this->GetClientRect(&m_clientRect);
 	this->Invalidate(FALSE);
 	if (m_clientRect.Width() < 800) {
@@ -527,7 +543,7 @@ LRESULT CMainDlg::OnSize(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BO
 LRESULT CMainDlg::OnGetMinMaxInfo(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, BOOL& /*bHandled*/) {
 	if (m_pJPEGProvider != NULL) {
 		MINMAXINFO* pMinMaxInfo = (MINMAXINFO*) lParam;
-		pMinMaxInfo->ptMinTrackSize = CPoint(400, 300);
+		pMinMaxInfo->ptMinTrackSize = CPoint(MIN_WND_WIDTH, MIN_WND_HEIGHT);
 		return 1;
 	} else {
 		return 0;
@@ -848,7 +864,7 @@ LRESULT CMainDlg::OnKeyDown(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOO
 	} else if (wParam == 'O') {
 		if (bCtrl) {
 			bHandled = true;
-			OpenFile(false);
+			OpenFile(false, false);
 		}
 	}  else if (wParam == 'R') {
 		if (bCtrl) {
@@ -940,7 +956,7 @@ LRESULT CMainDlg::OnDropFiles(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, B
 			if (::GetFileAttributes(buff) & FILE_ATTRIBUTE_DIRECTORY) {
 				_tcsncat_s(buff, BUFF_SIZE, _T("\\"), BUFF_SIZE);
 			}
-			OpenFile(buff);
+			OpenFile(buff, false);
 		}
 		::DragFinish(hDrop);
 	}
@@ -1106,18 +1122,6 @@ void CMainDlg::OnExecuteCommand(void* pContext, int nParameter, CButtonCtrl & se
 	((CMainDlg*)pContext)->ExecuteCommand(nParameter);
 }
 
-void CMainDlg::ToggleWindowMode(CMainDlg* pMainDlg, CButtonCtrl & sender, bool bSetCursor) {
-	pMainDlg->ExecuteCommand(IDM_FULL_SCREEN_MODE);
-
-	pMainDlg->m_pNavPanelCtl->GetPanel()->RequestRepositioning();
-	if (bSetCursor) {
-		CRect rect = sender.GetPosition();
-		CPoint ptWnd = rect.CenterPoint();
-		::ClientToScreen(pMainDlg->m_hWnd, &ptWnd);
-		::SetCursorPos(ptWnd.x, ptWnd.y);
-	}
-}
-
 bool CMainDlg::IsCurrentImageFitToScreen(void* pContext) {
 	CMainDlg* pThis = (CMainDlg*)pContext;
 	return fabs(pThis->m_dZoom - pThis->GetZoomFactorForFitToScreen(false, true)) <= 0.01;
@@ -1133,7 +1137,7 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 			this->ShowWindow(SW_MINIMIZE);
 			break;
 		case IDM_OPEN:
-			OpenFile(false);
+			OpenFile(false, false);
 			break;
 		case IDM_SAVE:
 		case IDM_SAVE_SCREEN:
@@ -1270,6 +1274,7 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 				m_dZoom = -1;
 				m_bUserZoom = false;
 				m_bUserPan = false;
+				AdjustWindowToImage(false);
 				this->Invalidate(FALSE);
 			}
 			break;
@@ -1344,27 +1349,19 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 			}
 			break;
 		case IDM_FULL_SCREEN_MODE:
-		case IDM_FULL_SCREEN_MODE_AFTER_STARTUP:
 			m_bFullScreenMode = !m_bFullScreenMode;
 			if (!m_bFullScreenMode) {
 				CRect windowRect;
 				this->SetWindowLongW(GWL_STYLE, this->GetWindowLongW(GWL_STYLE) | WS_OVERLAPPEDWINDOW | WS_VISIBLE);
-				if (::IsRectEmpty(&(m_storedWindowPlacement2.rcNormalPosition))) {
+				bool bAdjustWndToImage = IsAdjustWindowToImage() && m_pCurrentImage != NULL;
+				if (::IsRectEmpty(&(m_storedWindowPlacement2.rcNormalPosition)) || bAdjustWndToImage) {
 					// never set to window mode before, use default position
-					windowRect = CSettingsProvider::This().DefaultWindowRect();
-					CRect rectAllScreens = CMultiMonitorSupport::GetVirtualDesktop();
-					if (windowRect.IsRectEmpty() || !rectAllScreens.IntersectRect(&rectAllScreens, &windowRect)) {
-						int nDesiredWidth = m_monitorRect.Width()*2/3;
-						windowRect = CRect(CPoint(m_monitorRect.left + m_monitorRect.Width()/10, m_monitorRect.top + m_monitorRect.Height()/10), CSize(nDesiredWidth, nDesiredWidth*3/4));
-						AdjustWindowRectEx(&windowRect, GetStyle(), FALSE, GetExStyle());
-					}
+					windowRect = bAdjustWndToImage ? 
+						Helpers::GetWindowRectMatchingImageSize(m_hWnd, MIN_WND_WIDTH, MIN_WND_HEIGHT, m_pCurrentImage, false) : 
+						CMultiMonitorSupport::GetDefaultWindowRect();
 					this->SetWindowPos(HWND_TOP, windowRect.left, windowRect.top, windowRect.Width(), windowRect.Height(), SWP_NOZORDER | SWP_NOCOPYBITS);
-					if (nCommand == IDM_FULL_SCREEN_MODE_AFTER_STARTUP && CSettingsProvider::This().DefaultMaximized()) {
-						this->ShowWindow(SW_MAXIMIZE);
-					}
 				} else {
-					m_storedWindowPlacement2.flags = 
-					this->SetWindowPlacement(&m_storedWindowPlacement2);
+					m_storedWindowPlacement2.flags = this->SetWindowPlacement(&m_storedWindowPlacement2);
 				}
 				this->MouseOn();
 			} else {
@@ -1510,18 +1507,18 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 	}
 }
 
-bool CMainDlg::OpenFile(bool bFullScreen) {
+bool CMainDlg::OpenFile(bool bFullScreen, bool bAfterStartup) {
 	StopMovieMode();
 	MouseOn();
 	CFileOpenDialog dlgOpen(this->m_hWnd, m_pFileList->Current(), CFileList::GetSupportedFileEndings(), bFullScreen);
 	if (IDOK == dlgOpen.DoModal(this->m_hWnd)) {
-		OpenFile(dlgOpen.m_szFileName);
+		OpenFile(dlgOpen.m_szFileName, bAfterStartup);
 		return true;
 	}
 	return false;
 }
 
-void CMainDlg::OpenFile(LPCTSTR sFileName) {
+void CMainDlg::OpenFile(LPCTSTR sFileName, bool bAfterStartup) {
 	// recreate file list based on image opened
 	Helpers::ESorting eOldSorting = m_pFileList->GetSorting();
 	delete m_pFileList;
@@ -1532,9 +1529,10 @@ void CMainDlg::OpenFile(LPCTSTR sFileName) {
 	m_pJPEGProvider->NotifyNotUsed(m_pCurrentImage);
 	m_pJPEGProvider->ClearAllRequests();
 	m_pCurrentImage = m_pJPEGProvider->RequestJPEG(m_pFileList, CJPEGProvider::FORWARD,
-		m_pFileList->Current(), CreateProcessParams(), m_bOutOfMemoryLastImage);
+		m_pFileList->Current(), CreateProcessParams(!m_bFullScreenMode && (bAfterStartup || IsAdjustWindowToImage())), m_bOutOfMemoryLastImage);
 	m_nLastLoadError = GetLoadErrorAfterOpenFile();
-	AfterNewImageLoaded(true);
+	if (bAfterStartup) CheckIfApplyAutoFitWndToImage();
+	AfterNewImageLoaded(true, false);
 	m_startMouse.x = m_startMouse.y = -1;
 	m_sSaveDirectory = _T("");
 	MouseOff();
@@ -1766,7 +1764,7 @@ void CMainDlg::GotoImage(EImagePosition ePos, int nFlags) {
 		return;
 	}
 
-	CProcessParams procParams = CreateProcessParams();
+	CProcessParams procParams = CreateProcessParams(false);
 	if (nFlags & KEEP_PARAMETERS) {
 		procParams.ProcFlags = SetProcessingFlag(procParams.ProcFlags, PFLAG_KeepParams, true);
 	}
@@ -1783,7 +1781,7 @@ void CMainDlg::GotoImage(EImagePosition ePos, int nFlags) {
 			m_pFileList->Current(), procParams, m_bOutOfMemoryLastImage);
 		m_nLastLoadError = (m_pCurrentImage == NULL) ? HelpersGUI::FileLoad_LoadError : HelpersGUI::FileLoad_Ok;
 	}
-	AfterNewImageLoaded((nFlags & KEEP_PARAMETERS) == 0);
+	AfterNewImageLoaded((nFlags & KEEP_PARAMETERS) == 0, false);
 
 	this->Invalidate(FALSE);
 	// this will force to wait until really redrawn, preventing to process images but do not show them
@@ -1938,7 +1936,16 @@ void CMainDlg::ResetZoomTo100Percents(bool bZoomToMouse) {
 	}
 }
 
-CProcessParams CMainDlg::CreateProcessParams() {
+CProcessParams CMainDlg::CreateProcessParams(bool bNoProcessingAfterLoad) {
+	int nClientWidth = m_clientRect.Width();
+	int nClientHeight = m_clientRect.Height();
+	Helpers::EAutoZoomMode eAutoZoomMode = m_eAutoZoomMode;
+	if (IsAdjustWindowToImage() && !bNoProcessingAfterLoad) {
+		CSize maxClientSize = Helpers::GetMaxClientSize(m_hWnd);
+		nClientWidth = maxClientSize.cx;
+		nClientHeight = maxClientSize.cy;
+		eAutoZoomMode = Helpers::ZM_FitToScreenNoZoom;
+	}
 	if (m_bKeepParams) {
 		double dOldLightenShadows = m_pImageProcParamsKept->LightenShadows;
 		*m_pImageProcParamsKept = *m_pImageProcParams;
@@ -1951,18 +1958,18 @@ CProcessParams CMainDlg::CreateProcessParams() {
 		m_dZoomKept = m_bUserZoom ? m_dZoom : -1;
 		m_offsetKept = m_bUserPan ? m_offsets : CPoint(0, 0);
 
-		return CProcessParams(m_clientRect.Width(), m_clientRect.Height(), m_nRotationKept, 
+		return CProcessParams(nClientWidth, nClientHeight, m_nRotationKept, 
 			m_dZoomKept,
-			m_eAutoZoomMode,
+			eAutoZoomMode,
 			m_offsetKept,
 			_SetLandscapeModeParams(m_bLandscapeMode, *m_pImageProcParamsKept), 
-			_SetLandscapeModeFlags(m_eProcessingFlagsKept));
+			SetProcessingFlag(_SetLandscapeModeFlags(m_eProcessingFlagsKept), PFLAG_NoProcessingAfterLoad, bNoProcessingAfterLoad));
 	} else {
 		CSettingsProvider& sp = CSettingsProvider::This();
-		return CProcessParams(m_clientRect.Width(), m_clientRect.Height(), 0,
-			-1, m_eAutoZoomMode, CPoint(0, 0), 
+		return CProcessParams(nClientWidth, nClientHeight, 0,
+			-1, eAutoZoomMode, CPoint(0, 0), 
 			_SetLandscapeModeParams(m_bLandscapeMode, GetDefaultProcessingParams()),
-			_SetLandscapeModeFlags(GetDefaultProcessingFlags(m_bLandscapeMode)));
+			SetProcessingFlag(_SetLandscapeModeFlags(GetDefaultProcessingFlags(m_bLandscapeMode)), PFLAG_NoProcessingAfterLoad, bNoProcessingAfterLoad));
 	}
 }
 
@@ -2013,7 +2020,7 @@ void CMainDlg::StartMovieMode(double dFPS) {
 	}
 	m_bMovieMode = true;
 	StartSlideShowTimer(Helpers::RoundToInt(1000.0/dFPS));
-	AfterNewImageLoaded(false);
+	AfterNewImageLoaded(false, false);
 	this->InvalidateRect(m_pNavPanelCtl->PanelRect(), FALSE);
 }
 
@@ -2042,7 +2049,7 @@ void CMainDlg::StopMovieMode() {
 		m_bMovieMode = false;
 		m_bProcFlagsTouched = false;
 		StopSlideShowTimer();
-		AfterNewImageLoaded(false);
+		AfterNewImageLoaded(false, false);
 		this->Invalidate(FALSE);
 	}
 }
@@ -2103,7 +2110,7 @@ void CMainDlg::ExchangeProcessingParams() {
 	this->Invalidate(FALSE);
 }
 
-void CMainDlg::AfterNewImageLoaded(bool bSynchronize) {
+void CMainDlg::AfterNewImageLoaded(bool bSynchronize, bool bAfterStartup) {
 	UpdateWindowTitle();
 	m_pNavPanelCtl->HideNavPanelTemporary();
 	m_pPanelMgr->AfterNewImageLoaded();
@@ -2146,6 +2153,37 @@ void CMainDlg::AfterNewImageLoaded(bool bSynchronize) {
 					m_nRotation = m_nRotationKept;
 				}
 			}
+		}
+		AdjustWindowToImage(bAfterStartup);
+	}
+}
+
+bool CMainDlg::IsAdjustWindowToImage() {
+	return !m_bFullScreenMode && !::IsZoomed(m_hWnd) && (CSettingsProvider::This().DefaultWndToImage() || m_bAutoFitWndToImage);
+}
+
+void CMainDlg::AdjustWindowToImage(bool bAfterStartup) {
+	if (IsAdjustWindowToImage() && (m_pCurrentImage != NULL || bAfterStartup)) {
+		// window size shall be adjusted to image size (at least keep aspect ration)
+		CRect windowRect = Helpers::GetWindowRectMatchingImageSize(m_hWnd, MIN_WND_WIDTH, MIN_WND_HEIGHT, m_pCurrentImage, bAfterStartup);
+		m_bResizeForNewImage = true;
+		if (bAfterStartup) {
+			this->SetWindowLongW(GWL_STYLE, this->GetWindowLongW(GWL_STYLE) | WS_OVERLAPPEDWINDOW | WS_VISIBLE);
+		}
+		this->SetWindowPos(HWND_TOP, windowRect.left, windowRect.top, windowRect.Width(), windowRect.Height(), SWP_NOZORDER | SWP_NOCOPYBITS);
+		this->GetClientRect(&m_clientRect);
+		m_bResizeForNewImage = false;
+	}
+}
+
+void CMainDlg::CheckIfApplyAutoFitWndToImage() {
+	if (m_bAutoFitWndToImage) {
+		if (!Helpers::CanDisplayImageWithoutResize(m_hWnd, m_pCurrentImage)) {
+			m_bAutoFitWndToImage = false;
+			ExecuteCommand(IDM_FULL_SCREEN_MODE);
+			m_bTemporaryLowQ = false;
+			memset(&m_storedWindowPlacement2, 0, sizeof(WINDOWPLACEMENT));
+			MouseOff();
 		}
 	}
 }

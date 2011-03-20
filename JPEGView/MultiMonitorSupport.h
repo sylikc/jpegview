@@ -14,6 +14,15 @@ public:
 	// 1 to n for the secondary or other monitors
 	static CRect GetMonitorRect(int nIndex);
 
+	// Gets the working rectangle (monitor rectangle excluding taskbar) of the monitor the given window is displayed on
+	static CRect GetWorkingRect(HWND hWnd);
+
+	// Gets the default window rectangle for windowed mode
+	static CRect GetDefaultWindowRect();
+
+	// Gets the default client rectangle for windowed mode
+	static CRect GetDefaultClientRectInWindowMode(bool bAutoFitWndToImage);
+
 private:
 	CMultiMonitorSupport(void);
 };

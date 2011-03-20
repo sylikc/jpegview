@@ -28,6 +28,4 @@ private:
 	bool m_bVisible;
 	int m_nOldMouseY;
 	CWndButtonPanel* m_pWndButtonPanel;
-
-	static void OnRestore(void* pContext, int nParameter, CButtonCtrl & sender);
 };

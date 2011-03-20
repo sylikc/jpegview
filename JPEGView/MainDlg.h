@@ -165,10 +165,11 @@ public:
 	void ExecuteCommand(int nCommand);
 	bool PrepareForModalPanel(); // returns if navigation panel was enabled, turns it off
 	int TrackPopupMenu(CPoint pos, HMENU hMenu);
+	void AdjustWindowToImage(bool bAfterStartup);
+	bool IsAdjustWindowToImage();
 
 	// Called by button clicked handlers - must be static
 	static void OnExecuteCommand(void* pContext, int nParameter, CButtonCtrl & sender);
-	static void ToggleWindowMode(CMainDlg* pMainDlg, CButtonCtrl & sender, bool bSetCursor);
 	static bool IsCurrentImageFitToScreen(void* pContext);
 
 private:
@@ -187,6 +188,7 @@ private:
 	int m_nRotation; // this can only be 0, 90, 180 or 270
 	bool m_bUserZoom;
 	bool m_bUserPan; // user has zoomed and panned away from default values
+	bool m_bResizeForNewImage;
 	double m_dZoom;
 	double m_dZoomAtResizeStart; // zoom factor when user started resizing JPEGView main window
 	double m_dZoomMult;
@@ -226,6 +228,7 @@ private:
 	bool m_bShowFileName;
 	bool m_bShowHelp;
 	bool m_bFullScreenMode;
+	bool m_bAutoFitWndToImage;
 	bool m_bLockPaint;
 	int m_nCurrentTimeout;
 	POINT m_startMouse;
@@ -253,8 +256,8 @@ private:
 	CRotationPanelCtl* m_pRotationPanelCtl;
 	CPanelMgr* m_pPanelMgr;
 
-	bool OpenFile(bool bFullScreen);
-	void OpenFile(LPCTSTR sFileName);
+	bool OpenFile(bool bFullScreen, bool bAfterStartup);
+	void OpenFile(LPCTSTR sFileName, bool bAfterStartup);
 	bool SaveImage(bool bFullSize);
 	bool SaveImageNoPrompt(LPCTSTR sFileName, bool bFullSize);
 	void BatchCopy();
@@ -267,7 +270,7 @@ private:
 	void PerformZoom(double dValue, bool bExponent, bool bZoomToMouse);
 	void ZoomToSelection();
 	double GetZoomFactorForFitToScreen(bool bFillWithCrop, bool bAllowEnlarge);
-	CProcessParams CreateProcessParams();
+	CProcessParams CreateProcessParams(bool bNoProcessingAfterLoad);
 	void ResetParamsToDefault();
 	void StartSlideShowTimer(int nMilliSeconds);
 	void StopSlideShowTimer(void);
@@ -277,11 +280,12 @@ private:
 	void InitParametersForNewImage();
 	void ExchangeProcessingParams();
 	void SaveParameters();
-	void AfterNewImageLoaded(bool bSynchronize);
+	void AfterNewImageLoaded(bool bSynchronize, bool bAfterStartup);
 	int Scale(int nValue) { return (int)(m_fScaling*nValue); }
 	CRect ScreenToDIB(const CSize& sizeDIB, const CRect& rect);
 	void ToggleMonitor();
 	CRect GetZoomTextRect(CRect imageProcessingArea);
 	void EditINIFile(bool bGlobalINI);
 	int GetLoadErrorAfterOpenFile();
+	void CheckIfApplyAutoFitWndToImage();
 };

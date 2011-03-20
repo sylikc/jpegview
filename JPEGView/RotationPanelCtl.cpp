@@ -200,6 +200,10 @@ void CRotationPanelCtl::ApplyRotation() {
 		::MessageBox(m_pMainDlg->GetHWND(), CNLS::GetString(_T("The operation failed because not enough memory is available!")),
 			_T("JPEGView"), MB_ICONSTOP | MB_OK);
 	}
+	if (!m_bRotationAutoCrop) {
+		m_pMainDlg->ExecuteCommand(IDM_FIT_TO_SCREEN);
+	}
+	m_pMainDlg->AdjustWindowToImage(false);
 	InvalidateMainDlg();
 }
 

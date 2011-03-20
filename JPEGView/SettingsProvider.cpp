@@ -134,7 +134,8 @@ void CSettingsProvider::ReadWriteableINISettings() {
 	m_dMagentaGreen = GetDouble(_T("MagentaGreen"), 0.0, -1.0, 1.0);
 	m_dYellowBlue = GetDouble(_T("YellowBlue"), 0.0, -1.0, 1.0);
 	m_bHQRS = GetBool(_T("HighQualityResampling"), true);
-	m_bShowFullScreen = GetBool(_T("ShowFullScreen"), true);
+	m_bAutoFullScreen = GetString(_T("ShowFullScreen"), _T("")).CompareNoCase(_T("auto")) == 0;
+	m_bShowFullScreen = m_bAutoFullScreen ? true : GetBool(_T("ShowFullScreen"), true);
 	m_bShowFileName = GetBool(_T("ShowFileName"), false);
 	m_bShowFileInfo = GetBool(_T("ShowFileInfo"), false);
 	m_bShowHistogram = GetBool(_T("ShowHistogram"), false);
@@ -217,10 +218,13 @@ void CSettingsProvider::ReadWriteableINISettings() {
 	m_sCopyRenamePattern = GetString(_T("CopyRenamePattern"), _T(""));
 	m_defaultWindowRect = GetRect(_T("DefaultWindowRect"), CRect(0, 0, 0, 0));
 	m_bDefaultMaximized = false;
+	m_bDefaultWndToImage = false;
 	if (m_defaultWindowRect.IsRectEmpty()) {
 		CString sAuto = GetString(_T("DefaultWindowRect"), _T(""));
 		if (sAuto.CompareNoCase(_T("max")) == 0) {
 			m_bDefaultMaximized = true;
+		} else if (sAuto.CompareNoCase(_T("image")) == 0) {
+			m_bDefaultWndToImage = true;
 		}
 	}
 
