@@ -117,6 +117,7 @@ public:
 	// Original image size (of the unprocessed raw image, however the raw image may was rotated or cropped)
 	int OrigWidth() const { return m_nOrigWidth; }
 	int OrigHeight() const { return m_nOrigHeight; }
+	CSize OrigSize() const { return CSize(m_nOrigWidth, m_nOrigHeight); }
 
 	// Size of DIB - size of resampled section of the original image. If zero, no DIB is currently processed.
 	int DIBWidth() const { return m_ClippingSize.cx; }

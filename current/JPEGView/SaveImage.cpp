@@ -216,7 +216,7 @@ bool CSaveImage::SaveImage(LPCTSTR sFileName, CJPEGImage * pImage, const CImageP
 	void* pDIB32bpp;
 
 	if (bFullSize) {
-		imageSize = CSize(pImage->OrigWidth(), pImage->OrigHeight());
+		imageSize = pImage->OrigSize();
 		pDIB32bpp = pImage->GetDIB(imageSize, imageSize, CPoint(0, 0), procParams, eFlags);
 	} else {
 		imageSize = CSize(pImage->DIBWidth(), pImage->DIBHeight());

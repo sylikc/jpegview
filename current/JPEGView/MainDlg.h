@@ -287,5 +287,6 @@ private:
 	CRect GetZoomTextRect(CRect imageProcessingArea);
 	void EditINIFile(bool bGlobalINI);
 	int GetLoadErrorAfterOpenFile();
-	void CheckIfApplyAutoFitWndToImage();
+	void CheckIfApplyAutoFitWndToImage(bool bInInitDialog);
+	void PrefetchDIB(const CRect& clientRect);
 };

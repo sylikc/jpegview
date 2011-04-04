@@ -32,8 +32,7 @@ void CClipboard::CopyFullImageToClipboard(HWND hWnd, CJPEGImage * pImage, const 
 	clipRect.bottom = min(pImage->OrigHeight(), clipRect.bottom);
 
 	pImage->EnableDimming(false);
-	CSize fullImageSize = CSize(pImage->OrigWidth(), pImage->OrigHeight());
-	void* pDIB = pImage->GetDIB(fullImageSize, clipRect.Size(), clipRect.TopLeft(), procParams, eFlags);
+	void* pDIB = pImage->GetDIB(pImage->OrigSize(), clipRect.Size(), clipRect.TopLeft(), procParams, eFlags);
 	DoCopy(hWnd, clipRect.Width(), clipRect.Height(), pDIB);
 	pImage->EnableDimming(true);
 }

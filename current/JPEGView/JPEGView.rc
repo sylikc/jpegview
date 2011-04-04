@@ -62,7 +62,7 @@ IDR_MAINFRAME           ICON                    "res\\JPEGView.ico"
 
 IDD_MAINDLG DIALOG  0, 0, 0, 0
 FONT 8, "MS Sans Serif"
-STYLE 0x0
+STYLE 0x00CF0000
 BEGIN
 END
 
