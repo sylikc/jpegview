@@ -25,11 +25,11 @@ Changelog
 [1.0.24]
 New features:
 - New windowed mode that fits window size to image size, avoiding black borders. 
-  Enable in INI file by setting:
+  Enable in INI file using:
   DefaultWindowRect=image
 - New auto full screen mode that starts JPEGView in fullscreen mode when the image is larger than the screen
   or in windowed mode (window fit to image) when the image is small enough to fit to the screen.
-  Enable in INI file by setting:
+  Enable in INI file using:
   ShowFullScreen=auto
 
 [1.0.23]
