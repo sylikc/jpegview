@@ -181,7 +181,7 @@ BEGIN
 	  MENUITEM SEPARATOR
 	  MENUITEM "Show picture info (EXIF)\tF2",	IDM_SHOW_FILEINFO
       MENUITEM "Show filename\tCtrl-F2",		IDM_SHOW_FILENAME
-	  MENUITEM "Show navigation panel\tF11",	IDM_SHOW_NAVPANEL
+	  MENUITEM "Show navigation panel\tCtrl-N",	IDM_SHOW_NAVPANEL
 	  MENUITEM SEPARATOR
 	  MENUITEM "Next image\tPgDn",				IDM_NEXT
 	  MENUITEM "Previous image\tPgUp",			IDM_PREV
@@ -233,7 +233,7 @@ BEGIN
           MENUITEM "Fit to screen\tReturn",		IDM_FIT_TO_SCREEN
 		  MENUITEM "Fill with crop\tCtrl-Return", IDM_FILL_WITH_CROP
 		  MENUITEM "Span all screens\tF12",		IDM_SPAN_SCREENS
-		  MENUITEM "Full screen mode\tCtrl-W",	IDM_FULL_SCREEN_MODE
+		  MENUITEM "Full screen mode\tF11",	IDM_FULL_SCREEN_MODE
 		  MENUITEM SEPARATOR
 		  MENUITEM "400 %",				IDM_ZOOM_400
 		  MENUITEM "200 %",				IDM_ZOOM_200

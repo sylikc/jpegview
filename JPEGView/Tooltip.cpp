@@ -60,8 +60,10 @@ CRect CTooltip::CalculateTooltipRect() const {
 	::DrawText(dc, sTooltip, sTooltip.GetLength(), &rectText, DT_CENTER | DT_VCENTER | DT_CALCRECT | DT_NOPREFIX);
 	::ReleaseDC(m_hWnd, dc);
 
+	CRect clientRect;
+	::GetClientRect(m_hWnd, &clientRect);
 	CRect boundRect = m_pBoundCtrl->GetPosition();
-	int nLeft = boundRect.CenterPoint().x - rectText.Width()/2;
+	int nLeft = min(clientRect.Width() - rectText.Width() - 8, max(0, boundRect.CenterPoint().x - rectText.Width()/2));
 	int nTop = boundRect.bottom + 6;
 	return CRect(nLeft, nTop, nLeft + rectText.Width() + 8, nTop + rectText.Height() + 5);
 }

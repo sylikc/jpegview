@@ -46,6 +46,8 @@ public:
 	virtual CRect PanelRect();
 	virtual void RequestRepositioning();
 
+	bool AdjustMaximalWidth(int nMaxWidth); // return if the width has been adjusted
+
 protected:
 	virtual void RepositionAll();
 
@@ -70,6 +72,7 @@ private:
 	static LPCTSTR ZoomFitToggleTooltip(void* pContext);
 
 	void AddGap(int nID, int nGap);
+	void SetScaledWidth(float fScale);
 
 	DecisionMethod* m_isCurrentImageFitToScreen;
 	void* m_pDecisionMethodParam;
@@ -78,4 +81,5 @@ private:
 	int m_nWidth, m_nHeight;
 	int m_nBorder;
 	int m_nGap;
+	int m_nOptimalWidth;
 };

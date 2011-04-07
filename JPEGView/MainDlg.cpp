@@ -46,8 +46,8 @@
 // Constants
 //////////////////////////////////////////////////////////////////////////////////////////////
 
-static const int MIN_WND_WIDTH = 400;
-static const int MIN_WND_HEIGHT = 300;
+static const int MIN_WND_WIDTH = 320;
+static const int MIN_WND_HEIGHT = 240;
 
 static const double GAMMA_FACTOR = 1.02; // multiplicator for gamma value
 static const double CONTRAST_INC = 0.03; // increment for contrast value
@@ -526,6 +526,9 @@ LRESULT CMainDlg::OnSize(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BO
 		m_bShowHelp = false;
 		m_pImageProcPanelCtl->SetVisible(false);
 	}
+	if (m_pNavPanelCtl != NULL) {
+		m_pNavPanelCtl->AdjustMaximalWidth(m_clientRect.Width() - 16);
+	}
 	m_nMouseX = m_nMouseY = -1;
 
 	// keep fit to screen
@@ -782,7 +785,7 @@ LRESULT CMainDlg::OnKeyDown(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOO
 		ExecuteCommand(IDM_LOOP_SIBLINGS);
 	} else if (wParam == VK_F11) {
 		bHandled = true;
-		ExecuteCommand(IDM_SHOW_NAVPANEL);
+		ExecuteCommand(IDM_FULL_SCREEN_MODE);
 	} else if (wParam == VK_F12) {
 		bHandled = true;
 		if (bCtrl) {
@@ -822,7 +825,10 @@ LRESULT CMainDlg::OnKeyDown(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOO
 		bHandled = true;
 		ExchangeProcessingParams();
 	} else if (wParam == 'C' || wParam == 'M' || wParam == 'N') {
-		if (bCtrl && wParam == 'C') {
+		if (bCtrl && wParam == 'N') {
+			bHandled = true;
+			ExecuteCommand(IDM_SHOW_NAVPANEL);
+		} else if (bCtrl && wParam == 'C') {
 			bHandled = true;
 			ExecuteCommand(IDM_COPY);
 		} else {
@@ -884,13 +890,7 @@ LRESULT CMainDlg::OnKeyDown(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOO
 			bHandled = true;
 			ExecuteCommand(IDM_LANDSCAPE_MODE);
 		}
-	} else if (wParam == 'W') {
-		if (bCtrl) {
-			bHandled = true;
-			ExecuteCommand(IDM_FULL_SCREEN_MODE);
-		}
-	} 
-	else if ((wParam == VK_DOWN || wParam == VK_UP || wParam == VK_RIGHT || wParam == VK_LEFT) && bShift) {
+	} else if ((wParam == VK_DOWN || wParam == VK_UP || wParam == VK_RIGHT || wParam == VK_LEFT) && bShift) {
 		bHandled = true;
 		if (wParam == VK_DOWN) {
 			PerformPan(0, -PAN_STEP, false);

@@ -44,7 +44,6 @@ void CHelpDisplayCtl::GenerateHelpDisplay() {
 	m_pHelpDisplay->AddLine(_T("F1"), CNLS::GetString(_T("Show/hide this help text")));
 	m_pHelpDisplay->AddLineInfo(_T("F2"), m_pMainDlg->GetEXIFDisplayCtl()->IsActive(), CNLS::GetString(_T("Show/hide picture information (EXIF data)")));
 	m_pHelpDisplay->AddLineInfo(_T("Ctrl+F2"), m_pMainDlg->IsShowFileName(), CNLS::GetString(_T("Show/hide file name")));
-	m_pHelpDisplay->AddLineInfo(_T("F11"), m_pMainDlg->GetNavPanelCtl()->IsActive(), CNLS::GetString(_T("Show/hide navigation panel")));
 	m_pHelpDisplay->AddLineInfo(_T("F3"), m_pMainDlg->IsHQResampling(), CNLS::GetString(_T("Enable/disable high quality resampling")));
 	m_pHelpDisplay->AddLineInfo(_T("F4"), m_pMainDlg->IsKeepParams(), CNLS::GetString(_T("Enable/disable keeping of geometry related (zoom/pan/rotation)")));
 	m_pHelpDisplay->AddLineInfo(_T(""),  LPCTSTR(NULL), CNLS::GetString(_T("and image processing (brightness/contrast/sharpen) parameters between images")));
@@ -59,10 +58,11 @@ void CHelpDisplayCtl::GenerateHelpDisplay() {
 	m_pHelpDisplay->AddLineInfo(_T("F7"), m_pMainDlg->GetFileList()->GetNavigationMode() == Helpers::NM_LoopDirectory, CNLS::GetString(_T("Loop through files in current folder")));
 	m_pHelpDisplay->AddLineInfo(_T("F8"), m_pMainDlg->GetFileList()->GetNavigationMode() == Helpers::NM_LoopSubDirectories, CNLS::GetString(_T("Loop through files in current directory and all subfolders")));
 	m_pHelpDisplay->AddLineInfo(_T("F9"), m_pMainDlg->GetFileList()->GetNavigationMode() == Helpers::NM_LoopSameDirectoryLevel, CNLS::GetString(_T("Loop through files in current directory and all sibling folders (folders on same level)")));
+	m_pHelpDisplay->AddLineInfo(_T("F11"), m_pMainDlg->IsFullScreenMode(), CNLS::GetString(_T("Enable/disable full screen mode")));
 	m_pHelpDisplay->AddLineInfo(_T("F12"), m_pMainDlg->IsSpanVirtualDesktop(), CNLS::GetString(_T("Maximize/restore to/from virtual desktop (only for multi-monitor systems)")));
 	m_pHelpDisplay->AddLineInfo(_T("Ctrl+F12"), LPCTSTR(NULL), CNLS::GetString(_T("Toggle between screens (only for multi-monitor systems)")));
-	m_pHelpDisplay->AddLineInfo(_T("Ctrl+W"), m_pMainDlg->IsFullScreenMode(), CNLS::GetString(_T("Enable/disable full screen mode")));
 	m_pHelpDisplay->AddLine(_T("Ctrl+M"), CNLS::GetString(_T("Mark image for toggling. Use Ctrl+Left/Ctrl+Right to toggle between marked and current image")));
+	m_pHelpDisplay->AddLineInfo(_T("Ctrl+N"), m_pMainDlg->GetNavPanelCtl()->IsActive(), CNLS::GetString(_T("Show/hide navigation panel")));
 	m_pHelpDisplay->AddLine(_T("Ctrl+C/Ctrl+X"), CNLS::GetString(_T("Copy screen to clipboard/ Copy processed full size image to clipboard")));
 	m_pHelpDisplay->AddLine(_T("Ctrl+O"), CNLS::GetString(_T("Open new image or slideshow file")));
 	m_pHelpDisplay->AddLine(_T("Ctrl+S"), CNLS::GetString(_T("Save processed image to JPEG file (original size)")));
