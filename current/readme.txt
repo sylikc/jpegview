@@ -23,6 +23,9 @@ Changelog
 *********
 
 [1.0.24]
+Bugs fixed:
+- Navigation panel not truncated when window is small, instead the buttons are smaller.
+  Tooltip texts are also no longer truncated in small windows.
 New features:
 - New windowed mode that fits window size to image size, avoiding black borders. 
   Enable in INI file using:
@@ -31,6 +34,11 @@ New features:
   or in windowed mode (window fit to image) when the image is small enough to fit to the screen.
   Enable in INI file using:
   ShowFullScreen=auto
+  Note: This is the new default value in the INI file.
+Changed behaviour:
+- F11 key is now used for toggling full screen (used to be Ctrl-W). Navigation panel visibility now uses Ctrl-N (instead of F11)
+- If the first image shown is smaller than the screen, JPEGView now starts in 'window fit to image' mode.
+  To restore the old behavior (always use fullscreen), set ShowFullScreen=true in INI file
 
 [1.0.23]
 Bugs fixed:

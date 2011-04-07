@@ -49,6 +49,12 @@ CNavigationPanelCtl::~CNavigationPanelCtl() {
 	m_bInNavPanelAnimation = false;
 }
 
+void CNavigationPanelCtl::AdjustMaximalWidth(int nMaxWidth) {
+	if (m_pNavPanel->AdjustMaximalWidth(nMaxWidth)) {
+		EndNavPanelAnimation();
+	}
+}
+
 bool CNavigationPanelCtl::IsVisible() {
 	bool bMouseInNavPanel = m_bMouseInNavPanel && !m_pMainDlg->GetImageProcPanelCtl()->IsVisible();
 	return m_bEnabled && !(m_fCurrentBlendingFactorNavPanel <= 0.0f && !bMouseInNavPanel) &&

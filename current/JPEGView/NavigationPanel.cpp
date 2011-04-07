@@ -16,10 +16,7 @@ CNavigationPanel::CNavigationPanel(HWND hWnd, INotifiyMouseCapture* pNotifyMouse
 		DecisionMethod* isCurrentImageFitToScreen, void* pDecisionMethodParam) : CPanel(hWnd, pNotifyMouseCapture) {
 	m_pImageProcPanel = pImageProcPanel;
 	m_clientRect = CRect(0, 0, 0, 0);
-	m_nWidth = 0;
-	m_nHeight = (int)(NAV_PANEL_HEIGHT*m_fDPIScale);
-	m_nBorder = (int)(NAV_PANEL_BORDER*m_fDPIScale);
-	m_nGap = (int)(NAV_PANEL_GAP*m_fDPIScale);
+	SetScaledWidth(1.0f);
 	m_isCurrentImageFitToScreen = isCurrentImageFitToScreen;
 	m_pDecisionMethodParam = pDecisionMethodParam;
 
@@ -40,6 +37,8 @@ CNavigationPanel::CNavigationPanel(HWND hWnd, INotifiyMouseCapture* pNotifyMouse
 	AddUserPaintButton(ID_btnLandscapeMode, CNLS::GetString(_T("Landscape picture enhancement mode")), &PaintLandscapeModeBtn);
 	AddGap(ID_gap5, 16);
 	AddUserPaintButton(ID_btnShowInfo, CNLS::GetString(_T("Display image (EXIF) information")), &PaintInfoBtn);
+
+	m_nOptimalWidth = PanelRect().Width();
 }
 
 void CNavigationPanel::AddGap(int nID, int nGap) {
@@ -73,6 +72,17 @@ CRect CNavigationPanel::PanelRect() {
 	return m_clientRect;
 }
 
+bool CNavigationPanel::AdjustMaximalWidth(int nMaxWidth) {
+	int nUsedWidth = PanelRect().Width();
+	if (nUsedWidth > nMaxWidth || (nUsedWidth < m_nOptimalWidth && nUsedWidth < nMaxWidth)) {
+		float fScale = (float)min(nMaxWidth, m_nOptimalWidth)/m_nOptimalWidth;
+		SetScaledWidth(fScale);
+		RequestRepositioning();
+		return true;
+	}
+	return false;
+}
+
 void CNavigationPanel::RequestRepositioning() {
 	RepositionAll();
 }
@@ -95,6 +105,13 @@ void CNavigationPanel::RepositionAll() {
 			}
 		}
 	}
+}
+
+void CNavigationPanel::SetScaledWidth(float fScale) {
+	m_nWidth = 0;
+	m_nHeight = (int)(NAV_PANEL_HEIGHT*m_fDPIScale*fScale);
+	m_nBorder = (int)(NAV_PANEL_BORDER*m_fDPIScale*fScale);
+	m_nGap = (int)(NAV_PANEL_GAP*m_fDPIScale*fScale);
 }
 
 void CNavigationPanel::PaintHomeBtn(void* pContext, const CRect& rect, CDC& dc) {
@@ -183,7 +200,7 @@ void CNavigationPanel::PaintZoomToFitBtn(void* pContext, const CRect& rect, CDC&
 
 void CNavigationPanel::PaintZoomTo1to1Btn(void* pContext, const CRect& rect, CDC& dc) {
 	CFont font;
-	font.CreatePointFont(80, _T("MS Sans Serif"), dc, true, false);
+	font.CreatePointFont(min(rect.Width() * 3, 80), _T("Microsoft Sans Serif"), dc, true, false);
 	HFONT oldFont = dc.SelectFont(font);
 	dc.DrawText(_T("1:1"), 3, (LPRECT)&rect, DT_CENTER | DT_VCENTER | DT_SINGLELINE | DT_NOCLIP);
 	dc.SelectFont(oldFont);
@@ -290,7 +307,7 @@ void CNavigationPanel::PaintLandscapeModeBtn(void* pContext, const CRect& rect, 
 
 void CNavigationPanel::PaintInfoBtn(void* pContext, const CRect& rect, CDC& dc) {
 	CFont font;
-	font.CreatePointFont(160, _T("Times New Roman"), dc, false, true);
+	font.CreatePointFont(min(rect.Width() * 6, 160), _T("Times New Roman"), dc, false, true);
 	HFONT oldFont = dc.SelectFont(font);
 	dc.DrawText(_T("i"), 1, (LPRECT)&rect, DT_CENTER | DT_VCENTER | DT_SINGLELINE | DT_NOCLIP);
 	dc.SelectFont(oldFont);

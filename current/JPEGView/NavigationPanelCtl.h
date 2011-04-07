@@ -18,6 +18,8 @@ public:
 	virtual bool BlendPanel() { return !m_bMouseInNavPanel; }
 	virtual float DimFactor() { return 0.5f; }
 
+	void AdjustMaximalWidth(int nMaxWidth);
+
 	virtual bool IsVisible();
 	virtual bool IsActive() { return m_bEnabled; }
 
