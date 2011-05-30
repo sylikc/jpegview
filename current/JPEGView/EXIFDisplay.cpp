@@ -8,6 +8,8 @@
 
 #define BUTTON_SIZE 18
 #define HISTOGRAM_HEIGHT 50
+#define MAX_WIDTH 320
+#define PREFIX_GAP 10
 
 static LPTSTR CopyStrAlloc(LPCTSTR str) {
 	if (str == NULL) {
@@ -34,6 +36,7 @@ CEXIFDisplay::CEXIFDisplay(HWND hWnd, INotifiyMouseCapture* pNotifyMouseCapture)
 	m_nTitleHeight = 0;
 	m_pos = CPoint(0, 0);
 	m_size = CSize(0, 0);
+	m_sPrefix = NULL;
 	m_sTitle = NULL;
 	m_sComment = NULL;
 	m_nCommentHeight = 0;
@@ -52,11 +55,15 @@ CEXIFDisplay::~CEXIFDisplay() {
 }
 
 void CEXIFDisplay::ClearTexts() {
+	delete[] m_sPrefix;
+	m_sPrefix = NULL;
 	delete[] m_sTitle;
 	m_sTitle = NULL;
 	delete[] m_sComment;
 	m_sComment = NULL;
 	m_nCommentHeight = 0;
+	m_nPrefixLenght = 0;
+	m_nTitleWidth = 0;
 	std::list<TextLine>::iterator iter;
 	for (iter = m_lines.begin( ); iter != m_lines.end( ); iter++ ) {
 		delete[] iter->Desc;
@@ -69,6 +76,11 @@ void CEXIFDisplay::ClearTexts() {
 void CEXIFDisplay::AddTitle(LPCTSTR sTitle) {
 	delete[] m_sTitle;
 	m_sTitle = CopyStrAlloc(sTitle);
+}
+
+void CEXIFDisplay::AddPrefix(LPCTSTR sPrefix) {
+	delete[] m_sPrefix;
+	m_sPrefix = CopyStrAlloc(sPrefix);
 }
 
 void CEXIFDisplay::SetComment(LPCTSTR sComment) {
@@ -128,13 +140,33 @@ CRect CEXIFDisplay::PanelRect() {
 			::SelectObject(dc, m_hTitleFont);
 		}
 
+		m_nTitleHeight = 0;
+		m_nPrefixLenght = 0;
+		m_nTitleWidth = 0;
 		int nTitleLength = 0;
 		int nMaxLenght1 = 0, nMaxLength2 = 0;
 		CSize size;
+		if (m_sPrefix != NULL) {
+			::GetTextExtentPoint32(dc, m_sPrefix, _tcslen(m_sPrefix), &size);
+			nTitleLength = m_nPrefixLenght = size.cx;
+			m_nTitleHeight = size.cy + 9;
+		}
 		if (m_sTitle != NULL) {
 			::GetTextExtentPoint32(dc, m_sTitle, _tcslen(m_sTitle), &size);
-			nTitleLength = size.cx;
-			m_nTitleHeight = size.cy + 9;
+			if (size.cx > (int)(MAX_WIDTH * HelpersGUI::ScreenScaling)) {
+				CRect rectTitle(0, 0, (int)(MAX_WIDTH * HelpersGUI::ScreenScaling), 2);
+				::DrawText(dc, m_sTitle, _tcslen(m_sTitle), &rectTitle, DT_CALCRECT | DT_NOPREFIX | DT_WORDBREAK | DT_WORD_ELLIPSIS);
+				m_nTitleWidth = rectTitle.Width();
+				nTitleLength += m_nTitleWidth;
+				m_nTitleHeight = max(m_nTitleHeight, rectTitle.Height() + 9);
+			} else {
+				m_nTitleWidth = size.cx;
+				nTitleLength += m_nTitleWidth;
+				m_nTitleHeight = max(m_nTitleHeight, size.cy + 9);
+			}
+			int nGap = (int)(PREFIX_GAP * HelpersGUI::ScreenScaling);
+			m_nPrefixLenght += nGap;
+			nTitleLength += nGap;
 		}
 
 		::SelectObject(dc, ::GetStockObject(DEFAULT_GUI_FONT));
@@ -198,8 +230,13 @@ void CEXIFDisplay::OnPaint(CDC & dc, const CPoint& offset) {
 	}
 	::SetBkMode(dc, TRANSPARENT);
 	::SetTextColor(dc, RGB(255, 255, 255));
+	if (m_sPrefix != NULL) {
+		::TextOut(dc, nX + m_nGap, nY + m_nGap, m_sPrefix, _tcslen(m_sPrefix));
+	}
 	if (m_sTitle != NULL) {
-		::TextOut(dc, nX + m_nGap, nY + m_nGap, m_sTitle, _tcslen(m_sTitle));
+		int nXStart = nX + m_nGap + m_nPrefixLenght;
+		CRect rectTitle(nXStart, nY + m_nGap, nXStart + m_nTitleWidth, nY + m_nGap + m_nTitleHeight);
+		::DrawText(dc, m_sTitle, _tcslen(m_sTitle), &rectTitle, DT_NOPREFIX | DT_WORDBREAK | DT_WORD_ELLIPSIS);
 	}
 
 	::SetTextColor(dc, RGB(243, 242, 231));

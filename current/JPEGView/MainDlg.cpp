@@ -1354,7 +1354,7 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 				if (::IsRectEmpty(&(m_storedWindowPlacement2.rcNormalPosition)) || bAdjustWndToImage) {
 					// never set to window mode before, use default position
 					windowRect = bAdjustWndToImage ? 
-						Helpers::GetWindowRectMatchingImageSize(m_hWnd, MIN_WND_WIDTH, MIN_WND_HEIGHT, m_pCurrentImage, false) : 
+						Helpers::GetWindowRectMatchingImageSize(m_hWnd, MIN_WND_WIDTH, MIN_WND_HEIGHT, -1, m_pCurrentImage, false) : 
 						CMultiMonitorSupport::GetDefaultWindowRect();
 					this->SetWindowPos(HWND_TOP, windowRect.left, windowRect.top, windowRect.Width(), windowRect.Height(), SWP_NOZORDER | SWP_NOCOPYBITS);
 				} else {
@@ -2163,7 +2163,7 @@ bool CMainDlg::IsAdjustWindowToImage() {
 void CMainDlg::AdjustWindowToImage(bool bAfterStartup) {
 	if (IsAdjustWindowToImage() && (m_pCurrentImage != NULL || bAfterStartup)) {
 		// window size shall be adjusted to image size (at least keep aspect ration)
-		CRect windowRect = Helpers::GetWindowRectMatchingImageSize(m_hWnd, MIN_WND_WIDTH, MIN_WND_HEIGHT, m_pCurrentImage, bAfterStartup);
+		CRect windowRect = Helpers::GetWindowRectMatchingImageSize(m_hWnd, MIN_WND_WIDTH, MIN_WND_HEIGHT, m_dZoom, m_pCurrentImage, bAfterStartup);
 		m_bResizeForNewImage = true;
 		this->SetWindowPos(HWND_TOP, windowRect.left, windowRect.top, windowRect.Width(), windowRect.Height(), SWP_NOZORDER | SWP_NOCOPYBITS);
 		this->GetClientRect(&m_clientRect);

@@ -53,15 +53,17 @@ void CEXIFDisplayCtl::FillEXIFDataDisplay() {
 
 	m_pEXIFDisplay->SetHistogram(NULL);
 
-	CString sFileTitle;
+	CString sPrefix, sFileTitle;
 	LPCTSTR sCurrentFileName = m_pMainDlg->CurrentFileName(true);
 	const CFileList* pFileList = m_pMainDlg->GetFileList();
 	if (CurrentImage()->IsClipboardImage()) {
-		sFileTitle = sCurrentFileName;
+		sPrefix = sCurrentFileName;
 	} else if (pFileList->Current() != NULL) {
-		sFileTitle.Format(_T("[%d/%d]  %s"), pFileList->CurrentIndex() + 1, pFileList->Size(), sCurrentFileName);
+		sPrefix.Format(_T("[%d/%d]"), pFileList->CurrentIndex() + 1, pFileList->Size());
+		sFileTitle = sCurrentFileName;
 	}
 	LPCTSTR sComment = NULL;
+	m_pEXIFDisplay->AddPrefix(sPrefix);
 	m_pEXIFDisplay->AddTitle(sFileTitle);
 	m_pEXIFDisplay->AddLine(CNLS::GetString(_T("Image width:")), CurrentImage()->OrigWidth());
 	m_pEXIFDisplay->AddLine(CNLS::GetString(_T("Image height:")), CurrentImage()->OrigHeight());

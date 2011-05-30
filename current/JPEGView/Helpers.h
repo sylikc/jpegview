@@ -77,7 +77,7 @@ namespace Helpers {
 	void GetZoomParameters(float & fZoom, CPoint & offsets, CSize imageSize, CSize windowSize, CRect zoomRect);
 
 	// Gets a window rectangle (in screen coordinates) that fits the given image
-	CRect GetWindowRectMatchingImageSize(HWND hWnd, int nMinWidth, int nMinHeight, CJPEGImage* pImage, bool bForceCenterWindow);
+	CRect GetWindowRectMatchingImageSize(HWND hWnd, int nMinWidth, int nMinHeight, double dZoom, CJPEGImage* pImage, bool bForceCenterWindow);
 
 	// Gets if the given image can be displayed without sampling down the image.
 	bool CanDisplayImageWithoutResize(HWND hWnd, CJPEGImage* pImage);
