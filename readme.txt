@@ -36,6 +36,7 @@ New features:
   ShowFullScreen=auto
   Note: This is the new default value in the INI file.
 Changed behaviour:
+- In the EXIF display (F2), the file name is broken into multiple lines when it is very long
 - F11 key is now used for toggling full screen (used to be Ctrl-W). Navigation panel visibility now uses Ctrl-N (instead of F11)
 - If the first image shown is smaller than the screen, JPEGView now starts in 'window fit to image' mode.
   To restore the old behavior (always use fullscreen), set ShowFullScreen=true in INI file

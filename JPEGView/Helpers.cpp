@@ -445,9 +445,13 @@ double GetExactTickCount() {
 	}
 }
 
-CRect GetWindowRectMatchingImageSize(HWND hWnd, int nMinWidth, int nMinHeight, CJPEGImage* pImage, bool bForceCenterWindow) {
+CRect GetWindowRectMatchingImageSize(HWND hWnd, int nMinWidth, int nMinHeight, double dZoom, CJPEGImage* pImage, bool bForceCenterWindow) {
 	int nOrigWidth = (pImage == NULL) ? ::GetSystemMetrics(SM_CXSCREEN) / 2 : pImage->OrigWidth();
 	int nOrigHeight = (pImage == NULL) ? ::GetSystemMetrics(SM_CYSCREEN) / 2 : pImage->OrigHeight();
+	if (dZoom > 0) {
+		nOrigWidth = (int) (nOrigWidth * dZoom + 0.5);
+		nOrigHeight = (int) (nOrigHeight * dZoom + 0.5);
+	}
 	int nBorderWidth = ::GetSystemMetrics(SM_CXSIZEFRAME) * 2;
 	int nBorderHeight = ::GetSystemMetrics(SM_CYSIZEFRAME) * 2 + ::GetSystemMetrics(SM_CYCAPTION);
 	int nRequiredWidth = nBorderWidth + nOrigWidth;

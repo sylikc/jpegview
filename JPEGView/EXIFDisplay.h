@@ -19,6 +19,7 @@ public:
 
 	// Methods to create the information lines
 	void ClearTexts();
+	void AddPrefix(LPCTSTR sPrefix);
 	void AddTitle(LPCTSTR sTitle);
 	void SetComment(LPCTSTR sComment);
 	void AddLine(LPCTSTR sDescription, LPCTSTR sValue);
@@ -57,14 +58,17 @@ private:
 	int m_nGap;
 	int m_nTab1;
 	int m_nLineHeight;
+	int m_nTitleWidth;
 	int m_nTitleHeight;
+	int m_nPrefixLenght;
 	CSize m_nNoHistogramSize;
 	CPoint m_pos;
 	CSize m_size;
 	HFONT m_hTitleFont;
+	TCHAR* m_sPrefix;
 	TCHAR* m_sTitle;
 	TCHAR* m_sComment;
-	int m_nCommentHeight;
+	int m_nCommentHeight; 
 	std::list<TextLine> m_lines;
 	const CHistogram* m_pHistogram;
 
