@@ -117,6 +117,9 @@ void CEXIFDisplay::AddLine(LPCTSTR sDescription, const SYSTEMTIME &time) {
 void CEXIFDisplay::AddLine(LPCTSTR sDescription, const FILETIME &time) {
 	SYSTEMTIME systemTime;
 	::FileTimeToSystemTime(&time, &systemTime);
+	TIME_ZONE_INFORMATION tzi;
+	::GetTimeZoneInformation(&tzi);
+	::SystemTimeToTzSpecificLocalTime(&tzi, &systemTime, &systemTime);
 	AddLine(sDescription, systemTime);
 }
 

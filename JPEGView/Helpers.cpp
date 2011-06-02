@@ -405,7 +405,7 @@ CString GetJPEGComment(void* pJPEGStream, int nStreamLength) {
 	int nGoodChars = 0;
 	for (int i = 0; i < nCommentLen; i++) {
 		uint8 ch = pComment[i];
-		if (ch >= 'a' && ch <= 'z' ||  ch >= 'A' && ch <= 'Z' || ch == ' ') {
+		if (ch >= 'a' && ch <= 'z' ||  ch >= 'A' && ch <= 'Z' || ch == ' ' || ch == ',' || ch == '.' || ch >= '0' && ch <= '9') {
 			nGoodChars++;
 		}
 	}
