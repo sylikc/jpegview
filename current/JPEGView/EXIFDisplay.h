@@ -25,8 +25,8 @@ public:
 	void AddLine(LPCTSTR sDescription, LPCTSTR sValue);
 	void AddLine(LPCTSTR sDescription, double dValue, int nDigits);
 	void AddLine(LPCTSTR sDescription, int nValue);
-	void AddLine(LPCTSTR sDescription, const SYSTEMTIME &time);
-	void AddLine(LPCTSTR sDescription, const FILETIME &time);
+	void AddLine(LPCTSTR sDescription, const SYSTEMTIME &time); // time is in local time
+	void AddLine(LPCTSTR sDescription, const FILETIME &time); // file time is in UTC
 	void AddLine(LPCTSTR sDescription, const Rational &number);
 
 	void SetPosition(CPoint pos) { m_pos = pos; RepositionAll(); }

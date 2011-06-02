@@ -26,6 +26,7 @@ Changelog
 Bugs fixed:
 - Navigation panel not truncated when window is small, instead the buttons are smaller.
   Tooltip texts are also no longer truncated in small windows.
+- Modification date displayed with correct time zone adjustment
 New features:
 - New windowed mode that fits window size to image size, avoiding black borders. 
   Enable in INI file using:
