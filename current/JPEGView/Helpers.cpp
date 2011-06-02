@@ -409,6 +409,10 @@ CString GetJPEGComment(void* pJPEGStream, int nStreamLength) {
 			nGoodChars++;
 		}
 	}
+	// The Intel lib puts this useless comment into each JPEG it writes - filter this out as nobody is interested in that...
+	if (nCommentLen > 20 && strstr((char*)pComment, "Intel(R) JPEG Library") != NULL) {
+		return CString("");
+	}
 
 	return (nGoodChars > nCommentLen * 8 / 10) ? CString((LPCSTR)pComment, nCommentLen) : CString("");
 }
