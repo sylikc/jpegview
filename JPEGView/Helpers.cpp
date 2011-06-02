@@ -336,7 +336,7 @@ void* FindJPEGMarker(void* pJPEGStream, int nStreamLength, unsigned char nMarker
 		}
 	} while (nIndex < nStreamLength);
 
-	if (nMarker == 0 || pStream[nIndex] == nMarker) {
+	if (nMarker == 0 || (pStream[nIndex] == nMarker && pStream[nIndex-1] == 0xFF)) {
 		return &(pStream[nIndex-1]); // place on marker start
 	} else {
 		return NULL;
