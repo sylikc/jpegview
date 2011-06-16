@@ -10,6 +10,7 @@
 ; 'en'    English (default)
 ; 'es'    Spanish (Spain)
 ; 'es-ar' Spanish (latinoamerica)
+; 'pt-br' Portuguese (Brasil)
 ; 'de'    German
 ; 'it'    Italian
 ; 'fr'    French
