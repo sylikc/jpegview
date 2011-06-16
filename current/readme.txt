@@ -28,6 +28,7 @@ Bugs fixed:
   Tooltip texts are also no longer truncated in small windows.
 - Modification date displayed with correct time zone adjustment
 New features:
+- Portuguese translation, thanks to Carpegieri Torezan
 - New windowed mode that fits window size to image size, avoiding black borders. 
   Enable in INI file using:
   DefaultWindowRect=image
