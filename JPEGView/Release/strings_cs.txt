@@ -1,0 +1,272 @@
+﻿// This file must be encoded with UTF-8 (e.g. with Windows Notepad)
+// Filename is 'strings_%languagecode%.txt' where %languagecode% is the ISO 639 language code e.g. 'fr' for French
+// Format is: English string<tab>Translated string<newline>
+// Czech traslation by Milos Koutny, mail:milos(dot)koutny(at)gmail(dot)com
+Contrast	Kontrast
+Brightness	Jas
+Sharpen	Ostrost
+Lighten Shadows	Zjasnit stíny
+Darken Highlights	Snížit jasu u nejsvětlejších míst
+Deep Shadows	Hluboké stíny
+Color Correction	Korekce barev
+Contrast Correction	Korekce kontrastu
+Parameter DB:	Parametry DB:
+Save to	Uložit jako
+Remove from	Odstranit z
+Rename:	Přejmenovat:
+No file or folder name was provided as command line parameter!	Nebylo zadáno jméno souboru nebo složky jako parametr příkazové řádky!
+To use JPEGView, associate JPG, JPEG and BMP files with JPEGView.	K snažšímu užití JPEGView, asociovat JPG, JPEG a BMP soubory s JPEGView.
+Press ESC to exit...	Ukončit ESC...
+The file '%s' could not be read!	Soubor '%s' nemohl být přečten!
+The file '%s' does not contain a list of file names!	Soubor '%s' neobsahuje seznam jmen souborů!
+The directory '%s' does not contain any image files!	Složka '%s' neobsahuje žádné soubory k zobrazení!
+Press any key to search the subdirectories for image files.	Stisknout nějakou klávesu na vyhledání složky s obrázky.
+JPEGView Help	JPEGView Nápověda
+Current image	Tento obrázek
+Close help text display / Close JPEGView	Uzavřít nápovědu / Uzavřít JPEGView
+Show/hide this help text	Zobrazit/skrýt tuto nápovědu
+Show/hide picture information (EXIF data)	Zobrazit/skrýt obrazové metadata (EXIF Data)
+Show/hide file name	Zobrazit/skrýt jméno souboru
+Enable/disable high quality resampling	Povolit/zakázat zobrazení ve velmi vysoké kvalitě
+Enable/disable keeping of geometry related (zoom/pan/rotation)	Povolit/zakázat ukladání nastavení geometrie (zvětšení/posunutí/otočení)
+and image processing (brightness/contrast/sharpen) parameters between images	a změný parametrů(jas/kontrast/ostření) obrazu mezi obrázky
+Enable/disable automatic contrast correction (histogram equalization)	Povolit/zakázat automatickou korekci kontrastu
+Apply auto contrast correction using only visible section of image	Použít automatickou korekci kontrastu jen na viditelnou sekci obrázku
+Enable/disable automatic density correction (local brightness correction)	Povolit/zakázat automatickou korekci sytosti (lokální korekce jasu) 
+Increase/decrease lightening of shadows (LDC must be on)	Snížit/zvýšit jas stínů (LDC musí být povoleno)
+Increase/decrease darkening of highlights (LDC must be on)	Snížit/zvýšit potlačení jasu u nejsvětlejších míst (LDC musí být povoleno)
+Loop through files in current folder	Cyklické prohlížení souborů v aktuální složce
+Loop through files in current directory and all subfolders	Cyklické prohlížená souborů v aktuální složce a jejich podsložkách
+Loop through files in current directory and all sibling folders (folders on same level)	Cyklické prohlížení souborů v aktuálni složce a složkách ve stejné úrovni.
+Maximize/restore to/from virtual desktop (only for multi-monitor systems)	Maximalizovat/Obnovit z virtuální plochy (jen systém s více monitory)
+Copy screen to clipboard/ Copy processed full size image to clipboard	Kopírovat obrazovku/obraz v původním rozlišení do schránky
+Open new image or slideshow file	Otevřít nový obrázek nebo prezentaci
+Save processed image to JPEG file (original size)	Uložit upravený soubor do JPEG souboru (originální rozměr)
+Save (s)/ delete (d) image processing parameters in/from parameter DB	Uložit (s)/vymazat (d) parametry úprav obrázku do/z DB parametrů
+Sort images by creation date, resp. modification date, resp. file name	Řadit obrázky dle data pořízení/data úpravy/jména souboru
+Goto previous image	Přesun na předchozí obrázek
+Goto next image	Přesun na následující obrázek
+PgUp or Left	PgUp nebo šipka vlevo
+PgDn or Right	PgDn nebo šipka vpravo
+Goto first/last image of current folder (using sort order as defined)	Přejít na první/poslední obrázek z aktuální složky (dle zvoleného řazení)
+Increase/decrease brightness	Zvýšit/snížit jas
+Increase/decrease contrast	Zvýšit/snížit kontrast
+Increase/decrease sharpness	Zvýšit/snížit ostrost
+Increase/decrease auto color cast correction amount	Zvýšit/snížit stupeň automatické korekce barev
+Increase/decrease auto contrast correction amount	Zvýšit/snížit stupeň automatické korekce kontrastu
+Enable/disable landscape picture enhancement mode	Povolit/zakázat rozšířený mód pro vodorovné obrázky(orientace krajina)
+Slide show with timeout of n seconds (ESC to stop)	Prezetovat s přestávkou n sekunt (ESC ukončení)
+Set timeout to n/10 sec, respectively n/100 sec (Ctrl+Shift)	Nastavit přestávku na n/10 sekund, příp. n/100 sekund (Ctrl+Shift)
+Rotate image and fit to screen	Rotovat a přizpůsobit obrázek obrazovce
+Fit image to screen	Přizpůsobit obrázek obrazovce
+Zoom 1:1 (100 %)	Zobrazit 1:1 (100 %)
+Zoom in/Zoom out (also Ctrl+up/down)	Zvětšit/zmenšit (Ctrl+šipka nahoru/dolů)
+Zoom in/out image	Zvětšit/zmenšit obrázek
+Pan image	Posunout obrázek
+Crop image	Zastřihnout obrázek
+Next image	Další obrázek
+Previous image	Předchozí obrázek
+up/down	Šipka nahoru/dolů
+Mouse wheel	Kolečko myši
+Left mouse & drag	Levé tlačítko a posun myší
+Ctrl + Left mouse	Ctrl + levé tlačítko myši
+Forward mouse button	Tlačítko myši kupředu
+Back mouse button	Tlačítko myši zpět
+Delete current file on disk permanently	Trvale vymazat aktuální soubor z disku
+Rotate current file on disk lossless by 90 deg (W/H must be multiple of 16)	Otočit aktuální obrázek (bezeztrátově) na disku o 90 stupňů (rozměry musí být násobek 16) 
+Rotate current file on disk lossless by 270 deg (W/H must be multiple of 16)	Otočit aktuální obrázek (bezeztrátově) na disku o 270 stupňů (rozměry musí být násobek 16)
+The file is read-only!	Rozměr obrázku je jen k přečtení!
+Can't rename file	Nelze přejmenovat soubor
+New name contains backslash character!	Nové jméno obsazuje znak zpětné lomítko (\) !
+Renaming file failed!	Přejmenování souboru selhalo!
+Reason: 	Důvod: 
+on	zapnuto
+off	vypnuto
+Do you really want to save the following parameters as default to the INI file	Chcete skutečně uložit následující parametry jako výchozí do INI souboru
+Auto contrast and color correction: 	Automatická korekce kontrastu a barev: 
+Local density correction: 	Lokální korekce hustoty: 
+Order files by: 	Řadi soubory podle: 
+Creation date/time	Datum a čas pořízení
+Last modification date/time	Datum a čas poslední změny
+File name	Jméno souboru
+These values will override the values from the INI file located in the program folder of JPEGView!	Tyto hodnoty nahradí hodnoty z INI souboru v adresáři JPEGView!
+Confirm save default parameters	Potvrďte uložení výchozích parametrů
+Images	Obrázky
+All Files	Všechny soubory
+Parameter DB file '%s' could not be opened!	Parametrový DB soubor '%s'nelze otevřít!
+Parameter DB file '%s' is not valid (invalid header)!	Parametrový DB soubor '%s' není platný (neplatná hlavička)!
+Cannot write to parameter DB file '%s'!	Nelze zapsat do parametrového DB souboru '%s'!
+Cannot read from parameter DB file '%s'!	Nelze číst z DB souboru '%s'!
+Cannot read parameter DB file '%s' because it is too large!	Nelze číst z parametrového DB souboru '%s', protože je příliš velký!
+The parameter DB file '%s' has been created by a newer version of JPEGView!	Parametrový DB soubor '%s' byl vytvořen novější verzí JPEGView!
+The old parameter DB file '%s' could not be renamed during conversion to new format!	Starý parametrový DB soubor '%s' nemohl být přejmenován během konverze do novějšího formátu!
+Parameter DB error	Chyba parametr DB
+Error saving file	Chyba ukládání souboru
+Error writing file to disk!	Chyba zápisu souboru na disk!
+Confirm	Potvrďte
+Do you really want to permanently delete the file %filename%?	Přejete si skutečně trvale vymazat soubor %filename%?
+Rotate the following file lossless by 90 deg?\n%filename%	Otočit bezeztrátově o 90 stupňů soubor %filename% ?
+Rotate the following file lossless by 270 deg?\n%filename%	Otočit bezeztrátově o 270 stupňů soubor %filename% ?
+Open image...	Otevřít obrázek...
+Save processed image...	Uložit upravený obrázek...
+Reload image	Znovu načíst obrázek
+Copy to clipboard	Kopírovat do schránky
+Copy original size image	Kopírovat originální rozměr obrázku
+Paste from clipboard	Vložit ze schránky
+Batch rename/copy...	Dávkové přejmenování/kopírování
+Show picture info (EXIF)	Ukázat informace of obrázku (EXIF)
+Show filename	Ukázat název souboru
+Navigation	Procházení
+Loop folder	Zacyklit složku
+Loop recursively	Zacyklit nekonečně
+Loop siblings	Zacyklit vše na úrovni složky
+Display order	Zobraz třídění
+Modification date	Datum změny
+Creation date	Datum pořízení
+Play folder as slideshow/movie	Přehrát složku jako prezentaci/film
+Slideshow	Prezentace s přestávkou n sekunt (ESC ukončení)
+Movie	Film
+Waiting time	Čekací čas
+Stop slide show/movie	Zastavit prezentaci/flim
+Rotate +90	Otočit +90
+Rotate -90	Otočit -90
+Auto correction	Auto korekce
+Local density correction	Lokální korekce hustoty: 
+Keep parameters	Uchovat parametry
+Save parameters to INI...	Uložit parametry do INI...
+Save parameters to DB	Uložit parametry to DB
+Clear parameters from DB	Smazat parametry z DB
+Zoom	Měřítko
+Fit to screen	Přizpůsobit obrazovce
+Fill with crop	Vyplnit se zastřihnutím
+Span all screens	Užít všechny obrazovky
+Auto zoom mode	Automatické přizpůsobení rozlišení
+Fit to screen (no zoom)	Přizpůsobit obrazovce (bez změny rozlišení)
+Fill with crop (no zoom)	Vyplnit s ostřižením (bez změny rozlišení)
+Exit	Ukončit
+Cyan-Red	Azurová(C)-Červená(R)
+Magenta-Green	Purpurová(M)-Zelená(G)
+Yellow-Blue	Žlutá(Y)-Modrá(B)
+C - R	C - R
+M - G	M - G
+Y - B	Y - B
+Batch rename/copy of files	Dávkové přejmenování/kopírování souborů
+Image files in folder	Soubory obrázků ve složce
+Placeholders:	Zástupné znaky:
+Number (consecutively numbered)	Čísla (postupně očíslované)
+Number with N digits	Číslo s N číslicemi
+Extracted number from original file name	Číslo vytažené z původního názvu souboru
+Original file name (with extension)	Původní název souboru (s příponou)
+Original file name (without extension)	Původní název souboru (bez přípony)
+Original file extension	Původní přípona souboru
+My Pictures' folder	Složka mé obrázky
+Day / Month / Year (as numbers)	Den / Měsíc / Rok (jako čísla)
+Year short form (2 digits)	Rok kráká forma (2 číslice)
+Month / Short form (text)	Měsíc / Krátká forma (text)
+Target folders that are not yet existing are created as needed.	Cílové složky, neexestující budou vytvořeny dle potřeby.
+Date placeholders use the modification date of the image.	Zástupný znak datumu se užívá k změně data obrázku.
+Rename/copy images to:	Přejmenovat/kopírovat obrázky do:
+Rename	Přejmenovat
+Preview	Náhled
+Save as template	Uložit jako vzor (template)
+Close	Zavřít
+Old name	Staré jméno
+Date	Datum a čas poslední změny
+New name (>> : file gets copied)	Nové jméno (>> : file se zkoupíruje)
+Select all	Vybrat vše
+Select none	Zrušit výběr
+The file '%s' could not be %s.	Soubor '%s' nemohl být %s.
+copied	zkopírován
+renamed	přejmenován
+Continue rename/copy?	Pokračovat přejmenování/kopírování?
+Error during rename/copy	Chyba během přejmenování/kopírování
+%d file(s) renamed, %d file(s) copied, %d folder(s) created	%d soubor(y) přejmenován, %d soubor(y) zkopírován, %d složka(y) vytvořena
+Crop Selection	Ostřihnout výběr
+Copy Selection to Clipboard	Zkopírovat výběr do schránky
+Zoom to Selection	Zobrazit výběr
+Pasting image from clipboard failed!	Vložení obrázku ze schránky selhalo
+Image width:	Šířka obrázku:
+Image height:	Výška obrázku:
+Acquisition date:	Datum pořízení:
+Camera model:	Typ fotoaparátu:
+Exposure time (s):	Čas expozice:
+Exposure bias (EV):	Kompenzace expozice:
+Flash fired:	Užit blesk:
+Focal length (mm):	Ohnisková vzdálenost (mm):
+F-Number:	Clona-číslo:
+ISO Speed:	ISO rychlost:
+Modification date:	Čas modifikace:
+yes	ano
+no	ne
+Show navigation panel	Zobrazit ovládací panel
+Show/hide navigation panel	Zobrazit/skrýt ovládací panel
+About JPEGView...	O JPEGView...
+SIMD mode used:	SIMD mód:
+Number of CPU cores used:	Počet užitých jader CPU:
+Licensed under the GNU general public license (GPL), see readme file for details:	Licencováno dle „GNU general public license (GPL)“,  podrobnosti obsahuje soubor readme:
+Project home page:	Domácí stránka projektu:
+Show first image in folder	Zobrazit první obrázek ve složce
+Show previous image	Zobrazit předchozí obrázek
+Show next image	Zobrazit následující obrázek
+Show last image in folder	Zobrazit poslední obrázek ve složce
+Rotate image 90 deg clockwise	Otočit obrázek o 90 stupňů doprava (CW)
+Rotate image 90 deg counter-clockwise	Otočit obrázek o 90 stupňů doleva (CCW)
+Landscape picture enhancement mode	Vodorovný obrázek (krajina) rošířený mód
+Display image (EXIF) information	Zobrazit informace o obrázku (EXIF)
+Actual size of image	Aktuální rozměr obrázku
+Toggle between screens (only for multi-monitor systems)	Přepnutí mezi obrazovkami (jen pro více monitorové systémy)
+Enable/disable full screen mode	Povolit/zakázat celoobrazovkový mód
+Full screen mode	Celoobrazovkový mód
+Window mode	Zobrazení v okně
+Save as (in screen size/resolution)	Uložit jako (ve velikosti/rozlišení obrazovky)
+Save processed image to JPEG file (screen size)	Uložit upravený obrázek do JPEG souboru (rozměr obrazovky)
+Settings/Admin	Nastavení/Administrátor
+Edit global settings...	Upravit globální nastavení...
+Edit user settings...	Upravit uživatelská nastavení...
+Backup parameter DB...	Zálohovat DB parametrů...
+Restore parameter DB...	Obnovit DB parametrů
+No user INI file exits yet. Create user INI file from INI file template?	Uživatelský INI soubor zatím neexistuje. Vytvořit uživateský INI soubor z templatu INI souboru?
+Copying parameter DB to file '%s' failed. Reason: %s	Kopírování DB parametrů do soubrou '%s' selhalo. Důvod: %s
+Select parameter DB to restore	Vybrat DB parametrů DB k obnovení
+Conflicting entries in Param DB	Konfilktní položky v DB parametrů
+The imported param DB contains entries already present in active param DB.	Importovaná DB parametrů obsahuje položky již dostupné v aktivní DB.
+Shall existing entries be preserved (Yes) or be overriden by the imported entries (No)?	Mají být existující položky být chráněný (Ano) nebo přepsány importovanými položkami (Ne)?
+Select file to display in 'File Open' dialog	Zvolit soubor k zobrazení file v 'Otevřít sobour' nabídce.
+Crop Mode	Mód zastřihávání
+Free	Volno
+Fixed size...	Pevná velikost...
+Set Fixed Crop Size	Nastavit pevnou velikost zastřižení
+Width	Šířka
+Height	Výška
+Pixels	Bodů
+Screen Pixels	Obrazovkových bodů
+Image Pixels	Obrázkových bodů
+Set modification date	Nastavit datum modifikace
+to current date	na dnešní datum
+to EXIF date	na EXIF datum
+Mark image for toggling. Use Ctrl+Left/Ctrl+Right to toggle between marked and current image	Označit obrázek k úpravám. Ctrl+šipka vlevo/Ctrl+šipka vpravo přepnout mezi označeným a aktuálním obrázkem.
+Saturation	Nasycení
+Unsharp mask...	Rozostřit masku
+Apply Unsharp Mask	Aplikovat rozostřenou masku
+Radius	Poloměr
+Amount	Rozsah
+Threshold	Bod zlomu
+Apply	Použít
+Cancel	Zrušit
+Keep processing parameters between images	Zachovat parametry úprav mezi obrázky
+Show histogram	Zobrazit histogram
+Hide histogram	Skrýt histogram
+Crop Selection Lossless...	Zastřihnou výběr bezeztrátově
+Save cropped image	Uložit zastřižený obrázek
+Rotate image by user-defined angle	Otočit obrázek o uživatelem zadaný úhel
+Rotate Image	Otočit obrázek
+Show grid lines	Ukázat čáry mřížky
+Auto crop rotated image (avoids black border)	Automatické ostřižení otočeného obrázku (vyloučení černého pozadí)
+Align image to horizontal or vertical line	Zarovnat obrázek k vodorovné nebo svislé lince
+Use the mouse to draw a line that shall be horizontal or vertical.	Užít myš ke kreslení linky pro horizontální nebo vertikálnímu zarovnání.
+Rotate the image by dragging with the mouse.	Otočit obrázek pomocí tažení myší.
+The operation failed because not enough memory is available!	Operace selhala pro nedostatek paměti k provedení!
+to EXIF date (all files in folder)	EXIF datum (všechny soubory ve složce)
+Number of JPEG files in folder: %d	Počet JPEG souborů ve složce: %d
+EXIF date successfully set on %d images, failed on %d images	EXIF datum úspěšně nastaven u %d obrázků, selhal u %d obrázků
+Reason: Not enough memory available	Důvod: Není dostupná dostatečná paměť
