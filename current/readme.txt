@@ -22,6 +22,9 @@ to JPEGView\Debug
 Changelog
 *********
 
+[1.0.25]
+New features:
+- Czech translation, thanks to Milos Koutny
 [1.0.24]
 Bugs fixed:
 - Navigation panel not truncated when window is small, instead the buttons are smaller.
