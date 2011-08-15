@@ -57,6 +57,7 @@ public:
 	bool CreateParamDBEntryOnSave() { return m_bCreateParamDBEntryOnSave; }
 	bool SaveWithoutPrompt() { return m_bSaveWithoutPrompt; }
 	bool WrapAroundFolder() { return m_bWrapAroundFolder; }
+	bool ExchangeXButtons() { return m_bExchangeXButtons; }
 	LPCTSTR ACCExclude() { return m_sACCExclude; }
 	LPCTSTR ACCInclude() { return m_sACCInclude; }
 	LPCTSTR LDCExclude() { return m_sLDCExclude; }
@@ -140,6 +141,7 @@ private:
 	bool m_bCreateParamDBEntryOnSave;
 	bool m_bWrapAroundFolder;
 	bool m_bSaveWithoutPrompt;
+	bool m_bExchangeXButtons;
 	CString m_sACCExclude;
 	CString m_sACCInclude;
 	CString m_sLDCExclude;

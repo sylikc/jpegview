@@ -25,6 +25,9 @@ Changelog
 [1.0.25]
 New features:
 - Czech translation, thanks to Milos Koutny
+- New INI file setting: ExchangeXButtons to exchange the forward and backward mouse buttons (default is true, now can be switched to false)
+- Putting file name first in window title (as it is convention in Windows)
+
 [1.0.24]
 Bugs fixed:
 - Navigation panel not truncated when window is small, instead the buttons are smaller.
