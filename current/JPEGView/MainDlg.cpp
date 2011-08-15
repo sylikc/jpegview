@@ -619,10 +619,11 @@ LRESULT CMainDlg::OnMButtonUp(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*
 
 LRESULT CMainDlg::OnXButtonDown(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOOL& /*bHandled*/) {
 	if (!m_pPanelMgr->IsModalPanelShown()) {
+		bool bExchangeXButtons = CSettingsProvider::This().ExchangeXButtons();
 		if (GET_XBUTTON_WPARAM(wParam) == XBUTTON1) {
-			GotoImage(POS_Next);
+			GotoImage(bExchangeXButtons ? POS_Next : POS_Previous);
 		} else {
-			GotoImage(POS_Previous);
+			GotoImage(bExchangeXButtons ? POS_Previous : POS_Next);
 		}
 	}
 	return 0;
@@ -2320,11 +2321,12 @@ void CMainDlg::UpdateWindowTitle() {
 	if (sCurrentFileName == NULL || m_pCurrentImage == NULL) {
 		this->SetWindowText(_T("JPEGView"));
 	} else {
-		CString sWindowText = CString(_T("JPEGView - ")) + sCurrentFileName;
+		CString sWindowText =  sCurrentFileName;
 		CEXIFReader* pEXIF = m_pCurrentImage->GetEXIFReader();
 		if (pEXIF != NULL && pEXIF->GetAcquisitionTime().wYear > 1600) {
 			sWindowText += " - " + Helpers::SystemTimeToString(pEXIF->GetAcquisitionTime());
 		}
+		sWindowText += _T(" - JPEGView");
 		this->SetWindowText(sWindowText);
 	}
 }
