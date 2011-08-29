@@ -183,7 +183,8 @@ CFileList::CFileList(const CString & sInitialFile, Helpers::ESorting eInitialSor
 	if (!m_bIsSlideShowList) {
 		if (bImageFile || bIsDirectory) {
 			FindFiles();
-			m_iter = m_iterStart = FindFile(sInitialFile);
+			m_iter = FindFile(sInitialFile);
+			m_iterStart = bWrapAroundFolder ? m_iter : m_fileList.begin();
 		} else {
 			// neither image file nor directory nor list of file names - try to read anyway but normally will fail
 			CFindFile fileFind;
@@ -235,7 +236,7 @@ void CFileList::Reload(LPCTSTR sFileName) {
 	CString sCurrentFile = sCurrent;
 	if (!m_bIsSlideShowList) {
 		FindFiles();
-		m_iterStart = FindFile(m_sInitialFile);
+		m_iterStart = m_bWrapAroundFolder ? FindFile(m_sInitialFile) : m_fileList.begin();
 	} else {
 		VerifyFiles(); // maybe some of the files got deleted or moved
 		m_iterStart = m_fileList.begin();
@@ -416,6 +417,7 @@ void CFileList::SetSorting(Helpers::ESorting eSorting) {
 		CFileDesc::SetSorting(eSorting);
 		m_fileList.sort();
 		m_iter = FindFile(sThisFile);
+		m_iterStart = m_bWrapAroundFolder ? m_iter : m_fileList.begin();
 	}
 }
 
@@ -431,7 +433,7 @@ void CFileList::SetNavigationMode(Helpers::ENavigationMode eMode) {
 	sm_eMode = eMode;
 	DeleteHistory();
 	m_nLevel = 0;
-	m_iterStart = m_iter;
+	m_iterStart = m_bWrapAroundFolder ? m_iter : m_fileList.begin();
 }
 
 void CFileList::MarkCurrentFile() {
