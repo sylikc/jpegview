@@ -23,6 +23,8 @@ Changelog
 *********
 
 [1.0.25]
+Bugs fixed:
+- Previous image now works correctly when WrapAroundFolder is set to false
 New features:
 - Czech translation, thanks to Milos Koutny
 - New INI file setting: ExchangeXButtons to exchange the forward and backward mouse buttons (default is true, now can be switched to false)
