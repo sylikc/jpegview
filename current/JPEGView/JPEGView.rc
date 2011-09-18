@@ -218,8 +218,15 @@ BEGIN
 		  MENUITEM "100 fps",					IDM_MOVIE_100_FPS
 		END
 	  MENUITEM SEPARATOR
-	  MENUITEM "Rotate +90\tUp",				IDM_ROTATE_90
-      MENUITEM "Rotate -90\tDown",				IDM_ROTATE_270
+	  POPUP "Transform image" 
+        BEGIN 
+          MENUITEM "Rotate +90\tUp",			IDM_ROTATE_90
+		  MENUITEM "Rotate -90\tDown",			IDM_ROTATE_270
+		  MENUITEM "Rotate...",					IDM_ROTATE
+		  MENUITEM SEPARATOR
+		  MENUITEM "Mirror horizontally",		IDM_MIRROR_H
+		  MENUITEM "Mirror vertically",			IDM_MIRROR_V
+        END 
       MENUITEM "Auto correction\tF5",			IDM_AUTO_CORRECTION
 	  MENUITEM "Local density correction\tF6",	IDM_LDC
 	  MENUITEM "Keep parameters\tF4",			IDM_KEEP_PARAMETERS

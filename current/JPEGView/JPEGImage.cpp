@@ -512,6 +512,25 @@ bool CJPEGImage::Rotate(int nRotation) {
 	return true;
 }
 
+bool CJPEGImage::Mirror(bool bHorizontally) {
+	double dStartTickCount = Helpers::GetExactTickCount();
+
+	// Rotation can only be done in 32 bpp
+	if (!ConvertSrcTo4Channels()) {
+		return false;
+	}
+
+	InvalidateAllCachedPixelData();
+	void* pNewIJL = bHorizontally ? CBasicProcessing::MirrorH32bpp(m_nOrigWidth, m_nOrigHeight, m_pIJLPixels) :
+		CBasicProcessing::MirrorV32bpp(m_nOrigWidth, m_nOrigHeight, m_pIJLPixels);
+	if (pNewIJL == NULL) return false;
+	delete[] m_pIJLPixels;
+	m_pIJLPixels = pNewIJL;
+
+	m_dLastOpTickCount = Helpers::GetExactTickCount() - dStartTickCount;
+	return true;
+}
+
 bool CJPEGImage::Crop(CRect cropRect) {
 	// Cropping can only be done in 32 bpp
 	if (!ConvertSrcTo4Channels()) {
