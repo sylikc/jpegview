@@ -269,3 +269,7 @@ to EXIF date (all files in folder)	auf EXIF Datum (alle Dateien im Ordner)
 Number of JPEG files in folder: %d	Anzahl JPEG Bilder im Ordner: %d
 EXIF date successfully set on %d images, failed on %d images	EXIF Datum erfolgreich gesetzt auf %d Bildern, fehlgeschlagen auf %d Bildern
 Reason: Not enough memory available	Ursache: Nicht genug Speicher verfügbar
+Transform image	Bild transformieren
+Rotate...	Rotieren...
+Mirror horizontally	Horizontal spiegeln
+Mirror vertically	Vertikal spiegeln

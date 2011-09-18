@@ -29,6 +29,7 @@ New features:
 - Czech translation, thanks to Milos Koutny
 - New INI file setting: ExchangeXButtons to exchange the forward and backward mouse buttons (default is true, now can be switched to false)
 - Putting file name first in window title (as it is convention in Windows)
+- New transformations: Mirror horizontally and vertically (and put the rotation commands also under the new transformations submenu)
 
 [1.0.24]
 Bugs fixed:

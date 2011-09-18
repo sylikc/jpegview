@@ -51,6 +51,12 @@ public:
 	// cases the return value is NULL
 	static void* Rotate32bpp(int nWidth, int nHeight, const void* pDIBPixels, int nRotationAngleCW);
 
+	// Mirror 32 bit DIB horizontally
+	static void* MirrorH32bpp(int nWidth, int nHeight, const void* pDIBPixels);
+
+	// Mirror 32 bit DIB vertically
+	static void* MirrorV32bpp(int nWidth, int nHeight, const void* pDIBPixels);
+
 	// Crop given image
 	static void* Crop32bpp(int nWidth, int nHeight, const void* pDIBPixels, CRect cropRect);
 

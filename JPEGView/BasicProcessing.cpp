@@ -426,6 +426,34 @@ void* CBasicProcessing::Rotate32bpp(int nWidth, int nHeight, const void* pDIBPix
 	return pTarget;
 }
 
+void* CBasicProcessing::MirrorH32bpp(int nWidth, int nHeight, const void* pDIBPixels) {
+	uint32* pTarget = new(std::nothrow) uint32[nWidth * nHeight];
+	if (pTarget == NULL) return NULL;
+	uint32* pTgt = pTarget;
+	for (int j = 0; j < nHeight; j++) {
+		const uint32* pSource = (uint32*)pDIBPixels + (j + 1) * nWidth - 1;
+		for (int i = 0; i < nWidth; i++) {
+			*pTgt = *pSource;
+			pTgt++; pSource--;
+		}
+	}
+	return pTarget;
+}
+
+void* CBasicProcessing::MirrorV32bpp(int nWidth, int nHeight, const void* pDIBPixels) {
+	uint32* pTarget = new(std::nothrow) uint32[nWidth * nHeight];
+	if (pTarget == NULL) return NULL;
+	uint32* pTgt = pTarget;
+	for (int j = 0; j < nHeight; j++) {
+		const uint32* pSource = (uint32*)pDIBPixels + (nHeight - 1 - j) * nWidth;
+		for (int i = 0; i < nWidth; i++) {
+			*pTgt = *pSource;
+			pTgt++; pSource++;
+		}
+	}
+	return pTarget;
+}
+
 void* CBasicProcessing::Convert8bppTo32bppDIB(int nWidth, int nHeight, const void* pDIBPixels, const uint8* pPalette) {
 	if (pDIBPixels == NULL || pPalette == NULL) {
 		return NULL;

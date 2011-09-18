@@ -137,6 +137,10 @@ public:
 	// Applies to original image!
 	bool Rotate(int nRotation);
 
+	// Mirrors the image horizontally or vertically.
+	// Applies to original image!
+	bool Mirror(bool bHorizontally);
+
 	// Crops the image. 
 	// Applies to original image!
 	bool Crop(CRect cropRect);

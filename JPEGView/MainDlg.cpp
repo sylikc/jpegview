@@ -1050,12 +1050,11 @@ LRESULT CMainDlg::OnContextMenu(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam,
 		::EnableMenuItem(hMenuTrackPopup, IDM_RELOAD, MF_BYCOMMAND | MF_GRAYED);
 		::EnableMenuItem(hMenuTrackPopup, IDM_COPY, MF_BYCOMMAND | MF_GRAYED);
 		::EnableMenuItem(hMenuTrackPopup, IDM_COPY_FULL, MF_BYCOMMAND | MF_GRAYED);
-		::EnableMenuItem(hMenuTrackPopup, IDM_ROTATE_90, MF_BYCOMMAND | MF_GRAYED);
-		::EnableMenuItem(hMenuTrackPopup, IDM_ROTATE_270, MF_BYCOMMAND | MF_GRAYED);
 		::EnableMenuItem(hMenuTrackPopup, IDM_SAVE_PARAM_DB, MF_BYCOMMAND | MF_GRAYED);
 		::EnableMenuItem(hMenuTrackPopup, IDM_CLEAR_PARAM_DB, MF_BYCOMMAND | MF_GRAYED);
 		::EnableMenuItem(hMenuTrackPopup, SUBMENU_POS_ZOOM, MF_BYPOSITION  | MF_GRAYED);
 		::EnableMenuItem(hMenuTrackPopup, SUBMENU_POS_MODDATE, MF_BYPOSITION  | MF_GRAYED);
+		::EnableMenuItem(hMenuTrackPopup, SUBMENU_POS_TRANSFORM, MF_BYPOSITION  | MF_GRAYED);
 	} else {
 		if (m_bKeepParams || m_pCurrentImage->IsClipboardImage() ||
 			CParameterDB::This().FindEntry(m_pCurrentImage->GetPixelHash()) == NULL)
@@ -1273,6 +1272,16 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 				m_bUserZoom = false;
 				m_bUserPan = false;
 				AdjustWindowToImage(false);
+				this->Invalidate(FALSE);
+			}
+			break;
+		case IDM_ROTATE:
+			GetRotationPanelCtl()->SetVisible(true);
+			break;
+		case IDM_MIRROR_H:
+		case IDM_MIRROR_V:
+			if (m_pCurrentImage != NULL) {
+				m_pCurrentImage->Mirror(nCommand == IDM_MIRROR_H);
 				this->Invalidate(FALSE);
 			}
 			break;
