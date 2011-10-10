@@ -92,7 +92,7 @@ void CProcessingThread::DoProcess(CProcessingRequest* pRequest, int nOffsetY, in
 	uint32 nStripHeight = nSizeY / nStrips;
 	if (nStrips > 1) {
 		nStripHeight = nStripHeight & ~7; // must be dividable by 8, except last strip
-		nStripHeight = max(nStripHeight, 16);
+		nStripHeight = min(nSizeY, max(nStripHeight, 16));
 	}
 	int nSizeProcessed = 0;
 	int nCurrentSizeY = nStripHeight;

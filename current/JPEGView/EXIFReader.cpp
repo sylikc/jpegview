@@ -343,6 +343,10 @@ CEXIFReader::CEXIFReader(void* pApp1Block)
 
 	uint8* pTagUserComment = FindTag(pEXIFIFD, pLastEXIF, 0x9286, bLittleEndian);
 	ReadUserCommentTag(m_sUserComment, pTagUserComment, pTIFFHeader, bLittleEndian);
+	// Samsung Galaxy puts this useless comment into each JPEG, just ignore
+	if (m_sUserComment == "User comments") {	
+		m_sUserComment = "";
+	}
 
 	if (nOffsetIFD1 != 0) {
 		m_pIFD1 = pTIFFHeader + nOffsetIFD1;

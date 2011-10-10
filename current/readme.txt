@@ -25,6 +25,7 @@ Changelog
 [1.0.25]
 Bugs fixed:
 - Previous image now works correctly when WrapAroundFolder is set to false
+- Crash fixed when zooming down images of some sizes to 10 %
 New features:
 - Czech translation, thanks to Milos Koutny
 - Greek translation, thanks to Paris Setos
