@@ -606,7 +606,16 @@ LRESULT CMainDlg::OnLButtonUp(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, B
 
 LRESULT CMainDlg::OnLButtonDblClk(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, BOOL& /*bHandled*/) {
 	if (!m_bDragging && !m_pCropCtl->IsCropping()) {
-		m_pPanelMgr->OnMouseLButton(MouseEvent_BtnDblClk, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+		if (m_pPanelMgr->OnMouseLButton(MouseEvent_BtnDblClk, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam))) {
+			return 0;
+		}
+	}
+	if (!m_pCropCtl->IsCropping()) {
+		if (fabs(m_dZoom - 1) < 0.01) {
+			ResetZoomToFitScreen(false, true);
+		} else {
+			ResetZoomTo100Percents(true);
+		}
 	}
 	return 0;
 }
