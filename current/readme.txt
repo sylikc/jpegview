@@ -31,6 +31,7 @@ New features:
 - Greek translation, thanks to Paris Setos
 - New INI file setting: ExchangeXButtons to exchange the forward and backward mouse buttons (default is true, now can be switched to false)
 - Putting file name first in window title (as it is convention in Windows)
+- Double-click to set zoom to 100 % resp. fit to screen when already 100 %
 - New transformations: Mirror horizontally and vertically (and put the rotation commands also under the new transformations submenu)
 
 [1.0.24]
