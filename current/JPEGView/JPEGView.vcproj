@@ -255,6 +255,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\KeyMap.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\LocalDensityCorr.cpp"
 				>
 			</File>
@@ -501,6 +505,10 @@
 			</File>
 			<File
 				RelativePath=".\JPEGProvider.h"
+				>
+			</File>
+			<File
+				RelativePath=".\KeyMap.h"
 				>
 			</File>
 			<File

@@ -1,0 +1,161 @@
+// This file defines the key mapping for JPEGView
+// Make sure not to corrupt it - else no keys are working anymore!
+// It is possible to map multiple keys to the same command but not multiple commands to the same key
+
+// This section contains the definitions of the available JPEGView commands - do not modify!
+#define IDM_MINIMIZE		1010			// minimize window
+#define IDM_OPEN		1100			// open file
+#define IDM_SAVE		1500			// save to file in original size, don't allow override without prompt
+#define IDM_SAVE_SCREEN		1501			// save to file in screen size
+#define IDM_SAVE_ALLOW_NO_PROMPT 1502			// save to file in original size, allow override without prompt when enabled in INI
+#define IDM_RELOAD		1600			// reload image
+#define IDM_COPY		2000			// copy image to clipboard in screen size
+#define IDM_COPY_FULL		2500			// copy image to clipboard in original size
+#define IDM_PASTE		2550			// paste image from clipboard
+#define IDM_BATCH_COPY		2600			// open batch copy dialog
+#define IDM_TOUCH_IMAGE		2700			// set modification time to current time
+#define IDM_TOUCH_IMAGE_EXIF 	2710			// set modification time to EXIF time
+#define IDM_TOUCH_IMAGE_EXIF_FOLDER 2720		// set modification time to EXIF time for all images in folder
+#define IDM_SHOW_FILEINFO   	2800			// toggle show file and EXIF info box in top, left corner
+#define IDM_SHOW_FILENAME	3000			// toggle show file name on top of screen
+#define IDM_SHOW_NAVPANEL   	3100			// toggle show navigation panel
+#define IDM_NEXT		4000			// go to next image
+#define IDM_PREV		5000			// go to previous image
+#define IDM_FIRST		5100			// go to first image
+#define IDM_LAST		5200			// go to last image
+#define IDM_LOOP_FOLDER		6000			// set navigation mode loop through folder
+#define IDM_LOOP_RECURSIVELY 	6010			// set navigation mode loop through folder and subfolders
+#define IDM_LOOP_SIBLINGS	6020			// set navigation mode loop through folders on same level
+#define IDM_SORT_MOD_DATE	7000			// sorting order by modification date
+#define IDM_SORT_CREATION_DATE 	7010			// sorting order by creation date
+#define IDM_SORT_NAME		7020			// sorting order by name
+#define IDM_ROTATE_90		8000			// rotate image 90 deg
+#define IDM_ROTATE_270		9000			// rotate image 270 deg
+#define IDM_ROTATE          	9100			// show free rotation dialog
+#define IDM_MIRROR_H        	9200			// mirror image horizontally
+#define IDM_MIRROR_V        	9300			// mirror image vertically
+#define IDM_AUTO_CORRECTION	10000			// toggle auto color and contrast correction
+#define IDM_AUTO_CORRECTION_SECTION 10100		// auto contrast correction on visible section only
+#define IDM_LDC			10500			// toggle local density correction (lighten shadows, darken highlights)
+#define IDM_LANDSCAPE_MODE	10700			// toogle landscape picture enhancement mode
+#define IDM_KEEP_PARAMETERS	11000			// toogle keep parameters between images
+#define IDM_SAVE_PARAM_DB   	11500			// save to parameter DB
+#define IDM_CLEAR_PARAM_DB  	11510			// delete from parameter DB
+#define IDM_FIT_TO_SCREEN	12000			// fit image to screen
+#define IDM_FILL_WITH_CROP	12001			// fit image to fill screen with crop
+#define IDM_SPAN_SCREENS	12010			// span over all screens
+#define IDM_FULL_SCREEN_MODE 	12011			// toggle full screen mode
+#define IDM_ZOOM_400        	12020			// zoom to 400 %
+#define IDM_ZOOM_200		12030			// zoom to 200 %
+#define IDM_ZOOM_100		12040			// zoom to 100 %
+#define IDM_ZOOM_50		12050			// zoom to 50 %
+#define IDM_ZOOM_25		12060			// zoom to 25 %
+#define IDM_ZOOM_INC		12100			// zoom in
+#define IDM_ZOOM_DEC		12200			// zoom out
+#define IDM_AUTO_ZOOM_FIT_NO_ZOOM 12500			// set auto zoom mode fit to screen, never zoom
+#define IDM_AUTO_ZOOM_FILL_NO_ZOOM 12510		// set auto zoom mode fill screen, never zoom
+#define IDM_AUTO_ZOOM_FIT	12520			// set auto zoom mode fit to screen
+#define IDM_AUTO_ZOOM_FILL	12530			// set auto zoom mode fill screen
+#define IDM_EDIT_GLOBAL_CONFIG	12600			// edit global configuration
+#define IDM_EDIT_USER_CONFIG	12610			// edit user configuration
+#define IDM_BACKUP_PARAMDB	12620			// backup parameter DB
+#define IDM_RESTORE_PARAMDB	12630			// restore parameter DB
+#define IDM_ABOUT		12900			// show about box
+#define IDM_TOGGLE		14100			// toggle between marked image and current image
+#define IDM_MARK_FOR_TOGGLE	14101			// mark current image for toggling
+#define IDM_COLOR_CORRECTION_INC 14200			// increase color correction amount
+#define IDM_COLOR_CORRECTION_DEC 14201			// decrease color correction amount
+#define IDM_CONTRAST_CORRECTION_INC 14300		// increase contrast correction amount
+#define IDM_CONTRAST_CORRECTION_DEC 14301		// decrease contrast correction amount
+#define IDM_CONTRAST_INC	14400			// increase contrast
+#define IDM_CONTRAST_DEC	14401			// decrease contrast
+#define IDM_GAMMA_INC		14500			// increase gamma (brightness)
+#define IDM_GAMMA_DEC		14501			// decrease gamma (brightness)
+#define IDM_LDC_SHADOWS_INC	14600			// increase lighting shadows
+#define IDM_LDC_SHADOWS_DEC	14601			// decrease lighting shadows
+#define IDM_LDC_HIGHLIGHTS_INC	14700			// increase darken highlights
+#define IDM_LDC_HIGHLIGHTS_DEC	14701			// decrease darken highlights
+#define IDM_TOGGLE_RESAMPLING_QUALITY 14800		// toggle resampling quality (between point sampling and filtering)
+#define IDM_TOGGLE_MONITOR	14900			// move to other monitor
+#define IDM_TOGGLE_FIT_TO_SCREEN_100_PERCENTS 15000	// toggle between fit to screen and 100 % zoom
+#define IDM_EXCHANGE_PROC_PARAMS 15100			// toggle between two sets of image processing parameters
+#define IDM_PAN_UP		15200			// pan up
+#define IDM_PAN_DOWN		15201			// pan down
+#define IDM_PAN_RIGHT		15202			// pan right
+#define IDM_PAN_LEFT		15203			// pan left
+#define IDM_SHARPEN_INC		15300			// increase sharpness
+#define IDM_SHARPEN_DEC		15301			// decrease sharpness
+
+// This section contains the key map. A small number of keys is predefined and cannot be changed:
+// F1 for help, ESC for exit, 0..9 for slide show
+// The following keys are recognized: 
+// Alt, Ctrl, Shift, Return, Space, End, Home, Back, Tab, PgDn, PgUp
+// Left, Right, Up, Down, Insert, Del, Plus, Minus, Mul, Div, Comma, Period
+// A .. Z  F1 .. F12
+
+PgDn                    IDM_NEXT
+Right                   IDM_NEXT
+PgUp                    IDM_PREV
+Left                    IDM_PREV
+Ctrl+Left               IDM_TOGGLE
+Ctrl+Right              IDM_TOGGLE
+Home                    IDM_FIRST
+End                     IDM_LAST
+Plus                    IDM_ZOOM_INC
+Ctrl+Shift+Plus         IDM_CONTRAST_CORRECTION_INC
+Ctrl+Alt+Plus           IDM_COLOR_CORRECTION_INC
+Ctrl+Plus               IDM_CONTRAST_INC
+Shift+Plus              IDM_GAMMA_INC
+Alt+Plus                IDM_SHARPEN_INC
+Minus                   IDM_ZOOM_DEC
+Ctrl+Shift+Minus        IDM_CONTRAST_CORRECTION_DEC
+Ctrl+Alt+Minus          IDM_COLOR_CORRECTION_DEC
+Ctrl+Minus              IDM_CONTRAST_DEC
+Shift+Minus             IDM_GAMMA_DEC
+Alt+Minus               IDM_SHARPEN_DEC
+F2                      IDM_SHOW_FILEINFO
+Ctrl+F2                 IDM_SHOW_FILENAME
+F3                      IDM_TOGGLE_RESAMPLING_QUALITY
+F4                      IDM_KEEP_PARAMETERS
+F5                      IDM_AUTO_CORRECTION
+Shift+F5                IDM_AUTO_CORRECTION_SECTION
+F6                      IDM_LDC
+Shift+Ctrl+F6           IDM_LDC_HIGHLIGHTS_INC
+Ctrl+F6                 IDM_LDC_SHADOWS_INC
+Alt+Shift+F6            IDM_LDC_HIGHLIGHTS_DEC
+Alt+F6                  IDM_LDC_SHADOWS_DEC
+F7                      IDM_LOOP_FOLDER
+F8                      IDM_LOOP_RECURSIVELY
+F9                      IDM_LOOP_SIBLINGS
+F11                     IDM_FULL_SCREEN_MODE
+F12                     IDM_SPAN_SCREENS
+Ctrl+F12                IDM_TOGGLE_MONITOR
+Space                   IDM_TOGGLE_FIT_TO_SCREEN_100_PERCENTS
+Return                  IDM_FIT_TO_SCREEN
+Ctrl+Return             IDM_FILL_WITH_CROP
+Down                    IDM_ROTATE_90
+Up                      IDM_ROTATE_270
+Shift+Up                IDM_PAN_UP
+Shift+Down              IDM_PAN_DOWN
+Shift+Left              IDM_PAN_LEFT
+Shift+Right             IDM_PAN_RIGHT
+Ctrl+Down               IDM_ZOOM_DEC
+Ctrl+Up                 IDM_ZOOM_INC
+Ctrl+A                  IDM_EXCHANGE_PROC_PARAMS
+Ctrl+C                  IDM_COPY
+C                       IDM_SORT_CREATION_DATE
+Ctrl+N                  IDM_SHOW_NAVPANEL
+N                       IDM_SORT_NAME
+Ctrl+M                  IDM_MARK_FOR_TOGGLE
+Ctrl+Shift+M            IDM_TOUCH_IMAGE
+M                       IDM_SORT_MOD_DATE
+Ctrl+S                  IDM_SAVE_ALLOW_NO_PROMPT
+Ctrl+Shift+S            IDM_SAVE_SCREEN
+S                       IDM_SAVE_PARAM_DB
+D                       IDM_CLEAR_PARAM_DB
+Ctrl+Shift+E            IDM_TOUCH_IMAGE_EXIF
+Ctrl+O                  IDM_OPEN
+Ctrl+R                  IDM_RELOAD
+Ctrl+X                  IDM_COPY_FULL
+Ctrl+V                  IDM_PASTE
+Ctrl+L                  IDM_LANDSCAPE_MODE

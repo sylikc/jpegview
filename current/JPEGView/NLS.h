@@ -20,7 +20,7 @@ private:
 	CNLS(void);
 	~CNLS(void);
 
-private:
+public:
 	class CStringHashCompare {
 		public:
 			static const size_t bucket_size = 4;
@@ -29,6 +29,8 @@ private:
 			size_t operator( )( const LPCTSTR& Key ) const;
 			bool operator( )( const LPCTSTR& _Key1, const LPCTSTR& _Key2 ) const;
 	};
+
+private:
 
 	static stdext::hash_map<LPCTSTR, LPCTSTR, CStringHashCompare> sm_texts;
 	static bool sm_bTableRead;

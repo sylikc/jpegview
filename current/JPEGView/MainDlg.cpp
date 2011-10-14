@@ -41,6 +41,7 @@
 #include "NavigationPanelCtl.h"
 #include "HelpDisplayCtl.h"
 #include "NavigationPanel.h"
+#include "KeyMap.h"
 
 //////////////////////////////////////////////////////////////////////////////////////////////
 // Constants
@@ -240,6 +241,7 @@ CMainDlg::CMainDlg() {
 	m_pImageProcPanelCtl = NULL;
 	m_pNavPanelCtl = NULL;
 	m_pCropCtl = new CCropCtl(this);
+	m_pKeyMap = new CKeyMap(CString(CSettingsProvider::This().GetEXEPath()) + _T("KeyMap.txt"));
 }
 
 CMainDlg::~CMainDlg() {
@@ -250,6 +252,7 @@ CMainDlg::~CMainDlg() {
 	delete m_pZoomNavigatorCtl;
 	delete m_pCropCtl;
 	delete m_pPanelMgr; // this will delete all panel controllers and all panels
+	delete m_pKeyMap;
 }
 
 LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/) {	
@@ -699,110 +702,11 @@ LRESULT CMainDlg::OnKeyDown(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOO
 		} else {
 			this->EndDialog(0);
 		}
-	} else if (wParam == VK_F1) {
-		bHandled = true;
-		m_bShowHelp = !m_bShowHelp;
-		if (m_clientRect.Width() < 800) {
-			m_bShowHelp = false;
-		}
-		this->Invalidate(FALSE);
 	} else if (!bCtrl && m_nLastLoadError == HelpersGUI::FileLoad_NoFilesInDirectory) {
 		// search in subfolders if initially provider directory has no images
 		bHandled = true;
 		m_pFileList->SetNavigationMode(Helpers::NM_LoopSubDirectories);
 		GotoImage(POS_Next);
-	} else if (wParam == VK_PAGE_DOWN || (wParam == VK_RIGHT && !bCtrl && !bShift)) {
-		bHandled = true;
-		GotoImage(POS_Next);
-	} else if (wParam == VK_PAGE_UP || (wParam == VK_LEFT && !bCtrl && !bShift)) {
-		bHandled = true;
-		GotoImage(POS_Previous);
-	} else if ((wParam == VK_LEFT || wParam == VK_RIGHT) && bCtrl && m_pFileList->FileMarkedForToggle()) {
-		bHandled = true;
-		GotoImage(POS_Toggle);
-	} else if (wParam == VK_HOME) {
-		bHandled = true;
-		GotoImage(POS_First);
-	} else if (wParam == VK_END) {
-		bHandled = true;
-		GotoImage(POS_Last);
-	} else if (wParam == VK_PLUS) {
-		bHandled = true;
-		if (bCtrl && bShift && m_bAutoContrast) {
-			m_pImageProcParams->ContrastCorrectionFactor = min(1.0, m_pImageProcParams->ContrastCorrectionFactor + 0.05);
-			this->Invalidate(FALSE);
-		} else if (bCtrl && bAlt && m_bAutoContrast) {
-			m_pImageProcParams->ColorCorrectionFactor = min(0.5, m_pImageProcParams->ColorCorrectionFactor + 0.05);
-			this->Invalidate(FALSE);
-		} else if (bCtrl) {
-			AdjustContrast(CONTRAST_INC);
-		} else if (bShift) {
-			AdjustGamma(1.0/GAMMA_FACTOR);
-		} else {
-			PerformZoom(1, true, m_bMouseOn);
-		}
-	} else if (wParam == VK_MINUS) {
-		bHandled = true;
-		if (bCtrl && bShift && m_bAutoContrast) {
-			m_pImageProcParams->ContrastCorrectionFactor = max(0.0, m_pImageProcParams->ContrastCorrectionFactor - 0.05);
-			this->Invalidate(FALSE);
-		} else if (bCtrl && bAlt && m_bAutoContrast) {
-			m_pImageProcParams->ColorCorrectionFactor = max(-0.5, m_pImageProcParams->ColorCorrectionFactor - 0.05);
-			this->Invalidate(FALSE);
-		} else if (bCtrl) {
-			AdjustContrast(-CONTRAST_INC);
-		} else if (bShift) {
-			AdjustGamma(GAMMA_FACTOR);
-		} else {
-			PerformZoom(-1, true, m_bMouseOn);
-		}
-	} else if (wParam == VK_F2) {
-		bHandled = true;
-		ExecuteCommand(bCtrl ? IDM_SHOW_FILENAME : IDM_SHOW_FILEINFO);
-	} else if (wParam == VK_F3) {
-		bHandled = true;
-		m_bHQResampling = !m_bHQResampling;
-		this->Invalidate(FALSE);
-	} else if (wParam == VK_F4) {
-		bHandled = true;
-		ExecuteCommand(IDM_KEEP_PARAMETERS);
-	} else if (wParam == VK_F5) {
-		bHandled = true;
-		if (bShift) {
-			m_bAutoContrastSection = !m_bAutoContrastSection;
-			m_bAutoContrast = true;
-			this->Invalidate(FALSE);
-		} else {
-			ExecuteCommand(IDM_AUTO_CORRECTION);
-		}
-	} else if (wParam == VK_F6) {
-		bHandled = true;
-		if (bShift && bCtrl) {
-			AdjustLDC(DARKEN_HIGHLIGHTS, LDC_INC);
-		} else if (bCtrl) {
-			AdjustLDC(BRIGHTEN_SHADOWS, LDC_INC);
-		} else {
-			ExecuteCommand(IDM_LDC);
-		}
-	} else if (wParam == VK_F7) {
-		bHandled = true;
-		ExecuteCommand(IDM_LOOP_FOLDER);
-	} else if (wParam == VK_F8) {
-		bHandled = true;
-		ExecuteCommand(IDM_LOOP_RECURSIVELY);
-	} else if (wParam == VK_F9) {
-		bHandled = true;
-		ExecuteCommand(IDM_LOOP_SIBLINGS);
-	} else if (wParam == VK_F11) {
-		bHandled = true;
-		ExecuteCommand(IDM_FULL_SCREEN_MODE);
-	} else if (wParam == VK_F12) {
-		bHandled = true;
-		if (bCtrl) {
-			ToggleMonitor();
-		} else {
-			ExecuteCommand(IDM_SPAN_SCREENS);
-		}
 	} else if (wParam >= '1' && wParam <= '9' && (!bShift || bCtrl)) {
 		// Start the slideshow
 		bHandled = true;
@@ -815,103 +719,17 @@ LRESULT CMainDlg::OnKeyDown(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOO
 			nValue *= 1000; // seconds
 		}
 		StartMovieMode(1000.0/nValue);
-	} else if (wParam == VK_SPACE) {
+	} else if (wParam == VK_F1) {
 		bHandled = true;
-		if (fabs(m_dZoom - 1) < 0.01) {
-			ResetZoomToFitScreen(false, true);
-		} else {
-			ResetZoomTo100Percents(m_bMouseOn);
-		}
-	} else if (wParam == VK_RETURN) {
-		bHandled = true;
-		ResetZoomToFitScreen(bCtrl, true);
-	} else if ((wParam == VK_DOWN || wParam == VK_UP) && !bCtrl && !bShift) {
-		bHandled = true;
-		ExecuteCommand((wParam == VK_DOWN) ? IDM_ROTATE_90 : IDM_ROTATE_270);
-	} else if ((wParam == VK_DOWN || wParam == VK_UP) && bCtrl) {
-		bHandled = true;
-		PerformZoom((wParam == VK_DOWN) ? -1 : +1, true, m_bMouseOn);
-	} else if (bCtrl && wParam == 'A') {
-		bHandled = true;
-		ExchangeProcessingParams();
-	} else if (wParam == 'C' || wParam == 'M' || wParam == 'N') {
-		if (bCtrl && wParam == 'N') {
+		ExecuteCommand(IDM_HELP);
+	} else {
+		int nCommand = m_pKeyMap->GetCommandIdForKey(wParam, bAlt, bCtrl, bShift);
+		if (nCommand > 0) {
 			bHandled = true;
-			ExecuteCommand(IDM_SHOW_NAVPANEL);
-		} else if (bCtrl && wParam == 'C') {
-			bHandled = true;
-			ExecuteCommand(IDM_COPY);
-		} else {
-			if (!bCtrl) {
-				bHandled = true;
-				ExecuteCommand((wParam == 'C') ? IDM_SORT_CREATION_DATE : (wParam == 'M') ? IDM_SORT_MOD_DATE : IDM_SORT_NAME);
-			} else if (bCtrl && wParam == 'M') {
-				bHandled = true;
-				if (bShift) {
-					ExecuteCommand(IDM_TOUCH_IMAGE);
-				} else if (m_pFileList->Current() != NULL && m_pCurrentImage != NULL && !m_pCurrentImage->IsClipboardImage()) {
-					m_pFileList->MarkCurrentFile();
-				}
-			}
-		}
-	} else if (wParam == 'S') {
-		bHandled = true;
-		if (!bCtrl) {
-			ExecuteCommand(IDM_SAVE_PARAM_DB);
-		} else {
-			if (!bShift && m_pCurrentImage != NULL && !m_pCurrentImage->IsClipboardImage() && CSettingsProvider::This().SaveWithoutPrompt()) {
-				SaveImageNoPrompt(CurrentFileName(false), true);
-			} else {
-				ExecuteCommand(bShift ? IDM_SAVE_SCREEN : IDM_SAVE);
-			}
-		}
-	} else if (wParam == 'D') {
-		if (!bCtrl) {
-			bHandled = true;
-			ExecuteCommand(IDM_CLEAR_PARAM_DB);
-		}
-	} else if (wParam == 'E') {
-		if (bCtrl && bShift) {
-			bHandled = true;
-			ExecuteCommand(IDM_TOUCH_IMAGE_EXIF);
-		}
-	} else if (wParam == 'O') {
-		if (bCtrl) {
-			bHandled = true;
-			OpenFile(false, false);
-		}
-	}  else if (wParam == 'R') {
-		if (bCtrl) {
-			bHandled = true;
-			ExecuteCommand(IDM_RELOAD);
-		}
-	} else if (wParam == 'X') {
-		if (bCtrl) {
-			bHandled = true;
-			ExecuteCommand(IDM_COPY_FULL);
-		}
-	} else if (wParam == 'V') {
-		if (bCtrl) {
-			bHandled = true;
-			ExecuteCommand(IDM_PASTE);
-		}
-	} else if (wParam == 'L') {
-		if (bCtrl) {
-			bHandled = true;
-			ExecuteCommand(IDM_LANDSCAPE_MODE);
-		}
-	} else if ((wParam == VK_DOWN || wParam == VK_UP || wParam == VK_RIGHT || wParam == VK_LEFT) && bShift) {
-		bHandled = true;
-		if (wParam == VK_DOWN) {
-			PerformPan(0, -PAN_STEP, false);
-		} else if (wParam == VK_UP) {
-			PerformPan(0, PAN_STEP, false);
-		} else if (wParam == VK_RIGHT) {
-			PerformPan(-PAN_STEP, 0, false);
-		} else {
-			PerformPan(PAN_STEP, 0, false);
+			ExecuteCommand(nCommand);
 		}
 	}
+
 	if (!bHandled) {
 		// look if any of the user commands wants to handle this key
 		if (m_pFileList->Current() != NULL) {
@@ -927,17 +745,12 @@ LRESULT CMainDlg::OnSysKeyDown(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, 
 		return 1;
 	}
 	bool bShift = (::GetKeyState(VK_SHIFT) & 0x8000) != 0;
-	if (wParam == VK_PLUS) {
-		AdjustSharpen(SHARPEN_INC);
-	} else if (wParam == VK_MINUS) {
-		AdjustSharpen(-SHARPEN_INC);
-	} else if (wParam == VK_F4) {
+	if (wParam == VK_F4) {
 		this->EndDialog(0);
-	} else if (wParam == VK_F6) {
-		if (bShift) {
-			AdjustLDC(DARKEN_HIGHLIGHTS, -LDC_INC);
-		} else {
-			AdjustLDC(BRIGHTEN_SHADOWS, -LDC_INC);
+	} else {
+		int nCommand = m_pKeyMap->GetCommandIdForKey(wParam, true, false, bShift);
+		if (nCommand > 0) {
+			ExecuteCommand(nCommand);
 		}
 	}
 	return 1;
@@ -1140,6 +953,23 @@ bool CMainDlg::IsCurrentImageFitToScreen(void* pContext) {
 
 void CMainDlg::ExecuteCommand(int nCommand) {
 	switch (nCommand) {
+		case IDM_HELP:
+			m_bShowHelp = !m_bShowHelp;
+			if (m_clientRect.Width() < 800) {
+				m_bShowHelp = false;
+			}
+			this->Invalidate(FALSE);
+			break;
+		case IDM_TOGGLE:
+			if (m_pFileList->FileMarkedForToggle()) {
+				GotoImage(POS_Toggle);
+			}
+			break;
+		case IDM_MARK_FOR_TOGGLE:
+			if (m_pFileList->Current() != NULL && m_pCurrentImage != NULL && !m_pCurrentImage->IsClipboardImage()) {
+				m_pFileList->MarkCurrentFile();
+			}
+			break;
 		case IDM_MINIMIZE:
 			this->ShowWindow(SW_MINIMIZE);
 			break;
@@ -1148,8 +978,13 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 			break;
 		case IDM_SAVE:
 		case IDM_SAVE_SCREEN:
+		case IDM_SAVE_ALLOW_NO_PROMPT:
 			if (m_pCurrentImage != NULL) {
-				SaveImage(nCommand == IDM_SAVE);
+				if (nCommand == IDM_SAVE_ALLOW_NO_PROMPT && CSettingsProvider::This().SaveWithoutPrompt() && !m_pCurrentImage->IsClipboardImage()) {
+					SaveImageNoPrompt(CurrentFileName(false), true);
+				} else {
+					SaveImage(nCommand == IDM_SAVE);
+				}
 			}
 			break;
 		case IDM_RELOAD:
@@ -1193,6 +1028,12 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 			break;
 		case IDM_PREV:
 			GotoImage(POS_Previous);
+			break;
+		case IDM_FIRST:
+			GotoImage(POS_First);
+			break;
+		case IDM_LAST:
+			GotoImage(POS_Last);
 			break;
 		case IDM_LOOP_FOLDER:
 		case IDM_LOOP_RECURSIVELY:
@@ -1299,6 +1140,11 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 			m_bAutoContrast = !m_bAutoContrast;
 			this->Invalidate(FALSE);
 			break;
+		case IDM_AUTO_CORRECTION_SECTION:
+			m_bAutoContrast = true;
+			m_bAutoContrastSection = !m_bAutoContrastSection;
+			this->Invalidate(FALSE);
+			break;
 		case IDM_LDC:
 			m_bLDC = !m_bLDC;
 			this->Invalidate(FALSE);
@@ -1348,6 +1194,13 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 			break;
 		case IDM_FILL_WITH_CROP:
 			ResetZoomToFitScreen(true, true);
+			break;
+		case IDM_TOGGLE_FIT_TO_SCREEN_100_PERCENTS:
+			if (fabs(m_dZoom - 1) < 0.01) {
+				ResetZoomToFitScreen(false, true);
+			} else {
+				ResetZoomTo100Percents(m_bMouseOn);
+			}
 			break;
 		case IDM_SPAN_SCREENS:
 			if (CMultiMonitorSupport::IsMultiMonitorSystem()) {
@@ -1410,6 +1263,10 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 			break;
 		case IDM_ZOOM_25:
 			PerformZoom(0.25, false, m_bMouseOn);
+			break;
+		case IDM_ZOOM_INC:
+		case IDM_ZOOM_DEC:
+			PerformZoom((nCommand == IDM_ZOOM_INC) ? 1 : -1, true, m_bMouseOn);
 			break;
 		case IDM_AUTO_ZOOM_FIT_NO_ZOOM:
 		case IDM_AUTO_ZOOM_FILL_NO_ZOOM:
@@ -1519,6 +1376,58 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 					this->Invalidate(FALSE);
 				}
 			}
+			break;
+		case IDM_CONTRAST_CORRECTION_INC:
+		case IDM_CONTRAST_CORRECTION_DEC:
+			if (m_bAutoContrast) {
+				double dInc = (nCommand == IDM_CONTRAST_CORRECTION_INC) ? 0.05 : -0.05;
+				m_pImageProcParams->ContrastCorrectionFactor = max(0.0, min(1.0, m_pImageProcParams->ContrastCorrectionFactor + dInc));
+				this->Invalidate(FALSE);
+			}
+			break;
+		case IDM_COLOR_CORRECTION_INC:
+		case IDM_COLOR_CORRECTION_DEC:
+			if (m_bAutoContrast) {
+				double dInc = (nCommand == IDM_COLOR_CORRECTION_INC) ? 0.05 : -0.05;
+				m_pImageProcParams->ColorCorrectionFactor = max(-0.5, min(0.5, m_pImageProcParams->ColorCorrectionFactor + dInc));
+				this->Invalidate(FALSE);
+			}
+			break;
+		case IDM_CONTRAST_INC:
+		case IDM_CONTRAST_DEC:
+			AdjustContrast((nCommand == IDM_CONTRAST_INC)? CONTRAST_INC : -CONTRAST_INC);
+			break;
+		case IDM_GAMMA_INC:
+		case IDM_GAMMA_DEC:
+			AdjustGamma((nCommand == IDM_GAMMA_INC)? 1.0/GAMMA_FACTOR : GAMMA_FACTOR);
+			break;
+		case IDM_LDC_SHADOWS_INC:	
+		case IDM_LDC_SHADOWS_DEC:
+		case IDM_LDC_HIGHLIGHTS_INC:
+		case IDM_LDC_HIGHLIGHTS_DEC:
+			AdjustLDC((nCommand == IDM_LDC_HIGHLIGHTS_INC || nCommand == IDM_LDC_HIGHLIGHTS_DEC) ? DARKEN_HIGHLIGHTS : BRIGHTEN_SHADOWS,
+				(nCommand == IDM_LDC_SHADOWS_INC || nCommand == IDM_LDC_HIGHLIGHTS_INC) ? LDC_INC : -LDC_INC);
+			break;
+		case IDM_TOGGLE_RESAMPLING_QUALITY:
+			m_bHQResampling = !m_bHQResampling;
+			this->Invalidate(FALSE);
+			break;
+		case IDM_TOGGLE_MONITOR:
+			ToggleMonitor();
+			break;
+		case IDM_EXCHANGE_PROC_PARAMS:
+			ExchangeProcessingParams();
+			break;
+		case IDM_PAN_UP:
+		case IDM_PAN_DOWN:
+		case IDM_PAN_RIGHT:
+		case IDM_PAN_LEFT:
+			PerformPan((nCommand == IDM_PAN_LEFT) ? PAN_STEP : (nCommand == IDM_PAN_RIGHT) ? -PAN_STEP : 0,
+				(nCommand == IDM_PAN_UP) ? PAN_STEP : (nCommand == IDM_PAN_DOWN) ? -PAN_STEP : 0, false);
+			break;
+		case IDM_SHARPEN_INC:
+		case IDM_SHARPEN_DEC:
+			AdjustSharpen((nCommand == IDM_SHARPEN_INC) ? SHARPEN_INC : -SHARPEN_INC);
 			break;
 	}
 }
