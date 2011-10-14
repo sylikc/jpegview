@@ -25,14 +25,18 @@ Changelog
 [1.0.25]
 Bugs fixed:
 - Previous image now works correctly when WrapAroundFolder is set to false
-- Crash fixed when zooming down images of some sizes to 10 %
 New features:
 - Czech translation, thanks to Milos Koutny
 - Greek translation, thanks to Paris Setos
+- Keyboard shortcuts are now defined in the file KeyMap.txt, located in the EXE folder. Users can edit the key map if desired.
 - New INI file setting: ExchangeXButtons to exchange the forward and backward mouse buttons (default is true, now can be switched to false)
 - Putting file name first in window title (as it is convention in Windows)
 - Double-click to set zoom to 100 % resp. fit to screen when already 100 %
 - New transformations: Mirror horizontally and vertically (and put the rotation commands also under the new transformations submenu)
+
+[1.0.24.1]
+Bugs fixed:
+- Crash fixed when zooming down images of some sizes to 10 %
 
 [1.0.24]
 Bugs fixed:
