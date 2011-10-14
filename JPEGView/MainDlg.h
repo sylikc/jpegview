@@ -23,6 +23,7 @@ class CUnsharpMaskPanelCtl;
 class CWndButtonPanelCtl;
 class CZoomNavigatorCtl;
 class CCropCtl;
+class CKeyMap;
 
 enum EMouseEvent;
 
@@ -255,6 +256,7 @@ private:
 	CUnsharpMaskPanelCtl* m_pUnsharpMaskPanelCtl;
 	CRotationPanelCtl* m_pRotationPanelCtl;
 	CPanelMgr* m_pPanelMgr;
+	CKeyMap* m_pKeyMap;
 
 	bool OpenFile(bool bFullScreen, bool bAfterStartup);
 	void OpenFile(LPCTSTR sFileName, bool bAfterStartup);

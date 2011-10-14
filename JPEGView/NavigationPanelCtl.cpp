@@ -312,5 +312,5 @@ void CNavigationPanelCtl::OnToggleWindowMode(void* pContext, int nParameter, CBu
 }
 
 void CNavigationPanelCtl::OnRotateFree(void* pContext, int nParameter, CButtonCtrl & sender) {
-	((CNavigationPanelCtl*)pContext)->m_pMainDlg->GetRotationPanelCtl()->SetVisible(true);
+	((CNavigationPanelCtl*)pContext)->m_pMainDlg->ExecuteCommand(IDM_ROTATE);
 }
