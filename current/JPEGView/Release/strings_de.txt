@@ -41,8 +41,8 @@ Maximize/restore to/from virtual desktop (only for multi-monitor systems)	Anzeig
 Copy screen to clipboard/ Copy processed full size image to clipboard	Bildschirmbild in Zwischenablage kopieren/ Bearbeitetes Bild in Originalgrösse kopieren
 Open new image or slideshow file	Neues Bild, Ordner oder Bildliste für Diaschau öffnen
 Save processed image to JPEG file (original size)	Bearbeitetes Bild als JPEG Datei speichern (Originalgrösse)
-Save (s)/ delete (d) image processing parameters in/from parameter DB	Speichern (s) der Bildparameter in die Parameter DB, bzw. Löschen (d) der Parameter
-Sort images by creation date, resp. modification date, resp. file name	Bilder nach Erstellungsdatum (c), Änderungsdatum (m) oder Dateinamen (n) sortieren
+Save (%s)/ delete (%s) image processing parameters in/from parameter DB	Speichern (%s) der Bildparameter in die Parameter DB, bzw. Löschen (%s) der Parameter
+Sort images by creation date, resp. modification date, resp. file name	Bilder nach Erstellungsdatum, Änderungsdatum oder Dateinamen sortieren
 Goto previous image	Voriges Bild anzeigen
 Goto next image	Nächstes Bild anzeigen
 PgUp or Left	PgUp oder Pfeil links
@@ -59,7 +59,7 @@ Set timeout to n/10 sec, respectively n/100 sec (Ctrl+Shift)	Intervall auf n/10 
 Rotate image and fit to screen	Bild rotieren und an Bildschirm anpassen
 Fit image to screen	Bildgrösse an Bildschirm anpassen
 Zoom 1:1 (100 %)	Zoom 1:1 (100 %)
-Zoom in/Zoom out (also Ctrl+up/down)	Bild vergössern/verkleinern (auch mit Ctrl+Pfeil nach oben/unten)
+Zoom in (%s)/Zoom out (%s)	Bild vergössern (%s)/verkleinern (%s)
 Zoom in/out image	Bild vergössern/verkleinern (Zoom)
 Pan image	Bildausschnitt verschieben (Pan)
 Crop image	Bildausschnitt freistellen (Crop)
@@ -243,7 +243,7 @@ Image Pixels	Originalbild-Pixel
 Set modification date	Änderungsdatum setzen
 to current date	auf aktuelles Datum
 to EXIF date	auf EXIF Datum
-Mark image for toggling. Use Ctrl+Left/Ctrl+Right to toggle between marked and current image	Bild markieren für Umschalten. Ctrl+Pfeil rechts/links schaltet auf markiertes Bild um
+Mark image for toggling. Use %s to toggle between marked and current image	Bild markieren für Umschalten. %s schaltet auf markiertes Bild um
 Saturation	Sättigung
 Unsharp mask...	Unscharfmaske...
 Apply Unsharp Mask	Unscharfmaske anwenden

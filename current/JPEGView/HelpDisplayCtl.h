@@ -24,4 +24,6 @@ private:
 	CRect m_helpDisplayRect;
 
 	void GenerateHelpDisplay();
+	CString _KeyDesc(int nCommandId);
+	CString _KeyDesc(int nCommandId1, int nCommandId2);
 };

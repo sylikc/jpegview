@@ -41,7 +41,7 @@ Maximize/restore to/from virtual desktop (only for multi-monitor systems)	Agrand
 Copy screen to clipboard/ Copy processed full size image to clipboard	Copie d'écran dans le presse papier / Copier image transformée en taille réelle dans le presse papier
 Open new image or slideshow file	Ouvrir le fichier image ou le diaporama
 Save processed image to JPEG file (original size)	Enregistrer l'image traitée pour fichier JPEG (format original)
-Save (s)/ delete (d) image processing parameters in/from parameter DB	Sauvegarder (s)/supprimer (d) les paramètres de traitement d'image dans paramètre BD
+Save (%s)/ delete (%s) image processing parameters in/from parameter DB	Sauvegarder (%s)/supprimer (%s) les paramètres de traitement d'image dans paramètre BD
 Sort images by creation date, resp. modification date, resp. file name	Trier les images par date de création, resp. date de modification, resp. le nom du fichier
 Goto previous image	Aller à l'image précédente
 Goto next image	Aller à l'image suivante
@@ -59,7 +59,7 @@ Set timeout to n/10 sec, respectively n/100 sec (Ctrl+Shift)	Configurer delai à
 Rotate image and fit to screen	Faire pivoter l'image et ajuster à l'ecran
 Fit image to screen	Adapter l'image à l'ecran
 Zoom 1:1 (100 %)	Zoom 1:1 (100%)
-Zoom in/Zoom out (also Ctrl+up/down)	Zoom avant/Zoom arrière (Ctrl+haut/bas)
+Zoom in (%s)/Zoom out (%s)	Zoom avant (%s)/Zoom arrière (%s)
 Zoom in/out image	Zoom avant/arrière sur l'image
 Pan image	Ajourner l'image
 Crop image	Recadrer
@@ -243,7 +243,7 @@ Set modification date	Définir la date de modification
 to current date	à la date du jour
 to EXIF date	à la date EXIF
 Actual size of image	Taille effective de l'image
-Mark image for toggling. Use Ctrl+Left/Ctrl+Right to toggle between marked and current image	Marquer l'image pour basculer. Utilisez Ctrl+Gauche/Ctrl+Droite pour basculer entre l'image marquée et la courante
+Mark image for toggling. Use %s to toggle between marked and current image	Marquer l'image pour basculer. Utilisez %s pour basculer entre l'image marquée et la courante
 Saturation	Saturation
 Unsharp mask...	Renforcer la netteté...
 Apply Unsharp Mask	Appliquer la netteté

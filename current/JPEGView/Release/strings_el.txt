@@ -41,7 +41,7 @@ Maximize/restore to/from virtual desktop (only for multi-monitor systems)	Μεγ
 Copy screen to clipboard/ Copy processed full size image to clipboard	Αντέγραψε την οθόνη στο Πρόχειρο/ Αντέγραψε την επεξεργασμένη εικόνα ολόκληρη στο Πρόχειρο
 Open new image or slideshow file	Άνοιξε νέα εικόνα ή αρχείο slideshow
 Save processed image to JPEG file (original size)	Αποθήκευσε την επεξεργασμένη εικόνα ως αρχείο JPEG (αρχικό μέγεθος)
-Save (s)/ delete (d) image processing parameters in/from parameter DB	Αποθήκευσε (s) ή σβήσε (d) τις παραμέτρους επεξεργασίας της εικόνας στη parameter DB
+Save (%s)/ delete (%s) image processing parameters in/from parameter DB	Αποθήκευσε (%s) ή σβήσε (%s) τις παραμέτρους επεξεργασίας της εικόνας στη parameter DB
 Sort images by creation date, resp. modification date, resp. file name	Κατάταξη εικόνων κατά ημερομηνία δημιουργίας αρχείου, ημ. τροποποίησης, όνομα αρχείου
 Goto previous image	Πήγαινε στην προηγούμενη εικόνα
 Goto next image	Πήγαινε στην επόμενη εικόνα
@@ -59,7 +59,7 @@ Set timeout to n/10 sec, respectively n/100 sec (Ctrl+Shift)	Διάμεσο time
 Rotate image and fit to screen	Περιστροφή εικόνας και ταίριασμα στην οθόνη
 Fit image to screen	Ταίριασμα μεγέθους στην οθόνη
 Zoom 1:1 (100 %)	Ζουμάρισμα 1:1 (100 %)
-Zoom in/Zoom out (also Ctrl+up/down)	Ζουμάρισμα μέσα/έξω (επίσης Ctrl+up/down)
+Zoom in (%s)/Zoom out (%s)	Ζουμάρισμα μέσα (%s)/έξω (%s)
 Zoom in/out image	Ζουμάρισμα μέσα/έξω
 Pan image	Πανάρισμα (Pan)
 Crop image	Κροπάρισμα (Crop)
@@ -243,7 +243,7 @@ Image Pixels	Εικονοστοιχεία εικόνας
 Set modification date	Ορισμός ημερομηνίας τροποποίησης
 to current date	στην τρέχουσα ημερομηνία
 to EXIF date	στην ημερομηνία από το EXIF
-Mark image for toggling. Use Ctrl+Left/Ctrl+Right to toggle between marked and current image	Μαρκάρισμα εικόνας για εναλλαγή. Με Ctrl+Left/Ctrl+Right για εναλλαγή μεταξύ μαρκαρισμένης και τρέχουσας εικόνας
+Mark image for toggling. Use %s to toggle between marked and current image	Μαρκάρισμα εικόνας για εναλλαγή. Με %s για εναλλαγή μεταξύ μαρκαρισμένης και τρέχουσας εικόνας
 Saturation	Κορεσμός
 Unsharp mask...	Unsharp mask...
 Apply Unsharp Mask	Εφαρμογή του Unsharp mask

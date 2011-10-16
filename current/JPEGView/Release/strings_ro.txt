@@ -41,7 +41,7 @@ Maximize/restore to/from virtual desktop (only for multi-monitor systems)	Maximi
 Copy screen to clipboard/ Copy processed full size image to clipboard	Copiază imaginea de pe ecran în clipboard / Copiază imaginea procesată cu mărime originală în clipboard
 Open new image or slideshow file	Deschide o nouă imagine ori prezentarea de imagini
 Save processed image to JPEG file (original size)	Salvează imaginea procesată ca fişier JPEG (în mărime originală)
-Save (s)/ delete (d) image processing parameters in/from parameter DB	Salvează / Şterge parametrii imaginii procesate în / de la parametrul DB
+Save (%s)/ delete (%s) image processing parameters in/from parameter DB	Salvează / Şterge parametrii imaginii procesate în / de la parametrul DB
 Sort images by creation date, resp. modification date, resp. file name	Sortează imaginile după data de creare, după data modificării, după nume
 Goto previous image	Imaginea anterioară
 Goto next image	Imaginea următoare
@@ -59,7 +59,7 @@ Set timeout to n/10 sec, respectively n/100 sec (Ctrl+Shift)	Setează timpul de 
 Rotate image and fit to screen	Roteşte imaginea şi o încadrează pe ecran
 Fit image to screen	Încadrează imaginea pe ecran
 Zoom 1:1 (100%)	Mărime 1:1 (100%)
-Zoom in/Zoom out (also Ctrl+up/down)	Măreşte / Micşorează imaginea (se mai poate folosi: Ctrl+Săgeată sus/jos)
+Zoom in (%s)/Zoom out (%s)	Măreşte (%s)/ Micşorează (%s) imaginea
 Zoom in/out image	Măreşte / Micşorează imaginea
 Pan image	Mişcarea imaginii
 Crop image	Taie imaginea
@@ -244,7 +244,7 @@ Image Pixels	Pixelii imaginii
 Set modification date	Setează data modificării
 to current date	la data curentă
 to EXIF date	la data din informaţiile EXIF
-Mark image for toggling. Use Ctrl+Left/Ctrl+Right to toggle between marked and current image	Marchează imaginea pentru răsturnare. Folosiţi Ctrl+'Săgeată stânga' / Ctrl+'Săgeată dreapta' pentru a comuta între imagini
+Mark image for toggling. Use %s to toggle between marked and current image	Marchează imaginea pentru răsturnare. Folosiţi %s pentru a comuta între imagini
 Saturation	Saturaţie
 Unsharp mask...	Mască de claritate...
 Apply Unsharp Mask	Aplică masca de claritate

@@ -42,7 +42,7 @@ Maximize/restore to/from virtual desktop (only for multi-monitor systems)	Maxima
 Copy screen to clipboard/ Copy processed full size image to clipboard	Kopírovat obrazovku/obraz v původním rozlišení do schránky
 Open new image or slideshow file	Otevřít nový obrázek nebo prezentaci
 Save processed image to JPEG file (original size)	Uložit upravený soubor do JPEG souboru (originální rozměr)
-Save (s)/ delete (d) image processing parameters in/from parameter DB	Uložit (s)/vymazat (d) parametry úprav obrázku do/z DB parametrů
+Save (%s)/ delete (%s) image processing parameters in/from parameter DB	Uložit (%s)/vymazat (%s) parametry úprav obrázku do/z DB parametrů
 Sort images by creation date, resp. modification date, resp. file name	Řadit obrázky dle data pořízení/data úpravy/jména souboru
 Goto previous image	Přesun na předchozí obrázek
 Goto next image	Přesun na následující obrázek
@@ -60,7 +60,7 @@ Set timeout to n/10 sec, respectively n/100 sec (Ctrl+Shift)	Nastavit přestávk
 Rotate image and fit to screen	Rotovat a přizpůsobit obrázek obrazovce
 Fit image to screen	Přizpůsobit obrázek obrazovce
 Zoom 1:1 (100 %)	Zobrazit 1:1 (100 %)
-Zoom in/Zoom out (also Ctrl+up/down)	Zvětšit/zmenšit (Ctrl+šipka nahoru/dolů)
+Zoom in (%s)/Zoom out (%s)	Zvětšit (%s)/zmenšit (%s)
 Zoom in/out image	Zvětšit/zmenšit obrázek
 Pan image	Posunout obrázek
 Crop image	Zastřihnout obrázek
@@ -244,7 +244,7 @@ Image Pixels	Obrázkových bodů
 Set modification date	Nastavit datum modifikace
 to current date	na dnešní datum
 to EXIF date	na EXIF datum
-Mark image for toggling. Use Ctrl+Left/Ctrl+Right to toggle between marked and current image	Označit obrázek k úpravám. Ctrl+šipka vlevo/Ctrl+šipka vpravo přepnout mezi označeným a aktuálním obrázkem.
+Mark image for toggling. Use %s to toggle between marked and current image	Označit obrázek k úpravám. %s přepnout mezi označeným a aktuálním obrázkem.
 Saturation	Nasycení
 Unsharp mask...	Rozostřit masku
 Apply Unsharp Mask	Aplikovat rozostřenou masku
