@@ -983,7 +983,7 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 				if (nCommand == IDM_SAVE_ALLOW_NO_PROMPT && CSettingsProvider::This().SaveWithoutPrompt() && !m_pCurrentImage->IsClipboardImage()) {
 					SaveImageNoPrompt(CurrentFileName(false), true);
 				} else {
-					SaveImage(nCommand == IDM_SAVE);
+					SaveImage(nCommand != IDM_SAVE_SCREEN);
 				}
 			}
 			break;
