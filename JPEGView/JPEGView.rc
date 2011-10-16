@@ -164,48 +164,48 @@ BEGIN
     BEGIN
 	  MENUITEM "Stop slide show/movie\tEsc",		IDM_STOP_MOVIE
 	  MENUITEM SEPARATOR
-	  MENUITEM "Open image...\tCtrl-O",			IDM_OPEN
-	  MENUITEM "Save processed image...\tCtrl-S",	IDM_SAVE
-	  MENUITEM "Reload image\tCtrl-R",			IDM_RELOAD
+	  MENUITEM "Open image...",					IDM_OPEN
+	  MENUITEM "Save processed image...\t0x5de",		IDM_SAVE
+	  MENUITEM "Reload image",					IDM_RELOAD
 	  MENUITEM "Batch rename/copy...",			IDM_BATCH_COPY
       POPUP "Set modification date" 
         BEGIN
-          MENUITEM "to current date\tCtrl-Shift-M",	IDM_TOUCH_IMAGE
-		  MENUITEM "to EXIF date\tCtrl-Shift-E",	IDM_TOUCH_IMAGE_EXIF
+          MENUITEM "to current date",			IDM_TOUCH_IMAGE
+		  MENUITEM "to EXIF date",				IDM_TOUCH_IMAGE_EXIF
 		  MENUITEM "to EXIF date (all files in folder)",	IDM_TOUCH_IMAGE_EXIF_FOLDER
         END
 	  MENUITEM SEPARATOR
-	  MENUITEM "Copy to clipboard\tCtrl-C",		IDM_COPY
-      MENUITEM "Copy original size image\tCtrl-X",	IDM_COPY_FULL
-	  MENUITEM "Paste from clipboard\tCtrl-V",	IDM_PASTE
+	  MENUITEM "Copy to clipboard",				IDM_COPY
+      MENUITEM "Copy original size image",		IDM_COPY_FULL
+	  MENUITEM "Paste from clipboard",			IDM_PASTE
 	  MENUITEM SEPARATOR
-	  MENUITEM "Show picture info (EXIF)\tF2",	IDM_SHOW_FILEINFO
-      MENUITEM "Show filename\tCtrl-F2",		IDM_SHOW_FILENAME
-	  MENUITEM "Show navigation panel\tCtrl-N",	IDM_SHOW_NAVPANEL
+	  MENUITEM "Show picture info (EXIF)",		IDM_SHOW_FILEINFO
+      MENUITEM "Show filename",					IDM_SHOW_FILENAME
+	  MENUITEM "Show navigation panel",			IDM_SHOW_NAVPANEL
 	  MENUITEM SEPARATOR
-	  MENUITEM "Next image\tPgDn",				IDM_NEXT
-	  MENUITEM "Previous image\tPgUp",			IDM_PREV
+	  MENUITEM "Next image",					IDM_NEXT
+	  MENUITEM "Previous image",				IDM_PREV
       POPUP "Navigation" 
         BEGIN
-          MENUITEM "Loop folder\tF7",			IDM_LOOP_FOLDER
-		  MENUITEM "Loop recursively\tF8",		IDM_LOOP_RECURSIVELY
-		  MENUITEM "Loop siblings\tF9",			IDM_LOOP_SIBLINGS
+          MENUITEM "Loop folder",				IDM_LOOP_FOLDER
+		  MENUITEM "Loop recursively",			IDM_LOOP_RECURSIVELY
+		  MENUITEM "Loop siblings",				IDM_LOOP_SIBLINGS
         END
       POPUP "Display order" 
         BEGIN
-		  MENUITEM "Modification date\tM",		IDM_SORT_MOD_DATE
-		  MENUITEM "Creation date\tC",			IDM_SORT_CREATION_DATE
-		  MENUITEM "File name\tN",				IDM_SORT_NAME
+		  MENUITEM "Modification date",			IDM_SORT_MOD_DATE
+		  MENUITEM "Creation date",				IDM_SORT_CREATION_DATE
+		  MENUITEM "File name",					IDM_SORT_NAME
         END
       POPUP "Play folder as slideshow/movie" 
         BEGIN
 		  MENUITEM "Slideshow",					IDM_SLIDESHOW_START
 		  MENUITEM "Waiting time\t1 sec",		IDM_SLIDESHOW_1
-		  MENUITEM "Waiting time\t2 sec",			IDM_SLIDESHOW_2
-		  MENUITEM "Waiting time\t3 sec",			IDM_SLIDESHOW_3
-		  MENUITEM "Waiting time\t4 sec",			IDM_SLIDESHOW_4
-		  MENUITEM "Waiting time\t5 sec",			IDM_SLIDESHOW_5
-		  MENUITEM "Waiting time\t7 sec",			IDM_SLIDESHOW_7
+		  MENUITEM "Waiting time\t2 sec",		IDM_SLIDESHOW_2
+		  MENUITEM "Waiting time\t3 sec",		IDM_SLIDESHOW_3
+		  MENUITEM "Waiting time\t4 sec",		IDM_SLIDESHOW_4
+		  MENUITEM "Waiting time\t5 sec",		IDM_SLIDESHOW_5
+		  MENUITEM "Waiting time\t7 sec",		IDM_SLIDESHOW_7
 		  MENUITEM "Waiting time\t10 sec",		IDM_SLIDESHOW_10
 		  MENUITEM "Waiting time\t20 sec",		IDM_SLIDESHOW_20
 		  MENUITEM SEPARATOR
@@ -220,53 +220,53 @@ BEGIN
 	  MENUITEM SEPARATOR
 	  POPUP "Transform image" 
         BEGIN 
-          MENUITEM "Rotate +90\tUp",			IDM_ROTATE_90
-		  MENUITEM "Rotate -90\tDown",			IDM_ROTATE_270
+          MENUITEM "Rotate +90",				IDM_ROTATE_90
+		  MENUITEM "Rotate -90",				IDM_ROTATE_270
 		  MENUITEM "Rotate...",					IDM_ROTATE
 		  MENUITEM SEPARATOR
 		  MENUITEM "Mirror horizontally",		IDM_MIRROR_H
 		  MENUITEM "Mirror vertically",			IDM_MIRROR_V
         END 
-      MENUITEM "Auto correction\tF5",			IDM_AUTO_CORRECTION
-	  MENUITEM "Local density correction\tF6",	IDM_LDC
-	  MENUITEM "Keep parameters\tF4",			IDM_KEEP_PARAMETERS
+      MENUITEM "Auto correction",				IDM_AUTO_CORRECTION
+	  MENUITEM "Local density correction",		IDM_LDC
+	  MENUITEM "Keep parameters",				IDM_KEEP_PARAMETERS
       MENUITEM "Save parameters to INI...",		IDM_SAVE_PARAMETERS
 	  MENUITEM SEPARATOR
-	  MENUITEM "Save parameters to DB\tS",		IDM_SAVE_PARAM_DB
-	  MENUITEM "Clear parameters from DB\tD",	IDM_CLEAR_PARAM_DB
+	  MENUITEM "Save parameters to DB",			IDM_SAVE_PARAM_DB
+	  MENUITEM "Clear parameters from DB",		IDM_CLEAR_PARAM_DB
 	  MENUITEM SEPARATOR
       POPUP "Zoom" 
         BEGIN 
-          MENUITEM "Fit to screen\tReturn",		IDM_FIT_TO_SCREEN
-		  MENUITEM "Fill with crop\tCtrl-Return", IDM_FILL_WITH_CROP
-		  MENUITEM "Span all screens\tF12",		IDM_SPAN_SCREENS
-		  MENUITEM "Full screen mode\tF11",	IDM_FULL_SCREEN_MODE
+          MENUITEM "Fit to screen",				IDM_FIT_TO_SCREEN
+		  MENUITEM "Fill with crop",			IDM_FILL_WITH_CROP
+		  MENUITEM "Span all screens",			IDM_SPAN_SCREENS
+		  MENUITEM "Full screen mode",			IDM_FULL_SCREEN_MODE
 		  MENUITEM SEPARATOR
-		  MENUITEM "400 %",				IDM_ZOOM_400
-		  MENUITEM "200 %",				IDM_ZOOM_200
-          MENUITEM "100 %\tSpace",		IDM_ZOOM_100
-          MENUITEM "50 %",				IDM_ZOOM_50
-          MENUITEM "25 %",				IDM_ZOOM_25
+		  MENUITEM "400 %",						IDM_ZOOM_400
+		  MENUITEM "200 %",						IDM_ZOOM_200
+          MENUITEM "100 %\t0x3a98",				IDM_ZOOM_100
+          MENUITEM "50 %",						IDM_ZOOM_50
+          MENUITEM "25 %",						IDM_ZOOM_25
         END 
       POPUP "Auto zoom mode" 
         BEGIN 
           MENUITEM "Fit to screen (no zoom)",	IDM_AUTO_ZOOM_FIT_NO_ZOOM
           MENUITEM "Fill with crop (no zoom)",	IDM_AUTO_ZOOM_FILL_NO_ZOOM
-          MENUITEM "Fit to screen",		IDM_AUTO_ZOOM_FIT
-          MENUITEM "Fill with crop",	IDM_AUTO_ZOOM_FILL
+          MENUITEM "Fit to screen",				IDM_AUTO_ZOOM_FIT
+          MENUITEM "Fill with crop",			IDM_AUTO_ZOOM_FILL
         END 
 	  MENUITEM SEPARATOR
 	  POPUP "Settings/Admin" 
         BEGIN 
           MENUITEM "Edit global settings...",	IDM_EDIT_GLOBAL_CONFIG
-          MENUITEM "Edit user settings...",	IDM_EDIT_USER_CONFIG
+          MENUITEM "Edit user settings...",		IDM_EDIT_USER_CONFIG
 		  MENUITEM SEPARATOR
           MENUITEM "Backup parameter DB...",	IDM_BACKUP_PARAMDB
           MENUITEM "Restore parameter DB...",	IDM_RESTORE_PARAMDB
         END 
-	  MENUITEM "About JPEGView...",		IDM_ABOUT
+	  MENUITEM "About JPEGView...",				IDM_ABOUT
 	  MENUITEM SEPARATOR
-	  MENUITEM "Exit\tEsc",				IDM_EXIT
+	  MENUITEM "Exit\tEsc",						IDM_EXIT
     END 
  
 END 
@@ -299,8 +299,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 1,0,24,0
- PRODUCTVERSION 1,0,24,0
+ FILEVERSION 1,0,25,0
+ PRODUCTVERSION 1,0,25,0
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L

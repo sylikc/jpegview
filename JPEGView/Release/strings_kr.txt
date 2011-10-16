@@ -42,8 +42,8 @@ Maximize/restore to/from virtual desktop (only for multi-monitor systems)	가상
 Copy screen to clipboard/ Copy processed full size image to clipboard	화면을 클립보드로 복사/ 변경된 이미지 전체를 클립보드로 복사
 Open new image or slideshow file	새 이미지 또는 슬라이드 쇼 파일 열기
 Save processed image to JPEG file (original size)	변경된 이미지를 JPEG 파일로 저장 (원본 크기)
-Save (s)/ delete (d) image processing parameters in/from parameter DB	이미지 처리 매개변수 DB를 저장 (s)/ 삭제 (d)
-Sort images by creation date, resp. modification date, resp. file name	만든 날짜 (c), 수정한 날짜 (m), 파일명 (n) 순으로 정렬
+Save (%s)/ delete (%s) image processing parameters in/from parameter DB	이미지 처리 매개변수 DB를 저장 (%s)/ 삭제 (%s)
+Sort images by creation date, resp. modification date, resp. file name	만든 날짜, 수정한 날짜, 파일명 순으로 정렬
 Goto previous image	이전
 Goto next image	다음
 PgUp or Left	PgUp 또는 Left
@@ -60,7 +60,7 @@ Set timeout to n/10 sec, respectively n/100 sec (Ctrl+Shift)	시간 간격을 n/
 Rotate image and fit to screen	회전 및 화면에 맞추기
 Fit image to screen	화면에 맞추기
 Zoom 1:1 (100 %)	1:1 배율 (100 %)
-Zoom in/Zoom out (also Ctrl+up/down)	확대/축소 (Ctrl+up/down)
+Zoom in (%s)/Zoom out (%s)	확대 (%s)/축소 (%s)
 Zoom in/out image	확대/축소
 Pan image	이동
 Crop image	자르기
@@ -244,6 +244,6 @@ Image Pixels	이미지 픽셀
 Set modification date	수정한 날짜 변경
 to current date	현재 날짜로
 to EXIF date	EXIF 날짜로
-Mark image for toggling. Use Ctrl+Left/Ctrl+Right to toggle between marked and current image	바꿀 이미지 선택. 현재 이미지와 선택한 이미지를 바꾸려면 Ctrl+Left/Ctrl+Right 을 사용
+Mark image for toggling. Use %s to toggle between marked and current image	바꿀 이미지 선택. 현재 이미지와 선택한 이미지를 바꾸려면 %s 을 사용
 
- 	  	 
+

@@ -41,8 +41,8 @@ Maximize/restore to/from virtual desktop (only for multi-monitor systems)	Massim
 Copy screen to clipboard/ Copy processed full size image to clipboard	Copia la schermata negli Appunti/ Copia l’immagine elaborata delle dimensioni originali negli Appunti
 Open new image or slideshow file	Apri una nuova immagine o una presentazione
 Save processed image to JPEG file (original size)	Salva l'immagine modificata come JPEG file (dimensioni originali)
-Save (s)/ delete (d) image processing parameters in/from parameter DB	Salva (s)/ cancella (d) i parametri di modifica dell'immagine in/da parametri del DB
-Sort images by creation date, resp. modification date, resp. file name	Elenca le immagini per data di creazione (c), data di modifica (m), nome del file (n)
+Save (%s)/ delete (%s) image processing parameters in/from parameter DB	Salva (%s)/ cancella (%s) i parametri di modifica dell'immagine in/da parametri del DB
+Sort images by creation date, resp. modification date, resp. file name	Elenca le immagini per data di creazione, data di modifica, nome del file
 Goto previous image	Vai all'immagine precedente
 Goto next image	Vai all'immagine successiva
 PgUp or Left	PagSu o Sinistra
@@ -59,7 +59,7 @@ Set timeout to n/10 sec, respectively n/100 sec (Ctrl+Shift)	Imposta l'intervall
 Rotate image and fit to screen	Ruota l'immagine e adatta allo schermo
 Fit image to screen	Adatta allo schermo
 Zoom 1:1 (100 %)	Zoom 1:1 (100 %)
-Zoom in/Zoom out (also Ctrl+up/down)	Ingrandire/ridurre (anche Ctrl+su/giù)
+Zoom in (%s)/Zoom out (%s)	Ingrandire (%s)/ridurre (%s)
 Zoom in/out image	Ingrandire/ridurre l’immagine
 Pan image	Riquadra l’immagine (Pan)
 Crop image	Ritaglia l’immagine
@@ -243,7 +243,7 @@ Image Pixels	Pixels dell'immagine
 Set modification date	Imposta la data di modifica
 to current date	alla data odierna
 to EXIF date	alla data di EXIF
-Mark image for toggling. Use Ctrl+Left/Ctrl+Right to toggle between marked and current image	Marca l'immagine per alternarla. Usa Ctrl+Sinistra/Ctrl+Destra per alternare l'immagine marcata con l'immagine corrente
+Mark image for toggling. Use %s to toggle between marked and current image	Marca l'immagine per alternarla. Usa %s per alternare l'immagine marcata con l'immagine corrente
 Saturation	Saturazione
 Unsharp mask...	Maschera di contrasto
 Apply Unsharp Mask	Applica maschera di contrasto

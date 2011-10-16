@@ -45,7 +45,7 @@ Maximize/restore to/from virtual desktop (only for multi-monitor systems)	Maxime
 Copy screen to clipboard/ Copy processed full size image to clipboard	Kopiera skärmbild till urklipp/Kopiera bearbetad fullstorleksbild till urklipp
 Open new image or slideshow file	Öppna ny bild- eller bildspelsfil
 Save processed image to JPEG file (original size)	Spara bearbetad bild som JPEG-fil (originalstorlek)
-Save (s)/ delete (d) image processing parameters in/from parameter DB	Spara(s)/Ta bort(d) berbetningsparametrar i/från databas (DB)
+Save (%s)/ delete (%s) image processing parameters in/from parameter DB	Spara(%s)/Ta bort(%s) berbetningsparametrar i/från databas (DB)
 Sort images by creation date, resp. modification date, resp. file name	Sortera bilder efter respektive Skapad/Senast ändrad/Filnamn
 Goto previous image	Gå till föregående bild
 Goto next image	Gå till nästa bild
@@ -63,7 +63,7 @@ Set timeout to n/10 sec, respectively n/100 sec (Ctrl+Shift)	Bestäm timeout til
 Rotate image and fit to screen	Rotera bild och anpassa till skärm
 Fit image to screen	Anpassa bild till skärm
 Zoom 1:1 (100 %)	Zoom 1:1 (100 %)
-Zoom in/Zoom out (also Ctrl+up/down)	Zoom in/Zoom ut (även Ctrl+upp/ner)
+Zoom in (%s)/Zoom out (%s)	Zoom in (%s)/Zoom ut (%s)
 Zoom in/out image	Zoom in/ut
 Pan image	Panoramabild
 Crop image	Beskär
@@ -246,7 +246,7 @@ Image Pixels	Bildpunkter
 Set modification date	Bestäm 'Senast ändrad'
 to current date	till aktuellt datum
 to EXIF date	till EXIF-datum
-Mark image for toggling. Use Ctrl+Left/Ctrl+Right to toggle between marked and current image	Markera bild för växling. Använd Ctrl+Vänster/Ctrl+Höger för att växla mellan markerad och aktuell bild
+Mark image for toggling. Use %s to toggle between marked and current image	Markera bild för växling. Använd %s för att växla mellan markerad och aktuell bild
 Saturation	Mättnad
 Unsharp mask...	Oskärpa...
 Apply Unsharp Mask	Justera oskärpa

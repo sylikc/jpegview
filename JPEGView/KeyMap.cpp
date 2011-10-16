@@ -112,13 +112,28 @@ static int _FindCommandId(stdext::hash_map<LPCTSTR, int, CNLS::CStringHashCompar
 
 static CString _GetKeyShortcutName(int nShortcut) {
 	CString sKeyDesc;
-	if ((nShortcut & M_ALT) != 0) sKeyDesc += _T("Alt-");
-	if ((nShortcut & M_CTRL) != 0) sKeyDesc += _T("Ctrl-");
-	if ((nShortcut & M_SHIFT) != 0) sKeyDesc += _T("Shift-");
+	if ((nShortcut & M_ALT) != 0) sKeyDesc += _T("Alt+");
+	if ((nShortcut & M_CTRL) != 0) sKeyDesc += _T("Ctrl+");
+	if ((nShortcut & M_SHIFT) != 0) sKeyDesc += _T("Shift+");
+	int nRealShortcut = nShortcut & 0xFF;
 	for (int i = 0; i < NUM_KEYS; i++) {
-		if (KeyTable[i].KeyCode == (nShortcut & 0xFF)) {
-			sKeyDesc += KeyTable[i].Name;
+		if (KeyTable[i].KeyCode == nRealShortcut) {
+			if (KeyTable[i].Name == _T("Plus")) {
+				sKeyDesc += _T("+");
+			} else if (KeyTable[i].Name == _T("Minus")) {
+				sKeyDesc += _T("-");
+			} else {
+				sKeyDesc += KeyTable[i].Name;
+			}
 		}
+	}
+	if (nRealShortcut >= VK_F1 && nRealShortcut <= VK_F24) {
+		TCHAR buff[8];
+		_sntprintf(buff, 8, _T("F%d"), nRealShortcut - VK_F1 + 1);
+		sKeyDesc += buff;
+	}
+	if ((nRealShortcut >= _T('0') && nRealShortcut <= _T('9')) || (nRealShortcut >= _T('A') && nRealShortcut <= _T('Z'))) {
+		sKeyDesc += CString((TCHAR)nRealShortcut);
 	}
 	return sKeyDesc;
 }
@@ -185,19 +200,29 @@ int CKeyMap::GetCommandIdForKey(int nVirtualKeyCode, bool bAlt, bool bCtrl, bool
 }
 
 CString CKeyMap::GetKeyStringForCommand(int nCommandId) {
-	CString sKeyDesc;
 	stdext::hash_map<int, int>::const_iterator iter = m_keyMap.begin();
+	std::list<CString> keys;
 	while (iter != m_keyMap.end()) {
 		if (nCommandId == iter->second) {
 			CString sShortCutName = _GetKeyShortcutName(iter->first);
 			if (!sShortCutName.IsEmpty()) {
-				if (!sKeyDesc.IsEmpty()) {
-					sKeyDesc += _T(" / ");
+				if (sShortCutName[0] == _T('P')) {
+					keys.push_front(sShortCutName);
+				} else {
+					keys.push_back(sShortCutName);
 				}
-				sKeyDesc += sShortCutName;
 			}
 		}
 		iter++;
 	}
+
+	CString sKeyDesc;
+	for (std::list<CString>::iterator iter = keys.begin(); iter != keys.end(); iter++) {
+		if (!sKeyDesc.IsEmpty()) {
+			sKeyDesc += _T("/");
+		}
+		sKeyDesc += *iter;
+	}
+
 	return sKeyDesc;
 }

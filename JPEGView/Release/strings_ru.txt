@@ -42,8 +42,8 @@ Maximize/restore to/from virtual desktop (only for multi-monitor systems)	Рас
 Copy screen to clipboard/ Copy processed full size image to clipboard	Скопировать в буфер обмена экран/обработанное полноразмерное изображение
 Open new image or slideshow file	Открыть новое изображение или файл со слайдшоу
 Save processed image to JPEG file (original size)	Сохранить обработанное изображение как JPEG (исходного размера)
-Save (s)/ delete (d) image processing parameters in/from parameter DB	Сохранить (s) / удалить (d) параметры обработки изображения в базе данных
-Sort images by creation date, resp. modification date, resp. file name	Сортировать изображения по дате создания (c), изменения (m) или имени файла (n)
+Save (%s)/ delete (%s) image processing parameters in/from parameter DB	Сохранить (%s) / удалить (%s) параметры обработки изображения в базе данных
+Sort images by creation date, resp. modification date, resp. file name	Сортировать изображения по дате создания, изменения или имени файла
 Goto previous image	Перейти к предыдущему изображению
 Goto next image	Перейти к следующему изображению
 PgUp or Left	PgUp или стрелка влево
@@ -60,7 +60,7 @@ Set timeout to n/10 sec, respectively n/100 sec (Ctrl+Shift)	Задать инт
 Rotate image and fit to screen	Повернуть изображение и вписать в экран
 Fit image to screen	Вписать изображение в экран
 Zoom 1:1 (100 %)	Масштаб 1:1 (100%)
-Zoom in/Zoom out (also Ctrl+up/down)	Увеличить/уменьшить (также Ctrl+вверх/вниз)
+Zoom in (%s)/Zoom out (%s)	Увеличить (%s)/уменьшить (%s)
 Zoom in/out image	Увеличить/уменьшить изображение (масштабировать)
 Pan image	Панорамировать изображение
 Crop image	Обрезать изображение
@@ -244,7 +244,7 @@ Image Pixels	Исходные пикселы
 Set modification date	Установить дату изменения
 to current date	по текущей дате
 to EXIF date	по дате из EXIF
-Mark image for toggling. Use Ctrl+Left/Ctrl+Right to toggle between marked and current image	Отметить файл (Ctrl+влево/вправо - переключение между отмеченным и текущим изображениями)
+Mark image for toggling. Use %s to toggle between marked and current image	Отметить файл (%s - переключение между отмеченным и текущим изображениями)
 Saturation	Насыщенность
 Unsharp mask...	Нерезкая маска...
 Apply Unsharp Mask	Применить нерезкую маску

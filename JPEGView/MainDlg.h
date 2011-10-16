@@ -149,6 +149,7 @@ public:
 	const CRect& MonitorRect() { return m_monitorRect; }
 	const CSize& VirtualImageSize() { return m_virtualImageSize; }
 	CJPEGProvider* GetJPEGProvider() { return m_pJPEGProvider; }
+	CKeyMap* GetKeyMap() { return m_pKeyMap; }
 
 	void UpdateWindowTitle();
 	void MouseOff();

@@ -2,7 +2,7 @@
 #include "HelpersGUI.h"
 #include "NLS.h"
 #include "ProcessParams.h"
-
+#include "KeyMap.h"
 
 static void AddFlagText(CString& sText, LPCTSTR sFlagText, bool bFlag) {
 	sText += sFlagText;
@@ -30,7 +30,7 @@ HFONT CreateBoldFontOfSelectedFont(CDC & dc) {
 	return NULL;
 }
 
-void TranslateMenuStrings(HMENU hMenu) {
+void TranslateMenuStrings(HMENU hMenu, CKeyMap* pKeyMap) {
 	int nMenuItemCount = ::GetMenuItemCount(hMenu);
 	for (int i = 0; i < nMenuItemCount; i++) {
 		const int TEXT_BUFF_LEN = 128;
@@ -42,11 +42,27 @@ void TranslateMenuStrings(HMENU hMenu) {
 			*pTab = 0;
 			pTab++;
 		}
+		CString sKeyDesc;
+		if (pKeyMap != NULL) {
+			int nMenuItemId = ::GetMenuItemID(hMenu, i);
+			sKeyDesc = pKeyMap->GetKeyStringForCommand(nMenuItemId);
+		}
 		CString sNewMenuText = CNLS::GetString(menuText);
-		if (sNewMenuText != menuText) {
-			if (pTab != NULL) {
+		if (sNewMenuText != menuText || !sKeyDesc.IsEmpty() || pTab != NULL) {
+			if (pTab != NULL && pTab[0] != 0) {
 				sNewMenuText += _T('\t');
-				sNewMenuText += pTab;
+				if (pTab[0] == _T('0') && pTab[1] == _T('x')) {
+					// These hexadecimal mappings force to use the shortcut for the given command id
+					// instead of the shortcut of the menu item command id.
+					int nCommand;
+					_stscanf(pTab, _T("%x"), &nCommand);
+					sNewMenuText += pKeyMap->GetKeyStringForCommand(nCommand);
+				} else {
+					sNewMenuText += pTab;
+				}
+			} else if (!sKeyDesc.IsEmpty()) {
+				sNewMenuText += _T('\t');
+				sNewMenuText += sKeyDesc;
 			}
 			MENUITEMINFO menuInfo;
 			memset(&menuInfo , 0, sizeof(MENUITEMINFO));
@@ -58,7 +74,7 @@ void TranslateMenuStrings(HMENU hMenu) {
 
 		HMENU hSubMenu = ::GetSubMenu(hMenu, i);
 		if (hSubMenu != NULL) {
-			TranslateMenuStrings(hSubMenu);
+			TranslateMenuStrings(hSubMenu, pKeyMap);
 		}
 	}
 }

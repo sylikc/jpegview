@@ -95,8 +95,8 @@
 
 PgDn                    IDM_NEXT
 Right                   IDM_NEXT
-PgUp                    IDM_PREV
 Left                    IDM_PREV
+PgUp                    IDM_PREV
 Ctrl+Left               IDM_TOGGLE
 Ctrl+Right              IDM_TOGGLE
 Home                    IDM_FIRST

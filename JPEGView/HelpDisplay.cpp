@@ -15,8 +15,8 @@ CHelpDisplay::CHelpDisplay(CPaintDC & dc) : m_dc(dc) {
 	CSize size;
 	dc.SelectStockFont(SYSTEM_FONT);
 	dc.GetTextExtent(_T("teststring"), 10, &size);
-	m_nTab1 =  (int) (size.cx * 1.8f);
-	m_nTab2 = (int) (size.cx * 2.6f);
+	m_nTab1 =  (int) (size.cx * 2.1f);
+	m_nTab2 = (int) (size.cx * 3.1f);
 	m_nSizeX = m_nSizeY = m_nIncY = 0;
 	m_pTextBuffStart = new TCHAR[MAX_BUFF];
 	m_nTextBuffIndex = 0;

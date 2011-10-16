@@ -42,7 +42,7 @@ Maximize/restore to/from virtual desktop (only for multi-monitor systems)	Maximi
 Copy screen to clipboard/ Copy processed full size image to clipboard	Copiar pantalla al portapapeles/ Copiar imagen procesada de tamaño completo al portapapeles
 Open new image or slideshow file	Abrir nueva imagen o archivo de diapositivas
 Save processed image to JPEG file (original size)	Guardar imagen procesada en archivo JPEG (tamaño original)
-Save (s)/ delete (d) image processing parameters in/from parameter DB	Guardar (s)/ borrar (d) parámetros de procesado de imágenes en/desde parámetros de BD
+Save (%s)/ delete (%s) image processing parameters in/from parameter DB	Guardar (%s)/ borrar (%s) parámetros de procesado de imágenes en/desde parámetros de BD
 Sort images by creation date, resp. modification date, resp. file name	Ordenar imágenes por fecha de creación, resp. fecha de modificación, resp. nombre de archivo
 Goto previous image	Ir a la imagen anterior
 Goto next image	Ir a la imagen siguiente
@@ -60,7 +60,7 @@ Set timeout to n/10 sec, respectively n/100 sec (Ctrl+Shift)	Establecer tiempo d
 Rotate image and fit to screen	Rotar imagen y acomodar a la pantalla
 Fit image to screen	Acomodar imagen a la pantalla
 Zoom 1:1 (100 %)	Zoom 1:1 (100 %)
-Zoom in/Zoom out (also Ctrl+up/down)	Acercar/alejar (también Ctrl+arriba/abajo)
+Zoom in (%s)/Zoom out (%s)	Acercar (%s)/alejar (%s)
 Zoom in/out image	Acercar/alejar imagen
 Pan image	Panear imagen
 Crop image	Cortar bordes de imagen
@@ -244,7 +244,7 @@ Image Pixels	Pixeles de la imagen
 Set modification date	Establecer fecha de modificación
 to current date	a la fecha actual
 to EXIF date	a la fecha del EXIF
-Mark image for toggling. Use Ctrl+Left/Ctrl+Right to toggle between marked and current image
+Mark image for toggling. Use %s to toggle between marked and current image
 Saturation	Saturación
 Unsharp mask...	Máscara de desenfoque
 Apply Unsharp Mask	Aplicar máscara de desenfoque

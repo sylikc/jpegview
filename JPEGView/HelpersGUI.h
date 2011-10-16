@@ -4,6 +4,7 @@
 
 enum EProcessingFlags;
 class CImageProcessingParams;
+class CKeyMap;
 
 namespace HelpersGUI {
 
@@ -25,7 +26,7 @@ namespace HelpersGUI {
 	HFONT CreateBoldFontOfSelectedFont(CDC & dc);
 
 	// Translates all menu strings of the given menu, including the sub-menus
-	void TranslateMenuStrings(HMENU hMenu);
+	void TranslateMenuStrings(HMENU hMenu, CKeyMap* pKeyMap = NULL);
 
 	// Draws a text with Arial 10 font with a black outline to improve readability
 	void DrawTextBordered(CPaintDC& dc, LPCTSTR sText, const CRect& rect, UINT nFormat);

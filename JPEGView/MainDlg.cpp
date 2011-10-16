@@ -836,7 +836,7 @@ LRESULT CMainDlg::OnContextMenu(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam,
 	if (hMenu == NULL) return 1;
 
 	HMENU hMenuTrackPopup = ::GetSubMenu(hMenu, 0);
-	HelpersGUI::TranslateMenuStrings(hMenuTrackPopup);
+	HelpersGUI::TranslateMenuStrings(hMenuTrackPopup, m_pKeyMap);
 	
 	if (m_pEXIFDisplayCtl->IsActive()) ::CheckMenuItem(hMenuTrackPopup, IDM_SHOW_FILEINFO, MF_CHECKED);
 	if (m_bShowFileName) ::CheckMenuItem(hMenuTrackPopup, IDM_SHOW_FILENAME, MF_CHECKED);
