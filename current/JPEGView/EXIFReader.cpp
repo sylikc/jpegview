@@ -53,11 +53,8 @@ static void ReadStringTag(CString & strOut, uint8* ptr, uint8* pTIFFHeader, bool
 	try {
 		if (ptr != NULL && ReadUShort(ptr + 2, bLittleEndian) == 2) {
 			int nSize = ReadUInt(ptr + 4, bLittleEndian);
-			if (nSize <= 4) {
-				strOut = CString((LPCSTR)(ptr + 8), nSize);
-			} else {
-				strOut = CString((LPCSTR)(pTIFFHeader + ReadUInt(ptr + 8, bLittleEndian)), nSize);
-			}
+			LPCSTR pString = (nSize <= 4) ? (LPCSTR)(ptr + 8) : (LPCSTR)(pTIFFHeader + ReadUInt(ptr + 8, bLittleEndian));
+			strOut = CString(pString, min(nSize, strlen(pString)));
 		} else {
 			strOut.Empty();
 		}
