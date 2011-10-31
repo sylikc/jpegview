@@ -613,9 +613,12 @@ LRESULT CMainDlg::OnLButtonDblClk(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lPara
 			return 0;
 		}
 	}
-	if (!m_pCropCtl->IsCropping()) {
-		if (fabs(m_dZoom - 1) < 0.01) {
-			ResetZoomToFitScreen(false, true);
+	if (!m_pCropCtl->IsCropping() && m_pCurrentImage != NULL) {
+		double dZoom = -1.0;
+		CSize sizeAutoZoom = Helpers::GetVirtualImageSize(m_pCurrentImage->OrigSize(),
+			m_clientRect.Size(), IsAdjustWindowToImage() ? Helpers::ZM_FitToScreenNoZoom : m_eAutoZoomMode, dZoom);
+		if (sizeAutoZoom != m_virtualImageSize) {
+			ExecuteCommand(m_eAutoZoomMode * 10 + IDM_AUTO_ZOOM_FIT_NO_ZOOM);
 		} else {
 			ResetZoomTo100Percents(true);
 		}
@@ -1274,6 +1277,7 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 		case IDM_AUTO_ZOOM_FILL: 
 			m_eAutoZoomMode = (Helpers::EAutoZoomMode)((nCommand - IDM_AUTO_ZOOM_FIT_NO_ZOOM)/10);
 			m_dZoom = -1.0;
+			m_offsets = CPoint(0, 0);
 			this->Invalidate(FALSE);
 			break;
 		case IDM_EDIT_GLOBAL_CONFIG:
