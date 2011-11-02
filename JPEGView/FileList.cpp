@@ -160,9 +160,9 @@ void CFileDesc::SetModificationDate(const FILETIME& lastModDate) {
 ///////////////////////////////////////////////////////////////////////////////////
 
 // image file types supported
-static const int cnNumEndings = 7;
+static const int cnNumEndings = 8;
 static const TCHAR* csFileEndings[cnNumEndings] = {_T("jpg"), _T("jpeg"), _T("bmp"), _T("png"), 
-	_T("tif"), _T("tiff"), _T("gif")};
+	_T("tif"), _T("tiff"), _T("gif"), _T("webp")};
 
 CFileList::CFileList(const CString & sInitialFile, Helpers::ESorting eInitialSorting, bool bWrapAroundFolder, int nLevel) {
 	CFileDesc::SetSorting(eInitialSorting);

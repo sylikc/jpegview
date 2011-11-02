@@ -25,8 +25,8 @@ static CJPEGImage::EImageFormat GetImageFormat(LPCTSTR sFileName) {
 	if ((fptr = _tfopen(sFileName, _T("rb"))) == NULL) {
 		return CJPEGImage::IF_Unknown;
 	}
-	unsigned char header[8];
-	int nSize = fread((void*)header, 1, 8, fptr);
+	unsigned char header[16];
+	int nSize = fread((void*)header, 1, 16, fptr);
 	fclose(fptr);
 	if (nSize < 2) {
 		return CJPEGImage::IF_Unknown;
@@ -35,6 +35,9 @@ static CJPEGImage::EImageFormat GetImageFormat(LPCTSTR sFileName) {
 		return CJPEGImage::IF_WindowsBMP;
 	} else if (header[0] == 0xff && header[1] == 0xd8) {
 		return CJPEGImage::IF_JPEG;
+	} else if (header[0] == 'R' && header[1] == 'I' && header[2] == 'F' && header[3] == 'F' &&
+		header[8] == 'W' && header[9] == 'E' && header[10] == 'B' && header[11] == 'P') {
+		return CJPEGImage::IF_WEBP;
 	} else {
 		return CJPEGImage::IF_Unknown;
 	}
@@ -104,6 +107,9 @@ void CImageLoadThread::ProcessRequest(CRequestBase& request) {
 			break;
 		case CJPEGImage::IF_WindowsBMP :
 			ProcessReadBMPRequest(&rq);
+			break;
+		case CJPEGImage::IF_WEBP:
+			ProcessReadWEBPRequest(&rq);
 			break;
 		default:
 			// try with GDI+
@@ -207,6 +213,64 @@ void CImageLoadThread::ProcessReadBMPRequest(CRequest * request) {
 		// probabely one of the bitmap formats that can not be read directly, try with GDI+
 		ProcessReadGDIPlusRequest(request);
 	}
+}
+
+extern "C" {
+	__declspec(dllimport) int WebPGetInfo(const uint8* data, uint32 data_size, int* width, int* height);
+	__declspec(dllimport) uint8* WebPDecodeBGRInto(const uint8* data, uint32 data_size, uint8* output_buffer, int output_buffer_size, int output_stride);
+}
+
+void CImageLoadThread::ProcessReadWEBPRequest(CRequest * request) {
+	const unsigned int MAX_WEBP_FILE_SIZE = 1024*1024*50; // 50 MB
+	const unsigned int MAX_IMAGE_PIXELS = 1024*1024*100; // 100 MPixels
+
+	HANDLE hFile = ::CreateFile(request->FileName, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, 0, NULL);
+	if (hFile == INVALID_HANDLE_VALUE) {
+		return;
+	}
+
+	char* pBuffer = NULL;
+	try {
+		// Don't read too huge files...
+		unsigned int nFileSize = ::GetFileSize(hFile, NULL);
+		if (nFileSize > MAX_WEBP_FILE_SIZE) {
+			request->OutOfMemory = true;
+			::CloseHandle(hFile);
+			return;
+		}
+		unsigned int nNumBytesRead;
+		pBuffer = new(std::nothrow) char[nFileSize];
+		if (pBuffer == NULL) {
+			request->OutOfMemory = true;
+			::CloseHandle(hFile);
+			return;
+		}
+		if (::ReadFile(hFile, pBuffer, nFileSize, (LPDWORD) &nNumBytesRead, NULL) && nNumBytesRead == nFileSize) {
+			int nWidth, nHeight;
+			if (WebPGetInfo((uint8*)pBuffer, nFileSize, &nWidth, &nHeight)) {
+				if (nWidth * nHeight <= MAX_IMAGE_PIXELS) {
+					int nStride = Helpers::DoPadding(nWidth*3, 4);
+					uint8* pPixelData = new(std::nothrow) unsigned char[nStride * nHeight];
+					if (pPixelData != NULL) {
+						if (WebPDecodeBGRInto((uint8*)pBuffer, nFileSize, pPixelData, nStride * nHeight, nStride)) {
+							request->Image = new CJPEGImage(nWidth, nHeight, pPixelData, NULL, 3, 0, CJPEGImage::IF_WEBP);
+						} else {
+							delete[] pPixelData;
+						}
+					} else {
+						request->OutOfMemory = true;
+					}
+				} else {
+					request->OutOfMemory = true;
+				}
+			}
+		}
+	} catch (...) {
+		delete request->Image;
+		request->Image = NULL;
+	}
+	::CloseHandle(hFile);
+	delete[] pBuffer;
 }
 
 static CJPEGImage::EImageFormat GetBitmapFormat(Gdiplus::Bitmap * pBitmap) {

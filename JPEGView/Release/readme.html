@@ -36,6 +36,7 @@
 					&nbsp;&nbsp;<a href="#Clipboard">Clipboard</a><br/>
 					<a href="#ParameterDB">Parameter Database</a><br/>
 					<a href="#INIFile">INI file settings</a><br/>
+					<a href="#KeyMap">Changing keyboard shortcuts</a><br/>
 					<a href="#External">Calling external programs or batch files</a><br/>
 					<a href="#Trouble">Troubleshooting</a><br/>
 					<a href="#Copyright">License &amp; Copyright</a><br/>
@@ -44,10 +45,10 @@
 				<td>
 					<a name="Top"></a>
 					<h1>JPEGView Readme</h1>
-					Revision: 28-Feb-2011
+					Revision: 02-Nov-2011
 					<a name="Introduction"></a>
 					<h2>Introduction</h2>
-					JPEGView is a viewer/editor for JPEG, BMP, PNG, GIF and TIFF images. It is designed to view images from digital cameras
+					JPEGView is a viewer/editor for JPEG, BMP, WEBP, PNG, GIF and TIFF images. It is designed to view images from digital cameras
 					full screen and with highest quality possible. Basic image editing functionality is provided - allowing to correct typical
 					problems as color cast, high/low contrast and under- or overexposure very quickly and interactively during review of the
 					images. JPEGView does not replace a full blown image editor - such an editor will just be needed less often.<br/>
@@ -58,6 +59,7 @@
 							<ul style="margin-top:0in;margin-bottom:0in">
 								<li>JPEG (including EXIF)</li>
 								<li>BMP (Windows Bitmap)</li>
+								<li>WEBP</li>
 								<li>PNG</li>
 								<li>GIF</li>
 								<li>TIFF</li>
@@ -242,7 +244,7 @@
 
 					<h4>Full screen mode / Window mode</h4>
 					By default JPEGView starts in full screen mode on the largest monitor attached to the computer.
-					A window mode is also supported. Toggling between full screen and window mode is done with <kbd>Ctrl-W</kbd> or with
+					A window mode is also supported. Toggling between full screen and window mode is done with <kbd>F11</kbd> or with
 					the button on the navigation panel.<br/>
 					By changing the INI file, it is possible to force JPEGView to start in window mode and to use a different monitor
 					respectively window position and size. Note that when changing the window size with the mouse, the image is not
@@ -352,6 +354,7 @@
 						<li>
 							Fit image to screen<br/>
 							Keyboard: <kbd>Enter</kbd>
+						    Mouse: Double click on the image
 						</li>
 						<li>
 							Fill screen with crop (no black borders)<br/>
@@ -846,6 +849,13 @@
 					<br/><br/><b>
 						<a href="#Top">Top of Page</a>
 					</b><br/>
+					
+					<a name="KeyMap"></a>
+					<h2>Keymap - changing keyboard shortcuts</h2>
+					The mapping of keys to commands can be changed by editing the <a href="./KeyMap.txt">keymap file</a>.<br/>
+					Using the keymap file it is also possible to define additional keyboard shortcuts for command that are
+					not mapped by default.<br/>
+					When editing this file, make sure you follow the instructions mentioned in the keymap file itself.
 
 					<a name="External"></a>
 					<h2>Calling external programs or batch files</h2>
@@ -908,6 +918,7 @@
 					JPEGView includes or uses the following source code libraries:<br/>
 					- Windows Template Library 8.0 (build 6137) 5/17/06, Copyright &copy; 2006 Microsoft Corporation<br/>
 					- IJLWrapper, &copy; by John W. Ratcliff 2000<br/>
+					- WebP codec provided by Google <a href="http://www.code.google.com/speed/webp/">http://www.code.google.com/speed/webp/</a>, &copy; Google
 					<br/>
 					Developed with Visual Studio 2005, C++ Express Edition
 					<br/><br/>

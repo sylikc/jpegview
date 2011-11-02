@@ -58,6 +58,7 @@ private:
 
 	static void ProcessReadJPEGRequest(CRequest * request);
 	static void ProcessReadBMPRequest(CRequest * request);
+	static void ProcessReadWEBPRequest(CRequest * request);
 	static void ProcessReadGDIPlusRequest(CRequest * request);
 	static void SetFileDependentProcessParams(CRequest * request);
 	static bool ProcessImageAfterLoad(CRequest * request);

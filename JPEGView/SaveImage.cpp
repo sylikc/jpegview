@@ -26,6 +26,8 @@ static CJPEGImage::EImageFormat GetImageFormat(LPCTSTR sFileName) {
 			return CJPEGImage::IF_PNG;
 		} else if (_tcsicmp(sEnding, _T("TIF")) == 0 || _tcsicmp(sEnding, _T("TIFF")) == 0) {
 			return CJPEGImage::IF_TIFF;
+		} else if (_tcsicmp(sEnding, _T("WEBP")) == 0) {
+			return CJPEGImage::IF_WEBP;
 		}
 	}
 	return CJPEGImage::IF_Unknown;
@@ -133,6 +135,32 @@ static void* CompressAndSave(LPCTSTR sFileName, CJPEGImage * pImage,
 
 	// Success, return compressed JPEG stream
 	return pTargetStream;
+}
+
+extern "C" __declspec(dllimport) size_t WebPEncodeBGR(const uint8* bgr, int width, int height, int stride, float quality_factor, uint8** output);
+extern "C" __declspec(dllimport) void WebPFreeMemory(void* pointer);
+
+// pData must point to 24 bit BGR DIB
+static bool SaveWebP(LPCTSTR sFileName, void* pData, int nWidth, int nHeight) {
+	FILE *fptr = _tfopen(sFileName, _T("wb"));
+	if (fptr == NULL) {
+		return false;
+	}
+
+	uint8* pOutput;
+	size_t nSize = WebPEncodeBGR((uint8*)pData, nWidth, nHeight, Helpers::DoPadding(nWidth*3, 4), 80.0f, &pOutput);
+	
+	bool bSuccess = fwrite(pOutput, 1, nSize, fptr) == nSize;
+	fclose(fptr);
+	WebPFreeMemory(pOutput);
+
+	// delete partial file if no success
+	if (!bSuccess) {
+		_tunlink(sFileName);
+		return false;
+	}
+
+	return true;
 }
 
 // Copied from MS sample
@@ -247,7 +275,11 @@ bool CSaveImage::SaveImage(LPCTSTR sFileName, CJPEGImage * pImage, const CImageP
 			delete[] pCompressedJPEG;
 		}
 	} else {
-		bSuccess = SaveGDIPlus(sFileName, eFileFormat, pDIB24bpp, imageSize.cx, imageSize.cy);
+		if (eFileFormat == CJPEGImage::IF_WEBP) {
+			bSuccess = SaveWebP(sFileName, pDIB24bpp, imageSize.cx, imageSize.cy);
+		} else {
+			bSuccess = SaveGDIPlus(sFileName, eFileFormat, pDIB24bpp, imageSize.cx, imageSize.cy);
+		}
 		if (bSuccess) {
 			CJPEGImage tempImage(imageSize.cx, imageSize.cy, pDIB32bpp, NULL, 4, 0, CJPEGImage::IF_Unknown);
 			nPixelHash = tempImage.GetUncompressedPixelHash();

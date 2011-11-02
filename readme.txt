@@ -28,6 +28,7 @@ Bugs fixed:
 New features:
 - Czech translation, thanks to Milos Koutny
 - Greek translation, thanks to Paris Setos
+- WEBP image format supported (load and save), using the source code provided by Google
 - Keyboard shortcuts are now defined in the file KeyMap.txt, located in the EXE folder. Users can edit the key map if desired.
 - New INI file setting: ExchangeXButtons to exchange the forward and backward mouse buttons (default is true, now can be switched to false)
 - Putting file name first in window title (as it is convention in Windows)
