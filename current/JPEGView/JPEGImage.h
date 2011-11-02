@@ -26,6 +26,7 @@ public:
 		IF_PNG,
 		IF_GIF,
 		IF_TIFF,
+		IF_WEBP,
 		IF_CLIPBOARD,
 		IF_Unknown
 	};
