@@ -270,3 +270,7 @@ to EXIF date (all files in folder)	la datele EXIF (toate fișierele din folder)
 Number of JPEG files in folder: %d	Numărul de fișiere JPEG din folder:
 EXIF date successfully set on %d images, failed on %d images	Datele EXIF setate cu succes la %d imagini, eroare la %d imagini
 Reason: Not enough memory available	Motivul: Nu este suficientă memorie disponibilă
+Transform image	Rotire - oglindire imagine
+Rotate...	Rotire...
+Mirror horizontally	Oglindire pe orizontală
+Mirror vertically	Oglindire pe verticală
