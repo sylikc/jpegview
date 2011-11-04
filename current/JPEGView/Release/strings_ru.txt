@@ -270,3 +270,8 @@ to EXIF date (all files in folder)	по дате в EXIF (все файлы в �
 Number of JPEG files in folder: %d	Файлов JPEG в папке: %d
 EXIF date successfully set on %d images, failed on %d images	EXIF-дата успешно установлена для %d шт. изображений (для %d шт. - не установлена)
 Reason: Not enough memory available	Причина: недостаточно памяти
+Transform image	Трансформация изображения
+Rotate...	Повернуть...
+Mirror horizontally	Зеркально отобразить по горизонтали
+Mirror vertically	Зеркально отобразить по вертикали
+

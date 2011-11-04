@@ -273,3 +273,7 @@ to EXIF date (all files in folder)	till EXIF-data (alla filer i katalogen)
 Number of JPEG files in folder: %d	Antal JPEG-filer i katalogen: %d
 EXIF date successfully set on %d images, failed on %d images	EXIF-data applicerat på %d bilder, misslyckades med %d bilder
 Reason: Not enough memory available	Orsak: För lite tillgängligt minne
+Transform image	Omvandla bild
+Rotate...	Rotera... 
+Mirror horizontally	Spegla horisontellt 
+Mirror vertically	Spegla vertikalt 

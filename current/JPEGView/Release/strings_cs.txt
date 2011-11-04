@@ -270,3 +270,7 @@ to EXIF date (all files in folder)	EXIF datum (všechny soubory ve složce)
 Number of JPEG files in folder: %d	Počet JPEG souborů ve složce: %d
 EXIF date successfully set on %d images, failed on %d images	EXIF datum úspěšně nastaven u %d obrázků, selhal u %d obrázků
 Reason: Not enough memory available	Důvod: Není dostupná dostatečná paměť
+Transform image	Transformovat obraz
+Rotate...	Rotovat...
+Mirror horizontally	Zrcadlit vodorovně
+Mirror vertically	Zrcadlit svisle
