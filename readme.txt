@@ -3,14 +3,14 @@ JPEGView source code readme
 
 To compile JPEGView you need:
 
-- Visual Studio 2005 Express Edition with VC++ package (of course the standard or professional editions also work)
+- Visual Studio 2010 Express Edition with VC++ package (of course the standard or professional editions also work)
 - Windows Platform SDK (platform SDK for Windows Server 2003 or later) - only Core SDK is needed
 - Windows Template Library (WTL), Version 8.0 (http://sourceforge.net/projects/wtl/)
   (read http://www.codeproject.com/KB/wtl/WTLExpress.aspx how to patch the platform SDK headers so that WTL compiles with VC++ Express edition and PSDK)
 - To edit the resource file (rc) a free resource editor as www.radasm.com/resed/ is recommended
 
 The include directories of the platform SDK and WTL must be added to the include directories for VC++:
-Extras > Options > Projects and Solutions > VC++ directories > Include files
+Properties of JPEGView project > VC++-Directories-Include Directories and Library Directories
 
 
 Debug version:
@@ -34,6 +34,9 @@ New features:
 - Putting file name first in window title (as it is convention in Windows)
 - Double-click to fit image to screen (according auto zoom mode currently set), respectively 100 % when already fit
 - New transformations: Mirror horizontally and vertically (and put the rotation commands also under the new transformations submenu)
+Other changes:
+- After having had massive problems with a compiler bug when compiling the WEBP source code, I decided to switch to Visual Studio 2010.
+  Install VS 2010 to compile JPEGView - Express Edition (free) is sufficient.
 
 [1.0.24.1]
 Bugs fixed:

@@ -57,7 +57,7 @@ CJPEGImage* CJPEGProvider::RequestJPEG(CFileList* pFileList, EReadAheadDirection
 
 	// wait for request if not yet ready
 	if (!pRequest->Ready) {
-		::OutputDebugStr(_T("Waiting for request: ")); ::OutputDebugStr(pRequest->FileName); ::OutputDebugStr(_T("\n"));
+		::OutputDebugString(_T("Waiting for request: ")); ::OutputDebugString(pRequest->FileName); ::OutputDebugString(_T("\n"));
 		::WaitForSingleObject(pRequest->EventFinished, INFINITE);
 		GetLoadedImageFromWorkThread(pRequest);
 	} else {
@@ -69,7 +69,7 @@ CJPEGImage* CJPEGProvider::RequestJPEG(CFileList* pFileList, EReadAheadDirection
 				processParams.Rotation, processParams.Zoom, processParams.Offsets, 
 				CSize(processParams.TargetWidth, processParams.TargetHeight));
 		}
-		::OutputDebugStr(_T("Found in cache: ")); ::OutputDebugStr(pRequest->FileName); ::OutputDebugStr(_T("\n"));
+		::OutputDebugString(_T("Found in cache: ")); ::OutputDebugString(pRequest->FileName); ::OutputDebugString(_T("\n"));
 	}
 
 	// set before removing unused images!
@@ -79,7 +79,7 @@ CJPEGImage* CJPEGProvider::RequestJPEG(CFileList* pFileList, EReadAheadDirection
 	if (pRequest->OutOfMemory) {
 		// The request could not be satisfied because the system is out of memory.
 		// Clear all memory and try again - maybe some readahead requests can be deleted
-		::OutputDebugStr(_T("Retrying request because out of memory: ")); ::OutputDebugStr(pRequest->FileName); ::OutputDebugStr(_T("\n"));
+		::OutputDebugString(_T("Retrying request because out of memory: ")); ::OutputDebugString(pRequest->FileName); ::OutputDebugString(_T("\n"));
 		bWasOutOfMemory = true;
 		if (FreeAllPossibleMemory()) {
 			DeleteElement(pRequest);
@@ -225,7 +225,7 @@ void CJPEGProvider::StartNewRequestBundle(CFileList* pFileList, EReadAheadDirect
 }
 
 CJPEGProvider::CImageRequest* CJPEGProvider::StartNewRequest(LPCTSTR sFileName, const CProcessParams & processParams) {
-	::OutputDebugStr(_T("Start new request: ")); ::OutputDebugStr(sFileName); ::OutputDebugStr(_T("\n"));
+	::OutputDebugString(_T("Start new request: ")); ::OutputDebugString(sFileName); ::OutputDebugString(_T("\n"));
 	CImageRequest* pRequest = new CImageRequest(sFileName);
 	m_requestList.push_back(pRequest);
 	pRequest->HandlingThread = SearchThread();
@@ -237,7 +237,7 @@ CJPEGProvider::CImageRequest* CJPEGProvider::StartNewRequest(LPCTSTR sFileName, 
 
 void CJPEGProvider::GetLoadedImageFromWorkThread(CImageRequest* pRequest) {
 	if (pRequest->HandlingThread != NULL) {
-		::OutputDebugStr(_T("Finished request: ")); ::OutputDebugStr(pRequest->FileName); ::OutputDebugStr(_T("\n"));
+		::OutputDebugString(_T("Finished request: ")); ::OutputDebugString(pRequest->FileName); ::OutputDebugString(_T("\n"));
 		pRequest->Image = pRequest->HandlingThread->GetLoadedImage(pRequest->Handle);
 		pRequest->OutOfMemory = pRequest->HandlingThread->IsRequestFailedOutOfMemory(pRequest->Handle);
 		pRequest->Ready = true;
@@ -286,7 +286,7 @@ void CJPEGProvider::RemoveUnusedImages(bool bRemoveAlsoReadAhead) {
 				// remove the readahead images - if we get here with read ahead, the strategy was wrong and
 				// the read ahead image is not used.
 				if ((*iter)->AccessTimeStamp == nTimeStampToRemove) {
-					::OutputDebugStr(_T("Delete request: ")); ::OutputDebugStr((*iter)->FileName); ::OutputDebugStr(_T("\n"));
+					::OutputDebugString(_T("Delete request: ")); ::OutputDebugString((*iter)->FileName); ::OutputDebugString(_T("\n"));
 					DeleteElementAt(iter);
 					bRemoved = true;
 					break;

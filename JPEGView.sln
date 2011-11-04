@@ -1,7 +1,7 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 9.00
-# Visual C++ Express 2005
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "JPEGView", "JPEGView\JPEGView.vcproj", "{F6D355BF-A245-46FA-AE41-DAA541556245}"
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual C++ Express 2010
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "JPEGView", "JPEGView\JPEGView.vcxproj", "{F6D355BF-A245-46FA-AE41-DAA541556245}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
