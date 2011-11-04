@@ -53,6 +53,7 @@ public:
 	double BrightenShadowsSteepness() { return m_dBrightenShadowsSteepness; }
 	CImageProcessingParams LandscapeModeParams(const CImageProcessingParams& templParams);
 	int JPEGSaveQuality() { return m_nJPEGSaveQuality; }
+	int WEBPSaveQuality() { return m_nWEBPSaveQuality; }
 	LPCTSTR DefaultSaveFormat() { return m_sDefaultSaveFormat; }
 	bool CreateParamDBEntryOnSave() { return m_bCreateParamDBEntryOnSave; }
 	bool SaveWithoutPrompt() { return m_bSaveWithoutPrompt; }
@@ -137,6 +138,7 @@ private:
 	double m_dBrightenShadowsSteepness;
 	CString m_sLandscapeModeParams;
 	int m_nJPEGSaveQuality;
+	int m_nWEBPSaveQuality;
 	CString m_sDefaultSaveFormat;
 	bool m_bCreateParamDBEntryOnSave;
 	bool m_bWrapAroundFolder;

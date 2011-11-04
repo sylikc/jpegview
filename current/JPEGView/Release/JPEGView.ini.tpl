@@ -148,7 +148,10 @@ AutoZoomMode=FitNoZoom
 ; Quality when saving JPEG files (in 0..100 where 100 is the highest quality)
 JPEGSaveQuality=85
 
-; Default format for saving files. Supported formats: jpg, bmp, png, tif
+; Quality when saving WEBP files (in 0..100 where 100 is the highest quality)
+WEBPSaveQuality=85
+
+; Default format for saving files. Supported formats: jpg, bmp, png, tif, webp
 DefaultSaveFormat=jpg
 
 ; Set to true to create a parameter DB entry when saving an image with JPEGView to avoid processing it again
