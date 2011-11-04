@@ -148,7 +148,7 @@ static bool SaveWebP(LPCTSTR sFileName, void* pData, int nWidth, int nHeight) {
 	}
 
 	uint8* pOutput;
-	size_t nSize = WebPEncodeBGR((uint8*)pData, nWidth, nHeight, Helpers::DoPadding(nWidth*3, 4), 80.0f, &pOutput);
+	size_t nSize = WebPEncodeBGR((uint8*)pData, nWidth, nHeight, Helpers::DoPadding(nWidth*3, 4), CSettingsProvider::This().WEBPSaveQuality(), &pOutput);
 	
 	bool bSuccess = fwrite(pOutput, 1, nSize, fptr) == nSize;
 	fclose(fptr);

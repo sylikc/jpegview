@@ -202,6 +202,7 @@ void CSettingsProvider::ReadWriteableINISettings() {
 	}
 
 	m_nJPEGSaveQuality = GetInt(_T("JPEGSaveQuality"), 85, 0, 100);
+	m_nWEBPSaveQuality = GetInt(_T("WEBPSaveQuality"), 85, 0, 100);
 	m_sDefaultSaveFormat = GetString(_T("DefaultSaveFormat"), _T("jpg"));
 	m_bCreateParamDBEntryOnSave = GetBool(_T("CreateParamDBEntryOnSave"), true);
 	m_bWrapAroundFolder = GetBool(_T("WrapAroundFolder"), true);
