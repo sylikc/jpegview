@@ -893,7 +893,13 @@
 					</b><br/>
 					Maybe JPEGView was moved to another folder while the file type was already registered to it. In this case Windows
 					loses the connection and this cannot be fixed with the Windows Explorer. Start regedit.exe and check the path in
-					'HKEY_CLASSES_ROOT\Applications\JPEGView.exe\shell\open\command'. Correct the path if it points to an invalid location.
+					'HKEY_CLASSES_ROOT\Applications\JPEGView.exe\shell\open\command'. Correct the path if it points to an invalid location.<br/><br/>
+					
+					<b>The language of the user interface is in English instead of 'Portuguese/French/whatever'</b><br/>
+					Normally JPEGView selects the UI language automatically to match the operating system language.
+					This auto detection may has failed. To force a specific language, set the<br/>
+					Language=language_code<br/>
+					setting in the INI file to the desired language code. The supported codes are listed in the INI file.
 					<br/><br/><b>
 						<a href="#Top">Top of Page</a>
 					</b><br/>
