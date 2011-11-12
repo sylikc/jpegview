@@ -269,3 +269,7 @@ to EXIF date (all files in folder)	à la date EXIF (tous les fichiers dans le do
 Number of JPEG files in folder: %d	Nombre d'images JPEG dans le dossier: %d
 EXIF date successfully set on %d images, failed on %d images	Date EXIF a pu être defini avec succès sur %d images. Pour %d images la date EXIF n'a pas pu être défini.
 Reason: Not enough memory available	Raison: mémoire insuffisante
+Transform image	Transformer
+Rotate...	Tourner...
+Mirror horizontally	Retourner horizontalement
+Mirror vertically	Retourner verticalement
