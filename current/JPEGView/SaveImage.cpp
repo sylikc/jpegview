@@ -147,12 +147,17 @@ static bool SaveWebP(LPCTSTR sFileName, void* pData, int nWidth, int nHeight) {
 		return false;
 	}
 
-	uint8* pOutput;
-	size_t nSize = WebPEncodeBGR((uint8*)pData, nWidth, nHeight, Helpers::DoPadding(nWidth*3, 4), (float)CSettingsProvider::This().WEBPSaveQuality(), &pOutput);
+	bool bSuccess = false;
+	try {
+		uint8* pOutput;
+		size_t nSize = WebPEncodeBGR((uint8*)pData, nWidth, nHeight, Helpers::DoPadding(nWidth*3, 4), (float)CSettingsProvider::This().WEBPSaveQuality(), &pOutput);
 	
-	bool bSuccess = fwrite(pOutput, 1, nSize, fptr) == nSize;
-	fclose(fptr);
-	WebPFreeMemory(pOutput);
+		bSuccess = fwrite(pOutput, 1, nSize, fptr) == nSize;
+		fclose(fptr);
+		WebPFreeMemory(pOutput);
+	} catch(...) {
+		fclose(fptr);
+	}
 
 	// delete partial file if no success
 	if (!bSuccess) {
