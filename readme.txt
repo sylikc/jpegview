@@ -3,14 +3,19 @@ JPEGView source code readme
 
 To compile JPEGView you need:
 
-- Visual Studio 2010 Express Edition with VC++ package (of course the standard or professional editions also work)
-- Windows Platform SDK (platform SDK for Windows Server 2003 or later) - only Core SDK is needed
+- Visual Studio 2005 or 2010 Express Edition with VC++ package (of course the standard or professional editions also work)
+- Windows Platform SDK - only Core SDK is needed. In VS2010 VC++ package the SDK is included.
 - Windows Template Library (WTL), Version 8.0 (http://sourceforge.net/projects/wtl/)
-  (read http://www.codeproject.com/KB/wtl/WTLExpress.aspx how to patch the platform SDK headers so that WTL compiles with VC++ Express edition and PSDK)
+  (for VS2005 read http://www.codeproject.com/KB/wtl/WTLExpress.aspx how to patch the platform SDK headers so that WTL compiles with VC++ Express edition and PSDK)
+- When using the express edition: ATL headers. Get them from a standard or professional edition from the directory $(VCInstallDir)\atlmfc\include
+  or google for it. The ATL header files cannot be included into the JPEGView source code distribution due to copyright issues.
 - To edit the resource file (rc) a free resource editor as www.radasm.com/resed/ is recommended
 
-The include directories of the platform SDK and WTL must be added to the include directories for VC++:
-Properties of JPEGView project > VC++-Directories-Include Directories and Library Directories
+The include directories of WTL (and the platform SDK for VS2005) must be added to the include directories for VC++:
+VS2005: Options - Projects and Solutions - VC++ directories
+VS2010: Properties of JPEGView project > VC++-Directories-Include Directories and Library Directories
+
+Please note: When compiled with VS2010 Windows XP SP2 or later is needed to run the compiled binary.
 
 
 Debug version:
@@ -21,6 +26,15 @@ to JPEGView\Debug
 
 Changelog
 *********
+
+[1.0.25.1]
+- Rollback to VS2005 to compile the project because of problems with Windows 7 and Windows XP before SP2.
+  The Windows 7 issues can be solved by using the latest versions of Windows SDK, WTL and ATL but the XP issue can't.
+  JPEGView will remain on VS2005 at least for some versions.
+  For VS2010 users, a solution and project file for VS2010 is included in the source code distribution.
+  WebP library needs to be compiled with VS2010 as the VS2005 compiler produces crashing code from the Google source -
+  so WebP will not work in XP SP1 or earlier.
+- libwebp_a.dll made delay loaded - therefore JPEGView runs without this DLL when you do not need webp.
 
 [1.0.25]
 Bugs fixed:
