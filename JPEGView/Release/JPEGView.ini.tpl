@@ -138,6 +138,9 @@ ExchangeXButtons=true
 ; If false navigation stops on the last and first image
 WrapAroundFolder=true
 
+; If true, JPEG images are auto rotated according to EXIF image orientation tag if present.
+AutoRotateEXIF=true
+
 ; Auto zoom mode
 ; FitNoZoom : Fit images to screen, never enlarge image
 ; FillNoZoom : Fill screen with no black borders, crop if necessary but not too much, never enlarge image

@@ -27,6 +27,12 @@ to JPEGView\Debug
 Changelog
 *********
 
+[1.0.26]
+New features:
+- New INI file setting: 'AutoRotateEXIF' to disable auto rotation of images based on EXIF image orientation tag.
+  Default is true (the EXIF auto rotation is supported since many versions, this setting is introduced to turn this off).
+
+
 [1.0.25.1]
 - Rollback to VS2005 to compile the project because of problems with Windows 7 and Windows XP before SP2.
   The Windows 7 issues can be solved by using the latest versions of Windows SDK, WTL and ATL but the XP issue can't.

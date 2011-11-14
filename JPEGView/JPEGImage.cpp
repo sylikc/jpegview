@@ -1122,7 +1122,7 @@ CJPEGImage::EResizeType CJPEGImage::GetResizeType(CSize targetSize, CSize source
 }
 
 int CJPEGImage::GetRotationFromEXIF(int nOrigRotation) {
-	if (m_pEXIFReader != NULL && m_pEXIFReader->ImageOrientationPresent()) {
+	if (m_pEXIFReader != NULL && m_pEXIFReader->ImageOrientationPresent() && CSettingsProvider::This().AutoRotateEXIF()) {
 
 		// Some tools rotate the pixel data but do not reset the EXIF orientation flag.
 		// In this case the EXIF thumbnail is normally also not rotated.
