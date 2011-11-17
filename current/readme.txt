@@ -31,6 +31,9 @@ Changelog
 New features:
 - New INI file setting: 'AutoRotateEXIF' to disable auto rotation of images based on EXIF image orientation tag.
   Default is true (the EXIF auto rotation is supported since many versions, this setting is introduced to turn this off).
+Other changes:
+- Russian version of keymap and INI file (KeyMap_ru.txt, JPEGView_ru.ini) containig explanations in Russian. Be aware that
+  these files must be renamed to KeyMap.txt and JPEGView.ini and copied over the original (English) versions when JPEGView shall use them.
 
 
 [1.0.25.1]

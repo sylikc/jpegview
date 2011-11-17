@@ -269,3 +269,7 @@ to EXIF date (all files in folder)	στα δεδομένα EXIF (όλα τα α�
 Number of JPEG files in folder: %d	Αριθμός αρχείων JPEG στο φάκελο: %d
 EXIF date successfully set on %d images, failed on %d images	EXIF δεδομένα μπήκαν σε %d εικόνες, απέτυχαν σε %d εικόνες
 Reason: Not enough memory available	Αιτία: Δεν υπάρχει αρκετή μνήμη διαθέσιμη
+Transform image	Μετασχηματισμός εικόνας
+Rotate...	Περιστροφή...
+Mirror horizontally	Κατοπτρικά οριζοντίως
+Mirror vertically	Κατοπτρικά καθέτως
