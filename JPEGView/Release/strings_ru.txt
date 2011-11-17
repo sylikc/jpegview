@@ -1,7 +1,7 @@
 ﻿// This file must be encoded with UTF-8 (e.g. with Windows Notepad)
 // Filename is 'strings_%languagecode%.txt' where %languagecode% is the ISO 639 language code e.g. 'fr' for French
 // Format is: English string<tab>Translated string<newline>
-// Translated by Dmitry Yerokhin (erodim@mail.ru), March 4, 2011
+// Translated by Dmitry Yerokhin (erodim@mail.ru), November 16, 2011
 Contrast	Контрастность
 Brightness	Яркость
 Sharpen	Резкость
@@ -24,7 +24,7 @@ Press any key to search the subdirectories for image files.	Нажмите лю�
 JPEGView Help	Справка JPEGView
 Current image	Текущее изображение
 Close help text display / Close JPEGView	Закрыть экран справки / Закрыть JPEGView
-Show/hide this help text	Показать/скрыть этот справочный текст
+Show/hide this help text	Показать/скрыть этот текст справки
 Show/hide picture information (EXIF data)	Показать/скрыть данные об изображении (EXIF)
 Show/hide file name	Показать/скрыть имя файла
 Enable/disable high quality resampling	Включить/выключить высококачественное ресэмплирование
@@ -33,8 +33,8 @@ and image processing (brightness/contrast/sharpen) parameters between images	и 
 Enable/disable automatic contrast correction (histogram equalization)	Включить/выключить автокоррекцию контрастности (подстройку гистограммы)
 Apply auto contrast correction using only visible section of image	Применить автокоррекцию контрастности только к видимой области изображения
 Enable/disable automatic density correction (local brightness correction)	Включить/выключить автокоррекцию интенсивности (локальную подстройку яркости - ЛПЯ)
-Increase/decrease lightening of shadows (LDC must be on)	Увеличить/уменьшить высветление теней (нужно включить ЛПЯ)
-Increase/decrease darkening of highlights (LDC must be on)	Увеличить/уменьшить притемнение светов (нужно включить ЛПЯ)
+Increase/decrease lightening of shadows (LDC must be on)	Усилить/ослабить высветление теней (нужно включить ЛПЯ)
+Increase/decrease darkening of highlights (LDC must be on)	Усилить/ослабить притемнение светов (нужно включить ЛПЯ)
 Loop through files in current folder	Циклический просмотр файлов в текущей папке
 Loop through files in current directory and all subfolders	Циклический просмотр файлов в текущей папке и её подпапках
 Loop through files in current directory and all sibling folders (folders on same level)	Циклический просмотр файлов в текущей папке и всех папках того же уровня
@@ -82,9 +82,9 @@ Renaming file failed!	Ошибка при переименовании файл�
 Reason: 	Причина: 
 on	вкл.
 off	выкл.
-Do you really want to save the following parameters as default to the INI file	Вы действительно хотите сохранить эти параметры как стандартные в INI-файле
+Do you really want to save the following parameters as default to the INI file	Вы действительно хотите сохранить эти параметры в INI-файле как стандартные
 Auto contrast and color correction: 	Автокоррекция контрастности и цвета: 
-Local density correction: 	Коррекция локальной плотности: 
+Local density correction: 	Коррекция светов/теней: 
 Order files by: 	Сортировка файлов: 
 Creation date/time	Дата/время создания
 Last modification date/time	Дата/время изменения
@@ -96,7 +96,7 @@ All Files	Все файлы
 Parameter DB file '%s' could not be opened!	Невозможно открыть файл '%s' c БД параметров.
 Parameter DB file '%s' is not valid (invalid header)!	Неверный файл '%s' с БД параметров (недопустимый заголовок).
 Cannot write to parameter DB file '%s'!	Невозможно выполнить запись в файл '%s' с БД параметров.
-Cannot read from parameter DB file '%s'!	Невозможно выполнить из файла '%s' с БД параметров.
+Cannot read from parameter DB file '%s'!	Невозможно выполнить чтение из файла '%s' с БД параметров.
 Cannot read parameter DB file '%s' because it is too large!	Невозможно прочитать файл '%s' с БД параметров: он слишком велик.
 The parameter DB file '%s' has been created by a newer version of JPEGView!	Файл '%s' с БД параметров создан более новой версией JPEGView.
 The old parameter DB file '%s' could not be renamed during conversion to new format!	Не удалось переименовать старый файл '%s' с БД параметров при преобразовании в новый формат.
@@ -104,26 +104,26 @@ Parameter DB error	Ошибка в БД параметров
 Error saving file	Ошибка сохранения файла
 Error writing file to disk!	Ошибка записи файла на диск.
 Confirm	Подтвердите
-Do you really want to permanently delete the file %filename%?	Вы действительно хотите окончательно удалить файл %filename%?
+Do you really want to permanently delete the file %filename%?	Вы действительно хотите удалить файл %filename%?
 Rotate the following file lossless by 90 deg?\n%filename%	Повернуть этот файл без потерь на 90° вправо?\n%filename%
 Rotate the following file lossless by 270 deg?\n%filename%	Повернуть этот файл без потерь на 90° влево?\n%filename%
 Open image...	Открыть изображение...
 Save processed image...	Сохранить обработанное изображение...
 Reload image	Перезагрузить изображение
 Copy to clipboard	Скопировать в буфер обмена
-Copy original size image	Скопировать изображение исходного размера
+Copy original size image	Скопировать в буфер обмена с исходным размером
 Paste from clipboard	Вставить из буфера обмена
 Batch rename/copy...	Пакетное переименование/копирование...
-Show picture info (EXIF)	Показать сведения об изображении (EXIF)
-Show filename	Показать имя файла
+Show picture info (EXIF)	Сведения об изображении (EXIF)
+Show filename	Имя файла
 Navigation	Навигация
 Loop folder	Циклично в папке
-Loop recursively	Циклично с рекурсией
-Loop siblings	Циклично в папках на том же уровне
-Display order	Порядок вывода
+Loop recursively	Циклично с вложенными папками
+Loop siblings	Циклично с папками того же уровня вложенности
+Display order	Порядок вывода (критерий сортировки)
 Modification date	Дата изменения
 Creation date	Дата создания
-Play folder as slideshow/movie	Воспроизвести папку как слайдшоу/фильм
+Play folder as slideshow/movie	Показать содержимое папки как слайдшоу/фильм
 Slideshow	Слайдшоу
 Movie	Фильм
 Waiting time	Интервал
@@ -131,21 +131,21 @@ Stop slide show/movie	Остановить слайдшоу/фильм
 Rotate +90	Повернуть на 90° вправо
 Rotate -90	Повернуть на 90° влево
 Auto correction	Автокоррекция
-Local density correction	Коррекция локальной плотности
-Keep parameters	Удерживать параметры
+Local density correction	Коррекция светов/теней
+Keep parameters	Помнить параметры обработки при смене изображений
 Save parameters to INI...	Сохранить параметры в INI-файле...
 Save parameters to DB	Сохранить параметры в базе данных
 Clear parameters from DB	Удалить параметры из базы данных
 Zoom	Масштаб
-Fit to screen	Заполнение экрана
+Fit to screen	Подгонка под экран
 Fill with crop	Заполнение с обрезкой
 Span all screens	На все экраны
 Auto zoom mode	Режим автомасштабирования
-Fit to screen (no zoom)	Заполнение экрана (без масштабирования)
-Fill with crop (no zoom)	Заполнение с обрезкой (без масштабирования)
+Fit to screen (no zoom)	Подгонка под экран (без увеличения)
+Fill with crop (no zoom)	Заполнение с обрезкой (без увеличения)
 Exit	Выход
 Cyan-Red	Голубой-Красный
-Magenta-Green	Малиновый-Зелёный
+Magenta-Green	Пурпурный-Зелёный
 Yellow-Blue	Жёлтый-Синий
 C - R	C - R
 M - G	M - G
@@ -164,7 +164,7 @@ Day / Month / Year (as numbers)	день / месяц / год (цифрами)
 Year short form (2 digits)	год коротко (две цифры)
 Month / Short form (text)	месяц / месяц коротко (текст)
 Target folders that are not yet existing are created as needed.	Несуществующие папки назначения создаются по необходимости.
-Date placeholders use the modification date of the image.	Заполнители даты используют дату изменения изображения.
+Date placeholders use the modification date of the image.	Заполнители даты подставляют дату изменения изображения.
 Rename/copy images to:	Переименовать/скопировать изображения в:
 Rename	Переименовать
 Preview	Предпросмотр
@@ -230,15 +230,15 @@ Copying parameter DB to file '%s' failed. Reason: %s	Ошибка копиров
 Select parameter DB to restore	Выберите БД параметров для восстановления
 Conflicting entries in Param DB	Конфликт записей в БД параметров
 The imported param DB contains entries already present in active param DB.	Импортированная БД параметров содержит записи, которые уже присутствуют в активной БД.
-Shall existing entries be preserved (Yes) or be overriden by the imported entries (No)?	Следует ли сохранить имеющиеся записи ('Да') или перезаписать их импортированными ('Нет')?
+Shall existing entries be preserved (Yes) or be overriden by the imported entries (No)?	Имеющиеся записи следует сохранить ('Да') или перезаписать их импортированными ('Нет')?
 Select file to display in 'File Open' dialog	Выберите файл для показа в диалоге открытия файлов
 Crop Mode	Режим обрезки
 Free	Произвольно
 Fixed size...	Фиксированный размер...
-Set Fixed Crop Size	Выбрать фиксированный размер обрезки
+Set Fixed Crop Size	Выбрать размер обрезки
 Width	Ширина
 Height	Высота
-Pixels	Пикселы
+Pixels	пкс
 Screen Pixels	Экранные пикселы
 Image Pixels	Исходные пикселы
 Set modification date	Установить дату изменения
@@ -260,8 +260,8 @@ Crop Selection Lossless...	Обрезать выделенное без поте
 Save cropped image	Сохранить обрезанное изображение
 Rotate image by user-defined angle	Повернуть изображение на указанный угол
 Rotate Image	Повернуть изображение
-Show grid lines	Показывать линии сетки
-Auto crop rotated image (avoids black border)	Автоматически обрезать изображение при повороте (устранять чёрные поля)
+Show grid lines	Показывать сетку
+Auto crop rotated image (avoids black border)	Автообрезка изображения при повороте (устранять чёрные поля)
 Align image to horizontal or vertical line	Выровнять изображение по горизонтальной или вертикальной линии
 Use the mouse to draw a line that shall be horizontal or vertical.	Проведите мышью линию, которая должна стать горизонтальной или вертикальной.
 Rotate the image by dragging with the mouse.	Поверните изображение, потянув его мышью.
@@ -270,7 +270,7 @@ to EXIF date (all files in folder)	по дате в EXIF (все файлы в �
 Number of JPEG files in folder: %d	Файлов JPEG в папке: %d
 EXIF date successfully set on %d images, failed on %d images	EXIF-дата успешно установлена для %d шт. изображений (для %d шт. - не установлена)
 Reason: Not enough memory available	Причина: недостаточно памяти
-Transform image	Трансформация изображения
+Transform image	Трансформирование изображения
 Rotate...	Повернуть...
 Mirror horizontally	Зеркально отобразить по горизонтали
 Mirror vertically	Зеркально отобразить по вертикали
