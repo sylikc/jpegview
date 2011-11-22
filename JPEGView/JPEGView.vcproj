@@ -72,10 +72,10 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="ijl15.lib gdiplus.lib libwebp_dll.lib"
+				AdditionalDependencies="ijl15.lib gdiplus.lib libwebp_dll.lib wicloader.lib"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="IJL\lib;WebP\lib"
-				DelayLoadDLLs="libwebp_a.dll"
+				AdditionalLibraryDirectories="IJL\lib;WebP\lib;WICLoader\lib"
+				DelayLoadDLLs="libwebp_a.dll;wicloader.dll"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				TargetMachine="1"
@@ -163,10 +163,10 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="ijl15.lib gdiplus.lib libwebp_dll.lib"
+				AdditionalDependencies="ijl15.lib gdiplus.lib libwebp_dll.lib wicloader.lib"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="IJL\lib;WebP\lib"
-				DelayLoadDLLs="libwebp_a.dll"
+				AdditionalLibraryDirectories="IJL\lib;WebP\lib;WICLoader\lib"
+				DelayLoadDLLs="libwebp_a.dll;wicloader.dll"
 				GenerateDebugInformation="false"
 				SubSystem="2"
 				TargetMachine="1"
