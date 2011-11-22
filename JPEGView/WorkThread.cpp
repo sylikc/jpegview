@@ -7,8 +7,9 @@
 // Public
 /////////////////////////////////////////////////////////////////////////////////////////////
 
-CWorkThread::CWorkThread(void) {
+CWorkThread::CWorkThread(bool bCoInitialize) {
 	m_bTerminate = false;
+    m_bCoInitialize = bCoInitialize;
 	memset(&m_csList, 0, sizeof(CRITICAL_SECTION));
 	::InitializeCriticalSection(&m_csList);
 	m_wakeUp = ::CreateEvent(0, TRUE, FALSE, NULL);
@@ -86,6 +87,9 @@ void CWorkThread::Abort() {
 void CWorkThread::ThreadFunc(void* arg) {
 
 	CWorkThread* thisPtr = (CWorkThread*) arg;
+    if (thisPtr->m_bCoInitialize) {
+        ::CoInitialize(NULL);
+    }
 	do {
 		::EnterCriticalSection(&thisPtr->m_csList);
 
@@ -133,6 +137,9 @@ void CWorkThread::ThreadFunc(void* arg) {
 			::ResetEvent(thisPtr->m_wakeUp);
 		}
 	} while (!thisPtr->m_bTerminate);
+    if (thisPtr->m_bCoInitialize) {
+        ::CoUninitialize();
+    }
 	_endthread();
 }
 

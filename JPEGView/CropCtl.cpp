@@ -100,7 +100,7 @@ void CCropCtl::EndCropping() {
 	int nMenuCmd = 0;
 	if (hMenu != NULL) {
 		HMENU hMenuTrackPopup = ::GetSubMenu(hMenu, 0);
-		if (m_pMainDlg->GetCurrentImage()->GetImageFormat() != CJPEGImage::IF_JPEG) {
+		if (m_pMainDlg->GetCurrentImage()->GetImageFormat() != IF_JPEG) {
 			::DeleteMenu(hMenuTrackPopup, IDM_LOSSLESS_CROP_SEL, MF_BYCOMMAND);
 		}
 		HelpersGUI::TranslateMenuStrings(hMenuTrackPopup);

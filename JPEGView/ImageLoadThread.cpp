@@ -20,26 +20,26 @@ volatile LONG CImageLoadThread::m_curHandle = 0;
 /////////////////////////////////////////////////////////////////////////////////////////////
 
 // find image format of this image by reading some header bytes
-static CJPEGImage::EImageFormat GetImageFormat(LPCTSTR sFileName) {
+static EImageFormat GetImageFormat(LPCTSTR sFileName) {
 	FILE *fptr;
 	if ((fptr = _tfopen(sFileName, _T("rb"))) == NULL) {
-		return CJPEGImage::IF_Unknown;
+		return IF_Unknown;
 	}
 	unsigned char header[16];
 	int nSize = fread((void*)header, 1, 16, fptr);
 	fclose(fptr);
 	if (nSize < 2) {
-		return CJPEGImage::IF_Unknown;
+		return IF_Unknown;
 	}
 	if (header[0] == 0x42 && header[1] == 0x4d) {
-		return CJPEGImage::IF_WindowsBMP;
+		return IF_WindowsBMP;
 	} else if (header[0] == 0xff && header[1] == 0xd8) {
-		return CJPEGImage::IF_JPEG;
+		return IF_JPEG;
 	} else if (header[0] == 'R' && header[1] == 'I' && header[2] == 'F' && header[3] == 'F' &&
 		header[8] == 'W' && header[9] == 'E' && header[10] == 'B' && header[11] == 'P') {
-		return CJPEGImage::IF_WEBP;
+		return IF_WEBP;
 	} else {
-		return CJPEGImage::IF_Unknown;
+        return Helpers::GetImageFormat(sFileName);
 	}
 }
 
@@ -47,7 +47,7 @@ static CJPEGImage::EImageFormat GetImageFormat(LPCTSTR sFileName) {
 // Public
 /////////////////////////////////////////////////////////////////////////////////////////////
 
-CImageLoadThread::CImageLoadThread(void) {
+CImageLoadThread::CImageLoadThread(void) : CWorkThread(true) {
 }
 
 CImageLoadThread::~CImageLoadThread(void) {
@@ -102,15 +102,18 @@ void CImageLoadThread::ProcessRequest(CRequestBase& request) {
 	double dStartTime = Helpers::GetExactTickCount(); 
 	// Get image format and read the image
 	switch (GetImageFormat(rq.FileName)) {
-		case CJPEGImage::IF_JPEG :
+		case IF_JPEG :
 			ProcessReadJPEGRequest(&rq);
 			break;
-		case CJPEGImage::IF_WindowsBMP :
+		case IF_WindowsBMP :
 			ProcessReadBMPRequest(&rq);
 			break;
-		case CJPEGImage::IF_WEBP:
+		case IF_WEBP:
 			ProcessReadWEBPRequest(&rq);
 			break;
+        case IF_WIC:
+            ProcessReadWICRequest(&rq);
+            break;
 		default:
 			// try with GDI+
 			ProcessReadGDIPlusRequest(&rq);
@@ -186,7 +189,7 @@ void CImageLoadThread::ProcessReadJPEGRequest(CRequest * request) {
 				
 				request->Image = new CJPEGImage(nWidth, nHeight, pPixelData, 
 					pEXIFBlock, nBPP, 
-					Helpers::CalculateJPEGFileHash(pBuffer, nFileSize), CJPEGImage::IF_JPEG);
+					Helpers::CalculateJPEGFileHash(pBuffer, nFileSize), IF_JPEG);
 				request->Image->SetJPEGComment(Helpers::GetJPEGComment(pBuffer, nFileSize));
 			} else if (bOutOfMemory) {
 				request->OutOfMemory = true;
@@ -253,7 +256,7 @@ void CImageLoadThread::ProcessReadWEBPRequest(CRequest * request) {
 					uint8* pPixelData = new(std::nothrow) unsigned char[nStride * nHeight];
 					if (pPixelData != NULL) {
 						if (WebPDecodeBGRInto((uint8*)pBuffer, nFileSize, pPixelData, nStride * nHeight, nStride)) {
-							request->Image = new CJPEGImage(nWidth, nHeight, pPixelData, NULL, 3, 0, CJPEGImage::IF_WEBP);
+							request->Image = new CJPEGImage(nWidth, nHeight, pPixelData, NULL, 3, 0, IF_WEBP);
 						} else {
 							delete[] pPixelData;
 						}
@@ -273,22 +276,22 @@ void CImageLoadThread::ProcessReadWEBPRequest(CRequest * request) {
 	delete[] pBuffer;
 }
 
-static CJPEGImage::EImageFormat GetBitmapFormat(Gdiplus::Bitmap * pBitmap) {
+static EImageFormat GetBitmapFormat(Gdiplus::Bitmap * pBitmap) {
 	GUID guid;
 	memset(&guid, 0, sizeof(GUID));
 	pBitmap->GetRawFormat(&guid);
 	if (guid == Gdiplus::ImageFormatBMP) {
-		return CJPEGImage::IF_WindowsBMP;
+		return IF_WindowsBMP;
 	} else if (guid == Gdiplus::ImageFormatPNG) {
-		return CJPEGImage::IF_PNG;
+		return IF_PNG;
 	} else if (guid == Gdiplus::ImageFormatGIF) {
-		return CJPEGImage::IF_GIF;
+		return IF_GIF;
 	} else if (guid == Gdiplus::ImageFormatTIFF) {
-		return CJPEGImage::IF_TIFF;
+		return IF_TIFF;
 	} else if (guid == Gdiplus::ImageFormatJPEG || guid == Gdiplus::ImageFormatEXIF) {
-		return CJPEGImage::IF_JPEG;
+		return IF_JPEG;
 	} else {
-		return CJPEGImage::IF_Unknown;
+		return IF_Unknown;
 	}
 }
 
@@ -351,6 +354,42 @@ void CImageLoadThread::ProcessReadGDIPlusRequest(CRequest * request) {
 	}
 	delete pBitmap;
 	
+}
+
+static unsigned char* alloc(int sizeInBytes) {
+    return new(std::nothrow) unsigned char[sizeInBytes];
+}
+
+static void dealloc(unsigned char* buffer) {
+    delete[] buffer;
+}
+
+typedef unsigned char* Allocator(int sizeInBytes);
+typedef void Deallocator(unsigned char* buffer);
+
+__declspec(dllimport) unsigned char* __stdcall LoadImageWithWIC(LPCWSTR fileName, Allocator* allocator, Deallocator* deallocator,
+    unsigned int* width, unsigned int* height);
+
+void CImageLoadThread::ProcessReadWICRequest(CRequest* request) {
+	const wchar_t* sFileName;
+#ifdef _UNICODE
+	sFileName = (const wchar_t*)request->FileName;
+#else
+	wchar_t buff[MAX_PATH];
+	size_t nDummy;
+	mbstowcs_s(&nDummy, buff, MAX_PATH, (const char*)request->FileName, request->FileName.GetLength());
+	sFileName = (const wchar_t*)buff;
+#endif
+
+    try {
+        uint32 nWidth, nHeight;
+        unsigned char* pDIB = LoadImageWithWIC(sFileName, &alloc, &dealloc, &nWidth, &nHeight);
+        if (pDIB != NULL) {
+            request->Image = new CJPEGImage(nWidth, nHeight, pDIB, NULL, 4, 0, IF_WIC);
+        }
+    } catch (...) {
+        // fatal error in WIC
+    }
 }
 
 bool CImageLoadThread::ProcessImageAfterLoad(CRequest * request) {

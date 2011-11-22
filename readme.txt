@@ -29,6 +29,9 @@ Changelog
 
 [1.0.26]
 New features:
+- Support for loading images using Windows Image Codecs (WIC). By default WIC is used to load JPEG XR files (also called
+  High definition photo). When using Windows Vista or Windows 7, the Windows Camera Codec pack can be installed to get
+  support for RAW files in JPEGView. Refer to the readme.html for instructions.
 - New INI file setting: 'AutoRotateEXIF' to disable auto rotation of images based on EXIF image orientation tag.
   Default is true (the EXIF auto rotation is supported since many versions, this setting is introduced to turn this off).
 Other changes:

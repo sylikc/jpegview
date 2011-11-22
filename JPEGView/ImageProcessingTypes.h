@@ -20,3 +20,16 @@ enum EFilterType {
 	Filter_Downsampling_Narrow,
 	Filter_Upsampling_Bicubic
 };
+
+// Image formats (can be other than JPEG...)
+enum EImageFormat {
+	IF_JPEG,
+	IF_WindowsBMP,
+	IF_PNG,
+	IF_GIF,
+	IF_TIFF,
+	IF_WEBP,
+    IF_WIC,
+	IF_CLIPBOARD,
+	IF_Unknown
+};

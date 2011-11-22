@@ -1,5 +1,7 @@
 #pragma once
 
+#include "ImageProcessingTypes.h"
+
 class CJPEGImage;
 
 namespace Helpers {
@@ -137,6 +139,9 @@ namespace Helpers {
 
 	// Clears the JPEG comment (by filling with NULL characters)
 	void ClearJPEGComment(void* pJPEGStream, int nStreamLength);
+
+    // Gets the image format given a file name (uses the file extension)
+    EImageFormat GetImageFormat(LPCTSTR sFileName);
 
 	// Conversion class that replaces the | by null character in a string.
 	// Caution: Uses a static buffer and can therefore only one string can be replaced concurrently

@@ -1,8 +1,9 @@
 #include "StdAfx.h"
 #include "Helpers.h"
 #include "NLS.h"
-#include "JPEGImage.h"
 #include "MultiMonitorSupport.h"
+#include "JPEGImage.h"
+#include "SettingsProvider.h"
 #include <math.h>
 
 namespace Helpers {
@@ -498,6 +499,43 @@ CSize GetMaxClientSize(HWND hWnd) {
 	CRect workingArea = CMultiMonitorSupport::GetWorkingRect(hWnd);
 	return CSize(workingArea.Width() - 2 * ::GetSystemMetrics(SM_CXSIZEFRAME), 
 		workingArea.Height() - 2 * ::GetSystemMetrics(SM_CYSIZEFRAME) - ::GetSystemMetrics(SM_CYCAPTION));
+}
+
+EImageFormat GetImageFormat(LPCTSTR sFileName) {
+	LPCTSTR sEnding = _tcsrchr(sFileName, _T('.'));
+	if (sEnding != NULL) {
+		sEnding += 1;
+		if (_tcsicmp(sEnding, _T("JPG")) == 0 || _tcsicmp(sEnding, _T("JPEG")) == 0) {
+			return IF_JPEG;
+		} else if (_tcsicmp(sEnding, _T("BMP")) == 0) {
+			return IF_WindowsBMP;
+		} else if (_tcsicmp(sEnding, _T("PNG")) == 0) {
+			return IF_PNG;
+		} else if (_tcsicmp(sEnding, _T("TIF")) == 0 || _tcsicmp(sEnding, _T("TIFF")) == 0) {
+			return IF_TIFF;
+		} else if (_tcsicmp(sEnding, _T("WEBP")) == 0) {
+			return IF_WEBP;
+		} else {
+            const int BUFFER_SIZE = 196;
+            TCHAR buffer[BUFFER_SIZE];
+            _tcsncpy_s(buffer, BUFFER_SIZE, CSettingsProvider::This().FilesProcessedByWIC(), _TRUNCATE);
+            LPTSTR sStart = buffer, sCurrent = buffer;
+            while (*sCurrent != 0) {
+                while (*sCurrent != 0 && *sCurrent != _T(';')) {
+                    sCurrent++;
+                }
+                if (*sCurrent == _T(';')) {
+                    *sCurrent = 0;
+                    sCurrent++;
+                }
+                if (_tcsicmp(sStart + 1, sEnding - 1) == 0) {
+                    return IF_WIC;
+                }
+                sStart = sCurrent;
+            }
+        }
+	}
+	return IF_Unknown;
 }
 
 }

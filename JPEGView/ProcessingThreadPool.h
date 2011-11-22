@@ -168,7 +168,7 @@ private:
 
 class CProcessingThread : public CWorkThread {
 public:
-	CProcessingThread(void) {}
+	CProcessingThread(void) : CWorkThread(false) {}
 	~CProcessingThread(void) {}
 
 	// Start a processing request on this thread, returns immediately

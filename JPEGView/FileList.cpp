@@ -1,5 +1,6 @@
 #include "StdAfx.h"
 #include "FileList.h"
+#include "SettingsProvider.h"
 
 ///////////////////////////////////////////////////////////////////////////////////
 // Helpers
@@ -159,10 +160,56 @@ void CFileDesc::SetModificationDate(const FILETIME& lastModDate) {
 // Public interface
 ///////////////////////////////////////////////////////////////////////////////////
 
-// image file types supported
-static const int cnNumEndings = 8;
-static const TCHAR* csFileEndings[cnNumEndings] = {_T("jpg"), _T("jpeg"), _T("bmp"), _T("png"), 
+// image file types supported internally (there are additional endings supported by WIC - these come from INI file)
+static const int cnNumEndingsInternal = 8;
+static const TCHAR* csFileEndingsInternal[cnNumEndingsInternal] = {_T("jpg"), _T("jpeg"), _T("bmp"), _T("png"), 
 	_T("tif"), _T("tiff"), _T("gif"), _T("webp")};
+
+static int nNumEndings;
+static LPCTSTR* sFileEndings;
+
+__declspec(dllimport) bool __stdcall WICPresent(void);
+
+// Check if Windows Image Codecs library is present
+static bool WICPresentGuarded(void) {
+    try {
+        return WICPresent();
+    } catch (...) {
+        return false;
+    }
+}
+
+// Gets all supported file endings, including the ones from WIC.
+// The length of the returned list is nNumEndings
+static LPCTSTR* GetSupportedFileEndingList() {
+    if (sFileEndings == NULL) {
+        const int MAX_ENDINGS = 32;
+        sFileEndings = new LPCTSTR[MAX_ENDINGS];
+        for (nNumEndings = 0; nNumEndings < cnNumEndingsInternal; nNumEndings++) {
+            sFileEndings[nNumEndings] = csFileEndingsInternal[nNumEndings];
+        }
+        LPCTSTR sFileEndingsWIC = CSettingsProvider::This().FilesProcessedByWIC();
+        if (_tcslen(sFileEndingsWIC) > 2 && WICPresentGuarded()) {
+            LPTSTR buffer = new TCHAR[_tcslen(sFileEndingsWIC) + 1];
+            _tcscpy(buffer, sFileEndingsWIC);
+            LPTSTR sStart = buffer, sCurrent = buffer;
+            while (*sCurrent != 0 && nNumEndings < MAX_ENDINGS) {
+                while (*sCurrent != 0 && *sCurrent != _T(';')) {
+                    sCurrent++;
+                }
+                if (*sCurrent == _T(';')) {
+                    *sCurrent = 0;
+                    sCurrent++;
+                }
+                if (_tcslen(sStart) > 2) {
+                    sFileEndings[nNumEndings++] = sStart + 2;
+                }
+                sStart = sCurrent;
+            }
+        }
+    }
+    return sFileEndings;
+}
 
 CFileList::CFileList(const CString & sInitialFile, Helpers::ESorting eInitialSorting, bool bWrapAroundFolder, int nLevel) {
 	CFileDesc::SetSorting(eInitialSorting);
@@ -206,11 +253,12 @@ CFileList::~CFileList() {
 }
 
 CString CFileList::GetSupportedFileEndings() {
+    LPCTSTR* allFileEndings = GetSupportedFileEndingList();
 	CString sList;
-	for (int i = 0; i < cnNumEndings; i++) {
+	for (int i = 0; i < nNumEndings; i++) {
 		sList += _T("*.");
-		sList += csFileEndings[i];
-		if (i+1 < cnNumEndings) sList += _T(";");
+		sList += allFileEndings[i];
+		if (i+1 < nNumEndings) sList += _T(";");
 	}
 	return sList;
 }
@@ -672,9 +720,10 @@ void CFileList::FindFiles() {
 	m_fileList.clear();
 	if (!m_sDirectory.IsEmpty()) {
 		CFindFile fileFind;
-		for (int i = 0; i < cnNumEndings; i++) {
+        LPCTSTR* allFileEndings = GetSupportedFileEndingList();
+		for (int i = 0; i < nNumEndings; i++) {
 			// Windows bug: *.tif also finds *.tiff, so only search for *.tif else we have duplicated files...
-			if (_tcsicmp(csFileEndings[i], _T("tiff")) != 0 && fileFind.FindFile(m_sDirectory + _T("\\*.") + csFileEndings[i])) {
+			if (_tcsicmp(allFileEndings[i], _T("tiff")) != 0 && fileFind.FindFile(m_sDirectory + _T("\\*.") + allFileEndings[i])) {
 				AddToFileList(m_fileList, fileFind);
 				while (fileFind.FindNextFile()) {
 					AddToFileList(m_fileList, fileFind);
@@ -701,8 +750,9 @@ void CFileList::VerifyFiles() {
 bool CFileList::IsImageFile(const CString & sEnding) {
 	CString sEndingLC = sEnding;
 	sEndingLC.MakeLower();
-	for (int i = 0; i < cnNumEndings; i++) {
-		if (csFileEndings[i] == sEndingLC) {
+    LPCTSTR* allFileEndings = GetSupportedFileEndingList();
+	for (int i = 0; i < nNumEndings; i++) {
+		if (allFileEndings[i] == sEndingLC) {
 			return true;
 		}
 	}
@@ -823,8 +873,9 @@ bool CFileList::TryReadingSlideShowList(const CString & sSlideShowFile) {
 				pStart--;
 			} else {
 				// try to find file name with relative path
-				for (int i = 0; i < cnNumEndings; i++) {
-					pStart = _tcsstr(lineBuff, CString(_T(".")) + csFileEndings[i]);
+                LPCTSTR* allFileEndings = GetSupportedFileEndingList();
+				for (int i = 0; i < nNumEndings; i++) {
+					pStart = _tcsstr(lineBuff, CString(_T(".")) + allFileEndings[i]);
 					if (pStart != NULL) {
 						while (pStart >= lineBuff && *pStart != _T('"') && *pStart != _T('>')) pStart--;
 						pStart++;
