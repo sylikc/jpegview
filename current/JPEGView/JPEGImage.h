@@ -16,21 +16,7 @@ struct CDimRect {
 
 // Class holding a decoded image and allowing to get a processed section of the raw
 // image as DIB.
-class CJPEGImage
-{
-public:
-	// Image formats (can be other than JPEG...)
-	enum EImageFormat {
-		IF_JPEG,
-		IF_WindowsBMP,
-		IF_PNG,
-		IF_GIF,
-		IF_TIFF,
-		IF_WEBP,
-		IF_CLIPBOARD,
-		IF_Unknown
-	};
-
+class CJPEGImage {
 public:
 	// Ownership of memory in pIJLPixels goes to class, accessing this pointer after the constructor
 	// has been called is illegal (use IJLPixels() instead)

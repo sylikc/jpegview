@@ -29,7 +29,7 @@ public:
 class CWorkThread
 {
 public:
-	CWorkThread(void);
+	CWorkThread(bool bCoInitialize);
 	virtual ~CWorkThread(void);
 
 	// Gets if the request queue is currently empty, meaning the thread has nothing to do
@@ -71,4 +71,6 @@ protected:
 private:
 	static void  __cdecl ThreadFunc(void* arg);
 	static void DeleteMarkedRequests(CWorkThread* thisPtr);
+
+    bool m_bCoInitialize;
 };

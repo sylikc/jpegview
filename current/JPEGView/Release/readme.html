@@ -37,6 +37,7 @@
 					<a href="#ParameterDB">Parameter Database</a><br/>
 					<a href="#INIFile">INI file settings</a><br/>
 					<a href="#KeyMap">Changing keyboard shortcuts</a><br/>
+                    <a href="#RAWFiles">Viewing camera RAW files</a><br/>
 					<a href="#External">Calling external programs or batch files</a><br/>
 					<a href="#Trouble">Troubleshooting</a><br/>
 					<a href="#Copyright">License &amp; Copyright</a><br/>
@@ -60,9 +61,12 @@
 								<li>JPEG (including EXIF)</li>
 								<li>BMP (Windows Bitmap)</li>
 								<li>WEBP</li>
+                                <li>JPEG XR (Windows XP: <a href="http://www.microsoft.com/download/en/details.aspx?id=32">WIC</a> must be installed)</li>
 								<li>PNG</li>
 								<li>GIF</li>
 								<li>TIFF</li>
+                                <li>Camera RAW (only Vista/Windows 7,  see <a href="#RAWFiles">here</a>)<br/>
+                              </li>
 							</ul>
 						</li>
 						<li>
@@ -855,9 +859,30 @@
 					The mapping of keys to commands can be changed by editing the <a href="./KeyMap.txt">keymap file</a>.<br/>
 					Using the keymap file it is also possible to define additional keyboard shortcuts for command that are
 					not mapped by default.<br/>
-					When editing this file, make sure you follow the instructions mentioned in the keymap file itself.
+                    When editing this file, make sure you follow the instructions mentioned in the keymap file itself.
 
-					<a name="External"></a>
+                  <a name="RAWFiles"></a>
+                  <h2>Adding support for viewing camera RAW files to JPEGView</h2>
+                  <b>Notice:</b> Camera RAW support is provided indirectly by using the Microsoft Camera Codec pack.<br/>
+                  This codec pack is only available for Windows Vista SP2 and Windows 7, but not for Windows XP!<br/>
+                  To add support for camera RAW files:
+                  <ul style="margin-top:0in;margin-bottom:0in">
+                    <li>
+                      Download and install the <a href="http://www.microsoft.com/download/en/details.aspx?id=26829">Microsoft Camera Codec pack.</a><br/>
+                      Check if your camera model is supported by the codec pack.
+                    </li>
+                    <li>
+                      Add the extension(s) of the camera RAW files to be read by JPEGView to the user INI file, setting 'FilesProcessedByWIC'.<br/>
+                      Context menu: Settings/Admin > Edit user settings...<br/>
+                      Example for adding the extension "cr2", used by Canon cameras:<br/>
+                      <code>FilesProcessedByWIC=*.wdp;*.mdp;*.hdp;<b>*.cr2</b></code>
+                    </li>
+                    <li>
+                      Save the INI file and restart JPEGView.
+                    </li>
+                  </ul>
+                  
+                  <a name="External"></a>
 					<h2>Calling external programs or batch files</h2>
 					In the INI file, external commands can be defined and be bound to a key that is not used in JPEGView internally.
 					The file name of the currently displayed image can be passed to the external command or program.<br/>

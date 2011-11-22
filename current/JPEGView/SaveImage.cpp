@@ -13,26 +13,6 @@
 // Helpers
 //////////////////////////////////////////////////////////////////////////////////////////////
 
-// Gets the image format given a file name (uses the file extension)
-static CJPEGImage::EImageFormat GetImageFormat(LPCTSTR sFileName) {
-	LPCTSTR sEnding = _tcsrchr(sFileName, _T('.'));
-	if (sEnding != NULL) {
-		sEnding += 1;
-		if (_tcsicmp(sEnding, _T("JPG")) == 0 || _tcsicmp(sEnding, _T("JPEG")) == 0) {
-			return CJPEGImage::IF_JPEG;
-		} else if (_tcsicmp(sEnding, _T("BMP")) == 0) {
-			return CJPEGImage::IF_WindowsBMP;
-		} else if (_tcsicmp(sEnding, _T("PNG")) == 0) {
-			return CJPEGImage::IF_PNG;
-		} else if (_tcsicmp(sEnding, _T("TIF")) == 0 || _tcsicmp(sEnding, _T("TIFF")) == 0) {
-			return CJPEGImage::IF_TIFF;
-		} else if (_tcsicmp(sEnding, _T("WEBP")) == 0) {
-			return CJPEGImage::IF_WEBP;
-		}
-	}
-	return CJPEGImage::IF_Unknown;
-}
-
 // Gets the thumbnail DIB, returns size of thumbnail in sizeThumb
 static void* GetThumbnailDIB(CJPEGImage * pImage, CSize& sizeThumb) {
 	EProcessingFlags eFlags = pImage->GetLastProcessFlags();
@@ -194,7 +174,7 @@ static int GetEncoderClsid(const WCHAR* format, CLSID* pClsid) {
 }
 
 // Saves the given 24 bpp DIB data to the file namge given using GDI+
-static bool SaveGDIPlus(LPCTSTR sFileName, CJPEGImage::EImageFormat eFileFormat, void* pData, int nWidth, int nHeight) {
+static bool SaveGDIPlus(LPCTSTR sFileName, EImageFormat eFileFormat, void* pData, int nWidth, int nHeight) {
 	Gdiplus::Bitmap* pBitmap = new Gdiplus::Bitmap(nWidth, nHeight, Helpers::DoPadding(nWidth*3, 4), PixelFormat24bppRGB, (BYTE*)pData);
 	if (pBitmap->GetLastStatus() != Gdiplus::Ok) {
 		delete pBitmap;
@@ -203,13 +183,13 @@ static bool SaveGDIPlus(LPCTSTR sFileName, CJPEGImage::EImageFormat eFileFormat,
 
 	const wchar_t* sMIMEType = NULL;
 	switch (eFileFormat) {
-		case CJPEGImage::IF_WindowsBMP:
+		case IF_WindowsBMP:
 			sMIMEType = L"image/bmp";
 			break;
-		case CJPEGImage::IF_PNG:
+		case IF_PNG:
 			sMIMEType = L"image/png";
 			break;
-		case CJPEGImage::IF_TIFF:
+		case IF_TIFF:
 			sMIMEType = L"image/tiff";
 			break;
 	}
@@ -266,10 +246,10 @@ bool CSaveImage::SaveImage(LPCTSTR sFileName, CJPEGImage * pImage, const CImageP
 	char* pDIB24bpp = new char[nSizeBytes];
 	CBasicProcessing::Convert32bppTo24bppDIB(imageSize.cx, imageSize.cy, pDIB24bpp, pDIB32bpp, false);
 
-	CJPEGImage::EImageFormat eFileFormat = GetImageFormat(sFileName);
+	EImageFormat eFileFormat = Helpers::GetImageFormat(sFileName);
 	bool bSuccess = false;
 	__int64 nPixelHash = 0;
-	if (eFileFormat == CJPEGImage::IF_JPEG) {
+	if (eFileFormat == IF_JPEG) {
 		// Save JPEG not over GDI+ - we want to keep the meta-data if there is meta-data
 		int nJPEGStreamLen;
 		void* pCompressedJPEG = CompressAndSave(sFileName, pImage, pDIB24bpp, imageSize.cx, imageSize.cy, 
@@ -280,13 +260,13 @@ bool CSaveImage::SaveImage(LPCTSTR sFileName, CJPEGImage * pImage, const CImageP
 			delete[] pCompressedJPEG;
 		}
 	} else {
-		if (eFileFormat == CJPEGImage::IF_WEBP) {
+		if (eFileFormat == IF_WEBP) {
 			bSuccess = SaveWebP(sFileName, pDIB24bpp, imageSize.cx, imageSize.cy);
 		} else {
 			bSuccess = SaveGDIPlus(sFileName, eFileFormat, pDIB24bpp, imageSize.cx, imageSize.cy);
 		}
 		if (bSuccess) {
-			CJPEGImage tempImage(imageSize.cx, imageSize.cy, pDIB32bpp, NULL, 4, 0, CJPEGImage::IF_Unknown);
+			CJPEGImage tempImage(imageSize.cx, imageSize.cy, pDIB32bpp, NULL, 4, 0, IF_Unknown);
 			nPixelHash = tempImage.GetUncompressedPixelHash();
 			tempImage.DetachIJLPixels();
 		}
