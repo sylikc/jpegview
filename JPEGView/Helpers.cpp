@@ -501,6 +501,27 @@ CSize GetMaxClientSize(HWND hWnd) {
 		workingArea.Height() - 2 * ::GetSystemMetrics(SM_CYSIZEFRAME) - ::GetSystemMetrics(SM_CYCAPTION));
 }
 
+static bool IsInFileEndingList(LPCTSTR sFileEndings, LPCTSTR sEnding) {
+	const int BUFFER_SIZE = 256;
+    TCHAR buffer[BUFFER_SIZE];
+    _tcsncpy_s(buffer, BUFFER_SIZE, sFileEndings, _TRUNCATE);
+    LPTSTR sStart = buffer, sCurrent = buffer;
+    while (*sCurrent != 0) {
+        while (*sCurrent != 0 && *sCurrent != _T(';')) {
+            sCurrent++;
+        }
+        if (*sCurrent == _T(';')) {
+            *sCurrent = 0;
+            sCurrent++;
+        }
+        if (_tcsicmp(sStart + 1, sEnding - 1) == 0) {
+            return true;
+        }
+        sStart = sCurrent;
+    }
+	return false;
+}
+
 EImageFormat GetImageFormat(LPCTSTR sFileName) {
 	LPCTSTR sEnding = _tcsrchr(sFileName, _T('.'));
 	if (sEnding != NULL) {
@@ -515,25 +536,11 @@ EImageFormat GetImageFormat(LPCTSTR sFileName) {
 			return IF_TIFF;
 		} else if (_tcsicmp(sEnding, _T("WEBP")) == 0) {
 			return IF_WEBP;
-		} else {
-            const int BUFFER_SIZE = 196;
-            TCHAR buffer[BUFFER_SIZE];
-            _tcsncpy_s(buffer, BUFFER_SIZE, CSettingsProvider::This().FilesProcessedByWIC(), _TRUNCATE);
-            LPTSTR sStart = buffer, sCurrent = buffer;
-            while (*sCurrent != 0) {
-                while (*sCurrent != 0 && *sCurrent != _T(';')) {
-                    sCurrent++;
-                }
-                if (*sCurrent == _T(';')) {
-                    *sCurrent = 0;
-                    sCurrent++;
-                }
-                if (_tcsicmp(sStart + 1, sEnding - 1) == 0) {
-                    return IF_WIC;
-                }
-                sStart = sCurrent;
-            }
-        }
+		} else if (IsInFileEndingList(CSettingsProvider::This().FilesProcessedByWIC(), sEnding)) {
+			return IF_WIC;
+		} else if (IsInFileEndingList(CSettingsProvider::This().FileEndingsRAW(), sEnding)) {
+			return IF_CameraRAW;
+		}
 	}
 	return IF_Unknown;
 }

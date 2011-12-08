@@ -9,6 +9,7 @@
 #include "SettingsProvider.h"
 #include "ReaderBMP.h"
 #include "BasicProcessing.h"
+#include "dcraw_mod.h"
 
 using namespace Gdiplus;
 
@@ -110,6 +111,9 @@ void CImageLoadThread::ProcessRequest(CRequestBase& request) {
 			break;
 		case IF_WEBP:
 			ProcessReadWEBPRequest(&rq);
+			break;
+		case IF_CameraRAW:
+			ProcessReadRAWRequest(&rq);
 			break;
         case IF_WIC:
             ProcessReadWICRequest(&rq);
@@ -274,6 +278,19 @@ void CImageLoadThread::ProcessReadWEBPRequest(CRequest * request) {
 	}
 	::CloseHandle(hFile);
 	delete[] pBuffer;
+}
+
+void CImageLoadThread::ProcessReadRAWRequest(CRequest * request) {
+	bool bOutOfMemory = false;
+	try {
+		request->Image = CReaderRAW::ReadRawImage(request->FileName, bOutOfMemory);
+	} catch (...) {
+		delete request->Image;
+		request->Image = NULL;
+	}
+	if (bOutOfMemory) {
+		request->OutOfMemory = true;
+	}
 }
 
 static EImageFormat GetBitmapFormat(Gdiplus::Bitmap * pBitmap) {

@@ -213,6 +213,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\dcraw_mod.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\EXIFHelpers.cpp"
 				>
 			</File>
@@ -463,6 +467,10 @@
 			</File>
 			<File
 				RelativePath=".\Clipboard.h"
+				>
+			</File>
+			<File
+				RelativePath=".\dcraw_mod.h"
 				>
 			</File>
 			<File

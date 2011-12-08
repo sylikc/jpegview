@@ -137,6 +137,7 @@
   <ItemGroup>
     <ClCompile Include="BasicProcessing.cpp" />
     <ClCompile Include="Clipboard.cpp" />
+    <ClCompile Include="dcraw_mod.cpp" />
     <ClCompile Include="EXIFHelpers.cpp" />
     <ClCompile Include="EXIFReader.cpp" />
     <ClCompile Include="FileList.cpp" />
@@ -197,6 +198,7 @@
   <ItemGroup>
     <ClInclude Include="BasicProcessing.h" />
     <ClInclude Include="Clipboard.h" />
+    <ClInclude Include="dcraw_mod.h" />
     <ClInclude Include="EXIFHelpers.h" />
     <ClInclude Include="EXIFReader.h" />
     <ClInclude Include="FileList.h" />

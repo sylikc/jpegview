@@ -56,6 +56,7 @@ public:
 	int WEBPSaveQuality() { return m_nWEBPSaveQuality; }
 	LPCTSTR DefaultSaveFormat() { return m_sDefaultSaveFormat; }
     LPCTSTR FilesProcessedByWIC() { return m_sFilesProcessedByWIC; }
+	LPCTSTR FileEndingsRAW() { return m_sFileEndingsRAW; }
 	bool CreateParamDBEntryOnSave() { return m_bCreateParamDBEntryOnSave; }
 	bool SaveWithoutPrompt() { return m_bSaveWithoutPrompt; }
 	bool WrapAroundFolder() { return m_bWrapAroundFolder; }
@@ -143,6 +144,7 @@ private:
 	int m_nWEBPSaveQuality;
 	CString m_sDefaultSaveFormat;
     CString m_sFilesProcessedByWIC;
+	CString m_sFileEndingsRAW;
 	bool m_bCreateParamDBEntryOnSave;
 	bool m_bWrapAroundFolder;
 	bool m_bSaveWithoutPrompt;
