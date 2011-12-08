@@ -160,11 +160,12 @@ void CFileDesc::SetModificationDate(const FILETIME& lastModDate) {
 // Public interface
 ///////////////////////////////////////////////////////////////////////////////////
 
-// image file types supported internally (there are additional endings supported by WIC - these come from INI file)
+// image file types supported internally (there are additional endings for RAW and WIC - these come from INI file)
 static const int cnNumEndingsInternal = 8;
 static const TCHAR* csFileEndingsInternal[cnNumEndingsInternal] = {_T("jpg"), _T("jpeg"), _T("bmp"), _T("png"), 
 	_T("tif"), _T("tiff"), _T("gif"), _T("webp")};
 
+static const int MAX_ENDINGS = 48;
 static int nNumEndings;
 static LPCTSTR* sFileEndings;
 
@@ -179,34 +180,42 @@ static bool WICPresentGuarded(void) {
     }
 }
 
+// Parses a semicolon separated list of file endings of the form "*.nef;*.cr2;*.dng"
+static void ParseAndAddFileEndings(LPCTSTR sEndings) {
+    if (_tcslen(sEndings) > 2) {
+        LPTSTR buffer = new TCHAR[_tcslen(sEndings) + 1]; // this buffer will not be freed deliberately!
+        _tcscpy(buffer, sEndings);
+        LPTSTR sStart = buffer, sCurrent = buffer;
+        while (*sCurrent != 0 && nNumEndings < MAX_ENDINGS) {
+            while (*sCurrent != 0 && *sCurrent != _T(';')) {
+                sCurrent++;
+            }
+            if (*sCurrent == _T(';')) {
+                *sCurrent = 0;
+                sCurrent++;
+            }
+            if (_tcslen(sStart) > 2) {
+                sFileEndings[nNumEndings++] = sStart + 2;
+            }
+            sStart = sCurrent;
+        }
+	}
+}
+
 // Gets all supported file endings, including the ones from WIC.
 // The length of the returned list is nNumEndings
 static LPCTSTR* GetSupportedFileEndingList() {
     if (sFileEndings == NULL) {
-        const int MAX_ENDINGS = 32;
         sFileEndings = new LPCTSTR[MAX_ENDINGS];
         for (nNumEndings = 0; nNumEndings < cnNumEndingsInternal; nNumEndings++) {
             sFileEndings[nNumEndings] = csFileEndingsInternal[nNumEndings];
         }
-        LPCTSTR sFileEndingsWIC = CSettingsProvider::This().FilesProcessedByWIC();
-        if (_tcslen(sFileEndingsWIC) > 2 && WICPresentGuarded()) {
-            LPTSTR buffer = new TCHAR[_tcslen(sFileEndingsWIC) + 1];
-            _tcscpy(buffer, sFileEndingsWIC);
-            LPTSTR sStart = buffer, sCurrent = buffer;
-            while (*sCurrent != 0 && nNumEndings < MAX_ENDINGS) {
-                while (*sCurrent != 0 && *sCurrent != _T(';')) {
-                    sCurrent++;
-                }
-                if (*sCurrent == _T(';')) {
-                    *sCurrent = 0;
-                    sCurrent++;
-                }
-                if (_tcslen(sStart) > 2) {
-                    sFileEndings[nNumEndings++] = sStart + 2;
-                }
-                sStart = sCurrent;
-            }
-        }
+
+		LPCTSTR sFileEndingsWIC = CSettingsProvider::This().FilesProcessedByWIC();
+		if (_tcslen(sFileEndingsWIC) > 2 && WICPresentGuarded()) {
+			ParseAndAddFileEndings(sFileEndingsWIC);
+		}
+		ParseAndAddFileEndings(CSettingsProvider::This().FileEndingsRAW());
     }
     return sFileEndings;
 }

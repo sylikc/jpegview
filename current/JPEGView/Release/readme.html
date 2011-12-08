@@ -46,7 +46,7 @@
 				<td>
 					<a name="Top"></a>
 					<h1>JPEGView Readme</h1>
-					Revision: 02-Nov-2011
+					Revision: 09-Dec-2011
 					<a name="Introduction"></a>
 					<h2>Introduction</h2>
 					JPEGView is a viewer/editor for JPEG, BMP, WEBP, PNG, GIF and TIFF images. It is designed to view images from digital cameras
@@ -65,7 +65,7 @@
 								<li>PNG</li>
 								<li>GIF</li>
 								<li>TIFF</li>
-                                <li>Camera RAW (only Vista/Windows 7,  see <a href="#RAWFiles">here</a>)<br/>
+                                <li>Camera RAW (embedded JPEGs, see <a href="#RAWFiles">here for details</a>)<br/>
                               </li>
 							</ul>
 						</li>
@@ -863,9 +863,11 @@
 
                   <a name="RAWFiles"></a>
                   <h2>Adding support for viewing camera RAW files to JPEGView</h2>
-                  <b>Notice:</b> Camera RAW support is provided indirectly by using the Microsoft Camera Codec pack.<br/>
+                  JPEGView has built in support to view the JPEG images embedded in many camera RAW files. These embedded JPEGs often
+                  have a smaller resolution than the RAW image itself but can be decoded and displayed very quickly.<br/>
+                  Support for viewing the full size camera RAW images is provided indirectly by using the Microsoft Camera Codec pack.<br/>
                   This codec pack is only available for Windows Vista SP2 and Windows 7, but not for Windows XP!<br/>
-                  To add support for camera RAW files:
+                  To add support for viewing full size camera RAW files:
                   <ul style="margin-top:0in;margin-bottom:0in">
                     <li>
                       Download and install the <a href="http://www.microsoft.com/download/en/details.aspx?id=26829">Microsoft Camera Codec pack.</a><br/>
@@ -881,7 +883,7 @@
                       Save the INI file and restart JPEGView.
                     </li>
                   </ul>
-                  
+                  <b>Be warned that decoding the full size RAW images is much, much slower than just decoding the embedded JPEG!</b>
                   <a name="External"></a>
 					<h2>Calling external programs or batch files</h2>
 					In the INI file, external commands can be defined and be bound to a key that is not used in JPEGView internally.
@@ -949,7 +951,8 @@
 					JPEGView includes or uses the following source code libraries:<br/>
 					- Windows Template Library 8.0 (build 6137) 5/17/06, Copyright &copy; 2006 Microsoft Corporation<br/>
 					- IJLWrapper, &copy; by John W. Ratcliff 2000<br/>
-					- WebP codec provided by Google <a href="http://www.code.google.com/speed/webp/">http://www.code.google.com/speed/webp/</a>, &copy; Google
+					- WebP codec provided by Google <a href="http://www.code.google.com/speed/webp/">http://www.code.google.com/speed/webp/</a>, &copy; Google<br/>
+                    - <a href="http://www.cybercom.net/~dcoffin/dcraw/">dcraw</a>, &copy; 1997-2011 by Dave Coffin<br/>
 					<br/>
 					Developed and compiled with Visual Studio 2005, C++ Express Edition
 					<br/><br/>
@@ -960,6 +963,9 @@
 						</li>
 						<li>
 							Michi, Patrik and Michael for additional testing and ideas
+						</li>
+						<li>
+                          <a href="http://codename33.ru">CodeName33</a> for integration of dcraw, for viewing JPEGs embedded in camera RAW
 						</li>
 						<li>
 							Franco Bianconi and Daniel Sánchez Vargas for the Spanish translation

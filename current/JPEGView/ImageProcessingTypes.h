@@ -31,5 +31,6 @@ enum EImageFormat {
 	IF_WEBP,
     IF_WIC,
 	IF_CLIPBOARD,
+	IF_CameraRAW,
 	IF_Unknown
 };
