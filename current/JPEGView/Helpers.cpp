@@ -545,4 +545,25 @@ EImageFormat GetImageFormat(LPCTSTR sFileName) {
 	return IF_Unknown;
 }
 
+// Returns the short form of the path (including the file name)
+CString GetShortFilePath(LPCTSTR sPath) {
+	TCHAR shortPath[MAX_PATH];
+	if (::GetShortPathName(sPath, (LPTSTR)(&shortPath), MAX_PATH) != 0) {
+		return CString(shortPath);
+	} else {
+		int nError = ::GetLastError();
+		return CString(sPath);
+	}
+}
+
+// Returns the short form of the path but the file name remains untouched
+CString ReplacePathByShortForm(LPCTSTR sPath) {
+	LPCTSTR sLast = _tcsrchr(sPath, _T('\\'));
+	if (sLast != NULL) {
+		CString sShortPath = GetShortFilePath(CString(sPath).Left(sLast - sPath));
+		return sShortPath + sLast;
+	}
+	return CString(sPath);
+}
+
 }

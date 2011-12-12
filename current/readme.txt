@@ -28,6 +28,9 @@ Changelog
 *********
 
 [1.0.26]
+Bugs fixed:
+- Lossless rotate and crop now works in folders containing Unicode characters in the path.
+  Note that the file title must not contain Unicode characters due to the fact that the jpegtrans.exe does not support this.
 New features:
 - Support for viewing embedded JPEG images in camera RAW files using code from the dcraw project.
 - Support for loading images using Windows Image Codecs (WIC). By default WIC is used to load JPEG XR files (also called
