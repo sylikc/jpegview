@@ -143,6 +143,12 @@ namespace Helpers {
     // Gets the image format given a file name (uses the file extension)
     EImageFormat GetImageFormat(LPCTSTR sFileName);
 
+	// Returns the short form of the path (including the short form of the file name)
+	CString GetShortFilePath(LPCTSTR sPath);
+
+	// Returns the short form of the path but the file name remains untouched
+	CString ReplacePathByShortForm(LPCTSTR sPath);
+
 	// Conversion class that replaces the | by null character in a string.
 	// Caution: Uses a static buffer and can therefore only one string can be replaced concurrently
 	const int MAX_SIZE_REPLACE_PIPE = 512;

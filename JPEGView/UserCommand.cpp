@@ -1,6 +1,7 @@
 #include "StdAfx.h"
 #include "UserCommand.h"
 #include "NLS.h"
+#include "Helpers.h"
 #include <shlobj.h>
 #include <shellapi.h>
 
@@ -224,7 +225,12 @@ bool CUserCommand::Execute(HWND hWnd, LPCTSTR sFileName, const CRect& selectionR
 		}
 	}
 
-	CString sCommandLine = ReplacePlaceholders(m_sCommand, sFileName, selectionRect, m_bUseShortFileName);
+	CString sFileNameInCommandLine = sFileName;
+	if (m_sCommand.Find(_T("jpegtran ") == 0)) {
+		sFileNameInCommandLine = Helpers::ReplacePathByShortForm(sFileName);
+	}
+
+	CString sCommandLine = ReplacePlaceholders(m_sCommand, sFileNameInCommandLine, selectionRect, m_bUseShortFileName);
 	bool bSuccess = true;
 	if (m_bUseShellExecute) {
 		CString sEXE, sParameters, sStartupPath;

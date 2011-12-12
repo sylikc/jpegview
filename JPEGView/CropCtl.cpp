@@ -289,9 +289,9 @@ void CCropCtl::CropLossless() {
 
 	if (IDOK == fileDlg.DoModal(m_pMainDlg->GetHWND())) {
 		CString sCmd(_T("KeyCode: 0  Cmd: 'jpegtran -crop %w%x%h%+%x%+%y% -copy all -perfect %filename% \"%outfilename%\"' Flags: 'WaitForTerminate NoWindow ReloadFileList'"));
-		sCmd.Replace(_T("%outfilename%"), fileDlg.m_szFileName);
+		sCmd.Replace(_T("%outfilename%"), Helpers::ReplacePathByShortForm(fileDlg.m_szFileName));
 		CUserCommand cmdCrop(sCmd);
-		if (cmdCrop.Execute(m_pMainDlg->GetHWND(), m_pMainDlg->CurrentFileName(false), cropRect)) {
+		if (cmdCrop.Execute(m_pMainDlg->GetHWND(), Helpers::GetShortFilePath(m_pMainDlg->CurrentFileName(false)), cropRect)) {
 			if (_tcscmp(m_pMainDlg->CurrentFileName(false), fileDlg.m_szFileName) == 0) {
 				m_pMainDlg->ExecuteCommand(IDM_RELOAD);
 			}
