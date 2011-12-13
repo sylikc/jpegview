@@ -22,11 +22,16 @@
 ; 'el'    Greek
 Language=auto
 
+
 ; File endings of files to be decoded by WIC (Windows Image Converter)
-; If the Microsoft Camera Codec pack is installed, RAW file can be read with WIC
+; If the Microsoft Camera Codec pack is installed, full size camera RAW files can be read with WIC
 ; Add the file endings of the raw files to view here, e.g.
 ; FilesProcessedByWIC=*.wdp;*.mdp;*.hdp;*.nef
 FilesProcessedByWIC=*.wdp;*.mdp;*.hdp
+
+; File endings of camera RAW files to be searched for embedded JPEG thumb images to display
+; Reading just these embedded JPEGs is much faster than decoding the RAW using WIC
+FileEndingsRAW=*.pef;*.dng;*.crw;*.nef;*.cr2;*.mrw;*.rw2;*.orf;*.x3f;*.arw;*.kdc;*.nrw;*.dcr;*.sr2;*.raf
 
 ; Background color, R G B, each component must be in [0..255], e.g. "128 128 128" for a middle grey
 BackgroundColor=0 0 0
