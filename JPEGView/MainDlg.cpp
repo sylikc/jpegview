@@ -1624,6 +1624,14 @@ void CMainDlg::DoDragging() {
 }
 
 void CMainDlg::EndDragging() {
+	if (!m_bDoDragging && !m_pZoomNavigatorCtl->IsPointInZoomNavigatorThumbnail(CPoint(m_nMouseX, m_nMouseY))) {
+		if (!GetNavPanelCtl()->IsVisible()) {
+			MouseOn();
+			GetNavPanelCtl()->ShowNavPanelTemporary();
+		} else {
+			GetNavPanelCtl()->HideNavPanelTemporary();
+		}
+	}
 	m_bDragging = false;
 	m_bDoDragging = false;
 	m_pZoomNavigatorCtl->EndDragging();

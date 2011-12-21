@@ -143,6 +143,7 @@ void CSettingsProvider::ReadWriteableINISettings() {
 	m_bShowNavPanel = GetBool(_T("ShowNavPanel"), true);
 	m_bShowZoomNavigator = GetBool(_T("ShowZoomNavigator"), true);
 	m_fBlendFactorNavPanel = (float) GetDouble(_T("BlendFactorNavPanel"), 0.5, 0.0, 1.0);
+	m_fScaleFactorNavPanel = (float) GetDouble(_T("ScaleFactorNavPanel"), 1.0, 0.8, 2.5);
 	m_bKeepParams = GetBool(_T("KeepParameters"), false);
 	
 	CString sCPU = GetString(_T("CPUType"), _T("AutoDetect"));

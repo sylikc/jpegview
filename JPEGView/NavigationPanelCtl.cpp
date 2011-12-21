@@ -276,6 +276,17 @@ void CNavigationPanelCtl::HideNavPanelTemporary() {
 	}
 }
 
+void CNavigationPanelCtl::ShowNavPanelTemporary() {
+	if (!m_pMainDlg->GetImageProcPanelCtl()->IsVisible()) {
+		m_bInNavPanelAnimation = false;
+		m_fCurrentBlendingFactorNavPanel = CSettingsProvider::This().BlendFactorNavPanel();
+		m_pMainDlg->InvalidateRect(PanelRect(), FALSE);
+		m_bFadeOut = true;
+		::KillTimer(m_pMainDlg->GetHWND(), NAVPANEL_ANI_TIMER_EVENT_ID);
+		::KillTimer(m_pMainDlg->GetHWND(), NAVPANEL_START_ANI_TIMER_EVENT_ID);
+	}
+}
+
 void CNavigationPanelCtl::MoveMouseCursorToButton(CButtonCtrl & sender) {
 	GetPanel()->RequestRepositioning();
 	CRect rect = sender.GetPosition();

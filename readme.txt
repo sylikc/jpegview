@@ -38,6 +38,8 @@ New features:
   support for full size camera RAW images in JPEGView. Refer to the readme.html for instructions.
 - New INI file setting: 'AutoRotateEXIF' to disable auto rotation of images based on EXIF image orientation tag.
   Default is true (the EXIF auto rotation is supported since many versions, this setting is introduced to turn this off).
+- New INI file setting: 'ScaleFactorNavPanel' to scale the navigation panel buttons, e.g. to make them larger on touch screens
+- Clicking into the image (without dragging) toggles visiblity of navigation panel
 Other changes:
 - Russian version of keymap and INI file (KeyMap_ru.txt, JPEGView_ru.ini) containig explanations in Russian. Be aware that
   these files must be renamed to KeyMap.txt and JPEGView.ini and copied over the original (English) versions when JPEGView shall use them.
