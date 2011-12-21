@@ -11,6 +11,7 @@
 ; 'es'    Spanish (Spain)
 ; 'es-ar' Spanish (latinoamerica)
 ; 'pt-br' Portuguese (Brasil)
+; 'pt'    Portuguese
 ; 'de'    German
 ; 'it'    Italian
 ; 'fr'    French
