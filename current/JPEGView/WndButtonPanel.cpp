@@ -2,6 +2,7 @@
 #include "WndButtonPanel.h"
 #include "ImageProcessingPanel.h"
 #include "Helpers.h"
+#include "SettingsProvider.h"
 
 #define WNDBUTTON_PANEL_HEIGHT 24
 #define WNDBUTTON_BORDER 1
@@ -13,6 +14,7 @@
 CWndButtonPanel::CWndButtonPanel(HWND hWnd, INotifiyMouseCapture* pNotifyMouseCapture, CPanel* pImageProcPanel) : CPanel(hWnd, pNotifyMouseCapture) {
 	m_pImageProcPanel = pImageProcPanel;
 	m_clientRect = CRect(0, 0, 0, 0);
+	m_fDPIScale *= CSettingsProvider::This().ScaleFactorNavPanel();
 	m_nWidth = 0;
 	m_nHeight = (int)(WNDBUTTON_PANEL_HEIGHT*m_fDPIScale);
 

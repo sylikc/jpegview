@@ -36,6 +36,8 @@ public:
 	void EndNavPanelAnimation();
 	// Hides the navigation panel temporarily (invisible) - the panel remains active however
 	void HideNavPanelTemporary();
+	// Shows the navigation panel when it is blended out (CurrentBlendingFactor zero)
+	void ShowNavPanelTemporary();
 	// Gets managed panel containing the buttons
 	CNavigationPanel* GetNavPanel() { return m_pNavPanel; }
 

@@ -2,6 +2,7 @@
 #include "NavigationPanel.h"
 #include "ImageProcessingPanel.h"
 #include "Helpers.h"
+#include "SettingsProvider.h"
 #include "NLS.h"
 
 #define NAV_PANEL_HEIGHT 32
@@ -16,6 +17,7 @@ CNavigationPanel::CNavigationPanel(HWND hWnd, INotifiyMouseCapture* pNotifyMouse
 		DecisionMethod* isCurrentImageFitToScreen, void* pDecisionMethodParam) : CPanel(hWnd, pNotifyMouseCapture) {
 	m_pImageProcPanel = pImageProcPanel;
 	m_clientRect = CRect(0, 0, 0, 0);
+	m_fDPIScale *= CSettingsProvider::This().ScaleFactorNavPanel();
 	SetScaledWidth(1.0f);
 	m_isCurrentImageFitToScreen = isCurrentImageFitToScreen;
 	m_pDecisionMethodParam = pDecisionMethodParam;

@@ -33,6 +33,7 @@ public:
 	bool ShowFullScreen() { return m_bShowFullScreen; }
 	bool AutoFullScreen() { return m_bAutoFullScreen; }
 	float BlendFactorNavPanel() { return m_fBlendFactorNavPanel; }
+	float ScaleFactorNavPanel() { return m_fScaleFactorNavPanel; }
 	bool KeepParams() { return m_bKeepParams; }
 	LPCTSTR Language() { return m_sLanguage; }
 	Helpers::CPUType AlgorithmImplementation() { return m_eCPUAlgorithm; }
@@ -121,6 +122,7 @@ private:
 	bool m_bShowFullScreen;
 	bool m_bAutoFullScreen;
 	float m_fBlendFactorNavPanel;
+	float m_fScaleFactorNavPanel;
 	bool m_bKeepParams;
 	CString m_sLanguage;
 	Helpers::CPUType m_eCPUAlgorithm;

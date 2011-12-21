@@ -15,6 +15,10 @@
 
 static const int AUTOSCROLL_TIMEOUT = 20; // autoscroll time in ms
 
+static bool PointDifferenceSmall(const CPoint& p1, const CPoint& p2) {
+	return abs(p1.x - p2.x) < 2 && abs(p1.y - p2.y) < 2;
+}
+
 CCropCtl::CCropCtl(CMainDlg* pMainDlg) {
 	m_pMainDlg = pMainDlg;
 	m_bCropping = false;
@@ -86,11 +90,17 @@ void CCropCtl::DoCropping(int nX, int nY) {
 }
 
 void CCropCtl::EndCropping() {
-	if (m_pMainDlg->GetCurrentImage() == NULL || m_cropEnd == CPoint(INT_MIN, INT_MIN) || m_cropMouse == m_pMainDlg->GetMousePos()) {
+	bool bCropRectSmall = PointDifferenceSmall(m_cropMouse, m_pMainDlg->GetMousePos());
+	if (m_pMainDlg->GetCurrentImage() == NULL || m_cropEnd == CPoint(INT_MIN, INT_MIN) || bCropRectSmall) {
 		m_bCropping = false;
 		m_bDoCropping = false;
 		DeleteSceenCropRect();
-		m_pMainDlg->GetNavPanelCtl()->HideNavPanelTemporary();
+		if (bCropRectSmall && !m_pMainDlg->GetNavPanelCtl()->IsVisible()) {
+			m_pMainDlg->MouseOn();
+			m_pMainDlg->GetNavPanelCtl()->ShowNavPanelTemporary();
+		} else {
+			m_pMainDlg->GetNavPanelCtl()->HideNavPanelTemporary();
+		}
 		m_pMainDlg->GetZoomNavigatorCtl()->InvalidateZoomNavigatorRect();
 		return;
 	}
