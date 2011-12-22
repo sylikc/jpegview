@@ -169,6 +169,8 @@ CString GetINIFileSaveConfirmationText(const CImageProcessingParams& procParams,
 		sText += CNLS::GetString(_T("Creation date/time"));
 	} else if (eFileSorting == Helpers::FS_LastModTime) {
 		sText += CNLS::GetString(_T("Last modification date/time"));
+	} else if (eFileSorting == Helpers::FS_Random) {
+		sText += CNLS::GetString(_T("Random"));
 	} else {
 		sText += CNLS::GetString(_T("File name"));
 	}

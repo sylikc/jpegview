@@ -1052,8 +1052,10 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 		case IDM_SORT_MOD_DATE:
 		case IDM_SORT_CREATION_DATE:
 		case IDM_SORT_NAME:
+		case IDM_SORT_RANDOM:
 			m_pFileList->SetSorting((nCommand == IDM_SORT_CREATION_DATE) ? Helpers::FS_CreationTime : 
-				(nCommand == IDM_SORT_MOD_DATE) ? Helpers::FS_LastModTime : Helpers::FS_FileName);
+				(nCommand == IDM_SORT_MOD_DATE) ? Helpers::FS_LastModTime : 
+				(nCommand == IDM_SORT_RANDOM) ? Helpers::FS_Random : Helpers::FS_FileName);
 			if (m_bShowHelp || m_pEXIFDisplayCtl->IsActive() || m_bShowFileName) {
 				this->Invalidate(FALSE);
 			}

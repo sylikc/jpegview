@@ -37,6 +37,7 @@ private:
 	LPCTSTR m_sTitle;
 	FILETIME m_lastModTime;
 	FILETIME m_creationTime;
+	int m_nRandomOrderNumber;
 };
 
 

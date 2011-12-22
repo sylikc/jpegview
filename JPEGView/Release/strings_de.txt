@@ -273,3 +273,4 @@ Transform image	Bild transformieren
 Rotate...	Rotieren...
 Mirror horizontally	Horizontal spiegeln
 Mirror vertically	Vertikal spiegeln
+Random	Zufällig
