@@ -196,6 +196,7 @@ BEGIN
 		  MENUITEM "Modification date",			IDM_SORT_MOD_DATE
 		  MENUITEM "Creation date",				IDM_SORT_CREATION_DATE
 		  MENUITEM "File name",					IDM_SORT_NAME
+		  MENUITEM "Random",					IDM_SORT_RANDOM
         END
       POPUP "Play folder as slideshow/movie" 
         BEGIN

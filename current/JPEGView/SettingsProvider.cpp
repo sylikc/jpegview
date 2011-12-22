@@ -176,6 +176,8 @@ void CSettingsProvider::ReadWriteableINISettings() {
 		m_eSorting = Helpers::FS_CreationTime;
 	} else if (sSorting.CompareNoCase(_T("FileName")) == 0) {
 		m_eSorting = Helpers::FS_FileName;
+	} else if (sSorting.CompareNoCase(_T("Random")) == 0) {
+		m_eSorting = Helpers::FS_Random;
 	} else {
 		m_eSorting = Helpers::FS_LastModTime;
 	}
@@ -299,6 +301,8 @@ void CSettingsProvider::SaveSettings(const CImageProcessingParams& procParams,
 		sSorting = _T("CreationDate");
 	} else if (eFileSorting == Helpers::FS_LastModTime) {
 		sSorting = _T("LastModDate");
+	} else if (eFileSorting == Helpers::FS_Random) {
+		sSorting = _T("Random");
 	}
 	WriteString(_T("FileDisplayOrder"), sSorting);
 

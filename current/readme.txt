@@ -30,7 +30,7 @@ Changelog
 [1.0.26]
 Bugs fixed:
 - Lossless rotate and crop now works in folders containing Unicode characters in the path.
-  Note that the file title must not contain Unicode characters due to the fact that the jpegtrans.exe does not support this.
+  Note that the file title must not contain Unicode characters due to the fact that jpegtrans.exe does not support this.
 New features:
 - Portuguese (Portugal) translation, thanks to Sérgio Marques
 - Support for viewing embedded JPEG images in camera RAW files using code from the dcraw project.
@@ -40,7 +40,8 @@ New features:
 - New INI file setting: 'AutoRotateEXIF' to disable auto rotation of images based on EXIF image orientation tag.
   Default is true (the EXIF auto rotation is supported since many versions, this setting is introduced to turn this off).
 - New INI file setting: 'ScaleFactorNavPanel' to scale the navigation panel buttons, e.g. to make them larger on touch screens
-- Clicking into the image (without dragging) toggles visiblity of navigation panel
+- Clicking into the image (without dragging) toggles visibility of navigation panel
+- Random sorting order for images within folder, can be used e.g. for random slideshow mode (activate with 'z' key)
 Other changes:
 - Russian version of keymap and INI file (KeyMap_ru.txt, JPEGView_ru.ini) containig explanations in Russian. Be aware that
   these files must be renamed to KeyMap.txt and JPEGView.ini and copied over the original (English) versions when JPEGView shall use them.

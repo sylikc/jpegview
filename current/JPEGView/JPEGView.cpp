@@ -65,6 +65,8 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR lp
 	_tsetlocale(LC_ALL, _T(""));
 	_tsetlocale(LC_NUMERIC, _T("C"));
 
+	srand(::GetTickCount());
+
 	// this resolves ATL window thunking problem when Microsoft Layer for Unicode (MSLU) is used
 	::DefWindowProc(NULL, 0, 0, 0L);
 

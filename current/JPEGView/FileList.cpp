@@ -70,6 +70,7 @@ CFileDesc::CFileDesc(const CString & sName, const FILETIME* lastModTime, const F
 	m_sTitle = (LPCTSTR)m_sName + sName.ReverseFind(_T('\\')) + 1;
 	memcpy(&m_lastModTime, lastModTime, sizeof(FILETIME));
 	memcpy(&m_creationTime, creationTime, sizeof(FILETIME));
+	m_nRandomOrderNumber = rand();
 }
 
 bool CFileDesc::operator < (const CFileDesc& other) const {
@@ -83,6 +84,8 @@ bool CFileDesc::operator < (const CFileDesc& other) const {
 		} else {
 			return pTime->dwLowDateTime < pTimeOther->dwLowDateTime;
 		}
+	} else if (sm_eSorting == Helpers::FS_Random) {
+		return m_nRandomOrderNumber < other.m_nRandomOrderNumber;
 	} else {
 		// If the filename contains numbers, we want to sort the files
 		// according to the numbers to place 'File9' before 'File10'

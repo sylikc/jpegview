@@ -29,6 +29,7 @@
 #define IDM_SORT_MOD_DATE	7000			// sorting order by modification date
 #define IDM_SORT_CREATION_DATE 	7010			// sorting order by creation date
 #define IDM_SORT_NAME		7020			// sorting order by name
+#define IDM_SORT_RANDOM		7030			// sorting order random
 #define IDM_ROTATE_90		8000			// rotate image 90 deg
 #define IDM_ROTATE_270		9000			// rotate image 270 deg
 #define IDM_ROTATE          	9100			// show free rotation dialog
@@ -149,6 +150,7 @@ N                       IDM_SORT_NAME
 Ctrl+M                  IDM_MARK_FOR_TOGGLE
 Ctrl+Shift+M            IDM_TOUCH_IMAGE
 M                       IDM_SORT_MOD_DATE
+Z                       IDM_SORT_RANDOM
 Ctrl+S                  IDM_SAVE_ALLOW_NO_PROMPT
 Ctrl+Shift+S            IDM_SAVE_SCREEN
 S                       IDM_SAVE_PARAM_DB

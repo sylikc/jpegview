@@ -18,7 +18,8 @@ namespace Helpers {
 	enum ESorting {
 		FS_LastModTime,
 		FS_CreationTime,
-		FS_FileName
+		FS_FileName,
+		FS_Random
 	};
 
 	// Navigation mode over directories

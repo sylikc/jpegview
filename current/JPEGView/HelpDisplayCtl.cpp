@@ -71,9 +71,10 @@ void CHelpDisplayCtl::GenerateHelpDisplay() {
 	m_pHelpDisplay->AddLine(_KeyDesc(IDM_SAVE_SCREEN), CNLS::GetString(_T("Save processed image to JPEG file (screen size)")));
 	_stprintf_s(buffMI, 256, CNLS::GetString(_T("Save (%s)/ delete (%s) image processing parameters in/from parameter DB")), _KeyDesc(IDM_SAVE_PARAM_DB), _KeyDesc(IDM_CLEAR_PARAM_DB));
 	m_pHelpDisplay->AddLine(_KeyDesc(IDM_SAVE_PARAM_DB, IDM_CLEAR_PARAM_DB), buffMI);
-	m_pHelpDisplay->AddLineInfo(_KeyDesc(IDM_SORT_CREATION_DATE, IDM_SORT_MOD_DATE) + _T("/") + _KeyDesc(IDM_SORT_NAME), 
-		(m_pMainDlg->GetFileList()->GetSorting() == Helpers::FS_LastModTime) ? _T("m") :
-		(m_pMainDlg->GetFileList()->GetSorting() == Helpers::FS_FileName) ? _T("n") : _T("c"), 
+	m_pHelpDisplay->AddLineInfo(_KeyDesc(IDM_SORT_CREATION_DATE, IDM_SORT_MOD_DATE) + _T("/") + _KeyDesc(IDM_SORT_NAME, IDM_SORT_RANDOM), 
+		(m_pMainDlg->GetFileList()->GetSorting() == Helpers::FS_LastModTime) ? _KeyDesc(IDM_SORT_MOD_DATE) :
+		(m_pMainDlg->GetFileList()->GetSorting() == Helpers::FS_FileName) ? _KeyDesc(IDM_SORT_NAME) : 
+		(m_pMainDlg->GetFileList()->GetSorting() == Helpers::FS_Random) ? _KeyDesc(IDM_SORT_RANDOM) : _KeyDesc(IDM_SORT_CREATION_DATE), 
 		CNLS::GetString(_T("Sort images by creation date, resp. modification date, resp. file name")));
 	m_pHelpDisplay->AddLine(_KeyDesc(IDM_PREV), CNLS::GetString(_T("Goto previous image")));
 	m_pHelpDisplay->AddLine(_KeyDesc(IDM_NEXT), CNLS::GetString(_T("Goto next image")));
