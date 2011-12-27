@@ -199,6 +199,8 @@ CMainDlg::CMainDlg() {
 	m_eProcFlagsBeforeMovie = PFLAG_None;
 	m_nRotation = 0;
 	m_dZoomAtResizeStart = 1.0;
+	m_bZoomMode = false;
+	m_bZoomModeOnLeftMouse = false;
 	m_bUserZoom = false;
 	m_bUserPan = false;
 	m_bMovieMode = false;
@@ -210,6 +212,7 @@ CMainDlg::CMainDlg() {
 	m_bDragging = false;
 	m_bDoDragging = false;
 	m_offsets = CPoint(0, 0);
+	m_DIBOffsets = CPoint(0, 0);
 	m_nCapturedX = m_nCapturedY = 0;
 	m_nMouseX = m_nMouseY = 0;
 	m_bShowHelp = false;
@@ -410,7 +413,9 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 		CSize newSize = Helpers::GetVirtualImageSize(m_pCurrentImage->OrigSize(),
 			m_clientRect.Size(), IsAdjustWindowToImage() ? Helpers::ZM_FitToScreenNoZoom : m_eAutoZoomMode, m_dZoom);
 		m_virtualImageSize = newSize;
+		CPoint unlimitedOffsets = m_offsets;
 		m_offsets = Helpers::LimitOffsets(m_offsets, m_clientRect.Size(), newSize);
+		m_DIBOffsets = m_bZoomMode ? (unlimitedOffsets - m_offsets) : CPoint(0, 0);
 
 		// Clip to client rectangle and request the DIB
 		CSize clippedSize(min(m_clientRect.Width(), newSize.cx), min(m_clientRect.Height(), newSize.cy));
@@ -419,14 +424,14 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 		void* pDIBData;
 		if (m_pUnsharpMaskPanelCtl->IsVisible()) {
 			pDIBData = m_pUnsharpMaskPanelCtl->GetUSMDIBForPreview(clippedSize, offsetsInImage, 
-			    *m_pImageProcParams, CreateProcessingFlags(m_bHQResampling && !m_bTemporaryLowQ, m_bAutoContrast, m_bAutoContrastSection, m_bLDC, false, m_bLandscapeMode));
+			    *m_pImageProcParams, CreateProcessingFlags(m_bHQResampling && !m_bTemporaryLowQ && !m_bZoomMode, m_bAutoContrast, m_bAutoContrastSection, m_bLDC, false, m_bLandscapeMode));
 		} else if (m_pRotationPanelCtl->IsVisible()) {
 			pDIBData = m_pRotationPanelCtl->GetRotatedDIBForPreview(newSize, clippedSize, offsetsInImage, 
 				*m_pImageProcParams, CreateProcessingFlags(false, m_bAutoContrast, m_bAutoContrastSection, m_bLDC, false, m_bLandscapeMode));
 		} else {
 			pDIBData = m_pCurrentImage->GetDIB(newSize, clippedSize, offsetsInImage, 
 				*m_pImageProcParams, 
-				CreateProcessingFlags(m_bHQResampling && !m_bTemporaryLowQ, m_bAutoContrast, m_bAutoContrastSection, m_bLDC, false, m_bLandscapeMode));
+				CreateProcessingFlags(m_bHQResampling && !m_bTemporaryLowQ && !m_bZoomMode, m_bAutoContrast, m_bAutoContrastSection, m_bLDC, false, m_bLandscapeMode));
 		}
 
 		// Zoom navigator - check if visible and create exclusion rectangle
@@ -442,10 +447,11 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 		// Paint the DIB
 		if (pDIBData != NULL) {
 			BITMAPINFO bmInfo;
-			CPoint ptDIBStart = HelpersGUI::DrawDIB32bppWithBlackBorders(dc, bmInfo, pDIBData, backBrush, m_clientRect, clippedSize);
+			CPoint ptDIBStart = HelpersGUI::DrawDIB32bppWithBlackBorders(dc, bmInfo, pDIBData, backBrush, m_clientRect, clippedSize, m_DIBOffsets);
 			// The DIB is also blitted into the memory DCs of the panels
 			memDCMgr.BlitImageToMemDC(pDIBData, &bmInfo, ptDIBStart, m_pNavPanelCtl->CurrentBlendingFactor());
 		}
+		if (m_bZoomMode) m_offsets = unlimitedOffsets;
 	}
 
 	// Restore the old clipping region by adding the excluded rectangles again
@@ -571,8 +577,13 @@ LRESULT CMainDlg::OnLButtonDown(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam,
 
 	if (!bEatenByPanel) {
 		bool bCtrl = (::GetKeyState(VK_CONTROL) & 0x8000) != 0;
+		bool bShift = (::GetKeyState(VK_SHIFT) & 0x8000) != 0;
 		bool bDraggingRequired = m_virtualImageSize.cx > m_clientRect.Width() || m_virtualImageSize.cy > m_clientRect.Height();
-		if ((bCtrl || !bDraggingRequired) && !bShowRotationPanel) {
+		if ((bShift || m_bZoomModeOnLeftMouse) && !bShowRotationPanel && !m_pUnsharpMaskPanelCtl->IsVisible()) {
+			m_bZoomMode = true;
+			m_dStartZoom = m_dZoom;
+			m_nCapturedX = m_nMouseX; m_nCapturedY = m_nMouseY;
+		} else if ((bCtrl || !bDraggingRequired) && !bShowRotationPanel) {
 			m_pCropCtl->StartCropping(pointClicked.x, pointClicked.y);
 		} else if (!m_pZoomNavigatorCtl->OnMouseLButton(MouseEvent_BtnDown, pointClicked.x, pointClicked.y) && !bShowRotationPanel) {
 			StartDragging(pointClicked.x, pointClicked.y, false);
@@ -596,7 +607,10 @@ LRESULT CMainDlg::OnMButtonDown(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam,
 }
 
 LRESULT CMainDlg::OnLButtonUp(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, BOOL& /*bHandled*/) {
-	if (m_bDragging) {
+	if (m_bZoomMode) {
+		m_bZoomMode = false;
+		Invalidate(FALSE);
+	} else if (m_bDragging) {
 		EndDragging();
 	} else if (m_pCropCtl->IsCropping()) {
 		m_pCropCtl->EndCropping();
@@ -662,7 +676,12 @@ LRESULT CMainDlg::OnMouseMove(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, B
 	}
 
 	// Do dragging or cropping when needed, else pass event to panel manager and zoom navigator
-	if (m_bDragging) {
+	if (m_bZoomMode) {
+		int nDX = m_nMouseX - m_nCapturedX;
+		double dFactor = 1 + pow(nDX * nDX, 0.8) / 1500;
+		if (nDX < 0) dFactor = 1.0/dFactor;
+		PerformZoom(m_dStartZoom * dFactor, false, true);
+	} else if (m_bDragging) {
 		DoDragging();
 	} else if (m_pCropCtl->IsCropping()) {
 		m_pCropCtl->DoCropping(m_nMouseX, m_nMouseY);
@@ -1273,6 +1292,10 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 		case IDM_ZOOM_DEC:
 			PerformZoom((nCommand == IDM_ZOOM_INC) ? 1 : -1, true, m_bMouseOn);
 			break;
+		case IDM_ZOOM_MODE:
+			m_bZoomModeOnLeftMouse = !m_bZoomModeOnLeftMouse;
+			m_pNavPanelCtl->GetNavPanel()->GetBtnZoomMode()->SetActive(m_bZoomModeOnLeftMouse);
+			break;
 		case IDM_AUTO_ZOOM_FIT_NO_ZOOM:
 		case IDM_AUTO_ZOOM_FILL_NO_ZOOM:
 		case IDM_AUTO_ZOOM_FIT:
@@ -1640,7 +1663,11 @@ void CMainDlg::EndDragging() {
 	if (m_pCurrentImage != NULL) {
 		m_pCurrentImage->VerifyDIBPixelsCreated();
 	}
-	this->InvalidateRect(m_pNavPanelCtl->PanelRect(), FALSE);
+	if (m_DIBOffsets != CPoint(0, 0)) {
+		Invalidate(FALSE);
+	} else {
+		this->InvalidateRect(m_pNavPanelCtl->PanelRect(), FALSE);
+	}
 	SetCursorForMoveSection();
 }
 
@@ -1779,7 +1806,7 @@ void CMainDlg::PerformZoom(double dValue, bool bExponent, bool bZoomToMouse) {
 	if (abs(m_dZoom - 1.0) < 0.01) {
 		m_dZoom = 1.0;
 	}
-	if ((dOldZoom - 1.0)*(m_dZoom - 1.0) <= 0 && m_bInZooming) {
+	if ((dOldZoom - 1.0)*(m_dZoom - 1.0) <= 0 && m_bInZooming && !m_bZoomMode) {
 		// make a stop at 100 %
 		m_dZoom = 1.0;
 	} 
@@ -1798,11 +1825,13 @@ void CMainDlg::PerformZoom(double dValue, bool bExponent, bool bZoomToMouse) {
 
 	if (bZoomToMouse) {
 		// zoom to mouse
-		int nOldX = nOldXSize/2 - m_clientRect.Width()/2 + m_nMouseX - m_offsets.x;
-		int nOldY = nOldYSize/2 - m_clientRect.Height()/2 + m_nMouseY - m_offsets.y;
+		int nCenterX = m_bZoomMode ? m_nCapturedX : m_nMouseX;
+		int nCenterY = m_bZoomMode ? m_nCapturedY : m_nMouseY;
+		int nOldX = nOldXSize/2 - m_clientRect.Width()/2 + nCenterX - m_offsets.x;
+		int nOldY = nOldYSize/2 - m_clientRect.Height()/2 + nCenterY - m_offsets.y;
 		double dFac = m_dZoom/dOldZoom;
-		m_offsets.x = Helpers::RoundToInt(nNewXSize/2 - m_clientRect.Width()/2 + m_nMouseX - nOldX*dFac);
-		m_offsets.y = Helpers::RoundToInt(nNewYSize/2 - m_clientRect.Height()/2 + m_nMouseY - nOldY*dFac);
+		m_offsets.x = Helpers::RoundToInt(nNewXSize/2 - m_clientRect.Width()/2 + nCenterX - nOldX*dFac);
+		m_offsets.y = Helpers::RoundToInt(nNewYSize/2 - m_clientRect.Height()/2 + nCenterY - nOldY*dFac);
 	} else {
 		// zoom to center
 		m_offsets.x = (int) (m_offsets.x*m_dZoom/dOldZoom);
@@ -1811,7 +1840,7 @@ void CMainDlg::PerformZoom(double dValue, bool bExponent, bool bZoomToMouse) {
 
 	m_bInZooming = true;
 	StartLowQTimer(ZOOM_TIMEOUT);
-	if (fabs(dOldZoom - m_dZoom) > 0.01) {
+	if (fabs(dOldZoom - m_dZoom) > 0.01 || m_bZoomMode) {
 		this->Invalidate(FALSE);
 	}
 }

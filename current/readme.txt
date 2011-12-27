@@ -41,6 +41,7 @@ New features:
   Default is true (the EXIF auto rotation is supported since many versions, this setting is introduced to turn this off).
 - New INI file setting: 'ScaleFactorNavPanel' to scale the navigation panel buttons, e.g. to make them larger on touch screens
 - Clicking into the image (without dragging) toggles visibility of navigation panel
+- Zoom by dragging mouse, activate with 'Shift-left mouse click' or with button on navigation panel
 - Random sorting order for images within folder, can be used e.g. for random slideshow mode (activate with 'z' key)
 Other changes:
 - Russian version of keymap and INI file (KeyMap_ru.txt, JPEGView_ru.ini) containig explanations in Russian. Be aware that

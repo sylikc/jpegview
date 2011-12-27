@@ -34,7 +34,7 @@ namespace HelpersGUI {
 	// Draws a 32 bit DIB centered in the given target area, filling the remaining area with the given brush
 	// The bmInfo struct will be initialized by this method and does not need to be preinitialized.
 	// Return value is the top, left coordinate of the painted DIB in the target area
-	CPoint DrawDIB32bppWithBlackBorders(CPaintDC& dc, BITMAPINFO& bmInfo, void* pDIBData, HBRUSH backBrush, const CRect& targetArea, CSize dibSize);
+	CPoint DrawDIB32bppWithBlackBorders(CPaintDC& dc, BITMAPINFO& bmInfo, void* pDIBData, HBRUSH backBrush, const CRect& targetArea, CSize dibSize, CPoint offset);
 
 	// Gets the text for confirmation of saving of settings to INI file
 	CString GetINIFileSaveConfirmationText(const CImageProcessingParams& procParams, 

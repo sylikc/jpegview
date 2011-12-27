@@ -116,6 +116,7 @@ public:
 	bool IsShowFileName() { return m_bShowFileName; }
 	bool IsShowHelp() { return m_bShowHelp; }
 	bool IsInMovieMode() { return m_bMovieMode; }
+	bool IsInZoomMode() { return m_bZoomModeOnLeftMouse; }
 	bool IsFullScreenMode() { return m_bFullScreenMode; }
 	bool IsLandscapeMode() { return m_bLandscapeMode; }
 	bool IsHQResampling() { return m_bHQResampling; }
@@ -150,6 +151,7 @@ public:
 	const CSize& VirtualImageSize() { return m_virtualImageSize; }
 	CJPEGProvider* GetJPEGProvider() { return m_pJPEGProvider; }
 	CKeyMap* GetKeyMap() { return m_pKeyMap; }
+	CPoint GetDIBOffset() { return m_DIBOffsets; }
 
 	void UpdateWindowTitle();
 	void MouseOff();
@@ -192,8 +194,11 @@ private:
 	bool m_bUserPan; // user has zoomed and panned away from default values
 	bool m_bResizeForNewImage;
 	double m_dZoom;
+	double m_dStartZoom; // zoom when start zoomin in zoom mode
 	double m_dZoomAtResizeStart; // zoom factor when user started resizing JPEGView main window
 	double m_dZoomMult;
+	bool m_bZoomMode;
+	bool m_bZoomModeOnLeftMouse;
 	Helpers::EAutoZoomMode m_eAutoZoomMode;
 
 	CImageProcessingParams* m_pImageProcParams;
@@ -225,6 +230,7 @@ private:
 	EProcessingFlags m_eProcFlagsBeforeMovie;
 	bool m_bInTrackPopupMenu;
 	CPoint m_offsets; // Note: These offsets are center of image based
+	CPoint m_DIBOffsets;
 	int m_nCapturedX, m_nCapturedY;
 	int m_nMouseX, m_nMouseY;
 	bool m_bShowFileName;

@@ -274,3 +274,4 @@ Rotate...	Rotieren...
 Mirror horizontally	Horizontal spiegeln
 Mirror vertically	Vertikal spiegeln
 Random	Zufällig
+Zoom mode (drag mouse to zoom)	Zoom-Modus (Zoomen mittels Maus ziehen)
