@@ -110,7 +110,7 @@ CRect InflateRect(const CRect& rect, float fAmount) {
 	CRect r(rect);
 	int nAmount = (int)(fAmount * r.Width());
 	r.InflateRect(-nAmount, -nAmount);
-	return r;
+	return ((r.Height() & 1) == 1) ? CRect(r.left, r.top, r.right, r.bottom - 1) : r;
 }
 
 void GetZoomParameters(float & fZoom, CPoint & offsets, CSize imageSize, CSize windowSize, CRect zoomRect) {

@@ -101,7 +101,7 @@ void DrawTextBordered(CPaintDC& dc, LPCTSTR sText, const CRect& rect, UINT nForm
 	dc.SelectFont(hOldFont);
 }
 
-CPoint DrawDIB32bppWithBlackBorders(CPaintDC& dc, BITMAPINFO& bmInfo, void* pDIBData, HBRUSH backBrush, const CRect& targetArea, CSize dibSize) {
+CPoint DrawDIB32bppWithBlackBorders(CPaintDC& dc, BITMAPINFO& bmInfo, void* pDIBData, HBRUSH backBrush, const CRect& targetArea, CSize dibSize, CPoint offset) {
 	memset(&bmInfo, 0, sizeof(BITMAPINFO));
 	bmInfo.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
 	bmInfo.bmiHeader.biWidth = dibSize.cx;
@@ -109,24 +109,29 @@ CPoint DrawDIB32bppWithBlackBorders(CPaintDC& dc, BITMAPINFO& bmInfo, void* pDIB
 	bmInfo.bmiHeader.biPlanes = 1;
 	bmInfo.bmiHeader.biBitCount = 32;
 	bmInfo.bmiHeader.biCompression = BI_RGB;
-	int xDest = (targetArea.Width() - dibSize.cx) / 2;
-	int yDest = (targetArea.Height() - dibSize.cy) / 2;
-	dc.SetDIBitsToDevice(xDest, yDest, dibSize.cx, dibSize.cy, 0, 0, 0, dibSize.cy, pDIBData, 
-		&bmInfo, DIB_RGB_COLORS);
+	int xDest = (targetArea.Width() - dibSize.cx) / 2 + offset.x;
+	int yDest = (targetArea.Height() - dibSize.cy) / 2 + offset.y;
 
 	// remaining client area is painted black
-	if (dibSize.cx < targetArea.Width()) {
+	if (xDest > 0) {
 		CRect r(0, 0, xDest, targetArea.Height());
 		dc.FillRect(&r, backBrush);
-		CRect rr(xDest + dibSize.cx, 0, targetArea.Width(), targetArea.Height());
-		dc.FillRect(&rr, backBrush);
 	}
-	if (dibSize.cy < targetArea.Height()) {
-		CRect r(0, 0, targetArea.Width(), yDest);
+	if (xDest + dibSize.cx < targetArea.Width()) {
+		CRect r(xDest + dibSize.cx, 0, targetArea.Width(), targetArea.Height());
 		dc.FillRect(&r, backBrush);
-		CRect rr(0, yDest + dibSize.cy, targetArea.Width(), targetArea.Height());
-		dc.FillRect(&rr, backBrush);
 	}
+	if (yDest > 0) {
+		CRect r(xDest, 0, xDest + dibSize.cx, yDest);
+		dc.FillRect(&r, backBrush);
+	}
+	if (yDest + dibSize.cy < targetArea.Height()) {
+		CRect r(xDest, yDest + dibSize.cy, xDest + dibSize.cx, targetArea.Height());
+		dc.FillRect(&r, backBrush);
+	}
+
+	dc.SetDIBitsToDevice(xDest, yDest, dibSize.cx, dibSize.cy, 0, 0, 0, dibSize.cy, pDIBData, 
+		&bmInfo, DIB_RGB_COLORS);
 
 	return CPoint(xDest, yDest);
 }

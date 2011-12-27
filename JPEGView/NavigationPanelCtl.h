@@ -58,7 +58,7 @@ private:
 	bool CheckMouseInNavPanel(int nX, int nY);
 	void DoNavPanelAnimation();
 	void StartNavPanelTimer(int nMilliseconds);
-	void MoveMouseCursorToButton(CButtonCtrl & sender);
+	void MoveMouseCursorToButton(CButtonCtrl & sender, const CRect & oldRect);
 
 	static void OnGotoImage(void* pContext, int nParameter, CButtonCtrl & sender);
 	static void OnToggleZoomFit(void* pContext, int nParameter, CButtonCtrl & sender);
