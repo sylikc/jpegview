@@ -32,7 +32,8 @@ CNavigationPanelCtl::CNavigationPanelCtl(CMainDlg* pMainDlg, CPanel* pImageProcP
 	m_pNavPanel->GetBtnWindowMode()->SetButtonPressedHandler(&OnToggleWindowMode, this);
 	m_pNavPanel->GetBtnRotateCW()->SetButtonPressedHandler(&OnRotate, this, IDM_ROTATE_90);
 	m_pNavPanel->GetBtnRotateCCW()->SetButtonPressedHandler(&OnRotate, this, IDM_ROTATE_270);
-	m_pNavPanel->GetBtnRotateFree()->SetButtonPressedHandler(&OnRotateFree, this);
+	m_pNavPanel->GetBtnRotateFree()->SetButtonPressedHandler(&CMainDlg::OnExecuteCommand, pMainDlg, IDM_ROTATE);
+	m_pNavPanel->GetBtnPerspectiveCorrection()->SetButtonPressedHandler(&CMainDlg::OnExecuteCommand, pMainDlg, IDM_PERSPECTIVE);
 	m_pNavPanel->GetBtnKeepParams()->SetButtonPressedHandler(&CMainDlg::OnExecuteCommand, pMainDlg, IDM_KEEP_PARAMETERS, pMainDlg->IsKeepParams());
 	m_pNavPanel->GetBtnLandscapeMode()->SetButtonPressedHandler(&CMainDlg::OnExecuteCommand, pMainDlg, IDM_LANDSCAPE_MODE, pMainDlg->IsLandscapeMode());
 	m_pNavPanel->GetBtnShowInfo()->SetButtonPressedHandler(&CMainDlg::OnExecuteCommand, pMainDlg, IDM_SHOW_FILEINFO, pMainDlg->GetEXIFDisplayCtl()->IsActive());
@@ -326,8 +327,4 @@ void CNavigationPanelCtl::OnToggleWindowMode(void* pContext, int nParameter, CBu
 	CRect oldRect = pThis->GetPanel()->PanelRect();
 	pThis->m_pMainDlg->ExecuteCommand(IDM_FULL_SCREEN_MODE);
 	pThis->MoveMouseCursorToButton(sender, oldRect);
-}
-
-void CNavigationPanelCtl::OnRotateFree(void* pContext, int nParameter, CButtonCtrl & sender) {
-	((CNavigationPanelCtl*)pContext)->m_pMainDlg->ExecuteCommand(IDM_ROTATE);
 }

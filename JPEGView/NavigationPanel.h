@@ -20,6 +20,7 @@ public:
 		ID_btnRotateCW,
 		ID_btnRotateCCW,
 		ID_btnRotateFree,
+		ID_btnPerspectiveCorrection,
 		ID_gap4,
 		ID_btnKeepParams,
 		ID_btnLandscapeMode,
@@ -41,6 +42,7 @@ public:
 	CButtonCtrl* GetBtnRotateCW() { return GetControl<CButtonCtrl*>(ID_btnRotateCW); }
 	CButtonCtrl* GetBtnRotateCCW() { return GetControl<CButtonCtrl*>(ID_btnRotateCCW); }
 	CButtonCtrl* GetBtnRotateFree() { return GetControl<CButtonCtrl*>(ID_btnRotateFree); }
+	CButtonCtrl* GetBtnPerspectiveCorrection() { return GetControl<CButtonCtrl*>(ID_btnPerspectiveCorrection); }
 	CButtonCtrl* GetBtnKeepParams() { return GetControl<CButtonCtrl*>(ID_btnKeepParams); }
 	CButtonCtrl* GetBtnLandscapeMode() { return GetControl<CButtonCtrl*>(ID_btnLandscapeMode); }
 	CButtonCtrl* GetBtnShowInfo() { return GetControl<CButtonCtrl*>(ID_btnShowInfo); }
@@ -67,6 +69,7 @@ private:
 	static void PaintRotateCWBtn(void* pContext, const CRect& rect, CDC& dc);
 	static void PaintRotateCCWBtn(void* pContext, const CRect& rect, CDC& dc);
 	static void PaintFreeRotBtn(void* pContext, const CRect& rect, CDC& dc);
+	static void PaintPerspectiveBtn(void* pContext, const CRect& rect, CDC& dc);
 	static void PaintInfoBtn(void* pContext, const CRect& rect, CDC& dc);
 	static void PaintKeepParamsBtn(void* pContext, const CRect& rect, CDC& dc);
 	static void PaintLandscapeModeBtn(void* pContext, const CRect& rect, CDC& dc);

@@ -15,7 +15,8 @@ public:
 		LDCAndLUT,
 		Gauss,
 		UnsharpMask,
-		RotateImage
+		RotateImage,
+		TrapezoidTransform
 	};
 
 	CProcessingRequest(ERequest eRequest, const void* pSourcePixels, CSize sourceSize, void* pTargetPixels,
@@ -127,6 +128,21 @@ public:
 	}
 
 	double Rotation;
+	int Channels;
+	COLORREF BackColor;
+};
+
+class CRequestTrapezoid : public CProcessingRequest {
+public:
+	CRequestTrapezoid(const void* pSourcePixels, CPoint targetOffset, CSize targetSize, const CTrapezoid& trapezoid, 
+		CSize sourceSize, void* pTargetPixels, int nChannels, COLORREF backColor)
+			: CProcessingRequest(TrapezoidTransform, pSourcePixels, sourceSize, pTargetPixels, targetSize, targetOffset, targetSize) {
+		Trapezoid = trapezoid;
+		Channels = nChannels;
+		BackColor = backColor;
+	}
+
+	CTrapezoid Trapezoid;
 	int Channels;
 	COLORREF BackColor;
 };

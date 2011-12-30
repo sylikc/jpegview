@@ -224,6 +224,7 @@ BEGIN
           MENUITEM "Rotate +90",				IDM_ROTATE_90
 		  MENUITEM "Rotate -90",				IDM_ROTATE_270
 		  MENUITEM "Rotate...",					IDM_ROTATE
+		  MENUITEM "Perspective correction...",	IDM_PERSPECTIVE
 		  MENUITEM SEPARATOR
 		  MENUITEM "Mirror horizontally",		IDM_MIRROR_H
 		  MENUITEM "Mirror vertically",			IDM_MIRROR_V

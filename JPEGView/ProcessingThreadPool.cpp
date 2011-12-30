@@ -162,6 +162,13 @@ void CProcessingThread::DoProcess(CProcessingRequest* pRequest, int nOffsetY, in
 					(uint8*)pReq->TargetPixels + pReq->FullTargetSize.cx * 4 * nCurrentOffsetY, pReq->Channels, pReq->BackColor);
 				break;
 			}
+			case CProcessingRequest::TrapezoidTransform: {
+				CRequestTrapezoid* pReq = (CRequestTrapezoid*)pRequest;
+				pTarget = CBasicProcessing::TrapezoidHQ_Core(CPoint(pReq->FullTargetOffset.x, pReq->FullTargetOffset.y + nCurrentOffsetY),
+					CSize(pReq->FullTargetSize.cx, nCurrentSizeY), pReq->Trapezoid, pReq->SourceSize, pReq->SourcePixels, 
+					(uint8*)pReq->TargetPixels + pReq->FullTargetSize.cx * 4 * nCurrentOffsetY, pReq->Channels, pReq->BackColor);
+				break;
+			}
 		}
 		if (pTarget == NULL) {
 			pRequest->Success = false;
