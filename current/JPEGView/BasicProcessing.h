@@ -125,6 +125,14 @@ public:
 	static void* PointSampleWithRotation(CSize fullTargetSize, CPoint fullTargetOffset, CSize clippedTargetSize, 
 										 CSize sourceSize, double dRotation, const void* pIJLPixels, int nChannels, COLORREF backColor);
 
+	// Resample using point sampling (no interpolation) and map to trapezoid.
+	// fullTargetTrapezoid: Trapezoid, height must be fullTargetSize.cy.
+	// fullTargetOffset: Offset in fullTargetSize image, before mapping to trapezoid
+	// backColor: color to fill background of the image
+	// See PointSample() for other parameters
+	static void* PointSampleTrapezoid(CSize fullTargetSize, const CTrapezoid& fullTargetTrapezoid, CPoint fullTargetOffset, CSize clippedTargetSize, 
+										 CSize sourceSize, const void* pIJLPixels, int nChannels, COLORREF backColor);
+
 	// High quality downsampling to target size, using a set of down-sampling kernels that
 	// do some sharpening during down-sampling if desired. Note that the filter type can only
 	// be one of the downsampling filter types.
@@ -157,6 +165,18 @@ public:
 	// backColor: color to fill background of rotated image
 	// Returns a 32 bpp DIB of size targetSize
 	static void* RotateHQ(CPoint targetOffset, CSize targetSize, double dRotation, CSize sourceSize, 
+		const void* pSourcePixels, int nChannels, COLORREF backColor);
+
+	// Trapezoid correction (used for perspective correction) using bicubic interpolation.
+	// targetOffset: Offset for start of clipping window (in the region given by sourceSize)
+	// targetSize: Size of target image - returned DIB has this size
+	// trapezoid: Trapezoid end points, height + 1 must equal sourceSize.cy
+	// sourceSize: Size of source image
+	// pSourcePixels: Source image
+	// nChannels: number of channels (bytes) in source image, must be 3 or 4
+	// backColor: color to fill background of rotated image
+	// Returns a 32 bpp DIB of size targetSize
+	static void* TrapezoidHQ(CPoint targetOffset, CSize targetSize, const CTrapezoid& trapezoid, CSize sourceSize, 
 		const void* pSourcePixels, int nChannels, COLORREF backColor);
 
 	// Gauss filtering of a 16 bpp 1 channel image. In the image with size fullSize, the rectangle rect at position offset is filtered
@@ -194,4 +214,7 @@ private:
 
 	static void* RotateHQ_Core(CPoint targetOffset, CSize targetSize, double dRotation, CSize sourceSize, 
 							   const void* pSourcePixels, void* pTargetPixels, int nChannels, COLORREF backColor);
+
+	static void* TrapezoidHQ_Core(CPoint targetOffset, CSize targetSize, const CTrapezoid& trapezoid, CSize sourceSize, 
+						   const void* pSourcePixels, void* pTargetPixels, int nChannels, COLORREF backColor);
 };

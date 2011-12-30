@@ -63,6 +63,5 @@ private:
 	static void OnGotoImage(void* pContext, int nParameter, CButtonCtrl & sender);
 	static void OnToggleZoomFit(void* pContext, int nParameter, CButtonCtrl & sender);
 	static void OnToggleWindowMode(void* pContext, int nParameter, CButtonCtrl & sender);
-	static void OnRotateFree(void* pContext, int nParameter, CButtonCtrl & sender);
 	static void OnRotate(void* pContext, int nParameter, CButtonCtrl & sender);
 };

@@ -37,6 +37,7 @@ New features:
 - Support for loading images using Windows Image Codecs (WIC). By default WIC is used to load JPEG XR files (also called
   High definition photo). When using Windows Vista or Windows 7, the Windows Camera Codec pack can be installed to get
   support for full size camera RAW images in JPEGView. Refer to the readme.html for instructions.
+- New image processing: Perspective correction, use button on navigation panel to activate
 - New INI file setting: 'AutoRotateEXIF' to disable auto rotation of images based on EXIF image orientation tag.
   Default is true (the EXIF auto rotation is supported since many versions, this setting is introduced to turn this off).
 - New INI file setting: 'ScaleFactorNavPanel' to scale the navigation panel buttons, e.g. to make them larger on touch screens

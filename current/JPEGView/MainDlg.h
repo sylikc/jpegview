@@ -19,6 +19,7 @@ class CEXIFDisplayCtl;
 class CImageProcPanelCtl;
 class CNavigationPanelCtl;
 class CRotationPanelCtl;
+class CTiltCorrectionPanelCtl;
 class CUnsharpMaskPanelCtl;
 class CWndButtonPanelCtl;
 class CZoomNavigatorCtl;
@@ -143,6 +144,7 @@ public:
 	CUnsharpMaskPanelCtl* GetUnsharpMaskPanelCtl() { return m_pUnsharpMaskPanelCtl; }
 	CImageProcPanelCtl* GetImageProcPanelCtl() { return m_pImageProcPanelCtl; }
 	CRotationPanelCtl* GetRotationPanelCtl() { return m_pRotationPanelCtl; }
+	CTiltCorrectionPanelCtl* GetTiltCorrectionPanelCtl() { return m_pTiltCorrectionPanelCtl; }
 	CZoomNavigatorCtl* GetZoomNavigatorCtl() { return m_pZoomNavigatorCtl; }
 	CWndButtonPanelCtl* GetWndButtonPanelCtl() { return m_pWndButtonPanelCtl; }
 	CCropCtl* GetCropCtl() { return m_pCropCtl; }
@@ -262,6 +264,7 @@ private:
 	CWndButtonPanelCtl* m_pWndButtonPanelCtl;
 	CUnsharpMaskPanelCtl* m_pUnsharpMaskPanelCtl;
 	CRotationPanelCtl* m_pRotationPanelCtl;
+	CTiltCorrectionPanelCtl* m_pTiltCorrectionPanelCtl;
 	CPanelMgr* m_pPanelMgr;
 	CKeyMap* m_pKeyMap;
 

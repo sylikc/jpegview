@@ -35,6 +35,7 @@ CNavigationPanel::CNavigationPanel(HWND hWnd, INotifiyMouseCapture* pNotifyMouse
 	AddUserPaintButton(ID_btnRotateCW, CNLS::GetString(_T("Rotate image 90 deg clockwise")), &PaintRotateCWBtn);
 	AddUserPaintButton(ID_btnRotateCCW, CNLS::GetString(_T("Rotate image 90 deg counter-clockwise")), &PaintRotateCCWBtn);
 	AddUserPaintButton(ID_btnRotateFree, CNLS::GetString(_T("Rotate image by user-defined angle")), &PaintFreeRotBtn);
+	AddUserPaintButton(ID_btnPerspectiveCorrection, CNLS::GetString(_T("Correct converging lines (perspective correction)")), &PaintPerspectiveBtn);
 	AddGap(ID_gap4, 8);
 	AddUserPaintButton(ID_btnKeepParams, CNLS::GetString(_T("Keep processing parameters between images")), &PaintKeepParamsBtn);
 	AddUserPaintButton(ID_btnLandscapeMode, CNLS::GetString(_T("Landscape picture enhancement mode")), &PaintLandscapeModeBtn);
@@ -305,6 +306,18 @@ void CNavigationPanel::PaintFreeRotBtn(void* pContext, const CRect& rect, CDC& d
 	dc.LineTo(nX - nArrowStart + nArrowLen, r.bottom - 1 + nArrowLen);
 	dc.MoveTo(nX - nArrowStart, r.bottom - 1);
 	dc.LineTo(nX - nArrowStart + nArrowLen, r.bottom - 1 - nArrowLen);
+}
+
+void CNavigationPanel::PaintPerspectiveBtn(void* pContext, const CRect& rect, CDC& dc) {
+	CRect r = Helpers::InflateRect(rect, 0.3f);
+
+	int nW = (int)(r.Width() * 0.15f);
+	int nW2 = (int)(r.Width() * 0.4f);
+	dc.MoveTo(r.left + nW, r.bottom);
+	dc.LineTo(r.right - nW, r.bottom);
+	dc.LineTo(r.right - nW2, r.top);
+	dc.LineTo(r.left + nW2, r.top);
+	dc.LineTo(r.left + nW, r.bottom);
 }
 
 void CNavigationPanel::PaintKeepParamsBtn(void* pContext, const CRect& rect, CDC& dc) {

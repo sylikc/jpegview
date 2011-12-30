@@ -50,10 +50,12 @@ CRect CZoomNavigator::GetNavigatorRect(CJPEGImage* pImage, const CRect& panelRec
 void CZoomNavigator::PaintZoomNavigator(CJPEGImage* pImage, const CRectF& visRect, const CRect& navigatorRect,
 										const CPoint& mousePt,
 										const CImageProcessingParams& processingParams,
-										EProcessingFlags eFlags, double dRotation, CPaintDC& dc) {
+										EProcessingFlags eFlags, double dRotation, const CTrapezoid* pTrapezoid, CPaintDC& dc) {
 	
 	void* pDIBData = (fabs(dRotation) > 1e-3) ?
 		pImage->GetThumbnailDIBRotated(navigatorRect.Size(), processingParams, eFlags, dRotation) :
+		(pTrapezoid != NULL) ?
+		pImage->GetThumbnailDIBTrapezoid(navigatorRect.Size(), processingParams, eFlags, *pTrapezoid) :
 		pImage->GetThumbnailDIB(navigatorRect.Size(), processingParams, eFlags);
 
 	// Paint the DIB

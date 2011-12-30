@@ -368,7 +368,15 @@
 					>
 				</File>
 				<File
+					RelativePath=".\TiltCorrectionPanel.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\Tooltip.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\TransformPanel.cpp"
 					>
 				</File>
 				<File
@@ -413,6 +421,14 @@
 				</File>
 				<File
 					RelativePath=".\RotationPanelCtl.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\TiltCorrectionPanelCtl.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\TransformPanelCtl.cpp"
 					>
 				</File>
 				<File
@@ -621,6 +637,14 @@
 					>
 				</File>
 				<File
+					RelativePath=".\TiltCorrectionPanel.h"
+					>
+				</File>
+				<File
+					RelativePath=".\TransformPanel.h"
+					>
+				</File>
+				<File
 					RelativePath=".\UnsharpMaskPanel.h"
 					>
 				</File>
@@ -662,6 +686,14 @@
 				</File>
 				<File
 					RelativePath=".\RotationPanelCtl.h"
+					>
+				</File>
+				<File
+					RelativePath=".\TiltCorrectionPanelCtl.h"
+					>
+				</File>
+				<File
+					RelativePath=".\TransformPanelCtl.h"
 					>
 				</File>
 				<File

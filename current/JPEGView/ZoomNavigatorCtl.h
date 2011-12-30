@@ -28,9 +28,10 @@ public:
 
 	bool OnMouseLButton(EMouseEvent eMouseEvent, int nX, int nY);
 	bool OnMouseMove(int nOldX, int nOldY);
-	// Paints zoom navigator with given DC (when currently visible). Needs all image processing parameters and flags, including rotation to
-	// be able to generate the thumbnail image for the zoom navigator
-	void OnPaint(CPaintDC& paintDC, CRectF visRectZoomNavigator, const CImageProcessingParams* pImageProcParams, EProcessingFlags eProcessingFlags, double dRotationAngle);
+	// Paints zoom navigator with given DC (when currently visible). Needs all image processing parameters and flags, including rotation and
+	// trapezoid (that can be NULL of course) to be able to generate the thumbnail image for the zoom navigator
+	void OnPaint(CPaintDC& paintDC, CRectF visRectZoomNavigator, const CImageProcessingParams* pImageProcParams, 
+		EProcessingFlags eProcessingFlags, double dRotationAngle, const CTrapezoid* pTrapezoid);
 
 	void InvalidateZoomNavigatorRect(); // does nothing when zoom navigator is not active
 	bool IsPointInZoomNavigatorThumbnail(const CPoint& pt); // returns always false when zoom navigator not visible

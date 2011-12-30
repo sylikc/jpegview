@@ -50,7 +50,7 @@ public:
 	void* GetDIB(CSize fullTargetSize, CSize clippingSize, CPoint targetOffset,
 		const CImageProcessingParams & imageProcParams, EProcessingFlags eProcFlags) {
 		bool bNotUsed;
-		return GetDIBInternal(fullTargetSize, clippingSize, targetOffset, imageProcParams, eProcFlags, NULL, 0.0, false, bNotUsed);
+		return GetDIBInternal(fullTargetSize, clippingSize, targetOffset, imageProcParams, eProcFlags, NULL, NULL, 0.0, false, bNotUsed);
 	}
 
 	// Gets resampled and processed DIB image (up or downsampled), also including a low quality rotation.
@@ -58,7 +58,15 @@ public:
 	void* GetDIBRotated(CSize fullTargetSize, CSize clippingSize, CPoint targetOffset,
 		const CImageProcessingParams & imageProcParams, EProcessingFlags eProcFlags, double dRotation, bool bShowGrid) {
 		bool bNotUsed;
-		return GetDIBInternal(fullTargetSize, clippingSize, targetOffset, imageProcParams, eProcFlags, NULL, dRotation, bShowGrid, bNotUsed);
+		return GetDIBInternal(fullTargetSize, clippingSize, targetOffset, imageProcParams, eProcFlags, NULL, NULL, dRotation, bShowGrid, bNotUsed);
+	}
+
+	// Gets resampled and processed DIB image (up or downsampled), including a low quality trapezoid transformation.
+	// PFLAG_HighQualityResampling must not be set when calling this method 
+	void* GetDIBTrapezoid(CSize fullTargetSize, CSize clippingSize, CPoint targetOffset,
+		const CImageProcessingParams & imageProcParams, EProcessingFlags eProcFlags, const CTrapezoid* pTrapezoid, bool bShowGrid) {
+		bool bNotUsed;
+		return GetDIBInternal(fullTargetSize, clippingSize, targetOffset, imageProcParams, eProcFlags, NULL, pTrapezoid, 0.0, bShowGrid, bNotUsed);
 	}
 
 	// Gets a DIB for a thumbnail of the given size. The thumbnail should not be smaller than 400 x 300 pixels
@@ -66,6 +74,9 @@ public:
 
 	// Same as above but with low quality rotation
 	void* GetThumbnailDIBRotated(CSize size, const CImageProcessingParams & imageProcParams, EProcessingFlags eProcFlags, double dRotation);
+
+	// Same as GetThumbnailDIB but with trapezoid correction
+	void* GetThumbnailDIBTrapezoid(CSize size, const CImageProcessingParams & imageProcParams, EProcessingFlags eProcFlags, const CTrapezoid& trapezoid);
 
 	// Performs unsharp masking to a section in the original image, then apply image processing as requested and
 	// return resulting DIB. The returned DIB is always in original image resolution. The original
@@ -91,9 +102,15 @@ public:
 
 	// Rotate original pixels by given angle (in radians). The original pixels are replaced by this operation.
 	// If autocrop is enabled, the maximum defined rectangular area is cropped, else black borders are added to the image.
-	// In all cases the size of the image in pixels is change by rotation
+	// In all cases the size of the image in pixels is changed by rotation
 	// Returns false if not enough memory to perform the operation
 	bool RotateOriginalPixels(double dRotation, bool bAutoCrop);
+
+	// Transform into horizontal trapezoid. The original pixels are replaced by this operation.
+	// See RotateOriginalPixels() for auto crop parameter.
+	// In all cases the size of the image in pixels is changed by this operation
+	// Returns false if not enough memory to perform the operation
+	bool TrapezoidOriginalPixels(const CTrapezoid& trapezoid, bool bAutoCrop);
 
 	// Gets the hash value of the pixels, for JPEGs it on the compressed pixels
 	__int64 GetPixelHash() const { return m_nPixelHash; }
@@ -317,6 +334,8 @@ private:
 	CSize m_ClippingSize; // this is the size of the DIB
 	CPoint m_TargetOffset;
 	double m_dRotationLQ; // low quality rotation angle
+	CTrapezoid m_trapezoid;
+	bool m_bTrapezoidValid;
 
 	bool m_bInParamDB; // true if image found in param DB
 	bool m_bHasZoomStoredInParamDB; // true if image in param DB and entry contains zoom and offset values
@@ -339,12 +358,14 @@ private:
 	float m_fColorCorrectionFactors[6];
 	float m_fColorCorrectionFactorsNull[6];
 
-	// Internal GetDIB() implementation combining unsharp mask and (low quality= rotation with GetDIB(). pUnsharpMaskParams can be null if not used.
+	// Internal GetDIB() implementation combining unsharp mask and (low quality) rotation with GetDIB().
+	// pUnsharpMaskParams and pTrapezoid can be null if not used.
 	// bUsingOriginalDIB is output parameter and contains if the cached DIB could be used and no processing has been done
 	// When dRotation is not 0.0, PFLAG_HighQualityResampling must not be set
 	void* GetDIBInternal(CSize fullTargetSize, CSize clippingSize, CPoint targetOffset,
 						 const CImageProcessingParams & imageProcParams, EProcessingFlags eProcFlags,
-						 const CUnsharpMaskParams * pUnsharpMaskParams, double dRotation, bool bShowGrid, bool& bParametersChanged);
+						 const CUnsharpMaskParams * pUnsharpMaskParams, const CTrapezoid * pTrapezoid, 
+						 double dRotation, bool bShowGrid, bool& bParametersChanged);
 
 	// Resample when panning was done, using existing data in DIBs. Old clipping rectangle is given in oldClippingRect
 	void ResampleWithPan(void* & pDIBPixels, void* & pDIBPixelsLUTProcessed, CSize fullTargetSize, 

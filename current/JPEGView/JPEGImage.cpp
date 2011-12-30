@@ -97,6 +97,7 @@ CJPEGImage::CJPEGImage(int nWidth, int nHeight, void* pIJLPixels, void* pEXIFDat
 	m_ClippingSize = CSize(0, 0);
 	m_TargetOffset = CPoint(0, 0);
 	m_dRotationLQ = 0.0;
+	m_bTrapezoidValid = false;
 
 	// Create the LDC object on the image
 	m_pLDC = (pLDC == NULL) ? (new CLocalDensityCorr(*this, true)) : pLDC;
@@ -163,6 +164,14 @@ void* CJPEGImage::GetThumbnailDIBRotated(CSize size, const CImageProcessingParam
 	return m_pThumbnail->GetDIBRotated(size, size, CPoint(0, 0), imageProcParams, eProcFlags, dRotation, false);
 }
 
+void* CJPEGImage::GetThumbnailDIBTrapezoid(CSize size, const CImageProcessingParams & imageProcParams, EProcessingFlags eProcFlags, const CTrapezoid& trapezoid) {
+	assert(!m_bIsThumbnailImage);
+	if (m_pThumbnail == NULL) {
+		m_pThumbnail = CreateThumbnailImage();
+	}
+	return m_pThumbnail->GetDIBTrapezoid(size, size, CPoint(0, 0), imageProcParams, eProcFlags, &trapezoid, false);
+}
+
 void* CJPEGImage::GetDIBUnsharpMasked(CSize clippingSize, CPoint targetOffset,
 									  const CImageProcessingParams & imageProcParams, EProcessingFlags eProcFlags, 
 									  const CUnsharpMaskParams & unsharpMaskParams) {
@@ -170,7 +179,7 @@ void* CJPEGImage::GetDIBUnsharpMasked(CSize clippingSize, CPoint targetOffset,
 	bool bUseUnsharpMask = unsharpMaskParams.Amount > 0 && unsharpMaskParams.Radius > 0;
 	bool bParametersChanged;
 	return GetDIBInternal(CSize(m_nOrigWidth, m_nOrigHeight), clippingSize, targetOffset, imageProcParams, 
-		eProcFlags, bUseUnsharpMask ? &unsharpMaskParams : NULL, 0.0, false, bParametersChanged);
+		eProcFlags, bUseUnsharpMask ? &unsharpMaskParams : NULL, NULL, 0.0, false, bParametersChanged);
 }
 
 const CHistogram* CJPEGImage::GetOriginalHistogram() {
@@ -199,7 +208,7 @@ const CHistogram* CJPEGImage::GetHistogramOfProcessedDIB(const CImageProcessingP
 	assert(m_bIsThumbnailImage);
 	CSize origSize(m_nOrigWidth, m_nOrigHeight);
 	bool bParametersChanged;
-	void* pDIBPixels = GetDIBInternal(origSize, origSize, CPoint(0, 0), imageProcParams, eProcFlags, NULL, 0.0, false, bParametersChanged);
+	void* pDIBPixels = GetDIBInternal(origSize, origSize, CPoint(0, 0), imageProcParams, eProcFlags, NULL, NULL, 0.0, false, bParametersChanged);
 	if (bParametersChanged || m_pCachedProcessedHistogram == NULL) {
 		delete m_pCachedProcessedHistogram;
 		m_pCachedProcessedHistogram = NULL;
@@ -307,6 +316,38 @@ bool CJPEGImage::RotateOriginalPixels(double dRotation, bool bAutoCrop) {
 	m_nOrigHeight = newSize.cy;
 	m_nIJLChannels = 4;
 	m_pIJLPixels = pRotatedPixels;
+	return true;
+}
+
+bool CJPEGImage::TrapezoidOriginalPixels(const CTrapezoid& trapezoid, bool bAutoCrop) {
+	InvalidateAllCachedPixelData();
+
+	int nXStart, nXEnd;
+	int nYStart = trapezoid.y1, nYEnd = trapezoid.y2;
+
+	if (bAutoCrop) {
+		// Calculate the maximum enclosed rectangle
+		nXStart = max(trapezoid.x1s, trapezoid.x2s);
+		nXEnd = min(trapezoid.x1e, trapezoid.x2e);
+	} else {
+		nXStart = min(trapezoid.x1s, trapezoid.x2s);
+		nXEnd = max(trapezoid.x1e, trapezoid.x2e);
+	}
+
+	if (nXStart >= nXEnd) {
+		return false;
+	}
+
+	CSize newSize(nXEnd - nXStart + 1, nYEnd - nYStart + 1);
+	void* pTransformedPixels = CBasicProcessing::TrapezoidHQ(CPoint(nXStart, nYStart), newSize, trapezoid, 
+		CSize(m_nOrigWidth, m_nOrigHeight), m_pIJLPixels, m_nIJLChannels, CSettingsProvider::This().ColorBackground());
+	if (pTransformedPixels == NULL) return false;
+	delete[] m_pIJLPixels;
+
+	m_nOrigWidth = newSize.cx;
+	m_nOrigHeight = newSize.cy;
+	m_nIJLChannels = 4;
+	m_pIJLPixels = pTransformedPixels;
 	return true;
 }
 
@@ -731,21 +772,26 @@ __int64 CJPEGImage::GetUncompressedPixelHash() const {
 
 void* CJPEGImage::GetDIBInternal(CSize fullTargetSize, CSize clippingSize, CPoint targetOffset,
 						 const CImageProcessingParams & imageProcParams, EProcessingFlags eProcFlags,
-						 const CUnsharpMaskParams * pUnsharpMaskParams, double dRotation, bool bShowGrid, bool &bParametersChanged) {
+						 const CUnsharpMaskParams * pUnsharpMaskParams, const CTrapezoid * pTrapezoid,
+						 double dRotation, bool bShowGrid, bool &bParametersChanged) {
 
 	if (fabs(dRotation) > 1e-6 && GetProcessingFlag(eProcFlags, PFLAG_HighQualityResampling)) {
 		assert(false);
 	}
-	if (fabs(dRotation) > 1e-6) {
-		eProcFlags = SetProcessingFlag(eProcFlags, PFLAG_LDC, false); // not supported during rotation preview
+	if (pTrapezoid != NULL && GetProcessingFlag(eProcFlags, PFLAG_HighQualityResampling)) {
+		assert(false);
+	}
+	if (fabs(dRotation) > 1e-6 || pTrapezoid != NULL) {
+		eProcFlags = SetProcessingFlag(eProcFlags, PFLAG_LDC, false); // not supported during rotation or trapezoid processing with low quality
 	}
 
  	// Check if resampling due to bHighQualityResampling parameter change is needed
 	bool bMustResampleQuality = GetProcessingFlag(eProcFlags, PFLAG_HighQualityResampling) != GetProcessingFlag(m_eProcFlags, PFLAG_HighQualityResampling);
 	bool bTargetSizeChanged = fullTargetSize != m_FullTargetSize;
 	bool bMustResampleRotation = fabs(dRotation - m_dRotationLQ) > 1e-6;
+	bool bMustResampleTrapezoid = (m_bTrapezoidValid != (pTrapezoid != NULL)) || ((pTrapezoid != NULL) && *pTrapezoid != m_trapezoid);
 	// Check if resampling due to change of geometric parameters is needed
-	bool bMustResampleGeometry = bTargetSizeChanged || clippingSize != m_ClippingSize || targetOffset != m_TargetOffset || bMustResampleRotation;
+	bool bMustResampleGeometry = bTargetSizeChanged || clippingSize != m_ClippingSize || targetOffset != m_TargetOffset || bMustResampleRotation || bMustResampleTrapezoid;
 	// Check if resampling due to change of processing parameters is needed
 	bool bMustResampleProcessings = fabs(imageProcParams.Sharpen - m_imageProcParams.Sharpen) > 1e-2 && GetProcessingFlag(eProcFlags, PFLAG_HighQualityResampling);
 	bool bShowGridChanged = m_bShowGrid != bShowGrid;
@@ -759,6 +805,8 @@ void* CJPEGImage::GetDIBInternal(CSize fullTargetSize, CSize clippingSize, CPoin
 	m_TargetOffset = targetOffset;
 	m_dRotationLQ = dRotation;
 	m_bShowGrid = bShowGrid;
+	m_bTrapezoidValid = pTrapezoid != NULL;
+	m_trapezoid = (pTrapezoid != NULL) ? *pTrapezoid : CTrapezoid();
 
 	double dStartTickCount = Helpers::GetExactTickCount();
 
@@ -793,7 +841,8 @@ void* CJPEGImage::GetDIBInternal(CSize fullTargetSize, CSize clippingSize, CPoin
 		assert(pDIBUnsharpMasked == NULL);
 
 		// If we only pan, we can resample far more efficiently by only calculating the newly visible areas
-		bool bPanningOnly = !m_bFirstReprocessing && !bMustResampleProcessings && !bTargetSizeChanged && !bMustResampleQuality && !bMustResampleRotation && !bShowGrid;
+		bool bPanningOnly = !m_bFirstReprocessing && !bMustResampleProcessings && !bTargetSizeChanged && !bMustResampleQuality && 
+			!bMustResampleRotation && !bShowGrid && pTrapezoid == NULL;
 		m_bFirstReprocessing = false;
 		if (bPanningOnly && pUnsharpMaskParams == NULL) {
 			ResampleWithPan(m_pDIBPixels, m_pDIBPixelsLUTProcessed, fullTargetSize, clippingSize, targetOffset, 
@@ -809,7 +858,12 @@ void* CJPEGImage::GetDIBInternal(CSize fullTargetSize, CSize clippingSize, CPoin
 
 		// both DIBs are NULL, do normal resampling
 		if (m_pDIBPixels == NULL && m_pDIBPixelsLUTProcessed == NULL) {
-			m_pDIBPixels = Resample(fullTargetSize, clippingSize, targetOffset, eProcFlags, imageProcParams.Sharpen, dRotation, eResizeType);
+			if (pTrapezoid == NULL) {
+				m_pDIBPixels = Resample(fullTargetSize, clippingSize, targetOffset, eProcFlags, imageProcParams.Sharpen, dRotation, eResizeType);
+			} else {
+				m_pDIBPixels = CBasicProcessing::PointSampleTrapezoid(fullTargetSize, *pTrapezoid, targetOffset, clippingSize, 
+					CSize(m_nOrigWidth, m_nOrigHeight), m_pIJLPixels, m_nIJLChannels, CSettingsProvider::This().ColorBackground());
+			}
 		}
 
 		// if ResampleWithPan() has preseved this DIB, we can reuse it

@@ -163,6 +163,10 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="TiltCorrectionPanel.cpp" />
+    <ClCompile Include="TiltCorrectionPanelCtl.cpp" />
+    <ClCompile Include="TransformPanel.cpp" />
+    <ClCompile Include="TransformPanelCtl.cpp" />
     <ClCompile Include="UserCommand.cpp" />
     <ClCompile Include="WorkThread.cpp" />
     <ClCompile Include="XMMImage.cpp" />
@@ -223,7 +227,11 @@
     <ClInclude Include="SaveImage.h" />
     <ClInclude Include="SettingsProvider.h" />
     <ClInclude Include="stdafx.h" />
+    <ClInclude Include="TiltCorrectionPanel.h" />
+    <ClInclude Include="TiltCorrectionPanelCtl.h" />
     <ClInclude Include="TimerEventIDs.h" />
+    <ClInclude Include="TransformPanel.h" />
+    <ClInclude Include="TransformPanelCtl.h" />
     <ClInclude Include="UserCommand.h" />
     <ClInclude Include="WorkThread.h" />
     <ClInclude Include="XMMImage.h" />

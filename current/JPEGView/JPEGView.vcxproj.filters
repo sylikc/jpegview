@@ -201,6 +201,18 @@
     <ClCompile Include="dcraw_mod.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="TransformPanel.cpp">
+      <Filter>Source Files\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="TiltCorrectionPanel.cpp">
+      <Filter>Source Files\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="TransformPanelCtl.cpp">
+      <Filter>Source Files\Panels</Filter>
+    </ClCompile>
+    <ClCompile Include="TiltCorrectionPanelCtl.cpp">
+      <Filter>Source Files\Panels</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BasicProcessing.h">
@@ -379,6 +391,18 @@
     </ClInclude>
     <ClInclude Include="dcraw_mod.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TransformPanel.h">
+      <Filter>Header Files\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="TiltCorrectionPanel.h">
+      <Filter>Header Files\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="TiltCorrectionPanelCtl.h">
+      <Filter>Header Files\Panels</Filter>
+    </ClInclude>
+    <ClInclude Include="TransformPanelCtl.h">
+      <Filter>Header Files\Panels</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

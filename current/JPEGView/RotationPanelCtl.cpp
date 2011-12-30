@@ -4,96 +4,24 @@
 #include "JPEGImage.h"
 #include "RotationPanelCtl.h"
 #include "RotationPanel.h"
-#include "NavigationPanelCtl.h"
-#include "ZoomNavigatorCtl.h"
-#include "WndButtonPanelCtl.h"
 #include "NLS.h"
 #include "Helpers.h"
 #include <math.h>
 
-CRotationPanelCtl::CRotationPanelCtl(CMainDlg* pMainDlg, CPanel* pImageProcPanel) : CPanelController(pMainDlg, true) {
-	m_bVisible = false;
+CRotationPanelCtl::CRotationPanelCtl(CMainDlg* pMainDlg, CPanel* pImageProcPanel) 
+: CTransformPanelCtl(pMainDlg, pImageProcPanel, new CRotationPanel(pMainDlg->m_hWnd, this, pImageProcPanel)) {
+
 	m_bRotationModeAssisted = false;
-	m_bRotationShowGrid = true;
-	m_bRotationAutoCrop = true;
 	m_dRotationLQ = m_dRotatonLQStart = 0.0;
 	m_rotationStartX = m_rotationStartY = 0;
-	m_bRotating = false;
-	m_bOldShowNavPanel = false;
-	m_nMouseX = m_nMouseY = 0;
 
-	m_pPanel = m_pRotationPanel = new CRotationPanel(pMainDlg->m_hWnd, this, pImageProcPanel);
-	m_pRotationPanel->GetBtnShowGrid()->SetButtonPressedHandler(&OnRPShowGridLines, this, 0, m_bRotationShowGrid);
-	m_pRotationPanel->GetBtnAutoCrop()->SetButtonPressedHandler(&OnRPAutoCrop, this, 0, m_bRotationAutoCrop);
-	m_pRotationPanel->GetBtnAssistMode()->SetButtonPressedHandler(&OnRPAssistedMode, this, 0, m_bRotationModeAssisted);
-	m_pRotationPanel->GetBtnCancel()->SetButtonPressedHandler(&OnCancelRotation, this);
-	m_pRotationPanel->GetBtnApply()->SetButtonPressedHandler(&OnApplyRotation, this);
+	((CRotationPanel*)m_pTransformPanel)->GetBtnAssistMode()->SetButtonPressedHandler(&OnRPAssistedMode, this, 0, m_bRotationModeAssisted);
 	UpdateAssistedRotationMode();
 }
 
-CRotationPanelCtl::~CRotationPanelCtl() { 
-	delete m_pRotationPanel;
-	m_pRotationPanel = NULL;
-}
-
-bool CRotationPanelCtl::IsVisible() {
-	return m_bVisible;
-}
-
-bool CRotationPanelCtl::IsActive() {
-	return m_bVisible;
-}
-
-void CRotationPanelCtl::SetVisible(bool bVisible) {
-	if (bVisible != m_bVisible) {
-		if (bVisible) {
-			StartRotationPanel();
-		} else {
-			TerminateRotationPanel();
-		}
-	}
-}
-
-void CRotationPanelCtl::SetActive(bool bActive) {
-	SetVisible(bActive);
-}
-
-bool CRotationPanelCtl::OnMouseLButton(EMouseEvent eMouseEvent, int nX, int nY) {
-	if (eMouseEvent == MouseEvent_BtnUp && m_bRotating) {
-		EndRotating();
-		return true;
-	}
-	if (CPanelController::OnMouseLButton(eMouseEvent, nX, nY)) {
-		return true;
-	}
-	if (eMouseEvent == MouseEvent_BtnDown && 
-		!m_pMainDlg->GetZoomNavigatorCtl()->IsPointInZoomNavigatorThumbnail(CPoint(nX, nY)) &&
-		!m_pMainDlg->GetWndButtonPanelCtl()->IsPointInWndButtonPanel(CPoint(nX, nY))) {
-		StartRotating(nX, nY);
-		return true;
-	}
-	return false;
-}
-
-bool CRotationPanelCtl::OnMouseMove(int nX, int nY) {
-	m_nMouseX = nX;
-	m_nMouseY = nY;
-	if (m_bRotating) {
-		DoRotating();
-		return true;
-	}
-	return CPanelController::OnMouseMove(nX, nY);
-}
-
-bool CRotationPanelCtl::OnKeyDown(unsigned int nVirtualKey, bool bShift, bool bAlt, bool bCtrl) {
-	if (nVirtualKey == VK_ESCAPE) {
-		TerminateRotationPanel();
-	}
-	return true; // all other keys are eaten up in this panel without doing anything
-}
 
 void CRotationPanelCtl::OnPostPaintMainDlg(HDC hPaintDC) {
-	if (m_bRotating && m_bRotationModeAssisted) {
+	if (m_bTransforming && m_bRotationModeAssisted) {
 		// Draw the red line in assistet rotation mode
 		float fX = m_rotationStartX, fY = m_rotationStartY;
 		m_pMainDlg->ImageToScreen(fX, fY);
@@ -106,45 +34,33 @@ void CRotationPanelCtl::OnPostPaintMainDlg(HDC hPaintDC) {
 	}
 }
 
-void* CRotationPanelCtl::GetRotatedDIBForPreview(CSize fullTargetSize, CSize clippingSize, CPoint targetOffset,
+void* CRotationPanelCtl::GetDIBForPreview(CSize fullTargetSize, CSize clippingSize, CPoint targetOffset,
 												 const CImageProcessingParams & imageProcParams, EProcessingFlags eProcFlags) {
 	return CurrentImage()->GetDIBRotated(fullTargetSize, clippingSize, targetOffset, imageProcParams, 
-		SetProcessingFlag(eProcFlags, PFLAG_LDC, false), m_dRotationLQ, m_bRotationShowGrid);
+		SetProcessingFlag(eProcFlags, PFLAG_LDC, false), m_dRotationLQ, m_bShowGrid);
 }
 
-void CRotationPanelCtl::StartRotationPanel() {
-	if (CurrentImage() == NULL) {
-		return;
-	}
-	m_bVisible = true;
-	m_bOldShowNavPanel = m_pMainDlg->PrepareForModalPanel();
-	UpdateRotationPanelTitle();
-	InvalidateMainDlg();
-}
-
-void CRotationPanelCtl::TerminateRotationPanel() {
-	m_bVisible = false;
-	m_pMainDlg->GetNavPanelCtl()->SetActive(m_bOldShowNavPanel);
+void CRotationPanelCtl::TerminatePanel() {
+	CTransformPanelCtl::TerminatePanel();
 	m_dRotationLQ = 0.0;
-	InvalidateMainDlg();
 }
 
 void CRotationPanelCtl::UpdateAssistedRotationMode() {
-	m_pRotationPanel->GetTextHint()->SetText(CNLS::GetString(m_bRotationModeAssisted ? 
+	m_pTransformPanel->GetTextHint()->SetText(CNLS::GetString(m_bRotationModeAssisted ? 
 		_T("Use the mouse to draw a line that shall be horizontal or vertical.") : 
 		_T("Rotate the image by dragging with the mouse.")));
-	m_pMainDlg->InvalidateRect(&(m_pRotationPanel->GetTextHint()->GetPosition()), FALSE);
-	m_pRotationPanel->GetBtnAssistMode()->SetActive(m_bRotationModeAssisted);
-	if (m_bRotationShowGrid == m_bRotationModeAssisted) {
-		m_bRotationShowGrid = !m_bRotationModeAssisted;
-		m_pRotationPanel->GetBtnShowGrid()->SetActive(m_bRotationShowGrid);
+	m_pMainDlg->InvalidateRect(&(m_pTransformPanel->GetTextHint()->GetPosition()), FALSE);
+	((CRotationPanel*)m_pTransformPanel)->GetBtnAssistMode()->SetActive(m_bRotationModeAssisted);
+	if (m_bShowGrid == m_bRotationModeAssisted) {
+		m_bShowGrid = !m_bRotationModeAssisted;
+		m_pTransformPanel->GetBtnShowGrid()->SetActive(m_bShowGrid);
 		InvalidateMainDlg();
 	}
 }
 
-void CRotationPanelCtl::StartRotating(int nX, int nY) {
+void CRotationPanelCtl::StartTransforming(int nX, int nY) {
 	if (CurrentImage() != NULL) {
-		m_bRotating = true;
+		m_bTransforming = true;
 		float fX = (float)nX, fY = (float)nY;
 		m_pMainDlg->ScreenToImage(fX, fY);
 		m_rotationStartX = fX;
@@ -153,7 +69,7 @@ void CRotationPanelCtl::StartRotating(int nX, int nY) {
 	}
 }
 
-void CRotationPanelCtl::DoRotating() {
+void CRotationPanelCtl::DoTransforming() {
 	const double PI = 3.141592653;
 	if (CurrentImage() != NULL) {
 		if (!m_bRotationModeAssisted) {
@@ -164,15 +80,15 @@ void CRotationPanelCtl::DoRotating() {
 			double dAngleStart = atan2(m_rotationStartY - fCenterY, m_rotationStartX - fCenterX);
 			double dAngleEnd = atan2(fY - fCenterY, fX - fCenterX);
 			m_dRotationLQ = fmod(m_dRotatonLQStart + dAngleEnd - dAngleStart, 2 * PI);
-			UpdateRotationPanelTitle();
+			UpdatePanelTitle();
 		}
 		InvalidateMainDlg();
 	}
 }
 
-void CRotationPanelCtl::EndRotating() {
+void CRotationPanelCtl::EndTransforming() {
 	const float PI = 3.141592653f;
-	m_bRotating = false;
+	m_bTransforming = false;
 	if (m_bRotationModeAssisted) {
 		float fX = m_rotationStartX, fY = m_rotationStartY;
 		m_pMainDlg->ImageToScreen(fX, fY);
@@ -186,62 +102,29 @@ void CRotationPanelCtl::EndRotating() {
 			} else {
 				m_dRotationLQ -= fAngle;
 			}
-			UpdateRotationPanelTitle();
+			UpdatePanelTitle();
 		}
 		InvalidateMainDlg();
 	}
 }
 
-void CRotationPanelCtl::ApplyRotation() {
-	if (CurrentImage() == NULL) {
-		return;
-	}
-	if (!CurrentImage()->RotateOriginalPixels(m_dRotationLQ, m_bRotationAutoCrop)) {
+void CRotationPanelCtl::ApplyTransformation() {
+	if (!CurrentImage()->RotateOriginalPixels(m_dRotationLQ, m_bAutoCrop)) {
 		::MessageBox(m_pMainDlg->GetHWND(), CNLS::GetString(_T("The operation failed because not enough memory is available!")),
 			_T("JPEGView"), MB_ICONSTOP | MB_OK);
 	}
-	if (!m_bRotationAutoCrop) {
-		m_pMainDlg->ExecuteCommand(IDM_FIT_TO_SCREEN);
-	}
-	m_pMainDlg->AdjustWindowToImage(false);
-	InvalidateMainDlg();
 }
 
-void CRotationPanelCtl::UpdateRotationPanelTitle() {
+void CRotationPanelCtl::UpdatePanelTitle() {
 	const int BUFF_SIZE = 24;
 	double dAngleDeg = 360 * m_dRotationLQ / (2 * 3.141592653);
 	TCHAR buff[BUFF_SIZE];
 	_stprintf_s(buff, BUFF_SIZE, _T("  %.1f °"), dAngleDeg);
-	m_pRotationPanel->GetTextTitle()->SetText(CString(CNLS::GetString(_T("Rotate Image"))) + buff);
-}
-
-void CRotationPanelCtl::OnRPShowGridLines(void* pContext, int nParameter, CButtonCtrl & sender) {
-	CRotationPanelCtl* pThis = (CRotationPanelCtl*)pContext;
-	pThis->m_bRotationShowGrid = !pThis->m_bRotationShowGrid;
-	pThis->m_pRotationPanel->GetBtnShowGrid()->SetActive(pThis->m_bRotationShowGrid);
-	pThis->InvalidateMainDlg();
-}
-
-void CRotationPanelCtl::OnRPAutoCrop(void* pContext, int nParameter, CButtonCtrl & sender) {
-	CRotationPanelCtl* pThis = (CRotationPanelCtl*)pContext;
-	pThis->m_bRotationAutoCrop = !pThis->m_bRotationAutoCrop;
-	pThis->m_pRotationPanel->GetBtnAutoCrop()->SetActive(pThis->m_bRotationAutoCrop);
+	m_pTransformPanel->GetTextTitle()->SetText(CString(CNLS::GetString(_T("Rotate Image"))) + buff);
 }
 
 void CRotationPanelCtl::OnRPAssistedMode(void* pContext, int nParameter, CButtonCtrl & sender) {
 	CRotationPanelCtl* pThis = (CRotationPanelCtl*)pContext;
 	pThis->m_bRotationModeAssisted = !pThis->m_bRotationModeAssisted;
 	pThis->UpdateAssistedRotationMode();
-}
-
-void CRotationPanelCtl::OnCancelRotation(void* pContext, int nParameter, CButtonCtrl & sender) {
-	((CRotationPanelCtl*)pContext)->TerminateRotationPanel();
-}
-
-void CRotationPanelCtl::OnApplyRotation(void* pContext, int nParameter, CButtonCtrl & sender) {
-	CRotationPanelCtl* pThis = (CRotationPanelCtl*)pContext;
-	HCURSOR hOldCursor = ::SetCursor(::LoadCursor(NULL, MAKEINTRESOURCE(IDC_WAIT)));
-	pThis->ApplyRotation();
-	::SetCursor(hOldCursor);
-	pThis->TerminateRotationPanel();
 }

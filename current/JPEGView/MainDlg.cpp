@@ -36,6 +36,7 @@
 #include "ImageProcPanelCtl.h"
 #include "WndButtonPanelCtl.h"
 #include "RotationPanelCtl.h"
+#include "TiltCorrectionPanelCtl.h"
 #include "UnsharpMaskPanelCtl.h"
 #include "EXIFDisplayCtl.h"
 #include "NavigationPanelCtl.h"
@@ -240,6 +241,7 @@ CMainDlg::CMainDlg() {
 	m_pEXIFDisplayCtl = NULL;
 	m_pWndButtonPanelCtl = NULL;
 	m_pRotationPanelCtl = NULL;
+	m_pTiltCorrectionPanelCtl = NULL;
 	m_pUnsharpMaskPanelCtl = NULL;
 	m_pImageProcPanelCtl = NULL;
 	m_pNavPanelCtl = NULL;
@@ -286,6 +288,10 @@ LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam
 	// Create rotation panel
 	m_pRotationPanelCtl = new CRotationPanelCtl(this, m_pImageProcPanelCtl->GetPanel());
 	m_pPanelMgr->AddPanelController(m_pRotationPanelCtl);
+
+	// Create perspective correction panel
+	m_pTiltCorrectionPanelCtl = new CTiltCorrectionPanelCtl(this, m_pImageProcPanelCtl->GetPanel());
+	m_pPanelMgr->AddPanelController(m_pTiltCorrectionPanelCtl);
 
 	// Create navigation panel
 	m_pNavPanelCtl = new CNavigationPanelCtl(this, m_pImageProcPanelCtl->GetPanel(), &m_bFullScreenMode);
@@ -426,9 +432,12 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 			pDIBData = m_pUnsharpMaskPanelCtl->GetUSMDIBForPreview(clippedSize, offsetsInImage, 
 			    *m_pImageProcParams, CreateProcessingFlags(m_bHQResampling && !m_bTemporaryLowQ && !m_bZoomMode, m_bAutoContrast, m_bAutoContrastSection, m_bLDC, false, m_bLandscapeMode));
 		} else if (m_pRotationPanelCtl->IsVisible()) {
-			pDIBData = m_pRotationPanelCtl->GetRotatedDIBForPreview(newSize, clippedSize, offsetsInImage, 
+			pDIBData = m_pRotationPanelCtl->GetDIBForPreview(newSize, clippedSize, offsetsInImage, 
 				*m_pImageProcParams, CreateProcessingFlags(false, m_bAutoContrast, m_bAutoContrastSection, m_bLDC, false, m_bLandscapeMode));
-		} else {
+		} else if (m_pTiltCorrectionPanelCtl->IsVisible()) {
+			pDIBData = m_pTiltCorrectionPanelCtl->GetDIBForPreview(newSize, clippedSize, offsetsInImage, 
+				*m_pImageProcParams, CreateProcessingFlags(false, m_bAutoContrast, m_bAutoContrastSection, m_bLDC, false, m_bLandscapeMode));
+		}  else {
 			pDIBData = m_pCurrentImage->GetDIB(newSize, clippedSize, offsetsInImage, 
 				*m_pImageProcParams, 
 				CreateProcessingFlags(m_bHQResampling && !m_bTemporaryLowQ && !m_bZoomMode, m_bAutoContrast, m_bAutoContrastSection, m_bLDC, false, m_bLandscapeMode));
@@ -458,9 +467,11 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 	memDCMgr.IncludeIntoClippingRegion(dc, excludedClippingRects);
 
 	// paint zoom navigator
+	CTrapezoid trapezoid = m_pTiltCorrectionPanelCtl->IsVisible() ? m_pTiltCorrectionPanelCtl->GetCurrentTrapezoid(CZoomNavigator::GetNavigatorRect(m_pCurrentImage, m_pImageProcPanelCtl->PanelRect()).Size()) : CTrapezoid();
 	m_pZoomNavigatorCtl->OnPaint(dc, visRectZoomNavigator, m_pImageProcParams,
-		CreateProcessingFlags(!m_pRotationPanelCtl->IsVisible(), m_bAutoContrast, false, m_bLDC, false, m_bLandscapeMode), 
-		m_pRotationPanelCtl->IsVisible() ? m_pRotationPanelCtl->GetLQRotationAngle() : 0.0);
+		CreateProcessingFlags(!m_pRotationPanelCtl->IsVisible() && !m_pTiltCorrectionPanelCtl->IsVisible(), m_bAutoContrast, false, m_bLDC, false, m_bLandscapeMode), 
+		m_pRotationPanelCtl->IsVisible() ? m_pRotationPanelCtl->GetLQRotationAngle() : 0.0, 
+		m_pTiltCorrectionPanelCtl->IsVisible() ? &trapezoid : NULL);
 
 	dc.SelectStockFont(SYSTEM_FONT);
 	dc.SetBkMode(TRANSPARENT);
@@ -572,20 +583,20 @@ LRESULT CMainDlg::OnLButtonDown(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam,
 	this->SetCapture();
 	SetCursorForMoveSection();
 	CPoint pointClicked(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
-	bool bShowRotationPanel = m_pRotationPanelCtl->IsVisible();
+	bool bShowTransformPanel = m_pRotationPanelCtl->IsVisible() || m_pTiltCorrectionPanelCtl->IsVisible();
 	bool bEatenByPanel = m_pPanelMgr->OnMouseLButton(MouseEvent_BtnDown, pointClicked.x, pointClicked.y);
 
 	if (!bEatenByPanel) {
 		bool bCtrl = (::GetKeyState(VK_CONTROL) & 0x8000) != 0;
 		bool bShift = (::GetKeyState(VK_SHIFT) & 0x8000) != 0;
 		bool bDraggingRequired = m_virtualImageSize.cx > m_clientRect.Width() || m_virtualImageSize.cy > m_clientRect.Height();
-		if ((bShift || m_bZoomModeOnLeftMouse) && !bShowRotationPanel && !m_pUnsharpMaskPanelCtl->IsVisible()) {
+		if ((bShift || m_bZoomModeOnLeftMouse) && !bShowTransformPanel && !m_pUnsharpMaskPanelCtl->IsVisible()) {
 			m_bZoomMode = true;
 			m_dStartZoom = m_dZoom;
 			m_nCapturedX = m_nMouseX; m_nCapturedY = m_nMouseY;
-		} else if ((bCtrl || !bDraggingRequired) && !bShowRotationPanel) {
+		} else if ((bCtrl || !bDraggingRequired) && !bShowTransformPanel) {
 			m_pCropCtl->StartCropping(pointClicked.x, pointClicked.y);
-		} else if (!m_pZoomNavigatorCtl->OnMouseLButton(MouseEvent_BtnDown, pointClicked.x, pointClicked.y) && !bShowRotationPanel) {
+		} else if (!m_pZoomNavigatorCtl->OnMouseLButton(MouseEvent_BtnDown, pointClicked.x, pointClicked.y) && !bShowTransformPanel) {
 			StartDragging(pointClicked.x, pointClicked.y, false);
 		}
 	}
@@ -1152,6 +1163,9 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 		case IDM_ROTATE:
 			GetRotationPanelCtl()->SetVisible(true);
 			break;
+		case IDM_PERSPECTIVE:
+			GetTiltCorrectionPanelCtl()->SetVisible(true);
+			break;
 		case IDM_MIRROR_H:
 		case IDM_MIRROR_V:
 			if (m_pCurrentImage != NULL) {
@@ -1214,7 +1228,8 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 			SaveParameters();
 			break;
 		case IDM_FIT_TO_SCREEN:
-			ResetZoomToFitScreen(false, true);
+		case IDM_FIT_TO_SCREEN_NO_ENLARGE:
+			ResetZoomToFitScreen(false, nCommand == IDM_FIT_TO_SCREEN);
 			break;
 		case IDM_FILL_WITH_CROP:
 			ResetZoomToFitScreen(true, true);
