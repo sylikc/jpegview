@@ -31,9 +31,11 @@
 #define IDM_SORT_MOD_DATE	7000			// сортировать по датам изменения
 #define IDM_SORT_CREATION_DATE 	7010			// сортировать по датам создания
 #define IDM_SORT_NAME		7020			// сортировать по именам
+#define IDM_SORT_RANDOM		7030			// sorting order random
 #define IDM_ROTATE_90		8000			// повернуть изображение на 90° вправо
 #define IDM_ROTATE_270		9000			// повернуть изображение на 90° влево
 #define IDM_ROTATE          	9100			// показать диалоговое окно поворота на произвольный угол
+#define IDM_PERSPECTIVE         9150			// show perpective correction dialog
 #define IDM_MIRROR_H        	9200			// зеркально отобразить изображение по горизонтали
 #define IDM_MIRROR_V        	9300			// зеркально отобразить изображение по вертикали
 #define IDM_AUTO_CORRECTION	10000			// вкл./выкл. автокоррекцию цвета и контрастности
@@ -153,6 +155,7 @@ N                       IDM_SORT_NAME
 Ctrl+M                  IDM_MARK_FOR_TOGGLE
 Ctrl+Shift+M            IDM_TOUCH_IMAGE
 M                       IDM_SORT_MOD_DATE
+Z                       IDM_SORT_RANDOM
 Ctrl+S                  IDM_SAVE_ALLOW_NO_PROMPT
 Ctrl+Shift+S            IDM_SAVE_SCREEN
 S                       IDM_SAVE_PARAM_DB

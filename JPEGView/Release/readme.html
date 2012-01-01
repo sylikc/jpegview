@@ -46,7 +46,7 @@
 				<td>
 					<a name="Top"></a>
 					<h1>JPEGView Readme</h1>
-					Revision: 09-Dec-2011
+					Revision: 01-Jan-2012
 					<a name="Introduction"></a>
 					<h2>Introduction</h2>
 					JPEGView is a viewer/editor for JPEG, BMP, WEBP, PNG, GIF and TIFF images. It is designed to view images from digital cameras
@@ -80,7 +80,7 @@
 						<li>
 							Small and fast
 							<ul style="margin-top:0in;margin-bottom:0in">
-								<li>Executable is only 512 KB</li>
+								<li>Executable is only 640 KB</li>
 								<li>C++/MMX/SSE code</li>
 								<li>Support for multiple CPU cores to speedup processing</li>
 								<li>Minimal dependencies on external libraries</li>
@@ -104,6 +104,7 @@
 								<li>Automatic color and contrast correction</li>
 								<li>Rotation in 90 deg steps</li>
 								<li>Free image rotation for horizon correction</li>
+                                <li>Perspective correction</li>
 								<li>Crop image (also lossless for JPEGs)</li>
 								<li>Landscape picture improvement mode</li>
 							</ul>
@@ -163,6 +164,8 @@
 							Other CPUs also work but performance decreases somewhat
 						</li>
 						<li>A mouse with a scroll wheel (for zooming) and navigation buttons on the side is highly recommended</li>
+                        <li>If you are using JPEGView on a touch-screen: You may increase the size of the buttons on the navigation
+                        panel by increasing the value of 'ScaleFactorNavPanel' in the INI file.</li>
 					</ul>
 					<b>Supported Systems</b><br/>
 					<ul style="margin-top:0in;margin-bottom:0in">
@@ -238,10 +241,12 @@
 					<br/>
 					From left to right:<br/>
 					- First image in folder, Previous image, Next image, Last image in folder<br/>
+                    - Zoom mode, when active zooming can be done by pressing the left mouse button and dragging the mouse to the left and right<br/>
 					- Actual image size / Fit image to screen<br/>
 					- Window mode / Full screen mode<br/>
 					- Rotate clockwise, Rotate counter-clockwise<br/>
 					- Rotate image by any angle, e.g. to perform horizon correction<br/>
+                    - Perspecive correction, corrects tilted vertical edges<br/>
 					- Keep image processing parameters and zoom/pan between images<br/>
 					- Toggle landscape picture enhancement mode<br/>
 					- Toggle display of image information (EXIF)<br/>
@@ -382,7 +387,7 @@
 						<li>
 							Free Zoom<br/>
 							Keyboard: <kbd>'Plus' or Ctrl-'Arrow up'</kbd> to zoom in, <kbd>'Minus' or Ctrl-'Arrow down'</kbd> to zoom out<br/>
-							Mouse: Mouse wheel
+							Mouse: Mouse wheel or <kbd>Shift-</kbd>left mouse click and drag mouse to the left and right<br/>
 						</li>
 						<li>
 							Pan<br/>
@@ -459,7 +464,9 @@
 						</li>
 						<li>Zoom to selection</li>
 					</ul>
-					Hint: Use a large zoom factor and the point-sampling mode (F3 key) to crop with pixel precision.
+					Hint: Use a large zoom factor and the point-sampling mode (F3 key) to crop with pixel precision.<br/>
+                    Note: When the crop-menu appears, the crop rectangle can still be edited by clicking on the handles or on the border of
+                    the rectangle. Use the right mouse button to display the crop-menu again when the crop rectangle has the desired size.
 					<br/><br/><b>
 						<a href="#Top">Top of Page</a>
 					</b><br/>
@@ -592,6 +599,16 @@
 							Press the 'Apply' button to apply the rotation to the original image with high quality (bicubic interpolation). By default the
 							rotated image is cropped automatically to avoid black borders. This behavior can be changed with the middle tool button on the rotation panel.
 						</li>
+                        <li>
+                          <b>Perspective Correction</b><br/>
+                          Keyboard: <kbd>none</kbd><br/>
+                          Mouse: Use navigation panel, 'Perspective Correction' button.<br/>
+                          When a picture of a building is taken from ground level, the vertical edges of the building are usually tilted because the camera is not aligned
+                          horizontally when taking the picture. Perspective correction can be used to correct for this effect - at least partially.<br/>
+                          In preview mode the image can be tilted with the mouse in real time, but with low quality. Grid lines help during the process.<br/>
+                          Press the 'Apply' button to apply the correction to the original image with high quality (bicubic interpolation). By default the
+                          corrected image is cropped automatically to avoid black borders. This behavior can be changed with the right tool button on the panel.
+                        </li>
 						<li>
 							<b>Color balance</b><br/>
 							Mouse: Use processing panel<br/>
@@ -937,7 +954,7 @@
 
 					<a name="Copyright"></a>
 					<h2>License &amp; Copyright</h2>
-					Copyright &copy; 2006-2011 David Kleiner<br/><br/>
+					Copyright &copy; 2006-2012 David Kleiner<br/><br/>
 					This program is free software; you can redistribute it and/or modify
 					it under the terms of the GNU General Public License as published by
 					the Free Software Foundation, version 2.
@@ -969,7 +986,7 @@
 							Michi, Patrik and Michael for additional testing and ideas
 						</li>
 						<li>
-                          <a href="http://codename33.ru">CodeName33</a> for integration of dcraw, for viewing JPEGs embedded in camera RAW
+                            Anonymous for integration of dcraw, for viewing JPEGs embedded in camera RAW
 						</li>
 						<li>
 							Franco Bianconi and Daniel Sánchez Vargas for the Spanish translation

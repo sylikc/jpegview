@@ -590,11 +590,12 @@ LRESULT CMainDlg::OnLButtonDown(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam,
 		bool bCtrl = (::GetKeyState(VK_CONTROL) & 0x8000) != 0;
 		bool bShift = (::GetKeyState(VK_SHIFT) & 0x8000) != 0;
 		bool bDraggingRequired = m_virtualImageSize.cx > m_clientRect.Width() || m_virtualImageSize.cy > m_clientRect.Height();
-		if ((bShift || m_bZoomModeOnLeftMouse) && !bShowTransformPanel && !m_pUnsharpMaskPanelCtl->IsVisible()) {
+		bool bHandleByCropping = m_pCropCtl->IsCropping() || m_pCropCtl->HitHandle(pointClicked.x, pointClicked.y) != CCropCtl::HH_None;
+		if ((bShift || m_bZoomModeOnLeftMouse) && !bShowTransformPanel && !bHandleByCropping && !m_pUnsharpMaskPanelCtl->IsVisible()) {
 			m_bZoomMode = true;
 			m_dStartZoom = m_dZoom;
 			m_nCapturedX = m_nMouseX; m_nCapturedY = m_nMouseY;
-		} else if ((bCtrl || !bDraggingRequired) && !bShowTransformPanel) {
+		} else if ((bCtrl || !bDraggingRequired || bHandleByCropping) && !bShowTransformPanel) {
 			m_pCropCtl->StartCropping(pointClicked.x, pointClicked.y);
 		} else if (!m_pZoomNavigatorCtl->OnMouseLButton(MouseEvent_BtnDown, pointClicked.x, pointClicked.y) && !bShowTransformPanel) {
 			StartDragging(pointClicked.x, pointClicked.y, false);
@@ -732,6 +733,8 @@ LRESULT CMainDlg::OnKeyDown(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOO
 			this->Invalidate(FALSE);
 		} else if (m_bMovieMode) {
 			StopMovieMode(); // stop any running movie/slideshow
+		} else if (m_pCropCtl->IsCropping()) {
+			m_pCropCtl->AbortCropping();
 		} else {
 			this->EndDialog(0);
 		}
@@ -865,6 +868,11 @@ LRESULT CMainDlg::OnContextMenu(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam,
 
 	MouseOn();
 
+	if (m_pCropCtl->IsCropping()) {
+		m_pCropCtl->ShowCropContextMenu();
+		return 1;
+	}
+
 	HMENU hMenu = ::LoadMenu(_Module.m_hInst, _T("PopupMenu"));
 	if (hMenu == NULL) return 1;
 
@@ -988,7 +996,7 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 	switch (nCommand) {
 		case IDM_HELP:
 			m_bShowHelp = !m_bShowHelp;
-			if (m_clientRect.Width() < 800) {
+			if (m_clientRect.Width() < 800 || m_pCropCtl->IsCropping()) {
 				m_bShowHelp = false;
 			}
 			this->Invalidate(FALSE);
@@ -1161,9 +1169,11 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 			}
 			break;
 		case IDM_ROTATE:
+			m_pCropCtl->AbortCropping();
 			GetRotationPanelCtl()->SetVisible(true);
 			break;
 		case IDM_PERSPECTIVE:
+			m_pCropCtl->AbortCropping();
 			GetTiltCorrectionPanelCtl()->SetVisible(true);
 			break;
 		case IDM_MIRROR_H:
@@ -2098,6 +2108,7 @@ void CMainDlg::AfterNewImageLoaded(bool bSynchronize, bool bAfterStartup) {
 	UpdateWindowTitle();
 	m_pNavPanelCtl->HideNavPanelTemporary();
 	m_pPanelMgr->AfterNewImageLoaded();
+	m_pCropCtl->AbortCropping();
 	if (bSynchronize) {
 		// after loading an image, the per image processing parameters must be synchronized with
 		// the current processing parameters
@@ -2241,12 +2252,14 @@ LPCTSTR CMainDlg::CurrentFileName(bool bFileTitle) {
 }
 
 void CMainDlg::SetCursorForMoveSection() {
-	if (m_pZoomNavigatorCtl->IsPointInZoomNavigatorThumbnail(CPoint(m_nMouseX, m_nMouseY)) || m_bDragging) {
-		::SetCursor(::LoadCursor(NULL, MAKEINTRESOURCE(IDC_SIZEALL)));
-		m_bPanMouseCursorSet = true;
-	} else if (m_bPanMouseCursorSet) {
-		::SetCursor(::LoadCursor(NULL, MAKEINTRESOURCE(IDC_ARROW)));
-		m_bPanMouseCursorSet = false;
+	if (!m_pCropCtl->IsCropping()) {
+		if (m_pZoomNavigatorCtl->IsPointInZoomNavigatorThumbnail(CPoint(m_nMouseX, m_nMouseY)) || m_bDragging) {
+			::SetCursor(::LoadCursor(NULL, MAKEINTRESOURCE(IDC_SIZEALL)));
+			m_bPanMouseCursorSet = true;
+		} else if (m_bPanMouseCursorSet) {
+			::SetCursor(::LoadCursor(NULL, MAKEINTRESOURCE(IDC_ARROW)));
+			m_bPanMouseCursorSet = false;
+		}
 	}
 }
 
