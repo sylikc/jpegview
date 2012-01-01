@@ -284,6 +284,8 @@ void CFileList::Reload(LPCTSTR sFileName) {
 		}
 	}
 
+	CString sCurrentFile = sCurrent;
+
 	// delete the chain of CFileLists forward
 	CFileList* pFileList = this->m_next;
 	while (pFileList != NULL && pFileList->m_prev != NULL) {
@@ -293,7 +295,6 @@ void CFileList::Reload(LPCTSTR sFileName) {
 	}
 	m_next = NULL;
 
-	CString sCurrentFile = sCurrent;
 	if (!m_bIsSlideShowList) {
 		FindFiles();
 		m_iterStart = m_bWrapAroundFolder ? FindFile(m_sInitialFile) : m_fileList.begin();

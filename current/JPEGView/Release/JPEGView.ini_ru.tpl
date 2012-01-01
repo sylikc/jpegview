@@ -16,6 +16,7 @@
 ; 'es'		испанский (Испания)
 ; 'es-ar'	испанский (Латинская Америка)
 ; 'pt-br'	португальский (Бразилия)
+; 'pt'		португальский
 ; 'de'		немецкий
 ; 'it'		итальянский
 ; 'fr'		французский
@@ -26,6 +27,16 @@
 ; 'cs'		чешский
 ; 'el'		греческий
 Language=auto
+
+; File endings of files to be decoded by WIC (Windows Image Converter)
+; If the Microsoft Camera Codec pack is installed, full size camera RAW files can be read with WIC
+; Add the file endings of the raw files to view here, e.g.
+; FilesProcessedByWIC=*.wdp;*.mdp;*.hdp;*.nef
+FilesProcessedByWIC=*.wdp;*.mdp;*.hdp
+
+; File endings of camera RAW files to be searched for embedded JPEG thumb images to display
+; Reading just these embedded JPEGs is much faster than decoding the RAW using WIC
+FileEndingsRAW=*.pef;*.dng;*.crw;*.nef;*.cr2;*.mrw;*.rw2;*.orf;*.x3f;*.arw;*.kdc;*.nrw;*.dcr;*.sr2;*.raf
 
 ; Цвет фона, R G B, каждый компонент должен быть в диапазоне от 0 до 255, например, "128 128 128" это средне-серый.
 BackgroundColor=0 0 0
@@ -104,6 +115,9 @@ ShowZoomNavigator=true
 ; Коэффициент смешивания панели навигации, когда курсор находится вне её.
 ; Установите 0.0, чтобы панель отображалась только при наведении на неё мыши.
 BlendFactorNavPanel=0.5
+
+; Scaling factor for the navigation panel. Increase if the buttons on the panel are too small, e.g. on a touchscreen.
+ScaleFactorNavPanel=1.0
 
 ; Установите в 'true', чтобы при смене изображений запоминались значения масштаба, прокрутки, контрастности, гаммы, резкости и поворота.
 KeepParameters=false

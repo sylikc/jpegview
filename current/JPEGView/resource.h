@@ -179,7 +179,7 @@
 #define SUBMENU_POS_SETTINGS 34
 
 // in the crop menu
-#define SUBMENU_POS_CROPMODE 2
+#define SUBMENU_POS_CROPMODE 3
 
 // Next default values for new objects
 // 
