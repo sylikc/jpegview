@@ -1332,6 +1332,7 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 			m_dZoom = -1.0;
 			m_offsets = CPoint(0, 0);
 			this->Invalidate(FALSE);
+			AdjustWindowToImage(false);
 			break;
 		case IDM_EDIT_GLOBAL_CONFIG:
 		case IDM_EDIT_USER_CONFIG:
@@ -1713,24 +1714,11 @@ void CMainDlg::GotoImage(EImagePosition ePos, int nFlags) {
 		StopMovieMode();
 	}
 
-	if (ePos != POS_Current && ePos != POS_Clipboard) {
-		MouseOff();
-	}
-
-	if (nFlags & KEEP_PARAMETERS) {
-		if (!(m_bUserZoom || IsAdjustWindowToImage())) {
-			m_dZoom = -1;
-		}
-	} else {
-		InitParametersForNewImage();
-	}
-	m_pJPEGProvider->NotifyNotUsed(m_pCurrentImage);
-	if (ePos == POS_Current) {
-		m_pJPEGProvider->ClearRequest(m_pCurrentImage);
-	}
-	m_pCurrentImage = NULL;
 	m_pCropCtl->CancelCropping(); // cancel any running crop
-	
+
+	bool bCheckIfSameImage = true;
+	m_pFileList->SetCheckpoint();
+	CFileList* pOldFileList = m_pFileList;
 	CJPEGProvider::EReadAheadDirection eDirection = CJPEGProvider::FORWARD;
 	switch (ePos) {
 		case POS_First:
@@ -1752,8 +1740,30 @@ void CMainDlg::GotoImage(EImagePosition ePos, int nFlags) {
 			break;
 		case POS_Current:
 		case POS_Clipboard:
+			bCheckIfSameImage = false; // do something even when not moving iterator on filelist
 			break;
 	}
+
+	if (bCheckIfSameImage && (m_pFileList == pOldFileList && !m_pFileList->ChangedSinceCheckpoint())) {
+		return; // not placed on a new image, don't do anything
+	}
+
+	if (ePos != POS_Current && ePos != POS_Clipboard) {
+		MouseOff();
+	}
+
+	if (nFlags & KEEP_PARAMETERS) {
+		if (!(m_bUserZoom || IsAdjustWindowToImage())) {
+			m_dZoom = -1;
+		}
+	} else {
+		InitParametersForNewImage();
+	}
+	m_pJPEGProvider->NotifyNotUsed(m_pCurrentImage);
+	if (ePos == POS_Current) {
+		m_pJPEGProvider->ClearRequest(m_pCurrentImage);
+	}
+	m_pCurrentImage = NULL;
 
 	// do not perform a new image request if flagged
 	if (nFlags & NO_REQUEST) {

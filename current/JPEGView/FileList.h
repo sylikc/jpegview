@@ -105,6 +105,11 @@ public:
 	// Toggle between marked and current file
 	void ToggleBetweenMarkedAndCurrentFile();
 
+	// Sets a checkpoint on the current image
+	void SetCheckpoint() { m_iterCheckPoint = m_iter; }
+	// Check if we are now on another image since the last checkpoint was set
+	bool ChangedSinceCheckpoint() { return m_iterCheckPoint != m_iter; }
+
 	// Returns if the current file list is based on a slide show text file
 	bool IsSlideShowList() const { return m_bIsSlideShowList; }
 
@@ -126,6 +131,7 @@ private:
 	std::list<CFileDesc> m_fileList;
 	std::list<CFileDesc>::iterator m_iter; // current position in m_fileList
 	std::list<CFileDesc>::iterator m_iterStart; // start of iteration in m_fileList
+	std::list<CFileDesc>::iterator m_iterCheckPoint;
 
 	CString m_sMarkedFile;
 	CString m_sMarkedFileCurrent;
