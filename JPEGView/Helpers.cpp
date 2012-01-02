@@ -450,8 +450,9 @@ double GetExactTickCount() {
 	}
 }
 
-CRect GetWindowRectMatchingImageSize(HWND hWnd, int nMinWidth, int nMinHeight, double dZoom, CJPEGImage* pImage, bool bForceCenterWindow) {
+CRect GetWindowRectMatchingImageSize(HWND hWnd, CSize minSize, CSize maxSize, double& dZoom, CJPEGImage* pImage, bool bForceCenterWindow) {
 	int nOrigWidth = (pImage == NULL) ? ::GetSystemMetrics(SM_CXSCREEN) / 2 : pImage->OrigWidth();
+	int nOrigWidthUnzoomed = nOrigWidth;
 	int nOrigHeight = (pImage == NULL) ? ::GetSystemMetrics(SM_CYSCREEN) / 2 : pImage->OrigHeight();
 	if (dZoom > 0) {
 		nOrigWidth = (int) (nOrigWidth * dZoom + 0.5);
@@ -464,13 +465,16 @@ CRect GetWindowRectMatchingImageSize(HWND hWnd, int nMinWidth, int nMinHeight, d
 	CRect workingArea = CMultiMonitorSupport::GetWorkingRect(hWnd);
 	if (nRequiredWidth > workingArea.Width() || nRequiredHeight > workingArea.Height()) {
 		double dZoom;
-		CSize imageRect = Helpers::GetImageRect(nOrigWidth, nOrigHeight, workingArea.Width() - nBorderWidth, workingArea.Height() - nBorderHeight, 
+		CSize imageRect = Helpers::GetImageRect(nOrigWidth, nOrigHeight, 
+			min(maxSize.cx, workingArea.Width() - nBorderWidth), 
+			min(maxSize.cy, workingArea.Height() - nBorderHeight), 
 			false, false, false, dZoom);
 		nRequiredWidth = imageRect.cx + nBorderWidth;
 		nRequiredHeight = imageRect.cy + nBorderHeight;
 	}
-	nRequiredWidth = max(nMinWidth, nRequiredWidth);
-	nRequiredHeight = max(nMinHeight, nRequiredHeight);
+	nRequiredWidth = max(minSize.cx, nRequiredWidth);
+	nRequiredHeight = max(minSize.cy, nRequiredHeight);
+	dZoom = ((double)(nRequiredWidth - nBorderWidth))/nOrigWidthUnzoomed;
 	CRect wndRect;
 	::GetWindowRect(hWnd, &wndRect);
 	int nNewLeft = wndRect.CenterPoint().x - nRequiredWidth / 2;

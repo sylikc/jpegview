@@ -45,6 +45,7 @@
 #define IDM_CLEAR_PARAM_DB  	11510			// delete from parameter DB
 #define IDM_FIT_TO_SCREEN	12000			// fit image to screen
 #define IDM_FILL_WITH_CROP	12001			// fit image to fill screen with crop
+#define IDM_FIT_WINDOW_TO_IMAGE	12005			// toggle fit window automatically to image, avoiding black borders
 #define IDM_SPAN_SCREENS	12010			// span over all screens
 #define IDM_FULL_SCREEN_MODE 	12011			// toggle full screen mode
 #define IDM_ZOOM_400        	12020			// zoom to 400 %
@@ -130,6 +131,7 @@ F7                      IDM_LOOP_FOLDER
 F8                      IDM_LOOP_RECURSIVELY
 F9                      IDM_LOOP_SIBLINGS
 F11                     IDM_FULL_SCREEN_MODE
+Ctrl+F11                IDM_FIT_WINDOW_TO_IMAGE
 F12                     IDM_SPAN_SCREENS
 Ctrl+F12                IDM_TOGGLE_MONITOR
 Space                   IDM_TOGGLE_FIT_TO_SCREEN_100_PERCENTS

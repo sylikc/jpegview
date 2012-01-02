@@ -280,3 +280,4 @@ Perspective Correction	Perspektiven-Korrektur
 Perspective correction...	Perspektiven-Korrektur...
 Auto crop corrected image (avoids black border)	Korrigiertes Bild freistellen (verhindert schwarzen Rahmen)
 Click and drag the mouse horizontally to correct image tilt.	Klicken und ziehen Sie die Maus horizontal um die Bildneigung zu ändern.
+Fit window to image	Fenstergrösse an Bild anpassen
