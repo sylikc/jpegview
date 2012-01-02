@@ -93,7 +93,7 @@ STYLE 0x10C80000
 BEGIN
   CONTROL "",IDC_CLOSE,"Button",0x50010001,133,120,104,15
   CONTROL "",IDC_JPEGVIEW,"Static",0x50000000,64,7,163,9
-  CONTROL "Copyright 2006-2011 David Kleiner",IDC_COPYRIGHT,"Static",0x50000000,64,22,163,9
+  CONTROL "Copyright 2006-2012 David Kleiner",IDC_COPYRIGHT,"Static",0x50000000,64,22,163,9
   CONTROL IDR_MAINFRAME,IDC_ICONJPEGVIEW,"Static",0x50000203,18,14,22,20
   CONTROL "",IDC_LICENSE,"RichEdit20W",0x50010804,64,68,168,42
   CONTROL "",IDC_SIMDMODE,"Static",0x50000000,64,36,163,10
@@ -322,7 +322,7 @@ BEGIN
             VALUE "FileDescription", "High quality resampling JPEG viewer\0"
             VALUE "FileVersion", JPEGVIEW_VERSION
             VALUE "InternalName", "JPEGView\0"
-            VALUE "LegalCopyright", "Copyright 2006-2011 David Kleiner\0"
+            VALUE "LegalCopyright", "Copyright 2006-2012 David Kleiner\0"
             VALUE "OriginalFilename", "JPEGView.exe\0"
             VALUE "ProductName", "JPEGView Application\0"
             VALUE "ProductVersion", JPEGVIEW_VERSION
