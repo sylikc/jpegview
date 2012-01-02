@@ -45,6 +45,7 @@ New features:
 - Zoom by dragging mouse, activate with 'Shift-left mouse click' or with button on navigation panel
 - Random sorting order for images within folder, can be used e.g. for random slideshow mode (activate with 'z' key)
 - Improved crop handling: Crop rectangle can be resized using handles
+- When in 'Adjust window to image' zoom mode and in window mode, the window adjusts automatically to zoomed image size while zooming
 Other changes:
 - Russian version of keymap and INI file (KeyMap_ru.txt, JPEGView_ru.ini) containig explanations in Russian. Be aware that
   these files must be renamed to KeyMap.txt and JPEGView.ini and copied over the original (English) versions when JPEGView shall use them.

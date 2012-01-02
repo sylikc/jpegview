@@ -83,7 +83,7 @@ ShowFullScreen=auto
 ; 'max' to start with maximized window
 ; 'image' to adjust the window size automatically to the image size
 ; 'left top right bottom', space separated e.g: 100 100 900 700
-DefaultWindowRect=auto
+DefaultWindowRect=image
 
 ; The initial crop window size when using 'Fixed Size' crop mode
 DefaultFixedCropSize=320 200

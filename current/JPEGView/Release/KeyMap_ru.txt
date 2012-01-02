@@ -47,6 +47,7 @@
 #define IDM_CLEAR_PARAM_DB  	11510			// удалить из БД параметров
 #define IDM_FIT_TO_SCREEN	12000			// вписать изображение в экран
 #define IDM_FILL_WITH_CROP	12001			// вписать изображение в экран до заполнения с обрезкой
+#define IDM_FIT_WINDOW_TO_IMAGE	12005			// toggle fit window automatically to image, avoiding black borders
 #define IDM_SPAN_SCREENS	12010			// распределить по всем экранам
 #define IDM_FULL_SCREEN_MODE 	12011			// вкл./выкл. полноэкранный режим
 #define IDM_ZOOM_400        	12020			// масштабировать до 400%
@@ -134,6 +135,7 @@ F7                      IDM_LOOP_FOLDER
 F8                      IDM_LOOP_RECURSIVELY
 F9                      IDM_LOOP_SIBLINGS
 F11                     IDM_FULL_SCREEN_MODE
+Ctrl+F11                IDM_FIT_WINDOW_TO_IMAGE
 F12                     IDM_SPAN_SCREENS
 Ctrl+F12                IDM_TOGGLE_MONITOR
 Div                     IDM_TOGGLE_FIT_TO_SCREEN_100_PERCENTS

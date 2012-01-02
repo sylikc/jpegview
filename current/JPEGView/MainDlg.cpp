@@ -74,6 +74,8 @@ static const int NO_REQUEST = 1; // used in GotoImage() method
 static const int NO_REMOVE_KEY_MSG = 2; // used in GotoImage() method
 static const int KEEP_PARAMETERS = 4; // used in GotoImage() method
 
+static const CSize HUGE_SIZE = CSize(99999999, 99999999);
+
 //////////////////////////////////////////////////////////////////////////////////////////////
 // Helpers
 //////////////////////////////////////////////////////////////////////////////////////////////
@@ -217,8 +219,8 @@ CMainDlg::CMainDlg() {
 	m_nCapturedX = m_nCapturedY = 0;
 	m_nMouseX = m_nMouseY = 0;
 	m_bShowHelp = false;
-	m_bAutoFitWndToImage = sp.AutoFullScreen();
-	m_bFullScreenMode = sp.ShowFullScreen() && !m_bAutoFitWndToImage;
+	m_bAutoFitWndToImage = sp.DefaultWndToImage();
+	m_bFullScreenMode = sp.ShowFullScreen() && !sp.AutoFullScreen();
 	m_bLockPaint = true;
 	m_nCurrentTimeout = 0;
 	m_startMouse.x = m_startMouse.y = -1;
@@ -229,8 +231,6 @@ CMainDlg::CMainDlg() {
 	m_bSpanVirtualDesktop = false;
 	m_bPanMouseCursorSet = false;
 	m_storedWindowPlacement.length = sizeof(WINDOWPLACEMENT);
-	memset(&m_storedWindowPlacement2, 0, sizeof(WINDOWPLACEMENT));
-	m_storedWindowPlacement2.length = sizeof(WINDOWPLACEMENT);
 	m_nMonitor = 0;
 	m_monitorRect = CRect(0, 0, 0, 0);
 	m_bMouseOn = false;
@@ -269,9 +269,10 @@ LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam
 	HelpersGUI::ScreenScaling = m_fScaling;
 
 	// determine the monitor rectangle and client rectangle
-	m_nMonitor = CSettingsProvider::This().DisplayMonitor();
+	CSettingsProvider& sp = CSettingsProvider::This();
+	m_nMonitor = sp.DisplayMonitor();
 	m_monitorRect = CMultiMonitorSupport::GetMonitorRect(m_nMonitor);
-	m_clientRect = m_bFullScreenMode ? m_monitorRect : CMultiMonitorSupport::GetDefaultClientRectInWindowMode(m_bAutoFitWndToImage);
+	m_clientRect = m_bFullScreenMode ? m_monitorRect : CMultiMonitorSupport::GetDefaultClientRectInWindowMode(sp.AutoFullScreen());
 
 	// Create image processing panel at bottom of screen
 	m_pImageProcPanelCtl = new CImageProcPanelCtl(this, m_pImageProcParams, &m_bLDC, &m_bAutoContrast);
@@ -317,8 +318,8 @@ LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam
 	::ShowCursor(m_bMouseOn);
 
 	// intitialize navigation with startup file (and folder)
-	m_pFileList = new CFileList(m_sStartupFile, CSettingsProvider::This().Sorting(), CSettingsProvider::This().WrapAroundFolder());
-	m_pFileList->SetNavigationMode(CSettingsProvider::This().Navigation());
+	m_pFileList = new CFileList(m_sStartupFile, sp.Sorting(), sp.WrapAroundFolder());
+	m_pFileList->SetNavigationMode(sp.Navigation());
 
 	// create thread pool for processing requests on multiple CPU cores
 	CProcessingThreadPool::This().CreateThreadPoolThreads();
@@ -340,7 +341,7 @@ LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam
 		} else {
 			AdjustWindowToImage(true);
 		}
-		if (CSettingsProvider::This().DefaultMaximized()) {
+		if (sp.DefaultMaximized()) {
 			this->ShowWindow(SW_MAXIMIZE);
 		}
 	} else {
@@ -556,7 +557,7 @@ LRESULT CMainDlg::OnSize(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BO
 		if (fabs(m_dZoom - GetZoomFactorForFitToScreen(false, false)) >= 0.00001) {
 			StartLowQTimer(ZOOM_TIMEOUT);
 		}
-		ResetZoomToFitScreen(false, false);
+		ResetZoomToFitScreen(false, false, false);
 	}
 	return 0;
 }
@@ -621,6 +622,7 @@ LRESULT CMainDlg::OnMButtonDown(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam,
 LRESULT CMainDlg::OnLButtonUp(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, BOOL& /*bHandled*/) {
 	if (m_bZoomMode) {
 		m_bZoomMode = false;
+		AdjustWindowToImage(false);
 		Invalidate(FALSE);
 	} else if (m_bDragging) {
 		EndDragging();
@@ -692,7 +694,7 @@ LRESULT CMainDlg::OnMouseMove(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, B
 		int nDX = m_nMouseX - m_nCapturedX;
 		double dFactor = 1 + pow(nDX * nDX, 0.8) / 1500;
 		if (nDX < 0) dFactor = 1.0/dFactor;
-		PerformZoom(m_dStartZoom * dFactor, false, true);
+		PerformZoom(m_dStartZoom * dFactor, false, true, false);
 	} else if (m_bDragging) {
 		DoDragging();
 	} else if (m_pCropCtl->IsCropping()) {
@@ -713,7 +715,7 @@ LRESULT CMainDlg::OnMouseWheel(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, 
 			GotoImage(POS_Previous);
 		}
 	} else if (m_dZoom > 0 && !m_pUnsharpMaskPanelCtl->IsVisible()) {
-		PerformZoom(double(nDelta)/WHEEL_DELTA, true, m_bMouseOn);
+		PerformZoom(double(nDelta)/WHEEL_DELTA, true, m_bMouseOn, true);
 	}
 	return 0;
 }
@@ -894,6 +896,7 @@ LRESULT CMainDlg::OnContextMenu(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam,
 	HMENU hMenuZoom = ::GetSubMenu(hMenuTrackPopup, SUBMENU_POS_ZOOM);
 	if (m_bSpanVirtualDesktop) ::CheckMenuItem(hMenuZoom,  IDM_SPAN_SCREENS, MF_CHECKED);
 	if (m_bFullScreenMode) ::CheckMenuItem(hMenuZoom,  IDM_FULL_SCREEN_MODE, MF_CHECKED);
+	if (IsAdjustWindowToImage()) ::CheckMenuItem(hMenuZoom,  IDM_FIT_WINDOW_TO_IMAGE, MF_CHECKED);
 	HMENU hMenuAutoZoomMode = ::GetSubMenu(hMenuTrackPopup, SUBMENU_POS_AUTOZOOMMODE);
 	::CheckMenuItem(hMenuAutoZoomMode,  m_eAutoZoomMode*10 + IDM_AUTO_ZOOM_FIT_NO_ZOOM, MF_CHECKED);
 	HMENU hMenuSettings = ::GetSubMenu(hMenuTrackPopup, SUBMENU_POS_SETTINGS);
@@ -901,6 +904,8 @@ LRESULT CMainDlg::OnContextMenu(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam,
 
 	if (CSettingsProvider::This().StoreToEXEPath()) ::EnableMenuItem(hMenuSettings, IDM_EDIT_USER_CONFIG, MF_BYCOMMAND | MF_GRAYED);
 	if (CParameterDB::This().IsEmpty()) ::EnableMenuItem(hMenuSettings, IDM_BACKUP_PARAMDB, MF_BYCOMMAND | MF_GRAYED);
+	if (m_bFullScreenMode) ::EnableMenuItem(hMenuZoom, IDM_FIT_WINDOW_TO_IMAGE, MF_BYCOMMAND | MF_GRAYED);
+	if (!m_bFullScreenMode) ::EnableMenuItem(hMenuZoom, IDM_SPAN_SCREENS, MF_BYCOMMAND | MF_GRAYED);
 
 	::EnableMenuItem(hMenuMovie, IDM_SLIDESHOW_START, MF_BYCOMMAND | MF_GRAYED);
 	::EnableMenuItem(hMenuMovie, IDM_MOVIE_START_FPS, MF_BYCOMMAND | MF_GRAYED);
@@ -1161,7 +1166,7 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 				uint32 nRotationDelta = (nCommand == IDM_ROTATE_90) ? 90 : 270;
 				m_nRotation = (m_nRotation + nRotationDelta) % 360;
 				m_pCurrentImage->Rotate(nRotationDelta);
-				m_dZoom = -1;
+				if (!IsAdjustWindowToImage()) m_dZoom = -1;
 				m_bUserZoom = false;
 				m_bUserPan = false;
 				AdjustWindowToImage(false);
@@ -1226,7 +1231,7 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 				*m_pImageProcParamsKept = *m_pImageProcParams;
 				m_eProcessingFlagsKept = CreateProcessingFlags(m_bHQResampling, m_bAutoContrast, false, m_bLDC, m_bKeepParams, m_bLandscapeMode);
 				m_nRotationKept = m_nRotation;
-				m_dZoomKept = m_bUserZoom ? m_dZoom : -1;
+				m_dZoomKept = (m_bUserZoom || IsAdjustWindowToImage()) ? m_dZoom : -1;
 				m_offsetKept = m_bUserPan ? m_offsets : CPoint(0, 0);
 			}
 			m_pImageProcPanelCtl->ShowHideSaveDBButtons();
@@ -1239,20 +1244,20 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 			break;
 		case IDM_FIT_TO_SCREEN:
 		case IDM_FIT_TO_SCREEN_NO_ENLARGE:
-			ResetZoomToFitScreen(false, nCommand == IDM_FIT_TO_SCREEN);
+			ResetZoomToFitScreen(false, nCommand == IDM_FIT_TO_SCREEN, !m_bFullScreenMode);
 			break;
 		case IDM_FILL_WITH_CROP:
-			ResetZoomToFitScreen(true, true);
+			ResetZoomToFitScreen(true, true, !m_bFullScreenMode);
 			break;
 		case IDM_TOGGLE_FIT_TO_SCREEN_100_PERCENTS:
 			if (fabs(m_dZoom - 1) < 0.01) {
-				ResetZoomToFitScreen(false, true);
+				ResetZoomToFitScreen(false, true, !m_bFullScreenMode);
 			} else {
 				ResetZoomTo100Percents(m_bMouseOn);
 			}
 			break;
 		case IDM_SPAN_SCREENS:
-			if (CMultiMonitorSupport::IsMultiMonitorSystem()) {
+			if (CMultiMonitorSupport::IsMultiMonitorSystem() && m_bFullScreenMode) {
 				m_dZoom = -1.0;
 				this->Invalidate(FALSE);
 				if (m_bSpanVirtualDesktop) {
@@ -1271,19 +1276,13 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 			if (!m_bFullScreenMode) {
 				CRect windowRect;
 				this->SetWindowLongW(GWL_STYLE, this->GetWindowLongW(GWL_STYLE) | WS_OVERLAPPEDWINDOW | WS_VISIBLE);
-				bool bAdjustWndToImage = IsAdjustWindowToImage() && m_pCurrentImage != NULL;
-				if (::IsRectEmpty(&(m_storedWindowPlacement2.rcNormalPosition)) || bAdjustWndToImage) {
-					// never set to window mode before, use default position
-					windowRect = bAdjustWndToImage ? 
-						Helpers::GetWindowRectMatchingImageSize(m_hWnd, MIN_WND_WIDTH, MIN_WND_HEIGHT, -1, m_pCurrentImage, false) : 
-						CMultiMonitorSupport::GetDefaultWindowRect();
-					this->SetWindowPos(HWND_TOP, windowRect.left, windowRect.top, windowRect.Width(), windowRect.Height(), SWP_NOZORDER | SWP_NOCOPYBITS);
-				} else {
-					m_storedWindowPlacement2.flags = this->SetWindowPlacement(&m_storedWindowPlacement2);
-				}
+				CRect defaultWindowRect = CMultiMonitorSupport::GetDefaultWindowRect();
+				double dZoom = -1;
+				windowRect = Helpers::GetWindowRectMatchingImageSize(m_hWnd, CSize(MIN_WND_WIDTH, MIN_WND_HEIGHT), defaultWindowRect.Size(), dZoom, m_pCurrentImage, false);
+				this->SetWindowPos(HWND_TOP, windowRect.left, windowRect.top, windowRect.Width(), windowRect.Height(), SWP_NOZORDER | SWP_NOCOPYBITS);
 				this->MouseOn();
+				m_bSpanVirtualDesktop = false;
 			} else {
-				this->GetWindowPlacement(&m_storedWindowPlacement2);
 				HMONITOR hMonitor = ::MonitorFromWindow(m_hWnd, MONITOR_DEFAULTTONEAREST);
 				MONITORINFO monitorInfo;
 				monitorInfo.cbSize = sizeof(MONITORINFO);
@@ -1298,24 +1297,28 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 			StartLowQTimer(ZOOM_TIMEOUT);
 			this->SetWindowPos(NULL, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_NOCOPYBITS | SWP_FRAMECHANGED);
 			break;
+		case IDM_FIT_WINDOW_TO_IMAGE:
+			m_bAutoFitWndToImage = !m_bAutoFitWndToImage;
+			AdjustWindowToImage(false);
+			break;
 		case IDM_ZOOM_400:
-			PerformZoom(4.0, false, m_bMouseOn);
+			PerformZoom(4.0, false, m_bMouseOn, true);
 			break;
 		case IDM_ZOOM_200:
-			PerformZoom(2.0, false, m_bMouseOn);
+			PerformZoom(2.0, false, m_bMouseOn, true);
 			break;
 		case IDM_ZOOM_100:
 			ResetZoomTo100Percents(m_bMouseOn);
 			break;
 		case IDM_ZOOM_50:
-			PerformZoom(0.5, false, m_bMouseOn);
+			PerformZoom(0.5, false, m_bMouseOn, true);
 			break;
 		case IDM_ZOOM_25:
-			PerformZoom(0.25, false, m_bMouseOn);
+			PerformZoom(0.25, false, m_bMouseOn, true);
 			break;
 		case IDM_ZOOM_INC:
 		case IDM_ZOOM_DEC:
-			PerformZoom((nCommand == IDM_ZOOM_INC) ? 1 : -1, true, m_bMouseOn);
+			PerformZoom((nCommand == IDM_ZOOM_INC) ? 1 : -1, true, m_bMouseOn, true);
 			break;
 		case IDM_ZOOM_MODE:
 			m_bZoomModeOnLeftMouse = !m_bZoomModeOnLeftMouse;
@@ -1715,7 +1718,7 @@ void CMainDlg::GotoImage(EImagePosition ePos, int nFlags) {
 	}
 
 	if (nFlags & KEEP_PARAMETERS) {
-		if (!m_bUserZoom) {
+		if (!(m_bUserZoom || IsAdjustWindowToImage())) {
 			m_dZoom = -1;
 		}
 	} else {
@@ -1814,7 +1817,7 @@ void CMainDlg::AdjustSharpen(double dInc) {
 	this->Invalidate(FALSE);
 }
 
-void CMainDlg::PerformZoom(double dValue, bool bExponent, bool bZoomToMouse) {
+void CMainDlg::PerformZoom(double dValue, bool bExponent, bool bZoomToMouse, bool bAdjustWindowToImage) {
 	double dOldZoom = m_dZoom;
 	m_bUserZoom = true;
 	if (bExponent) {
@@ -1867,6 +1870,9 @@ void CMainDlg::PerformZoom(double dValue, bool bExponent, bool bZoomToMouse) {
 	StartLowQTimer(ZOOM_TIMEOUT);
 	if (fabs(dOldZoom - m_dZoom) > 0.01 || m_bZoomMode) {
 		this->Invalidate(FALSE);
+		if (bAdjustWindowToImage) {
+			AdjustWindowToImage(false);
+		}
 	}
 }
 
@@ -1893,7 +1899,7 @@ void CMainDlg::ZoomToSelection() {
 		CPoint offsets;
 		Helpers::GetZoomParameters(fZoom, offsets, m_pCurrentImage->OrigSize(), m_clientRect.Size(), zoomRect);
 		if (fZoom > 0) {
-			PerformZoom(fZoom, false, m_bMouseOn);
+			PerformZoom(fZoom, false, m_bMouseOn, false);
 			m_offsets = offsets;
 			m_bUserPan = true;
 		}
@@ -1912,21 +1918,34 @@ double CMainDlg::GetZoomFactorForFitToScreen(bool bFillWithCrop, bool bAllowEnla
 	}
 }
 
-void CMainDlg::ResetZoomToFitScreen(bool bFillWithCrop, bool bAllowEnlarge) {
+void CMainDlg::ResetZoomToFitScreen(bool bFillWithCrop, bool bAllowEnlarge, bool bAdjustWindowSize) {
 	if (m_pCurrentImage != NULL) {
-		double dOldZoom = m_dZoom;
-		m_dZoom = GetZoomFactorForFitToScreen(bFillWithCrop, bAllowEnlarge);
-		m_bUserZoom = m_dZoom > 1.0;
-		m_bUserPan = false;
-		if (fabs(dOldZoom - m_dZoom) > 0.01) {
+		if (bAdjustWindowSize) {
+			m_dZoom = bAllowEnlarge ? Helpers::ZoomMax : 1;
+			CRect wndRect = Helpers::GetWindowRectMatchingImageSize(m_hWnd, CSize(MIN_WND_WIDTH, MIN_WND_HEIGHT), HUGE_SIZE, m_dZoom, m_pCurrentImage, false);
+			if (m_dZoom <= 1) {
+				m_dZoom = -1;
+			}
+			m_bResizeForNewImage = true;
+			this->SetWindowPos(HWND_TOP, wndRect.left, wndRect.top, wndRect.Width(), wndRect.Height(), SWP_NOZORDER | SWP_NOCOPYBITS);
+			this->GetClientRect(&m_clientRect);
+			m_bResizeForNewImage = false;
 			this->Invalidate(FALSE);
+		} else {
+			double dOldZoom = m_dZoom;
+			m_dZoom = GetZoomFactorForFitToScreen(bFillWithCrop, bAllowEnlarge);
+			m_bUserZoom = m_dZoom > 1.0;
+			m_bUserPan = false;
+			if (fabs(dOldZoom - m_dZoom) > 0.01) {
+				this->Invalidate(FALSE);
+			}
 		}
 	}
 }
 
 void CMainDlg::ResetZoomTo100Percents(bool bZoomToMouse) {
 	if (m_pCurrentImage != NULL && fabs(m_dZoom - 1) > 0.01) {
-		PerformZoom(1.0, false, bZoomToMouse);
+		PerformZoom(1.0, false, bZoomToMouse, true);
 	}
 }
 
@@ -1949,7 +1968,7 @@ CProcessParams CMainDlg::CreateProcessParams(bool bNoProcessingAfterLoad) {
 		}
 		m_eProcessingFlagsKept = CreateProcessingFlags(m_bHQResampling, m_bAutoContrast, false, m_bLDC, m_bKeepParams, m_bLandscapeMode);
 		m_nRotationKept = m_nRotation;
-		m_dZoomKept = m_bUserZoom ? m_dZoom : -1;
+		m_dZoomKept = (m_bUserZoom || IsAdjustWindowToImage()) ? m_dZoom : -1;
 		m_offsetKept = m_bUserPan ? m_offsets : CPoint(0, 0);
 
 		return CProcessParams(nClientWidth, nClientHeight, m_nRotationKept, 
@@ -2081,7 +2100,7 @@ void CMainDlg::MouseOn() {
 void CMainDlg::InitParametersForNewImage() {
 	if (!m_bKeepParams) {
 		ResetParamsToDefault();
-	} else if (!m_bUserZoom) {
+	} else if (!(m_bUserZoom || IsAdjustWindowToImage())) {
 		m_dZoom = -1;
 	}
 
@@ -2156,13 +2175,14 @@ void CMainDlg::AfterNewImageLoaded(bool bSynchronize, bool bAfterStartup) {
 }
 
 bool CMainDlg::IsAdjustWindowToImage() {
-	return !m_bFullScreenMode && !::IsZoomed(m_hWnd) && (CSettingsProvider::This().DefaultWndToImage() || m_bAutoFitWndToImage);
+	return !m_bFullScreenMode && !::IsZoomed(m_hWnd) && m_bAutoFitWndToImage;
 }
 
 void CMainDlg::AdjustWindowToImage(bool bAfterStartup) {
 	if (IsAdjustWindowToImage() && (m_pCurrentImage != NULL || bAfterStartup)) {
 		// window size shall be adjusted to image size (at least keep aspect ration)
-		CRect windowRect = Helpers::GetWindowRectMatchingImageSize(m_hWnd, MIN_WND_WIDTH, MIN_WND_HEIGHT, m_dZoom, m_pCurrentImage, bAfterStartup);
+		double dZoom = m_dZoom;
+		CRect windowRect = Helpers::GetWindowRectMatchingImageSize(m_hWnd, CSize(MIN_WND_WIDTH, MIN_WND_HEIGHT), HUGE_SIZE, dZoom, m_pCurrentImage, bAfterStartup);
 		m_bResizeForNewImage = true;
 		this->SetWindowPos(HWND_TOP, windowRect.left, windowRect.top, windowRect.Width(), windowRect.Height(), SWP_NOZORDER | SWP_NOCOPYBITS);
 		this->GetClientRect(&m_clientRect);
@@ -2171,16 +2191,16 @@ void CMainDlg::AdjustWindowToImage(bool bAfterStartup) {
 }
 
 void CMainDlg::CheckIfApplyAutoFitWndToImage(bool bInInitDialog) {
-	if (m_bAutoFitWndToImage) {
+	if (CSettingsProvider::This().AutoFullScreen()) {
 		if (!Helpers::CanDisplayImageWithoutResize(m_hWnd, m_pCurrentImage)) {
-			m_bAutoFitWndToImage = false;
 			if (!bInInitDialog) {
 				ExecuteCommand(IDM_FULL_SCREEN_MODE);
 			}
 			m_bFullScreenMode = true;
 			m_bTemporaryLowQ = false;
-			memset(&m_storedWindowPlacement2, 0, sizeof(WINDOWPLACEMENT));
 			MouseOff();
+		} else {
+			m_bAutoFitWndToImage = true;
 		}
 	}
 }

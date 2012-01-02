@@ -160,7 +160,7 @@ public:
 	void MouseOn();
 	void GotoImage(EImagePosition ePos);
 	void ResetZoomTo100Percents(bool bZoomToMouse);
-	void ResetZoomToFitScreen(bool bFillWithCrop, bool bAllowEnlarge);
+	void ResetZoomToFitScreen(bool bFillWithCrop, bool bAllowEnlarge, bool bAdjustWindowSize);
 	bool PerformPan(int dx, int dy, bool bAbsolute);
 	void StartDragging(int nX, int nY, bool bDragWithZoomNavigator);
 	void DoDragging();
@@ -251,7 +251,6 @@ private:
 	bool m_bMouseOn;
 	int m_nMonitor;
 	WINDOWPLACEMENT m_storedWindowPlacement;
-	WINDOWPLACEMENT m_storedWindowPlacement2;
 	CRect m_monitorRect;
 	CRect m_clientRect;
 	CString m_sSaveDirectory;
@@ -279,7 +278,7 @@ private:
 	void AdjustGamma(double dFactor);
 	void AdjustContrast(double dInc);
 	void AdjustSharpen(double dInc);
-	void PerformZoom(double dValue, bool bExponent, bool bZoomToMouse);
+	void PerformZoom(double dValue, bool bExponent, bool bZoomToMouse, bool bAdjustWindowToImage);
 	void ZoomToSelection();
 	double GetZoomFactorForFitToScreen(bool bFillWithCrop, bool bAllowEnlarge);
 	CProcessParams CreateProcessParams(bool bNoProcessingAfterLoad);

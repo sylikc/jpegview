@@ -243,6 +243,7 @@ BEGIN
 		  MENUITEM "Fill with crop",			IDM_FILL_WITH_CROP
 		  MENUITEM "Span all screens",			IDM_SPAN_SCREENS
 		  MENUITEM "Full screen mode",			IDM_FULL_SCREEN_MODE
+		  MENUITEM "Fit window to image"		IDM_FIT_WINDOW_TO_IMAGE
 		  MENUITEM SEPARATOR
 		  MENUITEM "400 %",						IDM_ZOOM_400
 		  MENUITEM "200 %",						IDM_ZOOM_200
