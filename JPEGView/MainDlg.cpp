@@ -592,14 +592,17 @@ LRESULT CMainDlg::OnLButtonDown(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam,
 		bool bShift = (::GetKeyState(VK_SHIFT) & 0x8000) != 0;
 		bool bDraggingRequired = m_virtualImageSize.cx > m_clientRect.Width() || m_virtualImageSize.cy > m_clientRect.Height();
 		bool bHandleByCropping = m_pCropCtl->IsCropping() || m_pCropCtl->HitHandle(pointClicked.x, pointClicked.y) != CCropCtl::HH_None;
-		if ((bShift || m_bZoomModeOnLeftMouse) && !bShowTransformPanel && !bHandleByCropping && !m_pUnsharpMaskPanelCtl->IsVisible()) {
-			m_bZoomMode = true;
-			m_dStartZoom = m_dZoom;
-			m_nCapturedX = m_nMouseX; m_nCapturedY = m_nMouseY;
-		} else if ((bCtrl || !bDraggingRequired || bHandleByCropping) && !bShowTransformPanel) {
-			m_pCropCtl->StartCropping(pointClicked.x, pointClicked.y);
-		} else if (!m_pZoomNavigatorCtl->OnMouseLButton(MouseEvent_BtnDown, pointClicked.x, pointClicked.y) && !bShowTransformPanel) {
-			StartDragging(pointClicked.x, pointClicked.y, false);
+		if (bHandleByCropping || !m_pZoomNavigatorCtl->OnMouseLButton(MouseEvent_BtnDown, pointClicked.x, pointClicked.y)) {
+			bool bZoomMode = (bShift || m_bZoomModeOnLeftMouse) && !bCtrl && !bShowTransformPanel && !bHandleByCropping && !m_pUnsharpMaskPanelCtl->IsVisible();
+			if (bZoomMode) {
+				m_bZoomMode = true;
+				m_dStartZoom = m_dZoom;
+				m_nCapturedX = m_nMouseX; m_nCapturedY = m_nMouseY;
+			} else if ((bCtrl || !bDraggingRequired || bHandleByCropping) && !bShowTransformPanel) {
+				m_pCropCtl->StartCropping(pointClicked.x, pointClicked.y);
+			} else if (!bShowTransformPanel) {
+				StartDragging(pointClicked.x, pointClicked.y, false);
+			} 
 		}
 	}
 
