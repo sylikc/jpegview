@@ -279,5 +279,6 @@ Correct converging lines (perspective correction)	Stürzende Linien korrigieren 
 Perspective Correction	Perspektiven-Korrektur
 Perspective correction...	Perspektiven-Korrektur...
 Auto crop corrected image (avoids black border)	Korrigiertes Bild freistellen (verhindert schwarzen Rahmen)
-Click and drag the mouse horizontally to correct image tilt.	Klicken und ziehen Sie die Maus horizontal um die Bildneigung zu ändern.
+Click and drag the mouse vertically to correct image tilt.	Klicken und ziehen Sie die Maus vertikal um die Bildneigung zu ändern.
+Drag at the left or right border for asymmetric correction.	Ziehen Sie am rechten oder linken Rand für asymmetrische Korrektur.
 Fit window to image	Fenstergrösse an Bild anpassen

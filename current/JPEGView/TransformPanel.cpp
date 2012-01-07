@@ -7,7 +7,7 @@
 #define PANEL_BORDER 12
 #define PANEL_GAPTITLE 10
 #define TRANSFORM_PANEL_WIDTH 360
-#define TRANSFORM_PANEL_HEIGHT 100
+#define TRANSFORM_PANEL_HEIGHT 87
 #define TRANSFORM_PANEL_BUTTON_SIZE 21
 #define TRANSFORM_PANEL_GAPBUTTONX1 6
 #define TRANSFORM_PANEL_GAPBUTTONX2 12
@@ -21,7 +21,7 @@ CTransformPanel::CTransformPanel(HWND hWnd, INotifiyMouseCapture* pNotifyMouseCa
 	m_pImageProcPanel = pImageProcPanel;
 	m_clientRect = CRect(0, 0, 0, 0);
 	m_nWidth = (int)(TRANSFORM_PANEL_WIDTH*m_fDPIScale);
-	m_nHeight = (int)(TRANSFORM_PANEL_HEIGHT*m_fDPIScale);
+	m_nHeight = 0;
 	m_nButtonSize = (int)(TRANSFORM_PANEL_BUTTON_SIZE*m_fDPIScale);
 
 	CTextCtrl* pTitle = AddText(ID_txtTitle, sTitleText, false);
@@ -42,6 +42,11 @@ CRect CTransformPanel::PanelRect() {
 }
 
 void CTransformPanel::RequestRepositioning() {
+	if (GetTextHint() != NULL && m_nHeight == 0) {
+		int nTextAvailWidth = PanelRect().Width() - (int)(m_fDPIScale*2*PANEL_BORDER);
+		int nTextHeight = GetTextHint()->GetTextRectangleHeight(m_hWnd, nTextAvailWidth);
+		m_nHeight = (int)(TRANSFORM_PANEL_HEIGHT*m_fDPIScale) + nTextHeight;
+	}
 }
 
 void CTransformPanel::RepositionAll() {

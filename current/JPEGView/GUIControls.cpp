@@ -195,6 +195,24 @@ void CTextCtrl::CreateBoldFont(CDC & dc) {
 	}
 }
 
+int CTextCtrl::GetTextRectangleHeight(HWND hWnd, int nWidth) {
+	if (m_bAllowMultiline) {
+		CPaintDC dc = CPaintDC(hWnd);
+		if (m_bBold) {
+			CreateBoldFont(dc);
+			dc.SelectFont(m_hBoldFont);
+		} else {
+			dc.SelectStockFont(DEFAULT_GUI_FONT);
+		}
+		CRect textRect(0, 0, nWidth, 1);
+		dc.DrawText(m_sText, m_sText.GetLength(), &textRect, DT_WORDBREAK | DT_CALCRECT | DT_VCENTER | DT_LEFT);
+		dc.SelectStockFont(DEFAULT_GUI_FONT);
+		return textRect.Height();
+	} else {
+		return GetTextRectangle(hWnd, m_sText).cy;
+	}
+}
+
 CSize CTextCtrl::GetTextRectangle(HWND hWnd, LPCTSTR sText) {
 	if (m_bBold) {
 		CPaintDC dc = CPaintDC(hWnd);

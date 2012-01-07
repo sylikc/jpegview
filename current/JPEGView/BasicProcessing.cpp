@@ -755,6 +755,73 @@ void* CBasicProcessing::PointSampleWithRotation(CSize fullTargetSize, CPoint ful
 	return pDIB;
 }
 
+// The prepective correction can be accelerated enourmously by taking into account that the projection
+// rectangle is aligned to the camera plane (Doom engine did the same, only allowing horizontal floor and vertical walls)
+// We only have to precalculate a map for the intersection of the y-scanlines (pTableY, in 16.16 fixed point format)
+// The caller needs to delete the returned map when no longer needed
+static int* CalculateTrapezoidYIntersectionTable(const CTrapezoid& trapezoid, int nTableSize, int nSourceSizeY, int nTargetSizeY, int nOffsetInTargetSizeY) {
+	int* pTableY = new int[nTableSize];
+	int nW1 = trapezoid.x1e - trapezoid.x1s;
+	int nW2 = trapezoid.x2e - trapezoid.x2s;
+	int nD1 = trapezoid.x1s - trapezoid.x2s;
+	int nD2 = trapezoid.x1e - trapezoid.x2e;
+	int nSign = (nW1 < nW2) ? 1 : -1;
+	int nW = nSign * min(nW1, nW2);
+	// First step is to find out the height of the triangle that is built by extending the trapezoid
+	// left and right sides until they intersect. dHeightTria == 0 means no intersection (parallel projection)
+	double dHeightTria;
+	if (nD1 == 0) {
+		if (nD2 == 0) {
+			dHeightTria = 0;
+		} else {
+			dHeightTria = -nW * (double)trapezoid.Height()/nD2;
+		}
+	} else if (nD2 == 0) {
+		dHeightTria = nW * (double)trapezoid.Height()/nD1;
+	} else {
+		double dM1 = (double)trapezoid.Height()/nD1;
+		double dM2 = (double)trapezoid.Height()/nD2;
+		dHeightTria = (fabs(dM2 - dM1) < 1e-9) ? 0.0 : nW * dM1 * dM2/(dM2 - dM1);
+	}
+	if (dHeightTria > 0) {
+		// Perspective correction needed, y-scanlines are not homogenous.
+		// The unknowns in the projection equation are found using the following conditions:
+		// pTable(y) = a/(y + c) + b
+		// The pole of the projection is at position H, respecively h - H (depending on the sign of the trapezoid)
+		// -> This directly leads to: H + c = 0, thus c = -H, respectively c = H - h
+		// a and b are found using the following two border conditions:
+		// 0 = a/c + b
+		// h = a/(h + c) + b
+		int h = trapezoid.Height();
+		double dH = dHeightTria + h;
+		double dB = (nSign > 0) ? dH : (h - dH);
+		double dA = dH*(h - dH);
+		double dAdd = ((nSign > 0) ? dH - h : -dH) + nOffsetInTargetSizeY;
+		double dFactor = 65536.0*(nSourceSizeY - 1)/(nTargetSizeY - 1);
+		int nMaxValue = (nSourceSizeY - 1) << 16;
+		for (int j = 0; j < nTableSize; j++) {
+			int nYLineIndex = (int)(dFactor*(dA/(j + dAdd) + dB) + 0.5);
+			pTableY[j] = max(0, min(nMaxValue, nYLineIndex));
+		}
+	} else {
+		int nIncrementY;
+		if (nTargetSizeY <= nSourceSizeY) {
+			// Downsampling
+			nIncrementY = (nSourceSizeY << 16)/nTargetSizeY + 1;
+		} else {
+			// Upsampling
+			nIncrementY = (nTargetSizeY == 1) ? 0 : ((65536*(nSourceSizeY - 1) + 65535)/(nTargetSizeY - 1));
+		}
+		// only point resampling into a new rectangle, all y-scanlines have the same distance
+		int nCurY = nOffsetInTargetSizeY*nIncrementY;
+		for (int j = 0; j < nTableSize; j++) {
+			pTableY[j] = nCurY;
+			nCurY += nIncrementY;
+		}
+	}
+	return pTableY;
+}
+
 void* CBasicProcessing::PointSampleTrapezoid(CSize fullTargetSize, const CTrapezoid& fullTargetTrapezoid, CPoint fullTargetOffset, CSize clippedTargetSize, 
 											 CSize sourceSize, const void* pIJLPixels, int nChannels, COLORREF backColor) {
   	if (fullTargetSize.cx < 1 || fullTargetSize.cy < 1 ||
@@ -771,14 +838,7 @@ void* CBasicProcessing::PointSampleTrapezoid(CSize fullTargetSize, const CTrapez
 	uint8* pDIB = new(std::nothrow) uint8[clippedTargetSize.cx*4 * clippedTargetSize.cy];
 	if (pDIB == NULL) return NULL;
 
-	int nIncrementY;
-	if (fullTargetSize.cx <= sourceSize.cx) {
-		// Downsampling
-		nIncrementY = (sourceSize.cy << 16)/fullTargetSize.cy + 1;
-	} else {
-		// Upsampling
-		nIncrementY = (fullTargetSize.cy == 1) ? 0 : ((65536*(sourceSize.cy - 1) + 65535)/(fullTargetSize.cy - 1));
-	}
+	int* pTableY = CalculateTrapezoidYIntersectionTable(fullTargetTrapezoid, clippedTargetSize.cy, sourceSize.cy, fullTargetSize.cy, fullTargetOffset.y);
 
 	float fTx1 = (fullTargetTrapezoid.x1s - fullTargetTrapezoid.x2s)*0.5f;
 	float fTx2 = fTx1 + fullTargetTrapezoid.x1e - fullTargetTrapezoid.x1s;
@@ -789,12 +849,11 @@ void* CBasicProcessing::PointSampleTrapezoid(CSize fullTargetSize, const CTrapez
 	int nPaddedSourceWidth = Helpers::DoPadding(sourceSize.cx * nChannels, 4);
 	const uint8* pSrc = NULL;
 	uint8* pDst = pDIB;
-	int nCurY = fullTargetOffset.y*nIncrementY;
 	fTx1 = fTx1 + fullTargetOffset.y*fIncrementTx1;
 	fTx2 = fTx2 + fullTargetOffset.y*fIncrementTx2;
 	int nSourceSizeXFP16 = sourceSize.cx << 16;
 	for (int j = 0; j < clippedTargetSize.cy; j++) {
-		pSrc = (uint8*)pIJLPixels + nPaddedSourceWidth * (nCurY >> 16);
+		pSrc = (uint8*)pIJLPixels + nPaddedSourceWidth * (pTableY[j] >> 16);
 		int nIncrementX = (int)(nSourceSizeXFP16/(fTx2 - fTx1 + 1)) + 1;
 		int nStartX = (int)((fullTargetOffset.x - fTx1)*nIncrementX);
 		int nCurX = nStartX;
@@ -825,10 +884,11 @@ void* CBasicProcessing::PointSampleTrapezoid(CSize fullTargetSize, const CTrapez
 			}
 		}
 		pDst += clippedTargetSize.cx*4;
-		nCurY += nIncrementY;
 		fTx1 += fIncrementTx1;
 		fTx2 += fIncrementTx2;
 	}
+
+	delete[] pTableY;
 	return pDIB;
 }
 
@@ -1009,43 +1069,76 @@ void* CBasicProcessing::RotateHQ(CPoint targetOffset, CSize targetSize, double d
 // High quality trapezoid correction using bicubic sampling
 /////////////////////////////////////////////////////////////////////////////////////////////
 
+static inline void Get4Pixels16(const uint16* pSrc, uint16 dest[4], int nFrom, int nTo, uint32 nFill) {
+	int nC = -3;
+	for (int i = 0; i < 4; i++) {
+		dest[i] = (i >= nFrom + 1 && i <= nTo + 1) ? pSrc[nC] : (uint16)nFill;
+		nC += 3;
+	}
+}
+
 // Bicubic resampling of one pixel at pSource (in 3 or 4 channel format) into one destination pixel in 32 bit format
 // Interpolates only in x-direction
 // The fractional part of the pixel position is given in .16 fixed point format
 // pKernels contains NUM_KERNELS_BICUBIC precalculated bicubic filter kernels each of lenght 4, applied with offset -1 to the source pixels
-static void InterpolateBicubicX(const uint8* pSource, uint8* pDest, int16* pKernels, int32 nFracX, int nPaddedSourceWidth, int nChannels) {
+static void InterpolateBicubicX(const uint16* pSource, uint8* pDest, int16* pKernels, int32 nFracX) {
 	int16* pKernelX = &(pKernels[4*(nFracX >> (16 - NUM_KERNELS_LOG2))]);
-	int nChannels2 = nChannels * 2;
-	for (int i = 0; i < nChannels; i++) {
-		int32 nSum = pSource[-nChannels] * pKernelX[0] + pSource[0] * pKernelX[1] + pSource[nChannels] * pKernelX[2] + pSource[nChannels2] * pKernelX[3] + FP_HALF;
-		nSum = nSum >> 14;
+	for (int i = 0; i < 3; i++) {
+		int32 nSum = pSource[-3] * pKernelX[0] + pSource[0] * pKernelX[1] + pSource[3] * pKernelX[2] + pSource[6] * pKernelX[3] + FP_HALF;
+		nSum = nSum >> 22;
 		*pDest++ = min(255, max(0, nSum));
 		pSource++;
 	}
-	if (nChannels == 3) *pDest = 0;
+	*pDest = 0;
 }
 
 // Same as method above but with border handling, assuming that the filter kernels are only evaluated from nXFrom to nXTo
 // Pixels that are outside this range are assumed to have value nBackColor
-static void InterpolateBicubicBorderX(const uint8* pSource, uint8* pDest, int16* pKernels, 
-									  int32 nFracX, int nXFrom, int nXTo, int nPaddedSourceWidth, int nChannels, uint32 nBackColor) {
+static void InterpolateBicubicBorderX(const uint16* pSource, uint8* pDest, int16* pKernels, 
+									  int32 nFracX, int nXFrom, int nXTo, uint32 nBackColor) {
 	int16* pKernelX = &(pKernels[4*(nFracX >> (16 - NUM_KERNELS_LOG2))]);
 	uint32 nBackColorShifted = nBackColor;
-	for (int i = 0; i < nChannels; i++) {
-		uint32 nFill = nBackColorShifted & 0xFF;
+	for (int i = 0; i < 3; i++) {
+		uint32 nFill = (nBackColorShifted & 0xFF) << 8;
 		nBackColorShifted = nBackColorShifted >> 8;
 
-		uint8 pixels[4];
-		Get4Pixels(pSource, pixels, nXFrom, nXTo, nChannels, nFill); 
+		uint16 pixels[4];
+		Get4Pixels16(pSource, pixels, nXFrom, nXTo, nFill); 
 		int32 nSum = pixels[0] * pKernelX[0] + pixels[1] * pKernelX[1] + pixels[2] * pKernelX[2] + pixels[3] * pKernelX[3] + FP_HALF;
-		nSum = nSum >> 14;
+		nSum = nSum >> 22;
 
 		*pDest++ = min(255, max(0, nSum));
 		pSource++;
 	}
-	if (nChannels == 3) *pDest = 0;
+	*pDest = 0;
 }
 
+// Bicubic interpolation in y of one line in the image
+static void InterpolateBicubicY(const uint8* pSourcePixels, int nChannelsSource, int nPaddedSourceWidth, uint16* pTarget, int nPixelsPerLine, 
+								const int16* pKernels, 
+								int nCurY, int nCurYFrac, int nSizeY) {
+	if (nCurY > 0 && nCurY < nSizeY - 2) {
+		const int16* pKernelY = &(pKernels[4*(nCurYFrac >> (16 - NUM_KERNELS_LOG2))]);
+		int nPaddedSourceWidth2 = nPaddedSourceWidth * 2;
+		for (int i = 0; i < nPixelsPerLine; i++) {
+			for (int c = 0; c < 3; c++) {
+				int32 nSum = pSourcePixels[-nPaddedSourceWidth + c] * pKernelY[0] + pSourcePixels[c] * pKernelY[1] + 
+					pSourcePixels[nPaddedSourceWidth + c] * pKernelY[2] + pSourcePixels[nPaddedSourceWidth2 + c] * pKernelY[3] + FP_HALF;
+				nSum = nSum >> 6;
+				*pTarget++ = min(65535, max(0, nSum));
+			}
+			pSourcePixels += nChannelsSource;
+		}
+	} else {
+		// border handling...there is none ;-) just copy the line and hope that nobody will realize it
+		for (int i = 0; i < nPixelsPerLine; i++) {
+			for (int c = 0; c < 3; c++) {
+				*pTarget++ = (uint16)(pSourcePixels[c] << 8);
+			}
+			pSourcePixels += nChannelsSource;
+		}
+	}
+}
 
 void* CBasicProcessing::TrapezoidHQ_Core(CPoint targetOffset, CSize targetSize, const CTrapezoid& trapezoid, CSize sourceSize, 
 										 const void* pSourcePixels, void* pTargetPixels, int nChannels, COLORREF backColor) {
@@ -1058,11 +1151,13 @@ void* CBasicProcessing::TrapezoidHQ_Core(CPoint targetOffset, CSize targetSize, 
 	uint32 nBackColor = (GetRValue(backColor) << 16) + (GetGValue(backColor) << 8) + GetBValue(backColor);
 	int nPaddedSourceWidth = Helpers::DoPadding(sourceSize.cx * nChannels, 4);
 	uint8* pDst = (uint8*)pTargetPixels;
-	int nCurY = targetOffset.y;
 	fTx1 = fTx1 + targetOffset.y*fIncrementTx1;
 	fTx2 = fTx2 + targetOffset.y*fIncrementTx2;
 	int nSourceSizeXFP16 = (sourceSize.cx - 1) << 16;
 
+	int* pTableY = CalculateTrapezoidYIntersectionTable(trapezoid, targetSize.cy, sourceSize.cy, trapezoid.Height() + 1, targetOffset.y);
+	uint16* pLine = new uint16[sourceSize.cx * 3];
+	
 	int16* pKernels = new int16[NUM_KERNELS_BICUBIC * 4];
 	CResizeFilter::GetBicubicFilterKernels(NUM_KERNELS_BICUBIC, pKernels);
 
@@ -1071,17 +1166,21 @@ void* CBasicProcessing::TrapezoidHQ_Core(CPoint targetOffset, CSize targetSize, 
 		int nIncrementX = (int)(nSourceSizeXFP16 * fTxDiffInv);
 		int nStartX = (int)(nSourceSizeXFP16 * (targetOffset.x - fTx1) * fTxDiffInv);
 		int nCurX = nStartX;
+		int nCurY = pTableY[j] >> 16;
+		int nCurYFrac = pTableY[j] & 0xFFFF;
+		InterpolateBicubicY((uint8*)pSourcePixels + nPaddedSourceWidth * nCurY, nChannels, nPaddedSourceWidth, pLine, sourceSize.cx,
+			pKernels, nCurY, nCurYFrac, trapezoid.Height() + 1);
 		for (int i = 0; i < targetSize.cx; i++) {
 			int nCurXInt = nCurX >> 16;
 			int nCurXFrac = nCurX & 0xFFFF;
 			if (nCurXInt >= -1 && nCurXInt <= sourceSize.cx) {
-				const uint8* pSrc = (uint8*)pSourcePixels + nPaddedSourceWidth * nCurY + nCurXInt * nChannels;
+				const uint16* pSourceLineStart = pLine + nCurXInt*3;
 				if (nCurXInt > 0 && nCurXInt < sourceSize.cx - 2) {
-					InterpolateBicubicX(pSrc, pDst + i*4, pKernels, nCurXFrac, nPaddedSourceWidth, nChannels);
+					InterpolateBicubicX(pSourceLineStart, pDst + i*4, pKernels, nCurXFrac);
 				} else {
 					int nXFrom = (nCurXInt > 0) ? -1 : -nCurXInt;
 					int nXTo = (nCurXInt < sourceSize.cx - 2) ? 2 : sourceSize.cx - nCurXInt - 1;
-					InterpolateBicubicBorderX(pSrc, pDst + i*4, pKernels, nCurXFrac, nXFrom, nXTo, nPaddedSourceWidth, nChannels, nBackColor);
+					InterpolateBicubicBorderX(pSourceLineStart, pDst + i*4, pKernels, nCurXFrac, nXFrom, nXTo, nBackColor);
 				}
 			} else {
 				*((uint32*)pDst + i) = nBackColor;
@@ -1091,10 +1190,12 @@ void* CBasicProcessing::TrapezoidHQ_Core(CPoint targetOffset, CSize targetSize, 
 		}
 
 		pDst += targetSize.cx*4;
-		nCurY += 1;
 		fTx1 += fIncrementTx1;
 		fTx2 += fIncrementTx2;
 	}
+
+	delete[] pTableY;
+	delete[] pLine;
 
 	return pTargetPixels;
 }

@@ -1281,7 +1281,7 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 				this->SetWindowLongW(GWL_STYLE, this->GetWindowLongW(GWL_STYLE) | WS_OVERLAPPEDWINDOW | WS_VISIBLE);
 				CRect defaultWindowRect = CMultiMonitorSupport::GetDefaultWindowRect();
 				double dZoom = -1;
-				windowRect = Helpers::GetWindowRectMatchingImageSize(m_hWnd, CSize(MIN_WND_WIDTH, MIN_WND_HEIGHT), defaultWindowRect.Size(), dZoom, m_pCurrentImage, false);
+				windowRect = Helpers::GetWindowRectMatchingImageSize(m_hWnd, CSize(MIN_WND_WIDTH, MIN_WND_HEIGHT), defaultWindowRect.Size(), dZoom, m_pCurrentImage, false, true);
 				this->SetWindowPos(HWND_TOP, windowRect.left, windowRect.top, windowRect.Width(), windowRect.Height(), SWP_NOZORDER | SWP_NOCOPYBITS);
 				this->MouseOn();
 				m_bSpanVirtualDesktop = false;
@@ -1366,6 +1366,7 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 			if (m_pCurrentImage != NULL) {
 				m_pCurrentImage->Crop(m_pCropCtl->GetImageCropRect());
 				this->Invalidate(FALSE);
+				AdjustWindowToImage(false);
 			}
 			break;
 		case IDM_LOSSLESS_CROP_SEL:
@@ -1935,7 +1936,7 @@ void CMainDlg::ResetZoomToFitScreen(bool bFillWithCrop, bool bAllowEnlarge, bool
 	if (m_pCurrentImage != NULL) {
 		if (bAdjustWindowSize) {
 			m_dZoom = bAllowEnlarge ? Helpers::ZoomMax : 1;
-			CRect wndRect = Helpers::GetWindowRectMatchingImageSize(m_hWnd, CSize(MIN_WND_WIDTH, MIN_WND_HEIGHT), HUGE_SIZE, m_dZoom, m_pCurrentImage, false);
+			CRect wndRect = Helpers::GetWindowRectMatchingImageSize(m_hWnd, CSize(MIN_WND_WIDTH, MIN_WND_HEIGHT), HUGE_SIZE, m_dZoom, m_pCurrentImage, false, true);
 			if (m_dZoom <= 1) {
 				m_dZoom = -1;
 			}
@@ -2195,8 +2196,9 @@ void CMainDlg::AdjustWindowToImage(bool bAfterStartup) {
 	if (IsAdjustWindowToImage() && (m_pCurrentImage != NULL || bAfterStartup)) {
 		// window size shall be adjusted to image size (at least keep aspect ration)
 		double dZoom = m_dZoom;
-		CRect windowRect = Helpers::GetWindowRectMatchingImageSize(m_hWnd, CSize(MIN_WND_WIDTH, MIN_WND_HEIGHT), HUGE_SIZE, dZoom, m_pCurrentImage, bAfterStartup);
+		CRect windowRect = Helpers::GetWindowRectMatchingImageSize(m_hWnd, CSize(MIN_WND_WIDTH, MIN_WND_HEIGHT), HUGE_SIZE, dZoom, m_pCurrentImage, bAfterStartup, dZoom < 0);
 		m_bResizeForNewImage = true;
+		this->Invalidate(FALSE);
 		this->SetWindowPos(HWND_TOP, windowRect.left, windowRect.top, windowRect.Width(), windowRect.Height(), SWP_NOZORDER | SWP_NOCOPYBITS);
 		this->GetClientRect(&m_clientRect);
 		m_bResizeForNewImage = false;
