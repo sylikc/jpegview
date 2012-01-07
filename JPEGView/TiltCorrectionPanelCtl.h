@@ -24,9 +24,15 @@ private:
 	virtual void ApplyTransformation();
 	virtual void UpdatePanelTitle();
 
+	enum EClickPosition {
+		CP_Left,
+		CP_Right,
+		CP_Middle
+	};
+
 	float m_fLeftDeltaX;
 	float m_fRightDeltaX;
-	int m_nStartX;
-	bool m_bLeft;
+	int m_nStartX, m_nStartY;
+	EClickPosition m_eClickPosition;
 	float m_fScale;
 };

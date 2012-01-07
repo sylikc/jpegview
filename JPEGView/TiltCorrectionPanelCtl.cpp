@@ -14,12 +14,14 @@ static int round(float value) {
 
 CTiltCorrectionPanelCtl::CTiltCorrectionPanelCtl(CMainDlg* pMainDlg, CPanel* pImageProcPanel) 
 : CTransformPanelCtl(pMainDlg, pImageProcPanel, new CTiltCorrectionPanel(pMainDlg->m_hWnd, this, pImageProcPanel)) {
-	m_pTransformPanel->GetTextHint()->SetText(CNLS::GetString(
-		_T("Click and drag the mouse horizontally to correct image tilt.")));
+	m_pTransformPanel->GetTextHint()->SetText(
+		CString(CNLS::GetString(_T("Click and drag the mouse vertically to correct image tilt."))) + _T("\n") + 
+		CNLS::GetString(_T("Drag at the left or right border for asymmetric correction.")));
 	m_fLeftDeltaX = 0;
 	m_fRightDeltaX = 0;
 	m_nStartX = 0;
-	m_bLeft = true;
+	m_nStartY = 0;
+	m_eClickPosition = CP_Left;
 	m_fScale = 1.0f;
 }
 
@@ -54,22 +56,28 @@ void CTiltCorrectionPanelCtl::StartTransforming(int nX, int nY) {
 		m_pMainDlg->ScreenToImage(fX, fY);
 		float fCenterX = CurrentImage()->OrigWidth() * 0.5f;
 		float fCenterY = CurrentImage()->OrigHeight() * 0.5f;
-		m_bLeft = fX < fCenterX;
-		m_fScale = 0.5f + fabs(0.5f * (fX - fCenterX) / fCenterX);
-		if (fY > fCenterY) m_fScale = -m_fScale;
+		m_eClickPosition = (fX < CurrentImage()->OrigWidth() * 0.333f) ? CP_Left : (fX > CurrentImage()->OrigWidth() * 0.666f) ? CP_Right : CP_Middle;
+		m_fScale = (m_eClickPosition == CP_Middle) ? 0.5f + fabs(0.5f * (fY - fCenterY) / fCenterY) : 0.5f + fabs(0.5f * (fX - fCenterX) / fCenterX);
+		if (fY > fCenterY && m_eClickPosition != CP_Middle) m_fScale = -m_fScale;
 		m_nStartX = nX;
+		m_nStartY = nY;
 	}
 }
 
 void CTiltCorrectionPanelCtl::DoTransforming() {
 	if (CurrentImage() != NULL) {
 		int nDeltaX = m_nMouseX - m_nStartX;
+		int nDeltaY = m_nMouseY - m_nStartY;
 		m_nStartX = m_nMouseX;
+		m_nStartY = m_nMouseY;
 		float fFactorX = ((float)(CurrentImage()->OrigWidth() - 1))/(m_pMainDlg->VirtualImageSize().cx - 1);
-		if (m_bLeft) {
+		if (m_eClickPosition == CP_Left) {
 			m_fLeftDeltaX += nDeltaX * m_fScale * fFactorX;
-		} else {
+		} else if (m_eClickPosition == CP_Right) {
 			m_fRightDeltaX += nDeltaX * m_fScale * fFactorX;
+		} else {
+			m_fLeftDeltaX -= nDeltaY * m_fScale * fFactorX;
+			m_fRightDeltaX += nDeltaY * m_fScale * fFactorX;
 		}
 		float fMaxX = CurrentImage()->OrigWidth() * 0.25f;
 		m_fLeftDeltaX = max(min(fMaxX, m_fLeftDeltaX), -fMaxX);

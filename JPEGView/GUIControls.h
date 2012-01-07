@@ -143,8 +143,14 @@ public:
 
 	// sets the text of the text control
 	void SetText(LPCTSTR sText);
+	// gets the text of the text control
+	LPCTSTR GetText() { return m_sText; }
 	// gets the width of the text in pixels. In case of multiline, the returned size is the singleline size.
 	int GetTextLabelWidth() const { return m_textSize.cx; }
+	// gets the height of the text in pixels.
+	int GetTextLabelHeight() const { return m_textSize.cy; }
+	// gets the text rectangle height when using a given width in pixels (also works for multiline)
+	int GetTextRectangleHeight(HWND hWnd, int nWidth);
 	// gets if the text is editable
 	bool IsEditable() const { return m_bEditable; }
 	// gets if the text is right aligned to the screen
