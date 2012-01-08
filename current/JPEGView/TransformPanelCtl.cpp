@@ -11,6 +11,7 @@ CTransformPanelCtl::CTransformPanelCtl(CMainDlg* pMainDlg, CPanel* pImageProcPan
 	m_bVisible = false;
 	m_bShowGrid = true;
 	m_bAutoCrop = true;
+	m_bKeepAspectRatio = true;
 	m_bTransforming = false;
 	m_bOldShowNavPanel = false;
 	m_nMouseX = m_nMouseY = 0;
@@ -18,6 +19,7 @@ CTransformPanelCtl::CTransformPanelCtl(CMainDlg* pMainDlg, CPanel* pImageProcPan
 	m_pPanel = m_pTransformPanel = pTransformPanel;
 	m_pTransformPanel->GetBtnShowGrid()->SetButtonPressedHandler(&OnShowGridLines, this, 0, m_bShowGrid);
 	m_pTransformPanel->GetBtnAutoCrop()->SetButtonPressedHandler(&OnAutoCrop, this, 0, m_bAutoCrop);
+	m_pTransformPanel->GetBtnKeepAR()->SetButtonPressedHandler(&OnKeepAspectRatio, this, 0, m_bKeepAspectRatio);
 	m_pTransformPanel->GetBtnCancel()->SetButtonPressedHandler(&OnCancel, this);
 	m_pTransformPanel->GetBtnApply()->SetButtonPressedHandler(&OnApply, this);
 }
@@ -104,7 +106,7 @@ void CTransformPanelCtl::Apply() {
 		return;
 	}
 	ApplyTransformation();
-	if (!m_bAutoCrop) {
+	if (!m_bAutoCrop || m_pMainDlg->IsFullScreenMode()) {
 		m_pMainDlg->ExecuteCommand(IDM_FIT_TO_SCREEN_NO_ENLARGE);
 	}
 	m_pMainDlg->AdjustWindowToImage(false);
@@ -123,6 +125,13 @@ void CTransformPanelCtl::OnAutoCrop(void* pContext, int nParameter, CButtonCtrl 
 	CTransformPanelCtl* pThis = (CTransformPanelCtl*)pContext;
 	pThis->m_bAutoCrop = !pThis->m_bAutoCrop;
 	pThis->m_pTransformPanel->GetBtnAutoCrop()->SetActive(pThis->m_bAutoCrop);
+	pThis->m_pTransformPanel->GetBtnKeepAR()->SetShow(pThis->m_bAutoCrop);
+}
+
+void CTransformPanelCtl::OnKeepAspectRatio(void* pContext, int nParameter, CButtonCtrl & sender) {
+	CTransformPanelCtl* pThis = (CTransformPanelCtl*)pContext;
+	pThis->m_bKeepAspectRatio = !pThis->m_bKeepAspectRatio;
+	pThis->m_pTransformPanel->GetBtnKeepAR()->SetActive(pThis->m_bKeepAspectRatio);
 }
 
 void CTransformPanelCtl::OnCancel(void* pContext, int nParameter, CButtonCtrl & sender) {

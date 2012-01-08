@@ -34,6 +34,7 @@ protected:
 	CTransformPanel* m_pTransformPanel;
 	bool m_bShowGrid;
 	bool m_bAutoCrop;
+	bool m_bKeepAspectRatio;
 	bool m_bTransforming;
 	bool m_bOldShowNavPanel;
 	int m_nMouseX, m_nMouseY;
@@ -51,6 +52,7 @@ private:
 
 	static void OnShowGridLines(void* pContext, int nParameter, CButtonCtrl & sender);
 	static void OnAutoCrop(void* pContext, int nParameter, CButtonCtrl & sender);
+	static void OnKeepAspectRatio(void* pContext, int nParameter, CButtonCtrl & sender);
 	static void OnCancel(void* pContext, int nParameter, CButtonCtrl & sender);
 	static void OnApply(void* pContext, int nParameter, CButtonCtrl & sender);
 

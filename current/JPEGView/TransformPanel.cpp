@@ -30,6 +30,7 @@ CTransformPanel::CTransformPanel(HWND hWnd, INotifiyMouseCapture* pNotifyMouseCa
 	pHint->SetAllowMultiline(true);
 	AddUserPaintButton(ID_btnShowGrid, CNLS::GetString(_T("Show grid lines")), &PaintShowGridBtn);
 	AddUserPaintButton(ID_btnAutoCrop, sCropTooltipText, &PaintAutoCropBtn);
+	AddUserPaintButton(ID_btnKeepAR, CNLS::GetString(_T("Keep aspect ratio on crop")), &PaintKeepARBtn);
 	AddButton(ID_btnCancel, CNLS::GetString(_T("Cancel")));
     AddButton(ID_btnApply, CNLS::GetString(_T("Apply")));
 }
@@ -123,4 +124,12 @@ void CTransformPanel::PaintAutoCropBtn(void* pContext, const CRect& rect, CDC& d
 	dc.LineTo(r.right - 1, r.top - 3);
 	dc.LineTo(r.right + 2, r.bottom - 1);
 	dc.LineTo(r.left + 1, r.bottom + 2);
+}
+
+void CTransformPanel::PaintKeepARBtn(void* pContext, const CRect& rect, CDC& dc) {
+	CFont font;
+	font.CreatePointFont(1200 * rect.Width() / 300, _T("Arial"), dc, true, false);
+	HFONT oldFont = dc.SelectFont(font);
+	dc.DrawText(_T("AR"), 2, (LPRECT)&rect, DT_CENTER | DT_VCENTER | DT_SINGLELINE | DT_NOCLIP);
+	dc.SelectFont(oldFont);
 }

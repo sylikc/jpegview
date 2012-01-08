@@ -502,6 +502,34 @@ bool CanDisplayImageWithoutResize(HWND hWnd, CJPEGImage* pImage) {
 	return pImage->OrigWidth() + nBorderWidth <= workingArea.Width() && pImage->OrigHeight() + nBorderHeight <= workingArea.Height();
 }
 
+CRect CalculateMaxIncludedRectKeepAR(const CTrapezoid& trapezoid, double dAspectRatio) {
+	int w1 = trapezoid.x1e - trapezoid.x1s;
+	int w2 = trapezoid.x2e - trapezoid.x2s;
+	if ((trapezoid.x1s >= trapezoid.x2s && trapezoid.x1e <= trapezoid.x2e) || (trapezoid.x1s <= trapezoid.x2s && trapezoid.x1e >= trapezoid.x2e)) {
+		int h = trapezoid.y2 - trapezoid.y1;
+		double dTerm = (double)(w2 - w1)/h;
+		bool bPyramid = w1 < w2;
+		double dY =  bPyramid ? (dAspectRatio * h - w1)/(dAspectRatio + dTerm) : w1/(dAspectRatio - dTerm);
+		double dAlpha = dY/h;
+		double dX = (trapezoid.x2s - trapezoid.x1s)*dAlpha;
+		dX += trapezoid.x1s;
+		dY += trapezoid.y1;
+		return CRect((int)(dX + 0.5), bPyramid ? (int)(dY + 0.5) : trapezoid.y1, 
+			(int)(trapezoid.x1e + (trapezoid.x2e - trapezoid.x1e)*dAlpha + 0.5), bPyramid ? trapezoid.y2 : (int)(dY + 0.5));
+	}
+	if (trapezoid.x1s < trapezoid.x2s) {
+		if (w1 < w2) 
+			return CalculateMaxIncludedRectKeepAR(CTrapezoid(trapezoid.x2s, trapezoid.x1e, trapezoid.y1, trapezoid.x2s, trapezoid.x2e, trapezoid.y2), dAspectRatio);
+		else
+			return CalculateMaxIncludedRectKeepAR(CTrapezoid(trapezoid.x1s, trapezoid.x1e, trapezoid.y1, trapezoid.x2s, trapezoid.x1e, trapezoid.y2), dAspectRatio);
+	} else {
+		if (w1 < w2) 
+			return CalculateMaxIncludedRectKeepAR(CTrapezoid(trapezoid.x1s, trapezoid.x2e, trapezoid.y1, trapezoid.x2s, trapezoid.x2e, trapezoid.y2), dAspectRatio);
+		else
+			return CalculateMaxIncludedRectKeepAR(CTrapezoid(trapezoid.x1s, trapezoid.x1e, trapezoid.y1, trapezoid.x1s, trapezoid.x2e, trapezoid.y2), dAspectRatio);
+	}
+}
+
 CSize GetMaxClientSize(HWND hWnd) {
 	CRect workingArea = CMultiMonitorSupport::GetWorkingRect(hWnd);
 	return CSize(workingArea.Width() - 2 * ::GetSystemMetrics(SM_CXSIZEFRAME), 

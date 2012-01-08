@@ -11,6 +11,7 @@ public:
 		ID_txtHint,
 		ID_btnShowGrid,
 		ID_btnAutoCrop,
+		ID_btnKeepAR,
 		ID_btnCancel,
 		ID_btnApply
 	};
@@ -22,6 +23,7 @@ public:
 	CTextCtrl* GetTextHint() { return GetControl<CTextCtrl*>(ID_txtHint); }
 	CButtonCtrl* GetBtnShowGrid() { return GetControl<CButtonCtrl*>(ID_btnShowGrid); }
 	CButtonCtrl* GetBtnAutoCrop() { return GetControl<CButtonCtrl*>(ID_btnAutoCrop); }
+	CButtonCtrl* GetBtnKeepAR() { return GetControl<CButtonCtrl*>(ID_btnKeepAR); }
 	CButtonCtrl* GetBtnCancel() { return GetControl<CButtonCtrl*>(ID_btnCancel); }
 	CButtonCtrl* GetBtnApply() { return GetControl<CButtonCtrl*>(ID_btnApply); }
 
@@ -35,6 +37,7 @@ private:
 	// Painting handlers for the buttons
 	static void PaintShowGridBtn(void* pContext, const CRect& rect, CDC& dc);
 	static void PaintAutoCropBtn(void* pContext, const CRect& rect, CDC& dc);
+	static void PaintKeepARBtn(void* pContext, const CRect& rect, CDC& dc);
 
 	CPanel* m_pImageProcPanel;
 	CRect m_clientRect;

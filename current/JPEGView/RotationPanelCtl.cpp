@@ -109,7 +109,7 @@ void CRotationPanelCtl::EndTransforming() {
 }
 
 void CRotationPanelCtl::ApplyTransformation() {
-	if (!CurrentImage()->RotateOriginalPixels(m_dRotationLQ, m_bAutoCrop)) {
+	if (!CurrentImage()->RotateOriginalPixels(m_dRotationLQ, m_bAutoCrop, m_bKeepAspectRatio)) {
 		::MessageBox(m_pMainDlg->GetHWND(), CNLS::GetString(_T("The operation failed because not enough memory is available!")),
 			_T("JPEGView"), MB_ICONSTOP | MB_OK);
 	}
