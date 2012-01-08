@@ -57,7 +57,9 @@ void CUICtrl::SetShow(bool bShow, bool bInvalidate) {
 	if (bShow != m_bShow) {
 		m_bShow = bShow;
 		if (m_pPanel != NULL && bInvalidate) {
-			::InvalidateRect(m_pPanel->GetHWND(), &m_position, FALSE); // trigger redraw of area
+			CRect pos(m_position);
+			pos.InflateRect(1, 1);
+			::InvalidateRect(m_pPanel->GetHWND(), &pos, FALSE); // trigger redraw of area
 		}
 	}
 }

@@ -102,15 +102,16 @@ public:
 
 	// Rotate original pixels by given angle (in radians). The original pixels are replaced by this operation.
 	// If autocrop is enabled, the maximum defined rectangular area is cropped, else black borders are added to the image.
+	// If keep aspect ratio is true, the aspect ratio of the cropped area is the same as the aspect ratio of the original image.
 	// In all cases the size of the image in pixels is changed by rotation
 	// Returns false if not enough memory to perform the operation
-	bool RotateOriginalPixels(double dRotation, bool bAutoCrop);
+	bool RotateOriginalPixels(double dRotation, bool bAutoCrop, bool bKeepAspectRatio);
 
 	// Transform into horizontal trapezoid. The original pixels are replaced by this operation.
-	// See RotateOriginalPixels() for auto crop parameter.
+	// See RotateOriginalPixels() for auto crop parameter and keep aspect ratio parameter.
 	// In all cases the size of the image in pixels is changed by this operation
 	// Returns false if not enough memory to perform the operation
-	bool TrapezoidOriginalPixels(const CTrapezoid& trapezoid, bool bAutoCrop);
+	bool TrapezoidOriginalPixels(const CTrapezoid& trapezoid, bool bAutoCrop, bool bKeepAspectRatio);
 
 	// Gets the hash value of the pixels, for JPEGs it on the compressed pixels
 	__int64 GetPixelHash() const { return m_nPixelHash; }

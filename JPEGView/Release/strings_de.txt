@@ -282,3 +282,4 @@ Auto crop corrected image (avoids black border)	Korrigiertes Bild freistellen (v
 Click and drag the mouse vertically to correct image tilt.	Klicken und ziehen Sie die Maus vertikal um die Bildneigung zu ändern.
 Drag at the left or right border for asymmetric correction.	Ziehen Sie am rechten oder linken Rand für asymmetrische Korrektur.
 Fit window to image	Fenstergrösse an Bild anpassen
+Keep aspect ratio on crop	Seitenverhältnis beim Freistellen beibehalten

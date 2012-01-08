@@ -92,7 +92,7 @@ void CTiltCorrectionPanelCtl::EndTransforming() {
 }
 
 void CTiltCorrectionPanelCtl::ApplyTransformation() {
-	if (!CurrentImage()->TrapezoidOriginalPixels(GetCurrentTrapezoid(CurrentImage()->OrigSize()), m_bAutoCrop)) {
+	if (!CurrentImage()->TrapezoidOriginalPixels(GetCurrentTrapezoid(CurrentImage()->OrigSize()), m_bAutoCrop, m_bKeepAspectRatio)) {
 		::MessageBox(m_pMainDlg->GetHWND(), CNLS::GetString(_T("The operation failed because not enough memory is available!")),
 			_T("JPEGView"), MB_ICONSTOP | MB_OK);
 	}

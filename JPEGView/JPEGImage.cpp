@@ -250,7 +250,7 @@ bool CJPEGImage::ApplyUnsharpMaskToOriginalPixels(const CUnsharpMaskParams & uns
 	return bSuccess;
 }
 
-bool CJPEGImage::RotateOriginalPixels(double dRotation, bool bAutoCrop) {
+bool CJPEGImage::RotateOriginalPixels(double dRotation, bool bAutoCrop, bool bKeepAspectRatio) {
 	InvalidateAllCachedPixelData();
 
 	double dCoords[] = { 0, 0, m_nOrigWidth - 1, 0, m_nOrigWidth - 1, m_nOrigHeight - 1, 0, m_nOrigHeight - 1 };
@@ -272,6 +272,12 @@ bool CJPEGImage::RotateOriginalPixels(double dRotation, bool bAutoCrop) {
 
 	if (bAutoCrop) {
 		// Calculate the maximum enclosed rectangle by intersecting the diagonal lines of the bounding box with the rotated rectangle sides
+		if (bKeepAspectRatio) {
+			double dNeededX = ((double)m_nOrigWidth / m_nOrigHeight) * (dYMax - dYMin);
+			double dCenterX = (dXMax + dXMin) * 0.5;
+			dXMin = dCenterX - 0.5 * dNeededX;
+			dXMax = dCenterX + 0.5 * dNeededX;
+		}
 		double dBestX = (dXMax - dXMin) * 0.5;
 		double dBestY = (dYMax - dYMin) * 0.5;
 		double dBestDistance = dBestX*dBestX + dBestY*dBestY;
@@ -319,16 +325,22 @@ bool CJPEGImage::RotateOriginalPixels(double dRotation, bool bAutoCrop) {
 	return true;
 }
 
-bool CJPEGImage::TrapezoidOriginalPixels(const CTrapezoid& trapezoid, bool bAutoCrop) {
+bool CJPEGImage::TrapezoidOriginalPixels(const CTrapezoid& trapezoid, bool bAutoCrop, bool bKeepAspectRatio) {
 	InvalidateAllCachedPixelData();
 
 	int nXStart, nXEnd;
 	int nYStart = trapezoid.y1, nYEnd = trapezoid.y2;
 
 	if (bAutoCrop) {
-		// Calculate the maximum enclosed rectangle
-		nXStart = max(trapezoid.x1s, trapezoid.x2s);
-		nXEnd = min(trapezoid.x1e, trapezoid.x2e);
+		if (bKeepAspectRatio) {
+			CRect rect = Helpers::CalculateMaxIncludedRectKeepAR(trapezoid, (double)m_nOrigWidth / m_nOrigHeight);
+			nXStart = rect.left; nXEnd = rect.right;
+			nYStart = rect.top; nYEnd = rect.bottom;
+		} else {
+			// Calculate the maximum included rectangle
+			nXStart = max(trapezoid.x1s, trapezoid.x2s);
+			nXEnd = min(trapezoid.x1e, trapezoid.x2e);
+		}
 	} else {
 		nXStart = min(trapezoid.x1s, trapezoid.x2s);
 		nXEnd = max(trapezoid.x1e, trapezoid.x2e);
