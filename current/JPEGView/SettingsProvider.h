@@ -78,6 +78,9 @@ public:
 	COLORREF ColorSelected() { return m_colorSelected; }
 	COLORREF ColorSlider() { return m_colorSlider; }
 	const CUnsharpMaskParams& UnsharpMaskParams() { return m_unsharpMaskParms; }
+	bool RTShowGridLines() { return m_bRTShowGridLines; }
+	bool RTAutoCrop() { return m_bRTAutoCrop; }
+	bool RTPreserveAspectRatio() { return m_bRTPreserveAspectRatio; }
 
 	std::list<CUserCommand*> & UserCommandList() { return m_userCommands; }
 
@@ -167,6 +170,9 @@ private:
 	COLORREF m_colorSelected;
 	COLORREF m_colorSlider;
 	CUnsharpMaskParams m_unsharpMaskParms;
+	bool m_bRTShowGridLines;
+	bool m_bRTAutoCrop;
+	bool m_bRTPreserveAspectRatio;
 
 	std::list<CUserCommand*> m_userCommands;
 

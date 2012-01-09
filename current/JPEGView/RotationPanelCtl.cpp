@@ -11,8 +11,9 @@
 CRotationPanelCtl::CRotationPanelCtl(CMainDlg* pMainDlg, CPanel* pImageProcPanel) 
 : CTransformPanelCtl(pMainDlg, pImageProcPanel, new CRotationPanel(pMainDlg->m_hWnd, this, pImageProcPanel)) {
 
+	m_bOriginalShowGrid = m_bShowGrid;
 	m_bRotationModeAssisted = false;
-	m_dRotationLQ = m_dRotatonLQStart = 0.0;
+	m_dRotationLQ = m_dRotatonLQStart = m_dRotationBackup = 0.0;
 	m_rotationStartX = m_rotationStartY = 0;
 
 	((CRotationPanel*)m_pTransformPanel)->GetBtnAssistMode()->SetButtonPressedHandler(&OnRPAssistedMode, this, 0, m_bRotationModeAssisted);
@@ -42,7 +43,7 @@ void* CRotationPanelCtl::GetDIBForPreview(CSize fullTargetSize, CSize clippingSi
 
 void CRotationPanelCtl::TerminatePanel() {
 	CTransformPanelCtl::TerminatePanel();
-	m_dRotationLQ = 0.0;
+	m_dRotationLQ = m_dRotationBackup = 0.0;
 }
 
 void CRotationPanelCtl::UpdateAssistedRotationMode() {
@@ -51,8 +52,15 @@ void CRotationPanelCtl::UpdateAssistedRotationMode() {
 		_T("Rotate the image by dragging with the mouse.")));
 	m_pMainDlg->InvalidateRect(&(m_pTransformPanel->GetTextHint()->GetPosition()), FALSE);
 	((CRotationPanel*)m_pTransformPanel)->GetBtnAssistMode()->SetActive(m_bRotationModeAssisted);
-	if (m_bShowGrid == m_bRotationModeAssisted) {
-		m_bShowGrid = !m_bRotationModeAssisted;
+	bool bShowGrid;
+	if (m_bRotationModeAssisted) {
+		m_bOriginalShowGrid = m_bShowGrid;
+		bShowGrid = false;
+	} else {
+		bShowGrid = m_bOriginalShowGrid;
+	}
+	if (m_bShowGrid != bShowGrid) {
+		m_bShowGrid = bShowGrid;
 		m_pTransformPanel->GetBtnShowGrid()->SetActive(m_bShowGrid);
 		InvalidateMainDlg();
 	}
@@ -65,6 +73,7 @@ void CRotationPanelCtl::StartTransforming(int nX, int nY) {
 		m_pMainDlg->ScreenToImage(fX, fY);
 		m_rotationStartX = fX;
 		m_rotationStartY = fY;
+		m_dRotationBackup = 0;
 		m_dRotatonLQStart = m_dRotationLQ;
 	}
 }
@@ -121,6 +130,14 @@ void CRotationPanelCtl::UpdatePanelTitle() {
 	TCHAR buff[BUFF_SIZE];
 	_stprintf_s(buff, BUFF_SIZE, _T("  %.1f °"), dAngleDeg);
 	m_pTransformPanel->GetTextTitle()->SetText(CString(CNLS::GetString(_T("Rotate Image"))) + buff);
+}
+
+void CRotationPanelCtl::ExchangeTransformationParams() {
+	double dTemp = m_dRotationBackup;
+	m_dRotationBackup = m_dRotationLQ;
+	m_dRotationLQ = dTemp;
+	UpdatePanelTitle();
+	InvalidateMainDlg();
 }
 
 void CRotationPanelCtl::OnRPAssistedMode(void* pContext, int nParameter, CButtonCtrl & sender) {

@@ -20,9 +20,11 @@ public:
 	double GetLQRotationAngle() { return m_dRotationLQ; }
 
 private:
+	bool m_bOriginalShowGrid;
 	bool m_bRotationModeAssisted;
 	double m_dRotationLQ;
 	double m_dRotatonLQStart;
+	double m_dRotationBackup;
 	float m_rotationStartX;
 	float m_rotationStartY;
 
@@ -32,6 +34,7 @@ private:
 	virtual void EndTransforming();
 	virtual void ApplyTransformation();
 	virtual void UpdatePanelTitle();
+	virtual void ExchangeTransformationParams();
 
 	void UpdateAssistedRotationMode();
 	void PaintRotationLine(HDC hPaintDC);

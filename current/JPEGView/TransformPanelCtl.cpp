@@ -6,12 +6,14 @@
 #include "NavigationPanelCtl.h"
 #include "ZoomNavigatorCtl.h"
 #include "WndButtonPanelCtl.h"
+#include "KeyMap.h"
+#include "SettingsProvider.h"
 
 CTransformPanelCtl::CTransformPanelCtl(CMainDlg* pMainDlg, CPanel* pImageProcPanel, CTransformPanel* pTransformPanel) : CPanelController(pMainDlg, true) {
 	m_bVisible = false;
-	m_bShowGrid = true;
-	m_bAutoCrop = true;
-	m_bKeepAspectRatio = true;
+	m_bShowGrid = CSettingsProvider::This().RTShowGridLines();
+	m_bAutoCrop = CSettingsProvider::This().RTAutoCrop();
+	m_bKeepAspectRatio = CSettingsProvider::This().RTPreserveAspectRatio();
 	m_bTransforming = false;
 	m_bOldShowNavPanel = false;
 	m_nMouseX = m_nMouseY = 0;
@@ -81,6 +83,12 @@ bool CTransformPanelCtl::OnMouseMove(int nX, int nY) {
 bool CTransformPanelCtl::OnKeyDown(unsigned int nVirtualKey, bool bShift, bool bAlt, bool bCtrl) {
 	if (nVirtualKey == VK_ESCAPE) {
 		TerminatePanel();
+	} else if (nVirtualKey == VK_RETURN) {
+		OnApply(this, 0, *m_pTransformPanel->GetBtnApply());
+	} else {
+		if (!m_bTransforming && m_pMainDlg->GetKeyMap()->GetCommandIdForKey(nVirtualKey, bAlt, bCtrl, bShift) == IDM_EXCHANGE_PROC_PARAMS) {
+			ExchangeTransformationParams();
+		}
 	}
 	return true; // all other keys are eaten up in this panel without doing anything
 }
