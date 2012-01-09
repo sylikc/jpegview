@@ -1276,6 +1276,7 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 			break;
 		case IDM_FULL_SCREEN_MODE:
 			m_bFullScreenMode = !m_bFullScreenMode;
+			m_dZoomAtResizeStart = 1.0;
 			if (!m_bFullScreenMode) {
 				CRect windowRect;
 				this->SetWindowLongW(GWL_STYLE, this->GetWindowLongW(GWL_STYLE) | WS_OVERLAPPEDWINDOW | WS_VISIBLE);

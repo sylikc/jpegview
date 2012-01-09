@@ -252,6 +252,9 @@ void CSettingsProvider::ReadWriteableINISettings() {
 		m_unsharpMaskParms.Amount = 1.0;
 		m_unsharpMaskParms.Threshold = 4.0;
 	}
+	m_bRTShowGridLines = GetBool(_T("RTShowGridLines"), true);
+	m_bRTAutoCrop = GetBool(_T("RTAutoCrop"), true);
+	m_bRTPreserveAspectRatio = GetBool(_T("RTPreserveAspectRatio"), true);
 }
 
 CImageProcessingParams CSettingsProvider::LandscapeModeParams(const CImageProcessingParams& templParams) {

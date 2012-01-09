@@ -23,6 +23,7 @@ private:
 	virtual void EndTransforming();
 	virtual void ApplyTransformation();
 	virtual void UpdatePanelTitle();
+	virtual void ExchangeTransformationParams();
 
 	enum EClickPosition {
 		CP_Left,
@@ -30,8 +31,8 @@ private:
 		CP_Middle
 	};
 
-	float m_fLeftDeltaX;
-	float m_fRightDeltaX;
+	float m_fLeftDeltaX, m_fLeftDeltaXBackup;
+	float m_fRightDeltaX, m_fRightDeltaXBackup;
 	int m_nStartX, m_nStartY;
 	EClickPosition m_eClickPosition;
 	float m_fScale;

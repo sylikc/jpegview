@@ -46,6 +46,7 @@ protected:
 	virtual void EndTransforming() = 0;
 	virtual void ApplyTransformation() = 0;
 	virtual void UpdatePanelTitle() = 0;
+	virtual void ExchangeTransformationParams() = 0;
 
 private:
 	void Apply();

@@ -69,6 +69,11 @@ Sharpen=0.3
 ; параметр только задаЄт стандартные значени€ при входе в режим нерезкой маски.
 UnsharpMaskParameters=1.0 1.0 4.0
 
+; Default parameters for controlling rotation and perspective correction
+RTShowGridLines=true
+RTAutoCrop=true
+RTPreserveAspectRatio=true
+
 ; ÷ветовой баланс по умолчанию (в диапазоне -1.0 .. +1.0).
 ; ќтрицательные значени€ Ц дл€ коррекции C,M,Y, положительные Ц дл€ R,G,B.
 CyanRed=0.0

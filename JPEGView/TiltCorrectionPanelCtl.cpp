@@ -17,8 +17,8 @@ CTiltCorrectionPanelCtl::CTiltCorrectionPanelCtl(CMainDlg* pMainDlg, CPanel* pIm
 	m_pTransformPanel->GetTextHint()->SetText(
 		CString(CNLS::GetString(_T("Click and drag the mouse vertically to correct image tilt."))) + _T("\n") + 
 		CNLS::GetString(_T("Drag at the left or right border for asymmetric correction.")));
-	m_fLeftDeltaX = 0;
-	m_fRightDeltaX = 0;
+	m_fLeftDeltaX = m_fLeftDeltaXBackup = 0;
+	m_fRightDeltaX = m_fRightDeltaXBackup = 0;
 	m_nStartX = 0;
 	m_nStartY = 0;
 	m_eClickPosition = CP_Left;
@@ -45,8 +45,8 @@ void* CTiltCorrectionPanelCtl::GetDIBForPreview(CSize fullTargetSize, CSize clip
 
 void CTiltCorrectionPanelCtl::StartPanel() {
 	CTransformPanelCtl::StartPanel();
-	m_fLeftDeltaX = 0;
-	m_fRightDeltaX = 0;
+	m_fLeftDeltaX = m_fLeftDeltaXBackup = 0;
+	m_fRightDeltaX = m_fRightDeltaXBackup = 0;
 }
 
 void CTiltCorrectionPanelCtl::StartTransforming(int nX, int nY) {
@@ -61,6 +61,7 @@ void CTiltCorrectionPanelCtl::StartTransforming(int nX, int nY) {
 		if (fY > fCenterY && m_eClickPosition != CP_Middle) m_fScale = -m_fScale;
 		m_nStartX = nX;
 		m_nStartY = nY;
+		m_fLeftDeltaXBackup = m_fRightDeltaXBackup = 0;
 	}
 }
 
@@ -100,4 +101,14 @@ void CTiltCorrectionPanelCtl::ApplyTransformation() {
 
 void CTiltCorrectionPanelCtl::UpdatePanelTitle() {
 	// title is static, therefore empty
+}
+
+void CTiltCorrectionPanelCtl::ExchangeTransformationParams() {
+	float fTemp = m_fLeftDeltaXBackup;
+	m_fLeftDeltaXBackup = m_fLeftDeltaX;
+	m_fLeftDeltaX = fTemp;
+	fTemp = m_fRightDeltaXBackup;
+	m_fRightDeltaXBackup = m_fRightDeltaX;
+	m_fRightDeltaX = fTemp;
+	InvalidateMainDlg();
 }
