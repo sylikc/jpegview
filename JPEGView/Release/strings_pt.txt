@@ -275,3 +275,13 @@ Transform image	Transformar imagem
 Rotate...	Rodar...
 Mirror horizontally	Espelhar horizontalmente
 Mirror vertically	Espelhar verticalmente
+Random	Aleatório 
+Zoom mode (drag mouse to zoom)	Modo de ampliação (arraste o rato para ampliar)
+Correct converging lines (perspective correction)	Corrigir linhas de convergência (correção de perspetiva)
+Perspective Correction	Correção de perspetiva
+Perspective correction...	Correção de perspetiva... 
+Auto crop corrected image (avoids black border)	Recortar automaticamente a imagem corrigida (evitar contornos a negro)
+Click and drag the mouse vertically to correct image tilt.	Clique e arraste o rato na vertical para corrigir a inclinação
+Drag at the left or right border for asymmetric correction.	Clique no contono esquerdo ou direito para corrigir a simetria
+Fit window to image	Ajustar janela à imagem
+Keep aspect ratio on crop	Manter tamanho ao recortar

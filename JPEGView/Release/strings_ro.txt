@@ -274,3 +274,13 @@ Transform image	Rotire - oglindire imagine
 Rotate...	Rotire...
 Mirror horizontally	Oglindire pe orizontală
 Mirror vertically	Oglindire pe verticală
+Random	Aleatoriu
+Zoom mode (drag mouse to zoom)	Mărire (trageţi mouse-ul pentru a mări)
+Correct converging lines (perspective correction)	Corectează liniile convergente (corectează perspectiva)
+Perspective Correction	Corecţia Perspectievei
+Perspective correction...	Corecţia perspectivei...
+Auto crop corrected image (avoids black border)	Auto-tăierea imaginii corectate (anularea marginilor negre)
+Click and drag the mouse vertically to correct image tilt.	Clic şi trage mouse-ul vertical pentru a corecta imaginile înclinate.
+Drag at the left or right border for asymmetric correction.	Trage la stânga sau la dreapta bordura pentru corecţie asimetrică.
+Fit window to image	Ajustează fereastra la mărimea imaginii
+Keep aspect ratio on crop	Păstrează proporţia imaginii la decupare
