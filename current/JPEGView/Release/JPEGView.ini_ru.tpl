@@ -1,6 +1,6 @@
 [JPEGView]
-; Пользовательский файл конфигурации для программы JPEGView версии 1.0.25.1.
-; Перевод (111118): Дм.Ерохин (erodim@mail.ru)
+; Пользовательский файл конфигурации для программы JPEGView версии 1.0.26
+; Перевод (120110): Дм.Ерохин (erodim@mail.ru)
 
 ; Этот пользовательский INI-файл создан из шаблона JPEGView.ini.tpl
 ; Параметры в этом файле имеют более высокий приоритет, чем аналогичные параметры в глобальном INI-файле, находящемся в папке с EXE-файлом программы.
@@ -28,14 +28,14 @@
 ; 'el'		греческий
 Language=auto
 
-; File endings of files to be decoded by WIC (Windows Image Converter)
-; If the Microsoft Camera Codec pack is installed, full size camera RAW files can be read with WIC
-; Add the file endings of the raw files to view here, e.g.
+; Файлы, которые должны декодироваться с помощью WIC (Windows Imaging Component).
+; Если установлен пакет Microsoft Camera Codec, средствами WIC можно считывать полноразмерные RAW-файлы цифровых камер.
+; Укажите здесь маски RAW-файлов, которые вы хотите просматривать. Например:
 ; FilesProcessedByWIC=*.wdp;*.mdp;*.hdp;*.nef
 FilesProcessedByWIC=*.wdp;*.mdp;*.hdp
 
-; File endings of camera RAW files to be searched for embedded JPEG thumb images to display
-; Reading just these embedded JPEGs is much faster than decoding the RAW using WIC
+; RAW-файлы цифровых камер, в которых следует искать встроенные JPEG-изображения для предпросмотра.
+; Считывание таких встроенных JPEG выполняется гораздо быстрее, чем декодирование RAW-данных с помощью WIC.
 FileEndingsRAW=*.pef;*.dng;*.crw;*.nef;*.cr2;*.mrw;*.rw2;*.orf;*.x3f;*.arw;*.kdc;*.nrw;*.dcr;*.sr2;*.raf
 
 ; Цвет фона, R G B, каждый компонент должен быть в диапазоне от 0 до 255, например, "128 128 128" это средне-серый.
@@ -69,7 +69,7 @@ Sharpen=0.3
 ; параметр только задаёт стандартные значения при входе в режим нерезкой маски.
 UnsharpMaskParameters=1.0 1.0 4.0
 
-; Default parameters for controlling rotation and perspective correction
+; Параметры по умолчанию для управления поворотом и коррекцией перспективы.
 RTShowGridLines=true
 RTAutoCrop=true
 RTPreserveAspectRatio=true
@@ -121,7 +121,7 @@ ShowZoomNavigator=true
 ; Установите 0.0, чтобы панель отображалась только при наведении на неё мыши.
 BlendFactorNavPanel=0.5
 
-; Scaling factor for the navigation panel. Increase if the buttons on the panel are too small, e.g. on a touchscreen.
+; Коэффициент масштабирования панели навигации. Увеличьте, если кнопки панели слишком маленькие, например, на сенсорном экране.
 ScaleFactorNavPanel=1.0
 
 ; Установите в 'true', чтобы при смене изображений запоминались значения масштаба, прокрутки, контрастности, гаммы, резкости и поворота.

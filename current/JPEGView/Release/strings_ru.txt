@@ -274,4 +274,13 @@ Transform image	Трансформирование изображения
 Rotate...	Повернуть...
 Mirror horizontally	Зеркально отобразить по горизонтали
 Mirror vertically	Зеркально отобразить по вертикали
-
+Random	Случайно
+Zoom mode (drag mouse to zoom)	Масштабирование (перетаскивайте мышь)
+Correct converging lines (perspective correction)	Коррекция сходящихся линий (коррекция перспективы)
+Perspective Correction	Коррекция перспективы
+Perspective correction...	Коррекция перспективы...
+Auto crop corrected image (avoids black border)	Автообрезка при коррекции (без чёрных полей)
+Click and drag the mouse vertically to correct image tilt.	Перетаскивайте мышь вертикально для устранения наклона картинки.
+Drag at the left or right border for asymmetric correction.	Перетаскивайте у левого или правого края для несимметричной коррекции.
+Fit window to image	Подгонка окна по изображению
+Keep aspect ratio on crop	Соблюдать пропорции при обрезке

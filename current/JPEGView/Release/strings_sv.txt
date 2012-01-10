@@ -3,7 +3,7 @@
 //TranslatorName=Åke Engelbrektson
 //Contact=eson57@gmail.com
 //TranslatorURL=http://svenskasprakfiler.tejpad.se
-//LastUpdated=Mar 01, 2011
+//LastUpdated=Jan 10, 2012
 //
 Contrast	Kontrast
 Brightness	Ljus
@@ -277,3 +277,13 @@ Transform image	Omvandla bild
 Rotate...	Rotera... 
 Mirror horizontally	Spegla horisontellt 
 Mirror vertically	Spegla vertikalt 
+Random	Slumpmässig
+Zoom mode (drag mouse to zoom)	Zoom-läge (Dra med musen för att zooma)
+Correct converging lines (perspective correction)	Korrigera konvergerande linjer (perspektivkorrigering)
+Perspective Correction	Perspektivkorrigering
+Perspective correction...	Perspektivkorrigering...
+Auto crop corrected image (avoids black border)	Beskär korrigerad bild automatiskt (förhindrar svarat kanter)
+Click and drag the mouse vertically to correct image tilt.	Klicka och dra vertikalt med musen, för att korrigera bildens lutning
+Drag at the left or right border for asymmetric correction.	Dra i vänster eller höger kant för asymmetrisk korrigering
+Fit window to image	Anpassa fönster efter bild
+Keep aspect ratio on crop	Bevara proportioner vid beskärning
