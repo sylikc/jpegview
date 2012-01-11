@@ -274,3 +274,13 @@ Transform image	Transformovat obraz
 Rotate...	Rotovat...
 Mirror horizontally	Zrcadlit vodorovně
 Mirror vertically	Zrcadlit svisle
+Random	Náhodně
+Zoom mode (drag mouse to zoom)	Změna rozlišení (táhnout myší ke změně) 
+Correct converging lines (perspective correction)	Korekce konvergujicích čar (pespektivní korekce)
+Perspective Correction	Perspektivní korekce
+Perspective correction...	Perspektivní korekce...
+Auto crop corrected image (avoids black border)	Korigovat obraz automatickým ostřížením (zabránit černému pozadí)
+Click and drag the mouse vertically to correct image tilt.	Kliknout a táhnout myší vertikálně pro korekci náklonu obrazu. 
+Drag at the left or right border for asymmetric correction.	Táhnout myší na levém nebo pravém pozadí pro nesymetrickou korekci. 
+Fit window to image	Upnout okno k obrazu
+Keep aspect ratio on crop	Držet poměr stran při zastřižení

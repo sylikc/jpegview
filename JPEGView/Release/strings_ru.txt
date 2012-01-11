@@ -1,7 +1,9 @@
-﻿// This file must be encoded with UTF-8 (e.g. with Windows Notepad)
-// Filename is 'strings_%languagecode%.txt' where %languagecode% is the ISO 639 language code e.g. 'fr' for French
-// Format is: English string<tab>Translated string<newline>
-// Translated by Dmitry Yerokhin (erodim@mail.ru), November 16, 2011
+﻿//Language=Russian
+//TranslatorName=Dmitry Yerokhin
+//Contact=erodim@mail.ru
+//TranslatorURL=none
+//LastUpdated=Jan 11, 2012
+//
 Contrast	Контрастность
 Brightness	Яркость
 Sharpen	Резкость
@@ -23,13 +25,13 @@ The directory '%s' does not contain any image files!	В папке '%s' нет �
 Press any key to search the subdirectories for image files.	Нажмите любую клавишу для поиска графических файлов во вложенных папках.
 JPEGView Help	Справка JPEGView
 Current image	Текущее изображение
-Close help text display / Close JPEGView	Закрыть экран справки / Закрыть JPEGView
+Close help text display / Close JPEGView	Закрыть справку/JPEGView
 Show/hide this help text	Показать/скрыть этот текст справки
 Show/hide picture information (EXIF data)	Показать/скрыть данные об изображении (EXIF)
 Show/hide file name	Показать/скрыть имя файла
 Enable/disable high quality resampling	Включить/выключить высококачественное ресэмплирование
-Enable/disable keeping of geometry related (zoom/pan/rotation)	Включить/выключить сохранение геометрии (масштаб/панорамирование/поворот)
-and image processing (brightness/contrast/sharpen) parameters between images	и обработку картинки (яркость/контрастность/резкость) между изображениями
+Enable/disable keeping of geometry related (zoom/pan/rotation)	Включить/выключить сохранение геометрии (масштаб/перемещение/поворот)
+and image processing (brightness/contrast/sharpen) parameters between images	и обработку (яркость/контрастность/резкость) между изображениями
 Enable/disable automatic contrast correction (histogram equalization)	Включить/выключить автокоррекцию контрастности (подстройку гистограммы)
 Apply auto contrast correction using only visible section of image	Применить автокоррекцию контрастности только к видимой области изображения
 Enable/disable automatic density correction (local brightness correction)	Включить/выключить автокоррекцию интенсивности (локальную подстройку яркости - ЛПЯ)
@@ -41,9 +43,9 @@ Loop through files in current directory and all sibling folders (folders on same
 Maximize/restore to/from virtual desktop (only for multi-monitor systems)	Распахнуть/восстановить на/из виртуальный рабочий стол (для мультимониторных систем)
 Copy screen to clipboard/ Copy processed full size image to clipboard	Скопировать в буфер обмена экран/обработанное полноразмерное изображение
 Open new image or slideshow file	Открыть новое изображение или файл со слайдшоу
-Save processed image to JPEG file (original size)	Сохранить обработанное изображение как JPEG (исходного размера)
+Save processed image to JPEG file (original size)	Сохранить обработанное изображение как файл JPEG (исходного размера)
 Save (%s)/ delete (%s) image processing parameters in/from parameter DB	Сохранить (%s) / удалить (%s) параметры обработки изображения в базе данных
-Sort images by creation date, resp. modification date, resp. file name	Сортировать изображения по дате создания, изменения или имени файла
+Sort images by creation date, resp. modification date, resp. file name	Сортировка изображений: по дате создания (C), изменения (M), имени файла (N), случайно (Z)
 Goto previous image	Перейти к предыдущему изображению
 Goto next image	Перейти к следующему изображению
 PgUp or Left	PgUp или стрелка влево
@@ -55,22 +57,22 @@ Increase/decrease sharpness	Увеличить/уменьшить резкост
 Increase/decrease auto color cast correction amount	Увеличить/уменьшить автокоррекцию цвета
 Increase/decrease auto contrast correction amount	Увеличить/уменьшить автокоррекцию контрастности
 Enable/disable landscape picture enhancement mode	Включить/выключить режим улучшения изображений
-Slide show with timeout of n seconds (ESC to stop)	Запустить слайдшоу с интервалом N секунд (ESC - стоп)
-Set timeout to n/10 sec, respectively n/100 sec (Ctrl+Shift)	Задать интервал N/10 с или N/100 (Ctrl+Shift)
+Slide show with timeout of n seconds (ESC to stop)	Запустить слайдшоу с интервалом N сек (ESC - стоп)
+Set timeout to n/10 sec, respectively n/100 sec (Ctrl+Shift)	Задать интервал N/10 сек или N/100 сек (Ctrl+Shift)
 Rotate image and fit to screen	Повернуть изображение и вписать в экран
 Fit image to screen	Вписать изображение в экран
 Zoom 1:1 (100 %)	Масштаб 1:1 (100%)
 Zoom in (%s)/Zoom out (%s)	Увеличить (%s)/уменьшить (%s)
 Zoom in/out image	Увеличить/уменьшить изображение (масштабировать)
-Pan image	Панорамировать изображение
+Pan image	Переместить изображение
 Crop image	Обрезать изображение
 Next image	Следующее изображение
 Previous image	Предыдущее изображение
 up/down	Стрелки вверх/вниз
 Mouse wheel	Ролик мыши
-Left mouse & drag	ЛКМ и перетаскивание
+Left mouse & drag	Перетаскивание с ЛКМ
 Ctrl + L mouse	Ctrl + ЛКМ
-Fwd mouse button	Кнопка мыши 'вперёд'
+Forward mouse button	Кнопка мыши 'вперёд'
 Back mouse button	Кнопка мыши 'назад'
 Delete current file on disk permanently	Окончательно удалить текущий файл с диска
 Rotate current file on disk lossless by 90 deg (W/H must be multiple of 16)	Повернуть текущий файл на диске без потерь на 90° вправо (Ш/В должны быть кратны 16)
@@ -136,11 +138,11 @@ Keep parameters	Помнить параметры обработки при см
 Save parameters to INI...	Сохранить параметры в INI-файле...
 Save parameters to DB	Сохранить параметры в базе данных
 Clear parameters from DB	Удалить параметры из базы данных
-Zoom	Масштаб
+Zoom	Масштабирование
 Fit to screen	Подгонка под экран
 Fill with crop	Заполнение с обрезкой
 Span all screens	На все экраны
-Auto zoom mode	Режим автомасштабирования
+Auto zoom mode	Автомасштабирование
 Fit to screen (no zoom)	Подгонка под экран (без увеличения)
 Fill with crop (no zoom)	Заполнение с обрезкой (без увеличения)
 Exit	Выход
@@ -202,24 +204,24 @@ Show navigation panel	Панель навигации
 Show/hide navigation panel	Показать/скрыть панель навигации
 About JPEGView...	О программе JPEGView...
 SIMD mode used:	Режим SIMD:
-Number of CPU cores used:	Число ядер ЦП:
+Number of CPU cores used:	Используется ядер ЦП:
 Licensed under the GNU general public license (GPL), see readme file for details:	Лицензия: GNU General Public License (GPL), см. подробности в файле:
 Project home page:	Домашняя страница проекта:
-Show first image in folder	Показать первое изображение в папке
-Show previous image	Показать предыдущее изображение
-Show next image	Показать следующее изображение
-Show last image in folder	Показать последнее изображение в папке
-Rotate image 90 deg clockwise	Повернуть изображение на 90° по часовой стрелке
-Rotate image 90 deg counter-clockwise	Повернуть изображение на 90° против часовой стрелки
+Show first image in folder	Первое изображение в папке
+Show previous image	Предыдущее изображение
+Show next image	Следующее изображение
+Show last image in folder	Последнее изображение в папке
+Rotate image 90 deg clockwise	Повернуть на 90° вправо
+Rotate image 90 deg counter-clockwise	Повернуть на 90° влево
 Landscape picture enhancement mode	Режим улучшения изображений
-Display image (EXIF) information	Показать сведения об изображении (EXIF)
+Display image (EXIF) information	Сведения об изображении (EXIF)
 Actual size of image	Настоящий размер изображения
 Toggle between screens (only for multi-monitor systems)	Переключиться между экранами (в мультимониторных системах)
 Enable/disable full screen mode	Включить/выключить полноэкранный режим
 Full screen mode	Полноэкранный режим
 Window mode	Оконный режим
 Save as (in screen size/resolution)	Сохранить как (в экранном размере/разрешении)
-Save processed image to JPEG file (screen size)	Сохранить обработанное изображение как JPEG-файл (экранного размера)
+Save processed image to JPEG file (screen size)	Сохранить обработанное изображение как файл JPEG (экранного размера)
 Settings/Admin	Настройки
 Edit global settings...	Изменить общие параметры...
 Edit user settings...	Изменить пользовательские параметры...
@@ -253,34 +255,34 @@ Amount	Величина
 Threshold	Порог
 Apply	Применить
 Cancel	Отмена
-Keep processing parameters between images	Запоминать параметры обработки между изображениями
+Keep processing parameters between images	Помнить параметры обработки при смене изображений
 Show histogram	Показать гистограмму
 Hide histogram	Скрыть гистограмму
 Crop Selection Lossless...	Обрезать выделенное без потерь...
 Save cropped image	Сохранить обрезанное изображение
-Rotate image by user-defined angle	Повернуть изображение на указанный угол
-Rotate Image	Повернуть изображение
-Show grid lines	Показывать сетку
-Auto crop rotated image (avoids black border)	Автообрезка изображения при повороте (устранять чёрные поля)
-Align image to horizontal or vertical line	Выровнять изображение по горизонтальной или вертикальной линии
+Rotate image by user-defined angle	Повернуть на произвольный угол
+Rotate Image	Поворот изображения
+Show grid lines	Сетка
+Auto crop rotated image (avoids black border)	Автообрезка изображения при повороте (избегать чёрных полей)
+Align image to horizontal or vertical line	Выравнивание изображения по горизонтальной или вертикальной линии
 Use the mouse to draw a line that shall be horizontal or vertical.	Проведите мышью линию, которая должна стать горизонтальной или вертикальной.
-Rotate the image by dragging with the mouse.	Поверните изображение, потянув его мышью.
+Rotate the image by dragging with the mouse.	Вращайте изображение, перетаскивая по нему мышь.
 The operation failed because not enough memory is available!	Ошибка операции: недостаточно памяти.
-to EXIF date (all files in folder)	по дате в EXIF (все файлы в папке)
+to EXIF date (all files in folder)	по дате в EXIF (для всех файлов в папке)
 Number of JPEG files in folder: %d	Файлов JPEG в папке: %d
-EXIF date successfully set on %d images, failed on %d images	EXIF-дата успешно установлена для %d шт. изображений (для %d шт. - не установлена)
+EXIF date successfully set on %d images, failed on %d images	Установка EXIF-даты: %d - да, %d - нет
 Reason: Not enough memory available	Причина: недостаточно памяти
-Transform image	Трансформирование изображения
-Rotate...	Повернуть...
-Mirror horizontally	Зеркально отобразить по горизонтали
-Mirror vertically	Зеркально отобразить по вертикали
+Transform image	Трансформирование
+Rotate...	Повернуть на произвольный угол...
+Mirror horizontally	Зеркально перевернуть по горизонтали
+Mirror vertically	Зеркально перевернуть по вертикали
 Random	Случайно
-Zoom mode (drag mouse to zoom)	Масштабирование (перетаскивайте мышь)
-Correct converging lines (perspective correction)	Коррекция сходящихся линий (коррекция перспективы)
+Zoom mode (drag mouse to zoom)	Режим масштабирования (перетаскиванием мыши)
+Correct converging lines (perspective correction)	Коррекция сходящихся линий (перспективы)
 Perspective Correction	Коррекция перспективы
 Perspective correction...	Коррекция перспективы...
-Auto crop corrected image (avoids black border)	Автообрезка при коррекции (без чёрных полей)
-Click and drag the mouse vertically to correct image tilt.	Перетаскивайте мышь вертикально для устранения наклона картинки.
-Drag at the left or right border for asymmetric correction.	Перетаскивайте у левого или правого края для несимметричной коррекции.
+Auto crop corrected image (avoids black border)	Автообрезка при коррекции (избегать чёрных полей)
+Click and drag the mouse vertically to correct image tilt.	Перетаскивайте мышь вертикально, чтобы устранить/изменить наклон изображения.
+Drag at the left or right border for asymmetric correction.	Перетаскивайте мышь к левому или правому краю для несимметричной коррекции.
 Fit window to image	Подгонка окна по изображению
-Keep aspect ratio on crop	Соблюдать пропорции при обрезке
+Keep aspect ratio on crop	Соблюдение пропорций при обрезке
