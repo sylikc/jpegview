@@ -273,3 +273,13 @@ Transform image	Transformer
 Rotate...	Tourner...
 Mirror horizontally	Retourner horizontalement
 Mirror vertically	Retourner verticalement
+Random	Aléatoire
+Zoom mode (drag mouse to zoom)	Mode Zoom (déplacez la souris pour zoomer)
+Correct converging lines (perspective correction)	Corriger les lignes convergentes (correction de la perspective)
+Perspective Correction	Correction de la perspective
+Perspective correction...	Correction de la perspective...
+Auto crop corrected image (avoids black border)	Rognage automatique de l'image corrigée (evitant les bords noirs)
+Click and drag the mouse vertically to correct image tilt.	Cliquez et déplacez la souris verticalement pour corriger inclinaison de l'image.
+Drag at the left or right border for asymmetric correction.	Déplacez le bord gauche ou droit pour la correction asymétrique.
+Fit window to image	Ajuster la fenêtre à l'image
+Keep aspect ratio on crop	Maintenir ratio d'aspect lors du rognage
