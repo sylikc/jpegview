@@ -15,11 +15,11 @@ public:
 
 	virtual float DimFactor() { return 0.5f; }
 
-	virtual bool IsVisible() { return m_bVisible; }
-	virtual bool IsActive() { return true; }  // always active, but maybe invisible (when mouse outside hot area)
+	virtual bool IsVisible() { return m_bVisible && m_bEnabled; }
+	virtual bool IsActive() { return m_bEnabled; }
 
 	virtual void SetVisible(bool bVisible);
-	virtual void SetActive(bool bActive) {}  // not possible to set
+	virtual void SetActive(bool bActive) {}  // not possible to set, determined by INI file only
 
 	virtual void AfterNewImageLoaded();
 
@@ -32,6 +32,7 @@ public:
 	CRect GetUnsharpMaskButtonRect();
 
 private:
+	bool m_bEnabled;
 	bool m_bVisible;
 	int m_nOldMouseY;
 	CImageProcessingPanel* m_pImageProcPanel;

@@ -27,6 +27,12 @@ to JPEGView\Debug
 Changelog
 *********
 
+[1.0.27]
+New features:
+- New INI file setting: 'ShowBottomPanel. Set to false to disable showing the bottom panel when hovering with the mouse on bottom part
+  of window/screen.
+  Default is true (as before, was just not configurable).
+
 [1.0.26]
 Bugs fixed:
 - Lossless rotate and crop now works in folders containing Unicode characters in the path.

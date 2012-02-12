@@ -3,7 +3,7 @@
 // Used by JPEGView.RC
 //
 
-#define JPEGVIEW_VERSION "1, 0, 26, 0\0"
+#define JPEGVIEW_VERSION "1, 0, 27, 0\0"
 
 
 #define IDD_ABOUTBOX				100
