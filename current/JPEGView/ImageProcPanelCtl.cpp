@@ -14,11 +14,13 @@
 #include "EXIFDisplayCtl.h"
 #include "UnsharpMaskPanelCtl.h"
 #include "NavigationPanelCtl.h"
+#include "SettingsProvider.h"
 #include "Helpers.h"
 #include "NLS.h"
 
 CImageProcPanelCtl::CImageProcPanelCtl(CMainDlg* pMainDlg, CImageProcessingParams* pParams, bool* pEnableLDC, bool* pEnableContrastCorr) 
 : CPanelController(pMainDlg, false) {
+	m_bEnabled = CSettingsProvider::This().ShowBottomPanel();
 	m_bVisible = false;
 	m_nOldMouseY = 0;
 	m_pPanel = m_pImageProcPanel = new CImageProcessingPanel(pMainDlg->GetHWND(), this, pParams, pEnableLDC, pEnableContrastCorr);
@@ -36,15 +38,17 @@ CImageProcPanelCtl::~CImageProcPanelCtl() {
 void CImageProcPanelCtl::SetVisible(bool bVisible) {
 	if (m_bVisible != bVisible) {
 		m_bVisible = bVisible;
-		m_pMainDlg->InvalidateRect(PanelRect(), FALSE);
-		m_pMainDlg->InvalidateRect(m_pMainDlg->GetNavPanelCtl()->PanelRect(), FALSE);
-		if (!bVisible) {
-			m_pImageProcPanel->GetTooltipMgr().RemoveActiveTooltip();
-		}
-		if (bVisible) {
-			m_pMainDlg->GetNavPanelCtl()->StartNavPanelAnimation(true, true);
-		} else {
-			m_pMainDlg->GetNavPanelCtl()->StartNavPanelAnimation(false, true);
+		if (m_bEnabled) {
+			m_pMainDlg->InvalidateRect(PanelRect(), FALSE);
+			m_pMainDlg->InvalidateRect(m_pMainDlg->GetNavPanelCtl()->PanelRect(), FALSE);
+			if (!bVisible) {
+				m_pImageProcPanel->GetTooltipMgr().RemoveActiveTooltip();
+			}
+			if (bVisible) {
+				m_pMainDlg->GetNavPanelCtl()->StartNavPanelAnimation(true, true);
+			} else {
+				m_pMainDlg->GetNavPanelCtl()->StartNavPanelAnimation(false, true);
+			}
 		}
 	}
 }
@@ -92,6 +96,9 @@ bool CImageProcPanelCtl::OnTimer(int nTimerId) {
 }
 
 bool CImageProcPanelCtl::OnMouseMove(int nX, int nY) {
+	if (!m_bEnabled) {
+		return false;
+	}
 	if (m_pMainDlg->ClientRect().Width() < 800 || m_pMainDlg->GetPanelMgr()->IsModalPanelShown()) {
 		SetVisible(false);
 		return false;
