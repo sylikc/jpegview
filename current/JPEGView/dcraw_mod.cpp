@@ -3686,13 +3686,7 @@ void CLASS jpeg_thumb(CJPEGImage** Image, bool& bOutOfMemory)
 
 	if (pPixelData != NULL && (nBPP == 3 || nBPP == 1))
 	{
-		uint8* pEXIFBlock = (uint8*)Helpers::FindJPEGMarker(thumb, thumb_length, 0xE1);
-		if (pEXIFBlock != NULL && strncmp((const char*)(pEXIFBlock + 4), "Exif", 4) != 0)
-		{
-			pEXIFBlock = NULL;
-		}
-		
-		*Image = new CJPEGImage(nWidth, nHeight, pPixelData, pEXIFBlock, nBPP, Helpers::CalculateJPEGFileHash(thumb, thumb_length), IF_JPEG);
+		*Image = new CJPEGImage(nWidth, nHeight, pPixelData, Helpers::FindEXIFBlock(thumb, thumb_length), nBPP, Helpers::CalculateJPEGFileHash(thumb, thumb_length), IF_JPEG);
 		(*Image)->SetJPEGComment(Helpers::GetJPEGComment(thumb, thumb_length));
 	}
 	else if (bOutOfMemory)

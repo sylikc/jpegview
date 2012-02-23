@@ -44,6 +44,73 @@ static EImageFormat GetImageFormat(LPCTSTR sFileName) {
 	}
 }
 
+static EImageFormat GetBitmapFormat(Gdiplus::Bitmap * pBitmap) {
+	GUID guid;
+	memset(&guid, 0, sizeof(GUID));
+	pBitmap->GetRawFormat(&guid);
+	if (guid == Gdiplus::ImageFormatBMP) {
+		return IF_WindowsBMP;
+	} else if (guid == Gdiplus::ImageFormatPNG) {
+		return IF_PNG;
+	} else if (guid == Gdiplus::ImageFormatGIF) {
+		return IF_GIF;
+	} else if (guid == Gdiplus::ImageFormatTIFF) {
+		return IF_TIFF;
+	} else if (guid == Gdiplus::ImageFormatJPEG || guid == Gdiplus::ImageFormatEXIF) {
+		return IF_JPEG;
+	} else {
+		return IF_Unknown;
+	}
+}
+
+static CJPEGImage* ConvertGDIPlusBitmapToJPEGImage(Gdiplus::Bitmap* pBitmap, void* pEXIFData, __int64 nJPEGHash) {
+	if (pBitmap->GetLastStatus() != Gdiplus::Ok) {
+		return NULL;
+	}
+
+	// If there is an alpha channel in the original file we must blit the image onto a background color offscreen
+	// bitmap first to archieve proper rendering.
+	CJPEGImage* pJPEGImage = NULL;
+	Gdiplus::PixelFormat pixelFormat = pBitmap->GetPixelFormat();
+	bool bHasAlphaChannel = (pixelFormat & (PixelFormatAlpha | PixelFormatPAlpha));
+	Gdiplus::Bitmap* pBmTarget = NULL;
+	Gdiplus::Graphics* pBmGraphics = NULL;
+	Gdiplus::Bitmap* pBitmapToUse;
+	if (bHasAlphaChannel) {
+		pBmTarget = new Gdiplus::Bitmap(pBitmap->GetWidth(), pBitmap->GetHeight(), PixelFormat32bppRGB);
+		pBmGraphics = new Gdiplus::Graphics(pBmTarget);
+		COLORREF bkColor = CSettingsProvider::This().ColorBackground();
+		Gdiplus::SolidBrush bkBrush(Gdiplus::Color(GetRValue(bkColor), GetGValue(bkColor), GetBValue(bkColor)));
+		pBmGraphics->FillRectangle(&bkBrush, 0, 0, pBmTarget->GetWidth(), pBmTarget->GetHeight());
+		pBmGraphics->DrawImage(pBitmap, 0, 0, pBmTarget->GetWidth(), pBmTarget->GetHeight());
+		pBitmapToUse = pBmTarget;
+		if (pBmGraphics->GetLastStatus() == Gdiplus::OutOfMemory) {
+			delete pBmGraphics; delete pBmTarget;
+			return NULL;
+		}
+	} else {
+		pBitmapToUse = pBitmap;
+	}
+
+	Gdiplus::Rect bmRect(0, 0, pBitmap->GetWidth(), pBitmap->GetHeight());
+	Gdiplus::BitmapData bmData;
+	if (pBitmapToUse->LockBits(&bmRect, Gdiplus::ImageLockModeRead, PixelFormat32bppRGB, &bmData) == Gdiplus::Ok) {
+		assert(bmData.PixelFormat == PixelFormat32bppRGB);
+		void* pDIB = CBasicProcessing::ConvertGdiplus32bppRGB(bmRect.Width, bmRect.Height, bmData.Stride, bmData.Scan0);
+		if (pDIB != NULL) {
+			pJPEGImage = new CJPEGImage(bmRect.Width, bmRect.Height, pDIB, pEXIFData, 4, nJPEGHash, GetBitmapFormat(pBitmap));
+		}
+		pBitmapToUse->UnlockBits(&bmData);
+	}
+
+	if (pBmGraphics != NULL && pBmTarget != NULL) {
+		delete pBmGraphics;
+		delete pBmTarget;
+	}
+
+	return pJPEGImage;
+}
+
 /////////////////////////////////////////////////////////////////////////////////////////////
 // Public
 /////////////////////////////////////////////////////////////////////////////////////////////
@@ -164,7 +231,8 @@ void CImageLoadThread::ProcessReadJPEGRequest(CRequest * request) {
 		return;
 	}
 
-	char* pBuffer = NULL;
+	HGLOBAL hFileBuffer = NULL;
+	void* pBuffer = NULL;
 	try {
 		// Don't read too huge files...
 		unsigned int nFileSize = ::GetFileSize(hFile, NULL);
@@ -173,34 +241,48 @@ void CImageLoadThread::ProcessReadJPEGRequest(CRequest * request) {
 			::CloseHandle(hFile);
 			return;
 		}
-		unsigned int nNumBytesRead;
-		pBuffer = new(std::nothrow) char[nFileSize];
+		hFileBuffer  = ::GlobalAlloc(GMEM_MOVEABLE, nFileSize);
+		pBuffer = (hFileBuffer == NULL) ? NULL : ::GlobalLock(hFileBuffer);
 		if (pBuffer == NULL) {
+			if (hFileBuffer) ::GlobalFree(hFileBuffer);
 			request->OutOfMemory = true;
 			::CloseHandle(hFile);
 			return;
 		}
+		unsigned int nNumBytesRead;
 		if (::ReadFile(hFile, pBuffer, nFileSize, (LPDWORD) &nNumBytesRead, NULL) && nNumBytesRead == nFileSize) {
-			int nWidth, nHeight, nBPP;
-			bool bOutOfMemory;
-			void* pPixelData = Jpeg::ReadImage(nWidth, nHeight, nBPP, bOutOfMemory, pBuffer, nFileSize);
-			// Color and b/w JPEG is supported
-			if (pPixelData != NULL && (nBPP == 3 || nBPP == 1)) {
-				uint8* pEXIFBlock = (uint8*)Helpers::FindJPEGMarker(pBuffer, nFileSize, 0xE1);
-				if (pEXIFBlock != NULL && strncmp((const char*)(pEXIFBlock + 4), "Exif", 4) != 0) {
-					pEXIFBlock = NULL;
+			if (CSettingsProvider::This().ForceGDIPlus()) {
+				IStream* pStream = NULL;
+				if (::CreateStreamOnHGlobal(hFileBuffer, FALSE, &pStream) == S_OK) {
+					Gdiplus::Bitmap* pBitmap = Gdiplus::Bitmap::FromStream(pStream);
+					request->Image = ConvertGDIPlusBitmapToJPEGImage(pBitmap, Helpers::FindEXIFBlock(pBuffer, nFileSize),
+						Helpers::CalculateJPEGFileHash(pBuffer, nFileSize));
+					request->OutOfMemory = request->Image == NULL;
+					if (request->Image != NULL) {
+						request->Image->SetJPEGComment(Helpers::GetJPEGComment(pBuffer, nFileSize));
+					}
+					pStream->Release();
+					delete pBitmap;
+				} else {
+					request->OutOfMemory = true;
 				}
-				
-				request->Image = new CJPEGImage(nWidth, nHeight, pPixelData, 
-					pEXIFBlock, nBPP, 
-					Helpers::CalculateJPEGFileHash(pBuffer, nFileSize), IF_JPEG);
-				request->Image->SetJPEGComment(Helpers::GetJPEGComment(pBuffer, nFileSize));
-			} else if (bOutOfMemory) {
-				request->OutOfMemory = true;
 			} else {
-				// failed, try GDI+
-				delete[] pPixelData;
-				ProcessReadGDIPlusRequest(request);
+				int nWidth, nHeight, nBPP;
+				bool bOutOfMemory;
+				void* pPixelData = Jpeg::ReadImage(nWidth, nHeight, nBPP, bOutOfMemory, pBuffer, nFileSize);
+				// Color and b/w JPEG is supported
+				if (pPixelData != NULL && (nBPP == 3 || nBPP == 1)) {
+					request->Image = new CJPEGImage(nWidth, nHeight, pPixelData, 
+						Helpers::FindEXIFBlock(pBuffer, nFileSize), nBPP, 
+						Helpers::CalculateJPEGFileHash(pBuffer, nFileSize), IF_JPEG);
+					request->Image->SetJPEGComment(Helpers::GetJPEGComment(pBuffer, nFileSize));
+				} else if (bOutOfMemory) {
+					request->OutOfMemory = true;
+				} else {
+					// failed, try GDI+
+					delete[] pPixelData;
+					ProcessReadGDIPlusRequest(request);
+				}
 			}
 		}
 	} catch (...) {
@@ -208,7 +290,8 @@ void CImageLoadThread::ProcessReadJPEGRequest(CRequest * request) {
 		request->Image = NULL;
 	}
 	::CloseHandle(hFile);
-	delete[] pBuffer;
+	if (pBuffer) ::GlobalUnlock(hFileBuffer);
+	if (hFileBuffer) ::GlobalFree(hFileBuffer);
 }
 
 void CImageLoadThread::ProcessReadBMPRequest(CRequest * request) {
@@ -293,25 +376,6 @@ void CImageLoadThread::ProcessReadRAWRequest(CRequest * request) {
 	}
 }
 
-static EImageFormat GetBitmapFormat(Gdiplus::Bitmap * pBitmap) {
-	GUID guid;
-	memset(&guid, 0, sizeof(GUID));
-	pBitmap->GetRawFormat(&guid);
-	if (guid == Gdiplus::ImageFormatBMP) {
-		return IF_WindowsBMP;
-	} else if (guid == Gdiplus::ImageFormatPNG) {
-		return IF_PNG;
-	} else if (guid == Gdiplus::ImageFormatGIF) {
-		return IF_GIF;
-	} else if (guid == Gdiplus::ImageFormatTIFF) {
-		return IF_TIFF;
-	} else if (guid == Gdiplus::ImageFormatJPEG || guid == Gdiplus::ImageFormatEXIF) {
-		return IF_JPEG;
-	} else {
-		return IF_Unknown;
-	}
-}
-
 void CImageLoadThread::ProcessReadGDIPlusRequest(CRequest * request) {
 	const wchar_t* sFileName;
 #ifdef _UNICODE
@@ -324,53 +388,9 @@ void CImageLoadThread::ProcessReadGDIPlusRequest(CRequest * request) {
 #endif
 
 	Gdiplus::Bitmap* pBitmap = new Gdiplus::Bitmap(sFileName);
-	if (pBitmap->GetLastStatus() == Gdiplus::Ok) {
-		// If there is an alpha channel in the original file we must blit the image onto a background color offscreen
-		// bitmap first to archieve proper rendering.
-		Gdiplus::PixelFormat pixelFormat = pBitmap->GetPixelFormat();
-		bool bHasAlphaChannel = (pixelFormat & (PixelFormatAlpha | PixelFormatPAlpha));
-		Gdiplus::Bitmap* pBmTarget = NULL;
-		Gdiplus::Graphics* pBmGraphics = NULL;
-		Gdiplus::Bitmap* pBitmapToUse;
-		if (bHasAlphaChannel) {
-			pBmTarget = new Gdiplus::Bitmap(pBitmap->GetWidth(), pBitmap->GetHeight(), PixelFormat32bppRGB);
-			pBmGraphics = new Gdiplus::Graphics(pBmTarget);
-			COLORREF bkColor = CSettingsProvider::This().ColorBackground();
-			Gdiplus::SolidBrush bkBrush(Gdiplus::Color(GetRValue(bkColor), GetGValue(bkColor), GetBValue(bkColor)));
-			pBmGraphics->FillRectangle(&bkBrush, 0, 0, pBmTarget->GetWidth(), pBmTarget->GetHeight());
-			pBmGraphics->DrawImage(pBitmap, 0, 0, pBmTarget->GetWidth(), pBmTarget->GetHeight());
-			pBitmapToUse = pBmTarget;
-			if (pBmGraphics->GetLastStatus() == Gdiplus::OutOfMemory) {
-				request->OutOfMemory = true;
-				delete pBmGraphics; delete pBmTarget; delete pBitmap;
-				return;
-			}
-		} else {
-			pBitmapToUse = pBitmap;
-		}
-
-		Gdiplus::Rect bmRect(0, 0, pBitmap->GetWidth(), pBitmap->GetHeight());
-		Gdiplus::BitmapData bmData;
-		if (!request->OutOfMemory && pBitmapToUse->LockBits(&bmRect, Gdiplus::ImageLockModeRead, PixelFormat32bppRGB, &bmData) == Gdiplus::Ok) {
-			assert(bmData.PixelFormat == PixelFormat32bppRGB);
-			void* pDIB = CBasicProcessing::ConvertGdiplus32bppRGB(bmRect.Width, bmRect.Height, bmData.Stride, bmData.Scan0);
-			if (pDIB == NULL) {
-				request->OutOfMemory = true;
-			} else {
-				request->Image = new CJPEGImage(bmRect.Width, bmRect.Height, pDIB, NULL, 4, 0, GetBitmapFormat(pBitmap));
-			}
-			pBitmapToUse->UnlockBits(&bmData);
-		} else {
-			request->OutOfMemory = true;
-		}
-
-		if (pBmGraphics != NULL && pBmTarget != NULL) {
-			delete pBmGraphics;
-			delete pBmTarget;
-		}
-	}
+	request->Image = ConvertGDIPlusBitmapToJPEGImage(pBitmap, NULL, 0);
+	request->OutOfMemory = request->Image == NULL;
 	delete pBitmap;
-	
 }
 
 static unsigned char* alloc(int sizeInBytes) {

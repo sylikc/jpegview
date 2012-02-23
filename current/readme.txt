@@ -32,6 +32,9 @@ New features:
 - New INI file setting: 'ShowBottomPanel. Set to false to disable showing the bottom panel when hovering with the mouse on bottom part
   of window/screen.
   Default is true (as before, was just not configurable).
+- New INI file setting: 'MaxSlideShowFileListSizeKB'. Sets maximum size of slide show text files in KB.
+- New INI file setting: 'ForceGDIPlus'. If true, use GDI+ for reading JPEGS. Only use when you have problems reading your
+  JPEGs with the Intel library. Note that using GDI+ is much slower than the Intel JPEG library!
 
 [1.0.26]
 Bugs fixed:

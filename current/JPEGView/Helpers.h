@@ -133,6 +133,9 @@ namespace Helpers {
 	// To find the first non-marker block, set nMarker to zero.
 	void* FindJPEGMarker(void* pJPEGStream, int nStreamLength, unsigned char nMarker);
 
+	// Finds the EXIF block in the JPEG bytes stream, NULL if no EXIF block
+	void* FindEXIFBlock(void* pJPEGStream, int nStreamLength);
+
 	// Calculates a hash value over the given JPEG stream having the given length (in bytes).
 	// All blocks and tables in the JPEG stream are not included into the hash to allow
 	// e.g. commenting the JPEG or changing some EXIF information without changing the hash.
