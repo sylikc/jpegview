@@ -814,7 +814,7 @@ bool CFileList::TryReadingSlideShowList(const CString & sSlideShowFile) {
 		bUnicode = true;
 	}
 
-	const int FILE_BUFFER_SIZE = 200*1024; // cannot read files > 200 KB for simplicity
+	int FILE_BUFFER_SIZE = CSettingsProvider::This().MaxSlideShowFileListSize() * 1024;
 	char* fileBuff = new char[FILE_BUFFER_SIZE];
 	char* fileBuffOrig = fileBuff;
 	wchar_t* wideFileBuff = (wchar_t*)fileBuff; // same buffer interpreted as Unicode

@@ -54,6 +54,8 @@ public:
 	double DarkenHighlights() { return m_dDarkenHighlights; }
 	double BrightenShadowsSteepness() { return m_dBrightenShadowsSteepness; }
 	CImageProcessingParams LandscapeModeParams(const CImageProcessingParams& templParams);
+	int MaxSlideShowFileListSize() { return m_nMaxSlideShowFileListSize; }
+	bool ForceGDIPlus() { return m_bForceGDIPlus; }
 	int JPEGSaveQuality() { return m_nJPEGSaveQuality; }
 	int WEBPSaveQuality() { return m_nWEBPSaveQuality; }
 	LPCTSTR DefaultSaveFormat() { return m_sDefaultSaveFormat; }
@@ -147,6 +149,8 @@ private:
 	double m_dDarkenHighlights;
 	double m_dBrightenShadowsSteepness;
 	CString m_sLandscapeModeParams;
+	int m_nMaxSlideShowFileListSize;
+	bool m_bForceGDIPlus;
 	int m_nJPEGSaveQuality;
 	int m_nWEBPSaveQuality;
 	CString m_sDefaultSaveFormat;

@@ -344,6 +344,14 @@ void* FindJPEGMarker(void* pJPEGStream, int nStreamLength, unsigned char nMarker
 	}
 }
 
+void* FindEXIFBlock(void* pJPEGStream, int nStreamLength) {
+	uint8* pEXIFBlock = (uint8*)Helpers::FindJPEGMarker(pJPEGStream, nStreamLength, 0xE1);
+	if (pEXIFBlock != NULL && strncmp((const char*)(pEXIFBlock + 4), "Exif", 4) != 0) {
+		return NULL;
+	}
+	return pEXIFBlock;
+}
+
 __int64 CalculateJPEGFileHash(void* pJPEGStream, int nStreamLength) {
 	uint8* pStream = (uint8*) pJPEGStream;
 	void* pPixelStart = FindJPEGMarker(pJPEGStream, nStreamLength, 0);
