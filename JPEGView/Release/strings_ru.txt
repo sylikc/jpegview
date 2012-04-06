@@ -132,6 +132,7 @@ Waiting time	Интервал
 Stop slide show/movie	Остановить слайдшоу/фильм
 Rotate +90	Повернуть на 90° вправо
 Rotate -90	Повернуть на 90° влево
+Rotate 180	Повернуть на 180°
 Auto correction	Автокоррекция
 Local density correction	Коррекция светов/теней
 Keep parameters	Помнить параметры обработки при смене изображений

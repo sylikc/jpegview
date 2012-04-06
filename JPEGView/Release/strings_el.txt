@@ -129,6 +129,7 @@ Waiting time	Χρόνος αναμονής
 Stop slide show/movie	Σταμάτα το slideshow/ταινία
 Rotate +90	Περιστροφή +90
 Rotate -90	Περιστροφή -90
+Rotate 180	Περιστροφή 180
 Auto correction	Αυτόματη διόρθωση
 Local density correction	Διόρθωση Local Density
 Keep parameters	Διατήρηση παραμέτρων

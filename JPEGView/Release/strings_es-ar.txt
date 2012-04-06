@@ -130,6 +130,7 @@ Waiting time	Tiempo de espera
 Stop slide show/movie	Detener presentación/película
 Rotate +90	Rotar 90° en sentido horario
 Rotate -90	Rotar 90° en sentido antihorario
+Rotate 180	Rotar 180°
 Auto correction	Autocorrección
 Local density correction	Corrección de densidad local
 Keep parameters	Mantener parámetros

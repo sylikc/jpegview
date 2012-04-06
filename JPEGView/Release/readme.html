@@ -25,6 +25,7 @@
 					&nbsp;&nbsp;&nbsp;&nbsp;<a href="#AutoScaleMode">Auto Scale Mode</a><br/>
 					&nbsp;&nbsp;&nbsp;&nbsp;<a href="#Rotate">Rotate</a><br/>
 					&nbsp;&nbsp;&nbsp;&nbsp;<a href="#Crop">Crop</a><br/>
+                    &nbsp;&nbsp;&nbsp;&nbsp;<a href="#LosslessJPEG">Lossless JPEG Transformations</a><br/>
 					&nbsp;&nbsp;<a href="#SlideShow">Slideshows and Movies</a><br/>
 					&nbsp;&nbsp;&nbsp;&nbsp;<a href="#Slideshows">Slideshows</a><br/>
 					&nbsp;&nbsp;&nbsp;&nbsp;<a href="#Movies">Movies</a><br/>
@@ -46,7 +47,7 @@
 				<td>
 					<a name="Top"></a>
 					<h1>JPEGView Readme</h1>
-					Revision: 01-Jan-2012
+					Revision: 06-Apr-2012
 					<a name="Introduction"></a>
 					<h2>Introduction</h2>
 					JPEGView is a viewer/editor for JPEG, BMP, WEBP, PNG, GIF and TIFF images. It is designed to view images from digital cameras
@@ -80,7 +81,7 @@
 						<li>
 							Small and fast
 							<ul style="margin-top:0in;margin-bottom:0in">
-								<li>Executable is only 640 KB</li>
+								<li>Executable is only 900 KB</li>
 								<li>C++/MMX/SSE code</li>
 								<li>Support for multiple CPU cores to speedup processing</li>
 								<li>Minimal dependencies on external libraries</li>
@@ -105,6 +106,7 @@
 								<li>Rotation in 90 deg steps</li>
 								<li>Free image rotation for horizon correction</li>
                                 <li>Perspective correction</li>
+                                <li>Lossless JPEG transformations</li>
 								<li>Crop image (also lossless for JPEGs)</li>
 								<li>Landscape picture improvement mode</li>
 							</ul>
@@ -451,7 +453,7 @@
 						<li>
 							Lossless crop (for JPEG images only)<br/>
 							Crops the image selection without recompression of the JPEG image. The cropped image must be stored as a new JPEG file.
-							Note that lossless crop cannot be more exact than to 8 pixel boundaries due to the structure of JPEG images. 
+							Note that lossless crop cannot be more exact than to 16 pixel boundaries due to the structure of JPEG images. 
 						</li>
 						<li>
 							Copy image selection to clipboard<br/>
@@ -471,7 +473,29 @@
 						<a href="#Top">Top of Page</a>
 					</b><br/>
 
-					<a name="SlideShow"></a>
+                  <a name="LosslessJPEG"></a>
+                  <h3>Lossless JPEG Transformations</h3>
+                  The JPEG compression scheme consists of multiple steps. Some of the steps are lossless, others are lossy. Because of the
+                  lossy steps, each editing operation involving a recompression results in a (moderate) quality decrease. Lossless JPEG 
+                  transformations do not include any of the lossy compression steps and therefore should be prefered whenever possible. 
+                  However only a very limited number of operations can be done lossless on JPEG images:
+                  <ul style="margin-top:0in;margin-bottom:0in">
+                    <li>
+                      Rotation in steps of 90 degrees
+                    </li>
+                    <li>
+                      Mirror horizonally and vertically
+                    </li>
+                    <li>
+                      Crop
+                    </li>
+                  </ul>
+                  Note: Due to the structure of JPEG files, all these transformations only work if the width and height of the JPEG image is a multiple of 16.
+                  <br/><br/><b>
+                    <a href="#Top">Top of Page</a>
+                  </b><br/>
+                  
+                  <a name="SlideShow"></a>
 					<h3>Slide Shows</h3>
 					A text file containing file names can be passed on the command line to JPEGView. Alternatively such a file can be loaded
 					using the 'Open image' command. The following text file formats are supported:
@@ -916,13 +940,6 @@
 							<kbd>Del</kbd> : Delete the current image file permanently - calls the command processor (cmd.exe) to
 							delete the file.
 						</li>
-						<li>
-							<kbd>R</kbd> : Rotate the current JPEG image lossless by +90 degrees - calls the jpegtran.exe program provided
-							by the independent JPEG group
-						</li>
-						<li>
-							<kbd>T</kbd> : Rotate the current JPEG image lossless by -90 degrees - calls the jpegtran.exe program
-						</li>
 					</ul>
 					Other commands can be added as needed, e.g. starting your favorite image editor.
 					<br/><br/><b>
@@ -947,8 +964,11 @@
 					Normally JPEGView selects the UI language automatically to match the operating system language.
 					This auto detection may has failed. To force a specific language, set the<br/>
 					Language=language_code<br/>
-					setting in the INI file to the desired language code. The supported codes are listed in the INI file.
-					<br/><br/><b>
+                  setting in the INI file to the desired language code. The supported codes are listed in the INI file.<br/><br/>
+                  <b>Lossless JPEG transformations are grayed out</b><br/>
+                  The current image is either not a JPEG image or width and/or height of the image is not a multiple of 16.
+                  Due to the structure of JPEG files, lossless transformations only work if the width and height of the JPEG image is a multiple of 16
+                  <br/><br/><b>
 						<a href="#Top">Top of Page</a>
 					</b><br/>
 
@@ -965,17 +985,16 @@
 					Alternatively you can use the following e-mail address to contact me:<br/>
 					<a href="mailto:jpegview@gmail.com">jpegview@gmail.com</a>
 					<br/><br/>
-					JPEGView contains the following binary libraries or external applications:<br/>
-					- Intel JPEG Library version 1.51, Copyright &copy; Intel Corporation 1998 - 2001<br/>
-					- JPEGTran.exe, &copy; Independent JPEG Group<br/>
+					JPEGView contains the following binary library to read JPEG images:<br/>
+                    - Turbo JPEG, Copyright (C)2009-2011 D. R. Commander.  All Rights Reserved.<br/>
+                      Turbo JPEG is based on libjpeg, &copy; 1994-2010, Independent JPEG Group.<br/>
 					<br/>
 					JPEGView includes or uses the following source code libraries:<br/>
 					- Windows Template Library 8.0 (build 6137) 5/17/06, Copyright &copy; 2006 Microsoft Corporation<br/>
-					- IJLWrapper, &copy; by John W. Ratcliff 2000<br/>
 					- WebP codec provided by Google <a href="http://www.code.google.com/speed/webp/">http://www.code.google.com/speed/webp/</a>, &copy; Google<br/>
                     - <a href="http://www.cybercom.net/~dcoffin/dcraw/">dcraw</a>, &copy; 1997-2011 by Dave Coffin<br/>
 					<br/>
-					Developed and compiled with Visual Studio 2005, C++ Express Edition
+					Developed and compiled with Visual Studio 2010, C++ Express Edition
 					<br/><br/>
 					Thanks to:<br/>
 					<ul style="margin-top:0in;margin-bottom:0in">

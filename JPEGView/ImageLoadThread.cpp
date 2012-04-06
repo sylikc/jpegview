@@ -3,13 +3,13 @@
 #include "ImageLoadThread.h"
 #include <gdiplus.h>
 #include "JPEGImage.h"
-#include "IJLWrapper.h"
 #include "MessageDef.h"
 #include "Helpers.h"
 #include "SettingsProvider.h"
 #include "ReaderBMP.h"
 #include "BasicProcessing.h"
 #include "dcraw_mod.h"
+#include "TJPEGWrapper.h"
 
 using namespace Gdiplus;
 
@@ -269,7 +269,16 @@ void CImageLoadThread::ProcessReadJPEGRequest(CRequest * request) {
 			} else {
 				int nWidth, nHeight, nBPP;
 				bool bOutOfMemory;
-				void* pPixelData = Jpeg::ReadImage(nWidth, nHeight, nBPP, bOutOfMemory, pBuffer, nFileSize);
+				// int nTicks = ::GetTickCount();
+
+                void* pPixelData = TurboJpeg::ReadImage(nWidth, nHeight, nBPP, bOutOfMemory, pBuffer, nFileSize);
+				
+				/*
+				TCHAR buffer[20];
+				_stprintf_s(buffer, 20, _T("%d"), ::GetTickCount() - nTicks);
+				::MessageBox(NULL, CString(_T("Elapsed ticks: ")) + buffer, _T("Time"), MB_OK);
+				*/
+
 				// Color and b/w JPEG is supported
 				if (pPixelData != NULL && (nBPP == 3 || nBPP == 1)) {
 					request->Image = new CJPEGImage(nWidth, nHeight, pPixelData, 

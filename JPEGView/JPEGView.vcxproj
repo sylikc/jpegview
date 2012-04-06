@@ -78,14 +78,15 @@
       <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>ijl15.lib;gdiplus.lib;libwebp_dll.lib;WICLoader.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>IJL\lib;WebP\lib;WICLoader\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>gdiplus.lib;libwebp_dll.lib;WICLoader.lib;turbojpeg-static.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>WebP\lib;WICLoader\lib;libjpeg-turbo\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ModuleDefinitionFile>
       </ModuleDefinitionFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <TargetMachine>MachineX86</TargetMachine>
       <DelayLoadDLLs>libwebp_a.dll;WICLoader.dll</DelayLoadDLLs>
+      <IgnoreSpecificDefaultLibraries>LIBCMT</IgnoreSpecificDefaultLibraries>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -125,8 +126,8 @@
       <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>ijl15.lib;gdiplus.lib;libwebp_dll.lib;WICLoader.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>IJL\lib;WebP\lib;WICLoader\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>gdiplus.lib;libwebp_dll.lib;WICLoader.lib;turbojpeg-static.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>WebP\lib;WICLoader\lib;libjpeg-turbo\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <TargetMachine>MachineX86</TargetMachine>
@@ -144,9 +145,9 @@
     <ClCompile Include="Helpers.cpp" />
     <ClCompile Include="HelpersGUI.cpp" />
     <ClCompile Include="HistogramCorr.cpp" />
-    <ClCompile Include="IJLWrapper.cpp" />
     <ClCompile Include="ImageLoadThread.cpp" />
     <ClCompile Include="JPEGImage.cpp" />
+    <ClCompile Include="JPEGLosslessTransform.cpp" />
     <ClCompile Include="JPEGProvider.cpp" />
     <ClCompile Include="JPEGView.cpp" />
     <ClCompile Include="KeyMap.cpp" />
@@ -165,6 +166,7 @@
     </ClCompile>
     <ClCompile Include="TiltCorrectionPanel.cpp" />
     <ClCompile Include="TiltCorrectionPanelCtl.cpp" />
+    <ClCompile Include="TJPEGWrapper.cpp" />
     <ClCompile Include="TransformPanel.cpp" />
     <ClCompile Include="TransformPanelCtl.cpp" />
     <ClCompile Include="UserCommand.cpp" />
@@ -209,10 +211,10 @@
     <ClInclude Include="Helpers.h" />
     <ClInclude Include="HelpersGUI.h" />
     <ClInclude Include="HistogramCorr.h" />
-    <ClInclude Include="IJLWrapper.h" />
     <ClInclude Include="ImageLoadThread.h" />
     <ClInclude Include="ImageProcessingTypes.h" />
     <ClInclude Include="JPEGImage.h" />
+    <ClInclude Include="JPEGLosslessTransform.h" />
     <ClInclude Include="JPEGProvider.h" />
     <ClInclude Include="KeyMap.h" />
     <ClInclude Include="LocalDensityCorr.h" />
@@ -230,6 +232,7 @@
     <ClInclude Include="TiltCorrectionPanel.h" />
     <ClInclude Include="TiltCorrectionPanelCtl.h" />
     <ClInclude Include="TimerEventIDs.h" />
+    <ClInclude Include="TJPEGWrapper.h" />
     <ClInclude Include="TransformPanel.h" />
     <ClInclude Include="TransformPanelCtl.h" />
     <ClInclude Include="UserCommand.h" />

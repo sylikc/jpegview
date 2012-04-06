@@ -132,6 +132,7 @@ Waiting time	Väntetid
 Stop slide show/movie	Stoppa bildspel/film
 Rotate +90	Rotera +90
 Rotate -90	Rotera -90
+Rotate 180	Rotera 180
 Auto correction	Automatisk bildjustering
 Local density correction	Lokal densitetkorrektion (LDC)
 Keep parameters	Bevara parametrar

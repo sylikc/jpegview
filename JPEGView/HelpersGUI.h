@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Helpers.h"
+#include "JPEGLosslessTransform.h"
 
 enum EProcessingFlags;
 class CImageProcessingParams;
@@ -44,4 +45,10 @@ namespace HelpersGUI {
 
 	// Draws an error text for the given file loading error (combination of EFileLoadError codes)
 	void DrawImageLoadErrorText(CPaintDC& dc, const CRect& clientRect, LPCTSTR sFailedFileName, int nFileLoadError);
+
+    // Convert a menu item command ID to a transformation enumeration for lossless JPEG transformation
+    CJPEGLosslessTransform::ETransformation CommandIdToLosslessTransformation(int nCommandId);
+
+    // Convert the error result code from lossless JPEG transformation to a string
+    LPCTSTR LosslessTransformationResultToString(CJPEGLosslessTransform::EResult eResult);
 }

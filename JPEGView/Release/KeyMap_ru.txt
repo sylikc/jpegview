@@ -38,6 +38,13 @@
 #define IDM_PERSPECTIVE         9150			// показать диалоговое окно коррекции перспективы
 #define IDM_MIRROR_H        	9200			// зеркально перевернуть изображение по горизонтали
 #define IDM_MIRROR_V        	9300			// зеркально перевернуть изображение по вертикали
+#define IDM_ROTATE_90_LOSSLESS  9400			// Lossless JPEG transformation: rotate image 90 deg
+#define IDM_ROTATE_90_LOSSLESS_CONFIRM 9401		// Lossless JPEG transformation: rotate image 90 deg with user confirmation
+#define IDM_ROTATE_270_LOSSLESS 9410			// Lossless JPEG transformation: rotate image 270 deg
+#define IDM_ROTATE_270_LOSSLESS_CONFIRM 9411		// Lossless JPEG transformation: rotate image 270 deg with user confirmation
+#define IDM_ROTATE_180_LOSSLESS 9420			// Lossless JPEG transformation: rotate image 180 deg
+#define IDM_MIRROR_H_LOSSLESS   9430			// Lossless JPEG transformation: mirror image horizontally
+#define IDM_MIRROR_V_LOSSLESS   9440			// Lossless JPEG transformation: mirror image vertically
 #define IDM_AUTO_CORRECTION	10000			// вкл./выкл. автокоррекцию цвета и контрастности
 #define IDM_AUTO_CORRECTION_SECTION 10100		// автокоррекция контрастности только для видимой области
 #define IDM_LDC			10500			// вкл./выкл. локальную коррекцию плотностей (высветлить тени, притемнить света)

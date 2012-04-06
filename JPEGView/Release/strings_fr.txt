@@ -129,6 +129,7 @@ Waiting time	Temps d'attente
 Stop slide show/movie	Arrêter le diaporama / video
 Rotate +90	Rotation 90
 Rotate -90	Rotation -90
+Rotate 180	Rotation 180
 Auto correction	Correction automatique
 Local density correction	Correction de la densité locale
 Keep parameters	Conserver les paramètres

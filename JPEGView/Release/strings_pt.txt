@@ -132,6 +132,7 @@ Waiting time	Intervalo entre imagens
 Stop slide show/movie	Parar apresentação/filme
 Rotate +90	Rotação +90
 Rotate -90	Rotação -90
+Rotate 180	Rotação 180
 Auto correction	Correção automática
 Local density correction	Correção de densidade
 Keep parameters	Manter parâmetros

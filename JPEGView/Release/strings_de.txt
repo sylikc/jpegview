@@ -129,6 +129,7 @@ Waiting time	Wartezeit
 Stop slide show/movie	Diaschau/Film stoppen
 Rotate +90	Rotieren +90
 Rotate -90	Rotieren -90
+Rotate 180	Rotieren 180
 Auto correction	Auto-Korrektur
 Local density correction	Lokale Helligkeitskorrektur
 Keep parameters	Parameter beibehalten
@@ -283,3 +284,9 @@ Click and drag the mouse vertically to correct image tilt.	Klicken und ziehen Si
 Drag at the left or right border for asymmetric correction.	Ziehen Sie am rechten oder linken Rand für asymmetrische Korrektur.
 Fit window to image	Fenstergrösse an Bild anpassen
 Keep aspect ratio on crop	Seitenverhältnis beim Freistellen beibehalten
+Lossless JPEG transformations	Verlustfreie JPEG Transformationen
+Performing the lossless transformation failed!	Verlustfreie transformation fehlgeschlagen!
+Image width and height must be dividable by 16 for lossless transformations!	Bildbreite und -höhe muss für verlustfreie JPEG-Transformationen durch 16 teilbar sein!
+Reading the JPEG file from disk failed	JPEG-Datei konnte nicht gelesen werden
+Writing the resulting JPEG file to disk failed	Resultierende JPEG-Datei konnte nicht geschrieben werden
+Performing the transformation failed	Die Ausführung der Transformation ist fehlgeschlagen

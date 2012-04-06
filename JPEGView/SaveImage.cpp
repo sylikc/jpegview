@@ -3,10 +3,11 @@
 #include "JPEGImage.h"
 #include "BasicProcessing.h"
 #include "Helpers.h"
-#include "IJLWrapper.h"
 #include "SettingsProvider.h"
 #include "ParameterDB.h"
 #include "EXIFReader.h"
+#include "TJPEGWrapper.h"
+#include "libjpeg-turbo\include\turbojpeg.h"
 #include <gdiplus.h>
 
 //////////////////////////////////////////////////////////////////////////////////////////////
@@ -44,10 +45,12 @@ static int GetJFIFBlockLength(unsigned char* pJPEGStream) {
 
 // Returns the compressed JPEG stream that must be freed by the caller. NULL in case of error.
 static void* CompressAndSave(LPCTSTR sFileName, CJPEGImage * pImage, 
-							 void* pData, int nWidth, int nHeight, int nQuality, int& nJPEGStreamLen, bool bCopyEXIF, bool bDeleteThumbnail) {
+							 void* pData, int nWidth, int nHeight, int nQuality, int& nJPEGStreamLen, 
+                             bool& tjFreeNeeded, bool bCopyEXIF, bool bDeleteThumbnail) {
 	nJPEGStreamLen = 0;
+    tjFreeNeeded = false;
 	bool bOutOfMemory;
-	unsigned char* pTargetStream = (unsigned char*) Jpeg::Compress(pData, nWidth, nHeight, 3, 
+	unsigned char* pTargetStream = (unsigned char*) TurboJpeg::Compress(pData, nWidth, nHeight, 
 		nJPEGStreamLen, bOutOfMemory, nQuality);
 	if (pTargetStream == NULL) {
 		return NULL;
@@ -55,12 +58,9 @@ static void* CompressAndSave(LPCTSTR sFileName, CJPEGImage * pImage,
 
 	FILE *fptr = _tfopen(sFileName, _T("wb"));
 	if (fptr == NULL) {
-		delete[] pTargetStream;
+		tjFree(pTargetStream);
 		return NULL;
 	}
-
-	// The Intel lib writes a useless comment into the JPEG stream - delete this
-	Helpers::ClearJPEGComment(pTargetStream, nJPEGStreamLen);
 
 	// If EXIF data is present, replace any JFIF block by this EXIF block to preserve the EXIF information
 	if (pImage->GetEXIFData() != NULL && bCopyEXIF) {
@@ -81,7 +81,7 @@ static void* CompressAndSave(LPCTSTR sFileName, CJPEGImage * pImage,
 			void* pDIBThumb = GetThumbnailDIB(pImage, sizeThumb);
 			if (pDIBThumb != NULL) {
 				int nJPEGThumbStreamLen;
-				unsigned char* pJPEGThumb = (unsigned char*) Jpeg::Compress(pDIBThumb, sizeThumb.cx, sizeThumb.cy, 3, nJPEGThumbStreamLen, bOutOfMemory, 70);
+				unsigned char* pJPEGThumb = (unsigned char*) TurboJpeg::Compress(pDIBThumb, sizeThumb.cx, sizeThumb.cy, nJPEGThumbStreamLen, bOutOfMemory, 70);
 				if (pJPEGThumb != NULL) {
 					int nThumbJFIFLen = GetJFIFBlockLength(pJPEGThumb);
 					nEXIFBlockLenCorrection = nJPEGThumbStreamLen - nThumbJFIFLen - exifReader.GetJPEGThumbStreamLen();
@@ -98,7 +98,7 @@ static void* CompressAndSave(LPCTSTR sFileName, CJPEGImage * pImage,
 
 		int nJFIFLength = GetJFIFBlockLength(pTargetStream);
 		memcpy(pNewStream + 2 + pImage->GetEXIFDataLength() + nEXIFBlockLenCorrection, pTargetStream + 2 + nJFIFLength, nJPEGStreamLen - 2 - nJFIFLength);
-		delete[] pTargetStream;
+		tjFree(pTargetStream);
 		pTargetStream = pNewStream;
 		nJPEGStreamLen = nJPEGStreamLen - nJFIFLength + pImage->GetEXIFDataLength() + nEXIFBlockLenCorrection;
 	}
@@ -108,12 +108,13 @@ static void* CompressAndSave(LPCTSTR sFileName, CJPEGImage * pImage,
 
 	// delete partial file if no success
 	if (!bSuccess) {
-		delete[] pTargetStream;
+		tjFree(pTargetStream);
 		_tunlink(sFileName);
 		return NULL;
 	}
 
 	// Success, return compressed JPEG stream
+    tjFreeNeeded = true;
 	return pTargetStream;
 }
 
@@ -252,12 +253,17 @@ bool CSaveImage::SaveImage(LPCTSTR sFileName, CJPEGImage * pImage, const CImageP
 	if (eFileFormat == IF_JPEG) {
 		// Save JPEG not over GDI+ - we want to keep the meta-data if there is meta-data
 		int nJPEGStreamLen;
+        bool tjFreeNeeded;
 		void* pCompressedJPEG = CompressAndSave(sFileName, pImage, pDIB24bpp, imageSize.cx, imageSize.cy, 
-			CSettingsProvider::This().JPEGSaveQuality(), nJPEGStreamLen, true, !bFullSize);
+			CSettingsProvider::This().JPEGSaveQuality(), nJPEGStreamLen, tjFreeNeeded, true, !bFullSize);
 		bSuccess = pCompressedJPEG != NULL;
 		if (bSuccess) {
 			nPixelHash = Helpers::CalculateJPEGFileHash(pCompressedJPEG, nJPEGStreamLen);
-			delete[] pCompressedJPEG;
+            if (tjFreeNeeded) {
+                tjFree((unsigned char*)pCompressedJPEG);
+            } else {
+			    delete[] pCompressedJPEG;
+            }
 		}
 	} else {
 		if (eFileFormat == IF_WEBP) {
