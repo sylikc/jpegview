@@ -41,6 +41,7 @@
 #include <time.h>
 #include <direct.h>
 #include <sys/types.h>
+#include "TJPEGWrapper.h"
 #include "dcraw_mod.h"
 /*
    NO_JPEG disables decoding of compressed Kodak DC120 files.
@@ -3681,7 +3682,7 @@ void CLASS jpeg_thumb(CJPEGImage** Image, bool& bOutOfMemory)
 	fread(thumb, 1, thumb_length, ifp);
 
 	int nWidth, nHeight, nBPP;
-	void* pPixelData = Jpeg::ReadImage(nWidth, nHeight, nBPP, bOutOfMemory, thumb, thumb_length);
+	void* pPixelData = TurboJpeg::ReadImage(nWidth, nHeight, nBPP, bOutOfMemory, thumb, thumb_length);
 
 
 	if (pPixelData != NULL && (nBPP == 3 || nBPP == 1))

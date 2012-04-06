@@ -1,5 +1,5 @@
 #pragma once
-#include "IJLWrapper.h"
+
 #include "Helpers.h"
 #include "JPEGImage.h"
 

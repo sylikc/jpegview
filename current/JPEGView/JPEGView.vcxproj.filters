@@ -57,9 +57,6 @@
     <ClCompile Include="HistogramCorr.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="IJLWrapper.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="ImageLoadThread.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -213,6 +210,12 @@
     <ClCompile Include="TiltCorrectionPanelCtl.cpp">
       <Filter>Source Files\Panels</Filter>
     </ClCompile>
+    <ClCompile Include="TJPEGWrapper.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="JPEGLosslessTransform.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BasicProcessing.h">
@@ -237,9 +240,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="HistogramCorr.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="IJLWrapper.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ImageLoadThread.h">
@@ -403,6 +403,12 @@
     </ClInclude>
     <ClInclude Include="TransformPanelCtl.h">
       <Filter>Header Files\Panels</Filter>
+    </ClInclude>
+    <ClInclude Include="TJPEGWrapper.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="JPEGLosslessTransform.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

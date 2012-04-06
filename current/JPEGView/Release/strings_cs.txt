@@ -130,6 +130,7 @@ Waiting time	Čekací čas
 Stop slide show/movie	Zastavit prezentaci/flim
 Rotate +90	Otočit +90
 Rotate -90	Otočit -90
+Rotate 180	Otočit 180
 Auto correction	Auto korekce
 Local density correction	Lokální korekce hustoty: 
 Keep parameters	Uchovat parametry

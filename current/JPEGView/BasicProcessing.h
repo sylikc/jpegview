@@ -18,8 +18,7 @@ public:
 	// Note on DIBs: The rows of DIBs are padded to the next 4 byte boundary. For 32 bpp DIBs this is
 	// implicitely true (no padding needed), for other types the padding must be considered.
 	
-	// Note on IJL images: The output format of the IJL is either a 24 bit BGR format or a 8 bit grey level
-	// format. Padding is to 4 byte boundaries, as DIBs.
+	// Note on raw images: The output format of the JPEG lib is 24 bit BGR format. Padding is to 4 byte boundaries, as DIBs.
 
 	// Convert a 8 bpp DIB to a 32 bpp DIB
 	// The palette must contain 256 entries with format BGR0 (32 bits)

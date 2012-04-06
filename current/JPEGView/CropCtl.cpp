@@ -403,11 +403,18 @@ void CCropCtl::CropLossless() {
 	if (cropRect.IsRectEmpty()) {
 		return;
 	}
-	// coordinates must be multiples of 8 for lossless crop
-	cropRect.left = cropRect.left & ~7;
-	cropRect.right = (cropRect.right + 7) & ~7;
-	cropRect.top = cropRect.top & ~7;
-	cropRect.bottom = (cropRect.bottom + 7) & ~7;
+    CJPEGImage* pCurrentImage = m_pMainDlg->GetCurrentImage();
+	// coordinates must be multiples of 16 for lossless crop
+	cropRect.left = cropRect.left & ~15;
+	cropRect.right = (cropRect.right + 15) & ~15;
+    if (cropRect.right > pCurrentImage->OrigWidth()) {
+        cropRect.right -= 16; 
+    }
+	cropRect.top = cropRect.top & ~15;
+	cropRect.bottom = (cropRect.bottom + 15) & ~15;
+    if (cropRect.bottom > pCurrentImage->OrigHeight()) {
+        cropRect.bottom -= 16; 
+    }
 
 	CString sCurrentFile = m_pMainDlg->CurrentFileName(false);
 
@@ -422,14 +429,16 @@ void CCropCtl::CropLossless() {
 	fileDlg.m_ofn.lpstrTitle = sTitle;
 
 	if (IDOK == fileDlg.DoModal(m_pMainDlg->GetHWND())) {
-		CString sCmd(_T("KeyCode: 0  Cmd: 'jpegtran -crop %w%x%h%+%x%+%y% -copy all -perfect %filename% \"%outfilename%\"' Flags: 'WaitForTerminate NoWindow ReloadFileList'"));
-		sCmd.Replace(_T("%outfilename%"), Helpers::ReplacePathByShortForm(fileDlg.m_szFileName));
-		CUserCommand cmdCrop(sCmd);
-		if (cmdCrop.Execute(m_pMainDlg->GetHWND(), Helpers::GetShortFilePath(m_pMainDlg->CurrentFileName(false)), cropRect)) {
-			if (_tcscmp(m_pMainDlg->CurrentFileName(false), fileDlg.m_szFileName) == 0) {
-				m_pMainDlg->ExecuteCommand(IDM_RELOAD);
-			}
-		}
+        LPCTSTR sInputFileName = m_pMainDlg->CurrentFileName(false);
+        LPCTSTR sCropFileName = fileDlg.m_szFileName;
+        CJPEGLosslessTransform::EResult eResult = CJPEGLosslessTransform::PerformCrop(sInputFileName, sCropFileName, cropRect);
+        if (eResult != CJPEGLosslessTransform::Success) {
+            ::MessageBox(m_pMainDlg->GetHWND(), CString(CNLS::GetString(_T("Performing the lossless transformation failed!"))) + 
+                + _T("\n") + CNLS::GetString(_T("Reason:")) + _T(" ") + HelpersGUI::LosslessTransformationResultToString(eResult), 
+                CNLS::GetString(_T("Lossless JPEG transformations")), MB_OK | MB_ICONWARNING);
+        } else if (_tcscmp(sInputFileName, sCropFileName) == 0) {
+            m_pMainDlg->ExecuteCommand(IDM_RELOAD);
+        }
 	}
 }
 

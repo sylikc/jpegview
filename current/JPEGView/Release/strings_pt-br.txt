@@ -130,6 +130,7 @@ Waiting time	Intervalo de espera
 Stop slide show/movie	Parar Apresentação/Filme
 Rotate +90	Rotação +90
 Rotate -90	Rotação -90
+Rotate 180	Rotação 180
 Auto correction	Auto correção
 Local density correction	Correção da densidade local
 Keep parameters	Mantener parámetros

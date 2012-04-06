@@ -43,6 +43,7 @@
 #include "HelpDisplayCtl.h"
 #include "NavigationPanel.h"
 #include "KeyMap.h"
+#include "JPEGLosslessTransform.h"
 
 //////////////////////////////////////////////////////////////////////////////////////////////
 // Constants
@@ -916,6 +917,11 @@ LRESULT CMainDlg::OnContextMenu(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam,
 	bool bCanPaste = ::IsClipboardFormatAvailable(CF_DIB);
 	if (!bCanPaste) ::EnableMenuItem(hMenuTrackPopup, IDM_PASTE, MF_BYCOMMAND | MF_GRAYED);
 
+    bool bCanDoLosslessJPEGTransform = (m_pCurrentImage != NULL) && (m_pCurrentImage->GetImageFormat() == IF_JPEG)
+        && ((m_pCurrentImage->OrigWidth() & 15) == 0) && ((m_pCurrentImage->OrigHeight() & 15) == 0);
+
+    if (!bCanDoLosslessJPEGTransform) ::EnableMenuItem(hMenuTrackPopup, SUBMENU_POS_TRANSFORM_LOSSLESS, MF_BYPOSITION | MF_GRAYED);
+
 	if (m_pCurrentImage == NULL) {
 		::EnableMenuItem(hMenuTrackPopup, IDM_SAVE, MF_BYCOMMAND | MF_GRAYED);
 		::EnableMenuItem(hMenuTrackPopup, IDM_RELOAD, MF_BYCOMMAND | MF_GRAYED);
@@ -1191,6 +1197,40 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 				this->Invalidate(FALSE);
 			}
 			break;
+        case IDM_ROTATE_90_LOSSLESS:
+        case IDM_ROTATE_90_LOSSLESS_CONFIRM:
+        case IDM_ROTATE_270_LOSSLESS:
+        case IDM_ROTATE_270_LOSSLESS_CONFIRM:
+        case IDM_ROTATE_180_LOSSLESS:
+        case IDM_MIRROR_H_LOSSLESS:
+        case IDM_MIRROR_V_LOSSLESS:
+            if (m_pCurrentImage != NULL) {
+                if (((m_pCurrentImage->OrigWidth() & 15) == 0) && ((m_pCurrentImage->OrigHeight() & 15) == 0)) {
+                    bool bPerformTransformation = true;
+                    if (nCommand == IDM_ROTATE_90_LOSSLESS_CONFIRM || nCommand == IDM_ROTATE_270_LOSSLESS_CONFIRM) {
+                        LPCTSTR sConfirmMsg = (nCommand == IDM_ROTATE_90_LOSSLESS_CONFIRM) ?
+                            _T("Rotate current file on disk lossless by 90 deg (W/H must be multiple of 16)") :
+                            _T("Rotate current file on disk lossless by 270 deg (W/H must be multiple of 16)");
+                        bPerformTransformation = IDYES == ::MessageBox(m_hWnd, 
+                            CNLS::GetString(sConfirmMsg), CNLS::GetString(_T("Confirm")), MB_YESNOCANCEL | MB_ICONWARNING);
+                    }
+                    if (bPerformTransformation) {
+                        CJPEGLosslessTransform::EResult eResult =
+                            CJPEGLosslessTransform::PerformTransformation(m_pFileList->Current(), m_pFileList->Current(), HelpersGUI::CommandIdToLosslessTransformation(nCommand));
+                        if (eResult != CJPEGLosslessTransform::Success) {
+                            ::MessageBox(m_hWnd, CString(CNLS::GetString(_T("Performing the lossless transformation failed!"))) + 
+                                + _T("\n") + CNLS::GetString(_T("Reason:")) + _T(" ") + HelpersGUI::LosslessTransformationResultToString(eResult), 
+                                CNLS::GetString(_T("Lossless JPEG transformations")), MB_OK | MB_ICONWARNING);
+                        } else {
+                            GotoImage(POS_Current); // reload current image
+                        }
+                    }
+                } else {
+                    ::MessageBox(m_hWnd, CNLS::GetString(_T("Image width and height must be dividable by 16 for lossless transformations!")), 
+                        CNLS::GetString(_T("Lossless JPEG transformations")), MB_OK | MB_ICONWARNING);
+                }
+            }
+            break;
 		case IDM_AUTO_CORRECTION:
 			m_bAutoContrastSection = false;
 			m_bAutoContrast = !m_bAutoContrast;

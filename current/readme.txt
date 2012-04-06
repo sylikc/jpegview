@@ -3,19 +3,16 @@ JPEGView source code readme
 
 To compile JPEGView you need:
 
-- Visual Studio 2005 or 2010 Express Edition with VC++ package (of course the standard or professional editions also work)
-- Windows Platform SDK - only Core SDK is needed. In VS2010 VC++ package the SDK is included.
+- Visual Studio 2010 Express Edition with VC++ package (of course the standard or professional editions also work)
 - Windows Template Library (WTL), Version 8.0 (http://sourceforge.net/projects/wtl/)
-  (for VS2005 read http://www.codeproject.com/KB/wtl/WTLExpress.aspx how to patch the platform SDK headers so that WTL compiles with VC++ Express edition and PSDK)
 - When using the express edition: ATL headers. Get them from a standard or professional edition from the directory $(VCInstallDir)\atlmfc\include
   or google for it. The ATL header files cannot be included into the JPEGView source code distribution due to copyright issues.
 - To edit the resource file (rc) a free resource editor as www.radasm.com/resed/ is recommended
 
-The include directories of WTL (and the platform SDK for VS2005) must be added to the include directories for VC++:
-VS2005: Options - Projects and Solutions - VC++ directories
+The include directories of WTL must be added to the include directories for VC++:
 VS2010: Properties of JPEGView project > VC++-Directories-Include Directories and Library Directories
 
-Please note: When compiled with VS2010 Windows XP SP2 or later is needed to run the compiled binary.
+Please note: Windows XP SP2 or later is needed to run the compiled binary.
 
 
 Debug version:
@@ -28,13 +25,28 @@ Changelog
 *********
 
 [1.0.27]
+Replaced Intel JPEG library by Turbo JPEG (tjpeg)
+This replacement has many reasons:
+- The Intel library license was not an open source type license
+- Newer versions of the Intel library are not free of charge. The old versions are not supported by Intel anymore.
+- Some JPEG files could not be read by the Intel library. tjpeg can read these files.
+- There is no free 64 bit version of the Intel library.
+  (This is important for the future when there may be a 64 bit version of JPEGView)
+The tjpeg library is open source and (at least on modern CPUs) performs comparable to the Intel library. It is used by many other
+viewers and several Linux distributions.
+Note that tjpeg including lossless JPEG transformations has been statically linked to JPEGView. Therefore the application has grown
+by 300 KB. However the total size of the package is lower that before because IJL15.dll and jpegtran.exe are no longer needed.
+
 New features:
-- New INI file setting: 'ShowBottomPanel. Set to false to disable showing the bottom panel when hovering with the mouse on bottom part
+- Lossless JPEG transformations integrated into JPEGView. The jpegtran.exe application is no longer part of the distribution of JPEGView.
+- New INI file setting: 'ShowBottomPanel'. Set to false to disable showing the bottom panel when hovering with the mouse on bottom part
   of window/screen.
-  Default is true (as before, was just not configurable).
+  Default is true (as before, was not configurable).
 - New INI file setting: 'MaxSlideShowFileListSizeKB'. Sets maximum size of slide show text files in KB.
-- New INI file setting: 'ForceGDIPlus'. If true, use GDI+ for reading JPEGS. Only use when you have problems reading your
-  JPEGs with the Intel library. Note that using GDI+ is much slower than the Intel JPEG library!
+- New INI file setting: 'ForceGDIPlus'. If true, use GDI+ for reading JPEGS. Note that using GDI+ is much slower than the tjpeg library!
+Other changes:
+- Because the tjpeg library does not work with VS2005, JPEGView is now compiled with VS2010. If you are using Windows XP before SP2, use
+  version 1.0.26 (or install SP2).
 
 [1.0.26]
 Bugs fixed:

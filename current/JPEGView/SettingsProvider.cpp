@@ -122,7 +122,7 @@ CSettingsProvider::CSettingsProvider(void) {
 				m_userCommands.push_back(pUserCmd);
 			}
 		}
-	} while (sCmd.GetLength() > 0);
+	} while (sCmd.GetLength() > 0 || nIndex <= 3);
 }
 
 void CSettingsProvider::ReadWriteableINISettings() {

@@ -308,10 +308,10 @@ LandscapeModeParams=-1 -1 -1 -1 0.5 1.0 0.75 0.4 -1 -1 -1 -1
 ;				  Как правило, флаг 'ShellExecute' бывает нужен для запуска больших внешних приложений, например, графического редактора.
 
 
-; ВАЖНО: Начинайте с UserCmd3, если только вы не хотите переопределить команды удаления файла и поворота без потерь.
+; ВАЖНО: Начинайте с UserCmd1, если только вы не хотите переопределить команды удаления файла и поворота без потерь.
 
 ; Примеры пользовательских команд
-;UserCmd3="KeyCode: P  Cmd: 'C:\WINDOWS\system32\mspaint.exe /p %filename%' Confirm: 'Вы действительно хотите распечатать файл %filename%?' HelpText: 'P\tРаспечатать текущее изображение'"
-;UserCmd4="KeyCode: Q  Cmd: 'cmd /c move %filename% "%mypictures%\trash\"' Confirm: 'Вы действительно хотите переместить файл в %mypictures%\trash\%filetitle%' HelpText: 'Q\tПереместить файл в папку с браком' Flags: 'WaitForTerminate ReloadFileList MoveToNext'"
-;UserCmd5="KeyCode: W  Cmd: 'cmd /c copy %filename% "%mypictures%\trash\%filetitle%"' Confirm: 'Вы действительно хотите скопировать файл в %mypictures%\trash\%filetitle%' HelpText: 'W\tСкопировать файл в папку с браком' Flags: 'WaitForTerminate'"
-;UserCmd6="KeyCode: A  Cmd: 'cmd /u /c echo %filename% >> "%mydocuments%\test.txt"' HelpText: 'A\tДобавить в список файлов'"
+;UserCmd1="KeyCode: P  Cmd: 'C:\WINDOWS\system32\mspaint.exe /p %filename%' Confirm: 'Вы действительно хотите распечатать файл %filename%?' HelpText: 'P\tРаспечатать текущее изображение'"
+;UserCmd2="KeyCode: Q  Cmd: 'cmd /c move %filename% "%mypictures%\trash\"' Confirm: 'Вы действительно хотите переместить файл в %mypictures%\trash\%filetitle%' HelpText: 'Q\tПереместить файл в папку с браком' Flags: 'WaitForTerminate ReloadFileList MoveToNext'"
+;UserCmd3="KeyCode: W  Cmd: 'cmd /c copy %filename% "%mypictures%\trash\%filetitle%"' Confirm: 'Вы действительно хотите скопировать файл в %mypictures%\trash\%filetitle%' HelpText: 'W\tСкопировать файл в папку с браком' Flags: 'WaitForTerminate'"
+;UserCmd4="KeyCode: A  Cmd: 'cmd /u /c echo %filename% >> "%mydocuments%\test.txt"' HelpText: 'A\tДобавить в список файлов'"

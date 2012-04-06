@@ -1,4 +1,5 @@
 #include "StdAfx.h"
+#include "resource.h"
 #include "HelpersGUI.h"
 #include "NLS.h"
 #include "ProcessParams.h"
@@ -229,6 +230,38 @@ void DrawImageLoadErrorText(CPaintDC& dc, const CRect& clientRect, LPCTSTR sFail
 		_tcscat_s(buff, BUF_LEN, CNLS::GetString(_T("Reason: Not enough memory available")));
 	}
 	dc.DrawText(buff, -1, &rectText, DT_CENTER | DT_WORDBREAK | DT_NOPREFIX);
+}
+
+CJPEGLosslessTransform::ETransformation CommandIdToLosslessTransformation(int nCommandId) {
+    switch (nCommandId) {
+        case IDM_ROTATE_90_LOSSLESS:
+        case IDM_ROTATE_90_LOSSLESS_CONFIRM:
+            return CJPEGLosslessTransform::Rotate90;
+        case IDM_ROTATE_270_LOSSLESS:
+        case IDM_ROTATE_270_LOSSLESS_CONFIRM:
+            return CJPEGLosslessTransform::Rotate270;
+        case IDM_ROTATE_180_LOSSLESS:
+            return CJPEGLosslessTransform::Rotate180;
+        case IDM_MIRROR_H_LOSSLESS:
+            return CJPEGLosslessTransform::MirrorH;
+        case IDM_MIRROR_V_LOSSLESS:
+            return CJPEGLosslessTransform::MirrorV;
+        default:
+            return (CJPEGLosslessTransform::ETransformation)(-1);
+    }
+}
+
+LPCTSTR LosslessTransformationResultToString(CJPEGLosslessTransform::EResult eResult) {
+    switch (eResult) {
+    case CJPEGLosslessTransform::ReadFileFailed:
+        return CNLS::GetString(_T("Reading the JPEG file from disk failed"));
+    case CJPEGLosslessTransform::WriteFileFailed:
+        return CNLS::GetString(_T("Writing the resulting JPEG file to disk failed"));
+    case CJPEGLosslessTransform::TransformationFailed:
+        return CNLS::GetString(_T("Performing the transformation failed"));
+    default:
+        return _T("");
+    }
 }
 
 }

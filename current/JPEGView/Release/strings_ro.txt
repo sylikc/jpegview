@@ -129,6 +129,7 @@ Waiting time	după fiecare
 Stop slide show/movie	Opreşte prezentarea / filmul
 Rotate +90	Roteşte cu +90gr. (la dreapta)
 Rotate -90	Roteşte cu -90gr. (la stânga)
+Rotate 180	Roteşte cu 180gr.
 Auto correction	Autocorectare
 Local density correction	Corectează densitatea locală
 Keep parameters	Păstreză Parametrii

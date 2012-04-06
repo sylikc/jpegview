@@ -228,6 +228,15 @@ BEGIN
 		  MENUITEM SEPARATOR
 		  MENUITEM "Mirror horizontally",		IDM_MIRROR_H
 		  MENUITEM "Mirror vertically",			IDM_MIRROR_V
+        END
+      POPUP "Lossless JPEG transformations" 
+        BEGIN 
+          MENUITEM "Rotate +90\t0x24B9",		IDM_ROTATE_90_LOSSLESS
+		  MENUITEM "Rotate -90\t0x24C3",		IDM_ROTATE_270_LOSSLESS
+		  MENUITEM "Rotate 180",				IDM_ROTATE_180_LOSSLESS
+		  MENUITEM SEPARATOR
+		  MENUITEM "Mirror horizontally",		IDM_MIRROR_H_LOSSLESS
+		  MENUITEM "Mirror vertically",			IDM_MIRROR_V_LOSSLESS
         END 
       MENUITEM "Auto correction",				IDM_AUTO_CORRECTION
 	  MENUITEM "Local density correction",		IDM_LDC
