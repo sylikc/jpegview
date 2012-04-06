@@ -10,7 +10,7 @@
 #include "CropSizeDlg.h"
 #include "HelpersGUI.h"
 #include "NLS.h"
-#include "UserCommand.h"
+#include "FileList.h"
 #include <math.h>
 
 static const int AUTOSCROLL_TIMEOUT = 20; // autoscroll time in ms
@@ -436,9 +436,14 @@ void CCropCtl::CropLossless() {
             ::MessageBox(m_pMainDlg->GetHWND(), CString(CNLS::GetString(_T("Performing the lossless transformation failed!"))) + 
                 + _T("\n") + CNLS::GetString(_T("Reason:")) + _T(" ") + HelpersGUI::LosslessTransformationResultToString(eResult), 
                 CNLS::GetString(_T("Lossless JPEG transformations")), MB_OK | MB_ICONWARNING);
-        } else if (_tcscmp(sInputFileName, sCropFileName) == 0) {
-            m_pMainDlg->ExecuteCommand(IDM_RELOAD);
+        } else {
+            if (_tcscmp(sInputFileName, sCropFileName) == 0) {
+                m_pMainDlg->ExecuteCommand(IDM_RELOAD);
+            } else {
+                m_pMainDlg->GetFileList()->Reload();
+            }
         }
+
 	}
 }
 
