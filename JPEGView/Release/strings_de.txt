@@ -286,7 +286,7 @@ Fit window to image	Fenstergrösse an Bild anpassen
 Keep aspect ratio on crop	Seitenverhältnis beim Freistellen beibehalten
 Lossless JPEG transformations	Verlustfreie JPEG Transformationen
 Performing the lossless transformation failed!	Verlustfreie transformation fehlgeschlagen!
-Image width and height must be dividable by 16 for lossless transformations!	Bildbreite und -höhe muss für verlustfreie JPEG-Transformationen durch 16 teilbar sein!
+Image width and height must be dividable by the JPEG block size (8 or 16) for lossless transformations!	Bildbreite und -höhe muss für verlustfreie JPEG-Transformationen durch die JPEG Blockgrösse (8 oder 16) teilbar sein!
 Reading the JPEG file from disk failed	JPEG-Datei konnte nicht gelesen werden
 Writing the resulting JPEG file to disk failed	Resultierende JPEG-Datei konnte nicht geschrieben werden
 Performing the transformation failed	Die Ausführung der Transformation ist fehlgeschlagen

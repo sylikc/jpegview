@@ -1,6 +1,8 @@
 
 #pragma once
 
+enum TJSAMP;
+
 class TurboJpeg
 {
 public:
@@ -8,6 +10,7 @@ public:
 	static void * ReadImage(int &width,   // width of the image loaded.
                          int &height,  // height of the image loaded.
                          int &bpp,     // BYTES (not bits) PER PIXEL.
+                         TJSAMP &chromoSubsampling, // chromo subsampling of image
 						 bool &outOfMemory, // set to true when no memory to read image
                          const void *buffer, // memory address containing jpeg compressed data.
                          int sizebytes); // size of jpeg compressed data.

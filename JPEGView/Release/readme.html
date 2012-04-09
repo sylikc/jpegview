@@ -453,7 +453,7 @@
 						<li>
 							Lossless crop (for JPEG images only)<br/>
 							Crops the image selection without recompression of the JPEG image. The cropped image must be stored as a new JPEG file.
-							Note that lossless crop cannot be more exact than to 16 pixel boundaries due to the structure of JPEG images. 
+							Note that lossless crop cannot be more exact than to 8 or 16 pixel boundaries due to the structure of JPEG images. 
 						</li>
 						<li>
 							Copy image selection to clipboard<br/>
@@ -490,7 +490,8 @@
                       Crop
                     </li>
                   </ul>
-                  Note: Due to the structure of JPEG files, all these transformations only work if the width and height of the JPEG image is a multiple of 16.
+                  Note: Due to the structure of JPEG files, all these transformations only work if the width and height of the JPEG image is a multiple of the JPEG compression
+		  block size. This block size is 8 or 16 pixels, depending on the chrominance subsampling used for the image.
                   <br/><br/><b>
                     <a href="#Top">Top of Page</a>
                   </b><br/>
@@ -966,8 +967,9 @@
 					Language=language_code<br/>
                   setting in the INI file to the desired language code. The supported codes are listed in the INI file.<br/><br/>
                   <b>Lossless JPEG transformations are grayed out</b><br/>
-                  The current image is either not a JPEG image or width and/or height of the image is not a multiple of 16.
-                  Due to the structure of JPEG files, lossless transformations only work if the width and height of the JPEG image is a multiple of 16
+                  The current image is either not a JPEG image or width and/or height of the image is not a multiple of 8 or 16, depending on the chrominance subsampling
+                  used for this image.
+                  Due to the structure of JPEG files, lossless transformations only work if the width and height of the JPEG image is a multiple of the used JPEG compression block size.
                   <br/><br/><b>
 						<a href="#Top">Top of Page</a>
 					</b><br/>

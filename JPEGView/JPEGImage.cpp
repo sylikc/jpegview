@@ -8,6 +8,7 @@
 #include "LocalDensityCorr.h"
 #include "ParameterDB.h"
 #include "EXIFReader.h"
+#include "libjpeg-turbo\include\turbojpeg.h"
 #include <math.h>
 #include <assert.h>
 
@@ -57,6 +58,7 @@ CJPEGImage::CJPEGImage(int nWidth, int nHeight, void* pIJLPixels, void* pEXIFDat
 
 	m_nPixelHash = nJPEGHash;
 	m_eImageFormat = eImageFormat;
+    m_eJPEGChromoSampling = TJSAMP_420;
 
 	m_nOrigWidth = m_nInitOrigWidth = nWidth;
 	m_nOrigHeight = m_nInitOrigHeight = nHeight;
@@ -147,6 +149,26 @@ CJPEGImage::~CJPEGImage(void) {
 	m_pCachedProcessedHistogram = NULL;
 }
 
+bool CJPEGImage::CanUseLosslessJPEGTransformations() {
+    return m_eImageFormat == IF_JPEG && (m_nOrigWidth % tjMCUWidth[m_eJPEGChromoSampling]) == 0 &&
+        (m_nOrigHeight % tjMCUHeight[m_eJPEGChromoSampling]) == 0;
+}
+
+void CJPEGImage::TrimRectToMCUBlockSize(CRect& rect) {
+    int nBlockWidth = tjMCUWidth[m_eJPEGChromoSampling];
+    rect.left = rect.left & ~(nBlockWidth - 1);
+	rect.right = (rect.right + (nBlockWidth - 1)) & ~(nBlockWidth - 1);
+    if (rect.right > m_nOrigWidth) {
+        rect.right -= nBlockWidth; 
+    }
+
+    int nBlockHeight = tjMCUHeight[m_eJPEGChromoSampling];
+    rect.top = rect.top & ~(nBlockHeight - 1);
+	rect.bottom = (rect.bottom + (nBlockHeight - 1)) & ~(nBlockHeight - 1);
+    if (rect.bottom > m_nOrigHeight) {
+        rect.bottom -= nBlockHeight; 
+    }
+}
 
 void* CJPEGImage::GetThumbnailDIB(CSize size, const CImageProcessingParams & imageProcParams, EProcessingFlags eProcFlags) {
 	assert(!m_bIsThumbnailImage);
