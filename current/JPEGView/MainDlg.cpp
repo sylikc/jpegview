@@ -917,8 +917,7 @@ LRESULT CMainDlg::OnContextMenu(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam,
 	bool bCanPaste = ::IsClipboardFormatAvailable(CF_DIB);
 	if (!bCanPaste) ::EnableMenuItem(hMenuTrackPopup, IDM_PASTE, MF_BYCOMMAND | MF_GRAYED);
 
-    bool bCanDoLosslessJPEGTransform = (m_pCurrentImage != NULL) && (m_pCurrentImage->GetImageFormat() == IF_JPEG)
-        && ((m_pCurrentImage->OrigWidth() & 15) == 0) && ((m_pCurrentImage->OrigHeight() & 15) == 0);
+    bool bCanDoLosslessJPEGTransform = (m_pCurrentImage != NULL) && m_pCurrentImage->CanUseLosslessJPEGTransformations();
 
     if (!bCanDoLosslessJPEGTransform) ::EnableMenuItem(hMenuTrackPopup, SUBMENU_POS_TRANSFORM_LOSSLESS, MF_BYPOSITION | MF_GRAYED);
 
@@ -1205,7 +1204,7 @@ void CMainDlg::ExecuteCommand(int nCommand) {
         case IDM_MIRROR_H_LOSSLESS:
         case IDM_MIRROR_V_LOSSLESS:
             if (m_pCurrentImage != NULL) {
-                if (((m_pCurrentImage->OrigWidth() & 15) == 0) && ((m_pCurrentImage->OrigHeight() & 15) == 0)) {
+                if (m_pCurrentImage->CanUseLosslessJPEGTransformations()) {
                     bool bPerformTransformation = true;
                     if (nCommand == IDM_ROTATE_90_LOSSLESS_CONFIRM || nCommand == IDM_ROTATE_270_LOSSLESS_CONFIRM) {
                         LPCTSTR sConfirmMsg = (nCommand == IDM_ROTATE_90_LOSSLESS_CONFIRM) ?
@@ -1226,7 +1225,7 @@ void CMainDlg::ExecuteCommand(int nCommand) {
                         }
                     }
                 } else {
-                    ::MessageBox(m_hWnd, CNLS::GetString(_T("Image width and height must be dividable by 16 for lossless transformations!")), 
+                    ::MessageBox(m_hWnd, CNLS::GetString(_T("Image width and height must be dividable by the JPEG block size (8 or 16) for lossless transformations!")), 
                         CNLS::GetString(_T("Lossless JPEG transformations")), MB_OK | MB_ICONWARNING);
                 }
             }

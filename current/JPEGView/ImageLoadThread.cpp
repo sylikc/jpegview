@@ -268,10 +268,11 @@ void CImageLoadThread::ProcessReadJPEGRequest(CRequest * request) {
 				}
 			} else {
 				int nWidth, nHeight, nBPP;
+                TJSAMP eChromoSubSampling;
 				bool bOutOfMemory;
 				// int nTicks = ::GetTickCount();
 
-                void* pPixelData = TurboJpeg::ReadImage(nWidth, nHeight, nBPP, bOutOfMemory, pBuffer, nFileSize);
+                void* pPixelData = TurboJpeg::ReadImage(nWidth, nHeight, nBPP, eChromoSubSampling, bOutOfMemory, pBuffer, nFileSize);
 				
 				/*
 				TCHAR buffer[20];
@@ -285,6 +286,7 @@ void CImageLoadThread::ProcessReadJPEGRequest(CRequest * request) {
 						Helpers::FindEXIFBlock(pBuffer, nFileSize), nBPP, 
 						Helpers::CalculateJPEGFileHash(pBuffer, nFileSize), IF_JPEG);
 					request->Image->SetJPEGComment(Helpers::GetJPEGComment(pBuffer, nFileSize));
+                    request->Image->SetJPEGChromoSampling(eChromoSubSampling);
 				} else if (bOutOfMemory) {
 					request->OutOfMemory = true;
 				} else {

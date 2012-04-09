@@ -404,17 +404,7 @@ void CCropCtl::CropLossless() {
 		return;
 	}
     CJPEGImage* pCurrentImage = m_pMainDlg->GetCurrentImage();
-	// coordinates must be multiples of 16 for lossless crop
-	cropRect.left = cropRect.left & ~15;
-	cropRect.right = (cropRect.right + 15) & ~15;
-    if (cropRect.right > pCurrentImage->OrigWidth()) {
-        cropRect.right -= 16; 
-    }
-	cropRect.top = cropRect.top & ~15;
-	cropRect.bottom = (cropRect.bottom + 15) & ~15;
-    if (cropRect.bottom > pCurrentImage->OrigHeight()) {
-        cropRect.bottom -= 16; 
-    }
+    pCurrentImage->TrimRectToMCUBlockSize(cropRect);
 
 	CString sCurrentFile = m_pMainDlg->CurrentFileName(false);
 

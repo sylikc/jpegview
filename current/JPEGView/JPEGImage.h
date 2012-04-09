@@ -5,6 +5,7 @@
 class CHistogram;
 class CLocalDensityCorr;
 class CEXIFReader;
+enum TJSAMP;
 
 // Represents a rectangle to dim out in the image
 struct CDimRect {
@@ -131,6 +132,17 @@ public:
 	// Convert DIB coordinates into original image coordinates and vice versa
 	void DIBToOrig(float & fX, float & fY);
 	void OrigToDIB(float & fX, float & fY);
+
+    // Gets or sets the JPEG chromo sampling. See turbojpeg.h for the TJSAMP enumeration.
+    TJSAMP GetJPEGChromoSampling() { return m_eJPEGChromoSampling; }
+    void SetJPEGChromoSampling(TJSAMP eSampling) { m_eJPEGChromoSampling = eSampling; }
+
+    // Gets if lossless JPEG transformations can be applied to this image.
+    // Checks if this is a JPEG image and if the dimension of this image is dividable by the JPEG block size used
+    bool CanUseLosslessJPEGTransformations();
+
+    // Trims the given rectangle to MCU block size (allowing lossless JPEG transformations)
+    void TrimRectToMCUBlockSize(CRect& rect);
 
 	// Declare the generated DIB as invalid - forcing it to be regenerated on next access
 	void SetDIBInvalid() { m_ClippingSize = CSize(0, 0); }
@@ -288,6 +300,7 @@ private:
 	int m_nIJLChannels;
 	__int64 m_nPixelHash;
 	EImageFormat m_eImageFormat;
+    TJSAMP m_eJPEGChromoSampling;
 
 	// cached thumbnail image, created on first request
 	CJPEGImage* m_pThumbnail;

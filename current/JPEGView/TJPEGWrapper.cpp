@@ -6,6 +6,7 @@
 void * TurboJpeg::ReadImage(int &width,
                        int &height,
                        int &nchannels,
+                       TJSAMP &chromoSubsampling,
 					   bool &outOfMemory,
                        const void *buffer,
                        int sizebytes)
@@ -15,6 +16,7 @@ void * TurboJpeg::ReadImage(int &width,
     outOfMemory = false;
     width = height = 0;
     nchannels = 3;
+    chromoSubsampling = TJSAMP_420;
 
     tjhandle hDecoder = tjInitDecompress();
     if (hDecoder == NULL) {
@@ -25,6 +27,7 @@ void * TurboJpeg::ReadImage(int &width,
     int nSubSampling;
     int nResult = tjDecompressHeader2(hDecoder, (unsigned char*)buffer, sizebytes, &width, &height, &nSubSampling);
     if (nResult == 0){
+        chromoSubsampling = (TJSAMP)nSubSampling;
         if (abs(width*height) > MAX_PIXELS) {
             outOfMemory = true;
         } else {

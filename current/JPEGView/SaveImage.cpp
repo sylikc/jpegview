@@ -250,7 +250,7 @@ bool CSaveImage::SaveImage(LPCTSTR sFileName, CJPEGImage * pImage, const CImageP
 	EImageFormat eFileFormat = Helpers::GetImageFormat(sFileName);
 	bool bSuccess = false;
 	__int64 nPixelHash = 0;
-	if (eFileFormat == IF_JPEG) {
+	if (eFileFormat == IF_JPEG || eFileFormat == IF_JPEG_Embedded) {
 		// Save JPEG not over GDI+ - we want to keep the meta-data if there is meta-data
 		int nJPEGStreamLen;
         bool tjFreeNeeded;
