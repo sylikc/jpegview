@@ -110,7 +110,7 @@ void CCropCtl::StartCropping(int nX, int nY) {
 	}
 }
 
-void CCropCtl::DoCropping(int nX, int nY) {
+bool CCropCtl::DoCropping(int nX, int nY) {
 	if (m_bTrackingMode) {
 		SetMouseCursor(nX, nY);
 	}
@@ -125,6 +125,7 @@ void CCropCtl::DoCropping(int nX, int nY) {
 			::SetTimer(m_pMainDlg->GetHWND(), AUTOSCROLL_TIMER_EVENT_ID, AUTOSCROLL_TIMEOUT, NULL);
 		}
 	}
+    return m_bTrackingMode;
 }
 
 void CCropCtl::EndCropping() {

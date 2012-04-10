@@ -269,6 +269,8 @@ LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam
 	m_fScaling = ::GetDeviceCaps(dc, LOGPIXELSX)/96.0f;
 	HelpersGUI::ScreenScaling = m_fScaling;
 
+    ::SetClassLongPtr(m_hWnd, GCLP_HCURSOR, NULL);
+
 	// determine the monitor rectangle and client rectangle
 	CSettingsProvider& sp = CSettingsProvider::This();
 	m_nMonitor = sp.DisplayMonitor();
@@ -694,6 +696,7 @@ LRESULT CMainDlg::OnMouseMove(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, B
 	}
 
 	// Do dragging or cropping when needed, else pass event to panel manager and zoom navigator
+    bool bMouseCursorSet = false;
 	if (m_bZoomMode) {
 		int nDX = m_nMouseX - m_nCapturedX;
 		double dFactor = 1 + pow(nDX * nDX, 0.8) / 1500;
@@ -702,10 +705,14 @@ LRESULT CMainDlg::OnMouseMove(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, B
 	} else if (m_bDragging) {
 		DoDragging();
 	} else if (m_pCropCtl->IsCropping()) {
-		m_pCropCtl->DoCropping(m_nMouseX, m_nMouseY);
+		bMouseCursorSet = m_pCropCtl->DoCropping(m_nMouseX, m_nMouseY);
 	} else if (!m_pPanelMgr->OnMouseMove(m_nMouseX, m_nMouseY)) {
 		m_pZoomNavigatorCtl->OnMouseMove(nOldMouseX, nOldMouseY);
 	}
+    if (!m_bPanMouseCursorSet && !bMouseCursorSet) {
+        ::SetCursor(::LoadCursor(NULL, MAKEINTRESOURCE(IDC_ARROW)));
+    }
+
 	return 0;
 }
 
