@@ -35,7 +35,7 @@ public:
 
 	// nX, nY is the current mouse coordinate
 	void StartCropping(int nX, int nY);
-	void DoCropping(int nX, int nY);
+	bool DoCropping(int nX, int nY);
 	void EndCropping();
 	void AbortCropping();
 
