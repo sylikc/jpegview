@@ -95,11 +95,14 @@ void CHelpDisplay::Show(const CRect & screenRect) {
 		if ((nI++ & 1) == 0 && nI > 2) {
 			m_dc.FillRect(CRect(fullRect.left + 1, nStartY, fullRect.right - 1, nStartY + m_nIncY), brushBk1);
 		}
+        int nKeyLen = _tcslen(iter->Key);
 		m_dc.SetTextColor(iter->Color);
-		m_dc.TextOut(nStartX, nStartY, iter->Key, _tcslen(iter->Key));
+		m_dc.TextOut(nStartX, nStartY, iter->Key, nKeyLen);
+        CSize textLenKey;
+        m_dc.GetTextExtent(iter->Key, nKeyLen, &textLenKey);
 		if (iter->Info != NULL) {
 			m_dc.SetTextColor(iter->ColorInfo);
-			m_dc.TextOut(nStartX + m_nTab1, nStartY, iter->Info, _tcslen(iter->Info));
+			m_dc.TextOut(max(nStartX + m_nTab1, nStartX + textLenKey.cx + 2), nStartY, iter->Info, _tcslen(iter->Info));
 		}
 		if (iter->Help != NULL) {
 			m_dc.SetTextColor(iter->Color);

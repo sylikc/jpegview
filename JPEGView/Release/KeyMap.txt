@@ -3,6 +3,7 @@
 // It is possible to map multiple keys to the same command but not multiple commands to the same key
 
 // This section contains the definitions of the available JPEGView commands - do not modify!
+#define IDM_DONOTHING		1			// do nothing (can be used to disable a standard command for a mouse button)
 #define IDM_MINIMIZE		1010			// minimize window
 #define IDM_OPEN		1100			// open file
 #define IDM_SAVE		1500			// save to file in original size, don't allow override without prompt
@@ -95,6 +96,7 @@
 #define IDM_PAN_LEFT		15203			// pan left
 #define IDM_SHARPEN_INC		15300			// increase sharpness
 #define IDM_SHARPEN_DEC		15301			// decrease sharpness
+#define IDM_CONTEXT_MENU	16000			// display context menu
 
 // This section contains the key map. A small number of keys is predefined and cannot be changed:
 // F1 for help, ESC for exit, 0..9 for slide show
@@ -102,6 +104,13 @@
 // Alt, Ctrl, Shift, Return, Space, End, Home, Back, Tab, PgDn, PgUp
 // Left, Right, Up, Down, Insert, Del, Plus, Minus, Mul, Div, Comma, Period
 // A .. Z  F1 .. F12
+
+// It is also possible to bind a command to a mouse button. Be aware that you override the default
+// functionality (e.g. to pan with left mouse) when you do so! Mouse buttons can be combined with 
+// Alt, Ctrl and Shift but not with other keys or other mouse buttons.
+// The following mouse buttons are recognized:
+// MouseL, MouseR, MouseM, MouseX1, MouseX2, MouseDblClk
+// (Left, right, middle, extra mouse buttons, mouse left double click)
 
 PgDn                    IDM_NEXT
 Right                   IDM_NEXT
