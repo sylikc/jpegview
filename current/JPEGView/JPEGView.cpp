@@ -12,11 +12,11 @@
 CAppModule _Module;
 
 static BOOL CALLBACK EnumWindowsProc(HWND hwnd, LPARAM lParam) {
-	const int BUF_LEN = 32;
+	const int BUF_LEN = 255;
 	TCHAR buff[BUF_LEN + 1];
 	buff[BUF_LEN] = 0;
 	::GetWindowText(hwnd, (LPTSTR)&buff, BUF_LEN);
-	if (_tcsncmp(buff, _T("JPEGView"), 8) == 0) {
+	if (_tcsstr(buff, _T(" - JPEGView")) != NULL) {
 		::PostMessage(hwnd, WM_ANOTHER_INSTANCE_QUIT, 0, KEY_MAGIC);
 		return FALSE;
 	}

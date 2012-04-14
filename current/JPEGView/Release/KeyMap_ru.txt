@@ -5,6 +5,7 @@
 // Не забудьте перед этим сверить/синхронизировать ранее изменявшиеся вами настройки в исходном (англоязычном) файле KeyMap.txt
 
 // Этот раздел содержит определения команд JPEGView - НЕ ИЗМЕНЯЙТЕ ЕГО!
+#define IDM_DONOTHING		1			// do nothing (can be used to disable a standard command for a mouse button)
 #define IDM_MINIMIZE		1010			// свернуть окно
 #define IDM_OPEN		1100			// открыть файл
 #define IDM_SAVE		1500			// сохранить в файле с исходным размером, не позволять перезапись без запроса
@@ -97,6 +98,7 @@
 #define IDM_PAN_LEFT		15203			// переместить влево
 #define IDM_SHARPEN_INC		15300			// усилить резкость
 #define IDM_SHARPEN_DEC		15301			// ослабить резкость
+#define IDM_CONTEXT_MENU	16000			// display context menu
 
 // Следующий ниже раздел содержит назначения клавиш. Некоторые клавиши предопределены и не могут быть переназначены:
 // F1 - справка, ESC - выход, 0..9 - слайдшоу
@@ -104,6 +106,13 @@
 // Alt, Ctrl, Shift, Return, Space, End, Home, Back, Tab, PgDn, PgUp
 // Left, Right, Up, Down, Insert, Del, Plus, Minus, Mul, Div, Comma, Period
 // A .. Z  F1 .. F12
+
+// It is also possible to bind a command to a mouse button. Be aware that you override the default
+// functionality (e.g. to pan with left mouse) when you do so! Mouse buttons can be combined with 
+// Alt, Ctrl and Shift but not with other keys or other mouse buttons.
+// The following mouse buttons are recognized:
+// MouseL, MouseR, MouseM, MouseX1, MouseX2, MouseDblClk
+// (Left, right, middle, extra mouse buttons, mouse left double click)
 
 PgDn                    IDM_NEXT
 Right                   IDM_NEXT
@@ -175,3 +184,5 @@ Ctrl+R                  IDM_RELOAD
 Ctrl+X                  IDM_COPY_FULL
 Ctrl+V                  IDM_PASTE
 Ctrl+L                  IDM_LANDSCAPE_MODE
+R                       IDM_ROTATE_90_LOSSLESS_CONFIRM
+T                       IDM_ROTATE_270_LOSSLESS_CONFIRM

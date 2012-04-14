@@ -585,43 +585,35 @@ LRESULT CMainDlg::OnAnotherInstanceStarted(UINT /*uMsg*/, WPARAM /*wParam*/, LPA
 
 LRESULT CMainDlg::OnLButtonDown(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, BOOL& /*bHandled*/) {
 	this->SetCapture();
-	SetCursorForMoveSection();
-	CPoint pointClicked(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
-	bool bShowTransformPanel = m_pRotationPanelCtl->IsVisible() || m_pTiltCorrectionPanelCtl->IsVisible();
+    CPoint pointClicked(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
 	bool bEatenByPanel = m_pPanelMgr->OnMouseLButton(MouseEvent_BtnDown, pointClicked.x, pointClicked.y);
 
 	if (!bEatenByPanel) {
 		bool bCtrl = (::GetKeyState(VK_CONTROL) & 0x8000) != 0;
 		bool bShift = (::GetKeyState(VK_SHIFT) & 0x8000) != 0;
+
 		bool bDraggingRequired = m_virtualImageSize.cx > m_clientRect.Width() || m_virtualImageSize.cy > m_clientRect.Height();
 		bool bHandleByCropping = m_pCropCtl->IsCropping() || m_pCropCtl->HitHandle(pointClicked.x, pointClicked.y) != CCropCtl::HH_None;
+        bool bTransformPanelShown = m_pRotationPanelCtl->IsVisible() || m_pTiltCorrectionPanelCtl->IsVisible();
 		if (bHandleByCropping || !m_pZoomNavigatorCtl->OnMouseLButton(MouseEvent_BtnDown, pointClicked.x, pointClicked.y)) {
-			bool bZoomMode = (bShift || m_bZoomModeOnLeftMouse) && !bCtrl && !bShowTransformPanel && !bHandleByCropping && !m_pUnsharpMaskPanelCtl->IsVisible();
+            if (!m_bZoomModeOnLeftMouse && !bHandleByCropping && HandleMouseButtonByKeymap(VK_LBUTTON)) {
+                return 0;
+            }
+			bool bZoomMode = (bShift || m_bZoomModeOnLeftMouse) && !bCtrl && !bTransformPanelShown && !bHandleByCropping && !m_pUnsharpMaskPanelCtl->IsVisible();
 			if (bZoomMode) {
 				m_bZoomMode = true;
 				m_dStartZoom = m_dZoom;
 				m_nCapturedX = m_nMouseX; m_nCapturedY = m_nMouseY;
-			} else if ((bCtrl || !bDraggingRequired || bHandleByCropping) && !bShowTransformPanel) {
+			} else if ((bCtrl || !bDraggingRequired || bHandleByCropping) && !bTransformPanelShown) {
 				m_pCropCtl->StartCropping(pointClicked.x, pointClicked.y);
-			} else if (!bShowTransformPanel) {
+			} else if (!bTransformPanelShown) {
 				StartDragging(pointClicked.x, pointClicked.y, false);
 			} 
 		}
+        SetCursorForMoveSection();
 	}
 
 	m_pCropCtl->ResetStartCropOnNextClick();
-	return 0;
-}
-
-LRESULT CMainDlg::OnNCLButtonDown(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& bHandled) {
-	m_dZoomAtResizeStart = m_dZoom;
-	bHandled = FALSE; // do not handle message, this would block correct processing by OS
-	return 0;
-}
-
-LRESULT CMainDlg::OnMButtonDown(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, BOOL& /*bHandled*/) {
-	this->SetCapture();
-	StartDragging(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam), false);
 	return 0;
 }
 
@@ -641,6 +633,37 @@ LRESULT CMainDlg::OnLButtonUp(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, B
 	return 0;
 }
 
+LRESULT CMainDlg::OnNCLButtonDown(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& bHandled) {
+	m_dZoomAtResizeStart = m_dZoom;
+	bHandled = FALSE; // do not handle message, this would block correct processing by OS
+	return 0;
+}
+
+LRESULT CMainDlg::OnRButtonDown(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, BOOL& bHandled) {
+    bHandled = HandleMouseButtonByKeymap(VK_RBUTTON);
+    return 0;
+}
+
+LRESULT CMainDlg::OnRButtonUp(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& bHandled) {
+    bHandled = HandleMouseButtonByKeymap(VK_RBUTTON, false);
+    return 0;
+}
+
+LRESULT CMainDlg::OnMButtonDown(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, BOOL& /*bHandled*/) {
+	this->SetCapture();
+    if (HandleMouseButtonByKeymap(VK_MBUTTON)) {
+        return 0;
+    }
+	StartDragging(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam), false);
+	return 0;
+}
+
+LRESULT CMainDlg::OnMButtonUp(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/) {
+	EndDragging();
+	::ReleaseCapture();
+	return 0;
+}
+
 LRESULT CMainDlg::OnLButtonDblClk(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, BOOL& /*bHandled*/) {
 	if (!m_bDragging && !m_pCropCtl->IsCropping()) {
 		if (m_pPanelMgr->OnMouseLButton(MouseEvent_BtnDblClk, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam))) {
@@ -648,6 +671,9 @@ LRESULT CMainDlg::OnLButtonDblClk(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lPara
 		}
 	}
 	if (!m_pCropCtl->IsCropping() && m_pCurrentImage != NULL) {
+        if (HandleMouseButtonByKeymap(VK_LBUTTONDBLCLK)) {
+            return 0;
+        }
 		double dZoom = -1.0;
 		CSize sizeAutoZoom = Helpers::GetVirtualImageSize(m_pCurrentImage->OrigSize(),
 			m_clientRect.Size(), IsAdjustWindowToImage() ? Helpers::ZM_FitToScreenNoZoom : m_eAutoZoomMode, dZoom);
@@ -660,14 +686,11 @@ LRESULT CMainDlg::OnLButtonDblClk(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lPara
 	return 0;
 }
 
-LRESULT CMainDlg::OnMButtonUp(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/) {
-	EndDragging();
-	::ReleaseCapture();
-	return 0;
-}
-
 LRESULT CMainDlg::OnXButtonDown(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOOL& /*bHandled*/) {
 	if (!m_pPanelMgr->IsModalPanelShown()) {
+        if (HandleMouseButtonByKeymap((GET_XBUTTON_WPARAM(wParam) == XBUTTON1) ? VK_XBUTTON1 : VK_XBUTTON2)) {
+            return 0;
+        }
 		bool bExchangeXButtons = CSettingsProvider::This().ExchangeXButtons();
 		if (GET_XBUTTON_WPARAM(wParam) == XBUTTON1) {
 			GotoImage(bExchangeXButtons ? POS_Next : POS_Previous);
@@ -1538,6 +1561,10 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 		case IDM_SHARPEN_DEC:
 			AdjustSharpen((nCommand == IDM_SHARPEN_INC) ? SHARPEN_INC : -SHARPEN_INC);
 			break;
+        case IDM_CONTEXT_MENU:
+            BOOL bNotUsed;
+            OnContextMenu(0, 0, (m_nMouseX & 0xFFFF) | ((m_nMouseY & 0xFFFF) << 16), bNotUsed);
+            break;
 	}
 }
 
@@ -2452,4 +2479,21 @@ void CMainDlg::PrefetchDIB(const CRect& clientRect) {
 	CPoint offsetsInImage = m_pCurrentImage->ConvertOffset(newSize, clippedSize, Helpers::LimitOffsets(m_offsets, clientRect.Size(), newSize));
 	m_pCurrentImage->GetDIB(newSize, clippedSize, offsetsInImage, *m_pImageProcParams, 
 		CreateProcessingFlags(m_bHQResampling, m_bAutoContrast, m_bAutoContrastSection, m_bLDC, false, m_bLandscapeMode));
+}
+
+bool CMainDlg::HandleMouseButtonByKeymap(int nMouseButtonCode, bool bExecuteCommand) {
+    if (m_pPanelMgr->IsModalPanelShown()) {
+        return false;
+    }
+    bool bAlt = (::GetKeyState(VK_MENU) & 0x8000) != 0;
+	bool bCtrl = (::GetKeyState(VK_CONTROL) & 0x8000) != 0;
+	bool bShift = (::GetKeyState(VK_SHIFT) & 0x8000) != 0;
+    int nCommand = m_pKeyMap->GetCommandIdForKey(nMouseButtonCode, bAlt, bCtrl, bShift);
+	if (nCommand > 0) {
+        if (bExecuteCommand) {
+		    ExecuteCommand(nCommand);
+        }
+        return true;
+	}
+    return false;
 }

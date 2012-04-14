@@ -3,14 +3,14 @@ JPEGView source code readme
 
 To compile JPEGView you need:
 
-- Visual Studio 2010 Express Edition with VC++ package (of course the standard or professional editions also work)
+- Visual Studio 2010 Express Edition with VC++ package (of course all better editions also work)
 - Windows Template Library (WTL), Version 8.0 (http://sourceforge.net/projects/wtl/)
 - When using the express edition: ATL headers. Get them from a standard or professional edition from the directory $(VCInstallDir)\atlmfc\include
   or google for it. The ATL header files cannot be included into the JPEGView source code distribution due to copyright issues.
 - To edit the resource file (rc) a free resource editor as www.radasm.com/resed/ is recommended
 
 The include directories of WTL must be added to the include directories for VC++:
-VS2010: Properties of JPEGView project > VC++-Directories-Include Directories and Library Directories
+In Visual Studio 2010: Properties of JPEGView project > VC++-Directories-Include Directories and Library Directories
 
 Please note: Windows XP SP2 or later is needed to run the compiled binary.
 
@@ -25,7 +25,7 @@ Changelog
 *********
 
 [1.0.27]
-Replaced Intel JPEG library by Turbo JPEG (tjpeg)
+Replaced Intel JPEG library by Turbo JPEG (tjpeg, http://sourceforge.net/projects/libjpeg-turbo/)
 This replacement has many reasons:
 - The Intel library license was not an open source type license
 - Newer versions of the Intel library are not free of charge. The old versions are not supported by Intel anymore.
@@ -35,18 +35,19 @@ This replacement has many reasons:
 The tjpeg library is open source and (at least on modern CPUs) performs comparable to the Intel library. It is used by many other
 viewers and several Linux distributions.
 Note that tjpeg including lossless JPEG transformations has been statically linked to JPEGView. Therefore the application has grown
-by 300 KB. However the total size of the package is lower that before because IJL15.dll and jpegtran.exe are no longer needed.
+by 300 KB. However the total size of the package is lower tham before because IJL15.dll and jpegtran.exe are no longer needed.
 
 New features:
 - Lossless JPEG transformations integrated into JPEGView. The jpegtran.exe application is no longer part of the distribution of JPEGView.
+- Keymap.txt now also supports to remap mouse buttons to commands.
 - New INI file setting: 'ShowBottomPanel'. Set to false to disable showing the bottom panel when hovering with the mouse on bottom part
   of window/screen.
   Default is true (as before, was not configurable).
 - New INI file setting: 'MaxSlideShowFileListSizeKB'. Sets maximum size of slide show text files in KB.
 - New INI file setting: 'ForceGDIPlus'. If true, use GDI+ for reading JPEGS. Note that using GDI+ is much slower than the tjpeg library!
 Other changes:
-- Because the tjpeg library does not work with VS2005, JPEGView is now compiled with VS2010. If you are using Windows XP before SP2, use
-  version 1.0.26 (or install SP2).
+- Because the tjpeg static library cannot be linked with VS2005, JPEGView is now compiled with VS2010. If you are using Windows XP 
+  before SP2, install SP2 or keep using version 1.0.25.
 
 [1.0.26]
 Bugs fixed:

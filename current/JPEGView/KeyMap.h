@@ -2,6 +2,8 @@
 
 #include <hash_map>
 
+#define VK_LBUTTONDBLCLK 7
+
 // KeyMap
 class CKeyMap
 {
