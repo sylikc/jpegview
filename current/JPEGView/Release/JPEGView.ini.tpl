@@ -28,8 +28,8 @@ Language=auto
 ; File endings of files to be decoded by WIC (Windows Image Converter)
 ; If the Microsoft Camera Codec pack is installed, full size camera RAW files can be read with WIC
 ; Add the file endings of the raw files to view here, e.g.
-; FilesProcessedByWIC=*.wdp;*.mdp;*.hdp;*.nef
-FilesProcessedByWIC=*.wdp;*.mdp;*.hdp
+; FilesProcessedByWIC=*.wdp;*.hdp;*.jxr;*.nef
+FilesProcessedByWIC=*.wdp;*.hdp;*.jxr
 
 ; File endings of camera RAW files to be searched for embedded JPEG thumb images to display
 ; Reading just these embedded JPEGs is much faster than decoding the RAW using WIC
