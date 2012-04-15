@@ -21,6 +21,7 @@
 ; 'sv'    Swedish
 ; 'cs'    Czech
 ; 'el'    Greek
+; 'eu'    Basque
 Language=auto
 
 
