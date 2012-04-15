@@ -1274,7 +1274,7 @@ void CMainDlg::ExecuteCommand(int nCommand) {
                             GotoImage(POS_Current); // reload current image
                         }
                     }
-                } else {
+                } else if (m_pCurrentImage->GetImageFormat() == IF_JPEG) {
                     ::MessageBox(m_hWnd, CNLS::GetString(_T("Image width and height must be dividable by the JPEG block size (8 or 16) for lossless transformations!")), 
                         CNLS::GetString(_T("Lossless JPEG transformations")), MB_OK | MB_ICONWARNING);
                 }
