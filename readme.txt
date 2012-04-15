@@ -39,6 +39,7 @@ by 300 KB. However the total size of the package is lower tham before because IJ
 
 New features:
 - Lossless JPEG transformations integrated into JPEGView. The jpegtran.exe application is no longer part of the distribution of JPEGView.
+- Basque translation, thanks to Xabier Aramendi
 - Keymap.txt now also supports to remap mouse buttons to commands.
 - New INI file setting: 'SingleInstance'. Set to true to open all images in one single instance (window) of JPEGView.
 - New INI file setting: 'ShowBottomPanel'. Set to false to disable showing the bottom panel when hovering with the mouse on bottom part
