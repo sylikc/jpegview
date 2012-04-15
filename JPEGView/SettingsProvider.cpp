@@ -207,6 +207,7 @@ void CSettingsProvider::ReadWriteableINISettings() {
 
 	m_nMaxSlideShowFileListSize = GetInt(_T("MaxSlideShowFileListSizeKB"), 200, 100, 10000);
 	m_bForceGDIPlus = GetBool(_T("ForceGDIPlus"), false);
+    m_bSingleInstance = GetBool(_T("SingleInstance"), false);
 	m_nJPEGSaveQuality = GetInt(_T("JPEGSaveQuality"), 85, 0, 100);
 	m_nWEBPSaveQuality = GetInt(_T("WEBPSaveQuality"), 85, 0, 100);
 	m_sDefaultSaveFormat = GetString(_T("DefaultSaveFormat"), _T("jpg"));

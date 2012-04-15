@@ -11,13 +11,15 @@
 
 CAppModule _Module;
 
+static HWND _HWNDOtherInstance = NULL;
+
 static BOOL CALLBACK EnumWindowsProc(HWND hwnd, LPARAM lParam) {
 	const int BUF_LEN = 255;
 	TCHAR buff[BUF_LEN + 1];
 	buff[BUF_LEN] = 0;
 	::GetWindowText(hwnd, (LPTSTR)&buff, BUF_LEN);
 	if (_tcsstr(buff, _T(" - JPEGView")) != NULL) {
-		::PostMessage(hwnd, WM_ANOTHER_INSTANCE_QUIT, 0, KEY_MAGIC);
+        _HWNDOtherInstance = hwnd;
 		return FALSE;
 	}
 	return TRUE;
@@ -75,15 +77,29 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR lp
 	hRes = _Module.Init(NULL, hInstance);
 	ATLASSERT(SUCCEEDED(hRes));
 
+    CString sStartupFile = ParseCommandLineForStartupFile(lpstrCmdLine);
+
 	// Searches for other instances and terminates them
+    bool bFileLoadedByExistingInstance = false;
 	HANDLE hMutex = ::CreateMutex(NULL, FALSE, _T("JPVMtX2869"));
 	if (::GetLastError() == ERROR_ALREADY_EXISTS) {
 		::EnumWindows((WNDENUMPROC)EnumWindowsProc, 0);
+        if (_HWNDOtherInstance != NULL) {
+            // Other instance found, send the filename to be loaded to this instance
+            COPYDATASTRUCT copyData;
+            memset(&copyData, 0, sizeof(COPYDATASTRUCT));
+            copyData.dwData = KEY_MAGIC;
+            copyData.cbData = (sStartupFile.GetLength() + 1) * sizeof(TCHAR);
+            copyData.lpData = (LPVOID)(LPCTSTR)sStartupFile;
+            DWORD result = 0;
+            LRESULT res = ::SendMessageTimeout(_HWNDOtherInstance, WM_COPYDATA, 0, (LPARAM)&copyData, 0, 250, &result);
+            bFileLoadedByExistingInstance = result == KEY_MAGIC;
+        }
 	}
 
 	int nRet = 0;
-	// BLOCK: Run application
-	{
+	//Run application
+    if (!bFileLoadedByExistingInstance) {
 		// Initialize GDI+
 		Gdiplus::GdiplusStartupInput gdiplusStartupInput;
 		ULONG_PTR gdiplusToken;
@@ -91,7 +107,7 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR lp
 
 		CMainDlg dlgMain;
 
-		dlgMain.SetStartupFile(ParseCommandLineForStartupFile(lpstrCmdLine));
+		dlgMain.SetStartupFile(sStartupFile);
 		try {
 			nRet = dlgMain.DoModal();
 			::ShowCursor(TRUE);

@@ -56,6 +56,7 @@ public:
 	CImageProcessingParams LandscapeModeParams(const CImageProcessingParams& templParams);
 	int MaxSlideShowFileListSize() { return m_nMaxSlideShowFileListSize; }
 	bool ForceGDIPlus() { return m_bForceGDIPlus; }
+    bool SingleInstance() { return m_bSingleInstance; }
 	int JPEGSaveQuality() { return m_nJPEGSaveQuality; }
 	int WEBPSaveQuality() { return m_nWEBPSaveQuality; }
 	LPCTSTR DefaultSaveFormat() { return m_sDefaultSaveFormat; }
@@ -151,6 +152,7 @@ private:
 	CString m_sLandscapeModeParams;
 	int m_nMaxSlideShowFileListSize;
 	bool m_bForceGDIPlus;
+    bool m_bSingleInstance;
 	int m_nJPEGSaveQuality;
 	int m_nWEBPSaveQuality;
 	CString m_sDefaultSaveFormat;

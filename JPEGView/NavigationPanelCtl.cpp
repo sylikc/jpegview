@@ -269,13 +269,14 @@ void CNavigationPanelCtl::EndNavPanelAnimation() {
 	::SetTimer(m_pMainDlg->GetHWND(), NAVPANEL_START_ANI_TIMER_EVENT_ID, 2000, NULL);
 }
 
-void CNavigationPanelCtl::HideNavPanelTemporary() {
-	if (!m_bMouseInNavPanel || m_pMainDlg->GetImageProcPanelCtl()->IsVisible() || m_pMainDlg->IsCropping()) {
+void CNavigationPanelCtl::HideNavPanelTemporary(bool bForce) {
+	if (bForce || !m_bMouseInNavPanel || m_pMainDlg->GetImageProcPanelCtl()->IsVisible() || m_pMainDlg->IsCropping()) {
 		m_bInNavPanelAnimation = true;
 		m_fCurrentBlendingFactorNavPanel = 0.0;
 		m_pMainDlg->InvalidateRect(PanelRect(), FALSE);
 		m_bFadeOut = true;
 	}
+    if (bForce) m_bMouseInNavPanel = false;
 }
 
 void CNavigationPanelCtl::ShowNavPanelTemporary() {

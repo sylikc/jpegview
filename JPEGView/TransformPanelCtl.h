@@ -20,6 +20,8 @@ public:
 	virtual void SetVisible(bool bVisible);
 	virtual void SetActive(bool bActive);
 
+    virtual void CancelModalPanel() { TerminatePanel(); };
+
 	virtual bool OnMouseLButton(EMouseEvent eMouseEvent, int nX, int nY);
 	virtual bool OnMouseMove(int nX, int nY);
 	virtual bool OnKeyDown(unsigned int nVirtualKey, bool bShift, bool bAlt, bool bCtrl);

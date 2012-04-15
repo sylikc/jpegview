@@ -575,12 +575,32 @@ LRESULT CMainDlg::OnGetMinMaxInfo(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lPara
 	}
 }
 
-LRESULT CMainDlg::OnAnotherInstanceStarted(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, BOOL& /*bHandled*/) {
-	// Another instance has been started, terminate this one
-	if (lParam == KEY_MAGIC && m_bFullScreenMode) {
-		this->EndDialog(0);
-	}
-	return 0;
+LRESULT CMainDlg::OnAnotherInstanceStarted(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, BOOL& bHandled) {
+    bHandled = FALSE;
+    COPYDATASTRUCT* pData = (COPYDATASTRUCT*)lParam;
+    if (pData != NULL && pData->dwData == KEY_MAGIC && pData->cbData > 0 && (m_bFullScreenMode || CSettingsProvider::This().SingleInstance())) {
+        m_sStartupFile = CString((LPCTSTR)pData->lpData, pData->cbData / sizeof(TCHAR) - 1);
+        ::PostMessage(m_hWnd, WM_LOAD_FILE_ASYNCH, 0, KEY_MAGIC);
+        bHandled = TRUE;
+        return KEY_MAGIC;
+    }
+    return 0;
+}
+
+LRESULT CMainDlg::OnLoadFileAsynch(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, BOOL& bHandled) {
+    bHandled = lParam == KEY_MAGIC;
+    if (lParam == KEY_MAGIC && ::IsWindowEnabled(m_hWnd)) {
+        m_pPanelMgr->CancelModalPanel();
+        GetNavPanelCtl()->HideNavPanelTemporary(true);
+        StopMovieMode();
+	    MouseOn();
+        if (m_sStartupFile.IsEmpty()) {
+            OpenFile(false, false);
+        } else {
+            OpenFile(m_sStartupFile, false);
+        }
+    }
+    return 0;
 }
 
 LRESULT CMainDlg::OnLButtonDown(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, BOOL& /*bHandled*/) {

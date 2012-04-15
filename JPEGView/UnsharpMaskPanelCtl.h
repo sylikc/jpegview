@@ -20,6 +20,8 @@ public:
 	virtual void SetVisible(bool bVisible);
 	virtual void SetActive(bool bActive);
 
+    virtual void CancelModalPanel() { TerminateUnsharpMaskPanel(); };
+
 	virtual bool OnKeyDown(unsigned int nVirtualKey, bool bShift, bool bAlt, bool bCtrl);
 
 	// Gets preview DIB of unsharp masked image. Returned DIB has size clippingSize

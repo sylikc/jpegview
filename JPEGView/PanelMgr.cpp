@@ -23,6 +23,15 @@ bool CPanelMgr::IsModalPanelShown() const {
 	return false;
 }
 
+void CPanelMgr::CancelModalPanel() {
+	std::list<CPanelController*>::const_iterator iter;
+	for (iter = m_panelControllers.begin( ); iter != m_panelControllers.end( ); iter++ ) {
+		if ((*iter)->IsModal() && (*iter)->IsVisible()) {
+			(*iter)->CancelModalPanel();
+		}
+	}
+}
+
 void CPanelMgr::PrepareMemDCMgr(CPaintMemDCMgr& memDCMgr, std::list<CRect>& listExcludedRects) {
 	std::list<CPanelController*>::iterator iter;
 	for (iter = m_panelControllers.begin( ); iter != m_panelControllers.end( ); iter++ ) {
