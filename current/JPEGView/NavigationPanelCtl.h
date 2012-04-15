@@ -35,7 +35,7 @@ public:
 	// Immediately terminates any ongoing animation of the navigation panel
 	void EndNavPanelAnimation();
 	// Hides the navigation panel temporarily (invisible) - the panel remains active however
-	void HideNavPanelTemporary();
+	void HideNavPanelTemporary(bool bForce = false);
 	// Shows the navigation panel when it is blended out (CurrentBlendingFactor zero)
 	void ShowNavPanelTemporary();
 	// Gets managed panel containing the buttons

@@ -17,6 +17,9 @@ public:
 	// Is current a modal panel visible?
 	bool IsModalPanelShown() const;
 
+    // Cancels an open modal panel if one is open
+    void CancelModalPanel();
+
 	// The captured panel controller gets the mouse events first
 	void SetCapturedPanelController(CPanelController* pPanelController) { m_pCapturedPanelController = pPanelController; }
 
