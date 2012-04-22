@@ -74,6 +74,7 @@ public:
 		MESSAGE_HANDLER(WM_CTLCOLOREDIT, OnCtlColorEdit)
 		MESSAGE_HANDLER(WM_JPEG_LOAD_COMPLETED, OnJPEGLoaded)
 		MESSAGE_HANDLER(WM_DROPFILES, OnDropFiles)
+        MESSAGE_HANDLER(WM_CLOSE, OnClose)
 		//MESSAGE_HANDLER(WM_ANOTHER_INSTANCE_QUIT, OnAnotherInstanceStarted)
         MESSAGE_HANDLER(WM_LOAD_FILE_ASYNCH, OnLoadFileAsynch)
         MESSAGE_HANDLER(WM_COPYDATA, OnAnotherInstanceStarted) 
@@ -115,6 +116,7 @@ public:
 	LRESULT OnDropFiles(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, BOOL& /*bHandled*/);
 	LRESULT OnAnotherInstanceStarted(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, BOOL& /*bHandled*/);
     LRESULT OnLoadFileAsynch(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, BOOL& /*bHandled*/);
+    LRESULT OnClose(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, BOOL& /*bHandled*/);
 
 	// Called by main()
 	void SetStartupFile(LPCTSTR sStartupFile) { m_sStartupFile = sStartupFile; }
@@ -156,6 +158,7 @@ public:
 	CWndButtonPanelCtl* GetWndButtonPanelCtl() { return m_pWndButtonPanelCtl; }
 	CCropCtl* GetCropCtl() { return m_pCropCtl; }
 	const CRect& ClientRect() { return m_clientRect; }
+    const CRect& WindowRectOnClose() { return m_windowRectOnClose; } // only valid after having closed the window
 	const CRect& MonitorRect() { return m_monitorRect; }
 	const CSize& VirtualImageSize() { return m_virtualImageSize; }
 	CJPEGProvider* GetJPEGProvider() { return m_pJPEGProvider; }
@@ -260,6 +263,7 @@ private:
 	WINDOWPLACEMENT m_storedWindowPlacement;
 	CRect m_monitorRect;
 	CRect m_clientRect;
+    CRect m_windowRectOnClose;
 	CString m_sSaveDirectory;
 	CString m_sSaveExtension;
 	CCropCtl* m_pCropCtl;

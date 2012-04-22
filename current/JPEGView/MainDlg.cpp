@@ -234,6 +234,7 @@ CMainDlg::CMainDlg() {
 	m_storedWindowPlacement.length = sizeof(WINDOWPLACEMENT);
 	m_nMonitor = 0;
 	m_monitorRect = CRect(0, 0, 0, 0);
+    m_windowRectOnClose = CRect(0, 0, 0, 0);
 	m_bMouseOn = false;
 	m_fScaling = 1.0f;
 
@@ -600,6 +601,12 @@ LRESULT CMainDlg::OnLoadFileAsynch(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lPar
             OpenFile(m_sStartupFile, false);
         }
     }
+    return 0;
+}
+
+LRESULT CMainDlg::OnClose(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, BOOL& bHandled) {
+    GetWindowRect(m_windowRectOnClose);
+    bHandled = FALSE;
     return 0;
 }
 
@@ -1371,11 +1378,17 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 				this->SetWindowLongW(GWL_STYLE, this->GetWindowLongW(GWL_STYLE) | WS_OVERLAPPEDWINDOW | WS_VISIBLE);
 				CRect defaultWindowRect = CMultiMonitorSupport::GetDefaultWindowRect();
 				double dZoom = -1;
-				windowRect = Helpers::GetWindowRectMatchingImageSize(m_hWnd, CSize(MIN_WND_WIDTH, MIN_WND_HEIGHT), defaultWindowRect.Size(), dZoom, m_pCurrentImage, false, true);
+				windowRect = CSettingsProvider::This().ExplicitWindowRect() ? defaultWindowRect : Helpers::GetWindowRectMatchingImageSize(m_hWnd, CSize(MIN_WND_WIDTH, MIN_WND_HEIGHT), defaultWindowRect.Size(), dZoom, m_pCurrentImage, false, true);
 				this->SetWindowPos(HWND_TOP, windowRect.left, windowRect.top, windowRect.Width(), windowRect.Height(), SWP_NOZORDER | SWP_NOCOPYBITS);
 				this->MouseOn();
 				m_bSpanVirtualDesktop = false;
 			} else {
+                if (!IsZoomed() && CSettingsProvider::This().ExplicitWindowRect()) {
+                    // Save the old window rect to be able to restore it
+                    CRect rect;
+                    GetWindowRect(&rect);
+                    CMultiMonitorSupport::SetDefaultWindowRect(rect);
+                }
 				HMONITOR hMonitor = ::MonitorFromWindow(m_hWnd, MONITOR_DEFAULTTONEAREST);
 				MONITORINFO monitorInfo;
 				monitorInfo.cbSize = sizeof(MONITORINFO);
@@ -2291,6 +2304,10 @@ void CMainDlg::AdjustWindowToImage(bool bAfterStartup) {
 		// window size shall be adjusted to image size (at least keep aspect ration)
 		double dZoom = m_dZoom;
 		CRect windowRect = Helpers::GetWindowRectMatchingImageSize(m_hWnd, CSize(MIN_WND_WIDTH, MIN_WND_HEIGHT), HUGE_SIZE, dZoom, m_pCurrentImage, bAfterStartup, dZoom < 0);
+        CRect defaultRect = CMultiMonitorSupport::GetDefaultWindowRect();
+        if (bAfterStartup && CSettingsProvider::This().ExplicitWindowRect()) {
+            windowRect = CRect(defaultRect.TopLeft(), windowRect.Size());
+        }
 		m_bResizeForNewImage = true;
 		this->Invalidate(FALSE);
 		this->SetWindowPos(HWND_TOP, windowRect.left, windowRect.top, windowRect.Width(), windowRect.Height(), SWP_NOZORDER | SWP_NOCOPYBITS);
