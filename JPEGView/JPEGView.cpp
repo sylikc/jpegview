@@ -3,9 +3,10 @@
 
 #include "stdafx.h"
 #include <locale.h>
+#include <gdiplus.h>
 #include "resource.h"
 #include "MainDlg.h"
-#include <gdiplus.h>
+#include "SettingsProvider.h"
 
 // _CrtDumpMemoryLeaks
 
@@ -110,6 +111,9 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR lp
 		dlgMain.SetStartupFile(sStartupFile);
 		try {
 			nRet = dlgMain.DoModal();
+            if (CSettingsProvider::This().StickyWindowSize() && !dlgMain.IsFullScreenMode()) {
+                CSettingsProvider::This().SaveStickyWindowRect(dlgMain.WindowRectOnClose());
+            }
 			::ShowCursor(TRUE);
 		}
 		catch (...) {

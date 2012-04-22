@@ -20,6 +20,9 @@ public:
 	// Gets the default window rectangle for windowed mode
 	static CRect GetDefaultWindowRect();
 
+    // Sets teh default window rectangle for windowed mode
+    static void SetDefaultWindowRect(CRect rect);
+
 	// Gets the default client rectangle for windowed mode
 	static CRect GetDefaultClientRectInWindowMode(bool bAutoFitWndToImage);
 

@@ -16,6 +16,8 @@ struct EnumMonitorParams {
 	CRect rectMonitor;
 };
 
+static CRect defaultWindowRect = CRect(0, 0, 0, 0);
+
 bool CMultiMonitorSupport::IsMultiMonitorSystem() {
 	return ::GetSystemMetrics(SM_CMONITORS) > 1;
 }
@@ -87,10 +89,11 @@ CRect CMultiMonitorSupport::GetWorkingRect(HWND hWnd) {
 }
 
 CRect CMultiMonitorSupport::GetDefaultWindowRect() {
-	CRect windowRect = CSettingsProvider::This().DefaultWindowRect();
+    CSettingsProvider& settings = CSettingsProvider::This();
+	CRect windowRect = !defaultWindowRect.IsRectEmpty() ? defaultWindowRect : settings.StickyWindowSize() ? settings.StickyWindowRect() : settings.DefaultWindowRect();
 	CRect rectAllScreens = CMultiMonitorSupport::GetVirtualDesktop();
 	if (windowRect.IsRectEmpty() || !rectAllScreens.IntersectRect(&rectAllScreens, &windowRect)) {
-		CRect monitorRect = CMultiMonitorSupport::GetMonitorRect(CSettingsProvider::This().DisplayMonitor());
+		CRect monitorRect = CMultiMonitorSupport::GetMonitorRect(settings.DisplayMonitor());
 		int nDesiredWidth = monitorRect.Width()*2/3;
 		int nDesiredHeight = nDesiredWidth*3/4;
 		nDesiredWidth += ::GetSystemMetrics(SM_CXSIZEFRAME) * 2;
@@ -98,6 +101,10 @@ CRect CMultiMonitorSupport::GetDefaultWindowRect() {
 		windowRect = CRect(CPoint(monitorRect.left + (monitorRect.Width() - nDesiredWidth) / 2, monitorRect.top + (monitorRect.Height() - nDesiredHeight) / 2), CSize(nDesiredWidth, nDesiredHeight));
 	}
 	return windowRect;
+}
+
+void CMultiMonitorSupport::SetDefaultWindowRect(CRect rect) {
+    defaultWindowRect = rect;
 }
 
 CRect CMultiMonitorSupport::GetDefaultClientRectInWindowMode(bool bAutoFitWndToImage) {

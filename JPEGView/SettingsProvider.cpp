@@ -229,16 +229,24 @@ void CSettingsProvider::ReadWriteableINISettings() {
 	m_sLandscapeModeParams = GetString(_T("LandscapeModeParams"), _T("-1 -1 -1 -1 0.5 1.0 0.75 0.4 -1 -1 -1"));
 	m_sCopyRenamePattern = GetString(_T("CopyRenamePattern"), _T(""));
 	m_defaultWindowRect = GetRect(_T("DefaultWindowRect"), CRect(0, 0, 0, 0));
+    m_stickyWindowRect = GetRect(_T("StickyWindowRect"), CRect(0, 0, 0, 0));
 	m_bDefaultMaximized = false;
 	m_bDefaultWndToImage = false;
+    m_bStickyWindowSize = false;
+    m_bExplicitWindowRect = false;
 	if (m_defaultWindowRect.IsRectEmpty()) {
 		CString sAuto = GetString(_T("DefaultWindowRect"), _T(""));
 		if (sAuto.CompareNoCase(_T("max")) == 0) {
 			m_bDefaultMaximized = true;
 		} else if (sAuto.CompareNoCase(_T("image")) == 0) {
 			m_bDefaultWndToImage = true;
-		}
-	}
+		} else if (sAuto.CompareNoCase(_T("sticky")) == 0) {
+			m_bStickyWindowSize = true;
+            m_bExplicitWindowRect = !m_stickyWindowRect.IsRectEmpty();
+        }
+	} else {
+        m_bExplicitWindowRect = true;
+    }
 
 	m_colorBackground = GetColor(_T("BackgroundColor"), 0);
 	m_colorGUI = GetColor(_T("GUIColor"), RGB(243, 242, 231));
@@ -336,6 +344,20 @@ void CSettingsProvider::SaveCopyRenamePattern(const CString& sPattern) {
 	WriteString(_T("CopyRenamePattern"), sPattern);
 
 	m_bUserINIExists = true;
+}
+
+void CSettingsProvider::SaveStickyWindowRect(CRect rect) {
+    if (rect != m_stickyWindowRect && !rect.IsRectEmpty()) {
+        const int BUFF_SIZE = 64;
+        TCHAR buff[BUFF_SIZE];
+        _sntprintf(buff, BUFF_SIZE, _T("%d %d %d %d"), rect.left, rect.top, rect.right, rect.bottom);
+
+        MakeSureUserINIExists();
+
+        WriteString(_T("StickyWindowRect"), buff);
+
+        m_bUserINIExists = true;
+    }
 }
 
 void CSettingsProvider::MakeSureUserINIExists() {

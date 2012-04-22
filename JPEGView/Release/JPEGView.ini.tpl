@@ -88,8 +88,12 @@ ShowFullScreen=auto
 ; 'auto' for 2/3 of screen size
 ; 'max' to start with maximized window
 ; 'image' to adjust the window size automatically to the image size
+; 'sticky' to automatically restore the last used window size (when ShowFullScreen=auto only the upper,left position is restored)
 ; 'left top right bottom', space separated e.g: 100 100 900 700
 DefaultWindowRect=image
+
+; Contains the stored window rectangel in case of DefaultWindowRect=sticky
+StickyWindowRect=
 
 ; The initial crop window size when using 'Fixed Size' crop mode
 DefaultFixedCropSize=320 200

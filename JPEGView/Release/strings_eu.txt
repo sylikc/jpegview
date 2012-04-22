@@ -1,7 +1,6 @@
 ﻿// This file must be encoded with UTF-8 (e.g. with Windows Notepad)
 // Filename is 'strings_%languagecode%.txt' where %languagecode% is the ISO 639 language code e.g. 'fr' for French
 // Format is: English string<tab>Translated string<newline>
-
 Contrast	Zuribeltztasuna
 Brightness	Dizdira
 Sharpen	Garbitasuna
@@ -11,7 +10,6 @@ Deep Shadows	Itzal sakonak
 Color Correction	Margo Zuzenketa
 Contrast Correction	Zuribeltztasun Zuzenketa
 Parameter DB:	BD Parametroak:
-
 Save to	Gorde hemen
 Remove from	Kendu hemendik
 Rename:	Berrizendatu:
@@ -22,7 +20,6 @@ The file '%s' could not be read!	'%s' agiria ezin da irakurri!
 The file '%s' does not contain a list of file names!	'%s' agirak ez du agiri izenen zerradarik!
 The directory '%s' does not contain any image files!	'%s' zuzenbideak ez du irudi agiririk!
 Press any key to search the subdirectories for image files.	Sakatu edozein tekla azpizuzenbideetan irudi agiriak biltzeko.
-
 JPEGView Help	JPEGIkusgailu Laguntza
 Current image	Oraingo irudia
 Close help text display / Close JPEGView	Itxi laguntza idazki erakuspena / Itxi JPEGIkusgailua
@@ -70,7 +67,6 @@ Next image	Hurrengo irudia
 Previous image	Aurreko irudia
 up/down	gora/behera
 Mouse wheel	Sagu gurpila
-
 Left mouse & drag	Saguaren ezker botoia eta arrastatu
 Ctrl + Left mouse	Ktrl + saguaren ezker botoia
 Forward mouse button	Saguaren aurrera botoia
@@ -83,7 +79,6 @@ Can't rename file	Ezin da agiria berrizendatu
 New name contains backslash character!	Izen berriak ezkerbarra du!
 Renaming file failed!	Hutsegitea agiria berrizendatzerakoan!
 Reason: 	Zergaitia:
-
 on	eraginda
 off	etenda
 Do you really want to save the following parameters as default to the INI file	Egitan nahi duzu hurrengo parametroak berezkotzat bezala gordetzea INI agirian
@@ -156,7 +151,7 @@ M - G	M - O
 Y - B	Or - U
 Batch rename/copy of files	Agirien multzokako berrizendatzea/kopiatzea
 Image files in folder	Irudi agiriak agiritegian
-Placeholders:	Placeholders:
+Placeholders:	Ordezte-ezarpenak:
 Number (consecutively numbered)	Zenbakia (jarraian zenbakituta)
 Number with N digits	N digitodun zenbakia
 Extracted number from original file name	Jatorrizko agiritik ateratako zenbakia
@@ -168,7 +163,7 @@ Day / Month / Year (as numbers)	Eguna / Hilabetea / Urtea (zenbakietan)
 Year short form (2 digits)	Urtea laburtuta (2 digito)
 Month / Short form (text)	Hilabetea / Laburtuta (idazkia)
 Target folders that are not yet existing are created as needed.	Oraindik ez dauden xede agiritegiak sortu egingo dira beharrezkoa bada.
-Date placeholders use the modification date of the image.	Egun ezarpenak irudiaren eguna erabiltzen du.
+Date placeholders use the modification date of the image.	Egun ordezte-ezarpenak irudiaren eguna erabiltzen du.
 Rename/copy images to:	Berrizendatu/Kopiatu irudiak hona:
 Rename	Berrizendatu
 Preview	Aurreikuspena
@@ -213,12 +208,10 @@ Show first image in folder	Erakutsi agiritegiko lehenengo irudia
 Show previous image	Erakutsi aurreko irudia
 Show next image	Erakutsi hurrengo irudia
 Show last image in folder	Erakutsi agiritegiko azken irudia
-
 Rotate image 90 deg clockwise	Itzulikatu irudia 90 gradu ordulari orrantzen norabidean
 Rotate image 90 deg counter-clockwise	Itzulikatu irudia 90 gradu ordulari orrantzen aurkako norabidean
 Landscape picture enhancement mode	Landargazki irudi hobekuntza modua
 Display image (EXIF) information	Erakutsi irudiaren (EXIF) argibideak
-Actual size of image	Irudiaren oraingo neurria
 Toggle between screens (only for multi-monitor systems)	Aldatu ikusleiho artean (monitore-antziko sistematan bakarrik)
 Enable/disable full screen mode	Gaitu/Ezgaitu ikusleiho-osoko modua
 Full screen mode	Ikusleiho-osoko modua
@@ -289,3 +282,9 @@ Click and drag the mouse vertically to correct image tilt.	Klikatu eta arrastatu
 Drag at the left or right border for asymmetric correction.	Arrastatu ezker edo eskuin hertzera zuzenketa asimetrikorako
 Fit window to image	Finkatu leihoa irudiari
 Keep aspect ratio on crop	Heutsi ikuspegi mailari mozterakoan
+Lossless JPEG transformations	Galeragabeko JPEG eraldaketak
+Performing the lossless transformation failed!	Hutsegitea galeragabeko eraldaketa egiterakoan!
+Image width and height must be dividable by the JPEG block size (8 or 16) for lossless transformations!	Irudiaren zabalera eta garaiera JPEG bloke neurriagaitik (8 edo 16) zatikagarria izan behar da galeragabeko eraldaketetarako!
+Reading the JPEG file from disk failed	Hutsegitea JPEG agiria diskatik irekurtzerakoan
+Writing the resulting JPEG file to disk failed	Hutsegitea emaitz JPEG agiria diskara idazterakoan
+Performing the transformation failed	Hutsegitea eraldaketa egiterakoan

@@ -73,8 +73,11 @@ public:
 	LPCTSTR LDCInclude() { return m_sLDCInclude; }
 	LPCTSTR CopyRenamePattern() { return m_sCopyRenamePattern; }
 	CRect DefaultWindowRect() { return m_defaultWindowRect; }
+    CRect StickyWindowRect() { return m_stickyWindowRect; }
+    bool StickyWindowSize() { return m_bStickyWindowSize; }
 	bool DefaultWndToImage() { return m_bDefaultWndToImage; }
 	bool DefaultMaximized() { return m_bDefaultMaximized; }
+    bool ExplicitWindowRect() { return m_bExplicitWindowRect; }
 	CSize DefaultFixedCropSize() { return m_DefaultFixedCropSize; }
 	COLORREF ColorBackground() { return m_colorBackground; }
 	COLORREF ColorGUI() { return m_colorGUI; }
@@ -95,6 +98,9 @@ public:
 
 	// Saves the pattern used in the copy/rename dialog to rename files
 	void SaveCopyRenamePattern(const CString& sPattern);
+
+    // Saves the sticky window size to the INI file
+    void SaveStickyWindowRect(CRect rect);
 
 	// Gets the path where the global INI file and the EXE is located
 	LPCTSTR GetEXEPath() { return m_sEXEPath; }
@@ -169,8 +175,11 @@ private:
 	CString m_sLDCInclude;
 	CString m_sCopyRenamePattern;
 	CRect m_defaultWindowRect;
+    CRect m_stickyWindowRect;
 	bool m_bDefaultMaximized;
 	bool m_bDefaultWndToImage;
+    bool m_bStickyWindowSize;
+    bool m_bExplicitWindowRect;
 	CSize m_DefaultFixedCropSize;
 	COLORREF m_colorBackground;
 	COLORREF m_colorGUI;
