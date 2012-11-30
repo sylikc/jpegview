@@ -35,8 +35,10 @@ This replacement has many reasons:
 The tjpeg library is open source and (at least on modern CPUs) performs comparable to the Intel library. It is used by many other
 viewers and several Linux distributions.
 Note that tjpeg including lossless JPEG transformations has been statically linked to JPEGView. Therefore the application has grown
-by 300 KB. However the total size of the package is lower tham before because IJL15.dll and jpegtran.exe are no longer needed.
+by 300 KB. However the total size of the package is lower than before because IJL15.dll and jpegtran.exe are no longer needed.
 
+Bugs fixed:
+- Exposure time display: When nominator and denominator are both big numbers, a fractional value is shown instead of bigNum/bigDenum
 New features:
 - Lossless JPEG transformations integrated into JPEGView. The jpegtran.exe application is no longer part of the distribution of JPEGView.
 - Basque translation, thanks to Xabier Aramendi
