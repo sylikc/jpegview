@@ -126,7 +126,15 @@ void CEXIFDisplay::AddLine(LPCTSTR sDescription, const FILETIME &time) {
 void CEXIFDisplay::AddLine(LPCTSTR sDescription, const Rational &number) {
 	if (number.Denumerator == 1) {
 		AddLine(sDescription, number.Numerator);
-	} else {
+	} else if (number.Numerator > 9) {
+        TCHAR buff[32];
+        if (number.Numerator * 3 < number.Denumerator) {
+		    _stprintf_s(buff, 32, _T("1/%d"), number.Denumerator/number.Numerator);
+        } else {
+            _stprintf_s(buff, 32, _T("%.2f"), double(number.Numerator)/number.Denumerator);
+        }
+		AddLine(sDescription, buff);
+    } else {
 		TCHAR buff[32];
 		_stprintf_s(buff, 32, _T("%d/%d"), number.Numerator, number.Denumerator);
 		AddLine(sDescription, buff);
