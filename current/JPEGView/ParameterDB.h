@@ -22,7 +22,7 @@ public:
 	void WriteToProcessParams(CImageProcessingParams & processParams, EProcessingFlags & eFlags, int & nRotation) const;
 
 	// Initialize section of image to be displayed
-	void InitGeometricParams(CSize sourceSize, double fZoom, CPoint offsets, CSize targetSize);
+	void InitGeometricParams(CSize sourceSize, double fZoom, CPoint offsets, CSize targetSize, bool bStoreRelativeToScreenSize);
 
 	// Write DB entry values to given parameters, using the given target size for the image
 	void WriteToGeometricParams(double & fZoom, CPoint & offsets, CSize sourceSize, CSize targetSize);
@@ -32,6 +32,9 @@ public:
 
 	// Gets if zoom and offset values are stored with this entry
 	bool HasZoomOffsetStored() const;
+
+    // Gets if this entry has stored the zoom rectangle relative to screen size (true) or relative to window size (false)
+    bool IsStoredRelativeToScreenSize() const { return (flags & 32) != 0; }
 
 private:
 	__int64 hash;
@@ -43,7 +46,7 @@ private:
 	uint8 lightenShadowSteepness;
 	uint8 colorCorrection;
 	uint8 contrastCorrection;
-	uint8 flags;
+	uint8 flags; // bit 0: AutoContrast, bit 1:LDC, bit 2: HQ resampling, bit 3,4: Rotation, bit 5: ScreenAsRef
 	uint8 colorCorrectionAmount[6]; // this equals the INI setting at creation time of DB entry
 	int16 zoomRectLeft;
 	int16 zoomRectTop;

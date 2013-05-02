@@ -25,7 +25,7 @@ public:
 
     // Performs a lossless JPEG transformation, transforming the input file and writing the result to the output file.
     // Input and output file can be identical, then the input file is overriden by the resulting output file.
-    static EResult PerformTransformation(LPCTSTR sInputFile, LPCTSTR sOutputFile, ETransformation transformation);
+    static EResult PerformTransformation(LPCTSTR sInputFile, LPCTSTR sOutputFile, ETransformation transformation, bool bAllowTrim);
 
     // Performs a lossless JPEG crop, using the input file and writing the result to the output file.
     // Input and output file can be identical, then the input file is overriden by the resulting output file.

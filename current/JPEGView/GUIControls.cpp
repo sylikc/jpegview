@@ -162,7 +162,7 @@ bool CTextCtrl::OnMouseLButton(EMouseEvent eMouseEvent, int nX, int nY) {
 				m_pEdit->SetFont((HFONT)::GetStockObject(DEFAULT_GUI_FONT));
 				m_pEdit->SetWindowText(m_sText);
 				m_pEdit->LimitText(256);
-				m_pEdit->ShowWindow(SW_SHOW);
+                m_pEdit->ShowWindow(SW_SHOW);
 				m_pEdit->SetFocus();
 				m_pEdit->SetSelAll();
 			}

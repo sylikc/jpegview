@@ -12,6 +12,9 @@ CEXIFDisplayCtl::CEXIFDisplayCtl(CMainDlg* pMainDlg, CPanel* pImageProcPanel) : 
 	m_pImageProcPanel = pImageProcPanel;
 	m_pPanel = m_pEXIFDisplay = new CEXIFDisplay(pMainDlg->m_hWnd, this);
 	m_pEXIFDisplay->GetControl<CButtonCtrl*>(CEXIFDisplay::ID_btnShowHideHistogram)->SetButtonPressedHandler(&OnShowHistogram, this);
+    CButtonCtrl* pCloseBtn = m_pEXIFDisplay->GetControl<CButtonCtrl*>(CEXIFDisplay::ID_btnClose);
+    pCloseBtn->SetButtonPressedHandler(&OnClose, this);
+    pCloseBtn->SetShow(false);
 	m_pEXIFDisplay->SetShowHistogram(CSettingsProvider::This().ShowHistogram());
 }
 
@@ -61,6 +64,7 @@ void CEXIFDisplayCtl::FillEXIFDataDisplay() {
 	} else if (pFileList->Current() != NULL) {
 		sPrefix.Format(_T("[%d/%d]"), pFileList->CurrentIndex() + 1, pFileList->Size());
 		sFileTitle = sCurrentFileName;
+        sFileTitle += Helpers::GetMultiframeIndex(m_pMainDlg->GetCurrentImage());
 	}
 	LPCTSTR sComment = NULL;
 	m_pEXIFDisplay->AddPrefix(sPrefix);
@@ -119,9 +123,21 @@ void CEXIFDisplayCtl::FillEXIFDataDisplay() {
 	}
 }
 
+bool CEXIFDisplayCtl::OnMouseMove(int nX, int nY) {
+    bool bHandled = CPanelController::OnMouseMove(nX, nY);
+    bool bMouseOver = m_pEXIFDisplay->PanelRect().PtInRect(CPoint(nX, nY));
+    m_pEXIFDisplay->GetControl<CButtonCtrl*>(CEXIFDisplay::ID_btnClose)->SetShow(bMouseOver);
+    return bHandled;
+}
+
 void CEXIFDisplayCtl::OnShowHistogram(void* pContext, int nParameter, CButtonCtrl & sender) {
 	CEXIFDisplayCtl* pThis = (CEXIFDisplayCtl*)pContext;
 	pThis->m_pEXIFDisplay->SetShowHistogram(!pThis->m_pEXIFDisplay->GetShowHistogram());
 	pThis->m_pEXIFDisplay->RequestRepositioning();
 	pThis->InvalidateMainDlg();
+}
+
+void CEXIFDisplayCtl::OnClose(void* pContext, int nParameter, CButtonCtrl & sender) {
+    CEXIFDisplayCtl* pThis = (CEXIFDisplayCtl*)pContext;
+    pThis->m_pMainDlg->ExecuteCommand(IDM_SHOW_FILEINFO);
 }

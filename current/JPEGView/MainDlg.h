@@ -14,6 +14,7 @@ class CJPEGProvider;
 class CJPEGImage;
 class CButtonCtrl;
 class CTextCtrl;
+class CPanel;
 class CPanelMgr;
 class CEXIFDisplayCtl;
 class CImageProcPanelCtl;
@@ -22,6 +23,7 @@ class CRotationPanelCtl;
 class CTiltCorrectionPanelCtl;
 class CUnsharpMaskPanelCtl;
 class CWndButtonPanelCtl;
+class CInfoButtonPanelCtl;
 class CZoomNavigatorCtl;
 class CCropCtl;
 class CKeyMap;
@@ -39,13 +41,15 @@ public:
 		POS_First,
 		POS_Last,
 		POS_Next,
+        POS_NextSlideShow,
+        POS_NextAnimation,
 		POS_Previous,
 		POS_Current,
 		POS_Clipboard,
 		POS_Toggle
 	};
 
-	CMainDlg();
+	CMainDlg(bool bForceFullScreen);
 	~CMainDlg();
 
 	BEGIN_MSG_MAP(CMainDlg)
@@ -119,7 +123,11 @@ public:
     LRESULT OnClose(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, BOOL& /*bHandled*/);
 
 	// Called by main()
-	void SetStartupFile(LPCTSTR sStartupFile) { m_sStartupFile = sStartupFile; }
+	void SetStartupInfo(LPCTSTR sStartupFile, int nAutostartSlideShow, Helpers::ESorting eSorting, Helpers::ETransitionEffect eEffect, int nTransitionTime) { 
+        m_sStartupFile = sStartupFile; m_nAutoStartSlideShow = nAutostartSlideShow; m_eForcedSorting = eSorting;
+        if ((int)eEffect >= 0) m_eTransitionEffect = eEffect;
+        if (nTransitionTime > 0) m_nTransitionTime = nTransitionTime;
+    }
 
 	// Called by the different controller classes
 	HWND GetHWND() { return m_hWnd; }
@@ -127,6 +135,7 @@ public:
 	bool IsShowHelp() { return m_bShowHelp; }
 	bool IsInMovieMode() { return m_bMovieMode; }
 	bool IsInZoomMode() { return m_bZoomModeOnLeftMouse; }
+    bool IsPlayingAnimation() { return m_bIsAnimationPlaying; }
 	bool IsFullScreenMode() { return m_bFullScreenMode; }
 	bool IsLandscapeMode() { return m_bLandscapeMode; }
 	bool IsHQResampling() { return m_bHQResampling; }
@@ -144,6 +153,7 @@ public:
 	bool IsMouseOn() { return m_bMouseOn; }
 	CPoint GetMousePos() { return CPoint(m_nMouseX, m_nMouseY); }
 	double GetZoom() { return m_dZoom; }
+    int GetRotation() { return m_nRotation; }
 	CJPEGImage* GetCurrentImage() { return m_pCurrentImage; }
 	CPanelMgr* GetPanelMgr() { return m_pPanelMgr; }
 	LPCTSTR CurrentFileName(bool bFileTitle);
@@ -156,6 +166,7 @@ public:
 	CTiltCorrectionPanelCtl* GetTiltCorrectionPanelCtl() { return m_pTiltCorrectionPanelCtl; }
 	CZoomNavigatorCtl* GetZoomNavigatorCtl() { return m_pZoomNavigatorCtl; }
 	CWndButtonPanelCtl* GetWndButtonPanelCtl() { return m_pWndButtonPanelCtl; }
+    CInfoButtonPanelCtl* GetInfoButtonPanelCtl() { return m_pInfoButtonPanelCtl; }
 	CCropCtl* GetCropCtl() { return m_pCropCtl; }
 	const CRect& ClientRect() { return m_clientRect; }
     const CRect& WindowRectOnClose() { return m_windowRectOnClose; } // only valid after having closed the window
@@ -164,6 +175,14 @@ public:
 	CJPEGProvider* GetJPEGProvider() { return m_pJPEGProvider; }
 	CKeyMap* GetKeyMap() { return m_pKeyMap; }
 	CPoint GetDIBOffset() { return m_DIBOffsets; }
+    double GetZoomMultiplier(CJPEGImage* pImage, const CRect& clientRect);
+    Helpers::EAutoZoomMode GetAutoZoomMode() { return m_eAutoZoomMode; }
+    CPoint GetOffsets() { return m_offsets; }
+    CImageProcessingParams* GetImageProcessingParams() { return m_pImageProcParams; }
+    EProcessingFlags CreateDefaultProcessingFlags(bool bKeepParams = false);
+    void DisplayErrors(CJPEGImage* pCurrentImage, const CRect& clientRect, CDC& dc);
+    void DisplayFileName(const CRect& imageProcessingArea, CDC& dc);
+    void BlendBlackRect(CDC & targetDC, CPanel& panel, float fBlendFactor);
 
 	void UpdateWindowTitle();
 	void MouseOff();
@@ -183,6 +202,9 @@ public:
 	int TrackPopupMenu(CPoint pos, HMENU hMenu);
 	void AdjustWindowToImage(bool bAfterStartup);
 	bool IsAdjustWindowToImage();
+    Helpers::ETransitionEffect GetTransitionEffect() { return m_eTransitionEffect; }
+    int GetTransitionTime() { return m_nTransitionTime; }
+    bool IsInSlideShowWithTransition() { return m_bMovieMode && UseSlideShowTransitionEffect(); }
 
 	// Called by button clicked handlers - must be static
 	static void OnExecuteCommand(void* pContext, int nParameter, CButtonCtrl & sender);
@@ -191,6 +213,8 @@ public:
 private:
 
 	CString m_sStartupFile; // file passed on command line
+    int m_nAutoStartSlideShow; // if positive: Auto start slide show with given intervall in seconds, passed on command line
+    Helpers::ESorting m_eForcedSorting; // forced sorting mode on command line
 	CFileList* m_pFileList; // used for navigation
 	CJPEGProvider * m_pJPEGProvider; // reads JPEG files (read ahead)
 	CJPEGImage * m_pCurrentImage; // currently displayed image
@@ -259,6 +283,8 @@ private:
 	bool m_bSpanVirtualDesktop;
 	bool m_bPanMouseCursorSet;
 	bool m_bMouseOn;
+    bool m_bKeepParametersBeforeAnimation;
+    bool m_bIsAnimationPlaying;
 	int m_nMonitor;
 	WINDOWPLACEMENT m_storedWindowPlacement;
 	CRect m_monitorRect;
@@ -272,17 +298,23 @@ private:
 	CNavigationPanelCtl* m_pNavPanelCtl;
 	CEXIFDisplayCtl* m_pEXIFDisplayCtl;
 	CWndButtonPanelCtl* m_pWndButtonPanelCtl;
+    CInfoButtonPanelCtl* m_pInfoButtonPanelCtl;
 	CUnsharpMaskPanelCtl* m_pUnsharpMaskPanelCtl;
 	CRotationPanelCtl* m_pRotationPanelCtl;
 	CTiltCorrectionPanelCtl* m_pTiltCorrectionPanelCtl;
 	CPanelMgr* m_pPanelMgr;
 	CKeyMap* m_pKeyMap;
+    Helpers::ETransitionEffect m_eTransitionEffect;
+    int m_nTransitionTime;
+    DWORD m_nLastSlideShowImageTickCount;
+    bool m_bUseLosslessWEBP;
 
 	bool OpenFile(bool bFullScreen, bool bAfterStartup);
 	void OpenFile(LPCTSTR sFileName, bool bAfterStartup);
 	bool SaveImage(bool bFullSize);
 	bool SaveImageNoPrompt(LPCTSTR sFileName, bool bFullSize);
 	void BatchCopy();
+    void SetAsDefaultViewer();
 	void HandleUserCommands(uint32 virtualKeyCode);
 	void GotoImage(EImagePosition ePos, int nFlags);
 	void AdjustLDC(int nMode, double dInc);
@@ -312,4 +344,12 @@ private:
 	void CheckIfApplyAutoFitWndToImage(bool bInInitDialog);
 	void PrefetchDIB(const CRect& clientRect);
     bool HandleMouseButtonByKeymap(int nMouseButton, bool bExecuteCommand = true);
+    bool UseSlideShowTransitionEffect();
+    void PaintToDC(CDC& dc);
+    void AnimateTransition();
+    void CleanupAndTeminate();
+    // this is for animated GIFs
+    void StartAnimation();
+    void AdjustAnimationFrameTime();
+    void StopAnimation();
 };

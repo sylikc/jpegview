@@ -285,3 +285,12 @@ Click and drag the mouse vertically to correct image tilt.	Clic şi trage mouse-
 Drag at the left or right border for asymmetric correction.	Trage la stânga sau la dreapta bordura pentru corecţie asimetrică.
 Fit window to image	Ajustează fereastra la mărimea imaginii
 Keep aspect ratio on crop	Păstrează proporţia imaginii la decupare
+Lossless JPEG transformations	Transformări JPEG fără pierderi
+Performing the lossless transformation failed!	Transformarea fără pierderi a eșuat!
+Image width and height must be dividable by the JPEG block size (8 or 16) for lossless transformations!	Lățimea și înălțimea imaginii trebuie să fie divizibilă cu blocul de mărime JPEG (8 sau 16) pentru transformări fără pierderi!
+Reading the JPEG file from disk failed	Citirea fișierului JPEG de pe disc a eșuat!
+Writing the resulting JPEG file to disk failed	Scrierea rezultatului fișierului JPEG pe disc a eșuat! 
+Performing the transformation failed	Efectuarea transformării a eșuat!
+The transformation can be applied if the image is trimmed to the next matching size but this will remove some border pixels.	Transformarea poate fi aplicată doar dacă imaginea este tăiată la dimensiunea potrivită dar acet lucru va tăia pixeli din marginile imaginii. 
+Trim the image and apply transformation? Trimming cannot be undone!	Decupează imaginea și aplică transformarea? Decuparea nu poate fi făcută!
+Note: Set the key 'TrimWithoutPromptLosslessJPEG=true' in the INI file to always trim without showing this message.	Notă: Setarea parametrului 'TrimWithoutPromptLosslessJPEG=true' 'DecupareJPEGFărăPiederiFărăAtenționare=adevărat' in fișierul INI tot timpul va decupa imaginea fără să arate acest mesaj. 

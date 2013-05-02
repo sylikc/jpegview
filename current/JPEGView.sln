@@ -5,6 +5,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "JPEGView", "JPEGView\JPEGVi
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WICLoader", "WICLoader\WICLoader.vcxproj", "{91D548E5-3C0D-4AE3-9429-391910852D8C}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WEBP", "WEBP\WEBP.vcxproj", "{238F5CD4-8E56-4831-8A1F-525281EBD79E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -19,6 +21,10 @@ Global
 		{91D548E5-3C0D-4AE3-9429-391910852D8C}.Debug|Win32.Build.0 = Debug|Win32
 		{91D548E5-3C0D-4AE3-9429-391910852D8C}.Release|Win32.ActiveCfg = Release|Win32
 		{91D548E5-3C0D-4AE3-9429-391910852D8C}.Release|Win32.Build.0 = Release|Win32
+		{238F5CD4-8E56-4831-8A1F-525281EBD79E}.Debug|Win32.ActiveCfg = Debug|Win32
+		{238F5CD4-8E56-4831-8A1F-525281EBD79E}.Debug|Win32.Build.0 = Debug|Win32
+		{238F5CD4-8E56-4831-8A1F-525281EBD79E}.Release|Win32.ActiveCfg = Release|Win32
+		{238F5CD4-8E56-4831-8A1F-525281EBD79E}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

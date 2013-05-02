@@ -274,3 +274,44 @@ Transform image	Μετασχηματισμός εικόνας
 Rotate...	Περιστροφή...
 Mirror horizontally	Κατοπτρικά οριζοντίως
 Mirror vertically	Κατοπτρικά καθέτως
+Transition Effect	Εφέ μετάβασης
+None	Κανένα
+Blend	Μίξη εικόνων
+Slide from right	Είσοδος από δεξιά
+Slide from left	Είσοδος από αριστερά
+Slide from top	Είσοδος από επάνω
+Slide from bottom	Είσοδος από κάτω
+Roll from right	Εκτύλιξη από δεξιά
+Roll from left	Εκτύλιξη από αριστερά
+Roll from top	Εκτύλιξη από επάνω
+Roll from bottom	Εκτύλιξη από κάτω
+Scroll from right	Κίνηση από δεξιά
+Scroll from left	Κίνηση από αριστερά
+Scroll from top	Κίνηση από επάνω
+Scroll from bottom	Κίνηση από κάτω
+Transition Speed	Ταχύτητα μετάβασης
+Very fast	Πολύ γρήγορα
+Fast	Γρήγορα
+Normal	Κανονικά
+Slow	Αργά
+Very slow	Πολύ αργά
+Error	Σφάλμα
+Warning	Προειδοποίηση
+Error while writing the following registry key:	Σφάλμα κατά την εγγραφή του ακόλουθου Κλειδιού Μητρώου:
+Set as default viewer...	Όρισε ως προεπιλεγμένο Προβολέα...
+Set JPEGView as default image viewer	Όρισε το JPEGVIEW ως προεπιλεγμένο Προβολέα Εικόνων...
+JPEGView is registered as default viewer for the selected file formats.	Το JPEGVIEW έχει οριστεί ως προεπιλεγμένος Προβολέας για τις επιλεγμένες μορφές αρχείων.
+Registration applies to the current user only.	Η καταχώρηση ισχύει μόνο για τον τρέχοντα χρήστη.
+Extension	Προέκταση λογισμικού
+File type	Τύπος αρχείων
+The following file extensions cannot be unregistered because they have been registered in the 'local machine' registry area.	Οι ακόλουθες Προεκτάσεις Αρχείων δεν μπορούν να αφαιρεθούν επειδή έχουν καταχωρηθεί στην Περιοχή Μητρώου 'local machine'.
+Registering or unregistering file extensions in this registry area requires administration privileges and cannot be done in JPEGView.	Η καταχώρηση/αποκαταχώρηση Προεκτάσεων Αρχείων σε αυτή την Περιοχή Μητρώου απαιτεί Δικαιώματα Διαχείρισης και δεν μπορεί να γίνει στο JPEGVIEW.
+Press 'OK' to continue with registration or 'Cancel' to not modify any registrations.	Πάτα 'ΟΚ' για συνέχεια της καταχώρησης ή 'Άκυρο' για μη-τροποποίηση καταχωρήσεων.
+Unregistering not possible	Η αποκαταχώρηση δεν είναι δυνατή.
+%s images	εικόνες
+%s images (processed by Window Imaging Component - WIC)	εικόνες (επεξεργασία με Window Imaging Component - WIC)
+%s camera raw images (embedded JPEGs only)	εικόνες CAMERA RAW (μόνο embedded JPEGs)
+The following image extensions are protected by the operating system.	Οι ακόλουθες Προεκτάσεις Αρχείων προστατεύονται από το Λειτουργικό Σύστημα.
+JPEGView can try to remove the restrictions automatically.	Το JPEGVIEW μπορεί να προσπαθήσει να αφαιρέσει τους περιορισμούς αυτόματα.
+However this will fail if the current user has no administration privileges.	Ωστόσο αυτό θα αποτύχει εάν ο παρών χρήστης δεν έχει Δικαιώματα Διαχείρισης.
+Insufficient rights to remove the restrictions. Continue?	Μη επαρκή Δικαιώματα για αφαίρεση περιορισμών. Να συνεχίσω;

@@ -55,6 +55,8 @@ public:
 	double BrightenShadowsSteepness() { return m_dBrightenShadowsSteepness; }
 	CImageProcessingParams LandscapeModeParams(const CImageProcessingParams& templParams);
 	int MaxSlideShowFileListSize() { return m_nMaxSlideShowFileListSize; }
+    Helpers::ETransitionEffect SlideShowTransitionEffect() { return m_eSlideShowTransitionEffect; }
+    int SlideShowEffectTimeMs() { return m_nSlideShowEffectTimeMs; }
 	bool ForceGDIPlus() { return m_bForceGDIPlus; }
     bool SingleInstance() { return m_bSingleInstance; }
 	int JPEGSaveQuality() { return m_nJPEGSaveQuality; }
@@ -62,8 +64,10 @@ public:
 	LPCTSTR DefaultSaveFormat() { return m_sDefaultSaveFormat; }
     LPCTSTR FilesProcessedByWIC() { return m_sFilesProcessedByWIC; }
 	LPCTSTR FileEndingsRAW() { return m_sFileEndingsRAW; }
+    void AddTemporaryRAWFileEnding(LPCTSTR sEnding) { m_sFileEndingsRAW += CString(_T(";*.")) + sEnding; }
 	bool CreateParamDBEntryOnSave() { return m_bCreateParamDBEntryOnSave; }
 	bool SaveWithoutPrompt() { return m_bSaveWithoutPrompt; }
+    bool TrimWithoutPromptLosslessJPEG() { return m_bTrimWithoutPromptLosslessJPEG; }
 	bool WrapAroundFolder() { return m_bWrapAroundFolder; }
 	bool ExchangeXButtons() { return m_bExchangeXButtons; }
 	bool AutoRotateEXIF() { return m_bAutoRotateEXIF; }
@@ -84,10 +88,12 @@ public:
 	COLORREF ColorHighlight() { return m_colorHighlight; }
 	COLORREF ColorSelected() { return m_colorSelected; }
 	COLORREF ColorSlider() { return m_colorSlider; }
+    COLORREF ColorFileName() { return m_colorFileName; }
 	const CUnsharpMaskParams& UnsharpMaskParams() { return m_unsharpMaskParms; }
 	bool RTShowGridLines() { return m_bRTShowGridLines; }
 	bool RTAutoCrop() { return m_bRTAutoCrop; }
 	bool RTPreserveAspectRatio() { return m_bRTPreserveAspectRatio; }
+    LPCTSTR FileNameFormat() { return m_sFileNameFormat; }
 
 	std::list<CUserCommand*> & UserCommandList() { return m_userCommands; }
 
@@ -157,6 +163,8 @@ private:
 	double m_dBrightenShadowsSteepness;
 	CString m_sLandscapeModeParams;
 	int m_nMaxSlideShowFileListSize;
+    Helpers::ETransitionEffect m_eSlideShowTransitionEffect;
+    int m_nSlideShowEffectTimeMs;
 	bool m_bForceGDIPlus;
     bool m_bSingleInstance;
 	int m_nJPEGSaveQuality;
@@ -167,6 +175,7 @@ private:
 	bool m_bCreateParamDBEntryOnSave;
 	bool m_bWrapAroundFolder;
 	bool m_bSaveWithoutPrompt;
+    bool m_bTrimWithoutPromptLosslessJPEG;
 	bool m_bExchangeXButtons;
 	bool m_bAutoRotateEXIF;
 	CString m_sACCExclude;
@@ -186,14 +195,17 @@ private:
 	COLORREF m_colorHighlight;
 	COLORREF m_colorSelected;
 	COLORREF m_colorSlider;
+    COLORREF m_colorFileName;
 	CUnsharpMaskParams m_unsharpMaskParms;
 	bool m_bRTShowGridLines;
 	bool m_bRTAutoCrop;
 	bool m_bRTPreserveAspectRatio;
+    CString m_sFileNameFormat;
 
 	std::list<CUserCommand*> m_userCommands;
 
 	void MakeSureUserINIExists();
+    CString ReplacePlaceholdersFileNameFormat(const CString& sFileNameFormat);
 	void ReadWriteableINISettings();
 	CString GetString(LPCTSTR sKey, LPCTSTR sDefault);
 	int GetInt(LPCTSTR sKey, int nDefault, int nMin, int nMax);

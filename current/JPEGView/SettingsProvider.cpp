@@ -206,6 +206,8 @@ void CSettingsProvider::ReadWriteableINISettings() {
 	}
 
 	m_nMaxSlideShowFileListSize = GetInt(_T("MaxSlideShowFileListSizeKB"), 200, 100, 10000);
+    m_eSlideShowTransitionEffect = Helpers::ConvertTransitionEffectFromString(GetString(_T("SlideShowTransitionEffect"), _T("")));
+    m_nSlideShowEffectTimeMs = GetInt(_T("SlideShowEffectTime"), 200, 100, 5000);
 	m_bForceGDIPlus = GetBool(_T("ForceGDIPlus"), false);
     m_bSingleInstance = GetBool(_T("SingleInstance"), false);
 	m_nJPEGSaveQuality = GetInt(_T("JPEGSaveQuality"), 85, 0, 100);
@@ -216,6 +218,7 @@ void CSettingsProvider::ReadWriteableINISettings() {
 	m_bCreateParamDBEntryOnSave = GetBool(_T("CreateParamDBEntryOnSave"), true);
 	m_bWrapAroundFolder = GetBool(_T("WrapAroundFolder"), true);
 	m_bSaveWithoutPrompt = GetBool(_T("OverrideOriginalFileWithoutSaveDialog"), false);
+    m_bTrimWithoutPromptLosslessJPEG = GetBool(_T("TrimWithoutPromptLosslessJPEG"), false);
 	m_bExchangeXButtons = GetBool(_T("ExchangeXButtons"), true);
 	m_bAutoRotateEXIF = GetBool(_T("AutoRotateEXIF"), true);
 	m_nDisplayMonitor = GetInt(_T("DisplayMonitor"), -1, -1, 16);
@@ -253,6 +256,8 @@ void CSettingsProvider::ReadWriteableINISettings() {
 	m_colorHighlight = GetColor(_T("HighlightColor"), RGB(255, 205, 0));
 	m_colorSelected = GetColor(_T("SelectionColor"), RGB(255, 205, 0));
 	m_colorSlider = GetColor(_T("SliderColor"), RGB(255, 0, 80));
+    m_colorFileName = GetColor(_T("FileNameColor"), m_colorGUI);
+
 	CString sUnsharpMaskParams = GetString(_T("UnsharpMaskParameters"), _T(""));
 	float fRadius, fAmount, fThreshold;
 	if (_stscanf(sUnsharpMaskParams, _T(" %f %f %f "), &fRadius, &fAmount, &fThreshold) == 3) {
@@ -267,6 +272,8 @@ void CSettingsProvider::ReadWriteableINISettings() {
 	m_bRTShowGridLines = GetBool(_T("RTShowGridLines"), true);
 	m_bRTAutoCrop = GetBool(_T("RTAutoCrop"), true);
 	m_bRTPreserveAspectRatio = GetBool(_T("RTPreserveAspectRatio"), true);
+    m_sFileNameFormat = GetString(_T("FileNameFormat"), _T("%index% %filepath%"));
+    m_sFileNameFormat = ReplacePlaceholdersFileNameFormat(m_sFileNameFormat);
 }
 
 CImageProcessingParams CSettingsProvider::LandscapeModeParams(const CImageProcessingParams& templParams) {
@@ -358,6 +365,18 @@ void CSettingsProvider::SaveStickyWindowRect(CRect rect) {
 
         m_bUserINIExists = true;
     }
+}
+
+CString CSettingsProvider::ReplacePlaceholdersFileNameFormat(const CString& sFileNameFormat) {
+    // needed because a file name may contains the original placeholders from INI file
+    CString sNewString = sFileNameFormat;
+    sNewString.Replace(_T("%filename%"), _T("<f>"));
+    sNewString.Replace(_T("%filepath%"), _T("<p>"));
+    sNewString.Replace(_T("%index%"), _T("<i>"));
+    sNewString.Replace(_T("%zoom%"), _T("<z>"));
+    sNewString.Replace(_T("%size%"), _T("<s>"));
+    sNewString.Replace(_T("%filesize%"), _T("<l>"));
+    return sNewString;
 }
 
 void CSettingsProvider::MakeSureUserINIExists() {

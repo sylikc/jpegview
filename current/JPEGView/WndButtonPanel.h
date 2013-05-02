@@ -2,7 +2,7 @@
 
 #include "Panel.h"
 
-// Window button panel
+// Window button panel - panel with buttons shown top, right
 class CWndButtonPanel : public CPanel {
 public:
 	// IDs of the controls on this panel
@@ -12,7 +12,7 @@ public:
 		ID_btnClose
 	};
 public:
-	// The panel is on the given window on top border of image processing panel
+	// The panel is on the given window on top border above image processing panel
 	CWndButtonPanel(HWND hWnd, INotifiyMouseCapture* pNotifyMouseCapture, CPanel* pImageProcPanel);
 
 	CButtonCtrl* GetBtnMinimize() { return GetControl<CButtonCtrl*>(ID_btnMinimize); }

@@ -66,6 +66,12 @@ STYLE 0x00CF0000
 BEGIN
 END
 
+IDD_SLIDESHOWDLG DIALOG  0, 0, 0, 0
+FONT 8, "MS Sans Serif"
+STYLE 0x10000000
+BEGIN
+END
+
 IDD_BATCHCOPY DIALOGEX 10,9,626,355
 FONT 8,"MS Sans Serif",0,0
 STYLE 0x10C80000
@@ -87,13 +93,23 @@ BEGIN
   CONTROL "",IDC_RESULT,"Static",0x50000000,442,299,171,21
 END
 
+IDD_SETFILEEXTENSIONS DIALOGEX 8,7,363,368
+FONT 8,"MS Sans Serif",0,0
+STYLE 0x10C80000
+BEGIN
+  CONTROL "",IDC_FILEEXTENSIONS,"SysListView32",0x50010009,10,36,339,298,0x00000200
+  CONTROL "",IDC_HINT_FILE_EXT,"Static",0x50000000,13,9,336,25
+  CONTROL "",IDC_FE_CANCEL,"Button",0x50010000,253,344,96,15
+  CONTROL "",IDC_FE_OK,"Button",0x50010001,154,344,96,15
+END
+
 IDD_ABOUT DIALOGEX 8,7,243,142
 FONT 8,"MS Sans Serif",0,0
 STYLE 0x10C80000
 BEGIN
   CONTROL "",IDC_CLOSE,"Button",0x50010001,133,120,104,15
   CONTROL "",IDC_JPEGVIEW,"Static",0x50000000,64,7,163,9
-  CONTROL "Copyright 2006-2012 David Kleiner",IDC_COPYRIGHT,"Static",0x50000000,64,22,163,9
+  CONTROL "Copyright 2006-2013 David Kleiner",IDC_COPYRIGHT,"Static",0x50000000,64,22,163,9
   CONTROL IDR_MAINFRAME,IDC_ICONJPEGVIEW,"Static",0x50000203,18,14,22,20
   CONTROL "",IDC_LICENSE,"RichEdit20W",0x50010804,64,68,168,42
   CONTROL "",IDC_SIMDMODE,"Static",0x50000000,64,36,163,10
@@ -209,6 +225,35 @@ BEGIN
 		  MENUITEM "Waiting time\t7 sec",		IDM_SLIDESHOW_7
 		  MENUITEM "Waiting time\t10 sec",		IDM_SLIDESHOW_10
 		  MENUITEM "Waiting time\t20 sec",		IDM_SLIDESHOW_20
+          POPUP "Transition Effect" 
+            BEGIN
+                MENUITEM "None",				IDM_EFFECT_NONE
+                MENUITEM SEPARATOR
+                MENUITEM "Blend",				IDM_EFFECT_BLEND
+                MENUITEM SEPARATOR
+                MENUITEM "Slide from right",	IDM_EFFECT_SLIDE_RL
+                MENUITEM "Slide from left",		IDM_EFFECT_SLIDE_LR
+                MENUITEM "Slide from top",		IDM_EFFECT_SLIDE_TB
+                MENUITEM "Slide from bottom",	IDM_EFFECT_SLIDE_BT
+                MENUITEM SEPARATOR
+                MENUITEM "Roll from right",	    IDM_EFFECT_ROLL_RL
+                MENUITEM "Roll from left",		IDM_EFFECT_ROLL_LR
+                MENUITEM "Roll from top",		IDM_EFFECT_ROLL_TB
+                MENUITEM "Roll from bottom",	IDM_EFFECT_ROLL_BT
+                MENUITEM SEPARATOR
+                MENUITEM "Scroll from right",	IDM_EFFECT_SCROLL_RL
+                MENUITEM "Scroll from left",    IDM_EFFECT_SCROLL_LR
+                MENUITEM "Scroll from top",		IDM_EFFECT_SCROLL_TB
+                MENUITEM "Scroll from bottom",	IDM_EFFECT_SCROLL_BT
+            END
+          POPUP "Transition Speed" 
+            BEGIN
+                MENUITEM "Very fast",			IDM_EFFECTTIME_VERY_FAST
+                MENUITEM "Fast",				IDM_EFFECTTIME_FAST
+                MENUITEM "Normal",	            IDM_EFFECTTIME_NORMAL
+                MENUITEM "Slow",		        IDM_EFFECTTIME_SLOW
+                MENUITEM "Very slow",		    IDM_EFFECTTIME_VERY_SLOW
+            END
 		  MENUITEM SEPARATOR
 		  MENUITEM "Movie",						IDM_MOVIE_START_FPS
 		  MENUITEM "5 fps",						IDM_MOVIE_5_FPS
@@ -272,6 +317,8 @@ BEGIN
         BEGIN 
           MENUITEM "Edit global settings...",	IDM_EDIT_GLOBAL_CONFIG
           MENUITEM "Edit user settings...",		IDM_EDIT_USER_CONFIG
+          MENUITEM SEPARATOR
+          MENUITEM "Set as default viewer...",	IDM_SET_AS_DEFAULT_VIEWER
 		  MENUITEM SEPARATOR
           MENUITEM "Backup parameter DB...",	IDM_BACKUP_PARAMDB
           MENUITEM "Restore parameter DB...",	IDM_RESTORE_PARAMDB
@@ -305,14 +352,22 @@ BEGIN
     END 
 END 
 
+SlideShowMenu MENU 
+BEGIN 
+  POPUP "SlideShowMenu" 
+    BEGIN
+        MENUITEM "Stop slide show/movie\tEsc",		IDM_STOP_MOVIE
+    END 
+END
+
 /////////////////////////////////////////////////////////////////////////////
 //
 // Version
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 1,0,27,0
- PRODUCTVERSION 1,0,27,0
+ FILEVERSION 1,0,29,0
+ PRODUCTVERSION 1,0,29,0
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -331,7 +386,7 @@ BEGIN
             VALUE "FileDescription", "High quality resampling JPEG viewer\0"
             VALUE "FileVersion", JPEGVIEW_VERSION
             VALUE "InternalName", "JPEGView\0"
-            VALUE "LegalCopyright", "Copyright 2006-2012 David Kleiner\0"
+            VALUE "LegalCopyright", "Copyright 2006-2013 David Kleiner\0"
             VALUE "OriginalFilename", "JPEGView.exe\0"
             VALUE "ProductName", "JPEGView Application\0"
             VALUE "ProductVersion", JPEGVIEW_VERSION

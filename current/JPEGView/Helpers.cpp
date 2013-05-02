@@ -3,6 +3,7 @@
 #include "NLS.h"
 #include "MultiMonitorSupport.h"
 #include "JPEGImage.h"
+#include "FileList.h"
 #include "SettingsProvider.h"
 #include <math.h>
 
@@ -385,6 +386,24 @@ __int64 CalculateJPEGFileHash(void* pJPEGStream, int nStreamLength) {
 	return ((__int64)crcValue << 32) + sumValue;
 }
 
+CString TryConvertFromUTF8(uint8* pComment, int nLengthInBytes) {
+    wchar_t* pCommentUnicode = new wchar_t[nLengthInBytes + 1];
+    char* pCommentBack = new char[nLengthInBytes + 1];
+    CString result;
+    int nCharsConverted = ::MultiByteToWideChar(CP_UTF8, MB_ERR_INVALID_CHARS, (LPCSTR)pComment, nLengthInBytes, pCommentUnicode, nLengthInBytes);
+    if (nCharsConverted > 0) {
+        pCommentUnicode[nCharsConverted] = 0;
+        if (::WideCharToMultiByte(CP_UTF8, 0, pCommentUnicode, -1, pCommentBack, nLengthInBytes + 1, NULL , NULL) > 0) {
+            if (memcmp(pComment, pCommentBack, nLengthInBytes) == 0) {
+                result = CString((LPCWSTR)pCommentUnicode);
+            }
+        }
+    }
+    delete[] pCommentUnicode;
+    delete[] pCommentBack;
+    return result;
+}
+
 CString GetJPEGComment(void* pJPEGStream, int nStreamLength) {
 	uint8* pCommentSeg = (uint8*)FindJPEGMarker(pJPEGStream, nStreamLength, 0xFE);
 	if (pCommentSeg == NULL) {
@@ -406,6 +425,11 @@ CString GetJPEGComment(void* pJPEGStream, int nStreamLength) {
 			return CString("");
 		}
 	}
+
+    CString sConvertedFromUTF8 = TryConvertFromUTF8(pComment, nCommentLen);
+    if (!sConvertedFromUTF8.IsEmpty()) {
+        return sConvertedFromUTF8;
+    }
 
 	// check if this is a reasonable string - it must contain enough characters between a and z and A and Z
 	if (nCommentLen < 7) {
@@ -544,6 +568,37 @@ CSize GetMaxClientSize(HWND hWnd) {
 		workingArea.Height() - 2 * ::GetSystemMetrics(SM_CYSIZEFRAME) - ::GetSystemMetrics(SM_CYCAPTION));
 }
 
+ETransitionEffect ConvertTransitionEffectFromString(LPCTSTR str) {
+    if (_tcsicmp(str, _T("Blend")) == 0) {
+        return TE_Blend;
+    } else if (_tcsicmp(str, _T("SlideRL")) == 0) {
+        return TE_SlideRL;
+    } else if (_tcsicmp(str, _T("SlideLR")) == 0) {
+        return TE_SlideLR;
+    } else if (_tcsicmp(str, _T("SlideTB")) == 0) {
+        return TE_SlideTB;
+    } else if (_tcsicmp(str, _T("SlideBT")) == 0) {
+        return TE_SlideBT;
+    } else if (_tcsicmp(str, _T("RollRL")) == 0) {
+        return TE_RollRL;
+    } else if (_tcsicmp(str, _T("RollLR")) == 0) {
+        return TE_RollLR;
+    } else if (_tcsicmp(str, _T("RollTB")) == 0) {
+        return TE_RollTB;
+    } else if (_tcsicmp(str, _T("RollBT")) == 0) {
+        return TE_RollBT;
+    } else if (_tcsicmp(str, _T("ScrollRL")) == 0) {
+        return TE_ScrollRL;
+    } else if (_tcsicmp(str, _T("ScrollLR")) == 0) {
+        return TE_ScrollLR;
+    } else if (_tcsicmp(str, _T("ScrollTB")) == 0) {
+        return TE_ScrollTB;
+    } else if (_tcsicmp(str, _T("ScrollBT")) == 0) {
+        return TE_ScrollBT;
+    }
+    return TE_None;
+}
+
 static bool IsInFileEndingList(LPCTSTR sFileEndings, LPCTSTR sEnding) {
 	const int BUFFER_SIZE = 256;
     TCHAR buffer[BUFFER_SIZE];
@@ -607,6 +662,155 @@ CString ReplacePathByShortForm(LPCTSTR sPath) {
 		return sShortPath + sLast;
 	}
 	return CString(sPath);
+}
+
+// strstr() ignoring case
+LPTSTR stristr(LPCTSTR szStringToBeSearched, LPCTSTR szSubstringToSearchFor) {
+    LPCTSTR pPos = NULL;
+    LPCTSTR szCopy1 = NULL;
+    LPCTSTR szCopy2 = NULL;
+     
+    // verify parameters
+    if ( szStringToBeSearched == NULL || szSubstringToSearchFor == NULL ) {
+        return (LPTSTR)szStringToBeSearched;
+    }
+     
+    // empty substring - return input (consistent with strstr)
+    if ( _tcslen(szSubstringToSearchFor) == 0 ) {
+        return (LPTSTR)szStringToBeSearched;
+    }
+     
+    szCopy1 = _tcslwr(_tcsdup(szStringToBeSearched));
+    szCopy2 = _tcslwr(_tcsdup(szSubstringToSearchFor));
+     
+    if ( szCopy1 == NULL || szCopy2 == NULL ) {
+        // another option is to raise an exception here
+        free((void*)szCopy1);
+        free((void*)szCopy2);
+        return NULL;
+    }
+     
+    pPos = _tcsstr(szCopy1, szCopy2);
+     
+    if ( pPos != NULL ) {
+        // map to the original string
+        pPos = szStringToBeSearched + (pPos - szCopy1);
+    }
+     
+    free((void*)szCopy1);
+    free((void*)szCopy2);
+     
+    return (LPTSTR)pPos;
+ } // stristr(...)
+
+__int64 GetFileSize(LPCTSTR sPath) {
+    HANDLE hFile = ::CreateFile(sPath, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, 0, NULL);
+	if (hFile == INVALID_HANDLE_VALUE) {
+		return 0;
+	}
+    __int64 fileSize = 0;
+    ::GetFileSizeEx(hFile, (PLARGE_INTEGER)&fileSize);
+    ::CloseHandle(hFile);
+    return fileSize;
+}
+
+// Gets the frame index of the next frame, depending on the index of the last image (relevant if the image is a multiframe image)
+int GetFrameIndex(CJPEGImage* pImage, bool bNext, bool bPlayAnimation, bool & switchImage) {
+    bool isMultiFrame = pImage != NULL && pImage->NumberOfFrames() > 1;
+    bool isAnimation = pImage != NULL && pImage->IsAnimation();
+    int nFrameIndex = 0;
+    switchImage = true;
+    if (isMultiFrame) {
+        switchImage = false;
+        nFrameIndex = pImage->FrameIndex() + (bNext ? 1 : -1);
+        if (isAnimation) {
+            if (bPlayAnimation) {
+                if (nFrameIndex < 0) {
+                    nFrameIndex = pImage->NumberOfFrames() - 1;
+                } else if (nFrameIndex > pImage->NumberOfFrames() - 1) {
+                    nFrameIndex = 0;
+                }
+            } else {
+                switchImage = true;
+                nFrameIndex = 0;
+            }
+        } else {
+            if (nFrameIndex < 0 || nFrameIndex >= pImage->NumberOfFrames()) {
+                nFrameIndex = 0;
+                switchImage = true;
+            }
+        }
+    }
+    if (bPlayAnimation && pImage == NULL) {
+        switchImage = false; // never switch image when error during animation playing
+    }
+
+    return nFrameIndex;
+}
+
+// Gets an index string of the form [a/b] for multiframe images, empty string for single frame images
+CString GetMultiframeIndex(CJPEGImage* pImage) {
+    bool isMultiFrame = pImage != NULL && pImage->NumberOfFrames() > 1;
+    if (isMultiFrame && !pImage->IsAnimation()) {
+        CString s;
+        s.Format(_T(" [%d/%d]"), pImage->FrameIndex() + 1, pImage->NumberOfFrames());
+        return s;
+    }
+    return CString(_T(""));
+}
+
+CString GetFileInfoString(LPCTSTR sFormat, CJPEGImage* pImage, CFileList* pFilelist, double dZoom) {
+    if (pImage == NULL) {
+        return CString(_T(""));
+    }
+    bool isClipboardImage = pImage->IsClipboardImage();
+    if (_tcscmp(sFormat, _T("<i>  <p>")) == 0) {
+        if (isClipboardImage) return CString(_T("Clipboard Image"));
+        CString sFileInfo;
+        sFileInfo.Format(_T("[%d/%d]  %s"), pFilelist->CurrentIndex() + 1, pFilelist->Size(), pFilelist->Current() + GetMultiframeIndex(pImage));
+        return sFileInfo;
+    }
+    
+    CString sFileInfo(sFormat);
+    if (_tcsstr(sFormat, _T("<f>")) != NULL) {
+        CString sFileName = isClipboardImage ? _T("Clipboard Image") : pFilelist->CurrentFileTitle() + GetMultiframeIndex(pImage);
+        sFileInfo.Replace(_T("<f>"), sFileName);
+    }
+    if (_tcsstr(sFormat, _T("<p>")) != NULL) {
+        CString sFilePath = isClipboardImage ? _T("Clipboard Image") : pFilelist->Current() + GetMultiframeIndex(pImage);
+        sFileInfo.Replace(_T("<p>"), sFilePath);
+    }
+    if (_tcsstr(sFormat, _T("<i>")) != NULL) {
+        CString sIndex;
+        if (!isClipboardImage) sIndex.Format(_T("[%d/%d]"), pFilelist->CurrentIndex() + 1, pFilelist->Size());
+        sFileInfo.Replace(_T("<i>"), sIndex);
+    }
+    if (_tcsstr(sFormat, _T("<z>")) != NULL) {
+        TCHAR buff[32];
+		_stprintf_s(buff, 32, _T("%d %%"), int(dZoom*100 + 0.5));
+        sFileInfo.Replace(_T("<z>"), buff);
+    }
+    if (_tcsstr(sFormat, _T("<s>")) != NULL) {
+        TCHAR buff[48];
+		_stprintf_s(buff, 48, _T("%d x %d"), pImage->OrigWidth(), pImage->OrigHeight());
+        sFileInfo.Replace(_T("<s>"), buff);
+    }
+    if (_tcsstr(sFormat, _T("<l>")) != NULL) {
+        __int64 fileSize = isClipboardImage ? 0 : GetFileSize(pFilelist->Current());
+        CString sFileSize;
+        if (fileSize >= 1024 * 1024 * 100) {
+            sFileSize.Format(_T("%d MB"), (int)(fileSize >> 20));
+        } else if (fileSize >= 1024) {
+            sFileSize.Format(_T("%d KB"), (int)(fileSize >> 10));
+        } else if (fileSize > 0) {
+            sFileSize.Format(_T("%d b"), (int)fileSize);
+        }
+        sFileInfo.Replace(_T("<l>"), sFileSize);
+    }
+    sFileInfo.Replace(_T("\\t"), _T("        "));
+    sFileInfo.TrimLeft();
+    sFileInfo.TrimRight();
+    return sFileInfo;
 }
 
 }

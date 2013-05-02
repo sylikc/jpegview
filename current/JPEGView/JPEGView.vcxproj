@@ -78,14 +78,14 @@
       <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>gdiplus.lib;libwebp_dll.lib;WICLoader.lib;turbojpeg-static.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>gdiplus.lib;WICLoader.lib;turbojpeg-static.lib;webp.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>WebP\lib;WICLoader\lib;libjpeg-turbo\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ModuleDefinitionFile>
       </ModuleDefinitionFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <TargetMachine>MachineX86</TargetMachine>
-      <DelayLoadDLLs>libwebp_a.dll;WICLoader.dll</DelayLoadDLLs>
+      <DelayLoadDLLs>WICLoader.dll;webp.dll</DelayLoadDLLs>
       <IgnoreSpecificDefaultLibraries>LIBCMT</IgnoreSpecificDefaultLibraries>
     </Link>
   </ItemDefinitionGroup>
@@ -126,13 +126,13 @@
       <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>gdiplus.lib;libwebp_dll.lib;WICLoader.lib;turbojpeg-static.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>gdiplus.lib;WICLoader.lib;turbojpeg-static.lib;webp.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>WebP\lib;WICLoader\lib;libjpeg-turbo\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <TargetMachine>MachineX86</TargetMachine>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
-      <DelayLoadDLLs>libwebp_a.dll;WICLoader.dll</DelayLoadDLLs>
+      <DelayLoadDLLs>WICLoader.dll;webp.dll</DelayLoadDLLs>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -141,11 +141,15 @@
     <ClCompile Include="dcraw_mod.cpp" />
     <ClCompile Include="EXIFHelpers.cpp" />
     <ClCompile Include="EXIFReader.cpp" />
+    <ClCompile Include="FileExtensionsDlg.cpp" />
+    <ClCompile Include="FileExtensionsRegistry.cpp" />
     <ClCompile Include="FileList.cpp" />
     <ClCompile Include="Helpers.cpp" />
     <ClCompile Include="HelpersGUI.cpp" />
     <ClCompile Include="HistogramCorr.cpp" />
     <ClCompile Include="ImageLoadThread.cpp" />
+    <ClCompile Include="InfoButtonPanel.cpp" />
+    <ClCompile Include="InfoButtonPanelCtl.cpp" />
     <ClCompile Include="JPEGImage.cpp" />
     <ClCompile Include="JPEGLosslessTransform.cpp" />
     <ClCompile Include="JPEGProvider.cpp" />
@@ -207,12 +211,16 @@
     <ClInclude Include="dcraw_mod.h" />
     <ClInclude Include="EXIFHelpers.h" />
     <ClInclude Include="EXIFReader.h" />
+    <ClInclude Include="FileExtensionsDlg.h" />
+    <ClInclude Include="FileExtensionsRegistry.h" />
     <ClInclude Include="FileList.h" />
     <ClInclude Include="Helpers.h" />
     <ClInclude Include="HelpersGUI.h" />
     <ClInclude Include="HistogramCorr.h" />
     <ClInclude Include="ImageLoadThread.h" />
     <ClInclude Include="ImageProcessingTypes.h" />
+    <ClInclude Include="InfoButtonPanel.h" />
+    <ClInclude Include="InfoButtonPanelCtl.h" />
     <ClInclude Include="JPEGImage.h" />
     <ClInclude Include="JPEGLosslessTransform.h" />
     <ClInclude Include="JPEGProvider.h" />

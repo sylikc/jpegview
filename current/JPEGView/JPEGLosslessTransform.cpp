@@ -10,11 +10,11 @@ int _TransformationEnumToOpCode(CJPEGLosslessTransform::ETransformation transfor
 // Performs a lossless JPEG transformation, transforming the input file and writing the result to the output file.
 // Input and output file can be identical, then the input file is overriden by the resulting output file.
 CJPEGLosslessTransform::EResult CJPEGLosslessTransform::PerformTransformation(LPCTSTR sInputFile, LPCTSTR sOutputFile, 
-    CJPEGLosslessTransform::ETransformation transformation) {
+    CJPEGLosslessTransform::ETransformation transformation, bool bAllowTrim) {
     tjtransform transform;
     memset(&transform, 0, sizeof(tjtransform));
     transform.op = _TransformationEnumToOpCode(transformation);
-    transform.options = TJXOPT_PERFECT;
+    transform.options = bAllowTrim ? TJXOPT_TRIM : TJXOPT_PERFECT;
 
     return _DoTransformation(sInputFile, sOutputFile, transform);
 }

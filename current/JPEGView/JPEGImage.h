@@ -27,10 +27,13 @@ public:
 	// The nJPEGHash hash value gives a hash over the compressed JPEG pixels that uniquely identifies the
 	// JPEG image. It can be zero in which case a pixel based hash value is internally created.
 	// The image format is a hint about the original image format this image was created from.
+    // The bIsAnimation, nFrameIndex, nNumberOfFrames and nFrameTimeMs are used for multiframe images, e.g. animated GIFs.
+    // Frame index is zero based and the frame time is given in milliseconds.
 	// The pLDC object is used internally for thumbnail image creation to avoid duplication. From external,
 	// its value must be NULL.
 	CJPEGImage(int nWidth, int nHeight, void* pIJLPixels, void* pEXIFData, int nChannels, 
-		__int64 nJPEGHash, EImageFormat eImageFormat, CLocalDensityCorr* pLDC = NULL, bool bIsThumbnailImage = false);
+		__int64 nJPEGHash, EImageFormat eImageFormat, bool bIsAnimation, int nFrameIndex, int nNumberOfFrames, int nFrameTimeMs,
+        CLocalDensityCorr* pLDC = NULL, bool bIsThumbnailImage = false);
 	~CJPEGImage(void);
 
 	// Converts the target offset from 'center of image' based format to pixel coordinate format 
@@ -212,10 +215,10 @@ public:
 	// Sets the initial parameters to the given values.
 	void SetInitialParameters(const CImageProcessingParams& imageProcParams, EProcessingFlags procFlags, int nRotation, double dZoom, CPoint offsets);
 
-	// Restores the initial parameters to the parameters dependent from the directory (not file)
+	// Restores the initial parameters to the parameters dependent on the directory (not the file)
 	// Outputs the processing flags set for this directory
 	void RestoreInitialParameters(LPCTSTR sFileName, const CImageProcessingParams& imageProcParams, 
-		EProcessingFlags & procFlags, int nRotation, double dZoom, CPoint offsets, CSize targetSize);
+		EProcessingFlags & procFlags, int nRotation, double dZoom, CPoint offsets, CSize targetSize, CSize monitorSize);
 
 	// Gets the parameters according to param DB or file path dependend.
 	void GetFileParams(LPCTSTR sFileName, EProcessingFlags& eFlags, CImageProcessingParams& params) const;
@@ -252,6 +255,18 @@ public:
 
 	// Gets the image format this image was originally created from
 	EImageFormat GetImageFormat() const { return m_eImageFormat; }
+
+    // Gets if this image is part of an animation (GIF)
+    bool IsAnimation() const { return m_bIsAnimation; }
+
+    // Gets the frame index if this is a multiframe image, 0 otherwise
+    int FrameIndex() const { return m_nFrameIndex; }
+
+    // Gets the number of frames for multiframe images, 1 otherwise
+    int NumberOfFrames() const { return m_nNumberOfFrames; }
+
+    // Gets the frame time in milliseconds for animations
+    int FrameTimeMs() const { return m_nFrameTimeMs; }
 
 	// Gets if this image was created from the clipboard
 	bool IsClipboardImage() const { return m_eImageFormat == IF_CLIPBOARD; }
@@ -301,6 +316,12 @@ private:
 	__int64 m_nPixelHash;
 	EImageFormat m_eImageFormat;
     TJSAMP m_eJPEGChromoSampling;
+
+    // multiframe data
+    bool m_bIsAnimation;
+    int m_nFrameIndex;
+    int m_nNumberOfFrames;
+    int m_nFrameTimeMs;
 
 	// cached thumbnail image, created on first request
 	CJPEGImage* m_pThumbnail;

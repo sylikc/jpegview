@@ -1,6 +1,8 @@
 #include "StdAfx.h"
 #include "FileList.h"
 #include "SettingsProvider.h"
+#include "Helpers.h"
+#include "Shlwapi.h"
 
 ///////////////////////////////////////////////////////////////////////////////////
 // Helpers
@@ -12,53 +14,45 @@ Helpers::ENavigationMode CFileList::sm_eMode = Helpers::NM_LoopDirectory;
 
 // Helper to add the current file of filefind object to the list
 static void AddToFileList(std::list<CFileDesc> & fileList, CFindFile & fileFind) {
-	FILETIME lastWriteTime, creationTime;
-	fileFind.GetLastWriteTime(&lastWriteTime);
-	fileFind.GetCreationTime(&creationTime);
-	CFileDesc thisFile(fileFind.GetFilePath(), &lastWriteTime, &creationTime);
-	fileList.push_back(thisFile);
+    if (!fileFind.IsDirectory()) {
+	    FILETIME lastWriteTime, creationTime;
+	    fileFind.GetLastWriteTime(&lastWriteTime);
+	    fileFind.GetCreationTime(&creationTime);
+	    CFileDesc thisFile(fileFind.GetFilePath(), &lastWriteTime, &creationTime);
+	    fileList.push_back(thisFile);
+    }
 }
 
-// Replace all numbers in string with asterix and return numbers separated with \0
-static void ReplaceNumbers(LPCTSTR sFileName, TCHAR sNewFileName[MAX_PATH], TCHAR sNumberString[MAX_PATH]) {
-	LPCTSTR source = sFileName;
-	LPTSTR target = sNewFileName;
-	LPTSTR numberString = sNumberString;
-	numberString[1] = 0;
-	int i = 0, j = 0;
-	while (*source != 0 && i < MAX_PATH-1 && j < MAX_PATH-1) {
-		while (*source != 0 && !(*source >= _T('0') && *source <= _T('9'))) {
-			*target = *source;
-			source++;
-			if (i < MAX_PATH-1) {
-				target++;
-				i++;
-			}
-		}
-		if (*source >= _T('0') && *source <= _T('9') && i < MAX_PATH-1) {
-			*target++ = _T('*');
-			i++;
-			bool bTrailingZero = true;
-			while (*source >= _T('0') && *source <= _T('9') && j < MAX_PATH-2) {
-				if (*source != _T('0') || !bTrailingZero) {
-					bTrailingZero = false;
-					*numberString = *source;
-					if (j < MAX_PATH-2) {
-						numberString++;
-						j++;
-					}
-				}
-				source++;
-			}
-			if (j < MAX_PATH-1) {
-				*numberString++ = 0;
-				j++;
-			}
-		}
+static bool s_bUseLogicalStringCompare = true;
+static bool s_bUseLogicalStringCompareValid = false;
 
-	}
-	*target = 0;
-	*numberString = 0;
+// Use by method below
+static bool IsNoLogicalStrCmpSetInRegistryHive(HKEY hKeyRoot) {
+    HKEY key;
+    if (RegOpenKeyEx(hKeyRoot, _T("Software\\Microsoft\\Windows\\CurrentVersion\\Policies\\Explorer"), 0, KEY_READ, &key) == ERROR_SUCCESS) {
+        DWORD value;
+        DWORD size = sizeof(DWORD);
+        DWORD type;
+        if (RegQueryValueEx(key, _T("NoStrCmpLogical"), NULL, &type, (LPBYTE)&value, &size) == ERROR_SUCCESS) {
+            if (type == REG_DWORD) {
+                RegCloseKey(key);
+                return value == 1;
+            }
+        }
+        RegCloseKey(key);
+    }
+    return false;
+}
+
+// Queries the registry if logical string comparing (file9.txt before file10.txt) shall be used.
+// This is default in Windows XP and later.
+static bool UseLogicalStringCompare() {
+    if (!s_bUseLogicalStringCompareValid) {
+        s_bUseLogicalStringCompareValid = true;
+        s_bUseLogicalStringCompare = !(IsNoLogicalStrCmpSetInRegistryHive(HKEY_LOCAL_MACHINE) || 
+            IsNoLogicalStrCmpSetInRegistryHive(HKEY_CURRENT_USER));
+    }
+    return s_bUseLogicalStringCompare;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////
@@ -87,65 +81,13 @@ bool CFileDesc::operator < (const CFileDesc& other) const {
 	} else if (sm_eSorting == Helpers::FS_Random) {
 		return m_nRandomOrderNumber < other.m_nRandomOrderNumber;
 	} else {
-		// If the filename contains numbers, we want to sort the files
-		// according to the numbers to place 'File9' before 'File10'
-		// That's why sorting is this complicated
-		TCHAR sNewFileNameThis[MAX_PATH];
-		TCHAR sNewFileNameOther[MAX_PATH];
-		TCHAR sNumberStringThis[MAX_PATH];
-		TCHAR sNumberStringOther[MAX_PATH];
-		ReplaceNumbers(m_sTitle, sNewFileNameThis, sNumberStringThis);
-		ReplaceNumbers(other.m_sTitle, sNewFileNameOther, sNumberStringOther);
-		LPCTSTR sNewNameThis = sNewFileNameThis;
-		LPCTSTR sNewNameOther = sNewFileNameOther;
-		LPCTSTR sNumberThis = sNumberStringThis;
-		LPCTSTR sNumberOther = sNumberStringOther;
-		int nCharCount = 0;
-
-		while (*sNewNameThis != 0 && *sNewNameOther != 0) {
-			if (*sNewNameThis == _T('*') || *sNewNameOther == _T('*')) {
-				// One of the involved characters is an asterix and thus represents a number
-				
-				// compare substrings having no numbers involved
-				if (nCharCount > 0) {
-					int nCmp = _tcsnicoll(sNewNameThis - nCharCount, sNewNameOther - nCharCount, nCharCount);
-					if (nCmp != 0) {
-						return nCmp < 0;
-					}
-					nCharCount = 0;
-				}
-
-				if (*sNewNameThis == _T('*') && *sNewNameOther == _T('*')) {
-					// both have a number at the same position, compare numbers
-					if (*sNumberThis != 0 && *sNumberOther != 0) {
-						// a longer number string is always bigger than a shorter (as trailing zeros are removed)
-						int nLenThis = _tcslen(sNumberThis);
-						int nLenOther = _tcslen(sNumberOther);
-						int nLenCmp =  nLenThis - nLenOther;
-						if (nLenCmp != 0) {
-							return nLenCmp < 0;
-						}
-						// both strings have same length and contain only numbers, do ordinal string compare
-						int nStrCmp = _tcscmp(sNumberThis, sNumberOther);
-						if (nStrCmp != 0) {
-							return nStrCmp < 0;
-						}
-						// both number strings are equal, goto next pair
-						sNumberThis += nLenThis + 1;
-						sNumberOther += nLenOther + 1;
-					}
-				} else if (*sNewNameThis == _T('*')) {
-					return ((int)_T('0') - *sNewNameOther) < 0;
-				} else if (*sNewNameOther == _T('*')) {
-					return ((int)*sNewNameThis - _T('0')) < 0;
-				}
-			} else {
-				nCharCount++;
-			}
-			sNewNameThis++;
-			sNewNameOther++;
-		}
-		return _tcsicoll(m_sTitle, other.m_sTitle) < 0; // compare original ones if new strings are equal
+        if (UseLogicalStringCompare()) {
+		    // If the filename contains numbers, we want to sort the files
+		    // according to the numbers to place 'File9' before 'File10'
+            return StrCmpLogicalW(m_sTitle, other.m_sTitle) < 0;
+        } else {
+		    return _tcsicoll(m_sTitle, other.m_sTitle) < 0;
+        }
 	}
 }
 
@@ -167,6 +109,9 @@ void CFileDesc::SetModificationDate(const FILETIME& lastModDate) {
 static const int cnNumEndingsInternal = 8;
 static const TCHAR* csFileEndingsInternal[cnNumEndingsInternal] = {_T("jpg"), _T("jpeg"), _T("bmp"), _T("png"), 
 	_T("tif"), _T("tiff"), _T("gif"), _T("webp")};
+// supported camera RAW formats
+static const TCHAR* csFileEndingsRAW = _T("*.pef;*.dng;*.crw;*.nef;*.cr2;*.mrw;*.rw2;*.orf;*.x3f;*.arw;*.kdc;*.nrw;*.dcr;*.sr2;*.raf");
+
 
 static const int MAX_ENDINGS = 48;
 static int nNumEndings;
@@ -235,8 +180,16 @@ CFileList::CFileList(const CString & sInitialFile, Helpers::ESorting eInitialSor
 	m_sDirectory = (nPos > 0) ? sInitialFile.Left(nPos) : _T(""); // the backslash is stripped away!
 	nPos = sInitialFile.ReverseFind(_T('.'));
 	bool bIsDirectory = (::GetFileAttributes(sInitialFile) & FILE_ATTRIBUTE_DIRECTORY) != 0;
-	bool bImageFile = IsImageFile((nPos > 0) ? sInitialFile.Right(sInitialFile.GetLength()-nPos-1) : _T(""));
-	m_bIsSlideShowList = !bImageFile && TryReadingSlideShowList(sInitialFile);
+    CString sExtensionInitialFile = (nPos > 0) ? sInitialFile.Right(sInitialFile.GetLength()-nPos-1) : _T("");
+    sExtensionInitialFile.MakeLower();
+	bool bImageFile = !bIsDirectory && IsImageFile(sExtensionInitialFile);
+    if (!bIsDirectory && !bImageFile && !sExtensionInitialFile.IsEmpty() && _tcsstr(csFileEndingsRAW, _T("*.") + sExtensionInitialFile) != NULL) {
+        // initial file is a supported camera raw file but was excluded in INI file - add temporarily to file ending list
+        ParseAndAddFileEndings(_T("*.") + sExtensionInitialFile);
+        CSettingsProvider::This().AddTemporaryRAWFileEnding(sExtensionInitialFile);
+        bImageFile = true;
+    }
+	m_bIsSlideShowList = !bIsDirectory && !bImageFile && TryReadingSlideShowList(sInitialFile);
 	m_nMarkedIndexShow = -1;
 
 	if (!m_bIsSlideShowList) {
@@ -781,6 +734,8 @@ bool CFileList::TryReadingSlideShowList(const CString & sSlideShowFile) {
 	const int NUMPROBE = 64;
 	uint8 buff[NUMPROBE];
 	bool bUnicode;
+    bool bUTF8Marker = false;
+    int nSeekPos = 0;
 	int nRealProbe = fread(buff, 1, NUMPROBE, fptr);
 	if (nRealProbe < 16) {
 		// file is too short for a good guess
@@ -789,8 +744,12 @@ bool CFileList::TryReadingSlideShowList(const CString & sSlideShowFile) {
 		if (buff[0] == 0xFF && buff[1] == 0xFE) {
 			// Unicode byte order marker, only supporting little endian unicode files
 			bUnicode = true;
-		} else {
-			// Use a heuristic if the BOM is missing
+            nSeekPos = 2;
+		} else if (buff[0] == 0xEF && buff[1] == 0xBB && buff[2] == 0xBF) {
+            // UTF-8 encoded text file
+            bUTF8Marker = true;
+        } else {
+			// Use a heuristic in case the BOM is missing
 			int nGood = 0;
 			for (int i = 0; i < nRealProbe; i++) {
 				if (i & 1) {
@@ -803,14 +762,14 @@ bool CFileList::TryReadingSlideShowList(const CString & sSlideShowFile) {
 		}
 	}
 
-	int nSeekPos = 0;
-	if (strstr((char*)buff, "encoding=\"utf-8\"") != NULL) {
-		// UTF-8 coded XML file, open the file in UTF-8 mode, it will be read as Unicode
+    bool bIsUTF8EncodedXML = strstr((char*)buff, "encoding=\"utf-8\"") != NULL;
+	if (bUTF8Marker || bIsUTF8EncodedXML) {
+		// UTF-8 encoded text file, open the file in UTF-8 mode, it will be read as Unicode
 		fclose(fptr);
 		if ((fptr = _tfopen(sSlideShowFile,_T("r, ccs=UTF-8"))) == NULL) {
 			return false;
 		}
-		nSeekPos = max(0, strchr((char*)buff, '<') - (char*)buff);
+		nSeekPos = bIsUTF8EncodedXML ? max(0, strchr((char*)buff, '<') - (char*)buff) : 3;
 		bUnicode = true;
 	}
 
@@ -823,7 +782,7 @@ bool CFileList::TryReadingSlideShowList(const CString & sSlideShowFile) {
 	if (bUnicode) nRealFileSizeChars = nRealFileSizeChars/2;
 
 	const int LINE_BUFF_SIZE = 512;
-	TCHAR lineBuff[LINE_BUFF_SIZE];
+	TCHAR lineBuff[LINE_BUFF_SIZE + 1];
 	bool bValid = true;
 	int nTotalChars = 0;
 
@@ -832,7 +791,7 @@ bool CFileList::TryReadingSlideShowList(const CString & sSlideShowFile) {
 		if (bUnicode) {
 			wchar_t* pRunning = wideFileBuff;
 			bool bIsNull = false;
-			while (*pRunning != L'\n' && nNumChars < 512 && nTotalChars < nRealFileSizeChars) {
+			while (*pRunning != L'\n' && nNumChars < LINE_BUFF_SIZE && nTotalChars < nRealFileSizeChars) {
 				if (*pRunning == 0) {
 					bIsNull = true;
 				}
@@ -852,13 +811,13 @@ bool CFileList::TryReadingSlideShowList(const CString & sSlideShowFile) {
 		} else {
 			char* pRunning = fileBuff;
 			bool bIsNull = false;
-			while (*pRunning != '\n' && nNumChars < 512 && nTotalChars < nRealFileSizeChars) {
+			while (*pRunning != '\n' && nNumChars < LINE_BUFF_SIZE && nTotalChars < nRealFileSizeChars) {
 				if (*pRunning == 0) {
 					bIsNull = true;
 				}
 				pRunning++; nNumChars++; nTotalChars++;
 			}
-			bValid = nNumChars < 512 && !bIsNull;
+			bValid = nNumChars < LINE_BUFF_SIZE && !bIsNull;
 			if (bValid) {
 #ifdef _UNICODE
 				size_t nDummy;
@@ -879,6 +838,7 @@ bool CFileList::TryReadingSlideShowList(const CString & sSlideShowFile) {
 		// one line in lineBuff, check if there is a valid file name
 		bool bRelativePath = false;
 		lineBuff[nNumChars] = _T('\n'); // force end
+        lineBuff[nNumChars + 1] = 0; // terminate line string
 		TCHAR* pStart = _tcsstr(lineBuff, _T("\\\\"));
 		if (pStart == NULL) {
 			pStart = _tcsstr(lineBuff+1, _T(":\\"));
@@ -888,7 +848,7 @@ bool CFileList::TryReadingSlideShowList(const CString & sSlideShowFile) {
 				// try to find file name with relative path
                 LPCTSTR* allFileEndings = GetSupportedFileEndingList();
 				for (int i = 0; i < nNumEndings; i++) {
-					pStart = _tcsstr(lineBuff, CString(_T(".")) + allFileEndings[i]);
+					pStart = Helpers::stristr(lineBuff, (LPCTSTR)(CString(_T(".")) + allFileEndings[i]));
 					if (pStart != NULL) {
 						while (pStart >= lineBuff && *pStart != _T('"') && *pStart != _T('>')) pStart--;
 						pStart++;
@@ -907,7 +867,8 @@ bool CFileList::TryReadingSlideShowList(const CString & sSlideShowFile) {
 			}
 			*pEnd = 0;
 			CFindFile fileFind;
-			if (fileFind.FindFile(bRelativePath ? (m_sDirectory + _T('\\') + pStart) : pStart)) {
+            CString sPath = bRelativePath ? (m_sDirectory + _T('\\') + pStart) : pStart;
+			if (fileFind.FindFile(sPath)) {
 				AddToFileList(m_fileList, fileFind);
 			}
 		}

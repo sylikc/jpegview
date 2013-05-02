@@ -29,8 +29,11 @@ static BOOL CALLBACK EnumWindowsProc(HWND hwnd, LPARAM lParam) {
 static CString ParseCommandLineForStartupFile(LPCTSTR sCommandLine) { 
 	CString sStartupFile = sCommandLine;
 	if (sStartupFile.GetLength() == 0) {
-		return sStartupFile;
+		return CString(_T(""));
 	}
+    if (sCommandLine[0] == _T('/')) { // parameter
+        return CString(_T(""));
+    }
 
 	// Extract the startup file or directory from the command line parameter string
 	int nHyphen = sStartupFile.Find(_T('"'));
@@ -59,6 +62,54 @@ static CString ParseCommandLineForStartupFile(LPCTSTR sCommandLine) {
 	return sStartupFile;
 }
 
+static int ParseCommandLineForAutostart(LPCTSTR sCommandLine) {
+    LPCTSTR sAutoStart = Helpers::stristr(sCommandLine, _T("/slideshow"));
+    if (sAutoStart == NULL) {
+        return 0;
+    }
+    int intervall = _ttoi(sAutoStart + _tcslen(_T("/slideshow")));
+    return (intervall == 0) ? 5 : intervall;
+}
+
+static bool ParseCommandLineForFullScreen(LPCTSTR sCommandLine) {
+    return Helpers::stristr(sCommandLine, _T("/fullscreen")) != NULL;
+}
+
+static Helpers::ESorting ParseCommandLineForSorting(LPCTSTR sCommandLine) {
+    LPCTSTR sSorting = Helpers::stristr(sCommandLine, _T("/order"));
+    if (sSorting == NULL) {
+        return Helpers::FS_Undefined;
+    }
+    LPCTSTR sSortingMode = sSorting + _tcslen(_T("/order"));
+    if (sSortingMode[0] != 0) {
+        return 
+            (_totupper(sSortingMode[1]) == _T('M')) ? Helpers::FS_LastModTime :
+            (_totupper(sSortingMode[1]) == _T('C')) ? Helpers::FS_CreationTime :
+            (_totupper(sSortingMode[1]) == _T('N')) ? Helpers::FS_FileName :
+            (_totupper(sSortingMode[1]) == _T('Z')) ? Helpers::FS_Random : Helpers::FS_Undefined;
+    }
+    return Helpers::FS_Undefined; 
+}
+
+static Helpers::ETransitionEffect ParseCommandLineForSlideShowEffect(LPCTSTR sCommandLine) {
+    LPCTSTR sEffect = Helpers::stristr(sCommandLine, _T("/effect"));
+    if (sEffect == NULL) {
+        return (Helpers::ETransitionEffect)(-1);
+    }
+    sEffect = sEffect + _tcslen(_T("/effect")) + 1;
+    LPCTSTR posSpace = _tcschr(sEffect, _T(' '));
+    CString effect = (posSpace == NULL) ? CString(sEffect) : CString(sEffect, posSpace - sEffect);
+    return Helpers::ConvertTransitionEffectFromString(effect);
+}
+
+static int ParseCommandLineForTransitionTime(LPCTSTR sCommandLine) {
+    LPCTSTR sTransitionTime = Helpers::stristr(sCommandLine, _T("/transitiontime"));
+    if (sTransitionTime == NULL) {
+        return 0;
+    }
+    return max(100, min(5000, _ttoi(sTransitionTime + _tcslen(_T("/transitiontime")))));
+}
+
 int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR lpstrCmdLine, int /*nCmdShow*/)
 {
 	HRESULT hRes = ::CoInitialize(NULL);
@@ -79,6 +130,11 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR lp
 	ATLASSERT(SUCCEEDED(hRes));
 
     CString sStartupFile = ParseCommandLineForStartupFile(lpstrCmdLine);
+    int nAutostartSlideShow = (sStartupFile.GetLength() == 0) ? 0 : ParseCommandLineForAutostart(lpstrCmdLine);
+    bool bForceFullScreen = ParseCommandLineForFullScreen(lpstrCmdLine);
+    Helpers::ESorting eSorting = ParseCommandLineForSorting(lpstrCmdLine);
+    Helpers::ETransitionEffect eTransitionEffect = ParseCommandLineForSlideShowEffect(lpstrCmdLine);
+    int nTransitionTime = ParseCommandLineForTransitionTime(lpstrCmdLine);
 
 	// Searches for other instances and terminates them
     bool bFileLoadedByExistingInstance = false;
@@ -106,9 +162,9 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR lp
 		ULONG_PTR gdiplusToken;
 		Gdiplus::GdiplusStartup(&gdiplusToken, &gdiplusStartupInput, NULL);
 
-		CMainDlg dlgMain;
+		CMainDlg dlgMain(bForceFullScreen);
 
-		dlgMain.SetStartupFile(sStartupFile);
+		dlgMain.SetStartupInfo(sStartupFile, nAutostartSlideShow, eSorting, eTransitionEffect, nTransitionTime);
 		try {
 			nRet = dlgMain.DoModal();
             if (CSettingsProvider::This().StickyWindowSize() && !dlgMain.IsFullScreenMode()) {

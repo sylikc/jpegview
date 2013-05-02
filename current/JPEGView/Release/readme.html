@@ -35,8 +35,9 @@
 					&nbsp;&nbsp;&nbsp;&nbsp;<a href="#Comparing">Comparing to original image</a><br/>
 					&nbsp;&nbsp;<a href="#Saving">Saving and renaming images</a><br/>
 					&nbsp;&nbsp;<a href="#Clipboard">Clipboard</a><br/>
-					<a href="#ParameterDB">Parameter Database</a><br/>
+					<a href="#ParameterDB">Parameter database</a><br/>
 					<a href="#INIFile">INI file settings</a><br/>
+                    <a href="#CmdLine">Command line parameters</a><br/>
 					<a href="#KeyMap">Changing keyboard shortcuts</a><br/>
                     <a href="#RAWFiles">Viewing camera RAW files</a><br/>
 					<a href="#External">Calling external programs or batch files</a><br/>
@@ -47,7 +48,7 @@
 				<td>
 					<a name="Top"></a>
 					<h1>JPEGView Readme</h1>
-					Revision: 06-Apr-2012
+					Revision: 06-Mar-2013
 					<a name="Introduction"></a>
 					<h2>Introduction</h2>
 					JPEGView is a viewer/editor for JPEG, BMP, WEBP, PNG, GIF and TIFF images. It is designed to view images from digital cameras
@@ -122,6 +123,7 @@
 							Slide shows and movie playing
 							<ul style="margin-top:0in;margin-bottom:0in">
 								<li>Plays slide shows given by text file</li>
+                                <li>Multiple transition effects for slide shows</li>
 								<li>
 									Plays all images in folder as movie with configurable frame rate.<br/>
 									All image processing remains functional while playing.
@@ -142,17 +144,15 @@
 					<h2>Installation</h2>
 					There is no installer for JPEGView because none is needed. Just copy or extract all files to a folder
 					on your harddisk (e.g. C:\Program Files\JPEGView\).<br/>
-					To define JPEGView as your default viewer for JPEG files, perform the following steps:
+					To define JPEGView as your default viewer for image files, perform the following steps:
 					<ul style="margin-top:0in;margin-bottom:0in">
-						<li>In the Windows Explorer, right click a file with extension .JPG</li>
-						<li>On the context menu, choose 'Open with' - 'Choose program'</li>
+						<li>Open the context menu of JPEGView (right mouse click)</li>
+						<li>On the context menu, choose 'Settings/Administration' - 'Set as default viewer'</li>
 						<li>
-							On the dialog that is appearing, press the 'Browse' button, locate and double click the executable
-							of JPEGView (JPEGView.exe)
+							On the dialog that is appearing, the file extensions of the supported image file formats are listed,
+                            together with the information if the corresponding extension is currently bound to JPEGView.
 						</li>
-						<li>Select the 'Always open with...' option and confirm with OK</li>
-						<li>If you have JPEG files with extension '.JPEG' repeat the procedure on a .JPEG file</li>
-						<li>Repeat this procedure for the other image types that shall be opened with JPEGView</li>
+						<li>Select the file extensions to be opened by JPEGView and confirm with OK</li>
 					</ul>
 					<b>Hardware Requirements</b><br/>
 					<ul style="margin-top:0in;margin-bottom:0in">
@@ -175,12 +175,14 @@
 						<li>Windows Vista</li>
 						<li>Windows XP</li>
 						<li>Windows 2000 : Not supported anymore, use version 1.0.21</li>
+                        <li>Windows 8? (untested)</li>
 					</ul>
 					<b>Supported Languages</b><br/>
 					<ul style="margin-top:0in;margin-bottom:0in">
 						<li>English</li>
 						<li>German</li>
 						<li>Spanish</li>
+                        <li>Chinese</li>
 						<li>Portuguese</li>
 						<li>Italian</li>
 						<li>French</li>
@@ -198,8 +200,8 @@
 					If you want that your translation is included into the next JPEGView release, contact me at
 					<a href="mailto:jpegview@gmail.com">jpegview@gmail.com</a><br/>
 					<b>Registry</b><br/>
-					JPEGView does not touch the registry. Using the Windows Explorer for registering file types to be displayed with
-					JPEGView will add some registry entries in the 'Current User' branch of the registry.<br/>
+					JPEGView does not touch the registry except when registering file extensions to be displayed with
+					JPEGView. This will add some registry entries in the 'Current User' branch of the registry.<br/>
 					<b>Created Files during Runtime</b><br/>
 					The only location where files are written (the parameter DB and the user INI file)
 					is in 'Documents and Settings\<i>Username</i>\Application Data\JPEGView\' (exception of this rule: see next section)<br/>
@@ -209,7 +211,8 @@
 					the storage location for the user INI file and the parameter DB can be changed to the EXE path of JPEGView. This makes
 					sense when using JPEGView from an USB memory stick to prevent storing data on the host system.<br/>
 					<b>Restricted Rights</b><br/>
-					JPEGView runs without problems on accounts with restricted rights.
+					JPEGView runs without problems on accounts with restricted rights. Setting JPEGView as default viewer for already registered file
+                    extensions may fail without administrator rights when using Windows Vista, Windows 7 or later.
 					<br/><br/><b>
 						<a href="#Top">Top of Page</a>
 					</b><br/>
@@ -485,7 +488,7 @@
                       Rotation in steps of 90 degrees
                     </li>
                     <li>
-                      Mirror horizonally and vertically
+                      Mirror horizontally and vertically
                     </li>
                     <li>
                       Crop
@@ -536,10 +539,23 @@
 							<kbd>Esc</kbd> : Stops the slide show
 						</li>
 					</ul>
-					If the current context is a folder and not a slide show list, the slideshow is performed with the images
-					in the folder. The folder navigation mode and the sorting order are taken into account in this case - with
-					a slide show list they have no effect. For showing the images in a folder in random order, press 'z' before
-					starting the slide show (this sets random sorting order).
+                    If the current context is a folder and not a slide show list, the slideshow is performed with the images
+                    in the folder. The folder navigation mode and the sorting order are taken into account in this case - with
+                    a slide show list they have no effect. For showing the images in a folder in random order, press 'z' before
+                    starting the slide show (this sets random sorting order).
+                    <h4>Transition Effects</h4>
+                    Different transition effects can be used to switch between images when playing a slide show.
+                    The use of transition effects has the following limitations:
+                    <ul style="margin-top:0in;margin-bottom:0in">
+                      <li>
+                        Transition effects are only available in full screen mode
+                      </li>
+                      <li>
+                        When playing a slide show with transition effects, reaction on commands may be somewhat slow.
+                        The ESC key always immediatly terminates the slide show.
+                      </li>
+                    </ul>
+                    Use the INI file to set the default transition effect and the default transition effect speed.
 					<a name="Movies"></a>
 					<h4>Playing Image Series as Movie</h4>
 					The slide show feature can be used to play a series of images in a folder or given by a text file as a movie:
@@ -900,8 +916,57 @@
 					<br/><br/><b>
 						<a href="#Top">Top of Page</a>
 					</b><br/>
-					
-					<a name="KeyMap"></a>
+                  
+                  <a name="CmdLine"></a>
+                  <h2>Command line parameters</h2>
+
+                  JPEGView supports the following command line parameters:
+                  <ul style="margin-top:0in;margin-bottom:0in">
+                    <li>
+                      <code>filename</code><br/>
+                      File name of the file to load or folder to show. If this is a file name, it must be a valid
+                      image file name or a file name of a text file that contains a list of files to display. If it is a folder name, JPEGView
+                      displays the image files in this folder.<br/>
+                      If a file name is given, it must be given before all other parameters in the command line.<br/>
+                      Note: No slide show is started automatically. Use the /slideshow parameter for that.
+                    </li>
+                    <li>
+                      <code>/slideshow [time in seconds]</code><br/>
+                      Automatically starts a slide show after startup. Example:<br/>
+                      <code>jpegview.exe myfilelist.txt /slideshow 3</code><br/>
+                      Starts a slideshow of the files listed in "myfilelist.txt" with an interval of 3 seconds between the images.
+                    </li>
+                    <li>
+                      <code>/effect [effect]</code><br/>
+                      Sets the transition effect for full screen slideshows. The parameter has no effect if not used in fullscreen mode.<br/>
+                      Possible effects are: None, Blend, SlideLR, SlideRL, SlideTB, SlideBT, RollLR, RollRL, RollTB, RollBT, ScrollLR, ScrollRL, ScrollTB, ScrollBT<br/>
+                      Example:<br/>
+                      <code>jpegview.exe myfilelist.txt /slideshow 3 /effect blend /fullscreen</code>
+                    </li>
+                    <li>
+                      <code>/transitiontime [time in milliseconds]</code><br/>
+                      Sets the transition time for the effect in full screen slideshows. Example:<br/>
+                      <code>jpegview.exe myfilelist.txt /slideshow 3 /effect blend /transitiontime 250 /fullscreen</code>
+                    </li>
+                    <li>
+                      <code>/fullscreen</code><br/>
+                      Starts JPEGView in full screen mode, ignoring the INI file setting that is currently active.
+                      <br/>
+                    </li>
+                    <li>
+                      <code>/order [mode]</code><br/>
+                      Forces file ordering mode 'mode', ignoring the INI file setting that is currently active.<br/>
+                      [mode] can be M, C, N or Z, for the file ordering modes 'M: modification date', 'C: creation date', 'N: file name', 'Z: random'<br/>
+                      Example: <code>jpegview.exe c:\pictures /slideshow 2 /order z /fullscreen</code><br/>
+                      Shows a slideshow of the files in the folder "c:\pictures" using random ordering and an interval of 2 seconds, forcing full screen mode for the slide show.
+                    </li>
+                  </ul>
+                  
+                  <br/><b>
+                    <a href="#Top">Top of Page</a>
+                  </b><br/>
+
+                  <a name="KeyMap"></a>
 					<h2>Keymap - changing keyboard and mouse shortcuts</h2>
 					The mapping of keys to commands can be changed by editing the <a href="./KeyMap.txt">keymap file</a>.<br/>
 					Using the keymap file it is also possible to define additional keyboard shortcuts for command that are
@@ -968,17 +1033,13 @@
 					This auto detection may has failed. To force a specific language, set the<br/>
 					Language=language_code<br/>
                   setting in the INI file to the desired language code. The supported codes are listed in the INI file.<br/><br/>
-                  <b>Lossless JPEG transformations are grayed out</b><br/>
-                  The current image is either not a JPEG image or width and/or height of the image is not a multiple of 8 or 16, depending on the chrominance subsampling
-                  used for this image.
-                  Due to the structure of JPEG files, lossless transformations only work if the width and height of the JPEG image is a multiple of the used JPEG compression block size.
-                  <br/><br/><b>
+                     <b>
 						<a href="#Top">Top of Page</a>
 					</b><br/>
 
 					<a name="Copyright"></a>
 					<h2>License &amp; Copyright</h2>
-					Copyright &copy; 2006-2012 David Kleiner<br/><br/>
+					Copyright &copy; 2006-2013 David Kleiner<br/><br/>
 					This program is free software; you can redistribute it and/or modify
 					it under the terms of the GNU General Public License as published by
 					the Free Software Foundation, version 2.
@@ -1009,28 +1070,28 @@
 							Michi, Patrik and Michael for additional testing and ideas
 						</li>
 						<li>
-                            				Anonymous for integration of dcraw, for viewing JPEGs embedded in camera RAW
+                            Anonymous for integration of dcraw, for viewing JPEGs embedded in camera RAW
 						</li>
 						<li>
 							Franco Bianconi and Daniel Sánchez Vargas for the Spanish translation
 						</li>
 						<li>
-							winPenPack Team and Massimo for the Italian translation
+							winPenPack Team and Massimo Pietrolonardo for the Italian translation
 						</li>
 						<li>
-							Adil and Fabrice for the French translation
+							Adil Tiadi and Fabrice for the French translation
 						</li>
 						<li>
 							Anonymous for the Korean translation
 						</li>
 						<li>
-							Silviu for the Romanian translation
+							Silviu Laurentiu for the Romanian translation
 						</li>
 						<li>
-							Dmitry for the Russian translation
+							Dmitry Yerokhin for the Russian translation
 						</li>
 						<li>
-							&Aring;ke for the Swedish translation
+							&Aring;ke Engelbrektson for the Swedish translation
 						</li>
 						<li>
 							Carpegieri Torezan for the Portuguese (Brasilian) translation
@@ -1047,6 +1108,9 @@
 						<li>
 							Xabier Aramendi for the Basque translation
 						</li>
+                    	<li>
+                           	Yia Guo for the Chinese translation
+                        </li>
 					</ul>
 					<br/><br/><b>
 						<a href="#Top">Top of Page</a>

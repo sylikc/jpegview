@@ -21,7 +21,7 @@ bool CNLS::CStringHashCompare::operator( )( const LPCTSTR& _Key1, const LPCTSTR&
 	return _tcscmp(_Key1, _Key2) < 0;
 }
 
-CString CNLS::GetStringTableFileName(LPCTSTR sLanguageCode) {
+CString CNLS::GetLocalizedFileName(LPCTSTR sPath, LPCTSTR sPrefixName, LPCTSTR sExtension, LPCTSTR sLanguageCode) {
 	CString sNLSFile;
 	TCHAR buff[16], buff2[16];
 	if (_tcscmp(sLanguageCode, _T("auto")) == 0) {
@@ -29,15 +29,19 @@ CString CNLS::GetStringTableFileName(LPCTSTR sLanguageCode) {
 		::GetLocaleInfo(threadLocale, LOCALE_SISO639LANGNAME, (LPTSTR) &buff, sizeof(buff));
 		::GetLocaleInfo(threadLocale, LOCALE_SISO3166CTRYNAME, (LPTSTR) &buff2, sizeof(buff2));
 		sLanguageCode = buff;
-		sNLSFile = CString(CSettingsProvider::This().GetEXEPath()) + _T("strings_") + sLanguageCode + "-" + buff2 + _T(".txt");
+		sNLSFile = CString(sPath) + sPrefixName + _T("_") + sLanguageCode + "-" + buff2 + _T(".") + sExtension;
 		if (::GetFileAttributes(sNLSFile) == INVALID_FILE_ATTRIBUTES) {
 			sNLSFile.Empty();
 		}
 	}
 	if (sNLSFile.IsEmpty()) {
-		sNLSFile = CString(CSettingsProvider::This().GetEXEPath()) + _T("strings_") + sLanguageCode + _T(".txt");
+		sNLSFile = CString(sPath) + sPrefixName + _T("_") + sLanguageCode + __T(".") + sExtension;
 	}
 	return sNLSFile;
+}
+
+CString CNLS::GetStringTableFileName(LPCTSTR sLanguageCode) {
+    return GetLocalizedFileName(CSettingsProvider::This().GetEXEPath(), _T("strings"), _T("txt"), sLanguageCode);
 }
 
 void CNLS::ReadStringTable(LPCTSTR sFileName) {
