@@ -1,9 +1,8 @@
-﻿//Translation Info
-//Language=Swedish
-//TranslatorName=Åke Engelbrektson
-//Contact=eson57@gmail.com
-//TranslatorURL=http://svenskasprakfiler.tejpad.se
-//LastUpdated=Jan 10, 2012
+﻿//Language = Swedish
+//TranslatorName = Åke Engelbrektson
+//TranslatorContact = eson57@gmail.com
+//TranslatorURL = http://svenskasprakfiler.se
+//LastUpdated = 2013-03-09
 //
 Contrast	Kontrast
 Brightness	Ljus
@@ -17,13 +16,13 @@ Parameter DB:	Databas:
 Save to	Spara till
 Remove from	Ta bort från
 Rename:	Byt namn:
-No file or folder name was provided as command line parameter!	Ingen fil eller katalog angavs som kommandoradsparameter!
+No file or folder name was provided as command line parameter!	Ingen fil eller mapp angavs som kommandoradsparameter!
 To use JPEGView, associate JPG, JPEG and BMP files with JPEGView.	För att använda JPEGView, associera JPG-, JPEG- och BMP-filer med JPEGView.
 Press ESC to exit...	Tryck 'ESC' för att avsluta...
 The file '%s' could not be read!	Filen '%s' kunde inte läsas!
 The file '%s' does not contain a list of file names!	Filen '%s' innehåller ingen lista på filnamn!
-The directory '%s' does not contain any image files!	Katalogen '%s' innehåller inga bildfiler!
-Press any key to search the subdirectories for image files.	Tryck på valfri tangent för att söka igenom underkataloger efter bildfiler.
+The directory '%s' does not contain any image files!	Mappen '%s' innehåller inga bildfiler!
+Press any key to search the subdirectories for image files.	Tryck på valfri tangent för att söka igenom undermappar efter bildfiler.
 JPEGView Help	JPEGView hjälp
 Current image	Aktuell bild
 Close help text display / Close JPEGView	Stäng hjälpfilen/Stäng JPEGView
@@ -39,8 +38,8 @@ Enable/disable automatic density correction (local brightness correction)	Aktive
 Increase/decrease lightening of shadows (LDC must be on)	Öka/Minska ljussättning av skuggor (LDC måste vara aktiverat)
 Increase/decrease darkening of highlights (LDC must be on)	Öka/Minska nedtoning av högdagrar (LDC måste vara aktiverat)
 Loop through files in current folder	Gå igenom filer i aktuell katalog
-Loop through files in current directory and all subfolders	Gå igenom filer i aktuell katalog och alla underkataloger
-Loop through files in current directory and all sibling folders (folders on same level)	Gå igenom filer i aktuell katalog och alla underkataloger (kataloger på samma nivå)
+Loop through files in current directory and all subfolders	Gå igenom filer i aktuell mapp och alla undermappar
+Loop through files in current directory and all sibling folders (folders on same level)	Gå igenom filer i aktuell mapp och alla undermappar (mappar på samma nivå)
 Maximize/restore to/from virtual desktop (only for multi-monitor systems)	Maximera/Återställ till/från virtuellt skrivbord (endast för multiskärmsystem)
 Copy screen to clipboard/ Copy processed full size image to clipboard	Kopiera skärmbild till urklipp/Kopiera bearbetad fullstorleksbild till urklipp
 Open new image or slideshow file	Öppna ny bild- eller bildspelsfil
@@ -51,7 +50,7 @@ Goto previous image	Gå till föregående bild
 Goto next image	Gå till nästa bild
 PgUp or Left	PgUp eller vänster
 PgDn or Right	PgDn eller höger
-Goto first/last image of current folder (using sort order as defined)	Gå till första/sista bilden i aktuell katalog (sorterat enligt specifikation)
+Goto first/last image of current folder (using sort order as defined)	Gå till första/sista bilden i aktuell mapp (sorterat enligt specifikation)
 Increase/decrease brightness	Justera ljus
 Increase/decrease contrast	Justera kontrast
 Increase/decrease sharpness	 Justera skärpa
@@ -119,13 +118,13 @@ Paste from clipboard	Klistra in från urklipp
 Batch rename/copy...	Byt namn/kopiera (Batch-läge)
 Show filename	Visa filnamn
 Navigation	Navigation
-Loop folder	Upprepa katalog
+Loop folder	Upprepa mapp
 Loop recursively	Upprepa rekursivt
-Loop siblings	Upprepa kataloger på samma nivå
+Loop siblings	Upprepa mappar på samma nivå
 Display order	Sortera efter
 Modification date	Senast ändrad
 Creation date	Skapad
-Play folder as slideshow/movie	Visa katalog som bildspel/film
+Play folder as slideshow/movie	Visa mappen som bildspel/film
 Slideshow	Bildspel
 Movie	Film
 Waiting time	Väntetid
@@ -154,7 +153,7 @@ C - R	C - R
 M - G	M - G
 Y - B	G - B
 Batch rename/copy of files	Byt namn/Kopiera filer (Batch-läge)
-Image files in folder	Bildfiler i katalog
+Image files in folder	Bildfiler i mapp
 Placeholders:	Platshållare:
 Number (consecutively numbered)	Nummer (löpande numrering)
 Number with N digits	Nummer med N-siffror
@@ -166,7 +165,7 @@ Original file extension	 Ursprungligt filnamnstillägg
 Day / Month / Year (as numbers)	Dag/Månad/År (med siffror)
 Year short form (2 digits)	År/kortform (2 siffror)
 Month / Short form (text)	Månad/kortform (text)
-Target folders that are not yet existing are created as needed.	Målkatalog som ännu inte existerar skapas vid behov
+Target folders that are not yet existing are created as needed.	Målmapp som ännu inte existerar skapas vid behov
 Date placeholders use the modification date of the image.	Datum-platshållare använder 'Senast ändrad' från bilden
 Rename/copy images to:	Byt namn/ Kopiera bilder till:
 Rename	Byt namn
@@ -183,7 +182,7 @@ copied	kopierad
 renamed	  omdöpt
 Continue rename/copy?	Fortsätta byta namn/kopiera?
 Error during rename/copy	Fel vid namnbyte/kopiering
-%d file(s) renamed, %d file(s) copied, %d folder(s) created	%d  %d fil(er) omdöpta, %d fil(er) kopierade, %d katalog(er) skapad(e)	%d
+%d file(s) renamed, %d file(s) copied, %d folder(s) created	%d  %d fil(er) omdöpt(a), %d fil(er) kopierad(e), %d mapp(ar) skapad(e)	%d
 Crop Selection	Beskär
 Copy Selection to Clipboard	Kopiera markerat område till urklipp
 Zoom to Selection	Zooma in markerat område
@@ -208,10 +207,10 @@ SIMD mode used:	SIMD-läge:
 Number of CPU cores used:	Antal processorkärnor:
 Licensed under the GNU general public license (GPL), see readme file for details:	Licensierad under GNU general public license (GPL), se readme.txt för detaljer:
 Project home page:	Projektets hemsida:
-Show first image in folder	Visa första bilden i katalogen
+Show first image in folder	Visa första bilden i mappen
 Show previous image	Visa föregående bild
 Show next image	Visa nästa bild
-Show last image in folder	Visa sista bilden i katalogen
+Show last image in folder	Visa sista bilden i mappen
 Rotate image 90 deg clockwise	Rotera bilden 90 grader medurs
 Rotate image 90 deg counter-clockwise	Rotera bilden 90 grader moturs
 Landscape picture enhancement mode	Optimeringsläge för liggande bild
@@ -244,7 +243,7 @@ Height	Höjd
 Pixels	Pixel
 Screen Pixels	Skärm-pixel
 Image Pixels	Bildpunkter
-Set modification date	Bestäm 'Senast ändrad'
+Set modification date	Ange 'Senast ändrad'...
 to current date	till aktuellt datum
 to EXIF date	till EXIF-datum
 Mark image for toggling. Use %s to toggle between marked and current image	Markera bild för växling. Använd %s för att växla mellan markerad och aktuell bild
@@ -270,14 +269,14 @@ Align image to horizontal or vertical line	Justera bildposition efter horisontel
 Use the mouse to draw a line that shall be horizontal or vertical.	Rita en horisontell eler vertikal linje med musen.
 Rotate the image by dragging with the mouse.	Rotera bilden genom att dra med musen
 The operation failed because not enough memory is available!	Åtgärden misslyckades, eftersom det inte finns tillräckligt med ledigt minne tillgängligt.
-to EXIF date (all files in folder)	till EXIF-data (alla filer i katalogen)
-Number of JPEG files in folder: %d	Antal JPEG-filer i katalogen: %d
+to EXIF date (all files in folder)	till EXIF-data (alla filer i mappen)
+Number of JPEG files in folder: %d	Antal JPEG-filer i mappen: %d
 EXIF date successfully set on %d images, failed on %d images	EXIF-data applicerat på %d bilder, misslyckades med %d bilder
 Reason: Not enough memory available	Orsak: För lite tillgängligt minne
-Transform image	Omvandla bild
+Transform image	Redigera bild
 Rotate...	Rotera... 
-Mirror horizontally	Spegla horisontellt 
-Mirror vertically	Spegla vertikalt 
+Mirror horizontally	Vänd horisontellt 
+Mirror vertically	Vänd vertikalt 
 Random	Slumpmässig
 Zoom mode (drag mouse to zoom)	Zoom-läge (Dra med musen för att zooma)
 Correct converging lines (perspective correction)	Korrigera konvergerande linjer (perspektivkorrigering)
@@ -288,3 +287,53 @@ Click and drag the mouse vertically to correct image tilt.	Klicka och dra vertik
 Drag at the left or right border for asymmetric correction.	Dra i vänster eller höger kant för asymmetrisk korrigering
 Fit window to image	Anpassa fönster efter bild
 Keep aspect ratio on crop	Bevara proportioner vid beskärning
+Lossless JPEG transformations	Förlustfri JPEG-transformering
+Performing the lossless transformation failed!	Förlustfri transformering misslyckades!
+Image width and height must be dividable by the JPEG block size (8 or 16) for lossless transformations!	Bildbredd och -höjd måste vara delbart med JPEG-blockstorlek (8 eller 16), för förlustfri transformering!
+Reading the JPEG file from disk failed	Kunde inte läsa in JPEG-filen
+Writing the resulting JPEG file to disk failed	Kunde inte skriva utdatafilen till disk
+Performing the transformation failed	Kunde inte transformera
+The transformation can be applied if the image is trimmed to the next matching size but this will remove some border pixels.	Transformering kan utföras om bilden beskärs till närmast matchande storlek, men bilden blir alltså något beskuren.
+Trim the image and apply transformation? Trimming cannot be undone!	Vill du beskära bilden och slutföra transformeringen? Beskärningen kan inte ångras!
+Note: Set the key 'TrimWithoutPromptLosslessJPEG=true' in the INI file to always trim without showing this message.	Notera! Du kan ändra värdet i nyckeln 'TrimWithoutPromptLosslessJPEG=true' i inställningsfilen 'JPEGView.ini' för att alltid beskära, utan att visa detta meddelande.
+Transition Effect	Övergångseffekt
+None	Ingen
+Blend	Blanda
+Slide from right	Skjut in från höger
+Slide from left	Skjut in från vänster
+Slide from top	Skjut in från toppen
+Slide from bottom	Skjut in från botten
+Roll from right	Rulla in från höger
+Roll from left	Rulla in från vänster
+Roll from top	Rulla in från toppen
+Roll from bottom	Rulla in från botten
+Scroll from right	Skrolla från höger
+Scroll from left	Skrolla från vänster
+Scroll from top	Skrolla från toppen
+Scroll from bottom	Skrolla från botten
+Transition Speed	Övergångshastighet
+Very fast	Mycket snabb
+Fast	Snabb
+Normal	Normal
+Slow	Långsam
+Very slow	Mycket långsam
+Error	Fel
+Warning	Varning
+Error while writing the following registry key:	Kunde inte skriva till följande registernyckel:
+Set as default viewer...	Ange som standardvisare...
+Set JPEGView as default image viewer	Ange JPEGView som standardbildvisare
+JPEGView is registered as default viewer for the selected file formats.	JPEGView är registrerad som standardvisare för de valda filtilläggen.
+Registration applies to the current user only.	Inställningen gäller endast aktuellt användarkonto
+Extension	Filtillägg
+File type	Filtyp
+The following file extensions cannot be unregistered because they have been registered in the 'local machine' registry area.	Följande filtillägg kan inte avregistreras eftersom de har registrerats i registersektionen 'HKEY_LOCAL_MACHINE'.
+Registering or unregistering file extensions in this registry area requires administration privileges and cannot be done in JPEGView.	Registrering eller avregistrering av filtillägg i den här registersektionen kräver administratörsbehörighet och kan inte utföras i JPEGView.
+Press 'OK' to continue with registration or 'Cancel' to not modify any registrations.	Tryck 'OK' för att fortsätta med associeringen eller 'Avbryt' för att avbryta all registrering.
+Unregistering not possible	Avregistrering är inte möjlig
+%s images	%s bilder
+%s images (processed by Window Imaging Component - WIC)	%s bilder (bearbetade av Window Imaging Component - WIC)
+%s camera raw images (embedded JPEGs only)	%s rå-bilder (endast inbäddad JPEG)
+The following image extensions are protected by the operating system.	Följande filtillägg skyddas av operativsystemet.
+JPEGView can try to remove the restrictions automatically.	JPEGView kan försöka ta bort restriktionerna automatiskt.
+However this will fail if the current user has no administration privileges.	Det kommer dock att misslyckas om aktuellt användarkonto saknar administratörsrättigheter.
+Insufficient rights to remove the restrictions. Continue?	Otillräckliga rättigheter för att ta bort restriktionerna. Vill du fortsätta?

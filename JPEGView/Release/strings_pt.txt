@@ -16,12 +16,12 @@ Parameter DB:	Parâmetros da BD:
 Save to	Gravar como
 Remove from	Remover de
 Rename:	Mudar nome:
-No file or folder name was provided as command line parameter! Não indicou o nome do ficheiro ou pasta como parâmetro da linha de comandos!
+No file or folder name was provided as command line parameter!	Não indicou o nome do ficheiro ou pasta como parâmetro da linha de comandos!
 To use JPEGView, associate JPG, JPEG and BMP files with JPEGView.	Para utilizar o JPEGView, associe as extensões JPG, JPEG e BMP ao JPEGView
 Press ESC to exit...	Prima ESC para sair...
 The file '%s' could not be read!	O ficheiro "%s" não pôde ser lido!
-The file '%s' does not contain a list of file names! O ficheiro "%s" não contém uma lista de nomes de ficheiro!
-The directory '%s' does not contain any image files! A pasta "%s" não possui imagens!
+The file '%s' does not contain a list of file names!	O ficheiro "%s" não contém uma lista de nomes de ficheiro!
+The directory '%s' does not contain any image files!	A pasta "%s" não possui imagens!
 Press any key to search the subdirectories for image files.	Prima qualquer tecla para procurar imagens nas subpastas.
 JPEGView Help	Ajuda do JPEGView
 Current image	Imagem atual
@@ -74,7 +74,7 @@ Left mouse & drag	Botão esquerdo do rato e arraste
 Ctrl + Left mouse	Ctrl + botão esquerdo do rato
 Forward mouse button	Botão "Avançar" do rato
 Back mouse button	Botão "Recuar" do rato
-Delete current file on disk Eliminar ficheiro do disco
+Delete current file on disk	Eliminar ficheiro do disco
 Rotate current file on disk lossless by 90 deg (W/H must be multiple of 16)	Rodar ficheiro no disco em 90º, mas sem perda de qualidade (W/H deve ser múltiplo de 16)
 Rotate current file on disk lossless by 270 deg (W/H must be multiple of 16)	Rodar ficheiro no disco em 270º, mas sem perda de qualidade (W/H deve ser múltiplo de 16)
 The file is read-only!	O ficheiro é somente leitura!
@@ -101,8 +101,8 @@ Cannot write to parameter DB file '%s'!	Não foi possível escrever no ficheiro 
 Cannot read from parameter DB file '%s'!	Não foi possível ler o ficheiro de parâmetros da BD "%s"!
 Cannot read parameter DB file '%s' because it is too large!	Não foi possível ler o ficheiro de parâmetros da BD "%s", pois é muito grande!
 The parameter DB file '%s' has been created by a newer version of JPEGView!	O ficheiro de parâmetros da BD "%s" foi  criado por uma versão mais recente do JPEGView!
-The old parameter DB file '%s' could not be renamed during conversion to new format! O nome do ficheiro de parâmetros da BD "%s" não foi alterado ao converter para o novo formato!
-Parameter DB error Erro de parâmetros da BD
+The old parameter DB file '%s' could not be renamed during conversion to new format!	O nome do ficheiro de parâmetros da BD "%s" não foi alterado ao converter para o novo formato!
+Parameter DB error	Erro de parâmetros da BD
 Error saving file	Erro ao gravar o ficheiro
 Error writing file to disk!	Erro ao gravar o ficheiro no disco!
 Confirm	Confirmação
@@ -167,7 +167,7 @@ Day / Month / Year (as numbers)	Dia / Mês / Ano (como número)
 Year short form (2 digits)	Ano em forma curta (2 dígitos)
 Month / Short form (text)	Mês / forma curta (texto)
 Target folders that are not yet existing are created as needed.	As pastas de destino que não existam, são criadas automaticamente
-Date placeholders use the modification date of the image. Os marcadores de posição utilizam a data de modificação da imagem
+Date placeholders use the modification date of the image.	Os marcadores de posição utilizam a data de modificação da imagem
 Rename/copy images to:	Copiar/mudar nome para:
 Rename	Mudar nome
 Preview	Visualizar
@@ -236,7 +236,7 @@ Shall existing entries be preserved (Yes) or be overriden by the imported entrie
 Select file to display in 'File Open' dialog	Selecione o ficheiro a exibir na caixa de diálogo "Abrir"
 Crop Mode	Modo de recorte
 Free	Livre
-Fixed size... Tamanho fixo...
+Fixed size...	Tamanho fixo...
 Set Fixed Crop Size	Definir tamanho fixo de recorte
 Width	Largura
 Height	Altura
@@ -244,7 +244,7 @@ Pixels	Pixeis
 Screen Pixels	Pixeis do ecrã
 Image Pixels	Pixeis da imagem
 Set modification date	Definir data de modificação
-to current date	 a data atual
+to current date	a data atual
 to EXIF date	a data EXIF
 Mark image for toggling. Use %s to toggle between marked and current image	Marque a imagem a alternar. Utilize %s para trocar entre a imagem marcada e a imagem atual
 Saturation	Saturação
@@ -265,9 +265,9 @@ Rotate Image	Rodar imagem
 Show grid lines	Mostrar linhas de grelha
 Auto crop rotated image (avoids black border)	Recortar automaticamente as imagens rodadas (evita contornos a preto)
 Align image to horizontal or vertical line	Alinhar imagem à linha horizontal ou vertical
-Use the mouse to draw a line that shall be horizontal or vertical. Utilize o rato para criar uma linha horizontal ou vertical
-Rotate the image by dragging with the mouse. Rodar imagem com o rato
-The operation failed because not enough memory is available! A operação falhou porque a memória disponível não é suficiente!
+Use the mouse to draw a line that shall be horizontal or vertical.	Utilize o rato para criar uma linha horizontal ou vertical
+Rotate the image by dragging with the mouse.	Rodar imagem com o rato
+The operation failed because not enough memory is available!	A operação falhou porque a memória disponível não é suficiente!
 to EXIF date (all files in folder)	a data EXIF  (todos os ficheiros na pasta)
 Number of JPEG files in folder: %d	Número de ficheiros JPEG na pasta: %d
 EXIF date successfully set on %d images, failed on %d images	A data EXIF foi definida em %d imagens e falhou em %d
@@ -286,3 +286,53 @@ Click and drag the mouse vertically to correct image tilt.	Clique e arraste o ra
 Drag at the left or right border for asymmetric correction.	Clique no contono esquerdo ou direito para corrigir a simetria
 Fit window to image	Ajustar janela à imagem
 Keep aspect ratio on crop	Manter tamanho ao recortar
+Lossless JPEG transformations	Transformações JPEG sem perdas
+Performing the lossless transformation failed!	Ocorreu um erro ao transformar!
+Image width and height must be dividable by the JPEG block size (8 or 16) for lossless transformations!	Para efetuar a transformação, a largura e altura da imagem devem ser divisíveis pelos tamanhos JPEG (8 ou 16)!
+Reading the JPEG file from disk failed	Ocorreu um erro ao carregar o ficheiro JPEG!
+Writing the resulting JPEG file to disk failed	Ocorreu um erro ao gravar o ficheiro JPEG!
+Performing the transformation failed	Ocorreu um erro durante a transformação!
+The transformation can be applied if the image is trimmed to the next matching size but this will remove some border pixels.	A transformação pode ser aplicada de ajustar a imagem ao tamanho mais próximo mas alguns pixeis serão removidos.
+Trim the image and apply transformation? Trimming cannot be undone!	Ajustar imagem e transformar? Esta operação não pode ser desfeita!
+Note: Set the key 'TrimWithoutPromptLosslessJPEG=true' in the INI file to always trim without showing this message.	Nota: Defina a chave 'TrimWithoutPromptLosslessJPEG=true' no ficheiro INI se quiser utilizar esta ação sem comfirmação.
+Transition Effect	Efeito de transição
+None	Nenhum
+Blend	Sobreposição
+Slide from right	Deslizar da direita
+Slide from left	Deslizar da esquerda
+Slide from top	Deslizar de cima
+Slide from bottom	Deslizar de baixo
+Roll from right	Enrolar da direita
+Roll from left	Enrolar da esquerda
+Roll from top	Enrolar de cima
+Roll from bottom	Enrolar de baixo
+Scroll from right	Deslocar da direita
+Scroll from left	Deslocar da esquerda
+Scroll from top	Deslocar de cima
+Scroll from bottom	Deslocar de baixo
+Transition Speed	Velocidade da transição
+Very fast	Muito rápida
+Fast	Rápida
+Normal	Normal
+Slow	Lenta
+Very slow	Muito lenta
+Error	Erro
+Warning	Aviso
+Error while writing the following registry key:	Ocorreu um erro ao escrever a chave de registo:
+Set as default viewer...	Definir como visualizador padrão...
+Set JPEGView as default image viewer	Definir o JPEGView como visualizador padrão
+JPEGView is registered as default viewer for the selected file formats.	O JPEGView é o visualizador padrão para os formatos de ficheiro selecionados.
+Registration applies to the current user only.	Esta associação só é aplicável ao utilizador atual.
+Extension	Extensão
+File type	Tipo de ficheiro
+The following file extensions cannot be unregistered because they have been registered in the 'local machine' registry area.	Não foi possível remover a associação das seguintes extensões de ficheiros porque a associação foi registada na área de registo da máquina local.
+Registering or unregistering file extensions in this registry area requires administration privileges and cannot be done in JPEGView.	A associação ou cancelamente de associação nesta área do registo requer privilégios de administrador e não pode ser efetuada no JPEGView.
+Press 'OK' to continue with registration or 'Cancel' to not modify any registrations.	Prima Aceitar para continuar ou Cancelar para não efetuar as alterações.
+Unregistering not possible	Não foi possível remover a associação
+%s images	%s imagens
+%s images (processed by Window Imaging Component - WIC)	%s imagens (processadas pelo componente Windows Imaging - WIC)
+%s camera raw images (embedded JPEGs only)	%s imagens da máquina fotográfica
+The following image extensions are protected by the operating system.	Estes tipos de ficheiro estão protegidos pelo sistema operativo.
+JPEGView can try to remove the restrictions automatically.	O JPEGView pode tentar remover as restrições automaticamente.
+However this will fail if the current user has no administration privileges.	No entanto, se o utilizador não possuir privilégios de administrador a operação não é possível.
+Insufficient rights to remove the restrictions. Continue?	Não possui privilégios para remover as restrições. Continuar?

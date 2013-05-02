@@ -15,7 +15,7 @@ public:
 
 	virtual float DimFactor() { return 0.5f; }
 
-	virtual bool IsVisible() { return m_bVisible && m_bEnabled; }
+	virtual bool IsVisible() { return m_bVisible && m_bEnabled && !m_pMainDlg->IsInSlideShowWithTransition() ; }
 	virtual bool IsActive() { return m_bEnabled; }
 
 	virtual void SetVisible(bool bVisible);

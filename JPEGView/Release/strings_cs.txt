@@ -285,3 +285,53 @@ Click and drag the mouse vertically to correct image tilt.	Kliknout a táhnout m
 Drag at the left or right border for asymmetric correction.	Táhnout myší na levém nebo pravém pozadí pro nesymetrickou korekci. 
 Fit window to image	Upnout okno k obrazu
 Keep aspect ratio on crop	Držet poměr stran při zastřižení
+Lossless JPEG transformations	Bezeztrátové JPEG transformace
+Performing the lossless transformation failed!	Provedení bezeztrátové transformace selhalo!
+Image width and height must be dividable by the JPEG block size (8 or 16) for lossless transformations!	Šířka i výška obrázku musí být dělitelná rozměrem JPEG bloku (8 nebo 16) pro bezeztrátové transformace! 
+Reading the JPEG file from disk failed	Chyba čtení JPEG souboru z disku!
+Writing the resulting JPEG file to disk failed	Chyba zápisu výsledného JPEG souboru na disk!
+Performing the transformation failed	Chyba při provádění transformace!
+The transformation can be applied if the image is trimmed to the next matching size but this will remove some border pixels.	Transformace muže být provedena jen s ostřižením obrázku na nejbližší vhodný rozměr, to způsobí odstranění některých bodů na krajích. 
+Trim the image and apply transformation? Trimming cannot be undone!	Ostřihnou obrázek a provést transformaci? Ostřižení nelze vrátit!
+Note: Set the key 'TrimWithoutPromptLosslessJPEG=true' in the INI file to always trim without showing this message.	Pozn.:Nastavením klíče 'TrimWithoutPromptLosslessJPEG=true' v INI souboru lze ostřihovat vše bez této zprávy.
+Transition Effect	Přechodový efekt	
+None	Žádný
+Blend	Míchání
+Slide from right	Posun zprava	
+Slide from left	Posun zleva 
+Slide from top	Posun zhora
+Slide from bottom	Posun zdola
+Roll from right	Rolovat zprava
+Roll from left	Rolovat zleve
+Roll from top	Rolovat zhora
+Roll from bottom	Rolovat zdola
+Scroll from right	Odrolovat zprava
+Scroll from left	Odrolovat zleva
+Scroll from top	Odrolovat zhora
+Scroll from bottom	Odrolovat zdola
+Transition Speed	Rychlost přechody
+Very fast	Velmi rychle
+Fast	Rychle
+Normal	Normálnš
+Slow	Pomalu
+Very slow	Velmi pomalu
+Error	Chyba
+Warning	Varování
+Error while writing the following registry key:	Chybe během zápisu následujícího klíče registru:
+Set as default viewer...	Nastavit jako výchozí prohlížeč...
+Set JPEGView as default image viewer	Nastavit JPEGView jako výchozí prohlížeč
+JPEGView is registered as default viewer for the selected file formats.	JPEGView je nastaven jako výchozí prohlížeč pro vybrané souborové formáty.
+Registration applies to the current user only.	Registrace platí pro právě přihlášeného uživatele
+Extension	Přípona
+File type	Typ souboru
+The following file extensions cannot be unregistered because they have been registered in the 'local machine' registry area.	Následující přípony soborů nemohou být odregistrovány protože byly registrovány v 'místním počítači' registru.
+Registering or unregistering file extensions in this registry area requires administration privileges and cannot be done in JPEGView.	Registrace a odregistrace přípon souborů v registru vyžaduje administátorská práva a nemůže být provedena v JPEGView.
+Press 'OK' to continue with registration or 'Cancel' to not modify any registrations.	Zvolet 'OK' pro pokračování registrace nebo 'Zrušit' ke změně registrace.
+Unregistering not possible	Odregistrace není možná.
+%s images	%s obrázky
+%s images (processed by Window Imaging Component - WIC)	%s obrázky (zpracovány Window Imaging Component - WIC)
+%s camera raw images (embedded JPEGs only)	%s zrojové soubory z kamery (pouze zapouzdřený JPEG)
+The following image extensions are protected by the operating system.	Následující přípony obrázků jsou chráněny operačním systémem.
+JPEGView can try to remove the restrictions automatically.	JPEGView může zkusit odstranit omezení automaticky.
+However this will fail if the current user has no administration privileges.	Ačkoliv toto selže pokud uživatel nemá práva administrátora.
+Insufficient rights to remove the restrictions. Continue?	Nedostatečná práva k odstranění omezení. Pokračovat?

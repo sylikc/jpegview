@@ -201,8 +201,8 @@ Show navigation panel	Erakutsi nabigazio panela
 Show/hide navigation panel	Erakutsi/Ezkutatu nabigazio panela
 About JPEGView...	JPEGIkusgailuari buruz...
 SIMD mode used:	Erabilitako SIMD modua:
-Number of CPU cores used:	Erabilitao CPU nukleo zenbatekoa:
-Licensed under the GNU general public license (GPL), see readme file for details:	GNU Baimen Publiko Ororrarenpean (GPL) baimenduta, ikusi 'irakurri' agiria xehetasun gehiagorako:
+Number of CPU cores used:	Erabilitako CPU nukleo zenbatekoa:
+Licensed under the GNU general public license (GPL), see readme file for details:	GNU Baimen Publiko Orokorrarenpean (GPL) baimenduta, ikusi 'irakurri' agiria xehetasun gehiagorako:
 Project home page:	Egitasmoaren webgunea:
 Show first image in folder	Erakutsi agiritegiko lehenengo irudia
 Show previous image	Erakutsi aurreko irudia
@@ -288,3 +288,53 @@ Image width and height must be dividable by the JPEG block size (8 or 16) for lo
 Reading the JPEG file from disk failed	Hutsegitea JPEG agiria diskatik irekurtzerakoan
 Writing the resulting JPEG file to disk failed	Hutsegitea emaitz JPEG agiria diskara idazterakoan
 Performing the transformation failed	Hutsegitea eraldaketa egiterakoan
+Lossless JPEG transformations	Galeragabeko JPEG eraldaketak 
+Performing the lossless transformation failed!	Galeragabeko eraldaketa egintza hutsegitea!
+Image width and height must be dividable by the JPEG block size (8 or 16) for lossless transformations!	Irudiaren zabalera eta garaiera JPEG bloke neurriarekiko (8 edo 16) zatigarria izan behar da galeragabeko eraldaketentzat!
+Reading the JPEG file from disk failed	Hutsegitea JPEG agiria diskatik irakurtzerakoan
+Writing the resulting JPEG file to disk failed	Hutsegitea emaitz JPEG agiria diskan idazterakoan
+Performing the transformation failed	Hutsegitea eraldaketa egiterakoan
+The transformation can be applied if the image is trimmed to the next matching size but this will remove some border pixels.	Eraldaketa ezarri daiteke irudia bat datorren hurrengo neurrira mozten bada baina honek hertzeko zenbait pixel kenduko ditu.
+Trim the image and apply transformation? Trimming cannot be undone!	Moztu irudia eta ezarri eraldaketa? Mozketa ezin da desegin!
+Note: Set the key 'TrimWithoutPromptLosslessJPEG=true' in the INI file to always trim without showing this message.	Oharra: Ezarri 'TrimWithoutPromptLosslessJPEG=true' INI agirian betik mozteko mezu hau erakutsi gabe.
+Transition Effect	Aldaketa Eragina
+None	Ezer ez
+Blend	Nahasketa
+Slide from right	Aurkeztu eskuinetik
+Slide from left	Aurkeztu ezkerretik
+Slide from top	Aurkeztu goitik
+Slide from bottom	Aurkeztu behetik
+Roll from right	Gurpildu eskuinetik
+Roll from left	Gurpildu ezkerretik
+Roll from top	Gurpildu goitik
+Roll from bottom	Gurpildu behetik
+Scroll from right	Irristatu eskuinetik
+Scroll from left	Irristatu ezkerretik
+Scroll from top	Irristatu goitik
+Scroll from bottom	Irristatu behetik
+Transition Speed	Aldaketa Abiadura
+Very fast	Oso azkar
+Fast	Azkara
+Normal	Arrunt
+Slow	Astiro
+Very slow	Oso astiro
+Error	Akatsa
+Warning	Kontuz
+Error while writing the following registry key:	Akatsa hurrengo erregistro giltza idazterakoan:
+Set as default viewer...	Ezarri berezko ikusgailu bezala...
+Set JPEGView as default image viewer	Ezarri JPEGIkusgailua berezko irudi ikusgailu bezala
+JPEGView is registered as default viewer for the selected file formats.	JPEGIkusgailua berezko ikusgailu bezala erregistratu da hautaturiko agiri heuskarrientzat.
+Registration applies to the current user only.	Erregistroa oraingo erabiltzaileari bakarrik ezartzen zaio
+Extension	Hedapena
+File type	Agiri mota	
+The following file extensions cannot be unregistered because they have been registered in the 'local machine' registry area.	Hurrengo agiri hedapenak ezin dira deserregistratu 'tokiko makina' erregistro eremuan erregistraturik daudelako.
+Registering or unregistering file extensions in this registry area requires administration privileges and cannot be done in JPEGView.	Eremu honetan agiri hedapenak erregistratzea eta deserregistratzeak administratzaile eskubideak behar ditu eta ezin da JPEGIkusgailuan egin.
+Press 'OK' to continue with registration or 'Cancel' to not modify any registrations.	Sakatu 'Ongi' erregistratzearekin jarraitzeko edo 'Ezeztatu' erregistrorik ez aldatzeko.
+Unregistering not possible	Deserregistratzea ezinezkoa da
+%s images	%s irudiak
+%s images (processed by Window Imaging Component - WIC)	%s irudi (Window Imaging Component - WIC-rekin prozesatuta)	
+%s camera raw images (embedded JPEGs only)	%s kamera raw irudiak (barneratutako JPEG-ak  bakarrik)
+The following image extensions are protected by the operating system.	Hurrengo irudi hedapenak sistema eragileak babesturik daude.
+JPEGView can try to remove the restrictions automatically.	JPEGIkusgailua saiatu daiteke murrizpenak berezgaitasunez kentzen.
+However this will fail if the current user has no administration privileges.	Horrela ere honek huts egingo du oraingo erabiltzaileak ez baditu administratzaile pribilegioak.
+Insufficient rights to remove the restrictions. Continue?	Ez duzu nahikoa eskubide murrizpenak kentzeko. Jarraitu?

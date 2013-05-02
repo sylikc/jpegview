@@ -45,6 +45,7 @@ CEXIFDisplay::CEXIFDisplay(HWND hWnd, INotifiyMouseCapture* pNotifyMouseCapture)
 	m_pHistogram = NULL;
 
 	AddUserPaintButton(ID_btnShowHideHistogram, &ShowHistogramTooltip, &PaintShowHistogramBtn, NULL, this, this);
+    AddUserPaintButton(ID_btnClose, CNLS::GetString(_T("Close")), &PaintCloseBtn, NULL, this, this);
 }
 
 CEXIFDisplay::~CEXIFDisplay() {
@@ -312,6 +313,11 @@ void CEXIFDisplay::RepositionAll() {
 		int nButtonSize = (int)(m_fDPIScale * BUTTON_SIZE);
 		pButton->SetPosition(CRect(CPoint(panelRect.left + m_nNoHistogramSize.cx - m_nGap - nButtonSize, panelRect.top + m_nNoHistogramSize.cy - m_nGap - nButtonSize), CSize(nButtonSize, nButtonSize)));
 	}
+    CUICtrl* pButtonClose = GetControl(ID_btnClose);
+    if (pButtonClose != NULL) {
+		int nButtonSize = (int)(m_fDPIScale * BUTTON_SIZE * 0.9f);
+		pButtonClose->SetPosition(CRect(CPoint(panelRect.right - nButtonSize, panelRect.top), CSize(nButtonSize, nButtonSize)));
+	}
 }
 
 void CEXIFDisplay::PaintShowHistogramBtn(void* pContext, const CRect& rect, CDC& dc) {
@@ -333,6 +339,19 @@ void CEXIFDisplay::PaintShowHistogramBtn(void* pContext, const CRect& rect, CDC&
 		dc.MoveTo(p3);
 		dc.LineTo(p2);
 	}
+}
+
+void CEXIFDisplay::PaintCloseBtn(void* pContext, const CRect& rect, CDC& dc) {
+	CRect r = Helpers::InflateRect(rect, 0.25f);
+
+	CPoint p1(r.left + 1, r.top + 1);
+	dc.MoveTo(p1);
+	CPoint p2(r.right, r.bottom);
+	dc.LineTo(p2);
+	CPoint p3(r.right - 1, r.top + 1);
+	dc.MoveTo(p3);
+	CPoint p4(r.left, r.bottom);
+	dc.LineTo(p4);
 }
 
 LPCTSTR CEXIFDisplay::ShowHistogramTooltip(void* pContext) {

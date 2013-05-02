@@ -7,6 +7,10 @@ using namespace stdext;
 class CNLS
 {
 public:
+    // Gets a localized name of a file located in the EXE folder with given prefix and extension,
+    // e.g. GetLocalizedFileName("", "readme", "html", "ru") returns "readme_ru.html"
+    static CString GetLocalizedFileName(LPCTSTR sPath, LPCTSTR sPrefixName, LPCTSTR sExtension, LPCTSTR sLanguageCode);
+
 	// Gets the file name of the string table to use for the given ISO 639 language code 
 	static CString GetStringTableFileName(LPCTSTR sLanguageCode);
 

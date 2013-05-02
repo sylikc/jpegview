@@ -43,6 +43,7 @@ GUIColor=243 242 231
 HighlightColor=255 205 0
 SelectionColor=255 205 0
 SliderColor=255 0 80
+FileNameColor=255 255 255
 
 ; Initial fixed contrast correction to apply to all images. Must be in -0.5 .. 0.5
 ; Values > 0 increase contrast, values < 0 decrease contrast
@@ -100,6 +101,16 @@ DefaultFixedCropSize=320 200
 
 ; Set to true to initially display the filename of each image in the upper, left corner of the screen
 ShowFileName=false
+
+; The elements to show when showing the file name.
+; Possible elements:
+; %filename% : file name
+; %filepath% : File name and path
+; %index%    : Index of image in folder, e.g. [1/12]
+; %zoom%     : Current zoom factor
+; %size%     : Size of image in pixels (w x h)
+; %filesize% : Size of image on disk
+FileNameFormat=%index%  %filepath%
 
 ; Set to true to initially display the file info box (EXIF info if available)
 ShowFileInfo=false
@@ -180,6 +191,13 @@ AutoZoomMode=FitNoZoom
 ; Maximum size of slide show text files in KB
 MaxSlideShowFileListSizeKB=200
 
+; Transition effect for slide shows in full screen mode - ignored when used in window mode
+; Possible transition effects: None, Blend, SlideRL, SlideLR, SlideTB, SlideBT, RollRL, RollLR, RollTB, RollBT, ScrollRL, ScrollLR, ScrollTB, ScrollBT
+SlideShowTransitionEffect=Blend
+
+; Time of the slide show transition effect in milliseconds, only used in full screen mode
+SlideShowEffectTime=250
+
 ; If set to true, only one single instance of JPEGView runs at any time, if false multiple instances are allowed
 ; Set to true to open all images in the same JPEGView window.
 SingleInstance=false
@@ -191,7 +209,7 @@ ForceGDIPlus=false
 ; Quality when saving JPEG files (in 0..100 where 100 is the highest quality)
 JPEGSaveQuality=85
 
-; Quality when saving WEBP files (in 0..100 where 100 is the highest quality)
+; Quality when saving WEBP files with lossy compression (in 0..100 where 100 is the highest quality)
 WEBPSaveQuality=85
 
 ; Default format for saving files. Supported formats: jpg, bmp, png, tif, webp
@@ -204,6 +222,11 @@ CreateParamDBEntryOnSave=true
 ; showing a dialog or prompting the user to confirm.
 ; CAUTION: Use at your own risk! Be aware that the original image file is overriden and cannot be restored anymore!
 OverrideOriginalFileWithoutSaveDialog=false
+
+; If set to true, lossless JPEG transformations will trim the image as needed without prompting the user.
+; This will remove 15 pixel rows/colums at the image borders in worst case.
+; CAUTION: Use at your own risk! Be aware that the original image file is overriden and the trimmed borders cannot be restored anymore!
+TrimWithoutPromptLosslessJPEG=false
 
 ; Only for multi-monitor systems!
 ; Monitor to start the application on

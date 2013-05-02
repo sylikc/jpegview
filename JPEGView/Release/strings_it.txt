@@ -284,3 +284,53 @@ Click and drag the mouse vertically to correct image tilt.	Clicca e tracina il m
 Drag at the left or right border for asymmetric correction.	Trascina al bordo sinistro o al bordo destro per la correzione asimmetrica.
 Fit window to image	Adatta finestra all'immagine
 Keep aspect ratio on crop	Mantieni i rapporti dell'aspetto nel ritaglio
+Lossless JPEG transformations	Trasformazioni JPEG senza perdita di qualità
+Performing the lossless transformation failed!	Elaborazione della trasformazione senza perdita di qualità fallita!
+Image width and height must be dividable by the JPEG block size (8 or 16) for lossless transformations!	Larghezza ed altezza dell'immagine devono essere divisibili in base alle dimensioni del blocco JPEG (8 o 16) per la trasformazione senza perdita di qualità
+Reading the JPEG file from disk failed	Lettura del file JPEG dal disco fallita
+Writing the resulting JPEG file to disk failed	Scrittura sul disco del file JPEG elaborato fallita
+Performing the transformation failed	Elaborazione della trasformazione fallita
+The transformation can be applied if the image is trimmed to the next matching size but this will remove some border pixels.	La trasformazione può essere applicata se l'immagine è ritagliata alle dimensioni corrispondenti ma questo eliminerà qualche pixel perimetrale
+Trim the image and apply transformation? Trimming cannot be undone!	Ritagliare l'immagine e applicare le trasformazioni? ATTENZIONE, l'azione non può essere annullata!
+Note: Set the key 'TrimWithoutPromptLosslessJPEG=true' in the INI file to always trim without showing this message.	Nota: impostare la voce 'TrimWithoutPromptLosslessJPEG=true' nel file INI per ritagliare senza mostrare di nuovo questo messaggio.
+Transition Effect	Effetto di transizione
+None	Nessuno
+Blend	Fusione
+Slide from right	A scorrimento da destra	
+Slide from left	A scorrimento da sinistra
+Slide from top	A scorrimento dall'alto
+Slide from bottom	A scorrimento dal basso
+Roll from right	Rotola da destra
+Roll from left	Rotola da sinistra
+Roll from top	Rotola dall'alto
+Roll from bottom	Rotola dal basso
+Scroll from right	Scorri da destra
+Scroll from left	Scorri da sinistra
+Scroll from top	Scorri dall'alto
+Scroll from bottom	Scorri dal basso
+Transition Speed	Velocita' di transizione
+Very fast	Molto veloce
+Fast	Veloce
+Normal	Normale
+Slow	Lenta
+Very slow	Molto lenta
+Error	Errore
+Warning	Attenzione
+Error while writing the following registry key:	Errore durante la scrittura della seguente chiave di registro:
+Set as default viewer...	Imposta come visualizzatore di default
+Set JPEGView as default image viewer	Imposta JPEGView come visualizzatore di default per le immagini
+JPEGView is registered as default viewer for the selected file formats.	JPEGView ora è il visualizzatore di default per i seguenti formati di file.
+Registration applies to the current user only.	Registrazione valida solo per l'utente corrente.
+Extension	Estensione
+File type	Tipo di file
+The following file extensions cannot be unregistered because they have been registered in the 'local machine' registry area.	Non si può annullare la registrazione delle seguenti estensioni di file, perché sono state registrate tramite la sezione 'local machine' del registro di sistema.
+Registering or unregistering file extensions in this registry area requires administration privileges and cannot be done in JPEGView.	La registrazione o l'annullamento della registrazione delle estensioni di file in quest'area del registro di sitema richiede i privilegi di amministratore e non può essere effettuata tramite JPEGView.
+Press 'OK' to continue with registration or 'Cancel' to not modify any registrations.	Premere 'OK' per continuare con la registrazione o 'Annulla' per non modificare nulla.
+Unregistering not possible	Annullamento della registrazione impossibile 
+%s images	%s immagini
+%s images (processed by Window Imaging Component - WIC)	%s immagini (processate come WIC - Windows Imaging Component)
+%s camera raw images (embedded JPEGs only)	%s immagini "raw" della fotocamera (solo JPEGs incorporate)
+The following image extensions are protected by the operating system.	Le seguenti estensioni di file sono protette dal sistema operativo.
+JPEGView can try to remove the restrictions automatically.	JPEGView puo' provare a rimuovere automaticamente le restrizioni.
+However this will fail if the current user has no administration privileges.	Comunque l'azione non sarà possibile se l'utente non possiede i privilegi di amministratore.
+Insufficient rights to remove the restrictions. Continue?	Permessi insufficenti per rimuovere le restrizioni. Continuare?

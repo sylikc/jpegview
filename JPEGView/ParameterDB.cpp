@@ -164,7 +164,7 @@ void CParameterDBEntry::WriteToProcessParams(CImageProcessingParams & processPar
 	}
 }
 
-void CParameterDBEntry::InitGeometricParams(CSize sourceSize, double fZoom, CPoint offsets, CSize targetSize) {
+void CParameterDBEntry::InitGeometricParams(CSize sourceSize, double fZoom, CPoint offsets, CSize targetSize, bool bStoreRelativeToScreenSize) {
 	CSize zoomSourceSize = CSize((int)(sourceSize.cx*fZoom + 0.5f), (int)(sourceSize.cy*fZoom + 0.5f));
 	CRect rectSource(CPoint(-zoomSourceSize.cx/2, -zoomSourceSize.cy/2), CSize(zoomSourceSize.cx, zoomSourceSize.cy));
 	rectSource.OffsetRect(offsets);
@@ -174,6 +174,10 @@ void CParameterDBEntry::InitGeometricParams(CSize sourceSize, double fZoom, CPoi
 		assert(false);
 		return;
 	}
+
+    if (bStoreRelativeToScreenSize) {
+        flags |= 32;
+    }
 
 	// Target values are in (-32767, 0) if scaled image is smaller than screen and in (0, 32767) if scaled image
 	// is larger than screen.

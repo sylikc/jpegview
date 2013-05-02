@@ -72,7 +72,7 @@ Left mouse & drag	botão esquerdo e arrastrar
 Ctrl + Left mouse	Ctrl + botão esquerdo
 Forward mouse button	Mouse botão "Avançar"
 Back mouse button	Mouse botão "Atrás"
-Delete current file on disk Excluir arquivo atual do disco
+Delete current file on disk	Excluir arquivo atual do disco
 Rotate current file on disk lossless by 90 deg (W/H must be multiple of 16)	Rodar arquivo atual em disco sem perda em 90 graus (W/H deve ser múltiplo de 16)
 Rotate current file on disk lossless by 270 deg (W/H must be multiple of 16)	Rodar arquivo atual em disco sem perda em 270 graus (W/H deve ser múltiplo de 16)
 The file is read-only!	O arquivo é somente leitura!
@@ -284,3 +284,53 @@ Click and drag the mouse vertically to correct image tilt.	Clique e arraste o ra
 Drag at the left or right border for asymmetric correction.	Clique no contono esquerdo ou direito para corrigir a simetria
 Fit window to image	Ajustar janela à imagem
 Keep aspect ratio on crop	Manter tamanho ao recortar
+Lossless JPEG transformations	Conversão JPEG sem perda de qualidade
+Performing the lossless transformation failed!	Falha ao realizar a transformação sem perdas!
+Image width and height must be dividable by the JPEG block size (8 or 16) for lossless transformations!	Largura e altura da imagem devem ser divisíveis pelo tamanho do bloco JPEG (8 ou 16) para transformações sem perdas!
+Reading the JPEG file from disk failed	Falha ao ler o arquivo JPEG no disco
+Writing the resulting JPEG file to disk failed	Falha ao escrever o novo arquivo JPEG no disco
+Performing the transformation failed	Falha ao realizar a transformação
+The transformation can be applied if the image is trimmed to the next matching size but this will remove some border pixels.	A transformação pode ser aplicada se a imagem é cortada para o tamanho de correspondência seguinte, mas isso irá remover alguns pixels da borda.
+Trim the image and apply transformation? Trimming cannot be undone!	Recortar a imagem e aplicar a transformação? Operação não poderá ser desfeita!
+Note: Set the key 'TrimWithoutPromptLosslessJPEG=true' in the INI file to always trim without showing this message.	Nota: Defina 'TrimWithoutPromptLosslessJPEG = true' a chave no arquivo INI para sempre aparar sem mostrar esta mensagem.
+Transition Effect	Efeito de transição
+None	Nenhum
+Blend	Sobreposição
+Slide from right	Deslizar da direita
+Slide from left	Deslizar da esquerda
+Slide from top	Deslizar de cima
+Slide from bottom	Deslizar de baixo
+Roll from right	Enrolar da direita
+Roll from left	Enrolar da esquerda
+Roll from top	Enrolar de cima
+Roll from bottom	Enrolar de baixo
+Scroll from right	Deslocar da direita
+Scroll from left	Deslocar da esquerda
+Scroll from top	Deslocar de cima
+Scroll from bottom	Deslocar de baixo
+Transition Speed	Velocidade da transição
+Very fast	Muito rápida
+Fast	Rápida
+Normal	Normal
+Slow	Lenta
+Very slow	Muito lenta
+Error	Erro
+Warning	Aviso
+Error while writing the following registry key:	Ocorreu um erro ao escrever a chave de registo:
+Set as default viewer...	Definir como visualizador padrão...
+Set JPEGView as default image viewer	Definir o JPEGView como visualizador padrão
+JPEGView is registered as default viewer for the selected file formats.	O JPEGView é o visualizador padrão para os formatos de ficheiro selecionados.
+Registration applies to the current user only.	Esta associação só é aplicável ao utilizador atual.
+Extension	Extensão
+File type	Tipo de ficheiro
+The following file extensions cannot be unregistered because they have been registered in the 'local machine' registry area.	Não foi possível remover a associação das seguintes extensões de ficheiros porque a associação foi registada na área de registo da máquina local.
+Registering or unregistering file extensions in this registry area requires administration privileges and cannot be done in JPEGView.	A associação ou cancelamente de associação nesta área do registo requer privilégios de administrador e não pode ser efetuada no JPEGView.
+Press 'OK' to continue with registration or 'Cancel' to not modify any registrations.	Prima Aceitar para continuar ou Cancelar para não efetuar as alterações.
+Unregistering not possible	Não foi possível remover a associação
+%s images	%s imagens
+%s images (processed by Window Imaging Component - WIC)	%s imagens (processadas pelo componente Windows Imaging - WIC)
+%s camera raw images (embedded JPEGs only)	%s imagens da máquina fotográfica
+The following image extensions are protected by the operating system.	Estes tipos de ficheiro estão protegidos pelo sistema operativo.
+JPEGView can try to remove the restrictions automatically.	O JPEGView pode tentar remover as restrições automaticamente.
+However this will fail if the current user has no administration privileges.	No entanto, se o utilizador não possuir privilégios de administrador a operação não é possível.
+Insufficient rights to remove the restrictions. Continue?	Não possui privilégios para remover as restrições. Continuar?

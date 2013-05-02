@@ -118,11 +118,12 @@ static void* CompressAndSave(LPCTSTR sFileName, CJPEGImage * pImage,
 	return pTargetStream;
 }
 
-extern "C" __declspec(dllimport) size_t WebPEncodeBGR(const uint8* bgr, int width, int height, int stride, float quality_factor, uint8** output);
-extern "C" __declspec(dllimport) void WebPFreeMemory(void* pointer);
+__declspec(dllimport) size_t Webp_Dll_EncodeBGRLossy(const uint8* bgr, int width, int height, int stride, float quality_factor, uint8** output);
+__declspec(dllimport) size_t Webp_Dll_EncodeBGRLossless(const uint8* bgr, int width, int height, int stride, uint8** output);
+__declspec(dllimport) void Webp_Dll_FreeMemory(void* pointer);
 
 // pData must point to 24 bit BGR DIB
-static bool SaveWebP(LPCTSTR sFileName, void* pData, int nWidth, int nHeight) {
+static bool SaveWebP(LPCTSTR sFileName, void* pData, int nWidth, int nHeight, bool bUseLosslessWEBP) {
 	FILE *fptr = _tfopen(sFileName, _T("wb"));
 	if (fptr == NULL) {
 		return false;
@@ -131,11 +132,13 @@ static bool SaveWebP(LPCTSTR sFileName, void* pData, int nWidth, int nHeight) {
 	bool bSuccess = false;
 	try {
 		uint8* pOutput;
-		size_t nSize = WebPEncodeBGR((uint8*)pData, nWidth, nHeight, Helpers::DoPadding(nWidth*3, 4), (float)CSettingsProvider::This().WEBPSaveQuality(), &pOutput);
-	
+        int nQuality = CSettingsProvider::This().WEBPSaveQuality();
+		size_t nSize = bUseLosslessWEBP ? 
+            Webp_Dll_EncodeBGRLossless((uint8*)pData, nWidth, nHeight, Helpers::DoPadding(nWidth*3, 4), &pOutput) :
+            Webp_Dll_EncodeBGRLossy((uint8*)pData, nWidth, nHeight, Helpers::DoPadding(nWidth*3, 4), (float)nQuality, &pOutput);
 		bSuccess = fwrite(pOutput, 1, nSize, fptr) == nSize;
 		fclose(fptr);
-		WebPFreeMemory(pOutput);
+		Webp_Dll_FreeMemory(pOutput);
 	} catch(...) {
 		fclose(fptr);
 	}
@@ -223,7 +226,7 @@ static bool SaveGDIPlus(LPCTSTR sFileName, EImageFormat eFileFormat, void* pData
 //////////////////////////////////////////////////////////////////////////////////////////////
 
 bool CSaveImage::SaveImage(LPCTSTR sFileName, CJPEGImage * pImage, const CImageProcessingParams& procParams,
-						   EProcessingFlags eFlags, bool bFullSize) {
+						   EProcessingFlags eFlags, bool bFullSize, bool bUseLosslessWEBP) {
     pImage->EnableDimming(false);
 
 	CSize imageSize;
@@ -267,12 +270,12 @@ bool CSaveImage::SaveImage(LPCTSTR sFileName, CJPEGImage * pImage, const CImageP
 		}
 	} else {
 		if (eFileFormat == IF_WEBP) {
-			bSuccess = SaveWebP(sFileName, pDIB24bpp, imageSize.cx, imageSize.cy);
+			bSuccess = SaveWebP(sFileName, pDIB24bpp, imageSize.cx, imageSize.cy, bUseLosslessWEBP);
 		} else {
 			bSuccess = SaveGDIPlus(sFileName, eFileFormat, pDIB24bpp, imageSize.cx, imageSize.cy);
 		}
 		if (bSuccess) {
-			CJPEGImage tempImage(imageSize.cx, imageSize.cy, pDIB32bpp, NULL, 4, 0, IF_Unknown);
+			CJPEGImage tempImage(imageSize.cx, imageSize.cy, pDIB32bpp, NULL, 4, 0, IF_Unknown, false, 0, 1, 0);
 			nPixelHash = tempImage.GetUncompressedPixelHash();
 			tempImage.DetachIJLPixels();
 		}

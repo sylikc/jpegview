@@ -123,7 +123,7 @@ CJPEGImage* CReaderBMP::ReadBmpImage(LPCTSTR strFileName, bool& bOutOfMemory) {
 
 	// The CJPEGImage object gets ownership of the memory in pDest
 	CJPEGImage* pImage = (pDest == NULL) ? NULL : new CJPEGImage(infoheader.width, infoheader.height, pDest, NULL, infoheader.bits/8, 
-		0, IF_WindowsBMP);
+		0, IF_WindowsBMP, false, 0, 1, 0);
 
 	fclose(fptr);
 

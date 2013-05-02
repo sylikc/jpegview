@@ -29,8 +29,9 @@ static void RotateInplace(const CSize& imageSize, double& dX, double& dY, double
 // Public interface
 ///////////////////////////////////////////////////////////////////////////////////
 
-CJPEGImage::CJPEGImage(int nWidth, int nHeight, void* pIJLPixels, void* pEXIFData, int nChannels, 
-					   __int64 nJPEGHash, EImageFormat eImageFormat, CLocalDensityCorr* pLDC, bool bIsThumbnailImage) {
+CJPEGImage::CJPEGImage(int nWidth, int nHeight, void* pIJLPixels, void* pEXIFData, int nChannels, __int64 nJPEGHash, 
+                       EImageFormat eImageFormat, bool bIsAnimation, int nFrameIndex, int nNumberOfFrames, int nFrameTimeMs,
+                       CLocalDensityCorr* pLDC, bool bIsThumbnailImage) {
 	if (nChannels == 3 || nChannels == 4) {
 		m_pIJLPixels = pIJLPixels;
 		m_nIJLChannels = nChannels;
@@ -58,6 +59,10 @@ CJPEGImage::CJPEGImage(int nWidth, int nHeight, void* pIJLPixels, void* pEXIFDat
 
 	m_nPixelHash = nJPEGHash;
 	m_eImageFormat = eImageFormat;
+    m_bIsAnimation = bIsAnimation;
+    m_nFrameIndex = nFrameIndex;
+    m_nNumberOfFrames = nNumberOfFrames;
+    m_nFrameTimeMs = nFrameTimeMs;
     m_eJPEGChromoSampling = TJSAMP_420;
 
 	m_nOrigWidth = m_nInitOrigWidth = nWidth;
@@ -713,7 +718,7 @@ void CJPEGImage::SetInitialParameters(const CImageProcessingParams& imageProcPar
 
 void CJPEGImage::RestoreInitialParameters(LPCTSTR sFileName, const CImageProcessingParams& imageProcParams, 
 										  EProcessingFlags & procFlags, int nRotation, double dZoom, 
-										  CPoint offsets, CSize targetSize) {
+										  CPoint offsets, CSize targetSize, CSize monitorSize) {
 	// zoom and offsets must be initialized in all cases as they may be not in param DB even when
 	// other parameters are
 	m_dInitialZoom = dZoom;
@@ -728,7 +733,7 @@ void CJPEGImage::RestoreInitialParameters(LPCTSTR sFileName, const CImageProcess
 		dbEntry->GetColorCorrectionAmounts(m_fColorCorrectionFactors);
 
 		dbEntry->WriteToGeometricParams(m_dInitialZoom, m_initialOffsets, SizeAfterRotation(m_nInitialRotation),
-			targetSize);
+			dbEntry->IsStoredRelativeToScreenSize() ? monitorSize : targetSize);
 	} else {
 		m_nInitialRotation = GetRotationFromEXIF(nRotation);
 		m_eProcFlagsInitial = bKeepParams ? procFlags : GetProcFlagsIncludeExcludeFolders(sFileName, procFlags);
@@ -765,7 +770,7 @@ void CJPEGImage::SetFileDependentProcessParams(LPCTSTR sFileName, CProcessParams
 			dbEntry->WriteToProcessParams(pParams->ImageProcParams, pParams->ProcFlags, pParams->Rotation);
 			dbEntry->GetColorCorrectionAmounts(m_fColorCorrectionFactors);
 			dbEntry->WriteToGeometricParams(pParams->Zoom, pParams->Offsets, SizeAfterRotation(pParams->Rotation),
-				CSize(pParams->TargetWidth, pParams->TargetHeight));
+				dbEntry->IsStoredRelativeToScreenSize() ? pParams->MonitorSize : CSize(pParams->TargetWidth, pParams->TargetHeight));
 		}
 	} else {
 		pParams->Rotation = GetRotationFromEXIF(pParams->Rotation);
@@ -1286,7 +1291,7 @@ CJPEGImage* CJPEGImage::CreateThumbnailImage() {
 		nHeight = psiSize.cy;
 		pPixels = m_pLDC->GetPSImageAsDIB();
 	}
-	return new CJPEGImage(nWidth, nHeight, pPixels, NULL, 4, -1, IF_CLIPBOARD, m_pLDC, true);
+	return new CJPEGImage(nWidth, nHeight, pPixels, NULL, 4, -1, IF_CLIPBOARD, false, 0, 1, 0, m_pLDC, true);
 }
 
 void CJPEGImage::DrawGridLines(void * pDIB, const CSize& dibSize) {

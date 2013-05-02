@@ -30,12 +30,12 @@ namespace HelpersGUI {
 	void TranslateMenuStrings(HMENU hMenu, CKeyMap* pKeyMap = NULL);
 
 	// Draws a text with Arial 10 font with a black outline to improve readability
-	void DrawTextBordered(CPaintDC& dc, LPCTSTR sText, const CRect& rect, UINT nFormat);
+	void DrawTextBordered(CDC& dc, LPCTSTR sText, const CRect& rect, UINT nFormat);
 
 	// Draws a 32 bit DIB centered in the given target area, filling the remaining area with the given brush
 	// The bmInfo struct will be initialized by this method and does not need to be preinitialized.
 	// Return value is the top, left coordinate of the painted DIB in the target area
-	CPoint DrawDIB32bppWithBlackBorders(CPaintDC& dc, BITMAPINFO& bmInfo, void* pDIBData, HBRUSH backBrush, const CRect& targetArea, CSize dibSize, CPoint offset);
+	CPoint DrawDIB32bppWithBlackBorders(CDC& dc, BITMAPINFO& bmInfo, void* pDIBData, HBRUSH backBrush, const CRect& targetArea, CSize dibSize, CPoint offset);
 
 	// Gets the text for confirmation of saving of settings to INI file
 	CString GetINIFileSaveConfirmationText(const CImageProcessingParams& procParams, 
@@ -44,7 +44,7 @@ namespace HelpersGUI {
 									 bool bShowNavPanel);
 
 	// Draws an error text for the given file loading error (combination of EFileLoadError codes)
-	void DrawImageLoadErrorText(CPaintDC& dc, const CRect& clientRect, LPCTSTR sFailedFileName, int nFileLoadError);
+	void DrawImageLoadErrorText(CDC& dc, const CRect& clientRect, LPCTSTR sFailedFileName, int nFileLoadError);
 
     // Convert a menu item command ID to a transformation enumeration for lossless JPEG transformation
     CJPEGLosslessTransform::ETransformation CommandIdToLosslessTransformation(int nCommandId);

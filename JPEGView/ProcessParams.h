@@ -102,12 +102,15 @@ public:
 	// nRotation must be 0, 90, 270 degrees
 	// dZoom is the zoom factor compared to intial image size (1.0 means no zoom)
 	// offsets are relative to center of image and refer to original image size (not zoomed)
-	CProcessParams(int nTargetWidth, int nTargetHeight, int nRotation, double dZoom, 
+	CProcessParams(int nTargetWidth, int nTargetHeight,
+        CSize monitorSize,
+        int nRotation, double dZoom, 
 		Helpers::EAutoZoomMode eAutoZoomMode, CPoint offsets,
 		const CImageProcessingParams& imageProcParams,
 		EProcessingFlags eProcFlags) : ImageProcParams(imageProcParams) {
 		TargetWidth = nTargetWidth;
 		TargetHeight = nTargetHeight;
+        MonitorSize = monitorSize;
 		Rotation = nRotation;
 		Zoom = dZoom;
 		AutoZoomMode = eAutoZoomMode;
@@ -117,6 +120,7 @@ public:
 
 	int TargetWidth;
 	int TargetHeight;
+    CSize MonitorSize;
 	int Rotation;
 	double Zoom;
 	CPoint Offsets;

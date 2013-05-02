@@ -1,0 +1,298 @@
+﻿// This file must be encoded with UTF-8 (e.g. with Windows Notepad)
+// Filename is 'strings_%languagecode%.txt' where %languagecode% is the ISO 639 language code e.g. 'zh' for Chinese
+// Format is: English string<tab>Translated string<newline>
+//Translation Info
+//Translator:Yia Guo (email:YiaHng@gmail.com)
+
+Contrast	对比
+Brightness	亮度
+Sharpen	锐化
+Lighten Shadows	变浅阴影
+Darken Highlights	加深亮点
+Deep Shadows	深阴影
+Color Correction	色彩校正
+Contrast Correction	对比度校正
+Parameter DB:	参数数据库:
+Save to	保存为
+Remove from	删除
+Rename:	重命名:
+No file or folder name was provided as command line parameter!	么有文件或文件夹名称作为命令行参数提供!
+To use JPEGView, associate JPG, JPEG and BMP files with JPEGView.	使用JPEGView关联JPG, JPEG, BMP 文件。
+Press ESC to exit...	按 ESC退出...
+The file '%s' could not be read!	文件'%s'不能被读取!
+The file '%s' does not contain a list of file names!	文件'%s'不包含文件名列表!
+The directory '%s' does not contain any image files!	目录'%s'不存在图像文件!
+Press any key to search the subdirectories for image files.	按任意键 搜索的子文件夹中的图像文件.
+JPEGView Help	JPEGView 帮助
+Current image	当前图像
+Close help text display / Close JPEGView	关闭帮助显示 / 关闭JPEGView
+Show/hide this help text	显示/隐藏帮助文档
+Show/hide picture information (EXIF data)	显示/隐藏图片信息 (EXIF数据)
+Show/hide file name	显示/隐藏文件名
+Enable/disable high quality resampling	开/关高品质的重采样
+Enable/disable keeping of geometry related (zoom/pan/rotation)	启用/禁用几何相关（缩放/平移/旋转）
+and image processing (brightness/contrast/sharpen) parameters between images	和图像之间的图像处理参数（亮度/对比度/锐化）
+Enable/disable automatic contrast correction (histogram equalization)	开/关自动对比度校正（直方图均衡化）
+Apply auto contrast correction using only visible section of image	仅可见部分图像应用自动对比度校正
+Enable/disable automatic density correction (local brightness correction)	启用/禁用自动的密度修正（局部亮度校正）
+Increase/decrease lightening of shadows (LDC must be on)	增加/减少阴影的亮度（局部密度补偿必须打开）
+Increase/decrease darkening of highlights (LDC must be on)	增加/减少亮点变暗（局部密度补偿必须打开）
+Loop through files in current folder	遍历当前文件夹中的文件
+Loop through files in current directory and all subfolders	遍历当前目录中的文件和所有子文件夹
+Loop through files in current directory and all sibling folders (folders on same level)	循环遍历当前目录中的文件和所有同级文件夹（在同一层次上的文件夹）
+Maximize/restore to/from virtual desktop (only for multi-monitor systems)	最大化/还原到/从虚拟桌面（仅适用于多显示器系统）
+Copy screen to clipboard/ Copy processed full size image to clipboard	屏幕复制到剪贴板/处理的原图复制到剪贴板
+Open new image or slideshow file	打开新的图像或幻灯片文件
+Save processed image to JPEG file (original size)	保存处理后的图像为JPEG文件（原始大小）
+Save (%s)/ delete (%s) image processing parameters in/from parameter DB	/保存(%s)/删除(%s)图像处理参数到/从参数库
+Sort images by creation date, resp. modification date, resp. file name	按照创建日期，修改日期，文件名称排序
+Goto previous image	前个
+Goto next image	 下个
+PgUp or Left	PgUp 或 Left
+PgDn or Right	PgDn 或 Right
+Goto first/last image of current folder (using sort order as defined)	跳转到当前文件夹的第一个/最后一个图像（使用所定义的排序顺序）
+Increase/decrease brightness	增加/减少亮度
+Increase/decrease contrast	增加/减少对比度
+Increase/decrease sharpness	增加/减小锐度
+Increase/decrease auto color cast correction amount	增加/减少自动肤色校正度
+Increase/decrease auto contrast correction amount	增加/减少自动对比度的校正量
+Enable/disable landscape picture enhancement mode	启用/禁用景观图像增强模式
+Slide show with timeout of n seconds (ESC to stop)	n秒超时幻灯片放映（ESC停止）
+Set timeout to n/10 sec, respectively n/100 sec (Ctrl+Shift)	设置超时到N/10秒，分别为N/100秒（Ctrl + Shift）
+Rotate image and fit to screen	旋转且适合屏幕
+Fit image to screen	适合屏幕
+Zoom 1:1 (100 %)	1:1缩放（100%）
+Zoom in (%s)/Zoom out (%s)	放大(%s)/缩小(%s)
+Zoom in/out image	放大/缩小
+Pan image	移动
+Crop image	裁剪
+Next image	下一张
+Previous image	前一张
+up/down	向上/向下
+Mouse wheel	鼠标滚轮
+Left mouse & drag	鼠标左键并拖动
+Ctrl + Left mouse	按Ctrl+鼠标左键
+Forward mouse button	前向鼠标按钮
+Back mouse button	后退鼠标按钮
+Delete current file on disk permanently	从磁盘永久删除当前文件
+Rotate current file on disk lossless by 90 deg (W/H must be multiple of 16)	在磁盘上无损旋转当前文件90度（宽度/高度必须是16的倍数）
+Rotate current file on disk lossless by 270 deg (W/H must be multiple of 16)	当前文件在磁盘上无损旋转-90度（宽度/高度必须是16的倍数）
+The file is read-only!	只读文件!
+Can't rename file	无法重命名文件
+New name contains backslash character!	新名称中包含反斜杠字符!
+Renaming file failed!	重命名失败!
+Reason: 	原因: 
+on	开启
+off	关闭
+Do you really want to save the following parameters as default to the INI file	你真的想保存以下参数作为默认的INI文件?
+Auto contrast and color correction: 	自动对比度和色彩校正:
+Local density correction: 	局部密度校正: 
+Order files by: 	对文件排序: 
+Creation date/time	创建日期/时间
+Last modification date/time	最后修改的日期/时间
+File name	文件名
+These values will override the values from the INI file located in the program folder of JPEGView!	这些值将覆盖JPEGView程序文件夹中INI文件的值!
+Confirm save default parameters	确认保存默认参数
+Images	图像
+All Files	所有文件
+Parameter DB file '%s' could not be opened!	参数数据库文件'%s'无法打开!
+Parameter DB file '%s' is not valid (invalid header)!	参数数据库文件'%s'无效（无效的头）!
+Cannot write to parameter DB file '%s'!	无法写入到参数数据库文件'%s'!
+Cannot read from parameter DB file '%s'!	参数数据库文件'%s'无法读取!
+Cannot read parameter DB file '%s' because it is too large!	参数数据库文件'%s'过大，无法读取!
+The parameter DB file '%s' has been created by a newer version of JPEGView!	较新版本的JPEGView已建立参数数据库文件'%s'!
+The old parameter DB file '%s' could not be renamed during conversion to new format!	在转换为新的格式的过程中，旧的参数数据库文件'%s'不能重命名!
+Parameter DB error	参数数据库错误
+Error saving file	保存文件时出错
+Error writing file to disk!	写入文件到磁盘错误!
+Confirm	Conferma
+Do you really want to permanently delete the file %filename%?	你真的要永久删除文件%filename%?
+Rotate the following file lossless by 90 deg?\n%filename%	以下文件无损旋转90度?\n%filename%
+Rotate the following file lossless by 270 deg?\n%filename%	确定要以下文件无损旋转270度?\n%filename%
+Open image...	打开...
+Save processed image...	保存处理后的图像...
+Reload image	重载图像
+Copy to clipboard	复制到剪贴板
+Copy original size image	复制原始大小图像
+Paste from clipboard	从剪贴板粘贴
+Batch rename/copy...	批量重命名/复制...
+Show picture info (EXIF)	显示图片信息(EXIF)
+Show filename	显示文件名
+Navigation	导航
+Loop folder	循环文件夹
+Loop recursively	递归循环
+Loop siblings	同步循环
+Display order	显示顺序
+Modification date	修改日期
+Creation date	创建日期
+Play folder as slideshow/movie	幻灯片/视频播放文件夹
+Slideshow	幻灯片
+Movie	视频
+Waiting time	等待时间
+Stop slide show/movie	停止幻灯片/视频
+Rotate +90	旋转 +90°
+Rotate -90	旋转 -90°
+Rotate 180      旋转 180°
+Auto correction	自动校正
+Local density correction	局部密度校正
+Keep parameters	保持参数
+Save parameters to INI...	保存参数到INI...
+Save parameters to DB	参数保存到数据库
+Clear parameters from DB	清除参数数据库
+Zoom	缩放
+Fit to screen	适合屏幕
+Fill with crop	用裁剪来填充
+Span all screens	扩展到全部屏幕
+Auto zoom mode	自动缩放模式
+Fit to screen (no zoom)	适合屏幕（无缩放）
+Fill with crop (no zoom)	用裁剪来填充（无缩放）
+Exit	结束
+Cyan-Red	青蓝-红色
+Magenta-Green	品红-绿色
+Yellow-Blue	黄色-蓝色
+C - R	青蓝 - 红
+M - G	品红 - 绿
+Y - B	黄色 - 蓝
+Batch rename/copy of files	批量重命名/复制文件
+Image files in folder	在文件夹中的图像文件
+Placeholders:	占位符:
+Number (consecutively numbered)	编号（连续编号）
+Number with N digits	用N位编号
+Extracted number from original file name	从源文件名中提取编号
+Original file name (with extension)	原始文件名（带扩展名）
+Original file name (without extension)	原始文件名（无扩展名）
+Original file extension	原始文件扩展名
+'My Pictures' folder	“我的图片”文件夹
+Day / Month / Year (as numbers)	日/月/年（同编号）
+Year short form (2 digits)	年份短格式（2位）
+Month / Short form (text)	月/短期形式（文字）
+Target folders that are not yet existing are created as needed.	尚无的目标文件夹根据需要创建.
+Date placeholders use the modification date of the image.	日期的图像占位符使用修改日期.
+Rename/copy images to:	重命名/复制到:
+Rename	重命名
+Preview	预览
+Save as template	另存为模板
+Close	关闭
+Old name	旧名
+Date	日期
+New name (>> : file gets copied)	新名称(>> :文件将被复制)
+Select all	全部选择
+Select none	取消选择
+The file '%s' could not be %s.	文件'%s'不能是%s.
+copied	已复制
+renamed	改名
+Continue rename/copy?	继续重命名/复制?
+Error during rename/copy	重命名/复制过程中的出错
+%d file(s) renamed, %d file(s) copied, %d folder(s) created	%d文件已改名, %d文件已复制, %d文件夹已创建
+Crop Selection	裁剪已选
+Copy Selection to Clipboard	复制所选到剪贴板
+Zoom to Selection	缩放到所选
+Pasting image from clipboard failed!	从剪贴板粘贴图像失败!
+Image width:	宽度:
+Image height:	高度:
+Acquisition date:	采集日期:
+Camera model:	相机型号:
+Exposure time (s):	曝光时间(秒):
+Exposure bias (EV):	曝光补偿(EV):
+Flash fired:	闪光灯:
+Focal length (mm):	焦距(mm):
+F-Number:	F数值:
+ISO Speed:	ISO感光度:
+Modification date:	修改日期:
+yes	是
+no	否
+Show navigation panel	显示导航面板
+Show/hide navigation panel	显示/隐藏导航面板
+About JPEGView...	JPEGView程序信息...
+SIMD mode used:	SIMD模式下使用:
+Number of CPU cores used:	所使用的CPU核心的数量:
+Licensed under the GNU general public license (GPL), see readme file for details:	GNU General Public License (GPL) 许可证，请参阅自述文件的详细信息:
+Project home page:	项目主页:
+Show first image in folder	显示文件夹中的第一张
+Show previous image	上一张
+Show next image	下一张
+Show last image in folder	显示文件夹中的最后一个
+Rotate image 90 deg clockwise	顺时针旋转90度
+Rotate image 90 deg counter-clockwise	逆时针旋转90度
+Landscape picture enhancement mode	景观图像增强模式
+Display image (EXIF) information	显示图像信息(EXIF)
+Actual size of image	实际尺寸的图像
+Toggle between screens (only for multi-monitor systems)	屏幕之间切换（仅多显示器系统）
+Enable/disable full screen mode	全屏模式开/关
+Full screen mode	全屏幕模式
+Window mode	窗口模式
+Save as (in screen size/resolution)	另存为（在屏幕尺寸/分辨率）
+Save processed image to JPEG file (screen size)	另存处理的图像以JPEG文件（屏幕尺寸）
+Settings/Admin	配置/管理
+Edit global settings...	编辑全局设置...
+Edit user settings...	编辑用户设置...
+Backup parameter DB...	备份数据库参数...
+Restore parameter DB...	恢复数据库参数...
+No user INI file exits yet. Create user INI file from INI file template?	还没有用户INI文件。从模板INI文件创建用户INI文件?
+Copying parameter DB to file '%s' failed. Reason: %s	复制数据库参数到'%s'失败。原因: %s
+Select parameter DB to restore	选择参数数据库恢复
+Conflicting entries in Param DB	 Param数据库中的项目冲突
+The imported param DB contains entries already present in active param DB.	导入的参数数据库包含的项目已经存在于活跃的参数数据库.
+Shall existing entries be preserved (Yes) or be overriden by the imported entries (No)?	你想保留现有项目（是）或者你想覆盖的导入的项目（否）?
+Select file to display in 'File Open' dialog	显示“打开文件”对话框于选择文件
+Crop Mode	裁切模式
+Free	自由
+Fixed size...	固定大小...
+Set Fixed Crop Size	设置固定裁剪尺寸
+Width	宽度
+Height	高度
+Pixels	像素
+Screen Pixels	屏幕像素
+Image Pixels	图像像素
+Set modification date	设置修改日期
+to current date	为当前的日期
+to EXIF date	为EXIF日期
+Mark image for toggling. Use %s to toggle between marked and current image	标记图像翻转。使用%s在标记和当前图像之间翻转
+Saturation	饱和度
+Unsharp mask...	USM锐化
+Apply Unsharp Mask	应用“USM锐化”
+Radius	半径
+Amount	数量
+Threshold	阈值
+Apply	应运
+Cancel	取消
+Keep processing parameters between images	保持相邻的两图像间的变化参数
+Show histogram	显示直方图
+Hide histogram	隐藏直方图
+Crop Selection Lossless...	无损裁剪所选
+Save cropped image	保存裁剪后的图像
+Rotate image by user-defined angle	用户定义的角度旋转图像
+Rotate Image	旋转图像
+Show grid lines	显示网格
+Auto crop rotated image (avoids black border)	自动裁剪旋转后的图像（避免黑边框）
+Align image to horizontal or vertical line	图像水平或垂直线对齐
+Use the mouse to draw a line that shall be horizontal or vertical.	使用鼠标来画一条线，将作为水平或垂直线。
+Rotate the image by dragging with the mouse.	用鼠标拖动来旋转图像。
+The operation failed because not enough memory is available!	操作失败，因为没有足够的可用内存！
+to EXIF date (all files in folder)	到EXIF日期（该文件夹中的所有文件）
+Number of JPEG files in folder: %d	该文件夹中的JPEG文件数量: %d
+EXIF date successfully set on %d images, failed on %d images	%d张图片EXIF日期设置成功， %d 张失败
+Reason: Not enough memory available	原因：没有足够的可用内存
+Transform image	变换的图像
+Rotate...	旋转... 
+Mirror horizontally	水平翻转
+Mirror vertically	垂直翻转
+Random	随机
+Zoom mode (drag mouse to zoom)	缩放模式（拖动鼠标来放大）
+Correct converging lines (perspective correction)	正确的汇合线（透视校正）
+Perspective Correction	校正透视
+Perspective correction...	校正透视...
+Auto crop corrected image (avoids black border)	校正后的图像自动裁剪（避免黑边）
+Click and drag the mouse vertically to correct image tilt.	单击并拖动鼠标以纠正垂直图像倾斜。
+Drag at the left or right border for asymmetric correction.	在非对称校正的左边或右边的边框拖动。
+Fit window to image	窗口适合图像
+Keep aspect ratio on crop	保持纵横比裁剪
+Lossless JPEG transformations	无损的JPEG转换
+Performing the lossless transformation failed!	执行无损转换失败!
+Image width and height must be dividable by the JPEG block size (8 or 16) for lossless transformations!	无损转换的图片的宽度和高度必须是可被JPEG块大小（8或16）整除
+Reading the JPEG file from disk failed	从磁盘上读取JPEG文件失败
+Writing the resulting JPEG file to disk failed	生成的JPEG文件写入到磁盘时失败
+Performing the transformation failed	执行转换失败
+The transformation can be applied if the image is trimmed to the next matching size but this will remove some border pixels.	如果图像被裁剪，可以应用到下一个匹配的大小，但是这将消除一些边界像素的转变。
+Trim the image and apply transformation? Trimming cannot be undone!	裁切图像和应用转化？裁剪无法被撤消！
+Note: Set the key 'TrimWithoutPromptLosslessJPEG=true' in the INI file to always trim without showing this message.	注意：总是修剪不显示此消息，设置的INI文件的关键词'TrimWithoutPromptLosslessJPEG=true'。

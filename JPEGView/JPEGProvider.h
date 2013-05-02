@@ -27,7 +27,7 @@ public:
 	// The JPEGProvider then can decide whether to delete or to cache the object.
 	// strFileName is normally pFileList->Current(), however it is possible to request other files and
 	// set the pFileList parameter to NULL to prevent read ahead.
-	CJPEGImage* RequestJPEG(CFileList* pFileList, EReadAheadDirection eDirection, LPCTSTR strFileName, 
+	CJPEGImage* RequestJPEG(CFileList* pFileList, EReadAheadDirection eDirection, LPCTSTR strFileName, int nFrameIndex,
 		const CProcessParams & processParams, bool& bOutOfMemory);
 
 	// Notifies that this image is no longer used. The provider may decides to keep the image.
@@ -58,6 +58,7 @@ private:
 	// stores a request for loading and processing a JPEG image
 	struct CImageRequest {
 		CString FileName;
+        int FrameIndex;
 		CJPEGImage* Image;
 		bool Ready;
 		int Handle;
@@ -69,8 +70,9 @@ private:
 		CImageLoadThread* HandlingThread;
 		HANDLE EventFinished;
 
-		CImageRequest(LPCTSTR fileName) {
+		CImageRequest(LPCTSTR fileName, int nFrameIndex) {
 			FileName = fileName;
+            FrameIndex = nFrameIndex;
 			Image = NULL;
 			Ready = false;
 			Handle = -1;
@@ -101,10 +103,10 @@ private:
 	void GetLoadedImageFromWorkThread(CImageRequest* pRequest);
 	CImageLoadThread* SearchThread(void);
 	void RemoveUnusedImages(bool bRemoveAlsoReadAhead);
-	CImageRequest* StartRequestAndWaitUntilReady(LPCTSTR sFileName, const CProcessParams & processParams);
-	CImageRequest* StartNewRequest(LPCTSTR sFileName, const CProcessParams & processParams);
-	void StartNewRequestBundle(CFileList* pFileList, EReadAheadDirection eDirection, const CProcessParams & processParams, int nNumRequests);
-	CImageRequest* FindRequest(LPCTSTR strFileName);
+	CImageRequest* StartRequestAndWaitUntilReady(LPCTSTR sFileName, int nFrameIndex, const CProcessParams & processParams);
+	CImageRequest* StartNewRequest(LPCTSTR sFileName, int nFrameIndex, const CProcessParams & processParams);
+	void StartNewRequestBundle(CFileList* pFileList, EReadAheadDirection eDirection, const CProcessParams & processParams, int nNumRequests, CImageRequest* pLastReadyRequest);
+	CImageRequest* FindRequest(LPCTSTR strFileName, int nFrameIndex);
 	void ClearOldestReadAhead();
 	void DeleteElementAt(std::list<CImageRequest*>::iterator iteratorAt);
 	void DeleteElement(CImageRequest* pRequest);

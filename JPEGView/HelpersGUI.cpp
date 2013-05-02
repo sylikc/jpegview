@@ -80,7 +80,7 @@ void TranslateMenuStrings(HMENU hMenu, CKeyMap* pKeyMap) {
 	}
 }
 
-void DrawTextBordered(CPaintDC& dc, LPCTSTR sText, const CRect& rect, UINT nFormat) {
+void DrawTextBordered(CDC& dc, LPCTSTR sText, const CRect& rect, UINT nFormat) {
 	static HFONT hFont = 0;
 	if (hFont == 0) {
 		// Use cleartype here, this improves the readability
@@ -102,7 +102,7 @@ void DrawTextBordered(CPaintDC& dc, LPCTSTR sText, const CRect& rect, UINT nForm
 	dc.SelectFont(hOldFont);
 }
 
-CPoint DrawDIB32bppWithBlackBorders(CPaintDC& dc, BITMAPINFO& bmInfo, void* pDIBData, HBRUSH backBrush, const CRect& targetArea, CSize dibSize, CPoint offset) {
+CPoint DrawDIB32bppWithBlackBorders(CDC& dc, BITMAPINFO& bmInfo, void* pDIBData, HBRUSH backBrush, const CRect& targetArea, CSize dibSize, CPoint offset) {
 	memset(&bmInfo, 0, sizeof(BITMAPINFO));
 	bmInfo.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
 	bmInfo.bmiHeader.biWidth = dibSize.cx;
@@ -200,7 +200,7 @@ CString GetINIFileSaveConfirmationText(const CImageProcessingParams& procParams,
 	return sText;
 }
 
-void DrawImageLoadErrorText(CPaintDC& dc, const CRect& clientRect, LPCTSTR sFailedFileName, int nFileLoadError) {
+void DrawImageLoadErrorText(CDC& dc, const CRect& clientRect, LPCTSTR sFailedFileName, int nFileLoadError) {
 	bool bOutOfMemory = nFileLoadError & FileLoad_OutOfMemory;
 	nFileLoadError &= ~FileLoad_OutOfMemory;
 

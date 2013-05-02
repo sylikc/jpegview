@@ -619,7 +619,7 @@ void CLASS ppm_thumb (CJPEGImage** Image, bool& bOutOfMemory)
 	
 	free(thumb);
 
-	(*Image) = new CJPEGImage(thumb_width, thumb_height, data, 0, 3, 0, IF_WindowsBMP);
+	(*Image) = new CJPEGImage(thumb_width, thumb_height, data, 0, 3, 0, IF_WindowsBMP, false, 0, 1, 0);
 }
 
 //void CLASS layer_thumb (FILE *tfp)
@@ -3688,7 +3688,7 @@ void CLASS jpeg_thumb(CJPEGImage** Image, bool& bOutOfMemory)
 
 	if (pPixelData != NULL && (nBPP == 3 || nBPP == 1))
 	{
-		*Image = new CJPEGImage(nWidth, nHeight, pPixelData, Helpers::FindEXIFBlock(thumb, thumb_length), nBPP, Helpers::CalculateJPEGFileHash(thumb, thumb_length), IF_JPEG_Embedded);
+		*Image = new CJPEGImage(nWidth, nHeight, pPixelData, Helpers::FindEXIFBlock(thumb, thumb_length), nBPP, Helpers::CalculateJPEGFileHash(thumb, thumb_length), IF_JPEG_Embedded, false, 0, 1, 0);
 		(*Image)->SetJPEGComment(Helpers::GetJPEGComment(thumb, thumb_length));
         (*Image)->SetJPEGChromoSampling(eChromoSubSampling);
 	}

@@ -17,7 +17,7 @@ No file or folder name was provided as command line parameter!	Es wurde kein Dat
 To use JPEGView, associate JPG, JPEG and BMP files with JPEGView.	Um JPEGView zu verwenden, müssen die Dateitypen JPG, JPEG und BMP mit JPEGView verknüpft werden.
 Press ESC to exit...	ESC drücken zum Beenden...
 The file '%s' could not be read!	Die Datei '%s' kann nicht gelesen werden!
-The file '%s' does not contain a list of file names!	Die Datei '%s' enhält keine Liste von Dateinamen!
+The file '%s' does not contain a list of file names!	Die Datei '%s' enthält keine Liste von Dateinamen!
 The directory '%s' does not contain any image files!	Der Ordner '%s' enthält keine Bilddateien!
 Press any key to search the subdirectories for image files.	Bitte eine Taste drücken, um in Unterordnern nach Bilddateien zu suchen.
 JPEGView Help	JPEGView Hilfe
@@ -59,7 +59,7 @@ Set timeout to n/10 sec, respectively n/100 sec (Ctrl+Shift)	Intervall auf n/10 
 Rotate image and fit to screen	Bild rotieren und an Bildschirm anpassen
 Fit image to screen	Bildgrösse an Bildschirm anpassen
 Zoom 1:1 (100 %)	Zoom 1:1 (100 %)
-Zoom in (%s)/Zoom out (%s)	Bild vergössern (%s)/verkleinern (%s)
+Zoom in (%s)/Zoom out (%s)	Bild vergrössern (%s)/verkleinern (%s)
 Zoom in/out image	Bild vergössern/verkleinern (Zoom)
 Pan image	Bildausschnitt verschieben (Pan)
 Crop image	Bildausschnitt freistellen (Crop)
@@ -163,7 +163,7 @@ Original file extension	Originaldateierweiterung
 Day / Month / Year (as numbers)	Tag / Monat / Jahr (als Zahl)
 Year short form (2 digits)	Jahr Kurzform (2 Ziffern)
 Month / Short form (text)	Monat / Kurzform (Text)
-Target folders that are not yet existing are created as needed.	Zielordner werden erstellt falls sie noch nicht existieren.
+Target folders that are not yet existing are created as needed.	Zielordner werden erstellt, falls sie noch nicht existieren.
 Date placeholders use the modification date of the image.	Datumsplatzhalter verwenden das Änderungsdatum der Bilder.
 Rename/copy images to:	Bilder umbenennen/kopieren nach:
 Rename	Umbenennen
@@ -263,9 +263,9 @@ Rotate Image	Bild rotieren
 Show grid lines	Gitterlinien anzeigen
 Auto crop rotated image (avoids black border)	Rotiertes Bild freistellen (verhindert schwarzen Rahmen)
 Align image to horizontal or vertical line	Bild an horizontaler oder vertikaler Linie ausrichten
-Use the mouse to draw a line that shall be horizontal or vertical.	Benutzen Sie die Maus um eine Linie zu zeichnen, welche horizontal oder vertikal ausgerichtet sein soll.
+Use the mouse to draw a line that shall be horizontal or vertical.	Benutzen Sie die Maus, um eine Linie zu zeichnen, welche horizontal oder vertikal ausgerichtet sein soll.
 Rotate the image by dragging with the mouse.	Rotieren Sie das Bild durch Klicken und Ziehen mit der Maus.
-The operation failed because not enough memory is available!	Die Operation ist fehlgeschlagen da nicht genug Speicher verfügbar ist!
+The operation failed because not enough memory is available!	Die Operation ist fehlgeschlagen, da nicht genug Speicher verfügbar ist!
 to EXIF date (all files in folder)	auf EXIF Datum (alle Dateien im Ordner)
 Number of JPEG files in folder: %d	Anzahl JPEG Bilder im Ordner: %d
 EXIF date successfully set on %d images, failed on %d images	EXIF Datum erfolgreich gesetzt auf %d Bildern, fehlgeschlagen auf %d Bildern
@@ -285,8 +285,52 @@ Drag at the left or right border for asymmetric correction.	Ziehen Sie am rechte
 Fit window to image	Fenstergrösse an Bild anpassen
 Keep aspect ratio on crop	Seitenverhältnis beim Freistellen beibehalten
 Lossless JPEG transformations	Verlustfreie JPEG Transformationen
-Performing the lossless transformation failed!	Verlustfreie transformation fehlgeschlagen!
+Performing the lossless transformation failed!	Verlustfreie Transformation fehlgeschlagen!
 Image width and height must be dividable by the JPEG block size (8 or 16) for lossless transformations!	Bildbreite und -höhe muss für verlustfreie JPEG-Transformationen durch die JPEG Blockgrösse (8 oder 16) teilbar sein!
 Reading the JPEG file from disk failed	JPEG-Datei konnte nicht gelesen werden
 Writing the resulting JPEG file to disk failed	Resultierende JPEG-Datei konnte nicht geschrieben werden
 Performing the transformation failed	Die Ausführung der Transformation ist fehlgeschlagen
+The transformation can be applied if the image is trimmed to the next matching size but this will remove some border pixels.	Die Transformation kann angewendet werden, falls das Bild beschnitten wird, doch dadurch werden einige Randpixel entfernt.
+Trim the image and apply transformation? Trimming cannot be undone!	Bildränder beschneiden und Transformation anwenden? Dies kann nicht rückgängig gemacht werden!
+Note: Set the key 'TrimWithoutPromptLosslessJPEG=true' in the INI file to always trim without showing this message.	Hinweis: Der Schlüssel 'TrimWithoutPromptLosslessJPEG=true' in der INI-Datei bewirkt, dass das Bild immer beschnitten wird ohne diese Meldung anzuzeigen.
+Transition Effect	Übergangseffekt
+None	Keiner
+Blend	Überblenden
+Slide from right	Rutschen von rechts
+Slide from left	Rutschen von links
+Slide from top	Rutschen von oben
+Slide from bottom	Rutschen von unten
+Roll from right	Rollen von rechts
+Roll from left	Rollen von links
+Roll from top	Rollen von oben
+Roll from bottom	Rollen von unten
+Scroll from right	Schieben von rechts
+Scroll from left	Schieben von links
+Scroll from top	Schieben von oben
+Scroll from bottom	Schieben von unten
+Transition Speed	Übergangsgeschwindigkeit
+Very fast	Sehr schnell
+Fast	Schnell
+Normal	Normal
+Slow	Langsam
+Very slow	Sehr langsam
+Error	Fehler
+Warning	Warnung
+Error while writing the following registry key:	Fehler beim Schreiben des Registry-Schlüssels:
+Set as default viewer...	Als Standard-Bildbetrachter festlegen...
+Set JPEGView as default image viewer	JPEGView als Standard-Bildbetrachter festlegen
+JPEGView is registered as default viewer for the selected file formats.	JPEGView ist als Standard-Bildbetrachter für die folgenden Dateiformate festgelegt.
+Registration applies to the current user only.	Die Registrierung gilt nur für den aktuellen Benutzer!
+Extension	Erweiterung
+File type	Dateityp
+The following file extensions cannot be unregistered because they have been registered in the 'local machine' registry area.	Die folgenden Dateierweiterungen können nicht deregistriert werden, da sie im 'local machine' Registryzweig registriert wurden.
+Registering or unregistering file extensions in this registry area requires administration privileges and cannot be done in JPEGView.	Registrieren/deregistrieren von Dateierweiterungen in diesem Registryzweig erfordert Administratorrechte und kann nicht in JPEGView gemacht werden.
+Press 'OK' to continue with registration or 'Cancel' to not modify any registrations.	Drücken Sie 'OK' um fortzufahren oder 'Abbrechen' um keine Registierungen zu ändern.
+Unregistering not possible	Deregistrierung nicht möglich
+%s images	%s Bilder
+%s images (processed by Window Imaging Component - WIC)	%s Bilder (geöffnet mit Windows Imaging Component - WIC)
+%s camera raw images (embedded JPEGs only)	%s Kamera-Rohbilder (nur eingebettete JPEG Bilder)
+The following image extensions are protected by the operating system.	Die folgenden Dateiendungen sind durch das Betriebssystem geschützt.
+JPEGView can try to remove the restrictions automatically.	JPEGView kann versuchen, die Restriktionen automatisch zu entfernen.
+However this will fail if the current user has no administration privileges.	Dies wird allerdings fehlschlagen, wenn der aktuelle Benutzer keine Administratorrechte besitzt.
+Insufficient rights to remove the restrictions. Continue?	Ungenügende Rechte um die Restriktionen zu entfernen. Weitermachen?

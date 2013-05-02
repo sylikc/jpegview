@@ -1,11 +1,11 @@
-// Файл с назначениями клавиш для программы JPEGView.		Перевод (120111): Дм.Ерохин (erodim@mail.ru)
+// Файл с назначениями клавиш для программы JPEGView.		Перевод (130118): Дмитрий Ерохин (erodim@mail.ru)
 // Не повредите этот файл, иначе не будут работать никакие клавиши!
 // На одну команду можно назначать несколько клавиш, но нельзя назначать несколько команд на одну клавишу!
 // Чтобы использовать этот файл вместо исходного (англоязычного), его нужно переименовать в KeyMap.txt
 // Не забудьте перед этим сверить/синхронизировать ранее изменявшиеся вами настройки в исходном (англоязычном) файле KeyMap.txt
 
 // Этот раздел содержит определения команд JPEGView - НЕ ИЗМЕНЯЙТЕ ЕГО!
-#define IDM_DONOTHING		1			// do nothing (can be used to disable a standard command for a mouse button)
+#define IDM_DONOTHING		1			// ничего не делать (можно использовать для отключения стандартной команды по нажатию кнопки мыши)
 #define IDM_MINIMIZE		1010			// свернуть окно
 #define IDM_OPEN		1100			// открыть файл
 #define IDM_SAVE		1500			// сохранить в файле с исходным размером, не позволять перезапись без запроса
@@ -19,9 +19,9 @@
 #define IDM_TOUCH_IMAGE		2700			// установить время изменения по текущему времени
 #define IDM_TOUCH_IMAGE_EXIF 	2710			// установить время изменения по времени в EXIF
 #define IDM_TOUCH_IMAGE_EXIF_FOLDER 2720		// установить время изменения по времени в EXIF для всех изображений в папке
-#define IDM_SHOW_FILEINFO   	2800			// вкл./выкл. показ информации о файле и EXIF-данных в верхнем левом углу
-#define IDM_SHOW_FILENAME	3000			// вкл./выкл. показ имени файла вверху экрана
-#define IDM_SHOW_NAVPANEL   	3100			// вкл./выкл. показ панели навигации
+#define IDM_SHOW_FILEINFO   	2800			// включить/выключить показ информации о файле и EXIF-данных в верхнем левом углу
+#define IDM_SHOW_FILENAME	3000			// включить/выключить показ имени файла вверху экрана
+#define IDM_SHOW_NAVPANEL   	3100			// включить/выключить показ панели навигации
 #define IDM_NEXT		4000			// перейти к следующему изображению
 #define IDM_PREV		5000			// перейти к предыдущему изображению
 #define IDM_FIRST		5100			// перейти к первому изображению
@@ -39,25 +39,25 @@
 #define IDM_PERSPECTIVE         9150			// показать диалоговое окно коррекции перспективы
 #define IDM_MIRROR_H        	9200			// зеркально перевернуть изображение по горизонтали
 #define IDM_MIRROR_V        	9300			// зеркально перевернуть изображение по вертикали
-#define IDM_ROTATE_90_LOSSLESS  9400			// Lossless JPEG transformation: rotate image 90 deg
-#define IDM_ROTATE_90_LOSSLESS_CONFIRM 9401		// Lossless JPEG transformation: rotate image 90 deg with user confirmation
-#define IDM_ROTATE_270_LOSSLESS 9410			// Lossless JPEG transformation: rotate image 270 deg
-#define IDM_ROTATE_270_LOSSLESS_CONFIRM 9411		// Lossless JPEG transformation: rotate image 270 deg with user confirmation
-#define IDM_ROTATE_180_LOSSLESS 9420			// Lossless JPEG transformation: rotate image 180 deg
-#define IDM_MIRROR_H_LOSSLESS   9430			// Lossless JPEG transformation: mirror image horizontally
-#define IDM_MIRROR_V_LOSSLESS   9440			// Lossless JPEG transformation: mirror image vertically
-#define IDM_AUTO_CORRECTION	10000			// вкл./выкл. автокоррекцию цвета и контрастности
+#define IDM_ROTATE_90_LOSSLESS  9400			// преобразование JPEG без потерь: повернуть изображение на 90° вправо
+#define IDM_ROTATE_90_LOSSLESS_CONFIRM 9401		// преобразование JPEG без потерь: повернуть изображение на 90° вправо с запросом подтверждения
+#define IDM_ROTATE_270_LOSSLESS 9410			// преобразование JPEG без потерь: повернуть изображение на 90° влево
+#define IDM_ROTATE_270_LOSSLESS_CONFIRM 9411		// преобразование JPEG без потерь: повернуть изображение на 90° влево с запросом подтверждения
+#define IDM_ROTATE_180_LOSSLESS 9420			// преобразование JPEG без потерь: повернуть изображение на 180°
+#define IDM_MIRROR_H_LOSSLESS   9430			// преобразование JPEG без потерь: зеркально перевернуть изображение по горизонтали
+#define IDM_MIRROR_V_LOSSLESS   9440			// преобразование JPEG без потерь: зеркально перевернуть изображение по вертикали
+#define IDM_AUTO_CORRECTION	10000			// включить/выключить автокоррекцию цвета и контрастности
 #define IDM_AUTO_CORRECTION_SECTION 10100		// автокоррекция контрастности только для видимой области
-#define IDM_LDC			10500			// вкл./выкл. локальную коррекцию плотностей (высветлить тени, притемнить света)
-#define IDM_LANDSCAPE_MODE	10700			// вкл./выкл. режим улучшения изображения
-#define IDM_KEEP_PARAMETERS	11000			// вкл./выкл. запоминание параметров между изображениями
+#define IDM_LDC			10500			// включить/выключить локальную коррекцию плотностей (высветлить тени, притемнить света)
+#define IDM_LANDSCAPE_MODE	10700			// включить/выключить режим улучшения изображения
+#define IDM_KEEP_PARAMETERS	11000			// включить/выключить запоминание параметров между изображениями
 #define IDM_SAVE_PARAM_DB   	11500			// сохранить в БД параметров
 #define IDM_CLEAR_PARAM_DB  	11510			// удалить из БД параметров
 #define IDM_FIT_TO_SCREEN	12000			// вписать изображение в экран
 #define IDM_FILL_WITH_CROP	12001			// вписать изображение в экран до заполнения с обрезкой
-#define IDM_FIT_WINDOW_TO_IMAGE	12005			// вкл./выкл. автоматическую подгонку окна по изображению во избежание чёрных полей
+#define IDM_FIT_WINDOW_TO_IMAGE	12005			// включить/выключить автоматическую подгонку окна по изображению во избежание чёрных полей
 #define IDM_SPAN_SCREENS	12010			// распределить по всем экранам
-#define IDM_FULL_SCREEN_MODE 	12011			// вкл./выкл. полноэкранный режим
+#define IDM_FULL_SCREEN_MODE 	12011			// включить/выключить полноэкранный режим
 #define IDM_ZOOM_400        	12020			// масштабировать до 400%
 #define IDM_ZOOM_200		12030			// масштабировать до 200%
 #define IDM_ZOOM_100		12040			// масштабировать до 100%
@@ -98,7 +98,7 @@
 #define IDM_PAN_LEFT		15203			// переместить влево
 #define IDM_SHARPEN_INC		15300			// усилить резкость
 #define IDM_SHARPEN_DEC		15301			// ослабить резкость
-#define IDM_CONTEXT_MENU	16000			// display context menu
+#define IDM_CONTEXT_MENU	16000			// показать контекстное меню
 
 // Следующий ниже раздел содержит назначения клавиш. Некоторые клавиши предопределены и не могут быть переназначены:
 // F1 - справка, ESC - выход, 0..9 - слайдшоу
@@ -107,12 +107,12 @@
 // Left, Right, Up, Down, Insert, Del, Plus, Minus, Mul, Div, Comma, Period
 // A .. Z  F1 .. F12
 
-// It is also possible to bind a command to a mouse button. Be aware that you override the default
-// functionality (e.g. to pan with left mouse) when you do so! Mouse buttons can be combined with 
-// Alt, Ctrl and Shift but not with other keys or other mouse buttons.
-// The following mouse buttons are recognized:
+// Также можно привязывать команды к кнопкам мыши. Однако учитывайте, что при этом вы измените
+// стандартное действие (например, панорамирование картинки левой кнопкой мыши)! Кнопки мыши можно
+// сочетать с клавишами Alt, Ctrl и Shift, но не с другими клавишами или кнопками мыши.
+// Распознаваемые кнопки мыши:
 // MouseL, MouseR, MouseM, MouseX1, MouseX2, MouseDblClk
-// (Left, right, middle, extra mouse buttons, mouse left double click)
+// (левая, правая, средняя, дополнительные кнопки, двойной щелчок левой кнопкой)
 
 PgDn                    IDM_NEXT
 Right                   IDM_NEXT

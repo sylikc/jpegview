@@ -319,7 +319,7 @@ void CNavigationPanelCtl::OnToggleZoomFit(void* pContext, int nParameter, CButto
 	if (CMainDlg::IsCurrentImageFitToScreen(pThis->m_pMainDlg)) {
 		pThis->m_pMainDlg->ResetZoomTo100Percents(pThis->m_pMainDlg->IsMouseOn());
 	} else {
-		pThis->m_pMainDlg->ResetZoomToFitScreen(false, true, !pThis->m_pMainDlg->IsFullScreenMode());
+		pThis->m_pMainDlg->ResetZoomToFitScreen(false, true, true);
 	}
 }
 

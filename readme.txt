@@ -24,6 +24,48 @@ to JPEGView\Debug
 Changelog
 *********
 
+[1.0.29.1]
+Bugs fixed:
+- Slide shows with alpha blending: Work now also correctly if graphics driver implements alpha blending somewhat inexactly
+- NoStrCmpLogical registry setting also checked in "LOCAL MACHINE" registry hive
+
+[1.0.29]
+Bugs fixed:
+- EXIF (F2) and file name info (Ctrl+F2) no longer flicker when active during slide show with transition effect
+- No logical sorting of file names is done if HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer\NoStrCmpLogical
+  registry value is set to 1. This matches the behavior of the Windows explorer.
+  Note that the default registry value for this is 0, therefore almost all users will notice no change.
+New features:
+- Support for animated GIFs.
+  Limitations:
+  - Saving GIFs will only save the currently displayed frame.
+  - Some image processings (e.g. free rotation, perspective correction) will stop the animation and work on a single frame only
+  - No caching of the decoded frames. This has pros and cons. Pro is that memory consumption is limited. Con is that the CPU
+    load while playing can be rather high. However on a dual core CPU it's not a problem.
+- Support for multi-page TIFF. Note that (singlepage or multipage) TIFFs compressed with JPEG compression are not supported by GDI+.
+  This is a known issue of GDI+ that cannot be fixed in JPEGView (except if another TIFF library would be used)
+- New INI file setting: FileNameFormat allowing to display configurable information with Ctrl-F2. See INI file for information.
+Other changes:
+- WebP library 0.3.0 from Google is now used. This version supports lossy and lossless compression.
+  To use lossless compression with the WEBP format, select the "WEBP lossless" file format in the "File Save" dialog.
+  Be warned that lossless WEBP compression is very, very slow (decompression is fast however).
+
+[1.0.28]
+Bugs fixed:
+- Fixed bug in the window resizing code when 'DefaultWindowRect=max' and toggling between 100 % zoom and fit to window (space key)
+- Fixed bug causing that zoom was not saved to parameter DB when auto fitting window to image was on
+- Fixed bug that file pointer was invalid when deleting last file in folder and WrapAroundFolder=false in INI file
+- New algorithm to guess encoding (UTF-8, ANSI) of JPEG comments when no encoding is explicitly specified
+New features:
+- Support for slide show transition effects (only in full screen mode)
+  This can also be set in the INI file and on the command line, see readme.html for more info about command line parameters.
+- File extensions can be registered to be opened by JPEGView over the 'Administration-Set as default viewer...' menu item
+- New info button in top, left corner of screen in fullscreen mode to show EXIF info. EXIF into closable on the EXIF panel itself.
+- When a supported camera RAW file was excluded in INI file but opened nevertheless in JPEGView (e.g. from explorer), the camera
+  raw file type is added temporarily until program termination
+- Russian translation of readme.html
+- Improved Chinese translation
+
 [1.0.27]
 Replaced Intel JPEG library by Turbo JPEG (tjpeg, http://sourceforge.net/projects/libjpeg-turbo/)
 This replacement has many reasons:
@@ -38,11 +80,17 @@ Note that tjpeg including lossless JPEG transformations has been statically link
 by 300 KB. However the total size of the package is lower than before because IJL15.dll and jpegtran.exe are no longer needed.
 
 Bugs fixed:
+- When a folder is called 'pictures.jpg' for example, JPEGView no longer tries to process this folder as image
 - Exposure time display: When nominator and denominator are both big numbers, a fractional value is shown instead of bigNum/bigDenum
+- Reading slideshow list files (txt) encoded with UTF-8 and UTF-16 (little endian only) correctly
+- Reading slideshow list files (txt) using uppercase file endings for image files correctly
 New features:
 - Lossless JPEG transformations integrated into JPEGView. The jpegtran.exe application is no longer part of the distribution of JPEGView.
 - Basque translation, thanks to Xabier Aramendi
+- Chinese translation, thanks to Yia Guo
 - Keymap.txt now also supports to remap mouse buttons to commands.
+- New INI file setting: 'TrimWithoutPromptLosslessJPEG'. Set to true to trim image before lossless JPEG transformations if needed without
+                        prompting the user for each image.
 - New INI file setting: DefaultWindowRect=sticky to save and restore the window size and position in window mode
 - New INI file setting: 'SingleInstance'. Set to true to open all images in one single instance (window) of JPEGView.
 - New INI file setting: 'ShowBottomPanel'. Set to false to disable showing the bottom panel when hovering with the mouse on bottom part
@@ -50,9 +98,18 @@ New features:
   Default is true (as before, was not configurable).
 - New INI file setting: 'MaxSlideShowFileListSizeKB'. Sets maximum size of slide show text files in KB.
 - New INI file setting: 'ForceGDIPlus'. If true, use GDI+ for reading JPEGS. Note that using GDI+ is much slower than the tjpeg library!
+- New command line parameters:
+  /slideshow xx    Starts JPEGView in slideshow mode, xx denotes the switching time in seconds. Only use when providing a file name,
+                   folder name or file list on the command line as first parameter.
+                   Example: jpegview.exe "filelist.txt" /slideshow 2
+  /fullscreen      Starts JPEGView in full screen mode, ignoring the INI file setting that is currently active
+  /order x         Forces file ordering mode 'x', ignoring the INI file setting that is currently active
+                   'x' can be M, C, N or Z, for the file ordering modes 'M:modification date', 'C:creation date', 'N:file name', 'Z:random'
+                   Example: jpegview.exe c:\pictures /slideshow 2 /order z
+                   Shows a slideshow of the files in the folder "c:\pictures" using random ordering and an interval of 2 seconds.
 Other changes:
 - Because the tjpeg static library cannot be linked with VS2005, JPEGView is now compiled with VS2010. If you are using Windows XP 
-  before SP2, install SP2 or keep using version 1.0.25.
+  before SP2, install SP2 or keep using version 1.0.26.
 
 [1.0.26]
 Bugs fixed:
