@@ -1,0 +1,286 @@
+﻿// This file must be encoded with UTF-8 (e.g. with Windows Notepad)
+// Filename is 'strings_%languagecode%.txt' where %languagecode% is the ISO 639 language code e.g. 'fr' for French
+// Format is: English string<tab>Translated string<newline>
+// Translation=Uładzimir Panada
+Contrast	Кантраст
+Brightness	Яркасьць
+Sharpen	Вострасьць
+Lighten Shadows	Цень
+Darken Highlights	Сьвятло
+Deep Shadows	Глыбокі цень
+Color Correction	Карэкцыя колеру
+Contrast Correction	Карэкцыя кантрасту
+Parameter DB:	База зьвестак параметраў:
+Save to	захаваць у
+Remove from	выдаліць з
+Rename:	Перайменаваць:
+No file or folder name was provided as command line parameter!	У камандынм радку няма назвы файла ці тэчкі!
+To use JPEGView, associate JPG, JPEG and BMP files with JPEGView.	JPEGView трэба асацыяваць з файламі JPG, JPEG і BMP.
+Press ESC to exit...	Націснуць ESC для выхаду...
+The file '%s' could not be read!	Файл '%s' нечытэльны!
+The file '%s' does not contain a list of file names!	У файле '%s' няма сьпісу назваў файлаў!
+The directory '%s' does not contain any image files!	У тэчцы '%s' няма файлаў выяваў!
+Press any key to search the subdirectories for image files.	Націснуць любую кнопку для пошуку файлаў выяваў ва ўкладзеных тэчках.
+JPEGView Help	Даведка JPEGView
+Current image	Аб выяве
+Close help text display / Close JPEGView	Закрыць даведку/JPEGView
+Show/hide this help text	Паказаць/схаваць даведку
+Show/hide picture information (EXIF data)	Паказаць/схаваць зьвесткі пра выяву (інфармацыю EXIF)
+Show/hide file name	Паказаць/схаваць шлях і назву файла
+Enable/disable high quality resampling	Рэсэмплінг высокай якасьці
+Enable/disable keeping of geometry related (zoom/pan/rotation)	На ўзор гэтай выявы трансфармаваць
+and image processing (brightness/contrast/sharpen) parameters between images	і апрацаваць наступныя
+Enable/disable automatic contrast correction (histogram equalization)	Аўтакарэкцыя кантрасту (нармаваньне гістаграмы)
+Apply auto contrast correction using only visible section of image	Аўтакарэкцыя кантрасту толькі для бачнай часткі выявы
+Enable/disable automatic density correction (local brightness correction)	Аўтакарэкцыя шчыльнасьці (лакальная зьмена яркасьці)
+Increase/decrease lightening of shadows (LDC must be on)	Мацней/слабей высьвятляць цень (пры аўтакарэкцыі шчыльнасьці)
+Increase/decrease darkening of highlights (LDC must be on)	Мацней/слабей прыцямняць сьвятло (пры аўтакарэкцыі шчыльнасьці)
+Loop through files in current folder	Колавы прагляд файлаў у абранай тэчцы
+Loop through files in current directory and all subfolders	Колавы прагляд файлаў у абранай тэчцы і ва ўкладзеных у яе
+Loop through files in current directory and all sibling folders (folders on same level)	Колавы прагляд файлаў у абранай тэчцы ды іншых на гэтым узроўні
+Maximize/restore to/from virtual desktop (only for multi-monitor systems)	Цалкам/часткова заняць віртуальны працоўны стол (у шматманіторнай сістэме)
+Copy screen to clipboard/ Copy processed full size image to clipboard	Капіраваць у буфер абмену выяву з экрану/апрацаваную выяву поўнага памеру
+Open new image or slideshow file	Адкрыць новую выяву ці слайдшоў
+Save processed image to JPEG file (original size)	Захаваць апрацаваную выяву як файл JPEG поўнага памеру
+Save (%s)/ delete (%s) image processing parameters in/from parameter DB	Захаваць у базе зьвестак (%s)/выдаліць з базы зьвестак (%s) параметры апрацоўкі выявы
+Sort images by creation date, resp. modification date, resp. file name	Парадкаваць файлы паводле даты стварэньня (C)/даты мадыфікацыі (M)/назвы (N)/выпадкова (Z)
+Goto previous image	Папярэдняя выява
+Goto next image	Наступная выява
+PgUp or Left	PgUp ці стрэлка ўлева
+PgDn or Right	PgDn ці стрэлка ўправа
+Goto first/last image of current folder (using sort order as defined)	Пераход да першай/апошняй (паводле сарціроўкі) выявы ў тэчцы
+Increase/decrease brightness	Павялічыць/зьменьшыць яркасьць
+Increase/decrease contrast	Павялічыць/зьменьшыць кантраст
+Increase/decrease sharpness	Павялічыць/зьменьшыць вострасьць
+Increase/decrease auto color cast correction amount	Узмацніць/аслабіць аўтакарэкцыю колеру
+Increase/decrease auto contrast correction amount	Узмацніць/аслабіць аўтакарэкцыю кантрасту
+Enable/disable landscape picture enhancement mode	Рэжым паляпшэньня выявы
+Slide show with timeout of n seconds (ESC to stop)	Слайдшоў з затрымкай n сек. (n - кнопка ад 1 да 9). Esc - стоп
+Set timeout to n/10 sec, respectively n/100 sec (Ctrl+Shift)	Слайдшоў з затрымкай ад n/10 сек. да n/100 сек. (n - Ctrl+Shift+кнопка ад 1 да 9). Esc - стоп
+Rotate image and fit to screen	Павярнуць выяву з дапасаваньнем да экрану
+Fit image to screen	Дапасаваць выяву да экрану
+Zoom 1:1 (100 %)	Маштаб 1:1 (100%)
+Zoom in (%s)/Zoom out (%s)	Павялічыць (%s)/зьменьшыць (%s)
+Zoom in/out image	Павялічыць/зьменьшыць
+Pan image	Рухаць павялічаную выяву
+Crop image	Вылучыць частку выявы
+Next image	Наступная выява
+Previous image	Папярэдняя выява
+up/down	стрэлка ўверх/уніз
+Mouse wheel	Кола мышкі
+Left mouse & drag	Клік і рух мышкі
+Ctrl + L mouse	Ctrl + левая кнопка мышкі
+Forward mouse button	Кнопка мышкі "наперад"
+Back mouse button	Кнопка мышкі "назад"
+Delete current file on disk permanently	Незваротна выдаліць файл
+Rotate current file on disk lossless by 90 deg (W/H must be multiple of 16)	Павярнуць файл на дыску на 90°, захаваўшы якасьць (Ш/В мусяць быць кратнымі 16)
+Rotate current file on disk lossless by 270 deg (W/H must be multiple of 16)	Павярнуць файл на дыску на -90°, захаваўшы якасьць (Ш/В мусяць быць кратнымі 16)
+The file is read-only!	Гэты файл толькі для чытаньня!
+Can't rename file	Немагчыма перайменаваць файл
+New name contains backslash character!	У новай назьве ёсьць знак \ !
+Renaming file failed!	Не ўдалося перайменаваць файл!
+Reason: 	Прычына:
+on	так
+off	не
+Do you really want to save the following parameters as default to the INI file	Ці захаваць гэтыя наладкі як асноўныя ў INI-файле
+Auto contrast and color correction: 	Аўтакарэкцыя колеру і кантрасту: 
+Local density correction: 	Лакальная карэкцыя шчыльнасьці: 
+Order files by: 	Парадкаваць файлы паводе: 
+Creation date/time	даты/часу стварэньня
+Last modification date/time	даты/часу мадыфікацыі
+File name	назваў
+These values will override the values from the INI file located in the program folder of JPEGView!	Гэтыя наладкі будуць захаваныя ў INI-файле JPEGView!
+Confirm save default parameters	Пацьвердзіць захаваньне асноўных параметраў
+Images	Выявы
+All Files	Усе файлы
+Parameter DB file '%s' could not be opened!	У базе зьвестак не адкрываецца файл параметраў '%s'!
+Parameter DB file '%s' is not valid (invalid header)!	У базе зьвестак няўжывальны файл параметраў '%s' (неадпаведны загаловак)!
+Cannot write to parameter DB file '%s'!	Файл параметраў '%s' не запісваецца ў базу зьвестак!
+Cannot read from parameter DB file '%s'!	У базе зьвестак не чытаецца файл параметраў '%s'!
+Cannot read parameter DB file '%s' because it is too large!	У базе зьвестак не чытаецца файл параметраў '%s' (ён занадта вялікі)!
+The parameter DB file '%s' has been created by a newer version of JPEGView!	Файл параметраў у базе зьвестак '%s' створаны навейшай версіяй JPEGView!
+The old parameter DB file '%s' could not be renamed during conversion to new format!	У базе зьвестак немагчыма перайменаваць стары файл параметраў '%s' падчас канвертацыі ў новы фармат!
+Parameter DB error	Памылка ў параметры базы зьвестак
+Error saving file	Памылка пры захаваньні файла
+Error writing file to disk!	Памылка падчас запісу файла на дыск!
+Confirm	Пацьвердзіць
+Do you really want to permanently delete the file %filename%?	Незваротна выдаліць файл %filename%?
+Rotate the following file lossless by 90 deg?\n%filename%	Павярнуць гэты файл, захаваўшы якасьць, на 90°?\n%filename%
+Rotate the following file lossless by 270 deg?\n%filename%	Павярнуць гэты файл, захаваўшы якасьць, на -90°?\n%filename%
+Open image...	Адкрыць файл...
+Save processed image...	Захаваць апрацаваную выяву...
+Reload image	Пераадкрыць
+Copy to clipboard	Капіраваць выяву з экрану
+Copy original size image	Капіраваць выяву поўнага памеру
+Paste from clipboard	Уставіць
+Batch rename/copy...	Перайменаваць/капіраваць...
+Show picture info (EXIF)	Паказаць інфармацыю EXIF
+Show filename	Паказаць шлях і назву файла
+Navigation	Прагляд у межах
+Loop folder	тэчкі
+Loop recursively	укладзеных тэчак
+Loop siblings	тэчак аднаго ўзроўню
+Display order	Парадкаваць файлы паводле
+Modification date	даты мадыфікацыі
+Creation date	даты ставрэньня
+Play folder as slideshow/movie	Слайдшоў/фільм
+Slideshow	Слайдшоў
+Movie	Фільм
+Waiting time	Праз
+Stop slide show/movie	Спыніць слайдшоў/фільм
+Rotate +90	паварот на +90°
+Rotate -90	паварот на -90°
+Auto correction	Аўтакарэкцыя колеру і кантрасту
+Local density correction	Лакальная карэкцыя шчыльнасьці
+Keep parameters	Ужываць параметры апрацоўкі надалей
+Save parameters to INI...	Захаваць параметры апрацоўкі ў INI-файле...
+Save parameters to DB	Захаваць параметры апрацоўкі ў базе зьвестак
+Clear parameters from DB	Выдаліць параметры апрацоўкі з базы зьвестак
+Zoom	Маштаб
+Fit to screen	дапасаваць
+Fill with crop	запоўніць з абрэзкай
+Span all screens	на ўсе экраны
+Auto zoom mode	Аўтаматычная зьмена маштабу
+Fit to screen (no zoom)	дапасаваць (не павялічваць)
+Fill with crop (no zoom)	запоўніць з абрэзкай (не павялічваць)
+Exit	Выхад
+Cyan-Red	блакітны-чырвоны
+Magenta-Green	барвовы-зялёны
+Yellow-Blue	жоўты-сіні
+C - R	C - R
+M - G	M - G
+Y - B	Y - B
+Batch rename/copy of files	Пакетнае перайменаваньне/капіраваньне файлаў
+Image files in folder	Файлы выяваў у тэчцы
+Placeholders:	Знакі замены:
+Number (consecutively numbered)	нумар
+Number with N digits	N-лічбавы нумар
+Extracted number from original file name	нумар з першаснай назвы файла
+Original file name (with extension)	 першасная назва з пашырэньнем
+Original file name (without extension)	першасная назва без пашырэньня
+Original file extension	першаснае пашырэньне
+'My Pictures' folder	тэчка "My Pictures"
+Day / Month / Year (as numbers)	дзень/месяц/год (лічбы)
+Year short form (2 digits)	год скарочана (2 лічбы)
+Month / Short form (text)	месяц/месяц скарочана (тэкст)
+Target folders that are not yet existing are created as needed.	Калі на дыску няма згаданых у спосабе перайменаваньня/шляху капіраваньня тэчак, праграма іх створыць
+Date placeholders use the modification date of the image.	Знакі замены працуюць з датай мадыфікацыі файла
+Rename/copy images to:	Спосаб перайменаваньня/шлях капіраваньня:
+Rename	Выканаць
+Preview	Папярэдні прагляд
+Save as template	Захаваць як шаблон
+Close	Закрыць
+Old name	Старая назва 
+Date	Дата
+New name (>> : file gets copied)	Новая назва (>> : шлях капіраваньня)
+Select all	Выбраць усё
+Select none	Скасаваць выбар
+The file '%s' could not be %s.	Файл '%s' ня можа быць %s.
+copied	скапіраваны
+renamed	перайменаваны
+Continue rename/copy?	Працягнуць перайменаваньне/капіраваньне?
+Error during rename/copy	Памылка пры перайменаваньні/капіраваньні
+%d file(s) renamed, %d file(s) copied, %d folder(s) created	Перайменавана %d файлаў, скапіравана %d файлаў, створана %d тэчак
+Crop Selection	Абрэзаць вылучанае
+Copy Selection to Clipboard	Капіраваць вылучанае ў буфер абмену
+Zoom to Selection	На ўвесь экран
+Pasting image from clipboard failed!	Не ўдалося ўставіць выяву з буфера абмену!
+Image width:	Шырыня:
+Image height:	Вышыня:
+Acquisition date:	Дата:
+Camera model:	Мадэль камеры:
+Exposure time (s):	Экспазіцыя (сек):
+Exposure bias (EV):	Карэкцыя экспазіцыі (EV):
+Flash fired:	Бліц:
+Focal length (mm):	Фокусная адлегласьць (мм):
+F-Number:	Дыяфрагма:
+ISO Speed:	Чуйнасьць (ISO):
+Modification date:	Дата мадыфікацыі:
+yes	укл.
+no	выкл.
+Show navigation panel	Паказваць панэль навігацыі
+Show/hide navigation panel	Паказваць панэль навігацыі
+About JPEGView...	Пра JPEGView...
+SIMD mode used:	Рэжым SIMD:
+Number of CPU cores used:	Ужыта ядраў працэсара:
+Licensed under the GNU general public license (GPL), see readme file for details:	Ліцэнзія GNU General Public License (GPL), глядзі
+Project home page:	Дамашняя старонка пректу:
+Show first image in folder	Паказаць першую ў тэчцы выяву
+Show previous image	Паказаць папярэднюю выяву
+Show next image	Паказаць наступную выяву
+Show last image in folder	Паказаць апошнюю ў тэчцы выяву
+Rotate image 90 deg clockwise	Павярнуць выяву на +90°
+Rotate image 90 deg counter-clockwise	Павярнуць выяву на -90°
+Landscape picture enhancement mode	Рэжым паляпшэньня відарысу
+Display image (EXIF) information	Паказаць інфармацыю EXIF
+Actual size of image	Сапраўдны памер выявы
+Toggle between screens (only for multi-monitor systems)	Пераключыцца між экранамі (у шматманіторнай сістэме)
+Enable/disable full screen mode	Поўнаэкранны рэжым
+Full screen mode	поўнаэкранны рэжым
+Window mode	ваконны рэжым
+Save as (in screen size/resolution)	Захаваць як (адпаведна памеру/разьдзельнасьці экрану)
+Save processed image to JPEG file (screen size)	Захаваць апрацаваную выяву як файл JPEG памеру экрану
+Settings/Admin	Наладкі/Адміністрацыя
+Edit global settings...	зьмяніць агульныя наладкі...
+Edit user settings...	зьмяніць наладкі карыстальніка...
+Backup parameter DB...	зрабіць запасную копію базы зьвестак...
+Restore parameter DB...	аднавіць базу зьвестак з запасной копіі...
+No user INI file exits yet. Create user INI file from INI file template?	Карыстальніцкага INI-файла няма. Стварыць яго з шаблону INI-файла?
+Copying parameter DB to file '%s' failed. Reason: %s	Памылка пры капіраваньні параметра базы зьвестак у файл '%s'. Прычына: %s
+Select parameter DB to restore	Выбраць з базы зьвестак параметр для аднаўленьня
+Conflicting entries in Param DB	Канфлікт пры запісе параметра ў базу зьвестак
+The imported param DB contains entries already present in active param DB.	У імпартаванай базе зьвестак параметраў ёсьць запісы, прысутныя ў дзейснай.
+Shall existing entries be preserved (Yes) or be overriden by the imported entries (No)?	Захаваць прысутныя запісы (Так) ці замяніць імпартаванымі (Не)?
+Select file to display in 'File Open' dialog	Абраць файл для паказу ў дыялогу адкрыцьця
+Crop Mode	Памер/прапорцыі
+Free	адвольна
+Fixed size...	вызначыць памер...
+Set Fixed Crop Size	Памеры поля
+Width	Шырыня
+Height	Вышыня
+Pixels	Пікселы
+Screen Pixels	Пікселы экрана
+Image Pixels	Пікселы выявы
+Set modification date	Выставіць дату мадыфікацыі адпаведна
+to current date	бягучаму часу
+to EXIF date	зьвесткам EXIF
+Mark image for toggling. Use %s to toggle between marked and current image	Пазначыць файл. %s - вярнуцца да яго
+Saturation	Насычанасьць
+Unsharp mask...	Нявострая маска...
+Apply Unsharp Mask	Наладка нявострай маскі
+Radius	Радыюс
+Amount	Памер
+Threshold	Парог
+Apply	Згода
+Cancel	Адмена
+Keep processing parameters between images	Прагляд наступных выяваў з абранымі параметрамі апрацоўкі
+Show histogram	Паказаць гістагарму
+Hide histogram	Схаваць гістагарму
+Crop Selection Lossless...	Абрэзаць вылучанае, захаваўшы якасьць...
+Save cropped image	Захаваць абрэзаную выяву
+Rotate image by user-defined angle	Паварот на вызначаны вугал
+Rotate Image	Паварот
+Show grid lines	Сетка
+Auto crop rotated image (avoids black border)	Аўтаабрэзка павернутай выявы (пазьбягаць чорных палёў)
+Align image to horizontal or vertical line	Выраўнаць адносна лініі
+Use the mouse to draw a line that shall be horizontal or vertical.	Клік і рух мышкі для пазначэньня гарызанталі ці вертыкалі
+Rotate the image by dragging with the mouse.	Клік і рух мышкі для павароту выявы
+The operation failed because not enough memory is available!	Памылка аперацыі з-за недахопу памяці!
+to EXIF date (all files in folder)	зьвесткам EXIF (для ўсіх файлаў у тэчцы)
+Number of JPEG files in folder: %d	Колькасць файлаў JPEG у тэчцы: %d
+EXIF date successfully set on %d images, failed on %d images	Інфармацыя EXIF удала дададзеная ў %d выяваў, няўдала ў %d
+Reason: Not enough memory available	Прычына - недахоп памяці
+Transform image	Трансфармацыя
+Rotate...	паварот на...
+Mirror horizontally	люстраны гарызантальны паварот
+Mirror vertically	люстраны вертыкальны паварот
+Random	выпадкова
+Zoom mode (drag mouse to zoom)	Зьмена маштабу рухам мышкі
+Correct converging lines (perspective correction)	Карэкцыя сыходжаньня (персьпектывы)
+Perspective Correction	Змена геаметрыі
+Perspective correction...	зьмена геаметрыі...
+Auto crop corrected image (avoids black border)	Аўтаабрэзка скарэктаванай выявы (пазьбягаць чорных палёў)
+Click and drag the mouse vertically to correct image tilt.	Клік і вертыкальны рух мышкі для карэкцыі персьпектывы
+Drag at the left or right border for asymmetric correction.	Клік і гарызантальны рух мышкі для несіметрычнай трансфармацыі
+Fit window to image	Дапасаваць вакно да выявы
+Keep aspect ratio on crop	Захаваць прапорцыі пры абрэзцы
