@@ -2,6 +2,7 @@
 #include "UserCommand.h"
 #include "NLS.h"
 #include "Helpers.h"
+#include "SettingsProvider.h"
 #include <shlobj.h>
 #include <shellapi.h>
 
@@ -86,6 +87,21 @@ static CString ReplacePlaceholders(CString sMsg, LPCTSTR sFileName, const CRect&
 		::SHGetFolderPath(NULL, CSIDL_MYPICTURES, NULL, SHGFP_TYPE_CURRENT, buff);
 		SmartNameReplace(sNewMsg, _T("%mypictures%"), buff);
 	}
+
+    sNewMsg.Replace(_T("%exepath%"), CSettingsProvider::This().GetEXEPath());
+
+    if (sNewMsg.Find(_T("%exedrive%")) >= 0) {
+		LPCTSTR exePath = CSettingsProvider::This().GetEXEPath();
+		LPCTSTR driveLetter = _tcschr(exePath, _T(':'));
+		if (driveLetter != NULL) {
+			TCHAR letter[3];
+			letter[0] = driveLetter[-1];
+			letter[1] = *driveLetter;
+			letter[2] = 0;
+			sNewMsg.Replace(_T("%exedrive%"), (LPCTSTR)(&letter));
+		}
+    }
+
 	return sNewMsg;
 }
 
