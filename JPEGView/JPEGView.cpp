@@ -75,6 +75,10 @@ static bool ParseCommandLineForFullScreen(LPCTSTR sCommandLine) {
     return Helpers::stristr(sCommandLine, _T("/fullscreen")) != NULL;
 }
 
+static bool ParseCommandLineForAutoExit(LPCTSTR sCommandLine) {
+    return Helpers::stristr(sCommandLine, _T("/autoexit")) != NULL;
+}
+
 static Helpers::ESorting ParseCommandLineForSorting(LPCTSTR sCommandLine) {
     LPCTSTR sSorting = Helpers::stristr(sCommandLine, _T("/order"));
     if (sSorting == NULL) {
@@ -132,6 +136,7 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR lp
     CString sStartupFile = ParseCommandLineForStartupFile(lpstrCmdLine);
     int nAutostartSlideShow = (sStartupFile.GetLength() == 0) ? 0 : ParseCommandLineForAutostart(lpstrCmdLine);
     bool bForceFullScreen = ParseCommandLineForFullScreen(lpstrCmdLine);
+    bool bAutoExit = ParseCommandLineForAutoExit(lpstrCmdLine);
     Helpers::ESorting eSorting = ParseCommandLineForSorting(lpstrCmdLine);
     Helpers::ETransitionEffect eTransitionEffect = ParseCommandLineForSlideShowEffect(lpstrCmdLine);
     int nTransitionTime = ParseCommandLineForTransitionTime(lpstrCmdLine);
@@ -164,7 +169,8 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR lp
 
 		CMainDlg dlgMain(bForceFullScreen);
 
-		dlgMain.SetStartupInfo(sStartupFile, nAutostartSlideShow, eSorting, eTransitionEffect, nTransitionTime);
+		dlgMain.SetStartupInfo(sStartupFile, nAutostartSlideShow, eSorting, eTransitionEffect, nTransitionTime, bAutoExit);
+
 		try {
 			nRet = dlgMain.DoModal();
             if (CSettingsProvider::This().StickyWindowSize() && !dlgMain.IsFullScreenMode()) {

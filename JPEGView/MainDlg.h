@@ -123,8 +123,9 @@ public:
     LRESULT OnClose(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, BOOL& /*bHandled*/);
 
 	// Called by main()
-	void SetStartupInfo(LPCTSTR sStartupFile, int nAutostartSlideShow, Helpers::ESorting eSorting, Helpers::ETransitionEffect eEffect, int nTransitionTime) { 
+	void SetStartupInfo(LPCTSTR sStartupFile, int nAutostartSlideShow, Helpers::ESorting eSorting, Helpers::ETransitionEffect eEffect, int nTransitionTime, bool bAutoExit) { 
         m_sStartupFile = sStartupFile; m_nAutoStartSlideShow = nAutostartSlideShow; m_eForcedSorting = eSorting;
+        m_bAutoExit = bAutoExit;
         if ((int)eEffect >= 0) m_eTransitionEffect = eEffect;
         if (nTransitionTime > 0) m_nTransitionTime = nTransitionTime;
     }
@@ -214,6 +215,7 @@ private:
 
 	CString m_sStartupFile; // file passed on command line
     int m_nAutoStartSlideShow; // if positive: Auto start slide show with given intervall in seconds, passed on command line
+    bool m_bAutoExit;
     Helpers::ESorting m_eForcedSorting; // forced sorting mode on command line
 	CFileList* m_pFileList; // used for navigation
 	CJPEGProvider * m_pJPEGProvider; // reads JPEG files (read ahead)
@@ -347,7 +349,7 @@ private:
     bool UseSlideShowTransitionEffect();
     void PaintToDC(CDC& dc);
     void AnimateTransition();
-    void CleanupAndTeminate();
+    void CleanupAndTerminate();
     // this is for animated GIFs
     void StartAnimation();
     void AdjustAnimationFrameTime();
