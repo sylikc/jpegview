@@ -399,7 +399,7 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 		s_bFirst = false;
 		if (m_sStartupFile.GetLength() == 0) {
 			if (!OpenFile(true, true)) {
-				CleanupAndTeminate();
+				CleanupAndTerminate();
 			}
 		}
 	}
@@ -875,13 +875,19 @@ LRESULT CMainDlg::OnKeyDown(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOO
 			m_bShowHelp = false;
 			this->Invalidate(FALSE);
 		} else if (m_bMovieMode) {
-			StopMovieMode(); // stop any running movie/slideshow
+			if (m_bAutoExit)
+				CleanupAndTerminate();
+			else
+				StopMovieMode(); // stop any running movie/slideshow
 		} else if (m_bIsAnimationPlaying) {
-			StopAnimation(); // stop any running animation
+			if (m_bAutoExit)
+				CleanupAndTerminate();
+			else
+				StopAnimation(); // stop any running animation
 		}else if (m_pCropCtl->IsCropping()) {
 			m_pCropCtl->AbortCropping();
 		} else {
-            CleanupAndTeminate();
+            CleanupAndTerminate();
 		}
 	} else if (!bCtrl && m_nLastLoadError == HelpersGUI::FileLoad_NoFilesInDirectory) {
 		// search in subfolders if initially provider directory has no images
@@ -927,7 +933,7 @@ LRESULT CMainDlg::OnSysKeyDown(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, 
 	}
 	bool bShift = (::GetKeyState(VK_SHIFT) & 0x8000) != 0;
 	if (wParam == VK_F4) {
-		CleanupAndTeminate();
+		CleanupAndTerminate();
 	} else {
 		int nCommand = m_pKeyMap->GetCommandIdForKey(wParam, true, false, bShift);
 		if (nCommand > 0) {
@@ -1152,7 +1158,7 @@ LRESULT CMainDlg::OnOK(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*/, BOOL& /
 }
 
 LRESULT CMainDlg::OnCancel(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*/, BOOL& /*bHandled*/) {
-	CleanupAndTeminate();
+	CleanupAndTerminate();
 	return 0;
 }
 
@@ -1604,7 +1610,7 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 			}
 			break;
 		case IDM_EXIT:
-			CleanupAndTeminate();
+			CleanupAndTerminate();
 			break;
 		case IDM_ZOOM_SEL:
 			ZoomToSelection();
@@ -2036,7 +2042,10 @@ void CMainDlg::GotoImage(EImagePosition ePos, int nFlags) {
 	}
 
 	if (bCheckIfSameImage && (m_pFileList == pOldFileList && nOldFrameIndex == nFrameIndex && !m_pFileList->ChangedSinceCheckpoint())) {
-		return; // not placed on a new image, don't do anything
+		if (m_bMovieMode && m_bAutoExit)
+			CleanupAndTerminate();
+		else
+			return; // not placed on a new image, don't do anything
 	}
 
 	if (ePos != POS_Current && ePos != POS_NextAnimation && ePos != POS_Clipboard) {
@@ -2884,7 +2893,7 @@ void CMainDlg::AnimateTransition() {
     }
 }
 
-void CMainDlg::CleanupAndTeminate() {
+void CMainDlg::CleanupAndTerminate() {
     StopMovieMode();
     StopAnimation();
     delete m_pJPEGProvider; // delete this early to properly shut down the loading threads

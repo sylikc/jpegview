@@ -29,6 +29,10 @@ Bugs fixed:
 - Slide shows with alpha blending: Work now also correctly if graphics driver implements alpha blending somewhat inexactly
 - NoStrCmpLogical registry setting also checked in "LOCAL MACHINE" registry hive
 - Fixed size cropping bug fixed
+New features:
+- New command line parameter '/autoexit'. If passed, ESC key will terminate JPEGView also if a slideshow is running or an animated GIF is playing.
+  Additionally it will auto-terminate JPEGView after the slideshow has finished when combined with the '/slideshow' command line parameter.
+  Thanks to SourceForge user manuthie for implementing this.
 
 [1.0.29]
 Bugs fixed:

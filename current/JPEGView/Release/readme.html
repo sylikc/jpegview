@@ -949,6 +949,15 @@
                       <code>jpegview.exe myfilelist.txt /slideshow 3 /effect blend /transitiontime 250 /fullscreen</code>
                     </li>
                     <li>
+                      <code>/autoexit</code><br/>
+                      Terminates JPEGView automatically after having finished the slide show if combined with the /slideshow parameter.<br/>
+                      Setting this parameter also changes the behavior of the ESC key: JPEGView terminates immediately when pressing the ESC key,
+                      also while playing a slideshow or an animated GIF.<br/>
+                      Note that WrapAroundFolder must be set to false in the INI file - otherwise the slideshow does not finish when the
+                      end of the folder is reached.
+                      <br/>
+                    </li>
+                    <li>
                       <code>/fullscreen</code><br/>
                       Starts JPEGView in full screen mode, ignoring the INI file setting that is currently active.
                       <br/>
