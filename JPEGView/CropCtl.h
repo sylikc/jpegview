@@ -17,18 +17,26 @@ public:
 		HH_Top,
 		HH_Bottom
 	};
+
+    enum CropMode {
+        CM_Free,
+        CM_FixedAspectRatio,
+        CM_FixedSize
+    };
 public:
 	CCropCtl(CMainDlg* pMainDlg);
 
 	bool IsCropping() { return m_bCropping; } // during cropping
 	bool IsDoCropping() { return m_bDoCropping; } // during cropping and cropping rectangle visible
 	
-	// Get and set aspect ratio of cropping rectangle, -1 for free cropping
+	// Get and set aspect ratio of cropping rectangle, 0 for free cropping, -1 for fixed size cropping
 	double GetCropRectAR() { return m_dCropRectAspectRatio; }
 	void SetCropRectAR(double dRatio) {  m_dCropRectAspectRatio = dRatio; }
 
 	// Cropping rectangle in image coordinates (in original size image)
 	CRect GetImageCropRect();
+
+    CropMode GetCropMode();
 
 	void OnPaint(CPaintDC& dc); // paints cropping rectangle when in cropping
 	bool OnTimer(int nTimerId);
@@ -64,6 +72,7 @@ private:
 	CPoint m_cropMouse;
 	CPoint m_startTrackMousePos;
 	double m_dCropRectAspectRatio;
+    double m_dLastZoom;
 	int m_nHandleSize;
 	Handle m_eHitHandle;
 
