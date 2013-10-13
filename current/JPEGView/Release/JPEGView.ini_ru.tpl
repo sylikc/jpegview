@@ -38,6 +38,11 @@ FilesProcessedByWIC=*.wdp;*.hdp;*.jxr
 ; —читывание таких встроенных JPEG выполн€етс€ гораздо быстрее, чем декодирование RAW-данных с помощью WIC.
 FileEndingsRAW=*.pef;*.dng;*.crw;*.nef;*.cr2;*.mrw;*.rw2;*.orf;*.x3f;*.arw;*.kdc;*.nrw;*.dcr;*.sr2;*.raf
 
+; If true, reloads the currently displayed image automatically when it is changed by an external program on disk.
+; Also reloads the image list when a file in the current directory is added or deleted.
+; Set to false to turn off this behavior.
+ReloadWhenDisplayedImageChanged=true
+
 ; ÷вет фона в формате R G B, каждый компонент должен быть в диапазоне от 0 до 255, например, "128 128 128" это средне-серый.
 BackgroundColor=0 0 0
 

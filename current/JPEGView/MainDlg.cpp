@@ -46,6 +46,7 @@
 #include "NavigationPanel.h"
 #include "KeyMap.h"
 #include "JPEGLosslessTransform.h"
+#include "DirectoryWatcher.h"
 
 //////////////////////////////////////////////////////////////////////////////////////////////
 // Constants
@@ -264,6 +265,7 @@ CMainDlg::CMainDlg(bool bForceFullScreen) {
 }
 
 CMainDlg::~CMainDlg() {
+    delete m_pDirectoryWatcher;
 	delete m_pFileList;
 	if (m_pJPEGProvider != NULL) delete m_pJPEGProvider;
 	delete m_pImageProcParams;
@@ -283,6 +285,8 @@ LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam
 	HelpersGUI::ScreenScaling = m_fScaling;
 
     ::SetClassLongPtr(m_hWnd, GCLP_HCURSOR, NULL);
+
+    m_pDirectoryWatcher = new CDirectoryWatcher(m_hWnd);
 
 	// determine the monitor rectangle and client rectangle
 	CSettingsProvider& sp = CSettingsProvider::This();
@@ -338,7 +342,7 @@ LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam
 	::ShowCursor(m_bMouseOn);
 
 	// intitialize navigation with startup file (and folder)
-	m_pFileList = new CFileList(m_sStartupFile, (m_eForcedSorting == Helpers::FS_Undefined) ? sp.Sorting() : m_eForcedSorting, sp.WrapAroundFolder());
+	m_pFileList = new CFileList(m_sStartupFile, *m_pDirectoryWatcher, (m_eForcedSorting == Helpers::FS_Undefined) ? sp.Sorting() : m_eForcedSorting, sp.WrapAroundFolder());
 	m_pFileList->SetNavigationMode(sp.Navigation());
 
 	// create thread pool for processing requests on multiple CPU cores
@@ -952,6 +956,21 @@ LRESULT CMainDlg::OnGetDlgCode(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam
 LRESULT CMainDlg::OnJPEGLoaded(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, BOOL& /*bHandled*/) {
 	// route to JPEG provider
 	m_pJPEGProvider->OnJPEGLoaded((int)lParam);
+	return 0;
+}
+
+LRESULT CMainDlg::OnDisplayedFileChangedOnDisk(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, BOOL& /*bHandled*/) {
+	if (CSettingsProvider::This().ReloadWhenDisplayedImageChanged() && m_pCurrentImage != NULL && !m_pCurrentImage->IsClipboardImage()) {
+		ExecuteCommand(IDM_RELOAD);
+	}
+	return 0;
+}
+
+LRESULT CMainDlg::OnActiveDirectoryFilelistChanged(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, BOOL& /*bHandled*/) {
+	if (CSettingsProvider::This().ReloadWhenDisplayedImageChanged() && m_pFileList != NULL && m_pFileList->CurrentFileExists()) {
+		m_pFileList->Reload(NULL, false);
+		Invalidate(FALSE);
+	}
 	return 0;
 }
 
@@ -1768,7 +1787,7 @@ void CMainDlg::OpenFile(LPCTSTR sFileName, bool bAfterStartup) {
 	Helpers::ESorting eOldSorting = m_pFileList->GetSorting();
 	delete m_pFileList;
 	m_sStartupFile = sFileName;
-	m_pFileList = new CFileList(m_sStartupFile, eOldSorting, CSettingsProvider::This().WrapAroundFolder());
+	m_pFileList = new CFileList(m_sStartupFile, *m_pDirectoryWatcher, eOldSorting, CSettingsProvider::This().WrapAroundFolder());
 	// free current image and all read ahead images
 	InitParametersForNewImage();
 	m_pJPEGProvider->NotifyNotUsed(m_pCurrentImage);
@@ -2452,6 +2471,7 @@ void CMainDlg::ExchangeProcessingParams() {
 
 void CMainDlg::AfterNewImageLoaded(bool bSynchronize, bool bAfterStartup) {
 	UpdateWindowTitle();
+	m_pDirectoryWatcher->SetCurrentFile(CurrentFileName(false));
 	if (!m_bIsAnimationPlaying) m_pNavPanelCtl->HideNavPanelTemporary();
 	m_pPanelMgr->AfterNewImageLoaded();
 	m_pCropCtl->AbortCropping();

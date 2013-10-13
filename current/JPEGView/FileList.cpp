@@ -2,6 +2,7 @@
 #include "FileList.h"
 #include "SettingsProvider.h"
 #include "Helpers.h"
+#include "DirectoryWatcher.h"
 #include "Shlwapi.h"
 
 ///////////////////////////////////////////////////////////////////////////////////
@@ -168,9 +169,10 @@ static LPCTSTR* GetSupportedFileEndingList() {
     return sFileEndings;
 }
 
-CFileList::CFileList(const CString & sInitialFile, Helpers::ESorting eInitialSorting, bool bWrapAroundFolder, int nLevel) {
-	CFileDesc::SetSorting(eInitialSorting);
+CFileList::CFileList(const CString & sInitialFile, CDirectoryWatcher & directoryWatcher, Helpers::ESorting eInitialSorting, bool bWrapAroundFolder, int nLevel)
+    : m_directoryWatcher(directoryWatcher) {
 
+	CFileDesc::SetSorting(eInitialSorting);
 	m_bDeleteHistory = true;
 	m_bWrapAroundFolder = bWrapAroundFolder;
 	m_sInitialFile = sInitialFile;
@@ -191,6 +193,8 @@ CFileList::CFileList(const CString & sInitialFile, Helpers::ESorting eInitialSor
     }
 	m_bIsSlideShowList = !bIsDirectory && !bImageFile && TryReadingSlideShowList(sInitialFile);
 	m_nMarkedIndexShow = -1;
+
+    m_directoryWatcher.SetCurrentDirectory(m_sDirectory);
 
 	if (!m_bIsSlideShowList) {
 		if (bImageFile || bIsDirectory) {
@@ -228,7 +232,7 @@ CString CFileList::GetSupportedFileEndings() {
 	return sList;
 }
 
-void CFileList::Reload(LPCTSTR sFileName) {
+void CFileList::Reload(LPCTSTR sFileName, bool clearForwardHistory) {
 	LPCTSTR sCurrent = sFileName;
 	if (sCurrent == NULL) {
 		sCurrent = Current();
@@ -239,14 +243,16 @@ void CFileList::Reload(LPCTSTR sFileName) {
 
 	CString sCurrentFile = sCurrent;
 
-	// delete the chain of CFileLists forward
-	CFileList* pFileList = this->m_next;
-	while (pFileList != NULL && pFileList->m_prev != NULL) {
-		CFileList* thisList = pFileList;
-		pFileList = pFileList->m_next;
-		delete thisList;
+	if (clearForwardHistory) {
+		// delete the chain of CFileLists forward
+		CFileList* pFileList = this->m_next;
+		while (pFileList != NULL && pFileList->m_prev != NULL) {
+			CFileList* thisList = pFileList;
+			pFileList = pFileList->m_next;
+			delete thisList;
+		}
+		m_next = NULL;
 	}
-	m_next = NULL;
 
 	if (!m_bIsSlideShowList) {
 		FindFiles();
@@ -256,6 +262,13 @@ void CFileList::Reload(LPCTSTR sFileName) {
 		m_iterStart = m_fileList.begin();
 	}
 	m_iter = FindFile(sCurrentFile); // go again to current file
+}
+
+bool CFileList::CurrentFileExists() const {
+	if (Current() != NULL) {
+		return ::GetFileAttributes(Current()) != INVALID_FILE_ATTRIBUTES;
+	}
+	return false;
 }
 
 void CFileList::FileHasRenamed(LPCTSTR sOldFileName, LPCTSTR sNewFileName) {
@@ -671,7 +684,7 @@ CFileList* CFileList::TryCreateFileList(const CString& directory, int nNewLevel)
 		pList = pList->m_prev;
 	}
 
-	CFileList* pNewList = new CFileList(directory, CFileDesc::GetSorting(), m_bWrapAroundFolder, nNewLevel);
+	CFileList* pNewList = new CFileList(directory, m_directoryWatcher, CFileDesc::GetSorting(), m_bWrapAroundFolder, nNewLevel);
 	if (pNewList->m_fileList.size() > 0) {
 		pNewList->m_prev = this;
 		m_next = pNewList;

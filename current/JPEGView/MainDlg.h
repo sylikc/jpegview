@@ -27,6 +27,7 @@ class CInfoButtonPanelCtl;
 class CZoomNavigatorCtl;
 class CCropCtl;
 class CKeyMap;
+class CDirectoryWatcher;
 
 enum EMouseEvent;
 
@@ -77,6 +78,8 @@ public:
 		MESSAGE_HANDLER(WM_CONTEXTMENU, OnContextMenu)
 		MESSAGE_HANDLER(WM_CTLCOLOREDIT, OnCtlColorEdit)
 		MESSAGE_HANDLER(WM_JPEG_LOAD_COMPLETED, OnJPEGLoaded)
+		MESSAGE_HANDLER(WM_DISPLAYED_FILE_CHANGED_ON_DISK, OnDisplayedFileChangedOnDisk)
+        MESSAGE_HANDLER(WM_ACTIVE_DIRECTORY_FILELIST_CHANGED, OnActiveDirectoryFilelistChanged)
 		MESSAGE_HANDLER(WM_DROPFILES, OnDropFiles)
         MESSAGE_HANDLER(WM_CLOSE, OnClose)
 		//MESSAGE_HANDLER(WM_ANOTHER_INSTANCE_QUIT, OnAnotherInstanceStarted)
@@ -117,6 +120,8 @@ public:
 	LRESULT OnContextMenu(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);
 	LRESULT OnCtlColorEdit(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);
 	LRESULT OnJPEGLoaded(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, BOOL& /*bHandled*/);
+	LRESULT OnDisplayedFileChangedOnDisk(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, BOOL& /*bHandled*/);
+    LRESULT OnActiveDirectoryFilelistChanged(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, BOOL& /*bHandled*/);
 	LRESULT OnDropFiles(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, BOOL& /*bHandled*/);
 	LRESULT OnAnotherInstanceStarted(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, BOOL& /*bHandled*/);
     LRESULT OnLoadFileAsynch(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, BOOL& /*bHandled*/);
@@ -218,6 +223,7 @@ private:
     bool m_bAutoExit;
     Helpers::ESorting m_eForcedSorting; // forced sorting mode on command line
 	CFileList* m_pFileList; // used for navigation
+    CDirectoryWatcher* m_pDirectoryWatcher; // notifies the main window when the current file changed or a file in the current directory was added or deleted
 	CJPEGProvider * m_pJPEGProvider; // reads JPEG files (read ahead)
 	CJPEGImage * m_pCurrentImage; // currently displayed image
 	bool m_bOutOfMemoryLastImage; // true if the last image could not be requested because not enough memory
