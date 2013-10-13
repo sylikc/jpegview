@@ -94,6 +94,7 @@ public:
 	bool RTAutoCrop() { return m_bRTAutoCrop; }
 	bool RTPreserveAspectRatio() { return m_bRTPreserveAspectRatio; }
     LPCTSTR FileNameFormat() { return m_sFileNameFormat; }
+    bool ReloadWhenDisplayedImageChanged() { return m_bReloadWhenDisplayedImageChanged; }
 
 	std::list<CUserCommand*> & UserCommandList() { return m_userCommands; }
 
@@ -201,6 +202,7 @@ private:
 	bool m_bRTAutoCrop;
 	bool m_bRTPreserveAspectRatio;
     CString m_sFileNameFormat;
+    bool m_bReloadWhenDisplayedImageChanged;
 
 	std::list<CUserCommand*> m_userCommands;
 

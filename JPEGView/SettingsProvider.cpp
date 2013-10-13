@@ -274,6 +274,7 @@ void CSettingsProvider::ReadWriteableINISettings() {
 	m_bRTPreserveAspectRatio = GetBool(_T("RTPreserveAspectRatio"), true);
     m_sFileNameFormat = GetString(_T("FileNameFormat"), _T("%index% %filepath%"));
     m_sFileNameFormat = ReplacePlaceholdersFileNameFormat(m_sFileNameFormat);
+    m_bReloadWhenDisplayedImageChanged = GetBool(_T("ReloadWhenDisplayedImageChanged"), true);
 }
 
 CImageProcessingParams CSettingsProvider::LandscapeModeParams(const CImageProcessingParams& templParams) {

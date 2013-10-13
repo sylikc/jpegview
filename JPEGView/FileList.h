@@ -2,6 +2,8 @@
 
 #include "Helpers.h"
 
+class CDirectoryWatcher;
+
 // Entry in the file list, allowing to sort by name, creation date and modification date
 class CFileDesc 
 {
@@ -49,14 +51,14 @@ public:
 	// (must end with backslash in this case) or a text file containing file names to display.
 	// Supported text files are ANSI, Unicode or UTF-8.
 	// nLevel is increased when recursively create lists for sub-folders
-	CFileList(const CString & sInitialFile, Helpers::ESorting eInitialSorting, bool bWrapAroundFolder, int nLevel = 0);
+	CFileList(const CString & sInitialFile, CDirectoryWatcher & directoryWatcher, Helpers::ESorting eInitialSorting, bool bWrapAroundFolder, int nLevel = 0);
 	~CFileList();
 
 	// Gets a list of all supported file endings, separated by semicolon
 	static CString GetSupportedFileEndings();
 
 	// Reload file list for given file, if NULL for current file
-	void Reload(LPCTSTR sFileName = NULL);
+	void Reload(LPCTSTR sFileName = NULL, bool clearForwardHistory = true);
 
 	// Tells the file list that a file has been renamed externally
 	void FileHasRenamed(LPCTSTR sOldFileName, LPCTSTR sNewFileName);
@@ -113,6 +115,9 @@ public:
 	// Returns if the current file list is based on a slide show text file
 	bool IsSlideShowList() const { return m_bIsSlideShowList; }
 
+	// Returns if the current file exists
+	bool CurrentFileExists() const;
+
 	// Returns the raw file list of the current folder
 	std::list<CFileDesc> & GetFileList() { return m_fileList; }
 
@@ -136,6 +141,8 @@ private:
 	CString m_sMarkedFile;
 	CString m_sMarkedFileCurrent;
 	int m_nMarkedIndexShow;
+
+    CDirectoryWatcher & m_directoryWatcher;
 
 	void DeleteHistory();
 	void MoveIterToLast();

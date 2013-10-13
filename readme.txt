@@ -24,7 +24,7 @@ to JPEGView\Debug
 Changelog
 *********
 
-[1.0.29.1]
+[1.0.30]
 Bugs fixed:
 - Slide shows with alpha blending: Work now also correctly if graphics driver implements alpha blending somewhat inexactly
 - NoStrCmpLogical registry setting also checked in "LOCAL MACHINE" registry hive
@@ -36,6 +36,9 @@ New features:
 - New placeholders that can be used in user commands:
   %exepath% : Path to EXE folder where JPEGView is running
   %exedrive% : Drive letter of the EXE path, e.g. "c:"
+- Displayed image is reloaded automatically when it changes on disk, using a file system change notifier.
+  The image list of the current directory is also reloaded when images are added or deleted in this directory.
+  To disable the file system notifier, set ReloadWhenDisplayedImageChanged=false in the INI file
 
 [1.0.29]
 Bugs fixed:
