@@ -39,6 +39,8 @@ New features:
 - Displayed image is reloaded automatically when it changes on disk, using a file system change notifier.
   The image list of the current directory is also reloaded when images are added or deleted in this directory.
   To disable the file system notifier, set ReloadWhenDisplayedImageChanged=false in the INI file
+- When canceling the 'Open file' dialog after startup, JPEGView is not terminated but an empty window is shown with some hints what to do.
+  Can be used e.g. to paste images from clipboard.
 
 [1.0.29]
 Bugs fixed:
