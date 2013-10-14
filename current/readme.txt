@@ -26,7 +26,7 @@ Changelog
 
 [1.0.30]
 Bugs fixed:
-- Slide shows with alpha blending: Work now also correctly if graphics driver implements alpha blending somewhat inexactly
+- Slide shows with alpha blending: maybe now also works correctly if graphics driver implements alpha blending somewhat inexactly
 - NoStrCmpLogical registry setting also checked in "LOCAL MACHINE" registry hive
 - Fixed size cropping bug fixed
 New features:

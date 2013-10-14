@@ -15,6 +15,8 @@
 	int16* name = (int16*)((((PTR_INTEGRAL_TYPE)&(_tempVal##name) + 15) & ~15)); \
 	name[0] = name[1] = name[2] = name[3] = name[4] = name[5] = name[6] = name[7] = initializer;
 
+#define ALPHA_OPAQUE 0xFF000000
+
 // holds last resize timing info
 static TCHAR s_TimingInfo[256];
 
@@ -125,7 +127,7 @@ void* CBasicProcessing::Apply3ChannelLUT32bpp(int nWidth, int nHeight, const voi
 		for (int i = 0; i < nWidth; i++) {
 			uint32 nSrcPixels = *pSrc;
 			*pTgt = pLUT[nSrcPixels & 0xFF] + pLUT[256 + ((nSrcPixels >> 8) & 0xFF)] * 256 + 
-				pLUT[512 + ((nSrcPixels >> 16) & 0xFF)] * 65536;
+				pLUT[512 + ((nSrcPixels >> 16) & 0xFF)] * 65536 + ALPHA_OPAQUE;
 			pTgt++; pSrc++;
 		}
 	}
@@ -153,7 +155,7 @@ void* CBasicProcessing::ApplySaturationAnd3ChannelLUT32bpp(int nWidth, int nHeig
 			int32 nGreen = pSatLUTs[768 + nSrcRed] + pSatLUTs[1024 + nSrcGreen] + pSatLUTs[512 + nSrcBlue];
 			int32 nBlue = pSatLUTs[768 + nSrcRed] + pSatLUTs[256 + nSrcGreen] + pSatLUTs[1280 + nSrcBlue];
 			*pTgt = pLUT[max(0, min(cnMax, nBlue)) >> 16] + pLUT[256 + (max(0, min(cnMax, nGreen)) >> 16)] * 256 + 
-				pLUT[512 + (max(0, min(cnMax, nRed)) >> 16)] * 65536;
+				pLUT[512 + (max(0, min(cnMax, nRed)) >> 16)] * 65536 + ALPHA_OPAQUE;
 			pTgt++; pSrc++;
 		}
 	}
@@ -240,7 +242,7 @@ void* CBasicProcessing::ApplyLDC32bpp_Core(CSize fullTargetSize, CPoint fullTarg
 				uint32 nRed = pLUT[((nSrcPixels >> 16) & 0xFF) + 512];
 				nRed = nRed + (nMaskValue*pMulLUT[nRed] >> 14);
 
-				*pTgt = max(0, min(255, (int)nBlue)) + max(0, min(255, (int)nGreen))*256 + max(0, min(255, (int)nRed))*65536;
+				*pTgt = max(0, min(255, (int)nBlue)) + max(0, min(255, (int)nGreen))*256 + max(0, min(255, (int)nRed))*65536 + ALPHA_OPAQUE;
 				pTgt++; pSrc++;
 				nCurX += nIncrementX;
 			}
@@ -272,7 +274,7 @@ void* CBasicProcessing::ApplyLDC32bpp_Core(CSize fullTargetSize, CPoint fullTarg
 				nRed = pLUT[(max(0, min(cnMax, nRed)) >> 16) + 512];
 				nRed = nRed + (nMaskValue*pMulLUT[nRed] >> 14);
 
-				*pTgt = max(0, min(255, (int)nBlue)) + max(0, min(255, (int)nGreen))*256 + max(0, min(255, (int)nRed))*65536;
+				*pTgt = max(0, min(255, (int)nBlue)) + max(0, min(255, (int)nGreen))*256 + max(0, min(255, (int)nRed))*65536 + ALPHA_OPAQUE;
 				pTgt++; pSrc++;
 				nCurX += nIncrementX;
 			}
@@ -326,7 +328,7 @@ void CBasicProcessing::DimRectangle32bpp(int nWidth, int nHeight, void* pDIBPixe
 		uint32* pLine = pSrc;
 		for (int i = 0; i < rectTarget.Width(); i++) {
 			uint32 nPixel = *pLine;
-			*pLine++ = alphaLUT[nPixel & 0xFF] + 256*alphaLUT[(nPixel >> 8) & 0xFF] + 65536*alphaLUT[(nPixel >> 16) & 0xFF];
+			*pLine++ = alphaLUT[nPixel & 0xFF] + 256*alphaLUT[(nPixel >> 8) & 0xFF] + 65536*alphaLUT[(nPixel >> 16) & 0xFF] + ALPHA_OPAQUE;
 		}
 		pSrc += nWidth;
 	}
@@ -339,6 +341,7 @@ void CBasicProcessing::FillRectangle32bpp(int nWidth, int nHeight, void* pDIBPix
 		return;
 	}
 
+	color = color | ALPHA_OPAQUE;
 	uint32* pSrc = (uint32*) pDIBPixels + rectTarget.top*nWidth + rectTarget.left;
 	for (int j = 0; j < rectTarget.Height(); j++) {
 		uint32* pLine = pSrc;
@@ -466,7 +469,7 @@ void* CBasicProcessing::Convert8bppTo32bppDIB(int nWidth, int nHeight, const voi
 	const uint8* pSourceDIB = (uint8*)pDIBPixels;
 	for (int j = 0; j < nHeight; j++) {
 		for (int i = 0; i < nWidth; i++) {
-			*pTargetDIB++ = pPalette[4 * *pSourceDIB] + pPalette[4 * *pSourceDIB + 1] * 256 + pPalette[4 * *pSourceDIB + 2] * 65536;
+			*pTargetDIB++ = pPalette[4 * *pSourceDIB] + pPalette[4 * *pSourceDIB + 1] * 256 + pPalette[4 * *pSourceDIB + 2] * 65536 + ALPHA_OPAQUE;
 			pSourceDIB ++;
 		}
 		pSourceDIB += nPadS;
@@ -510,7 +513,7 @@ void* CBasicProcessing::Convert1To4Channels(int nWidth, int nHeight, const void*
 	const uint8* pSource = (uint8*)pIJLPixels;
 	for (int j = 0; j < nHeight; j++) {
 		for (int i = 0; i < nWidth; i++) {
-			*pTarget++ = *pSource + *pSource * 256 + *pSource * 65536;
+			*pTarget++ = *pSource + *pSource * 256 + *pSource * 65536 + ALPHA_OPAQUE;
 			pSource++;
 		}
 		pSource += nPadSrc;
@@ -526,7 +529,7 @@ void* CBasicProcessing::Convert16bppGrayTo32bppDIB(int nWidth, int nHeight, cons
 	for (int j = 0; j < nHeight; j++) {
 		for (int i = 0; i < nWidth; i++) {
 			int nSourceValue = *pSource++ >> 6; // from 14 to 8 bits
-			*pTarget++ = nSourceValue + nSourceValue * 256 + nSourceValue * 65536;
+			*pTarget++ = nSourceValue + nSourceValue * 256 + nSourceValue * 65536 + ALPHA_OPAQUE;
 		}
 	}
 	return pNewDIB;
@@ -544,7 +547,7 @@ void* CBasicProcessing::Convert3To4Channels(int nWidth, int nHeight, const void*
 	const uint8* pSource = (uint8*)pIJLPixels;
 	for (int j = 0; j < nHeight; j++) {
 		for (int i = 0; i < nWidth; i++) {
-			*pTarget++ = pSource[0] + pSource[1] * 256 + pSource[2] * 65536;
+			*pTarget++ = pSource[0] + pSource[1] * 256 + pSource[2] * 65536 + ALPHA_OPAQUE;
 			pSource += 3;
 		}
 		pSource += nPadSrc;
@@ -561,7 +564,8 @@ void* CBasicProcessing::ConvertGdiplus32bppRGB(int nWidth, int nHeight, int nStr
 	uint32* pTgt = pNewDIB;
 	const uint8* pSrc = (const uint8*)pGdiplusPixels;
 	for (int j = 0; j < nHeight; j++) {
-		memcpy(pTgt, pSrc, nWidth*4);
+        for (int i = 0; i < nWidth; i++)
+            pTgt[i] = ((uint32*)pSrc)[i] | ALPHA_OPAQUE;
 		pTgt += nWidth;
 		pSrc += nStride;
 	}
@@ -650,7 +654,7 @@ void* CBasicProcessing::PointSample(CSize fullTargetSize, CPoint fullTargetOffse
 				pDst[d] = pSrc[s];
 				pDst[d+1] = pSrc[s+1];
 				pDst[d+2] = pSrc[s+2];
-				pDst[d+3] = 0;
+				pDst[d+3] = 0xFF;
 				nCurX += nIncrementX;
 			}
 		} else {
@@ -687,7 +691,7 @@ void* CBasicProcessing::PointSampleWithRotation(CSize fullTargetSize, CPoint ful
 	uint8* pDIB = new(std::nothrow) uint8[clippedTargetSize.cx*4 * clippedTargetSize.cy];
 	if (pDIB == NULL) return NULL;
 
-	uint32 nBackColor = (GetRValue(backColor) << 16) + (GetGValue(backColor) << 8) + GetBValue(backColor);
+	uint32 nBackColor = (GetRValue(backColor) << 16) + (GetGValue(backColor) << 8) + GetBValue(backColor) + ALPHA_OPAQUE;
 	double dFirstX = -(sourceSize.cx - 1) * 0.5;
 	double dFirstY = -(sourceSize.cy - 1) * 0.5;
 	double dIncX1 = dFirstX + ((fullTargetSize.cx == 1) ? 0 : (double)(sourceSize.cx)/(fullTargetSize.cx - 1));
@@ -727,7 +731,7 @@ void* CBasicProcessing::PointSampleWithRotation(CSize fullTargetSize, CPoint ful
 					pDst[d] = pSrc[0];
 					pDst[d+1] = pSrc[1];
 					pDst[d+2] = pSrc[2];
-					pDst[d+3] = 0;
+					pDst[d+3] = 0xFF;
 				} else {
 					*((uint32*)pDst + i) = nBackColor;
 				}
@@ -845,7 +849,7 @@ void* CBasicProcessing::PointSampleTrapezoid(CSize fullTargetSize, const CTrapez
 	float fIncrementTx1 = ((float)(fullTargetTrapezoid.x2s - fullTargetTrapezoid.x1s))/fullTargetTrapezoid.Height();
 	float fIncrementTx2 = ((float)(fullTargetTrapezoid.x2e - fullTargetTrapezoid.x1e))/fullTargetTrapezoid.Height();
 
-	uint32 nBackColor = (GetRValue(backColor) << 16) + (GetGValue(backColor) << 8) + GetBValue(backColor);
+	uint32 nBackColor = (GetRValue(backColor) << 16) + (GetGValue(backColor) << 8) + GetBValue(backColor) + ALPHA_OPAQUE;
 	int nPaddedSourceWidth = Helpers::DoPadding(sourceSize.cx * nChannels, 4);
 	const uint8* pSrc = NULL;
 	uint8* pDst = pDIB;
@@ -866,7 +870,7 @@ void* CBasicProcessing::PointSampleTrapezoid(CSize fullTargetSize, const CTrapez
 					pDst[d] = pSrc[s];
 					pDst[d+1] = pSrc[s+1];
 					pDst[d+2] = pSrc[s+2];
-					pDst[d+3] = 0;
+					pDst[d+3] = 0xFF;
 				} else {
 					((uint32*)pDst)[i] = nBackColor;
 				}
@@ -924,7 +928,7 @@ static void InterpolateBicubic(const uint8* pSource, uint8* pDest, int16* pKerne
 		*pDest++ = min(255, max(0, nSum));
 		pSource++;
 	}
-	if (nChannels == 3) *pDest = 0;
+	if (nChannels == 3) *pDest = 0xFF;
 }
 
 static inline void Get4Pixels(const uint8* pSrc, uint8 dest[4], int nFrom, int nTo, int nChannels, uint32 nFill) {
@@ -981,7 +985,7 @@ static void InterpolateBicubicBorder(const uint8* pSource, uint8* pDest, int16* 
 		*pDest++ = min(255, max(0, nSum));
 		pSource++;
 	}
-	if (nChannels == 3) *pDest = 0;
+	if (nChannels == 3) *pDest = 0xFF;
 }
 
 void* CBasicProcessing::RotateHQ_Core(CPoint targetOffset, CSize targetSize, double dRotation, CSize sourceSize, 
@@ -1011,7 +1015,7 @@ void* CBasicProcessing::RotateHQ_Core(CPoint targetOffset, CSize targetSize, dou
 	int16* pKernels = new int16[NUM_KERNELS_BICUBIC * 4];
 	CResizeFilter::GetBicubicFilterKernels(NUM_KERNELS_BICUBIC, pKernels);
 
-	uint32 nBackColor = (GetRValue(backColor) << 16) + (GetGValue(backColor) << 8) + GetBValue(backColor);
+	uint32 nBackColor = (GetRValue(backColor) << 16) + (GetGValue(backColor) << 8) + GetBValue(backColor) + ALPHA_OPAQUE;
 	int nPaddedSourceWidth = Helpers::DoPadding(sourceSize.cx * nChannels, 4);
 	const uint8* pSrc = NULL;
 	uint8* pDst = (uint8*)pTargetPixels;
@@ -1089,7 +1093,7 @@ static void InterpolateBicubicX(const uint16* pSource, uint8* pDest, int16* pKer
 		*pDest++ = min(255, max(0, nSum));
 		pSource++;
 	}
-	*pDest = 0;
+	*pDest = 0XFF;
 }
 
 // Same as method above but with border handling, assuming that the filter kernels are only evaluated from nXFrom to nXTo
@@ -1110,7 +1114,7 @@ static void InterpolateBicubicBorderX(const uint16* pSource, uint8* pDest, int16
 		*pDest++ = min(255, max(0, nSum));
 		pSource++;
 	}
-	*pDest = 0;
+	*pDest = 0xFF;
 }
 
 // Bicubic interpolation in y of one line in the image
@@ -1148,7 +1152,7 @@ void* CBasicProcessing::TrapezoidHQ_Core(CPoint targetOffset, CSize targetSize, 
 	float fIncrementTx1 = ((float)(trapezoid.x2s - trapezoid.x1s))/trapezoid.Height();
 	float fIncrementTx2 = ((float)(trapezoid.x2e - trapezoid.x1e))/trapezoid.Height();
 
-	uint32 nBackColor = (GetRValue(backColor) << 16) + (GetGValue(backColor) << 8) + GetBValue(backColor);
+	uint32 nBackColor = (GetRValue(backColor) << 16) + (GetGValue(backColor) << 8) + GetBValue(backColor) + ALPHA_OPAQUE;
 	int nPaddedSourceWidth = Helpers::DoPadding(sourceSize.cx * nChannels, 4);
 	uint8* pDst = (uint8*)pTargetPixels;
 	fTx1 = fTx1 + targetOffset.y*fIncrementTx1;
@@ -1273,7 +1277,7 @@ static uint8* ApplyFilter(int nSourceWidth, int nTargetWidth, int nHeight,
 			*pTargetPixel++ = (uint8)max(0, min(255, nPixelValue1));
 			*pTargetPixel++ = (uint8)max(0, min(255, nPixelValue2));
 			*pTargetPixel++ = (uint8)max(0, min(255, nPixelValue3));
-			*pTargetPixel++ = 0;
+			*pTargetPixel++ = 0xFF;
 			// rotate: go to next row in target - width of target is nHeight
 			pTargetPixel = pTargetPixel - 4 + nHeight*4;
 			nX += nIncrementX_FP;
@@ -1541,14 +1545,14 @@ static void RotateBlockToDIB(const int16* pSrc, uint8* pTgt, int nWidth, int nHe
 	for (int i = 0; i < nBlockHeight; i++) {
 		for (int j = 0; j < nLoopX; j++) {
 			uint8* pSaveTarget = pTarget;
-			*((uint32*)pTarget) = 0; *pTarget = *pSource++ >> 6; pTarget += nIncTargetLine;
-			*((uint32*)pTarget) = 0; *pTarget = *pSource++ >> 6; pTarget += nIncTargetLine;
-			*((uint32*)pTarget) = 0; *pTarget = *pSource++ >> 6; pTarget += nIncTargetLine;
-			*((uint32*)pTarget) = 0; *pTarget = *pSource++ >> 6; pTarget += nIncTargetLine;
-			*((uint32*)pTarget) = 0; *pTarget = *pSource++ >> 6; pTarget += nIncTargetLine;
-			*((uint32*)pTarget) = 0; *pTarget = *pSource++ >> 6; pTarget += nIncTargetLine;
-			*((uint32*)pTarget) = 0; *pTarget = *pSource++ >> 6; pTarget += nIncTargetLine;
-			*((uint32*)pTarget) = 0; *pTarget = *pSource++ >> 6;
+			*((uint32*)pTarget) = ALPHA_OPAQUE; *pTarget = *pSource++ >> 6; pTarget += nIncTargetLine;
+			*((uint32*)pTarget) = ALPHA_OPAQUE; *pTarget = *pSource++ >> 6; pTarget += nIncTargetLine;
+			*((uint32*)pTarget) = ALPHA_OPAQUE; *pTarget = *pSource++ >> 6; pTarget += nIncTargetLine;
+			*((uint32*)pTarget) = ALPHA_OPAQUE; *pTarget = *pSource++ >> 6; pTarget += nIncTargetLine;
+			*((uint32*)pTarget) = ALPHA_OPAQUE; *pTarget = *pSource++ >> 6; pTarget += nIncTargetLine;
+			*((uint32*)pTarget) = ALPHA_OPAQUE; *pTarget = *pSource++ >> 6; pTarget += nIncTargetLine;
+			*((uint32*)pTarget) = ALPHA_OPAQUE; *pTarget = *pSource++ >> 6; pTarget += nIncTargetLine;
+			*((uint32*)pTarget) = ALPHA_OPAQUE; *pTarget = *pSource++ >> 6;
 			pSaveTarget++;
 			pTarget = pSaveTarget;
 			*pTarget = *pSource++ >> 6; pTarget += nIncTargetLine;
@@ -2147,7 +2151,7 @@ void* CBasicProcessing::UnsharpMask_Core(CSize fullSize, CPoint offset, CSize re
 			pTargetPixelLine[1] = min(255, max(0, nGreen));
 			pTargetPixelLine[2] = min(255, max(0, nRed));
 			if (nChannels == 4) {
-				pTargetPixelLine[3] = 0;
+				pTargetPixelLine[3] = 0xFF;
 			}
 			pSourcePixelLine += nChannels;
 			pTargetPixelLine += nChannels;
