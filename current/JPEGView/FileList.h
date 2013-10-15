@@ -118,6 +118,9 @@ public:
 	// Returns if the current file exists
 	bool CurrentFileExists() const;
 
+    // Returns if the current file exists and can be opened for reading
+    bool CanOpenCurrentFileForReading() const;
+
 	// Returns the raw file list of the current folder
 	std::list<CFileDesc> & GetFileList() { return m_fileList; }
 

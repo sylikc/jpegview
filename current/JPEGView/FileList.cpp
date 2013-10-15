@@ -498,6 +498,19 @@ void CFileList::ToggleBetweenMarkedAndCurrentFile() {
 	m_nMarkedIndexShow = (m_nMarkedIndexShow + 1) & 1;
 }
 
+bool CFileList::CanOpenCurrentFileForReading() const
+{
+    LPCTSTR sCurrentFile = Current();
+    if (sCurrentFile != NULL && sCurrentFile[0] != 0) {
+	    HANDLE hFile = ::CreateFile(Current(), GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, 0, NULL);
+	    if (hFile != NULL) {
+		    ::CloseHandle(hFile);
+		    return true;
+	    }
+    }
+	return false;
+}
+
 ///////////////////////////////////////////////////////////////////////////////////
 // Private
 ///////////////////////////////////////////////////////////////////////////////////
