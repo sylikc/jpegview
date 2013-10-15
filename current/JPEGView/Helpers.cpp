@@ -428,7 +428,7 @@ CString GetJPEGComment(void* pJPEGStream, int nStreamLength) {
 
     CString sConvertedFromUTF8 = TryConvertFromUTF8(pComment, nCommentLen);
     if (!sConvertedFromUTF8.IsEmpty()) {
-        return sConvertedFromUTF8;
+		return (sConvertedFromUTF8.Find(_T("Intel(R) JPEG Library")) != -1) ? CString("") : sConvertedFromUTF8;
     }
 
 	// check if this is a reasonable string - it must contain enough characters between a and z and A and Z
