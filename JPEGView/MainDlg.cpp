@@ -405,6 +405,7 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 		s_bFirst = false;
 		if (m_sStartupFile.IsEmpty()) {
 			OpenFile(true, true);
+            Invalidate(TRUE);
 		}
 	}
 
@@ -966,7 +967,8 @@ LRESULT CMainDlg::OnJPEGLoaded(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, 
 }
 
 LRESULT CMainDlg::OnDisplayedFileChangedOnDisk(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, BOOL& /*bHandled*/) {
-	if (CSettingsProvider::This().ReloadWhenDisplayedImageChanged() && m_pCurrentImage != NULL && !m_pCurrentImage->IsClipboardImage()) {
+	if (CSettingsProvider::This().ReloadWhenDisplayedImageChanged() && m_pCurrentImage != NULL && !m_pCurrentImage->IsClipboardImage() &&
+        m_pFileList != NULL && m_pFileList->CanOpenCurrentFileForReading()) {
 		ExecuteCommand(IDM_RELOAD);
 	}
 	return 0;
