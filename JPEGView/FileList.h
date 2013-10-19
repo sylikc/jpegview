@@ -75,6 +75,8 @@ public:
 	void First();
 	// Move to last file in current folder (according to sort order)
 	void Last();
+    // Move away from current image, either forward or backward (if on last image)
+    CFileList* AwayFromCurrent();
 	// Filename (with path) of the current item in the list, NULL if none
 	LPCTSTR Current() const;
 	// File title of the current item in the list, NULL if none

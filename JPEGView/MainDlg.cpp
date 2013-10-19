@@ -1922,35 +1922,36 @@ void CMainDlg::HandleUserCommands(uint32 virtualKeyCode) {
 	for (iter = userCmdList.begin( ); iter != userCmdList.end( ); iter++ ) {
 		if ((*iter)->GetKeyCode() == virtualKeyCode) {
 			MouseOn();
-			if ((*iter)->Execute(this->m_hWnd, CurrentFileName(false))) {
+            LPCTSTR sCurrentFileName = CurrentFileName(false);
+			if ((*iter)->CanExecute(this->m_hWnd, sCurrentFileName)) {
 				bool bReloadCurrent = false;
-				// First go to next, then reload (else we get into troubles when the current image was deleted or moved)
+				// First go to next, then execute the command and reload current file.
+                // Otherwise we get into troubles when the current image was deleted or moved.
 				if ((*iter)->MoveToNextAfterCommand()) {
-                    LPCTSTR sCurrentFile = m_pFileList->Current();
-                    LPCTSTR sNextFile = m_pFileList->PeekNextPrev(1, true, false);
-                    EImagePosition pos = (sCurrentFile == NULL || sNextFile == NULL || _tcscmp(sCurrentFile, sNextFile) == 0) ? POS_Previous : POS_Next;
                     // don't send a request if we reload all, it would be canceled anyway later
-					GotoImage(pos, (*iter)->NeedsReloadAll() ? NO_REQUEST : 0);
+					GotoImage(POS_AwayFromCurrent, (*iter)->NeedsReloadAll() ? NO_REQUEST : 0);
 				}
-				if ((*iter)->NeedsReloadAll()) {
-					m_pFileList->Reload();
-					m_pJPEGProvider->NotifyNotUsed(m_pCurrentImage);
-					m_pJPEGProvider->ClearAllRequests();
-					m_pCurrentImage = NULL;
-					bReloadCurrent = true;
-				} else {
-					if ((*iter)->NeedsReloadFileList()) {
-						m_pFileList->Reload();
-						bReloadCurrent = m_pFileList->Current() == NULL; // needs "reload" in this case
-                        Invalidate();
-					}
-					if ((*iter)->NeedsReloadCurrent() && !(*iter)->MoveToNextAfterCommand()) {
-						bReloadCurrent = true;
-					}
-				}
-				if (bReloadCurrent) {
-					GotoImage(POS_Current);
-				}
+                if ((*iter)->Execute(this->m_hWnd, sCurrentFileName)) {
+				    if ((*iter)->NeedsReloadAll()) {
+					    m_pFileList->Reload();
+					    m_pJPEGProvider->NotifyNotUsed(m_pCurrentImage);
+					    m_pJPEGProvider->ClearAllRequests();
+					    m_pCurrentImage = NULL;
+					    bReloadCurrent = true;
+				    } else {
+					    if ((*iter)->NeedsReloadFileList()) {
+						    m_pFileList->Reload();
+						    bReloadCurrent = m_pFileList->Current() == NULL; // needs "reload" in this case
+                            Invalidate();
+					    }
+					    if ((*iter)->NeedsReloadCurrent() && !(*iter)->MoveToNextAfterCommand()) {
+						    bReloadCurrent = true;
+					    }
+				    }
+				    if (bReloadCurrent) {
+					    GotoImage(POS_Current);
+				    }
+                }
 			}
 			break;
 		}
@@ -2068,6 +2069,9 @@ void CMainDlg::GotoImage(EImagePosition ePos, int nFlags) {
 		case POS_Clipboard:
 			bCheckIfSameImage = false; // do something even when not moving iterator on filelist
 			break;
+        case POS_AwayFromCurrent:
+            m_pFileList = m_pFileList->AwayFromCurrent();
+            break;
 	}
 
 	if (bCheckIfSameImage && (m_pFileList == pOldFileList && nOldFrameIndex == nFrameIndex && !m_pFileList->ChangedSinceCheckpoint())) {
@@ -2077,7 +2081,7 @@ void CMainDlg::GotoImage(EImagePosition ePos, int nFlags) {
 			return; // not placed on a new image, don't do anything
 	}
 
-	if (ePos != POS_Current && ePos != POS_NextAnimation && ePos != POS_Clipboard) {
+	if (ePos != POS_Current && ePos != POS_NextAnimation && ePos != POS_Clipboard && ePos != POS_AwayFromCurrent) {
 		MouseOff();
 	}
 
@@ -2089,8 +2093,8 @@ void CMainDlg::GotoImage(EImagePosition ePos, int nFlags) {
 		InitParametersForNewImage();
 	}
 	m_pJPEGProvider->NotifyNotUsed(m_pCurrentImage);
-	if (ePos == POS_Current) {
-		m_pJPEGProvider->ClearRequest(m_pCurrentImage);
+	if (ePos == POS_Current || ePos == POS_AwayFromCurrent) {
+		m_pJPEGProvider->ClearRequest(m_pCurrentImage, ePos == POS_AwayFromCurrent);
 	}
 	m_pCurrentImage = NULL;
 
@@ -2114,7 +2118,7 @@ void CMainDlg::GotoImage(EImagePosition ePos, int nFlags) {
 	} else {
 		m_pCurrentImage = m_pJPEGProvider->RequestJPEG(m_pFileList, eDirection,  
 			m_pFileList->Current(), nFrameIndex, procParams, m_bOutOfMemoryLastImage);
-		m_nLastLoadError = (m_pCurrentImage == NULL) ? HelpersGUI::FileLoad_LoadError : HelpersGUI::FileLoad_Ok;
+		m_nLastLoadError = (m_pCurrentImage == NULL) ? ((m_pFileList->Current() == NULL) ? HelpersGUI::FileLoad_NoFilesInDirectory : HelpersGUI::FileLoad_LoadError) : HelpersGUI::FileLoad_Ok;
 	}
 	AfterNewImageLoaded((nFlags & KEEP_PARAMETERS) == 0, false);
 

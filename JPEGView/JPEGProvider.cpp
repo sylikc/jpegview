@@ -152,7 +152,7 @@ void CJPEGProvider::FileHasRenamed(LPCTSTR sOldFileName, LPCTSTR sNewFileName) {
 	}
 }
 
-bool CJPEGProvider::ClearRequest(CJPEGImage* pImage) {
+bool CJPEGProvider::ClearRequest(CJPEGImage* pImage, bool releaseLockedFile) {
 	if (pImage == NULL) {
 		return false;
 	}
@@ -160,6 +160,7 @@ bool CJPEGProvider::ClearRequest(CJPEGImage* pImage) {
 	std::list<CImageRequest*>::iterator iter;
 	for (iter = m_requestList.begin( ); iter != m_requestList.end( ); iter++ ) {
 		if ((*iter)->Image == pImage) {
+            if (releaseLockedFile) m_pWorkThreads[0]->ReleaseFile((*iter)->FileName);
 			// images that are not ready cannot be removed yet
 			if ((*iter)->Ready) {
 				DeleteElementAt(iter);
@@ -167,6 +168,7 @@ bool CJPEGProvider::ClearRequest(CJPEGImage* pImage) {
 			} else {
 				(*iter)->Deleted = true;
 			}
+
 			break;
 		}
 	}

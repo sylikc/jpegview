@@ -29,6 +29,9 @@ Bugs fixed:
 - Slide shows with alpha blending: maybe now also works correctly if graphics driver implements alpha blending somewhat inexactly
 - NoStrCmpLogical registry setting also checked in "LOCAL MACHINE" registry hive
 - Fixed size cropping bug fixed
+- Always registering JPEGView in registry when changing file assignments, thus fixing any invalid path, e.g. resulting from move
+  of the EXE to another directory
+- Animated GIFs and multifram TIFFs can now be moved or deleted while displayed
 New features:
 - New command line parameter '/autoexit'. If passed, ESC key will terminate JPEGView also if a slideshow is running or an animated GIF is playing.
   Additionally it will auto-terminate JPEGView after the slideshow has finished when combined with the '/slideshow' command line parameter.
