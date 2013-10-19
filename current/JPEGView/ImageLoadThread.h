@@ -41,6 +41,9 @@ public:
 	// Marks the request for deletion - only call once with given handle
 	CImageData GetLoadedImage(int nHandle);
 
+    // Releases the cached image file if an image of the given name is cached
+    void ReleaseFile(LPCTSTR strFileName);
+
 	// Gets the request handle value used for the last request
 	static LONG GetCurHandleValue() { return m_curHandle; }
 
@@ -67,6 +70,19 @@ private:
 		CProcessParams ProcessParams;
 		bool OutOfMemory;
 	};
+
+    // Request to release image file
+    class CReleaseFileRequest : public CRequestBase {
+	public:
+		CReleaseFileRequest(LPCTSTR strFileName) : CRequestBase() {
+			FileName = strFileName;
+            Type = ReleaseFileRequest;
+		}
+
+        enum { ReleaseFileRequest = 1 };
+
+        CString FileName;
+    };
 
 	static volatile LONG m_curHandle;
 

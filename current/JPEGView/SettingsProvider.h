@@ -68,7 +68,7 @@ public:
 	bool CreateParamDBEntryOnSave() { return m_bCreateParamDBEntryOnSave; }
 	bool SaveWithoutPrompt() { return m_bSaveWithoutPrompt; }
     bool TrimWithoutPromptLosslessJPEG() { return m_bTrimWithoutPromptLosslessJPEG; }
-	bool WrapAroundFolder() { return m_bWrapAroundFolder; }
+	bool WrapAroundFolder() { return m_bWrapAroundFolder && m_eNavigation == Helpers::NM_LoopDirectory; }
 	bool ExchangeXButtons() { return m_bExchangeXButtons; }
 	bool AutoRotateEXIF() { return m_bAutoRotateEXIF; }
 	LPCTSTR ACCExclude() { return m_sACCExclude; }

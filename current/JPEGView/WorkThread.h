@@ -9,6 +9,7 @@ public:
 		EventFinishedCounter = NULL;
 		Processed = false;
 		Deleted = false;
+        Type = 0;
 	}
 
 	CRequestBase() {
@@ -16,8 +17,10 @@ public:
 		EventFinishedCounter = NULL;
 		Processed = false;
 		Deleted = false;
+        Type = 0;
 	}
 
+    int Type; // Can be used to set the type of the request, default is 0
 	HANDLE EventFinished; // Event signaled when processing is finished
 	volatile LONG* EventFinishedCounter; // if not NULL, this counter is decremented on having handled the request and the event is not fired until it is zero
 	volatile bool Processed; // Set to true when processing is finished

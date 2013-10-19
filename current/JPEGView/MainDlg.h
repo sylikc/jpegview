@@ -47,7 +47,8 @@ public:
 		POS_Previous,
 		POS_Current,
 		POS_Clipboard,
-		POS_Toggle
+		POS_Toggle,
+        POS_AwayFromCurrent
 	};
 
 	CMainDlg(bool bForceFullScreen);

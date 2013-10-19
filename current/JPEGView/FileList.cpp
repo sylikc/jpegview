@@ -374,6 +374,21 @@ void CFileList::Last() {
 	m_iterStart = m_fileList.begin();
 }
 
+CFileList* CFileList::AwayFromCurrent() {
+    LPCTSTR sCurrentFile = Current();
+    LPCTSTR sNextFile = PeekNextPrev(1, true, false);
+    if (sCurrentFile == NULL || sNextFile == NULL || _tcscmp(sCurrentFile, sNextFile) == 0) {
+        CFileList* pFileList = Prev();
+        if (Current() != NULL && sCurrentFile != NULL && _tcscmp(sCurrentFile, Current()) == 0) {
+            // not moved away, only one image
+            m_iter = m_fileList.end();
+        }
+        return pFileList;
+    } else {
+        return Next();
+    }
+}
+
 LPCTSTR CFileList::Current() const {
 	if (m_iter != m_fileList.end()) {
 		return m_iter->GetName();

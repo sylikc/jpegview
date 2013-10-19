@@ -38,7 +38,7 @@ public:
 	// This forces reloading of the image next time it is requested.
 	// The passed image is deleted and must not be accessed anymore.
 	// Returns if the request was erased or just marked as deleted
-	bool ClearRequest(CJPEGImage* pImage);
+	bool ClearRequest(CJPEGImage* pImage, bool releaseLockedFile = false);
 
 	// Clears all requests (mark them as invalid) - forces reloading of all images next time they are requested
 	// Any references to CJPEGImage objects get invalid by this call.

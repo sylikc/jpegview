@@ -27,7 +27,7 @@ CWorkThread::~CWorkThread(void) {
 
 void CWorkThread::ProcessAndWait(CRequestBase* pRequest) {
 	bool bCreateEvent = pRequest->EventFinished == NULL;
-	if (bCreateEvent == NULL) {
+	if (bCreateEvent) {
 		pRequest->EventFinished = ::CreateEvent(0, TRUE, FALSE, NULL);
 	}
 

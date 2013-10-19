@@ -142,12 +142,10 @@ LRESULT CFileExtensionsDlg::OnOK(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*
         }
     }
 
-    // if some extensions are registered, make sure JPEGView is registered in HKEY_CURRENT_USER\Software\Classes\Applications
-    if (endingsToRegister.size() > 0) {
-        if (!m_pRegistry->RegisterJPEGView()) {
-            if (!ShowRegistryError(m_hWnd, _T("HKCU\\Software\\Classes\\Applications\\JPEGView.exe\\shell\\open\\command"), NULL)) {
-                return 0;
-            }
+    // make sure JPEGView is registered in HKEY_CURRENT_USER\Software\Classes\Applications
+    if (!m_pRegistry->RegisterJPEGView()) {
+        if (!ShowRegistryError(m_hWnd, _T("HKCU\\Software\\Classes\\Applications\\JPEGView.exe\\shell\\open\\command"), NULL)) {
+            return 0;
         }
     }
 

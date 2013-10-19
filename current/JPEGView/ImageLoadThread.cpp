@@ -185,11 +185,24 @@ CImageData CImageLoadThread::GetLoadedImage(int nHandle) {
 	return CImageData(imageFound, bFailedMemory);
 }
 
+void CImageLoadThread::ReleaseFile(LPCTSTR strFileName) {
+    CReleaseFileRequest request(strFileName);
+    ProcessAndWait(&request);
+}
+
 /////////////////////////////////////////////////////////////////////////////////////////////
 // Protected
 /////////////////////////////////////////////////////////////////////////////////////////////
 
 void CImageLoadThread::ProcessRequest(CRequestBase& request) {
+    if (request.Type == CReleaseFileRequest::ReleaseFileRequest) {
+        CReleaseFileRequest& rq = (CReleaseFileRequest&)request;
+        if (rq.FileName == m_sLastFileName) {
+            DeleteCachedGDIBitmap();
+        }
+        return;
+    }
+
 	CRequest& rq = (CRequest&)request;
 	double dStartTime = Helpers::GetExactTickCount(); 
 	// Get image format and read the image
@@ -231,6 +244,10 @@ void CImageLoadThread::ProcessRequest(CRequestBase& request) {
 }
 
 void CImageLoadThread::AfterFinishProcess(CRequestBase& request) {
+    if (request.Type == CReleaseFileRequest::ReleaseFileRequest) {
+        return;
+    }
+
 	CRequest& rq = (CRequest&)request;
 	if (rq.TargetWnd != NULL) {
 		// post message to window that request has been processed

@@ -213,6 +213,22 @@ CUserCommand::CUserCommand(const CString & sCommandLine) {
 CUserCommand::~CUserCommand(void) {
 }
 
+bool CUserCommand::CanExecute(HWND hWnd, LPCTSTR sFileName) const
+{
+	if (!m_bValid || sFileName == NULL) {
+		return false;
+	}
+	if (m_sConfirmMsg.GetLength() > 0) {
+		CString sMsg = CNLS::GetString(m_sConfirmMsg);
+		sMsg.Replace(_T("\\n"), _T("\n"));
+		sMsg = ReplacePlaceholders(sMsg, sFileName, CRect(0, 0, 0, 0), false);
+		if (IDYES != ::MessageBox(hWnd, sMsg, CNLS::GetString(_T("Confirm")), MB_YESNOCANCEL | MB_ICONWARNING)) {
+			return false;
+		}
+	}
+    return true;
+}
+
 bool CUserCommand::Execute(HWND hWnd, LPCTSTR sFileName) const {
 	return Execute(hWnd, sFileName, CRect(0, 0, 0, 0));
 }
@@ -220,14 +236,6 @@ bool CUserCommand::Execute(HWND hWnd, LPCTSTR sFileName) const {
 bool CUserCommand::Execute(HWND hWnd, LPCTSTR sFileName, const CRect& selectionRect) const {
 	if (!m_bValid || sFileName == NULL) {
 		return false;
-	}
-	if (m_sConfirmMsg.GetLength() > 0) {
-		CString sMsg = CNLS::GetString(m_sConfirmMsg);
-		sMsg.Replace(_T("\\n"), _T("\n"));
-		sMsg = ReplacePlaceholders(sMsg, sFileName, selectionRect, false);
-		if (IDYES != ::MessageBox(hWnd, sMsg, CNLS::GetString(_T("Confirm")), MB_YESNOCANCEL | MB_ICONWARNING)) {
-			return false;
-		}
 	}
 
 	// Get last write time if we need to restore it
