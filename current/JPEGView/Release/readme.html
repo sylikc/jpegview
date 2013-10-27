@@ -48,7 +48,7 @@
 				<td>
 					<a name="Top"></a>
 					<h1>JPEGView Readme</h1>
-					Revision: 06-Mar-2013
+					Revision: 27-Oct-2013
 					<a name="Introduction"></a>
 					<h2>Introduction</h2>
 					JPEGView is a viewer/editor for JPEG, BMP, WEBP, PNG, GIF and TIFF images. It is designed to view images from digital cameras
@@ -193,6 +193,7 @@
 						<li>Czech</li>
 						<li>Greek</li>
 						<li>Basque</li>
+                        <li>Belarusan</li>
 					</ul>
 					By default JPEGView uses the same language as the operating system. However another language can be forced using the INI file.
 					Translations to other languages can be done very easily by providing an UTF8 coded text mapping file, see
@@ -949,6 +950,12 @@
                       <code>jpegview.exe myfilelist.txt /slideshow 3 /effect blend /transitiontime 250 /fullscreen</code>
                     </li>
                     <li>
+                      <code>/monitor [monitor index]</code><br/>
+                      Sets the monitor to display JPEGView, overriding the INI file setting. 0 stands for the primary monitor,
+                      any number bigger than 0 for the secondary monitor with the corresponding index. Example:<br/>
+                      <code>jpegview.exe "d:\pictures\jan 2013\" /slideshow 3 /fullscreen /monitor 1</code>
+                    </li>
+                    <li>
                       <code>/autoexit</code><br/>
                       Terminates JPEGView automatically after having finished the slide show if combined with the /slideshow parameter.<br/>
                       Setting this parameter also changes the behavior of the ESC key: JPEGView terminates immediately when pressing the ESC key,
@@ -1120,6 +1127,9 @@
                     	<li>
                            	Yia Guo for the Chinese translation
                         </li>
+                      <li>
+                            Uladzimir Panada for the Belarusan translation
+                      </li>
 					</ul>
 					<br/><br/><b>
 						<a href="#Top">Top of Page</a>

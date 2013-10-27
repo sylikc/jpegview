@@ -36,6 +36,7 @@ New features:
 - New command line parameter '/autoexit'. If passed, ESC key will terminate JPEGView also if a slideshow is running or an animated GIF is playing.
   Additionally it will auto-terminate JPEGView after the slideshow has finished when combined with the '/slideshow' command line parameter.
   Thanks to SourceForge user manuthie for implementing this.
+- New command line parameter '/monitor [index]'. Shows JPEGView on the given monitor, overriding the INI file setting.
 - New placeholders that can be used in user commands:
   %exepath% : Path to EXE folder where JPEGView is running
   %exedrive% : Drive letter of the EXE path, e.g. "c:"

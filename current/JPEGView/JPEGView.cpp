@@ -79,6 +79,14 @@ static bool ParseCommandLineForAutoExit(LPCTSTR sCommandLine) {
     return Helpers::stristr(sCommandLine, _T("/autoexit")) != NULL;
 }
 
+static int ParseCommandLineForDisplayMonitor(LPCTSTR sCommandLine) {
+    LPCTSTR sMonitor = Helpers::stristr(sCommandLine, _T("/monitor"));
+    if (sMonitor == NULL) {
+        return -1;
+    }
+    return _ttoi(sMonitor + _tcslen(_T("/monitor")));
+}
+
 static Helpers::ESorting ParseCommandLineForSorting(LPCTSTR sCommandLine) {
     LPCTSTR sSorting = Helpers::stristr(sCommandLine, _T("/order"));
     if (sSorting == NULL) {
@@ -140,6 +148,7 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR lp
     Helpers::ESorting eSorting = ParseCommandLineForSorting(lpstrCmdLine);
     Helpers::ETransitionEffect eTransitionEffect = ParseCommandLineForSlideShowEffect(lpstrCmdLine);
     int nTransitionTime = ParseCommandLineForTransitionTime(lpstrCmdLine);
+    int nDisplayMonitor = ParseCommandLineForDisplayMonitor(lpstrCmdLine);
 
 	// Searches for other instances and terminates them
     bool bFileLoadedByExistingInstance = false;
@@ -169,7 +178,7 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR lp
 
 		CMainDlg dlgMain(bForceFullScreen);
 
-		dlgMain.SetStartupInfo(sStartupFile, nAutostartSlideShow, eSorting, eTransitionEffect, nTransitionTime, bAutoExit);
+		dlgMain.SetStartupInfo(sStartupFile, nAutostartSlideShow, eSorting, eTransitionEffect, nTransitionTime, bAutoExit, nDisplayMonitor);
 
 		try {
 			nRet = dlgMain.DoModal();
