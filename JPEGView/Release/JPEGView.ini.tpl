@@ -22,6 +22,7 @@
 ; 'cs'    Czech
 ; 'el'    Greek
 ; 'eu'    Basque
+; 'bel'   Belarusan
 Language=auto
 
 

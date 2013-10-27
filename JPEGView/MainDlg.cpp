@@ -277,6 +277,15 @@ CMainDlg::~CMainDlg() {
 	delete m_pKeyMap;
 }
 
+void CMainDlg::SetStartupInfo(LPCTSTR sStartupFile, int nAutostartSlideShow, Helpers::ESorting eSorting, Helpers::ETransitionEffect eEffect, 
+    int nTransitionTime, bool bAutoExit, int nDisplayMonitor) { 
+    m_sStartupFile = sStartupFile; m_nAutoStartSlideShow = nAutostartSlideShow; m_eForcedSorting = eSorting;
+    m_bAutoExit = bAutoExit;
+    if ((int)eEffect >= 0) m_eTransitionEffect = eEffect;
+    if (nTransitionTime > 0) m_nTransitionTime = nTransitionTime;
+    if (nDisplayMonitor >= 0) CSettingsProvider::This().SetMonitorOverride(nDisplayMonitor);
+}
+
 LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/) {	
 	UpdateWindowTitle();
 

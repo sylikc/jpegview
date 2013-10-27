@@ -129,12 +129,8 @@ public:
     LRESULT OnClose(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, BOOL& /*bHandled*/);
 
 	// Called by main()
-	void SetStartupInfo(LPCTSTR sStartupFile, int nAutostartSlideShow, Helpers::ESorting eSorting, Helpers::ETransitionEffect eEffect, int nTransitionTime, bool bAutoExit) { 
-        m_sStartupFile = sStartupFile; m_nAutoStartSlideShow = nAutostartSlideShow; m_eForcedSorting = eSorting;
-        m_bAutoExit = bAutoExit;
-        if ((int)eEffect >= 0) m_eTransitionEffect = eEffect;
-        if (nTransitionTime > 0) m_nTransitionTime = nTransitionTime;
-    }
+	void SetStartupInfo(LPCTSTR sStartupFile, int nAutostartSlideShow, Helpers::ESorting eSorting, Helpers::ETransitionEffect eEffect, 
+        int nTransitionTime, bool bAutoExit, int nDisplayMonitor);
 
 	// Called by the different controller classes
 	HWND GetHWND() { return m_hWnd; }

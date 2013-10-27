@@ -45,6 +45,7 @@ public:
 	bool NavigateWithMouseWheel() { return m_bNavigateMouseWheel; }
 	Helpers::EAutoZoomMode AutoZoomMode() { return m_eAutoZoomMode; }
 	int DisplayMonitor() { return m_nDisplayMonitor; }
+    void SetMonitorOverride(int nMonitor) { m_nDisplayMonitor = nMonitor; }
 	bool AutoContrastCorrection() { return m_bAutoContrastCorrection; }
 	double AutoContrastAmount() { return m_dAutoContrastAmount; }
 	float* ColorCorrectionAmounts(); // can't be declared inline due to compiler bug...sad but true
