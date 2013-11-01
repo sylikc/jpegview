@@ -1,11 +1,11 @@
-﻿// Этот файл должен иметь кодировку UTF-8 (можно сделать, например, в Блокноте Windows)
+﻿// Этот файл должен иметь кодировку UTF-8 (подойдёт, например, Блокнот Windows)
 // Имя файла должно иметь вид 'strings_%languagecode%.txt' (где %languagecode% - код языка согласно ISO 639, пример: 'fr' это французский)
 // Формат: Английская строка<tab>Переведённая строка<cr/lf>
 //Language=Russian
 //TranslatorName=Dmitry Yerokhin
 //Contact=erodim@mail.ru
 //TranslatorURL=none
-//LastUpdated=Mar 10, 2013
+//LastUpdated=Oct 31, 2013
 //
 Contrast	Контрастность
 Brightness	Яркость
@@ -32,7 +32,7 @@ Close help text display / Close JPEGView	Закрыть справку/JPEGView
 Show/hide this help text	Показать/скрыть этот текст справки
 Show/hide picture information (EXIF data)	Показать/скрыть данные об изображении (EXIF)
 Show/hide file name	Показать/скрыть имя файла
-Enable/disable high quality resampling	Включить/выключить высококачественное ресэмплирование
+Enable/disable high quality resampling	Включить/выключить улучшенное ресэмплирование
 Enable/disable keeping of geometry related (zoom/pan/rotation)	Включить/выключить сохранение геометрии (масштаб/перемещение/поворот)
 and image processing (brightness/contrast/sharpen) parameters between images	и обработку (яркость/контрастность/резкость) между изображениями
 Enable/disable automatic contrast correction (histogram equalization)	Включить/выключить автокоррекцию контрастности (подстройку гистограммы)
@@ -75,8 +75,8 @@ up/down	Стрелки вверх/вниз
 Mouse wheel	Ролик мыши
 Left mouse & drag	Перетаскивание с ЛКМ
 Ctrl + L mouse	Ctrl + ЛКМ
-Forward mouse button	Кнопка мыши 'вперёд'
-Back mouse button	Кнопка мыши 'назад'
+Forward mouse button	Кнопка мыши 'Вперёд'
+Back mouse button	Кнопка мыши 'Назад'
 Delete current file on disk permanently	Окончательно удалить текущий файл с диска
 Rotate current file on disk lossless by 90 deg (W/H must be multiple of 16)	Повернуть текущий файл на диске без потерь на 90° вправо (Ш/В должны быть кратны 16)
 Rotate current file on disk lossless by 270 deg (W/H must be multiple of 16)	Повернуть текущий файл на диске без потерь на 90° влево (Ш/В должны быть кратны 16)
@@ -249,7 +249,7 @@ Screen Pixels	Экранные пикселы
 Image Pixels	Исходные пикселы
 Set modification date	Установить дату изменения
 to current date	по текущей дате
-to EXIF date	по дате из EXIF
+to EXIF date	по дате в EXIF
 Mark image for toggling. Use %s to toggle between marked and current image	Отметить файл (%s - переключение между отмеченным и текущим изображениями)
 Saturation	Насыщенность
 Unsharp mask...	Нерезкая маска...
@@ -340,3 +340,5 @@ The following image extensions are protected by the operating system.	Следу
 JPEGView can try to remove the restrictions automatically.	JPEGView может попытаться удалить ограничения автоматически.
 However this will fail if the current user has no administration privileges.	Однако если у текущего пользователя нет прав администратора, это не сработает.
 Insufficient rights to remove the restrictions. Continue?	Недостаточно прав для удаления ограничений. Продолжить?
+No image loaded!	Не загружено изображение!
+Right mouse button: Context menu	Правая кнопка мыши: контекстное меню

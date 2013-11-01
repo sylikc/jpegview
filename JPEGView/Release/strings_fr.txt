@@ -284,3 +284,5 @@ Click and drag the mouse vertically to correct image tilt.	Cliquez et déplacez 
 Drag at the left or right border for asymmetric correction.	Déplacez le bord gauche ou droit pour la correction asymétrique.
 Fit window to image	Ajuster la fenêtre à l'image
 Keep aspect ratio on crop	Maintenir ratio d'aspect lors du rognage
+No image loaded!	Aucune image chargée!
+Right mouse button: Context menu	Bouton droit de la souris: Menu Contextuel

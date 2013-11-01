@@ -40,6 +40,7 @@ CJPEGImage* CReaderBMP::ReadBmpImage(LPCTSTR strFileName, bool& bOutOfMemory) {
 	FILE *fptr;
 
 	const int MAX_FILE_SIZE_BYTES = 100 * 1024 * 1024; // 100 MB
+    const int MAX_IMAGE_DIMENSION = 65535;
 
 	bOutOfMemory = false;
 
@@ -65,6 +66,11 @@ CJPEGImage* CReaderBMP::ReadBmpImage(LPCTSTR strFileName, bool& bOutOfMemory) {
 		fclose(fptr);
 		return NULL;
 	}
+    /* Not too big files */
+    if (infoheader.width > MAX_IMAGE_DIMENSION || infoheader.width <= 0 || abs(infoheader.height) > MAX_IMAGE_DIMENSION) {
+        fclose(fptr);
+		return NULL;
+    }
 
 	// read palette for 8 bpp DIBs
 	uint8 palette[4*256];

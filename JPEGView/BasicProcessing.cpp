@@ -205,8 +205,8 @@ void* CBasicProcessing::ApplyLDC32bpp_Core(CSize fullTargetSize, CPoint fullTarg
 									  float fBlackPt, float fWhitePt, float fBlackPtSteepness, uint32* pTarget) {
 
 	uint32 nIncrementX, nIncrementY;
-	nIncrementX = (ldcMapSize.cx == 1) ? 0 : (uint32)((65536*(ldcMapSize.cx - 1))/(fullTargetSize.cx - 1) - 1);
-	nIncrementY = (ldcMapSize.cy == 1) ? 0 : (uint32)((65536*(ldcMapSize.cy - 1))/(fullTargetSize.cy - 1) - 1);
+	nIncrementX = (ldcMapSize.cx == 1) ? 0 : (uint32)((65536*(uint32)(ldcMapSize.cx - 1))/(fullTargetSize.cx - 1) - 1);
+	nIncrementY = (ldcMapSize.cy == 1) ? 0 : (uint32)((65536*(uint32)(ldcMapSize.cy - 1))/(fullTargetSize.cy - 1) - 1);
 
 	uint32 nCurY = fullTargetOffset.y*nIncrementY;
 	uint32 nStartX = fullTargetOffset.x*nIncrementX;
@@ -634,8 +634,8 @@ void* CBasicProcessing::PointSample(CSize fullTargetSize, CPoint fullTargetOffse
 		nIncrementY = (uint32)(sourceSize.cy << 16)/fullTargetSize.cy + 1;
 	} else {
 		// Upsampling
-		nIncrementX = (fullTargetSize.cx == 1) ? 0 : (uint32)((65536*(sourceSize.cx - 1) + 65535)/(fullTargetSize.cx - 1));
-		nIncrementY = (fullTargetSize.cy == 1) ? 0 : (uint32)((65536*(sourceSize.cy - 1) + 65535)/(fullTargetSize.cy - 1));
+		nIncrementX = (fullTargetSize.cx == 1) ? 0 : (uint32)((65536*(uint32)(sourceSize.cx - 1) + 65535)/(fullTargetSize.cx - 1));
+		nIncrementY = (fullTargetSize.cy == 1) ? 0 : (uint32)((65536*(uint32)(sourceSize.cy - 1) + 65535)/(fullTargetSize.cy - 1));
 	}
 
 	int nPaddedSourceWidth = Helpers::DoPadding(sourceSize.cx * nChannels, 4);
@@ -814,7 +814,7 @@ static int* CalculateTrapezoidYIntersectionTable(const CTrapezoid& trapezoid, in
 			nIncrementY = (nSourceSizeY << 16)/nTargetSizeY + 1;
 		} else {
 			// Upsampling
-			nIncrementY = (nTargetSizeY == 1) ? 0 : ((65536*(nSourceSizeY - 1) + 65535)/(nTargetSizeY - 1));
+			nIncrementY = (nTargetSizeY == 1) ? 0 : ((65536*(uint32)(nSourceSizeY - 1) + 65535)/(nTargetSizeY - 1));
 		}
 		// only point resampling into a new rectangle, all y-scanlines have the same distance
 		int nCurY = nOffsetInTargetSizeY*nIncrementY;
@@ -1382,8 +1382,8 @@ void* CBasicProcessing::SampleUp_HQ(CSize fullTargetSize, CPoint fullTargetOffse
 	int nSourceWidth = sourceSize.cx;
 	int nSourceHeight = sourceSize.cy;
 
-	uint32 nIncrementX = (uint32)(65536*(nSourceWidth - 1)/(fullTargetSize.cx - 1));
-	uint32 nIncrementY = (uint32)(65536*(nSourceHeight - 1)/(fullTargetSize.cy - 1));
+	uint32 nIncrementX = (uint32)(65536*(uint32)(nSourceWidth - 1)/(fullTargetSize.cx - 1));
+	uint32 nIncrementY = (uint32)(65536*(uint32)(nSourceHeight - 1)/(fullTargetSize.cy - 1));
 
 	// Caution: This code assumes a upsampling filter kernel of length 4, with a filter offset of 1
 	int nFirstY = max(0, int((uint32)(nIncrementY*fullTargetOffset.y) >> 16) - 1);
@@ -2010,8 +2010,8 @@ void* CBasicProcessing::SampleUp_HQ_SSE_MMX_Core(CSize fullTargetSize, CPoint fu
 	int nSourceWidth = sourceSize.cx;
 	int nSourceHeight = sourceSize.cy;
 
-	uint32 nIncrementX = (uint32)(65536*(nSourceWidth - 1)/(fullTargetSize.cx - 1));
-	uint32 nIncrementY = (uint32)(65536*(nSourceHeight - 1)/(fullTargetSize.cy - 1));
+	uint32 nIncrementX = (uint32)(65536*(uint32)(nSourceWidth - 1)/(fullTargetSize.cx - 1));
+	uint32 nIncrementY = (uint32)(65536*(uint32)(nSourceHeight - 1)/(fullTargetSize.cy - 1));
 
 	int nFirstX = max(0, int((uint32)(nIncrementX*fullTargetOffset.x) >> 16) - 1);
 	int nLastX = min(sourceSize.cx - 1, int(((uint32)(nIncrementX*(fullTargetOffset.x + nTargetWidth - 1)) >> 16) + 2));
