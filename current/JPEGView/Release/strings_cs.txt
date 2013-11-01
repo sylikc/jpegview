@@ -335,3 +335,5 @@ The following image extensions are protected by the operating system.	Následuj�
 JPEGView can try to remove the restrictions automatically.	JPEGView může zkusit odstranit omezení automaticky.
 However this will fail if the current user has no administration privileges.	Ačkoliv toto selže pokud uživatel nemá práva administrátora.
 Insufficient rights to remove the restrictions. Continue?	Nedostatečná práva k odstranění omezení. Pokračovat?
+No image loaded!	Obrázek nenačten!
+Right mouse button: Context menu	Pravé tlačítko myši: Kontextové menu

@@ -92,8 +92,8 @@ CLocalDensityCorr::CLocalDensityCorr(const CJPEGImage & image, bool bFullConstru
 	m_nPSIHeight = Helpers::DoPadding((int)(m_nPSIWidth/dFactor), 4);
 
 	uint32 nY = 0;
-	uint32 nIncX = nWidth*65536/m_nPSIWidth;
-	uint32 nIncY = nHeight*65536/m_nPSIHeight;
+	uint32 nIncX = (uint32)nWidth*65536/m_nPSIWidth;
+	uint32 nIncY = (uint32)nHeight*65536/m_nPSIHeight;
 	int nLineSize = Helpers::DoPadding(nWidth * nChannels, 4);
 
 	// The subsampled image has 16 bits per channel and three line interleaved channels B, G, R

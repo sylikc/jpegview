@@ -14,7 +14,7 @@ Save to	Gorde hemen
 Remove from	Kendu hemendik
 Rename:	Berrizendatu:
 No file or folder name was provided as command line parameter!	Ez da agiriri edo agiritegi izenik eman komando lerro parametro bezala!
-To use JPEGView, associate JPG, JPEG and BMP files with JPEGView.	JPEGVIkusgailua erabiltzeko, elkartu JPG, JPEG eta BMP agiriak JPEGIkusgailuarekin.
+To use JPEGView, associate JPG, JPEG and BMP files with JPEGView.	JPEGIkusgailua erabiltzeko, elkartu JPG, JPEG eta BMP agiriak JPEGIkusgailuarekin.
 Press ESC to exit...	Sakatu ESC irtetezeko...
 The file '%s' could not be read!	'%s' agiria ezin da irakurri!
 The file '%s' does not contain a list of file names!	'%s' agirak ez du agiri izenen zerradarik!
@@ -37,7 +37,7 @@ Increase/decrease darkening of highlights (LDC must be on)	Gehitu/Gutxitu itzale
 Loop through files in current folder	Bigiztatu agirien artean uneko agiritegian
 Loop through files in current directory and all subfolders	Bigiztatu agirien artean uneko zuzenbidean eta azpizuzenbide guztietan
 Loop through files in current directory and all sibling folders (folders on same level)	Bigiztatu agirien artean uneko zuzenbidean eta agiritegi kidetu guztietan (maila bereko agiritegiak)
-Maximize/restore to/from virtual desktop (only for multi-monitor systems)	Handitu/Leheneratu mahigain birutale-ra/-tik (monitore-anitzeko sistematan bakarrik)
+Maximize/restore to/from virtual desktop (only for multi-monitor systems)	Handitu/Leheneratu mahaigain birtuale-ra/-tik (monitore-anitzeko sistematan bakarrik)
 Copy screen to clipboard/ Copy processed full size image to clipboard	Kopiatu ikusleihoa gakora/ Kopiatu prozesatutako irudia neurri osoan gakora
 Open new image or slideshow file	Ireki irudi berri bat edo aurkezpen agiria
 Save processed image to JPEG file (original size)	Gorde prozesatutako irudia JPEG agiri batean (jatorrizko neurria)
@@ -55,7 +55,7 @@ Increase/decrease auto color cast correction amount	Gehitu/Gutxitu berez margo z
 Increase/decrease auto contrast correction amount	Gehitu/Gutxitu berez zuribeltztasun zuzenketa kopurua
 Enable/disable landscape picture enhancement mode	Gaitu/Ezgaitu etzaneko argazki hobekuntza modua
 Slide show with timeout of n seconds (ESC to stop)	Argazki aurkezpen tartea n segundu (ESC gelditzeko)
-Set timeout to n/10 sec, respectively n/100 sec (Ctrl+Shift)	Ezarri tartea n/10 seg-tan, edo n/100 seg (Ktrl+Shift)
+Set timeout to n/10 sec, respectively n/100 sec (Ctrl+Shift)	Ezarri tartea n/10 seg-tan, edo n/100 seg (Ktrl+Aldatu)
 Rotate image and fit to screen	Itzulikatu irudia eta finkatu ikusleihoan
 Fit image to screen	Finkatu irudia ikusleihoan
 Zoom 1:1 (100 %)	Zooma 1:1 (100 %)
@@ -177,7 +177,7 @@ Select none	Ez hautatu ezer
 The file '%s' could not be %s.	'%s' agiria ezin da %s izan.
 copied	kopiatuta
 renamed	Berrizendatuta
-Continue rename/copy?	Jarraitu berrizendatu/kopiatu?
+Continue rename/copy?	Jarraitu berrizendatu/kopiaturekin?
 Error during rename/copy	Akatsa berrizendatze/kopiatzerakoan
 %d file(s) renamed, %d file(s) copied, %d folder(s) created	%d agiri berrizendatuta, %d agiri kopiatuta, %d agiritegi sortuta
 Crop Selection	Moztu Hautapena
@@ -209,10 +209,10 @@ Show previous image	Erakutsi aurreko irudia
 Show next image	Erakutsi hurrengo irudia
 Show last image in folder	Erakutsi agiritegiko azken irudia
 Rotate image 90 deg clockwise	Itzulikatu irudia 90 gradu ordulari orrantzen norabidean
-Rotate image 90 deg counter-clockwise	Itzulikatu irudia 90 gradu ordulari orrantzen aurkako norabidean
+Rotate image 90 deg counter-clockwise	Itzulikatu irudia 90 gradu ordulari orratzen-aurkako norabidean
 Landscape picture enhancement mode	Landargazki irudi hobekuntza modua
 Display image (EXIF) information	Erakutsi irudiaren (EXIF) argibideak
-Toggle between screens (only for multi-monitor systems)	Aldatu ikusleiho artean (monitore-antziko sistematan bakarrik)
+Toggle between screens (only for multi-monitor systems)	Aldatu ikusleiho artean (monitore-anitzeko sistematan bakarrik)
 Enable/disable full screen mode	Gaitu/Ezgaitu ikusleiho-osoko modua
 Full screen mode	Ikusleiho-osoko modua
 Window mode	Leiho modua
@@ -261,7 +261,7 @@ Rotate Image	Itzulikatu irudia
 Show grid lines	Erakutsi saretxo lerroak
 Auto crop rotated image (avoids black border)	Berez moztu itzulkatutako irudia (hertz beltzak saihesten ditu)
 Align image to horizontal or vertical line	Lerrokatu irudia etzaneko edo zutikako lerro batera
-Use the mouse to draw a line that shall be horizontal or vertical.	Erabili sagua etzan edo zutia izango den lerro bat marrazteko.
+Use the mouse to draw a line that shall be horizontal or vertical.	Erabili sagua etzana edo zutia izango den lerro bat marrazteko.
 Rotate the image by dragging with the mouse.	Itzulikatu irudia saguarekin arrastatuz.
 The operation failed because not enough memory is available!	Eragiketak huts egin du ez dagoelako nahikoa oroimen eskuragarri!
 to EXIF date (all files in folder)	EXIF egunera (agiritegiko agiri denak)
@@ -338,3 +338,5 @@ The following image extensions are protected by the operating system.	Hurrengo i
 JPEGView can try to remove the restrictions automatically.	JPEGIkusgailua saiatu daiteke murrizpenak berezgaitasunez kentzen.
 However this will fail if the current user has no administration privileges.	Horrela ere honek huts egingo du oraingo erabiltzaileak ez baditu administratzaile pribilegioak.
 Insufficient rights to remove the restrictions. Continue?	Ez duzu nahikoa eskubide murrizpenak kentzeko. Jarraitu?
+No image loaded!	Ez da irudirik gertatu! 
+Right mouse button: Context menu	Saguaren eskuin botoia: Hitzinguru menua

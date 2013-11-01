@@ -336,3 +336,6 @@ The following image extensions are protected by the operating system.	Estes tipo
 JPEGView can try to remove the restrictions automatically.	O JPEGView pode tentar remover as restrições automaticamente.
 However this will fail if the current user has no administration privileges.	No entanto, se o utilizador não possuir privilégios de administrador a operação não é possível.
 Insufficient rights to remove the restrictions. Continue?	Não possui privilégios para remover as restrições. Continuar?
+Actual size of image	Tamanho real da imagem
+No image loaded!	Nenhuma imagem carregada!
+Right mouse button: Context menu	Botão direito do rato: menu de contexto

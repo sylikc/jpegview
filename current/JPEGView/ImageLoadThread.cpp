@@ -65,6 +65,9 @@ static EImageFormat GetBitmapFormat(Gdiplus::Bitmap * pBitmap) {
 
 static CJPEGImage* ConvertGDIPlusBitmapToJPEGImage(Gdiplus::Bitmap* pBitmap, int nFrameIndex, void* pEXIFData, 
     __int64 nJPEGHash, bool &isOutOfMemory, bool &isAnimatedGIF) {
+
+    const unsigned int MAX_IMAGE_DIMENSION = 65535;
+
 	isOutOfMemory = false;
     isAnimatedGIF = false;
     Gdiplus::Status lastStatus = pBitmap->GetLastStatus();
@@ -72,6 +75,11 @@ static CJPEGImage* ConvertGDIPlusBitmapToJPEGImage(Gdiplus::Bitmap* pBitmap, int
         isOutOfMemory = lastStatus == Gdiplus::OutOfMemory;
 		return NULL;
 	}
+
+    if (pBitmap->GetWidth() > MAX_IMAGE_DIMENSION || pBitmap->GetHeight() > MAX_IMAGE_DIMENSION)
+    {
+        return NULL;
+    }
 
     EImageFormat eImageFormat = GetBitmapFormat(pBitmap);
 
@@ -377,6 +385,7 @@ __declspec(dllimport) uint8* Webp_Dll_DecodeBGRInto(const uint8* data, uint32 da
 void CImageLoadThread::ProcessReadWEBPRequest(CRequest * request) {
 	const unsigned int MAX_WEBP_FILE_SIZE = 1024*1024*50; // 50 MB
 	const unsigned int MAX_IMAGE_PIXELS = 1024*1024*100; // 100 MPixels
+    const unsigned int MAX_IMAGE_DIMENSION = 65535;
 
 	HANDLE hFile = ::CreateFile(request->FileName, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, 0, NULL);
 	if (hFile == INVALID_HANDLE_VALUE) {
@@ -402,21 +411,23 @@ void CImageLoadThread::ProcessReadWEBPRequest(CRequest * request) {
 		if (::ReadFile(hFile, pBuffer, nFileSize, (LPDWORD) &nNumBytesRead, NULL) && nNumBytesRead == nFileSize) {
 			int nWidth, nHeight;
 			if (Webp_Dll_GetInfo((uint8*)pBuffer, nFileSize, &nWidth, &nHeight)) {
-				if (nWidth * nHeight <= MAX_IMAGE_PIXELS) {
-					int nStride = Helpers::DoPadding(nWidth*3, 4);
-					uint8* pPixelData = new(std::nothrow) unsigned char[nStride * nHeight];
-					if (pPixelData != NULL) {
-						if (Webp_Dll_DecodeBGRInto((uint8*)pBuffer, nFileSize, pPixelData, nStride * nHeight, nStride)) {
-							request->Image = new CJPEGImage(nWidth, nHeight, pPixelData, NULL, 3, 0, IF_WEBP, false, 0, 1, 0);
-						} else {
-							delete[] pPixelData;
-						}
-					} else {
-						request->OutOfMemory = true;
-					}
-				} else {
-					request->OutOfMemory = true;
-				}
+                if (nWidth <= MAX_IMAGE_DIMENSION && nHeight <= MAX_IMAGE_DIMENSION) {
+				    if (nWidth * nHeight <= MAX_IMAGE_PIXELS) {
+					    int nStride = Helpers::DoPadding(nWidth*3, 4);
+					    uint8* pPixelData = new(std::nothrow) unsigned char[nStride * nHeight];
+					    if (pPixelData != NULL) {
+						    if (Webp_Dll_DecodeBGRInto((uint8*)pBuffer, nFileSize, pPixelData, nStride * nHeight, nStride)) {
+							    request->Image = new CJPEGImage(nWidth, nHeight, pPixelData, NULL, 3, 0, IF_WEBP, false, 0, 1, 0);
+						    } else {
+							    delete[] pPixelData;
+						    }
+					    } else {
+						    request->OutOfMemory = true;
+					    }
+				    } else {
+					    request->OutOfMemory = true;
+				    }
+                }
 			}
 		}
 	} catch (...) {

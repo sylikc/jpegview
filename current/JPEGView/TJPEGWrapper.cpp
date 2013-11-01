@@ -12,6 +12,7 @@ void * TurboJpeg::ReadImage(int &width,
                        int sizebytes)
 {
     const int MAX_PIXELS = 1024*1024*100; // 100 MPixel
+    const unsigned int MAX_IMAGE_DIMENSION = 65535;
 
     outOfMemory = false;
     width = height = 0;
@@ -30,7 +31,7 @@ void * TurboJpeg::ReadImage(int &width,
         chromoSubsampling = (TJSAMP)nSubSampling;
         if (abs(width*height) > MAX_PIXELS) {
             outOfMemory = true;
-        } else {
+        } else if (width <= MAX_IMAGE_DIMENSION && height <= MAX_IMAGE_DIMENSION) {
             pPixelData = new(std::nothrow) unsigned char[TJPAD(width * 3) * height];
             if (pPixelData != NULL) {
 	            nResult = tjDecompress2(hDecoder, (unsigned char*)buffer, sizebytes, pPixelData, width, TJPAD(width * 3), height,
