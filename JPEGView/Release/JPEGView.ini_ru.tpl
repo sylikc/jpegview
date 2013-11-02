@@ -188,6 +188,10 @@ WrapAroundFolder=true
 ; Если 'true', то автоматически поворачивать изображения JPEG согласно тегу ориентации в EXIF, если таковой имеется.
 AutoRotateEXIF=true
 
+; If true, embedded ICC color profiles are used for JPEG and TIFF. This forces using GDI+ for JPEGs and therefore
+; results in much slower loading of JPEGs! Only set to true if you really need this.
+UseEmbeddedColorProfiles=false
+
 ; Режим автомасштабирования.
 ; 'FitNoZoom'	– изображения вписываются в экран, но без увеличения мелких.
 ; 'FillNoZoom'	– заполнение экрана без чёрных полей с некоторой обрезкой, если это необходимо, но без увеличения мелких.
@@ -209,8 +213,8 @@ SlideShowEffectTime=250
 ; Установите в 'true', чтобы открывать все изображения в одном и том же окне JPEGView.
 SingleInstance=false
 
-; Принудительно использовать GDI+ для чтения файлов JPEG. Используйте только в случае проблем с чтением JPEG посредством стандартной библиотеки Intel.
-; Имейте в виду, что GDI+ медленнее, чем JPEG-библиотека Intel.
+; Принудительно использовать GDI+ для чтения файлов JPEG. Используйте только в случае проблем с чтением JPEG посредством стандартной библиотеки Turbo JPEG.
+; Имейте в виду, что GDI+ медленнее, чем JPEG-библиотека Turbo JPEG
 ForceGDIPlus=false
 
 ; Качество сохранения файлов JPEG (в диапазоне 0..100, где 100 – наивысшее качество).

@@ -221,6 +221,7 @@ void CSettingsProvider::ReadWriteableINISettings() {
     m_bTrimWithoutPromptLosslessJPEG = GetBool(_T("TrimWithoutPromptLosslessJPEG"), false);
 	m_bExchangeXButtons = GetBool(_T("ExchangeXButtons"), true);
 	m_bAutoRotateEXIF = GetBool(_T("AutoRotateEXIF"), true);
+    m_bUseEmbeddedColorProfiles = GetBool(_T("UseEmbeddedColorProfiles"), false);
 	m_nDisplayMonitor = GetInt(_T("DisplayMonitor"), -1, -1, 16);
 	m_bAutoContrastCorrection = GetBool(_T("AutoContrastCorrection"), false);
 	m_dAutoContrastAmount = GetDouble(_T("AutoContrastCorrectionAmount"), 0.5, 0.0, 1.0);

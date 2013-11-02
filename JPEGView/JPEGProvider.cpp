@@ -101,9 +101,6 @@ CJPEGImage* CJPEGProvider::RequestJPEG(CFileList* pFileList, EReadAheadDirection
 }
 
 void CJPEGProvider::NotifyNotUsed(CJPEGImage* pImage) {
-	if (pImage == NULL) {
-		return;
-	}
 	// mark image as unused but do not remove yet from request queue
 	std::list<CImageRequest*>::iterator iter;
 	for (iter = m_requestList.begin( ); iter != m_requestList.end( ); iter++ ) {
@@ -114,7 +111,7 @@ void CJPEGProvider::NotifyNotUsed(CJPEGImage* pImage) {
 		}
 	}
 	// image not found in request queue - delete it as it is no longer used and will not be cached
-	delete pImage;
+	if (pImage != NULL) delete pImage;
 }
 
 void CJPEGProvider::ClearAllRequests() {

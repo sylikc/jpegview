@@ -313,10 +313,10 @@ void CImageLoadThread::ProcessReadJPEGRequest(CRequest * request) {
 		}
 		unsigned int nNumBytesRead;
 		if (::ReadFile(hFile, pBuffer, nFileSize, (LPDWORD) &nNumBytesRead, NULL) && nNumBytesRead == nFileSize) {
-			if (CSettingsProvider::This().ForceGDIPlus()) {
+			if (CSettingsProvider::This().ForceGDIPlus() || CSettingsProvider::This().UseEmbeddedColorProfiles()) {
 				IStream* pStream = NULL;
 				if (::CreateStreamOnHGlobal(hFileBuffer, FALSE, &pStream) == S_OK) {
-					Gdiplus::Bitmap* pBitmap = Gdiplus::Bitmap::FromStream(pStream);
+					Gdiplus::Bitmap* pBitmap = Gdiplus::Bitmap::FromStream(pStream, CSettingsProvider::This().UseEmbeddedColorProfiles());
                     bool isOutOfMemory, isAnimatedGIF;
 					request->Image = ConvertGDIPlusBitmapToJPEGImage(pBitmap, 0, Helpers::FindEXIFBlock(pBuffer, nFileSize),
 						Helpers::CalculateJPEGFileHash(pBuffer, nFileSize), isOutOfMemory, isAnimatedGIF);
@@ -467,7 +467,7 @@ void CImageLoadThread::ProcessReadGDIPlusRequest(CRequest * request) {
         pBitmap = m_pLastBitmap;
     } else {
         DeleteCachedGDIBitmap();
-        m_pLastBitmap = pBitmap = new Gdiplus::Bitmap(sFileName);
+        m_pLastBitmap = pBitmap = new Gdiplus::Bitmap(sFileName, CSettingsProvider::This().UseEmbeddedColorProfiles());
         m_sLastFileName = sFileName;
     }
     bool isOutOfMemory, isAnimatedGIF;
