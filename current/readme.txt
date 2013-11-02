@@ -27,6 +27,7 @@ Changelog
 [1.0.30]
 Bugs fixed:
 - Fixed crash (leading to potential exploit) when image width or height is larger than 32767
+- Improved zoom behavior for zoom < 10 %
 - Slide shows with alpha blending: maybe now also works correctly if graphics driver implements alpha blending somewhat inexactly
 - NoStrCmpLogical registry setting also checked in "LOCAL MACHINE" registry hive
 - Fixed size cropping bug fixed

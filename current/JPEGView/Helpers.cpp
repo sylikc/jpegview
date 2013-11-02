@@ -126,7 +126,7 @@ void GetZoomParameters(float & fZoom, CPoint & offsets, CSize imageSize, CSize w
 		// Height is dominating
 		fZoom = (float)windowSize.cy/nZoomHeight;
 	}
-	if (fZoom < Helpers::ZoomMin || fZoom > Helpers::ZoomMax) {
+	if (fZoom < 0.0001 || fZoom > Helpers::ZoomMax) {
 		fZoom = -1.0f;
 		return;
 	}

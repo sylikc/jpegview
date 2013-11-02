@@ -2188,11 +2188,14 @@ void CMainDlg::PerformZoom(double dValue, bool bExponent, bool bZoomToMouse, boo
 	} else {
 		m_dZoom = dValue;
 	}
-	m_dZoom = max(Helpers::ZoomMin, min(Helpers::ZoomMax, m_dZoom));
 
 	if (m_pCurrentImage == NULL) {
+        m_dZoom = max(Helpers::ZoomMin, min(Helpers::ZoomMax, m_dZoom));
 		return;
 	}
+
+    double dZoomMin = max(0.0001, min(Helpers::ZoomMin, GetZoomFactorForFitToScreen(false, false) * 0.5));
+    m_dZoom = max(dZoomMin, min(Helpers::ZoomMax, m_dZoom));
 
 	if (abs(m_dZoom - 1.0) < 0.01) {
 		m_dZoom = 1.0;
@@ -2231,7 +2234,7 @@ void CMainDlg::PerformZoom(double dValue, bool bExponent, bool bZoomToMouse, boo
 
 	m_bInZooming = true;
 	StartLowQTimer(ZOOM_TIMEOUT);
-	if (fabs(dOldZoom - m_dZoom) > 0.01 || m_bZoomMode) {
+	if (fabs(dOldZoom - m_dZoom) > 0.0001 || m_bZoomMode) {
 		this->Invalidate(FALSE);
 		if (bAdjustWindowToImage) {
 			AdjustWindowToImage(false);
@@ -2275,7 +2278,7 @@ double CMainDlg::GetZoomFactorForFitToScreen(bool bFillWithCrop, bool bAllowEnla
 		Helpers::GetImageRect(m_pCurrentImage->OrigWidth(), m_pCurrentImage->OrigHeight(), 
 			m_clientRect.Width(), m_clientRect.Height(), true, bFillWithCrop, false, dZoom);
 		double dZoomMax = bAllowEnlarge ? Helpers::ZoomMax : max(1.0, m_dZoomAtResizeStart);
-		return max(Helpers::ZoomMin, min(dZoomMax, dZoom));
+		return max(0.0001, min(dZoomMax, dZoom));
 	} else {
 		return 1.0;
 	}
