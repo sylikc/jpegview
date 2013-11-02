@@ -24,6 +24,18 @@ to JPEGView\Debug
 Changelog
 *********
 
+[1.0.31]
+Bugs fixed:
+- Read ahead no longer turned off when failed to read one image
+New features:
+- New INI file setting:
+  UseEmbeddedColorProfiles=[true/false]
+  Setting this to true will enable color management fro JPEG images and TIFF images.
+  Default is false because enabling this setting has some disadvantages:
+  - Turbo JPEG does not support embedded profiles, so GDI+ needs to be used what is much slower
+  - GDI+ cannot read some valid JPEG files (e.g. grayscale JPEGs)
+  Notice that GDI+ does not support V4 ICC color profiles.
+
 [1.0.30]
 Bugs fixed:
 - Fixed crash (leading to potential exploit) when image width or height is larger than 32767

@@ -187,6 +187,10 @@ WrapAroundFolder=true
 ; If true, JPEG images are auto rotated according to EXIF image orientation tag if present.
 AutoRotateEXIF=true
 
+; If true, embedded ICC color profiles are used for JPEG and TIFF. This forces using GDI+ for JPEGs and therefore
+; results in much slower loading of JPEGs! Only set to true if you really need this.
+UseEmbeddedColorProfiles=false
+
 ; Auto zoom mode
 ; FitNoZoom : Fit images to screen, never enlarge image
 ; FillNoZoom : Fill screen with no black borders, crop if necessary but not too much, never enlarge image
@@ -208,8 +212,8 @@ SlideShowEffectTime=250
 ; Set to true to open all images in the same JPEGView window.
 SingleInstance=false
 
-; Force using GDI+ for reading JPEGS. Only use when you have problems reading your JPEGs with the default Intel library.
-; Note that using GDI+ is slower than the Intel JPEG library!
+; Force using GDI+ for reading JPEGS. Only use when you have problems reading your JPEGs with the default Turbo JPEG library.
+; Note that using GDI+ is slower than the Turbo JPEG JPEG library!
 ForceGDIPlus=false
 
 ; Quality when saving JPEG files (in 0..100 where 100 is the highest quality)
