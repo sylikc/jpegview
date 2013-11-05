@@ -457,6 +457,31 @@ void* CBasicProcessing::MirrorV32bpp(int nWidth, int nHeight, const void* pDIBPi
 	return pTarget;
 }
 
+void CBasicProcessing::MirrorVInplace(int nWidth, int nHeight, int nStride, void* pDIBPixels) {
+    for (int j = 0; j < (nHeight >> 1); j++) {
+        if ((nStride & 3) == 0) {
+            uint32 nPixelsPerStride = nStride >> 2;
+	        uint32* pSource = (uint32*)pDIBPixels + (nHeight - 1 - j) * nPixelsPerStride;
+            uint32* pTgt = (uint32*)pDIBPixels + j * nPixelsPerStride;
+		    for (int i = 0; i < nPixelsPerStride; i++) {
+                uint32 t = *pTgt;
+			    *pTgt = *pSource;
+                *pSource = t;
+			    pTgt++; pSource++;
+		    }
+        } else {
+	        uint8* pSource = (uint8*)pDIBPixels + (nHeight - 1 - j) * nStride;
+            uint8* pTgt = (uint8*)pDIBPixels + j * nStride;
+		    for (int i = 0; i < nStride; i++) {
+                uint8 t = *pTgt;
+			    *pTgt = *pSource;
+                *pSource = t;
+			    pTgt++; pSource++;
+		    }
+        }
+	}
+}
+
 void* CBasicProcessing::Convert8bppTo32bppDIB(int nWidth, int nHeight, const void* pDIBPixels, const uint8* pPalette) {
 	if (pDIBPixels == NULL || pPalette == NULL) {
 		return NULL;

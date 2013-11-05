@@ -162,6 +162,7 @@
     <ClCompile Include="ParameterDB.cpp" />
     <ClCompile Include="ProcessingThreadPool.cpp" />
     <ClCompile Include="ReaderBMP.cpp" />
+    <ClCompile Include="ReaderTGA.cpp" />
     <ClCompile Include="ResizeFilter.cpp" />
     <ClCompile Include="SaveImage.cpp" />
     <ClCompile Include="SettingsProvider.cpp" />
@@ -235,6 +236,7 @@
     <ClInclude Include="ProcessingThreadPool.h" />
     <ClInclude Include="ProcessParams.h" />
     <ClInclude Include="ReaderBMP.h" />
+    <ClInclude Include="ReaderTGA.h" />
     <ClInclude Include="ResizeFilter.h" />
     <ClInclude Include="SaveImage.h" />
     <ClInclude Include="SettingsProvider.h" />

@@ -95,6 +95,7 @@ private:
 
     void ProcessReadJPEGRequest(CRequest * request);
     void ProcessReadBMPRequest(CRequest * request);
+    void ProcessReadTGARequest(CRequest * request);
 	void ProcessReadWEBPRequest(CRequest * request);
 	void ProcessReadRAWRequest(CRequest * request);
 	void ProcessReadGDIPlusRequest(CRequest * request);

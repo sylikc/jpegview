@@ -56,6 +56,9 @@ public:
 	// Mirror 32 bit DIB vertically
 	static void* MirrorV32bpp(int nWidth, int nHeight, const void* pDIBPixels);
 
+    // Mirror 32 bit DIB vertically inplace
+    static void MirrorVInplace(int nWidth, int nHeight, int nStride, void* pDIBPixels);
+
 	// Crop given image
 	static void* Crop32bpp(int nWidth, int nHeight, const void* pDIBPixels, CRect cropRect);
 

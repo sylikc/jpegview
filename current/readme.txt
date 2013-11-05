@@ -28,9 +28,10 @@ Changelog
 Bugs fixed:
 - Read ahead no longer turned off when failed to read one image
 New features:
+- New supported file format: TGA (8, 15, 16, 24, 32 bits) - only for reading
 - New INI file setting:
   UseEmbeddedColorProfiles=[true/false]
-  Setting this to true will enable color management fro JPEG images and TIFF images.
+  Setting this to true will enable color management for JPEG images and TIFF images (to the extend GDI+ supports it).
   Default is false because enabling this setting has some disadvantages:
   - Turbo JPEG does not support embedded profiles, so GDI+ needs to be used what is much slower
   - GDI+ cannot read some valid JPEG files (e.g. grayscale JPEGs)
