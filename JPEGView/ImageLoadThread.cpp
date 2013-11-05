@@ -7,6 +7,7 @@
 #include "Helpers.h"
 #include "SettingsProvider.h"
 #include "ReaderBMP.h"
+#include "ReaderTGA.h"
 #include "BasicProcessing.h"
 #include "dcraw_mod.h"
 #include "TJPEGWrapper.h"
@@ -223,6 +224,10 @@ void CImageLoadThread::ProcessRequest(CRequestBase& request) {
             DeleteCachedGDIBitmap();
 			ProcessReadBMPRequest(&rq);
 			break;
+        case IF_TGA :
+            DeleteCachedGDIBitmap();
+			ProcessReadTGARequest(&rq);
+			break;
 		case IF_WEBP:
             DeleteCachedGDIBitmap();
 			ProcessReadWEBPRequest(&rq);
@@ -376,6 +381,14 @@ void CImageLoadThread::ProcessReadBMPRequest(CRequest * request) {
 	} else if (request->Image == NULL) {
 		// probabely one of the bitmap formats that can not be read directly, try with GDI+
 		ProcessReadGDIPlusRequest(request);
+	}
+}
+
+void CImageLoadThread::ProcessReadTGARequest(CRequest * request) {
+    bool bOutOfMemory;
+	request->Image = CReaderTGA::ReadTgaImage(request->FileName, CSettingsProvider::This().ColorBackground(), bOutOfMemory);
+	if (bOutOfMemory) {
+		request->OutOfMemory = true;
 	}
 }
 

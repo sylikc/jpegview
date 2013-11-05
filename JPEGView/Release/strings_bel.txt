@@ -284,3 +284,5 @@ Click and drag the mouse vertically to correct image tilt.	Клік і верт�
 Drag at the left or right border for asymmetric correction.	Клік і гарызантальны рух мышкі для несіметрычнай трансфармацыі
 Fit window to image	Дапасаваць вакно да выявы
 Keep aspect ratio on crop	Захаваць прапорцыі пры абрэзцы
+No image loaded!	Выява не абраная!
+Right mouse button: Context menu	Правая кнопка мышкі – кантэкстнае меню
