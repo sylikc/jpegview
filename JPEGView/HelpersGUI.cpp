@@ -4,6 +4,7 @@
 #include "NLS.h"
 #include "ProcessParams.h"
 #include "KeyMap.h"
+#include "SettingsProvider.h"
 
 static void AddFlagText(CString& sText, LPCTSTR sFlagText, bool bFlag) {
 	sText += sFlagText;
@@ -11,10 +12,57 @@ static void AddFlagText(CString& sText, LPCTSTR sFlagText, bool bFlag) {
 	sText += _T('\n');
 }
 
+// Creates a font from the INI file description:
+// "Font face" fontSizePoints [bold]
+// Returns NULL if default font shall be used
+static HFONT CreateFontFromINIDescription(HDC dc, LPCTSTR sIniFileDescription)
+{
+	CString sIniDesc(sIniFileDescription);
+	sIniDesc.TrimLeft(); sIniDesc.TrimRight();
+
+	CString sFontName;
+	float fFontSize = 9.0f;
+	bool isBold = false;
+	if (sIniDesc.CompareNoCase(_T("default")) != 0) {
+		if (sIniDesc.Find(_T(' ')) == -1) {
+			sIniDesc.TrimLeft(_T('"')); sIniDesc.TrimRight(_T('"'));
+			sFontName = sIniDesc;
+		} else {
+			TCHAR delimiter = (sIniDesc.GetAt(0) == _T('"')) ? _T('"') : _T(' ');
+			sIniDesc.TrimLeft(_T('"'));
+			if (delimiter != _T('"') && sIniDesc.FindOneOf(_T("0123456789")) == -1) {
+				sFontName = sIniDesc;
+			} else {
+				int indexEndOfFilename = sIniDesc.Find(delimiter);
+				if (indexEndOfFilename < 0) {
+					sFontName = sIniDesc;
+				} else {
+					sFontName =  sIniDesc.Left(indexEndOfFilename);
+					sIniDesc = sIniDesc.Mid(indexEndOfFilename + 1);
+					fFontSize = (float)_ttof(sIniDesc);
+					if (fFontSize <= 0.0)
+						fFontSize = 9.0;
+					fFontSize = max(7.0f, min(30.0f, fFontSize));
+					isBold = sIniDesc.Find(_T("bold")) != -1;
+				}
+			}
+		}
+	}
+
+	if (sFontName.IsEmpty())
+		return (HFONT)NULL;
+
+	int nHeight = - (int)(0.5f + fFontSize * ::GetDeviceCaps(dc, LOGPIXELSY) / 72);
+	return ::CreateFont(nHeight, 0, 0, 0, isBold ? FW_BOLD : FW_NORMAL, FALSE, FALSE, FALSE, DEFAULT_CHARSET, OUT_OUTLINE_PRECIS,
+            CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, VARIABLE_PITCH, sFontName);
+}
 
 namespace HelpersGUI {
 
 float ScreenScaling = -1.0f;
+
+HFONT DefaultGUIFont = NULL;
+HFONT DefaultFileNameFont = NULL;
 
 HFONT CreateBoldFontOfSelectedFont(CDC & dc) {
 	TCHAR buff[LF_FACESIZE];
@@ -29,6 +77,25 @@ HFONT CreateBoldFontOfSelectedFont(CDC & dc) {
 		return ::CreateFontIndirect(&logFont);
 	}
 	return NULL;
+}
+
+void SelectDefaultGUIFont(HDC dc) {
+	if (DefaultGUIFont == NULL) {
+		DefaultGUIFont = CreateFontFromINIDescription(dc, CSettingsProvider::This().DefaultGUIFont());
+		if (DefaultGUIFont == NULL)
+			DefaultGUIFont = (HFONT)::GetStockObject(DEFAULT_GUI_FONT);
+	}
+	::SelectObject(dc, DefaultGUIFont);
+}
+
+void SelectDefaultFileNameFont(HDC dc) {
+	if (DefaultFileNameFont == NULL) {
+		DefaultFileNameFont = CreateFontFromINIDescription(dc, CSettingsProvider::This().FileNameFont());
+		if (DefaultFileNameFont == NULL)
+			DefaultFileNameFont = ::CreateFont(16, 0, 0, 0, FW_BOLD, FALSE, FALSE, FALSE, DEFAULT_CHARSET, OUT_DEFAULT_PRECIS,
+				CLIP_DEFAULT_PRECIS, CLEARTYPE_QUALITY, VARIABLE_PITCH, _T("Arial"));
+	}
+	::SelectObject(dc, DefaultFileNameFont);
 }
 
 void TranslateMenuStrings(HMENU hMenu, CKeyMap* pKeyMap) {
@@ -81,14 +148,6 @@ void TranslateMenuStrings(HMENU hMenu, CKeyMap* pKeyMap) {
 }
 
 void DrawTextBordered(CDC& dc, LPCTSTR sText, const CRect& rect, UINT nFormat) {
-	static HFONT hFont = 0;
-	if (hFont == 0) {
-		// Use cleartype here, this improves the readability
-		hFont = ::CreateFont(16, 0, 0, 0, FW_BOLD, FALSE, FALSE, FALSE, DEFAULT_CHARSET, OUT_DEFAULT_PRECIS,
-			CLIP_DEFAULT_PRECIS, CLEARTYPE_QUALITY, VARIABLE_PITCH, _T("Arial"));
-	}
-
-	HFONT hOldFont = dc.SelectFont(hFont);
 	COLORREF oldColor = dc.SetTextColor(RGB(0, 0, 0));
 	CRect textRect = rect;
 	textRect.InflateRect(-1, -1);
@@ -99,7 +158,6 @@ void DrawTextBordered(CDC& dc, LPCTSTR sText, const CRect& rect, UINT nFormat) {
 	textRect.OffsetRect(0, -1);
 	dc.SetTextColor(oldColor);
 	dc.DrawText(sText, -1, &textRect, nFormat | DT_NOPREFIX);
-	dc.SelectFont(hOldFont);
 }
 
 CPoint DrawDIB32bppWithBlackBorders(CDC& dc, BITMAPINFO& bmInfo, void* pDIBData, HBRUSH backBrush, const CRect& targetArea, CSize dibSize, CPoint offset) {

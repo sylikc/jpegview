@@ -54,6 +54,11 @@ SelectionColor=255 205 0
 SliderColor=255 0 80
 FileNameColor=255 255 255
 
+; GUI font, format: "font name" fontSizeInPoints [bold]
+; 'Default' for the default GUI font of Windows
+; Example: DefaultGUIFont="Arial" 9.0 bold
+DefaultGUIFont=Default
+
 ; Исходная фиксированная коррекция контрастности, применяемая ко всем изображениям (в диапазоне от -0.5 до 0.5).
 ; Значения больше 0 увеличивают контрастность, меньше 0 – уменьшают.
 Contrast=0.0
@@ -121,6 +126,9 @@ ShowFileName=false
 ; %size%     : размер изображения в пикселах (Ш x В)
 ; %filesize% : размер файла с изображением на диске
 FileNameFormat=%index%  %filepath%
+
+; Font for the file name display, see DefaultGUIFont key for the format
+FileNameFont=Default
 
 ; Установите в 'true', чтобы при показе файла о нём сразу выводилась информация (и EXIF-данные, если это возможно).
 ShowFileInfo=false

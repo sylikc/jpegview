@@ -259,6 +259,9 @@ void CSettingsProvider::ReadWriteableINISettings() {
 	m_colorSlider = GetColor(_T("SliderColor"), RGB(255, 0, 80));
     m_colorFileName = GetColor(_T("FileNameColor"), m_colorGUI);
 
+	m_defaultGUIFont = GetString(_T("DefaultGUIFont"), _T("Default"));
+	m_fileNameFont = GetString(_T("FileNameFont"), _T("Default"));
+
 	CString sUnsharpMaskParams = GetString(_T("UnsharpMaskParameters"), _T(""));
 	float fRadius, fAmount, fThreshold;
 	if (_stscanf(sUnsharpMaskParams, _T(" %f %f %f "), &fRadius, &fAmount, &fThreshold) == 3) {

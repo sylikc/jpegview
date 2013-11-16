@@ -5,10 +5,19 @@
 #include "EXIFDisplayCtl.h"
 #include "EXIFDisplay.h"
 #include "SettingsProvider.h"
+#include "HelpersGUI.h"
 #include "NLS.h"
+
+static int GetFileNameHeight(HDC dc) {
+	CSize size;
+	HelpersGUI::SelectDefaultFileNameFont(dc);
+	::GetTextExtentPoint32(dc, _T("("), 1, &size);
+	return size.cy;
+}
 
 CEXIFDisplayCtl::CEXIFDisplayCtl(CMainDlg* pMainDlg, CPanel* pImageProcPanel) : CPanelController(pMainDlg, false) {
 	m_bVisible = CSettingsProvider::This().ShowFileInfo();
+	m_nFileNameHeight = 0;
 	m_pImageProcPanel = pImageProcPanel;
 	m_pPanel = m_pEXIFDisplay = new CEXIFDisplay(pMainDlg->m_hWnd, this);
 	m_pEXIFDisplay->GetControl<CButtonCtrl*>(CEXIFDisplay::ID_btnShowHideHistogram)->SetButtonPressedHandler(&OnShowHistogram, this);
@@ -44,7 +53,10 @@ void CEXIFDisplayCtl::AfterNewImageLoaded() {
 }
 
 void CEXIFDisplayCtl::OnPrePaintMainDlg(HDC hPaintDC) {
-	m_pEXIFDisplay->SetPosition(CPoint(m_pImageProcPanel->PanelRect().left, m_pMainDlg->IsShowFileName() ? 32 : 0));
+	if (m_pMainDlg->IsShowFileName() && m_nFileNameHeight == 0) {
+		m_nFileNameHeight = GetFileNameHeight(hPaintDC);
+	}
+	m_pEXIFDisplay->SetPosition(CPoint(m_pImageProcPanel->PanelRect().left, m_pMainDlg->IsShowFileName() ? m_nFileNameHeight + 6 : 0));
 	FillEXIFDataDisplay();
 	if (CurrentImage() != NULL && m_pEXIFDisplay->GetShowHistogram()) {
 		m_pEXIFDisplay->SetHistogram(CurrentImage()->GetProcessedHistogram());

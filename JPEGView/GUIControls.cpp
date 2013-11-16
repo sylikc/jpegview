@@ -13,14 +13,14 @@
 
 static CSize GetTextRect(HWND hWnd, LPCTSTR sText) {
 	CPaintDC dc(hWnd);
-	dc.SelectStockFont(DEFAULT_GUI_FONT);
+	HelpersGUI::SelectDefaultGUIFont(dc);
 	CSize textlen;
 	dc.GetTextExtent(sText, _tcslen(sText), &textlen);
 	return textlen;
 }
 
 static CSize GetTextRect(CDC & dc, LPCTSTR sText) {
-	dc.SelectStockFont(DEFAULT_GUI_FONT);
+	HelpersGUI::SelectDefaultGUIFont(dc);
 	CSize textlen;
 	dc.GetTextExtent(sText, _tcslen(sText), &textlen);
 	return textlen;
@@ -39,7 +39,7 @@ CUICtrl::CUICtrl(CPanel* pPanel) {
 }
 
 void CUICtrl::OnPaint(CDC & dc, const CPoint& offset) {
-	dc.SelectStockFont(DEFAULT_GUI_FONT);
+	HelpersGUI::SelectDefaultGUIFont(dc);
 	dc.SetBkMode(TRANSPARENT);
 
 	m_pos2Screen = CPoint(-offset.x, -offset.y);
@@ -192,7 +192,7 @@ bool CTextCtrl::OnMouseMove(int nX, int nY) {
 
 void CTextCtrl::CreateBoldFont(CDC & dc) {
 	if (m_hBoldFont == NULL) {
-		dc.SelectStockFont(DEFAULT_GUI_FONT);
+		HelpersGUI::SelectDefaultGUIFont(dc);
 		m_hBoldFont = HelpersGUI::CreateBoldFontOfSelectedFont(dc);
 	}
 }
@@ -204,7 +204,7 @@ int CTextCtrl::GetTextRectangleHeight(HWND hWnd, int nWidth) {
 			CreateBoldFont(dc);
 			dc.SelectFont(m_hBoldFont);
 		} else {
-			dc.SelectStockFont(DEFAULT_GUI_FONT);
+			HelpersGUI::SelectDefaultGUIFont(dc);
 		}
 		CRect textRect(0, 0, nWidth, 1);
 		dc.DrawText(m_sText, m_sText.GetLength(), &textRect, DT_WORDBREAK | DT_CALCRECT | DT_VCENTER | DT_LEFT);
@@ -234,7 +234,7 @@ void CTextCtrl::Draw(CDC & dc, CRect position, bool bBlack) {
 		CreateBoldFont(dc);
 		dc.SelectFont(m_hBoldFont);
 	} else {
-		dc.SelectStockFont(DEFAULT_GUI_FONT);
+		HelpersGUI::SelectDefaultGUIFont(dc);
 	}
 	dc.SetBkMode(TRANSPARENT);
 	dc.SetTextColor(bBlack ? 0 : m_bHighlight ? CSettingsProvider::This().ColorHighlight() : CSettingsProvider::This().ColorGUI());
@@ -370,7 +370,7 @@ void CButtonCtrl::Draw(CDC & dc, CRect position, bool bBlack) {
 	}
 	dc.Rectangle(position);
 	if (m_sText.GetLength() > 0) {
-		dc.SelectStockFont(DEFAULT_GUI_FONT);
+		HelpersGUI::SelectDefaultGUIFont(dc);
 		dc.SetBkMode(TRANSPARENT);
 		dc.SetTextColor(bBlack ? 0 : m_bHighlight ? CSettingsProvider::This().ColorHighlight() : m_bActive ? CSettingsProvider::This().ColorSelected() : CSettingsProvider::This().ColorGUI());
 		dc.DrawText(m_sText, m_sText.GetLength(), &position, DT_CENTER | DT_VCENTER | DT_SINGLELINE | DT_WORD_ELLIPSIS | DT_NOPREFIX);

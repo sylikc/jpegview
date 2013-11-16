@@ -91,6 +91,8 @@ public:
 	COLORREF ColorSelected() { return m_colorSelected; }
 	COLORREF ColorSlider() { return m_colorSlider; }
     COLORREF ColorFileName() { return m_colorFileName; }
+	LPCTSTR DefaultGUIFont() { return m_defaultGUIFont; }
+	LPCTSTR FileNameFont() { return m_fileNameFont; }
 	const CUnsharpMaskParams& UnsharpMaskParams() { return m_unsharpMaskParms; }
 	bool RTShowGridLines() { return m_bRTShowGridLines; }
 	bool RTAutoCrop() { return m_bRTAutoCrop; }
@@ -200,6 +202,8 @@ private:
 	COLORREF m_colorSelected;
 	COLORREF m_colorSlider;
     COLORREF m_colorFileName;
+	CString m_defaultGUIFont;
+	CString m_fileNameFont;
 	CUnsharpMaskParams m_unsharpMaskParms;
 	bool m_bRTShowGridLines;
 	bool m_bRTAutoCrop;

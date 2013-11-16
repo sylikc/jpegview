@@ -1,5 +1,6 @@
 #include "StdAfx.h"
 #include "GUIControls.h"
+#include "HelpersGUI.h"
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 // Tooltip support
@@ -31,15 +32,16 @@ void CTooltip::Paint(CDC & dc) const {
 	const CString& sTooltip = GetTooltip();
 	CRect tooltipRect = GetTooltipRect();
 	CBrush brush;
-	brush.CreateSolidBrush(RGB(255, 255, 200));
+	DWORD backgroundColor = RGB(0, 0, 0);
+	DWORD foregroundColor = RGB(255, 255, 255);
+	brush.CreateSolidBrush(backgroundColor);
 	dc.SelectBrush(brush);
-	dc.SelectStockPen(BLACK_PEN);
+	dc.SelectStockPen(WHITE_PEN);
 	dc.Rectangle(tooltipRect.left, tooltipRect.top, tooltipRect.right, tooltipRect.bottom);
-	dc.SetTextColor(RGB(0, 0, 0));
-	dc.SetBkColor(RGB(255, 255, 200));
-	dc.SelectStockFont(DEFAULT_GUI_FONT);
-	tooltipRect.OffsetRect(0, 2);
-	dc.DrawText(sTooltip, sTooltip.GetLength(), tooltipRect, DT_CENTER | DT_VCENTER | DT_NOPREFIX);
+	dc.SetTextColor(foregroundColor);
+	dc.SetBkColor(backgroundColor);
+	HelpersGUI::SelectDefaultGUIFont(dc);
+	dc.DrawText(sTooltip, sTooltip.GetLength(), tooltipRect, DT_CENTER | DT_VCENTER | DT_NOPREFIX | DT_SINGLELINE);
 	dc.SelectStockBrush(BLACK_BRUSH);
 }
 
@@ -54,18 +56,20 @@ CRect CTooltip::GetTooltipRect() const {
 
 CRect CTooltip::CalculateTooltipRect() const {
 	HDC dc = ::GetDC(m_hWnd);
-	::SelectObject(dc, (HGDIOBJ)::GetStockObject(DEFAULT_GUI_FONT));
+	HelpersGUI::SelectDefaultGUIFont(dc);
 	CRect rectText(0, 0, 400, 0);
 	const CString& sTooltip = GetTooltip();
-	::DrawText(dc, sTooltip, sTooltip.GetLength(), &rectText, DT_CENTER | DT_VCENTER | DT_CALCRECT | DT_NOPREFIX);
+	::DrawText(dc, sTooltip, sTooltip.GetLength(), &rectText, DT_CENTER | DT_VCENTER | DT_CALCRECT | DT_NOPREFIX | DT_SINGLELINE);
 	::ReleaseDC(m_hWnd, dc);
 
+	const int BORDERX = 6;
+	const int BORDERY = 7;
 	CRect clientRect;
 	::GetClientRect(m_hWnd, &clientRect);
 	CRect boundRect = m_pBoundCtrl->GetPosition();
-	int nLeft = min(clientRect.Width() - rectText.Width() - 8, max(0, boundRect.CenterPoint().x - rectText.Width()/2));
+	int nLeft = min(clientRect.Width() - rectText.Width() - BORDERX*2, max(0, boundRect.CenterPoint().x - rectText.Width()/2));
 	int nTop = boundRect.bottom + 6;
-	return CRect(nLeft, nTop, nLeft + rectText.Width() + 8, nTop + rectText.Height() + 5);
+	return CRect(nLeft, nTop, nLeft + rectText.Width() + BORDERX*2, nTop + rectText.Height() + BORDERY*2 - 1);
 }
 
 CTooltipMgr::CTooltipMgr(HWND hWnd) {

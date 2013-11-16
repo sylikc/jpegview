@@ -3,11 +3,14 @@ JPEGView source code readme
 
 To compile JPEGView you need:
 
-- Visual Studio 2010 Express Edition with VC++ package (of course all better editions also work)
-- Windows Template Library (WTL), Version 8.0 (http://sourceforge.net/projects/wtl/)
-- When using the express edition: ATL headers. Get them from a standard or professional edition from the directory $(VCInstallDir)\atlmfc\include
-  or google for it. The ATL header files cannot be included into the JPEGView source code distribution due to copyright issues.
-- To edit the resource file (rc) a free resource editor as www.radasm.com/resed/ is recommended
+- Visual Studio 2010 (VC 10 C++ Express Edition also works, see below what you additionally need).
+- Windows Template Library (WTL), Version 8.1 (http://sourceforge.net/projects/wtl/)
+When using the Express Edition: 
+- ATL header files. 'Borrow' the files from a standard or professional edition of Visual Studio 10.0
+  or google for it. Copy the files to $(VCInstallDir)\atlmfc\include (e.g. C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\atlmfc\include)
+  The ATL header files cannot be included into the JPEGView source code distribution due to copyright issues.
+- To edit resource files (.rc) a resource editor (e.g. www.radasm.com/resed/) is recommended. The Express Edition has no
+  integrated resource editor.
 
 The include directories of WTL must be added to the include directories for VC++:
 In Visual Studio 2010: Properties of JPEGView project > VC++-Directories-Include Directories and Library Directories
@@ -36,7 +39,11 @@ New features:
   - Turbo JPEG does not support embedded profiles, so GDI+ needs to be used what is much slower
   - GDI+ cannot read some valid JPEG files (e.g. grayscale JPEGs)
   Notice that GDI+ does not support V4 ICC color profiles.
-
+- New INI file settings:
+  DefaultGUIFont=fontName fontSize [bold]
+  FileNameFont=fontName fontSize [bold]
+  Enables to change the GUI font, its size and if a bold font shall be used
+  
 [1.0.30]
 Bugs fixed:
 - Fixed crash (leading to potential exploit) when image width or height is larger than 32767
