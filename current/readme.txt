@@ -30,6 +30,7 @@ Changelog
 [1.0.31]
 Bugs fixed:
 - Read ahead no longer turned off when failed to read one image
+- Fixed loading error of JPEGs with EXIF data but IDF1 missing
 New features:
 - New supported file format: TGA (8, 15, 16, 24, 32 bits) - only for reading
 - New INI file setting:
