@@ -355,6 +355,9 @@ CEXIFReader::CEXIFReader(void* pApp1Block)
 
 	if (nOffsetIFD1 != 0) {
 		m_pIFD1 = pTIFFHeader + nOffsetIFD1;
+		if (m_pIFD1 - m_pApp1 >= nApp1Size || m_pIFD1 - m_pApp1 < 0) {
+			return;
+		}
 		nNumTags = ReadUShort(m_pIFD1, bLittleEndian);
 		m_pIFD1 += 2;
 		uint8* pLastIFD1 = m_pIFD1 + nNumTags*12;
