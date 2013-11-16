@@ -181,8 +181,10 @@ void CCropCtl::AbortCropping() {
 	m_bDontStartCropOnNextClick = false;
 	InvalidateSceenCropRect();
 	m_cropEnd = CPoint(INT_MIN, INT_MIN);
-	::SetCursor(::LoadCursor(NULL, MAKEINTRESOURCE(IDC_ARROW)));
-	if (!m_pMainDlg->IsPlayingAnimation()) m_pMainDlg->GetNavPanelCtl()->HideNavPanelTemporary();
+	if (!m_pMainDlg->IsPlayingAnimation()) {
+		::SetCursor(::LoadCursor(NULL, MAKEINTRESOURCE(IDC_ARROW)));
+		m_pMainDlg->GetNavPanelCtl()->HideNavPanelTemporary();
+	}
 	m_pMainDlg->GetZoomNavigatorCtl()->InvalidateZoomNavigatorRect();
 }
 

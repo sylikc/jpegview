@@ -145,7 +145,7 @@ void CEXIFDisplay::AddLine(LPCTSTR sDescription, const Rational &number) {
 CRect CEXIFDisplay::PanelRect() {
 	if (m_nLineHeight == 0) {
 		CDC dc(::GetDC(m_hWnd));
-		::SelectObject(dc, ::GetStockObject(DEFAULT_GUI_FONT));
+		HelpersGUI::SelectDefaultGUIFont(dc);
 		m_hTitleFont = HelpersGUI::CreateBoldFontOfSelectedFont(dc);
 
 		if (m_hTitleFont != 0) {
@@ -181,7 +181,7 @@ CRect CEXIFDisplay::PanelRect() {
 			nTitleLength += nGap;
 		}
 
-		::SelectObject(dc, ::GetStockObject(DEFAULT_GUI_FONT));
+		HelpersGUI::SelectDefaultGUIFont(dc);
 
 		int nLen1 = 0, nLen2 = 0;
 		std::list<TextLine>::iterator iter;
@@ -252,7 +252,7 @@ void CEXIFDisplay::OnPaint(CDC & dc, const CPoint& offset) {
 	}
 
 	::SetTextColor(dc, RGB(243, 242, 231));
-	::SelectObject(dc, ::GetStockObject(DEFAULT_GUI_FONT));
+	HelpersGUI::SelectDefaultGUIFont(dc);
 
 	int nRunningY = nY + m_nTitleHeight + m_nGap;
 

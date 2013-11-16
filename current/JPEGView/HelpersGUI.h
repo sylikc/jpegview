@@ -26,10 +26,16 @@ namespace HelpersGUI {
 	// The caller is responsible for deleting the returned font when no longer used
 	HFONT CreateBoldFontOfSelectedFont(CDC & dc);
 
+	// Selects the default GUI font into the given DC.
+	void SelectDefaultGUIFont(HDC dc);
+
+	// Selects the default file name font into the given DC.
+	void SelectDefaultFileNameFont(HDC dc);
+
 	// Translates all menu strings of the given menu, including the sub-menus
 	void TranslateMenuStrings(HMENU hMenu, CKeyMap* pKeyMap = NULL);
 
-	// Draws a text with Arial 10 font with a black outline to improve readability
+	// Draws a text with a black outline to improve readability
 	void DrawTextBordered(CDC& dc, LPCTSTR sText, const CRect& rect, UINT nFormat);
 
 	// Draws a 32 bit DIB centered in the given target area, filling the remaining area with the given brush

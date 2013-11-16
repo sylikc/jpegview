@@ -51,6 +51,11 @@ SelectionColor=255 205 0
 SliderColor=255 0 80
 FileNameColor=255 255 255
 
+; GUI font, format: "font name" fontSizeInPoints [bold]
+; 'Default' for the default GUI font of Windows
+; Example: DefaultGUIFont="Arial" 9.0 bold
+DefaultGUIFont=Default
+
 ; Initial fixed contrast correction to apply to all images. Must be in -0.5 .. 0.5
 ; Values > 0 increase contrast, values < 0 decrease contrast
 Contrast=0.0
@@ -117,6 +122,9 @@ ShowFileName=false
 ; %size%     : Size of image in pixels (w x h)
 ; %filesize% : Size of image on disk
 FileNameFormat=%index%  %filepath%
+
+; Font for the file name display, see DefaultGUIFont key for the format
+FileNameFont=Default
 
 ; Set to true to initially display the file info box (EXIF info if available)
 ShowFileInfo=false

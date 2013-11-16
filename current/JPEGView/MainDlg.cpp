@@ -534,6 +534,7 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 		TCHAR buff[32];
 		_stprintf_s(buff, 32, _T("%d %%"), int(m_dZoom*100 + 0.5));
 		dc.SetTextColor(CSettingsProvider::This().ColorGUI());
+		HelpersGUI::SelectDefaultFileNameFont(dc);
 		HelpersGUI::DrawTextBordered(dc, buff, GetZoomTextRect(imageProcessingArea), DT_RIGHT);
 	}
 
@@ -631,12 +632,12 @@ void CMainDlg::DisplayErrors(CJPEGImage* pCurrentImage, const CRect& clientRect,
 }
 
 void CMainDlg::DisplayFileName(const CRect& imageProcessingArea, CDC& dc) {
-	dc.SelectStockFont(SYSTEM_FONT);
 	dc.SetBkMode(TRANSPARENT);
 	dc.SetTextColor(CSettingsProvider::This().ColorFileName());
 	dc.SetBkColor(RGB(0, 0, 0));
 
 	if (m_bShowFileName) {
+		HelpersGUI::SelectDefaultFileNameFont(dc);
 		CString sFileName = Helpers::GetFileInfoString(CSettingsProvider::This().FileNameFormat(), m_pCurrentImage, m_pFileList, m_dZoom);
 		HelpersGUI::DrawTextBordered(dc, sFileName, CRect(Scale(2) + imageProcessingArea.left, 0, imageProcessingArea.right, Scale(30)), DT_LEFT); 
 	}
@@ -1183,9 +1184,10 @@ LRESULT CMainDlg::OnCtlColorEdit(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/
 	return (LRESULT)::GetStockObject(BLACK_BRUSH);
 }
 
-LRESULT CMainDlg::OnEraseBackground(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOOL& /*bHandled*/) {
+LRESULT CMainDlg::OnEraseBackground(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOOL& bHandled) {
 	// prevent erasing background
-	return 0;
+	bHandled = TRUE;
+	return TRUE;
 }
 
 LRESULT CMainDlg::OnOK(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*/, BOOL& /*bHandled*/) {

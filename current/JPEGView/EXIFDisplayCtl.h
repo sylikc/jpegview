@@ -28,6 +28,7 @@ private:
 	bool m_bVisible;
 	CEXIFDisplay* m_pEXIFDisplay;
 	CPanel* m_pImageProcPanel;
+	int m_nFileNameHeight;
 
 	void FillEXIFDataDisplay();
 	static void OnShowHistogram(void* pContext, int nParameter, CButtonCtrl & sender);

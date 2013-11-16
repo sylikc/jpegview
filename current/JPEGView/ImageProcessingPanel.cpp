@@ -1,13 +1,14 @@
 #include "StdAfx.h"
 #include "ImageProcessingPanel.h"
 #include "Helpers.h"
+#include "HelpersGUI.h"
 #include "ProcessParams.h"
 #include "NLS.h"
 
 #define SLIDER_WIDTH 130
 #define MIN_SLIDER_WIDTH 40
 #define SLIDER_HEIGHT 30
-#define WIDTH_ADD_PIXELS 63
+#define WIDTH_ADD_PIXELS 43
 #define SLIDER_GAP 23
 #define SCREEN_Y_OFFSET 5
 
@@ -76,7 +77,13 @@ void CImageProcessingPanel::DetermineSliderWidth() {
 		m_nSliderWidth = max(MIN_SLIDER_WIDTH, m_nSliderWidth);
 	}
 
-	m_nNoLabelWidth = m_nSliderWidth + (int)(WIDTH_ADD_PIXELS*m_fDPIScale);
+	HDC dc = ::GetDC(m_hWnd);
+	HelpersGUI::SelectDefaultGUIFont(dc);
+	CSize textlen;
+	::GetTextExtentPoint32(dc, _T("0.00"), 4, &textlen);
+	::ReleaseDC(m_hWnd, dc);
+
+	m_nNoLabelWidth = m_nSliderWidth + textlen.cx + (int)(WIDTH_ADD_PIXELS*m_fDPIScale);
 }
 
 CRect CImageProcessingPanel::PanelRect() {
