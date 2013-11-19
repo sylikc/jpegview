@@ -6,6 +6,7 @@ enum RegResult {
     Reg_ErrorNoAdminRights,
     Reg_ErrorWriteKey,
     Reg_ErrorChangeDACL,
+	Reg_NeedsWriteToHKLMAsAdministrator,
     Reg_Internal
 };
 
@@ -33,5 +34,6 @@ public:
 
 private:
     bool m_bNewRegistryFormat;
+	bool m_bIsWindows8;
     bool m_bIsJPEGViewRegistered;
 };

@@ -106,11 +106,58 @@ static bool ExistsKey(LPCTSTR subKeyRelativeToHKCU) {
     return false;
 }
 
-// Registers the given extension for JPEGView
-static RegResult RegisterExtension(LPCTSTR sExtension, bool bNewRegistryFormat, bool bChangeDACLIfRequired) {
-    CString sRegKeyPathForExtension = GetRegKeyPathForExtension(sExtension, bNewRegistryFormat);
-
+// Checks if the given key relative to HKEY_CLASSES_ROOT exists
+static bool ExistsKeyHKCR(LPCTSTR subKeyRelativeToHKCR, bool &hasDefaultValue) {
+	hasDefaultValue = false;
     HKEY key;
+    if (RegOpenKeyEx(HKEY_CLASSES_ROOT, subKeyRelativeToHKCR, 0, KEY_READ, &key) == ERROR_SUCCESS) {
+		CString value;
+		hasDefaultValue = GetRegistryStringValue(key, NULL, value);
+        RegCloseKey(key);
+        return true;
+    }
+    return false;
+}
+
+// Registers the given extension for JPEGView
+static RegResult RegisterExtension(LPCTSTR sExtension, bool bNewRegistryFormat, bool bIsWindows8, bool bChangeDACLIfRequired) {
+	bool hasDefaultValue;
+	bool existsKeyHKCR = ExistsKeyHKCR(sExtension, hasDefaultValue);
+	if ((!existsKeyHKCR || !hasDefaultValue) && bIsWindows8)
+	{
+		// Windows 8: Need to create the extension under HKEY_CLASSES_ROOT if it does not exist yet
+		// However this needs administrator privileges.
+		HKEY key;
+		if (!existsKeyHKCR) {
+			if (RegCreateKeyEx(HKEY_CLASSES_ROOT, sExtension, 0, NULL, 0, KEY_WRITE | KEY_READ, NULL, &key, NULL) != ERROR_SUCCESS) {
+				return Reg_NeedsWriteToHKLMAsAdministrator;
+			}
+		} else if (RegOpenKeyEx(HKEY_CLASSES_ROOT, sExtension, 0, KEY_WRITE | KEY_READ, &key) != ERROR_SUCCESS) {
+			return Reg_NeedsWriteToHKLMAsAdministrator;
+		}
+		CString keyClassesRoot = CString(sExtension + 1) + _T("_auto_file");
+		if (!SetRegistryStringValue(key, NULL, keyClassesRoot)) {
+			RegCloseKey(key);
+			return Reg_ErrorWriteKey;
+		}
+		RegCloseKey(key);
+
+		keyClassesRoot += _T("\\shell\\open\\command");
+		if (RegCreateKeyEx(HKEY_CLASSES_ROOT, keyClassesRoot, 0, NULL, 0, KEY_WRITE | KEY_READ, NULL, &key, NULL) != ERROR_SUCCESS) {
+			return Reg_ErrorWriteKey;
+		}
+		CString startupCommand;
+        startupCommand.Format(_T("\"%sJPEGView.exe\" \"%%1\""),  CSettingsProvider::This().GetEXEPath());
+		if (!SetRegistryStringValue(key, NULL, startupCommand)) {
+			RegCloseKey(key);
+			return Reg_ErrorWriteKey;
+		}
+		RegCloseKey(key);
+	}
+
+	CString sRegKeyPathForExtension = GetRegKeyPathForExtension(sExtension, bNewRegistryFormat);
+
+	HKEY key;
     bool bCanWriteKey = (RegCreateKeyEx(HKEY_CURRENT_USER, sRegKeyPathForExtension, 0, NULL, 0, KEY_WRITE | KEY_READ, NULL, &key, NULL) == ERROR_SUCCESS);
     if (!bCanWriteKey) {
         if (ExistsKey(sRegKeyPathForExtension)) {
@@ -300,6 +347,7 @@ CFileExtensionsRegistry::CFileExtensionsRegistry() {
     GetVersionEx(&osvi);
 
     m_bNewRegistryFormat = osvi.dwMajorVersion >= 6;
+	m_bIsWindows8 = osvi.dwMajorVersion >= 6 && osvi.dwMinorVersion >= 2;
     m_bIsJPEGViewRegistered = IsRegistered();
 }
 
@@ -352,7 +400,7 @@ RegResult CFileExtensionsRegistry::RegisterFileExtension(LPCTSTR sExtension, boo
         CString sExtensionStripped(&((LPCTSTR)sExtension)[1]);
         sExtensionStripped.MakeLower();
         if (sExtensionStripped.GetAt(0) == _T('.')) {
-            return RegisterExtension(sExtensionStripped, m_bNewRegistryFormat, bChangeDACLIfRequired);
+            return RegisterExtension(sExtensionStripped, m_bNewRegistryFormat, m_bIsWindows8, bChangeDACLIfRequired);
         }
     }
     return Reg_Internal;

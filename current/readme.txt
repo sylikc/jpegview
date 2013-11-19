@@ -31,6 +31,8 @@ Changelog
 Bugs fixed:
 - Read ahead no longer turned off when failed to read one image
 - Fixed loading error of JPEGs with EXIF data but IDF1 missing
+- Blending issues with nVidia cards fixed (hopefully now all of them)
+- Registration of file endings in Windows 8 improved
 New features:
 - New supported file format: TGA (8, 15, 16, 24, 32 bits) - only for reading
 - New INI file setting:
@@ -43,7 +45,7 @@ New features:
 - New INI file settings:
   DefaultGUIFont=fontName fontSize [bold]
   FileNameFont=fontName fontSize [bold]
-  Enables to change the GUI font, its size and if a bold font shall be used
+  Enables to change the GUI font, its size and weight
   
 [1.0.30]
 Bugs fixed:
