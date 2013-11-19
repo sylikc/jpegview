@@ -336,3 +336,6 @@ However this will fail if the current user has no administration privileges.	Die
 Insufficient rights to remove the restrictions. Continue?	Ungenügende Rechte um die Restriktionen zu entfernen. Weitermachen?
 No image loaded!	Kein Bild geladen!
 Right mouse button: Context menu	Rechte Maustaste: Kontextmenü
+The following image extensions can only be registered when run as administrator:	Die folgenden Dateierweiterungen können nur registriert werden, falls JPEGView mit Administratorenrechten ausgeführt wird:
+To run JPEGView with administrator rights:	JPEGView mit Administratorenrechten ausführen:
+Right-click JPEGView.exe in the Windows Explorer and select 'Run as administrator'	JPEGView.exe im Windows Explorer mit der rechten Maustaste anklicken und 'Als Administrator ausführen' auswählen

@@ -150,7 +150,8 @@ LRESULT CFileExtensionsDlg::OnOK(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*
     }
 
     CString sFailedEndings;
-    CString sAdminRightsNeededEndings;
+    CString sPrivilegeNeededEndings;
+	CString sRunAsAdminRequiredEndings;
     std::list<CString> endingsToRegisterSecondTry;
     std::list<CString> endingsToUnregisterSecondTry;
 
@@ -158,10 +159,13 @@ LRESULT CFileExtensionsDlg::OnOK(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*
     for (std::list<CString>::const_iterator it = endingsToRegister.begin(); it != endingsToRegister.end(); ++it) {
         RegResult result = m_pRegistry->RegisterFileExtension(*it, false);
         if (result == Reg_WarningRequiresAdminRights) {
-            sAdminRightsNeededEndings += _T("\n");
-            sAdminRightsNeededEndings += *it;
+            sPrivilegeNeededEndings += _T("\n");
+            sPrivilegeNeededEndings += *it;
             endingsToRegisterSecondTry.push_back(*it);
-        } else if (result != Reg_Success) {
+        } else if (result == Reg_NeedsWriteToHKLMAsAdministrator) {
+			sRunAsAdminRequiredEndings += _T("\n");
+			sRunAsAdminRequiredEndings += *it;
+		} else if (result != Reg_Success) {
             sFailedEndings += _T("\n");
             sFailedEndings += *it;
         }
@@ -171,8 +175,8 @@ LRESULT CFileExtensionsDlg::OnOK(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*
     for (std::list<CString>::const_iterator it = endingsToUnregister.begin(); it != endingsToUnregister.end(); ++it) {
         RegResult result = m_pRegistry->UnregisterFileExtension(*it, false);
         if (result == Reg_WarningRequiresAdminRights) {
-            sAdminRightsNeededEndings += _T("\n");
-            sAdminRightsNeededEndings += *it;
+            sPrivilegeNeededEndings += _T("\n");
+            sPrivilegeNeededEndings += *it;
             endingsToUnregisterSecondTry.push_back(*it);
         } else if (result != Reg_Success) {
             sFailedEndings += _T("\n");
@@ -180,13 +184,13 @@ LRESULT CFileExtensionsDlg::OnOK(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*
         }
     }
 
-    if (sAdminRightsNeededEndings.GetLength() > 0) {
+    if (sPrivilegeNeededEndings.GetLength() > 0) {
         CString msg(CNLS::GetString(_T("The following image extensions are protected by the operating system.")));
         msg += _T("\n");
         msg += CNLS::GetString(_T("JPEGView can try to remove the restrictions automatically."));
         msg += _T("\n");
         msg += CNLS::GetString(_T("However this will fail if the current user has no administration privileges."));
-        msg += sAdminRightsNeededEndings;
+        msg += sPrivilegeNeededEndings;
         if (::MessageBox(m_hWnd, msg, CNLS::GetString(_T("Warning")), MB_OKCANCEL | MB_ICONWARNING) == IDCANCEL) {
             return 0;
         }
@@ -215,6 +219,17 @@ LRESULT CFileExtensionsDlg::OnOK(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*
             }
         }
     }
+
+	if (sRunAsAdminRequiredEndings.GetLength() > 0) {
+        CString msg(CNLS::GetString(_T("The following image extensions can only be registered when run as administrator:")));
+        msg += _T("\n");
+		msg += sRunAsAdminRequiredEndings;
+		msg += _T("\n\n");
+        msg += CNLS::GetString(_T("To run JPEGView with administrator rights:"));
+        msg += _T("\n");
+        msg += CNLS::GetString(_T("Right-click JPEGView.exe in the Windows Explorer and select 'Run as administrator'"));
+        ::MessageBox(m_hWnd, msg, CNLS::GetString(_T("Warning")), MB_OK | MB_ICONWARNING);
+	}
 
     if (sFailedEndings.GetLength() > 0) {
         if (!ShowRegistryError(m_hWnd, _T("HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\FileExts\\"), sFailedEndings)) {

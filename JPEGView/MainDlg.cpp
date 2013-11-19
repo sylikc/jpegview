@@ -555,8 +555,11 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 }
 
 void CMainDlg::PaintToDC(CDC& dc) {
+	COLORREF backColor = CSettingsProvider::This().ColorBackground();
+	if (backColor == 0)
+		backColor = RGB(0, 0, 1); // these f**ing nVidia drivers have a bug when blending pure black
     CBrush backBrush;
-	backBrush.CreateSolidBrush(CSettingsProvider::This().ColorBackground());
+	backBrush.CreateSolidBrush(backColor);
 
     CJPEGImage* pCurrentImage = GetCurrentImage();
     if (pCurrentImage == NULL) {
@@ -602,7 +605,7 @@ void CMainDlg::BlendBlackRect(CDC & targetDC, CPanel& panel, float fBlendFactor)
 	CBitmap bitmapPanel;
 	bitmapPanel.CreateCompatibleBitmap(targetDC, nW, nH);
 	memDCPanel.SelectBitmap(bitmapPanel);
-	memDCPanel.FillSolidRect(0, 0, nW, nH, RGB(0, 0, 0));
+	memDCPanel.FillSolidRect(0, 0, nW, nH, RGB(0, 0, 1)); // nVidia workaround: blending pure black has a bug
 	
 	BLENDFUNCTION blendFunc;
 	memset(&blendFunc, 0, sizeof(blendFunc));

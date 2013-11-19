@@ -45,7 +45,12 @@ LRESULT CAboutDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lPara
 		IMAGE_ICON, ::GetSystemMetrics(SM_CXSMICON), ::GetSystemMetrics(SM_CYSMICON), LR_DEFAULTCOLOR);
 	SetIcon(hIconSmall, FALSE);
 
-	this->SetWindowText(CNLS::GetString(_T("About JPEGView...")));
+#ifdef _DEBUG
+	LPCTSTR sTitle = _T("About JPEGView... (Debug version)");
+#else
+	LPCTSTR sTitle = CNLS::GetString(_T("About JPEGView..."));
+#endif
+	this->SetWindowText(sTitle);
 
 	m_lblVersion.Attach(GetDlgItem(IDC_JPEGVIEW));
 	m_lblSIMD.Attach(GetDlgItem(IDC_SIMDMODE));
