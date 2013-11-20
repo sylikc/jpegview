@@ -11,6 +11,7 @@ class CJPEGProvider
 public:
 	// hint for caching - read ahead or opposite
 	enum EReadAheadDirection {
+		NONE, // Do not create a read-ahead request
 		FORWARD,
 		BACKWARD,
 		TOGGLE

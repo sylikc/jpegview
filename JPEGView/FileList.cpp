@@ -301,6 +301,8 @@ CFileList* CFileList::Next() {
 	m_nMarkedIndexShow = -1;
 	if (m_fileList.size() > 0) {
 		std::list<CFileDesc>::iterator iterTemp = m_iter;
+		if (iterTemp == m_fileList.end())
+			return this;
 		iterTemp++;
 		if (iterTemp == m_fileList.end()) {
 			iterTemp = m_fileList.begin();
