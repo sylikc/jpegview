@@ -195,8 +195,8 @@ CImageData CImageLoadThread::GetLoadedImage(int nHandle) {
 }
 
 void CImageLoadThread::ReleaseFile(LPCTSTR strFileName) {
-    CReleaseFileRequest request(strFileName);
-    ProcessAndWait(&request);
+    CReleaseFileRequest* pRequest = new CReleaseFileRequest(strFileName);
+    ProcessAndWait(pRequest);
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////

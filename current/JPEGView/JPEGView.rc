@@ -383,7 +383,7 @@ BEGIN
         BLOCK "040904B0"
         BEGIN
             VALUE "CompanyName", "\0"
-            VALUE "FileDescription", "High quality resampling JPEG viewer\0"
+            VALUE "FileDescription", "JPEGView\0"
             VALUE "FileVersion", JPEGVIEW_VERSION
             VALUE "InternalName", "JPEGView\0"
             VALUE "LegalCopyright", "Copyright 2006-2013 David Kleiner\0"

@@ -49,7 +49,7 @@ CJPEGImage* CJPEGProvider::RequestJPEG(CFileList* pFileList, EReadAheadDirection
 		// no, request never sent for this file, add to request queue and start async
 		pRequest = StartNewRequest(strFileName, nFrameIndex, processParams);
 		// wait with read ahead when direction changed - maybe user just wants to resee last image
-		if (!bDirectionChanged) {
+		if (!bDirectionChanged && eDirection != NONE) {
 			// start parallel if more than one thread
 			StartNewRequestBundle(pFileList, eDirection, processParams, m_nNumThread - 1, NULL);
 		}
@@ -92,7 +92,7 @@ CJPEGImage* CJPEGProvider::RequestJPEG(CFileList* pFileList, EReadAheadDirection
 	ClearOldestReadAhead();
 
 	// check if we shall start new requests (don't start another request if we are short of memory!)
-	if (m_requestList.size() < (unsigned int)m_nNumBuffers && !bDirectionChanged && !bWasOutOfMemory) {
+	if (m_requestList.size() < (unsigned int)m_nNumBuffers && !bDirectionChanged && !bWasOutOfMemory && eDirection != NONE) {
 		StartNewRequestBundle(pFileList, eDirection, processParams, m_nNumThread, pRequest);
 	}
 
