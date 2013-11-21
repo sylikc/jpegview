@@ -2,11 +2,11 @@
 
 enum RegResult {
     Reg_Success,
-    Reg_WarningRequiresAdminRights,
-    Reg_ErrorNoAdminRights,
-    Reg_ErrorWriteKey,
-    Reg_ErrorChangeDACL,
-	Reg_NeedsWriteToHKLMAsAdministrator,
+    Reg_WarningNeedsChangeDACL,  // DACL needs to be changed to write the enty
+    Reg_ErrorNeedsWriteDACLRights, // Right to change DACL is not present
+    Reg_ErrorWriteKey, // Error writing the key
+    Reg_ErrorChangeDACL, // Error changing the DACL
+	Reg_ErrorProtectedByHash, // Key is protected by kryptographic hash (Windows 8 only)
     Reg_Internal
 };
 

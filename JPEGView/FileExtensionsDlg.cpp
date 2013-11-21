@@ -150,21 +150,21 @@ LRESULT CFileExtensionsDlg::OnOK(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*
     }
 
     CString sFailedEndings;
-    CString sPrivilegeNeededEndings;
-	CString sRunAsAdminRequiredEndings;
+    CString sChangeDACLRequiredEndings;
+	CString sProtectedByWindowsEndings;
     std::list<CString> endingsToRegisterSecondTry;
     std::list<CString> endingsToUnregisterSecondTry;
 
     // Register new file extensions
     for (std::list<CString>::const_iterator it = endingsToRegister.begin(); it != endingsToRegister.end(); ++it) {
         RegResult result = m_pRegistry->RegisterFileExtension(*it, false);
-        if (result == Reg_WarningRequiresAdminRights) {
-            sPrivilegeNeededEndings += _T("\n");
-            sPrivilegeNeededEndings += *it;
+        if (result == Reg_WarningNeedsChangeDACL) {
+            sChangeDACLRequiredEndings += _T("\n");
+            sChangeDACLRequiredEndings += *it;
             endingsToRegisterSecondTry.push_back(*it);
-        } else if (result == Reg_NeedsWriteToHKLMAsAdministrator) {
-			sRunAsAdminRequiredEndings += _T("\n");
-			sRunAsAdminRequiredEndings += *it;
+        } else if (result == Reg_ErrorProtectedByHash) {
+			sProtectedByWindowsEndings += _T("\n");
+			sProtectedByWindowsEndings += *it;
 		} else if (result != Reg_Success) {
             sFailedEndings += _T("\n");
             sFailedEndings += *it;
@@ -174,31 +174,24 @@ LRESULT CFileExtensionsDlg::OnOK(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*
     // Unregister file extensions
     for (std::list<CString>::const_iterator it = endingsToUnregister.begin(); it != endingsToUnregister.end(); ++it) {
         RegResult result = m_pRegistry->UnregisterFileExtension(*it, false);
-        if (result == Reg_WarningRequiresAdminRights) {
-            sPrivilegeNeededEndings += _T("\n");
-            sPrivilegeNeededEndings += *it;
+        if (result == Reg_WarningNeedsChangeDACL) {
+            sChangeDACLRequiredEndings += _T("\n");
+            sChangeDACLRequiredEndings += *it;
             endingsToUnregisterSecondTry.push_back(*it);
-        } else if (result != Reg_Success) {
+        } else if (result == Reg_ErrorProtectedByHash) {
+			sProtectedByWindowsEndings += _T("\n");
+			sProtectedByWindowsEndings += *it;
+		} else if (result != Reg_Success) {
             sFailedEndings += _T("\n");
             sFailedEndings += *it;
         }
     }
 
-    if (sPrivilegeNeededEndings.GetLength() > 0) {
-        CString msg(CNLS::GetString(_T("The following image extensions are protected by the operating system.")));
-        msg += _T("\n");
-        msg += CNLS::GetString(_T("JPEGView can try to remove the restrictions automatically."));
-        msg += _T("\n");
-        msg += CNLS::GetString(_T("However this will fail if the current user has no administration privileges."));
-        msg += sPrivilegeNeededEndings;
-        if (::MessageBox(m_hWnd, msg, CNLS::GetString(_T("Warning")), MB_OKCANCEL | MB_ICONWARNING) == IDCANCEL) {
-            return 0;
-        }
-
+    if (sChangeDACLRequiredEndings.GetLength() > 0) {
         for (std::list<CString>::const_iterator it = endingsToRegisterSecondTry.begin(); it != endingsToRegisterSecondTry.end(); ++it) {
             RegResult result = m_pRegistry->RegisterFileExtension(*it, true);
-            if (result == Reg_ErrorNoAdminRights) {
-                if (::MessageBox(m_hWnd, CNLS::GetString(_T("Insufficient rights to remove the restrictions. Continue?")), CNLS::GetString(_T("Error")), MB_YESNO | MB_ICONERROR) == IDNO) {
+            if (result == Reg_ErrorNeedsWriteDACLRights) {
+                if (::MessageBox(m_hWnd, CNLS::GetString(_T("Insufficient rights to change the privilege (DACL) on the registry entry. Continue?")), CNLS::GetString(_T("Error")), MB_YESNO | MB_ICONERROR) == IDNO) {
                     return 0;
                 }
             } else if (result != Reg_Success) {
@@ -209,8 +202,8 @@ LRESULT CFileExtensionsDlg::OnOK(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*
 
         for (std::list<CString>::const_iterator it = endingsToUnregisterSecondTry.begin(); it != endingsToUnregisterSecondTry.end(); ++it) {
             RegResult result = m_pRegistry->UnregisterFileExtension(*it, true);
-            if (result == Reg_ErrorNoAdminRights) {
-                if (::MessageBox(m_hWnd, CNLS::GetString(_T("Insufficient rights to remove the restrictions. Continue?")), CNLS::GetString(_T("Error")), MB_YESNO | MB_ICONERROR) == IDNO) {
+            if (result == Reg_ErrorNeedsWriteDACLRights) {
+                if (::MessageBox(m_hWnd, CNLS::GetString(_T("Insufficient rights to change the privilege (DACL) on the registry entry. Continue?")), CNLS::GetString(_T("Error")), MB_YESNO | MB_ICONERROR) == IDNO) {
                     return 0;
                 }
             } else if (result != Reg_Success) {
@@ -220,14 +213,16 @@ LRESULT CFileExtensionsDlg::OnOK(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*
         }
     }
 
-	if (sRunAsAdminRequiredEndings.GetLength() > 0) {
-        CString msg(CNLS::GetString(_T("The following image extensions can only be registered when run as administrator:")));
+	if (sProtectedByWindowsEndings.GetLength() > 0) {
+        CString msg(CNLS::GetString(_T("The following image extensions are protected by the operating system.")));
         msg += _T("\n");
-		msg += sRunAsAdminRequiredEndings;
+		msg += sProtectedByWindowsEndings;
 		msg += _T("\n\n");
-        msg += CNLS::GetString(_T("To run JPEGView with administrator rights:"));
+        msg += CNLS::GetString(_T("Windows 8 blocks JPEGView from changing the default program for these file endings."));
         msg += _T("\n");
-        msg += CNLS::GetString(_T("Right-click JPEGView.exe in the Windows Explorer and select 'Run as administrator'"));
+        msg += CNLS::GetString(_T("Use the 'Default Programs' configuration dialog from the operating system instead."));
+		msg += _T("\n");
+		msg += CNLS::GetString(_T("Alternatively, right click an image file of the given type in Windows Explorer and select 'Open with... > Choose default program'"));
         ::MessageBox(m_hWnd, msg, CNLS::GetString(_T("Warning")), MB_OK | MB_ICONWARNING);
 	}
 
