@@ -331,11 +331,9 @@ Unregistering not possible	Deregistrierung nicht möglich
 %s images (processed by Window Imaging Component - WIC)	%s Bilder (geöffnet mit Windows Imaging Component - WIC)
 %s camera raw images (embedded JPEGs only)	%s Kamera-Rohbilder (nur eingebettete JPEG Bilder)
 The following image extensions are protected by the operating system.	Die folgenden Dateiendungen sind durch das Betriebssystem geschützt.
-JPEGView can try to remove the restrictions automatically.	JPEGView kann versuchen, die Restriktionen automatisch zu entfernen.
-However this will fail if the current user has no administration privileges.	Dies wird allerdings fehlschlagen, wenn der aktuelle Benutzer keine Administratorrechte besitzt.
-Insufficient rights to remove the restrictions. Continue?	Ungenügende Rechte um die Restriktionen zu entfernen. Weitermachen?
+Insufficient rights to change the privilege (DACL) on the registry entry. Continue?	Ungenügende Rechte um die Berechtigung (DACL) auf dem Registryeintrag zu ändern. Weitermachen?
 No image loaded!	Kein Bild geladen!
 Right mouse button: Context menu	Rechte Maustaste: Kontextmenü
-The following image extensions can only be registered when run as administrator:	Die folgenden Dateierweiterungen können nur registriert werden, falls JPEGView mit Administratorenrechten ausgeführt wird:
-To run JPEGView with administrator rights:	JPEGView mit Administratorenrechten ausführen:
-Right-click JPEGView.exe in the Windows Explorer and select 'Run as administrator'	JPEGView.exe im Windows Explorer mit der rechten Maustaste anklicken und 'Als Administrator ausführen' auswählen
+Windows 8 blocks JPEGView from changing the default program for these file endings.	Windows 8 verunmöglicht, dass JPEGView das Standardprogramm für diese Dateierweiterungen ändert.
+Use the 'Default Programs' configuration dialog from the operating system instead.	Benutzen Sie stattdessen den 'Standardprogramme' Konfigurationsdialog des Betriebssystems.
+Alternatively, right click an image file of the given type in Windows Explorer and select 'Open with... > Choose default program'	Alternativ können Sie eine Bilddatei des entsprechenden Typs im Windows Explorer rechtsklicken und 'Öffnen mit... > Standardprogram festlegen' anwählen.
