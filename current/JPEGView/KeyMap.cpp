@@ -1,6 +1,7 @@
 #include "StdAfx.h"
 #include "KeyMap.h"
 #include "NLS.h"
+#include "resource.h"
 
 #define M_SHIFT 0x10000
 #define M_ALT   0x20000
@@ -11,12 +12,13 @@ struct SKey {
 	int KeyCode;
 };
 
-#define NUM_KEYS 29
+#define NUM_KEYS 30
 
 static SKey KeyTable[NUM_KEYS] = {
 	{ _T("Alt"), M_ALT },
 	{ _T("Ctrl"), M_CTRL },
 	{ _T("Shift"), M_SHIFT },
+	{ _T("Esc"), VK_ESCAPE },
 	{ _T("Return"), VK_RETURN },
 	{ _T("Space"), VK_SPACE },
 	{ _T("End"), VK_END },
@@ -147,6 +149,7 @@ static CString _GetKeyShortcutName(int nShortcut) {
 CKeyMap::CKeyMap(LPCTSTR sKeyMapFile) {
 	FILE *fptr = _tfopen(sKeyMapFile, _T("r"));
 	if (fptr == NULL) {
+		AddDefaultEscapeHandling();
 		return;
 	}
 
@@ -189,7 +192,16 @@ CKeyMap::CKeyMap(LPCTSTR sKeyMapFile) {
 		
 	}
 
+	AddDefaultEscapeHandling();
+
 	fclose(fptr);
+}
+
+void CKeyMap::AddDefaultEscapeHandling() {
+	if (m_keyMap.find(VK_ESCAPE) == m_keyMap.end()) {
+		// ESC key not in keymap - map to default command for ESC
+		m_keyMap[VK_ESCAPE] = IDM_DEFAULT_ESC;
+	}
 }
 
 int CKeyMap::GetCommandIdForKey(int nVirtualKeyCode, bool bAlt, bool bCtrl, bool bShift) {

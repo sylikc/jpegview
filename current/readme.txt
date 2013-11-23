@@ -31,9 +31,10 @@ Changelog
 Bugs fixed:
 - Read ahead no longer turned off when failed to read one image
 - Fixed loading error of JPEGs with EXIF data and IDF1 section missing
-- Blending issues with nVidia cards fixed (hopefully now all of them)
-- Fixed (sporadic) crash when deleting files in folder with the 'Del' key
-- Registration of file endings in Windows 8 improved
+- Blending issues with nVidia cards fixed (hopefully now works correctly in all situations)
+- Fixed (sporadic) crash when deleting images permanently with the 'Del' key
+- Registration of file extensions in Windows 8 improved. Consider however that Windows 8 protects the standard
+  file associations. For changing these associations the 'Default programs' dialog of Windows 8 must be used.
 New features:
 - New supported file format: TGA (8, 15, 16, 24, 32 bits) - only for reading
 - New INI file setting:
@@ -47,6 +48,8 @@ New features:
   DefaultGUIFont=fontName fontSize [bold]
   FileNameFont=fontName fontSize [bold]
   Enables to change the GUI font, its size and weight
+- Esc key can now be re-defined in keymap (e.g. to display to 'Open file' dialog)
+  Default remains to exit JPEGView
   
 [1.0.30]
 Bugs fixed:

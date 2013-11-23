@@ -893,26 +893,13 @@ LRESULT CMainDlg::OnKeyDown(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOO
 		return 1; // a panel has handled the key
 	}
 	bool bHandled = false;
-	if (wParam == VK_ESCAPE) {
+	if (wParam == VK_ESCAPE && m_bShowHelp) {
 		bHandled = true;
-		if (m_bShowHelp) {
-			m_bShowHelp = false;
-			this->Invalidate(FALSE);
-		} else if (m_bMovieMode) {
-			if (m_bAutoExit)
-				CleanupAndTerminate();
-			else
-				StopMovieMode(); // stop any running movie/slideshow
-		} else if (m_bIsAnimationPlaying) {
-			if (m_bAutoExit)
-				CleanupAndTerminate();
-			else
-				StopAnimation(); // stop any running animation
-		}else if (m_pCropCtl->IsCropping()) {
-			m_pCropCtl->AbortCropping();
-		} else {
-            CleanupAndTerminate();
-		}
+		m_bShowHelp = false;
+		this->Invalidate(FALSE);
+	} else if (wParam == VK_ESCAPE && m_pCropCtl->IsCropping()) {
+		bHandled = true;
+		m_pCropCtl->AbortCropping();
 	} else if (!bCtrl && m_nLastLoadError == HelpersGUI::FileLoad_NoFilesInDirectory && !m_sStartupFile.IsEmpty()) {
 		// search in subfolders if initially provider directory has no images
 		bHandled = true;
@@ -1652,6 +1639,21 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 			break;
 		case IDM_EXIT:
 			CleanupAndTerminate();
+			break;
+		case IDM_DEFAULT_ESC:
+			if (m_bMovieMode) {
+				if (m_bAutoExit)
+					CleanupAndTerminate();
+				else
+					StopMovieMode(); // stop any running movie/slideshow
+			} else if (m_bIsAnimationPlaying) {
+				if (m_bAutoExit)
+					CleanupAndTerminate();
+				else
+					StopAnimation(); // stop any running animation
+			} else {
+				CleanupAndTerminate();
+			}
 			break;
 		case IDM_ZOOM_SEL:
 			ZoomToSelection();

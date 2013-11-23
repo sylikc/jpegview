@@ -21,4 +21,6 @@ private:
 
 	// key is the key code, value the command ID
 	stdext::hash_map<int, int> m_keyMap;
+
+	void AddDefaultEscapeHandling();
 };

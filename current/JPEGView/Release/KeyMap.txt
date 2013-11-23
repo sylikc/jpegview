@@ -72,6 +72,7 @@
 #define IDM_BACKUP_PARAMDB	12620			// backup parameter DB
 #define IDM_RESTORE_PARAMDB	12630			// restore parameter DB
 #define IDM_ABOUT		12900			// show about box
+#define IDM_EXIT		13000			// exit JPEGView application
 #define IDM_TOGGLE		14100			// toggle between marked image and current image
 #define IDM_MARK_FOR_TOGGLE	14101			// mark current image for toggling
 #define IDM_COLOR_CORRECTION_INC 14200			// increase color correction amount
@@ -99,9 +100,9 @@
 #define IDM_CONTEXT_MENU	16000			// display context menu
 
 // This section contains the key map. A small number of keys is predefined and cannot be changed:
-// F1 for help, ESC for exit, 0..9 for slide show
+// F1 for help, Alt+F4 for exit, 0..9 for slide show
 // The following keys are recognized: 
-// Alt, Ctrl, Shift, Return, Space, End, Home, Back, Tab, PgDn, PgUp
+// Alt, Ctrl, Shift, Esc, Return, Space, End, Home, Back, Tab, PgDn, PgUp
 // Left, Right, Up, Down, Insert, Del, Plus, Minus, Mul, Div, Comma, Period
 // A .. Z  F1 .. F12
 
@@ -112,6 +113,8 @@
 // MouseL, MouseR, MouseM, MouseX1, MouseX2, MouseDblClk
 // (Left, right, middle, extra mouse buttons, mouse left double click)
 
+// Uncomment the following line if you want to exit JPEGView with the Esc key immediatly when playing an animation or a slideshow
+// Esc                    IDM_EXIT
 PgDn                    IDM_NEXT
 Right                   IDM_NEXT
 Left                    IDM_PREV

@@ -124,7 +124,16 @@ void TranslateMenuStrings(HMENU hMenu, CKeyMap* pKeyMap) {
 					// instead of the shortcut of the menu item command id.
 					int nCommand;
 					_stscanf(pTab, _T("%x"), &nCommand);
-					sNewMenuText += pKeyMap->GetKeyStringForCommand(nCommand);
+					if (nCommand == 0xFFFF) {
+						// Exit JPEGView is special
+						CString shortCutExit = pKeyMap->GetKeyStringForCommand(0xFF);
+						if (shortCutExit.IsEmpty()) {
+							shortCutExit = pKeyMap->GetKeyStringForCommand(IDM_EXIT);
+						}
+						sNewMenuText += shortCutExit;
+					} else {
+						sNewMenuText += pKeyMap->GetKeyStringForCommand(nCommand);
+					}
 				} else {
 					sNewMenuText += pTab;
 				}
