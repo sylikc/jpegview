@@ -178,7 +178,7 @@ PopupMenu MENU
 BEGIN 
   POPUP "PopupMenu" 
     BEGIN
-	  MENUITEM "Stop slide show/movie\tEsc",		IDM_STOP_MOVIE
+	  MENUITEM "Stop slide show/movie\t0xff",	IDM_STOP_MOVIE
 	  MENUITEM SEPARATOR
 	  MENUITEM "Open image...",					IDM_OPEN
 	  MENUITEM "Save processed image...\t0x5de",		IDM_SAVE
@@ -325,7 +325,7 @@ BEGIN
         END 
 	  MENUITEM "About JPEGView...",				IDM_ABOUT
 	  MENUITEM SEPARATOR
-	  MENUITEM "Exit\tEsc",						IDM_EXIT
+	  MENUITEM "Exit\t0xffff",					IDM_EXIT
     END 
  
 END 

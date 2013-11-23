@@ -55,6 +55,7 @@
 #define IDC_LBL_PIXEL 1008
 #define IDC_LBL_PIXEL2 1009
 
+#define IDM_DEFAULT_ESC		255
 #define IDM_STOP_MOVIE		1000
 #define IDM_MINIMIZE		1010
 #define IDM_OPEN			1100
