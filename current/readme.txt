@@ -32,7 +32,7 @@ Bugs fixed:
 - Read ahead no longer turned off when failed to read one image
 - Fixed loading error of JPEGs with EXIF data and IDF1 section missing
 - Blending issues with nVidia cards fixed (hopefully now works correctly in all situations)
-- Fixed (sporadic) crash when deleting images permanently with the 'Del' key
+- Fixed (sporadic) crash when deleting images permanently with the 'Del' key or when executing other user commands
 - Registration of file extensions in Windows 8 improved. Consider however that Windows 8 protects the standard
   file associations. For changing these associations the 'Default programs' dialog of Windows 8 must be used.
 New features:
@@ -50,6 +50,9 @@ New features:
   Enables to change the GUI font, its size and weight
 - Esc key can now be re-defined in keymap (e.g. to display to 'Open file' dialog)
   Default remains to exit JPEGView
+- User commands extensions
+  - Shortcuts with modifier keys can now be assigned to user commands. Shortcut format is as in the keymap, e.g. 'Ctrl+P'
+  - User commands can optionally be bound to a menu entry in the submenu 'User commands' in the JPEGView context menu
   
 [1.0.30]
 Bugs fixed:

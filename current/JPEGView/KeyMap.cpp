@@ -197,6 +197,25 @@ CKeyMap::CKeyMap(LPCTSTR sKeyMapFile) {
 	fclose(fptr);
 }
 
+int CKeyMap::GetVirtualKeyCode(LPCTSTR keyName) {
+	CString sBuffer(keyName);
+	LPTSTR buffer = sBuffer.GetBuffer(sBuffer.GetLength());
+	int key = _ParseKeys(buffer);
+	return (key == 0) ? -1 : key;
+}
+
+int CKeyMap::GetCombinedKeyCode(int keyCode, bool alt, bool control, bool shift) {
+	int nKeyCode = keyCode;
+	if (alt) nKeyCode += M_ALT;
+	if (control) nKeyCode += M_CTRL;
+	if (shift) nKeyCode += M_SHIFT;
+	return nKeyCode;
+}
+
+CString CKeyMap::GetShortcutKey(int combinedKeyCode) {
+	return _GetKeyShortcutName(combinedKeyCode);
+}
+
 void CKeyMap::AddDefaultEscapeHandling() {
 	if (m_keyMap.find(VK_ESCAPE) == m_keyMap.end()) {
 		// ESC key not in keymap - map to default command for ESC
@@ -205,10 +224,7 @@ void CKeyMap::AddDefaultEscapeHandling() {
 }
 
 int CKeyMap::GetCommandIdForKey(int nVirtualKeyCode, bool bAlt, bool bCtrl, bool bShift) {
-	int nKeyCode = nVirtualKeyCode;
-	if (bAlt) nKeyCode += M_ALT;
-	if (bCtrl) nKeyCode += M_CTRL;
-	if (bShift) nKeyCode += M_SHIFT;
+	int nKeyCode = GetCombinedKeyCode(nVirtualKeyCode, bAlt, bCtrl, bShift);
 	stdext::hash_map<int, int>::const_iterator iter = m_keyMap.find(nKeyCode);
 	if (iter == m_keyMap.end()) {
 		return -1;

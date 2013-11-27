@@ -322,7 +322,13 @@ BEGIN
 		  MENUITEM SEPARATOR
           MENUITEM "Backup parameter DB...",	IDM_BACKUP_PARAMDB
           MENUITEM "Restore parameter DB...",	IDM_RESTORE_PARAMDB
-        END 
+        END
+	  MENUITEM SEPARATOR
+	  POPUP "User commands" 
+        BEGIN
+		  MENUITEM "_empty_",					IDM_ABOUT
+        END
+	  MENUITEM SEPARATOR
 	  MENUITEM "About JPEGView...",				IDM_ABOUT
 	  MENUITEM SEPARATOR
 	  MENUITEM "Exit\t0xffff",					IDM_EXIT

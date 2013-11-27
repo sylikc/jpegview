@@ -204,6 +204,9 @@
 #define IDM_CROPMODE_16_9   20700
 #define IDM_CROPMODE_16_10	20800
 
+#define IDM_FIRST_USER_CMD  22000
+#define IDM_LAST_USER_CMD   22099
+
 // in the main menu
 // these position must be changed if menu items are inserted
 #define SUBMENU_POS_MODDATE 6
@@ -215,6 +218,7 @@
 #define SUBMENU_POS_ZOOM 32
 #define SUBMENU_POS_AUTOZOOMMODE 33
 #define SUBMENU_POS_SETTINGS 35
+#define SUBMENU_POS_USER_COMMANDS 37
 
 // in the crop menu
 #define SUBMENU_POS_CROPMODE 3

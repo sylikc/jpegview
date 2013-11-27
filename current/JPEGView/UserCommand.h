@@ -14,6 +14,9 @@ public:
 	// Gets the virtual keycode the user command is bound to
 	int GetKeyCode() const { return m_nKeyCode; }
 
+	// Gets the menu item text, null if command is not in the menu
+	LPCTSTR MenuItemText() const { return m_sMenuItemText.IsEmpty() ? (LPCTSTR)NULL : m_sMenuItemText; }
+
 	// Returns if the current image and all cached image needs to be reloaded after executing the command
 	bool NeedsReloadAll() const { return m_bReloadAll; }
 
@@ -46,6 +49,7 @@ private:
 	int m_nKeyCode;
 	CString m_sCommand;
 	CString m_sConfirmMsg;
+	CString m_sMenuItemText;
 	bool m_bNoWindow;
 	bool m_bWaitForProcess;
 	bool m_bReloadFileList;

@@ -331,4 +331,43 @@ LPCTSTR LosslessTransformationResultToString(CJPEGLosslessTransform::EResult eRe
     }
 }
 
+bool CreateUserCommandsMenu(HMENU hMenu) {
+	bool hasItems = false;
+	int count = 0;
+	std::list<CUserCommand*>::iterator iter;
+	std::list<CUserCommand*> & userCmdList = CSettingsProvider::This().UserCommandList();
+	::DeleteMenu(hMenu, 0, MF_BYPOSITION);
+	for (iter = userCmdList.begin( ); iter != userCmdList.end( ); iter++ ) {
+		LPCTSTR menuItemText = (*iter)->MenuItemText();
+		if (menuItemText != NULL) {
+			hasItems = true;
+			CString itemText(menuItemText);
+			CString shortcutKey = CKeyMap::GetShortcutKey((*iter)->GetKeyCode());
+			if (!shortcutKey.IsEmpty()) {
+				itemText += _T('\t');
+				itemText += shortcutKey;
+			}
+			::AppendMenu(hMenu, MF_ENABLED | MF_STRING, (UINT_PTR)(IDM_FIRST_USER_CMD + count), itemText);
+			count++;
+		}
+	}
+	return hasItems;
+}
+
+CUserCommand* FindUserCommand(int index) {
+	int count = 0;
+	std::list<CUserCommand*>::iterator iter;
+	std::list<CUserCommand*> & userCmdList = CSettingsProvider::This().UserCommandList();
+	for (iter = userCmdList.begin( ); iter != userCmdList.end( ); iter++ ) {
+		LPCTSTR menuItemText = (*iter)->MenuItemText();
+		if (menuItemText != NULL) {
+			if (count == index) {
+				return *iter;
+			}
+			count++;
+		}
+	}
+	return NULL;
+}
+
 }

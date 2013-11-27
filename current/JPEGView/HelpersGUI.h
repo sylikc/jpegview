@@ -6,6 +6,7 @@
 enum EProcessingFlags;
 class CImageProcessingParams;
 class CKeyMap;
+class CUserCommand;
 
 namespace HelpersGUI {
 
@@ -57,4 +58,10 @@ namespace HelpersGUI {
 
     // Convert the error result code from lossless JPEG transformation to a string
     LPCTSTR LosslessTransformationResultToString(CJPEGLosslessTransform::EResult eResult);
+
+	// Creates the submenu containing the user commands in hMenu, returns if there are any menu items
+	bool CreateUserCommandsMenu(HMENU hMenu);
+
+	// Finds a user command given the menu index in the menu as created above
+	CUserCommand* FindUserCommand(int index);
 }

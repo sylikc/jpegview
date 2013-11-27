@@ -337,3 +337,4 @@ Right mouse button: Context menu	Rechte Maustaste: Kontextmenü
 Windows 8 blocks JPEGView from changing the default program for these file endings.	Windows 8 verunmöglicht, dass JPEGView das Standardprogramm für diese Dateierweiterungen ändert.
 Use the 'Default Programs' configuration dialog from the operating system instead.	Benutzen Sie stattdessen den 'Standardprogramme' Konfigurationsdialog des Betriebssystems.
 Alternatively, right click an image file of the given type in Windows Explorer and select 'Open with... > Choose default program'	Alternativ können Sie eine Bilddatei des entsprechenden Typs im Windows Explorer rechtsklicken und 'Öffnen mit... > Standardprogram festlegen' anwählen.
+User commands	Benutzerkommandos

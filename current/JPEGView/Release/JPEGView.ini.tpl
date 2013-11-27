@@ -22,7 +22,7 @@
 ; 'cs'    Czech
 ; 'el'    Greek
 ; 'eu'    Basque
-; 'bel'   Belarusan
+; 'bel'   Belorussian
 Language=auto
 
 
@@ -41,7 +41,7 @@ FileEndingsRAW=*.pef;*.dng;*.crw;*.nef;*.cr2;*.mrw;*.rw2;*.orf;*.x3f;*.arw;*.kdc
 ; Set to false to turn off this behavior.
 ReloadWhenDisplayedImageChanged=true
 
-; Background color, R G B, each component must be in [0..255], e.g. "128 128 128" for a middle grey
+; Background color, R G B, each component must be in [0..255], e.g. "128 128 128" for a middle gray
 BackgroundColor=0 0 0
 
 ; GUI colors, R G B format as used by BackgroundColor
@@ -65,7 +65,7 @@ Contrast=0.0
 Gamma=1.0
 
 ; Color saturation. Must be in 0.0 .. 2.0
-; 0.0 means grey scale image, 1.0 no additional color saturation, 2.0 maximal saturation
+; 0.0 means gray scale image, 1.0 no additional color saturation, 2.0 maximal saturation
 Saturation=1.0
 
 ; Sharpening to apply for downsampled images. Must be in 0 .. 0.5
@@ -104,7 +104,7 @@ ShowFullScreen=auto
 ; 'left top right bottom', space separated e.g: 100 100 900 700
 DefaultWindowRect=image
 
-; Contains the stored window rectangel in case of DefaultWindowRect=sticky
+; Contains the stored window rectangle in case of DefaultWindowRect=sticky
 StickyWindowRect=
 
 ; The initial crop window size when using 'Fixed Size' crop mode
@@ -238,12 +238,12 @@ CreateParamDBEntryOnSave=true
 
 ; If set to true, Ctrl-S overrides the original file on disk, applying the current processings without
 ; showing a dialog or prompting the user to confirm.
-; CAUTION: Use at your own risk! Be aware that the original image file is overriden and cannot be restored anymore!
+; CAUTION: Use at your own risk! Be aware that the original image file is overridden and cannot be restored anymore!
 OverrideOriginalFileWithoutSaveDialog=false
 
 ; If set to true, lossless JPEG transformations will trim the image as needed without prompting the user.
-; This will remove 15 pixel rows/colums at the image borders in worst case.
-; CAUTION: Use at your own risk! Be aware that the original image file is overriden and the trimmed borders cannot be restored anymore!
+; This will remove 15 pixel rows/columns at the image borders in worst case.
+; CAUTION: Use at your own risk! Be aware that the original image file is overridden and the trimmed borders cannot be restored anymore!
 TrimWithoutPromptLosslessJPEG=false
 
 ; Only for multi-monitor systems!
@@ -257,8 +257,8 @@ DisplayMonitor=-1
 ; F5 enables/disables the correction on the current image.
 AutoContrastCorrection=false
 
-; Using the following two keys, it is possible to explicitely exclude/include folders from the contrast correction.
-; More specific patterns have presedence over less specific patterns and inclusion has presedence over exclusion if
+; Using the following two keys, it is possible to explicitly exclude/include folders from the contrast correction.
+; More specific patterns have precedence over less specific patterns and inclusion has precedence over exclusion if
 ; a folder matches both. Example: '*\pics\orig\* has precedence over *\pics\* because it is more specific
 ; Use the ; character to separate two expressions.
 ; Example: ACCExclude=%mypictures%\Digicam\edited\*;*.bmp
@@ -275,11 +275,11 @@ ACCInclude=
 AutoContrastCorrectionAmount=0.5
 
 ; Amount of color correction in the color channels reg, green, blue, cyan, magenta and yellow
-; The numbers must be between 0.0 (no correction) and 1.0 (total correction towards the grey world model)
+; The numbers must be between 0.0 (no correction) and 1.0 (total correction towards the gray world model)
 ColorCorrection = "R: 0.2 G: 0.1 B: 0.35 C: 0.1 M: 0.3 Y: 0.15"
 
 ; Amount of automatic brightness correction
-; 0 means no brightness correction, 1 means full correction to middle grey. Must be in (0 .. 1)
+; 0 means no brightness correction, 1 means full correction to middle gray. Must be in (0 .. 1)
 AutoBrightnessCorrectionAmount=0.2
 
 ; Automatic correction of local density (local brightness of images)
@@ -312,8 +312,10 @@ LandscapeModeParams=-1 -1 -1 -1 0.5 1.0 0.75 0.4 -1 -1 -1 -1
 ; User command must be named UserCmd# where # stands for a number. The numbers 0 to 2 are already used by the global INI file.
 ; User command must have the following form:
 ; UserCmd#="KeyCode: %Key% Cmd: '%Cmd%' [Confirm: '%confirm%'] [HelpText: '%help%'] [Flags: '%flags%']"
-; %Key% :   Keycode (virtual key code) of the key that invokes the command. Do not define keys already used by JPEGView.
-;           For the character keys A to Z, the literal character can be used instead of the key code, e.g. A for the A-key.
+; %Key% :   Key that invokes the command. Do not define keys already used by JPEGView.
+;           The following keys are known: Alt, Ctrl, Shift, Esc, Return, Space, End, Home, Back, Tab, PgDn, PgUp,
+;           Left, Right, Up, Down, Insert, Del, Plus, Minus, Mul, Div, Comma, Period, A .. Z  F1 .. F12
+;           Combine modifier keys with +, e.g. 'Alt+Ctrl+P'
 ; %Cmd% :   Application to start, including command arguments. Enclose the application name with double quotes ("") if the path contains
 ;           spaces. To execute command line commands or batch files, use 'cmd /c command' respectively 'cmd /c MyBatchFile.bat'.
 ;           The following placeholders can be used in the %cmd% argument:
@@ -324,7 +326,7 @@ LandscapeModeParams=-1 -1 -1 -1 0.5 1.0 0.75 0.4 -1 -1 -1 -1
 ;           %mypictures% : The 'My Pictures' folder without trailing backslash
 ;           %exepath%    : Path to EXE folder where JPEGView is running
 ;           %exedrive%   : Drive letter of the EXE path, e.g. "c:"
-;           The resulting names are enclosed with double quotes automatically by JPEGView when no backslash if before or after the placeholder.
+;           The resulting names are enclosed with double quotes automatically by JPEGView when no backslash is before or after the placeholder.
 ; %confirm% : Message text that is shown and must be confirmed before the command is executed. 
 ;           This is an optional argument, if not used, no confirmation is needed for the command.
 ; %help% :  Help string that is displayed in JPEG view when F1 is pressed.
@@ -354,10 +356,10 @@ LandscapeModeParams=-1 -1 -1 -1 0.5 1.0 0.75 0.4 -1 -1 -1 -1
 ;                              Typically ShellExecute is set to start large external applications, e.g. an image editor.
 
 
-; IMPORTANT: Start with UserCmd1 except you want to override the Delete file command
+; IMPORTANT: Start with UserCmd1 except you want to override the Delete image command
 
 ; Here are some examples for user commands
-;UserCmd1="KeyCode: P  Cmd: 'C:\WINDOWS\system32\mspaint.exe /p %filename%' Confirm: 'Do you really want to print the file %filename%?' HelpText: 'P\tPrint current image'"
+;UserCmd1="KeyCode: Ctrl+P  Cmd: 'C:\WINDOWS\system32\mspaint.exe /p %filename%' Confirm: 'Do you really want to print the file %filename%?' HelpText: 'P\tPrint current image'"
 ;UserCmd2="KeyCode: Q  Cmd: 'cmd /c move %filename% "%mypictures%\trash\"' Confirm: 'Really move file to %mypictures%\trash\%filetitle%' HelpText: 'Q\tMove file to trash directory' Flags: 'WaitForTerminate ReloadFileList MoveToNext'"
 ;UserCmd3="KeyCode: W  Cmd: 'cmd /c copy %filename% "%mypictures%\trash\%filetitle%"' Confirm: 'Really copy file to %mypictures%\trash\%filetitle%' HelpText: 'W\tCopy file to trash directory' Flags: 'WaitForTerminate'"
 ;UserCmd4="KeyCode: A  Cmd: 'cmd /u /c echo %filename% >> "%mydocuments%\test.txt"' HelpText: 'A\tAppend to file list'"

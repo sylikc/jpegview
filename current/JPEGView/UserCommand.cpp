@@ -3,6 +3,7 @@
 #include "NLS.h"
 #include "Helpers.h"
 #include "SettingsProvider.h"
+#include "KeyMap.h"
 #include <shlobj.h>
 #include <shellapi.h>
 
@@ -131,13 +132,12 @@ CUserCommand::CUserCommand(const CString & sCommandLine) {
 	if (nIdxKeyCode < 0) {
 		return;
 	}
-	TCHAR keyChar[2];
-	if (_stscanf(&(lpCmdLine[nIdxKeyCode + 8]), _T("%1s"), &keyChar) != 1) {
+	TCHAR key[32];
+	if (_stscanf(&(lpCmdLine[nIdxKeyCode + 8]), _T("%31s"), &key) != 1) {
 		return;
 	}
-	if (keyChar[0] >= _T('A') && keyChar[0] <= _T('Z')) {
-		m_nKeyCode = (int)keyChar[0];
-	} else {
+	m_nKeyCode = CKeyMap::GetVirtualKeyCode(key);
+	if (m_nKeyCode == -1) {
 		if (_stscanf(&(lpCmdLine[nIdxKeyCode + 8]), _T("%d"), &m_nKeyCode) != 1) {
 			return;
 		}
@@ -154,6 +154,12 @@ CUserCommand::CUserCommand(const CString & sCommandLine) {
 	m_sCommand = ParseString(sCommandLine, nIdxCmd + 4);
 	if (m_sCommand.GetLength() == 0) {
 		return;
+	}
+
+	// Menu item text (optional)
+	int nIdxMenuText = sCmdLineLower.Find(_T("menuitem:"));
+	if (nIdxMenuText >= 0) {
+		m_sMenuItemText = ParseString(sCommandLine, nIdxMenuText + 9);
 	}
 
 	// Confirm message (optional)
