@@ -931,7 +931,7 @@ LRESULT CMainDlg::OnKeyDown(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOO
 	if (!bHandled) {
 		// look if any of the user commands wants to handle this key
 		if (m_pFileList->Current() != NULL) {
-			HandleUserCommands((uint32)wParam);
+			HandleUserCommands(CKeyMap::GetCombinedKeyCode(wParam, bAlt, bCtrl, bShift));
 		}
 	}
 
@@ -1096,7 +1096,13 @@ LRESULT CMainDlg::OnContextMenu(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam,
 	::CheckMenuItem(hMenuAutoZoomMode,  m_eAutoZoomMode*10 + IDM_AUTO_ZOOM_FIT_NO_ZOOM, MF_CHECKED);
 	HMENU hMenuSettings = ::GetSubMenu(hMenuTrackPopup, SUBMENU_POS_SETTINGS);
 	HMENU hMenuModDate = ::GetSubMenu(hMenuTrackPopup, SUBMENU_POS_MODDATE);
+	HMENU hUserCommands = ::GetSubMenu(hMenuTrackPopup, SUBMENU_POS_USER_COMMANDS);
 
+	if (!HelpersGUI::CreateUserCommandsMenu(hUserCommands)) {
+		::DeleteMenu(hMenuTrackPopup, SUBMENU_POS_USER_COMMANDS + 1, MF_BYPOSITION);
+		::DeleteMenu(hMenuTrackPopup, SUBMENU_POS_USER_COMMANDS, MF_BYPOSITION);
+		::DeleteMenu(hMenuTrackPopup, SUBMENU_POS_USER_COMMANDS - 1, MF_BYPOSITION);
+	}
     if (!m_bFullScreenMode) {
         // Transition effect and speed only available in full screen mode
 		::DeleteMenu(hMenuMovie, 9, MF_BYPOSITION);
@@ -1792,6 +1798,9 @@ void CMainDlg::ExecuteCommand(int nCommand) {
             OnContextMenu(0, 0, (m_nMouseX & 0xFFFF) | ((m_nMouseY & 0xFFFF) << 16), bNotUsed);
             break;
 	}
+	if (nCommand >= IDM_FIRST_USER_CMD && nCommand <= IDM_LAST_USER_CMD) {
+		ExecuteUserCommand(HelpersGUI::FindUserCommand(nCommand - IDM_FIRST_USER_CMD));
+	}
 }
 
 bool CMainDlg::OpenFile(bool bFullScreen, bool bAfterStartup) {
@@ -1937,40 +1946,44 @@ void CMainDlg::HandleUserCommands(uint32 virtualKeyCode) {
 	std::list<CUserCommand*> & userCmdList = CSettingsProvider::This().UserCommandList();
 	for (iter = userCmdList.begin( ); iter != userCmdList.end( ); iter++ ) {
 		if ((*iter)->GetKeyCode() == virtualKeyCode) {
-			MouseOn();
-            LPCTSTR sCurrentFileName = CurrentFileName(false);
-			if ((*iter)->CanExecute(this->m_hWnd, sCurrentFileName)) {
-				bool bReloadCurrent = false;
-				// First go to next, then execute the command and reload current file.
-                // Otherwise we get into troubles when the current image was deleted or moved.
-				if ((*iter)->MoveToNextAfterCommand()) {
-                    // don't send a request if we reload all, it would be canceled anyway later
-					GotoImage(POS_AwayFromCurrent, (*iter)->NeedsReloadAll() ? NO_REQUEST : 0);
-				}
-                if ((*iter)->Execute(this->m_hWnd, sCurrentFileName)) {
-				    if ((*iter)->NeedsReloadAll()) {
-					    m_pFileList->Reload();
-					    m_pJPEGProvider->NotifyNotUsed(m_pCurrentImage);
-					    m_pJPEGProvider->ClearAllRequests();
-					    m_pCurrentImage = NULL;
-					    bReloadCurrent = true;
-				    } else {
-					    if ((*iter)->NeedsReloadFileList()) {
-						    m_pFileList->Reload();
-						    bReloadCurrent = m_pFileList->Current() == NULL; // needs "reload" in this case
-                            Invalidate();
-					    }
-					    if ((*iter)->NeedsReloadCurrent() && !(*iter)->MoveToNextAfterCommand()) {
-						    bReloadCurrent = true;
-					    }
-				    }
-				    if (bReloadCurrent) {
-					    GotoImage(POS_Current);
-				    }
-                }
-			}
+			ExecuteUserCommand(*iter);
 			break;
 		}
+	}
+}
+
+void CMainDlg::ExecuteUserCommand(CUserCommand* pUserCommand) {
+	MouseOn();
+    LPCTSTR sCurrentFileName = CurrentFileName(false);
+	if (pUserCommand != NULL && pUserCommand->CanExecute(this->m_hWnd, sCurrentFileName)) {
+		bool bReloadCurrent = false;
+		// First go to next, then execute the command and reload current file.
+        // Otherwise we get into troubles when the current image was deleted or moved.
+		if (pUserCommand->MoveToNextAfterCommand()) {
+            // don't send a request if we reload all, it would be canceled anyway later
+			GotoImage(POS_AwayFromCurrent, pUserCommand->NeedsReloadAll() ? NO_REQUEST : 0);
+		}
+        if (pUserCommand->Execute(this->m_hWnd, sCurrentFileName)) {
+			if (pUserCommand->NeedsReloadAll()) {
+				m_pFileList->Reload();
+				m_pJPEGProvider->NotifyNotUsed(m_pCurrentImage);
+				m_pJPEGProvider->ClearAllRequests();
+				m_pCurrentImage = NULL;
+				bReloadCurrent = true;
+			} else {
+				if (pUserCommand->NeedsReloadFileList()) {
+					m_pFileList->Reload();
+					bReloadCurrent = m_pFileList->Current() == NULL; // needs "reload" in this case
+                    Invalidate();
+				}
+				if (pUserCommand->NeedsReloadCurrent() && !pUserCommand->MoveToNextAfterCommand()) {
+					bReloadCurrent = true;
+				}
+			}
+			if (bReloadCurrent) {
+				GotoImage(POS_Current);
+			}
+        }
 	}
 }
 
