@@ -5,8 +5,11 @@ class CUserCommand
 {
 public:
 	// Creates a user command given the INI file definition line
-	CUserCommand(const CString & sCommandLine);
+	CUserCommand(int index, const CString & sCommandLine, bool allowNoMenuAssignment);
 	~CUserCommand(void);
+
+	// Index of command in INI file (this is not the index in the command list, there are probabely gaps in the index)
+	int GetIndex() const { return m_nIndex;  }
 
 	// Returns if the user command is valid, i.e. if the definition is valid
 	bool IsValid() const { return m_bValid; }
@@ -31,9 +34,12 @@ public:
 	bool MoveToNextAfterCommand() const { return m_bMoveToNextAfterCommand; }
 
 	// Gets the key (as text, e.g. TAB) text (displayed in the list when F1 is pressed)
-	const CString & HelpKey()const  { return m_sHelpKey; }
+	const CString & HelpKey() const  { return m_sHelpKey; }
 	// Gets the explanation text (displayed in the list when F1 is pressed)
 	const CString & HelpText() const { return m_sHelpText; }
+
+	// Gets the executable of the command, not replacing any placeholders
+	CString GetExecutable() const;
 
     // Checks if the command can execute by asking the user for confirmation if the command requires this
 	bool CanExecute(HWND hWnd, LPCTSTR sFileName) const;
@@ -45,6 +51,7 @@ public:
 	bool Execute(HWND hWnd, LPCTSTR sFileName, const CRect& selectionRect) const;
 
 private:
+	int m_nIndex;
 	bool m_bValid;
 	int m_nKeyCode;
 	CString m_sCommand;
@@ -62,5 +69,5 @@ private:
 	CString m_sHelpKey;
 	CString m_sHelpText;
 
-	void _ParseCommandline(const CString& sCommandLine, CString& sEXE, CString& sParameters, CString& sStartupPath) const;
+	void _ParseCommandline(const CString& sCommandLine, bool removeHypen, CString& sEXE, CString& sParameters, CString& sStartupPath) const;
 };

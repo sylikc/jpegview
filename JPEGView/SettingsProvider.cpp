@@ -2,6 +2,7 @@
 #include "SettingsProvider.h"
 #include <float.h>
 #include <shlobj.h>
+#include <algorithm>
 
 static const TCHAR* INI_FILE_NAME = _T("JPEGView.ini");
 static const TCHAR* SECTION_NAME = _T("JPEGView");
@@ -117,12 +118,35 @@ CSettingsProvider::CSettingsProvider(void) {
 		sKey.Format(_T("UserCmd%d"), nIndex++);
 		sCmd = GetString(sKey, _T(""));
 		if (sCmd.GetLength() > 0) {
-			CUserCommand* pUserCmd = new CUserCommand(sCmd);
+			CUserCommand* pUserCmd = new CUserCommand(nIndex - 1, sCmd, true);
 			if (pUserCmd->IsValid()) {
 				m_userCommands.push_back(pUserCmd);
 			}
 		}
 	} while (sCmd.GetLength() > 0 || nIndex <= 3);
+
+	// read all open with commands
+	nIndex = 0;
+	m_nNextOpenWithIndex = 0;
+	int nGapIndex = 0;
+	do {
+		CString sKey;
+		sKey.Format(_T("OpenWith%d"), nIndex++);
+		sCmd = GetString(sKey, _T(""));
+		if (!sCmd.IsEmpty()) {
+			if (sCmd != _T("[deleted]")) {
+				CUserCommand* pOpenWithCmd = new CUserCommand(nIndex - 1, sCmd, false);
+				if (pOpenWithCmd->IsValid()) {
+					m_openWithCommands.push_back(pOpenWithCmd);
+				}
+			}
+			m_nNextOpenWithIndex = nIndex;
+			nGapIndex = 0;
+		} else {
+			nGapIndex++;
+		}
+	} while (nGapIndex <= 2);
+	
 }
 
 void CSettingsProvider::ReadWriteableINISettings() {
@@ -370,6 +394,60 @@ void CSettingsProvider::SaveStickyWindowRect(CRect rect) {
 
         m_bUserINIExists = true;
     }
+}
+
+int CSettingsProvider::DeleteOpenWithCommand(CUserCommand* pCommand) {
+	MakeSureUserINIExists();
+
+	int index = 0;
+	std::list<CUserCommand*>::iterator iter;
+	for (iter = m_openWithCommands.begin( ); iter != m_openWithCommands.end( ); iter++ ) {
+		if (*iter == pCommand)
+			break;
+		index++;
+	}
+
+	if (index < m_openWithCommands.size()) {
+		CString sKey;
+		sKey.Format(_T("OpenWith%d"), pCommand->GetIndex());
+
+		WriteString(sKey, _T("[deleted]"));
+
+		m_openWithCommands.remove(pCommand);
+		delete pCommand;
+
+		m_bUserINIExists = true;
+		return index;
+	}
+
+	return -1;
+}
+
+void CSettingsProvider::AddOpenWithCommand(const CString& sCommandString) {
+	MakeSureUserINIExists();
+
+	CUserCommand* pNewCommand = new CUserCommand(m_nNextOpenWithIndex, sCommandString, false);
+	m_openWithCommands.push_back(pNewCommand);
+
+	CString sKey;
+	sKey.Format(_T("OpenWith%d"), m_nNextOpenWithIndex);
+
+	WriteString(sKey, sCommandString);
+
+	m_bUserINIExists = true;
+	m_nNextOpenWithIndex++;
+}
+
+void CSettingsProvider::ChangeOpenWithCommand(CUserCommand* pCommand, const CString& sCommandString) {
+	CUserCommand* pChangedCommand = new CUserCommand(pCommand->GetIndex(), sCommandString, false);
+	m_openWithCommands.insert(std::find(m_openWithCommands.begin(), m_openWithCommands.end(), pCommand), pChangedCommand);
+	m_openWithCommands.remove(pCommand);
+	delete pCommand;
+
+	CString sKey;
+	sKey.Format(_T("OpenWith%d"), pChangedCommand->GetIndex());
+
+	WriteString(sKey, sCommandString);
 }
 
 CString CSettingsProvider::ReplacePlaceholdersFileNameFormat(const CString& sFileNameFormat) {

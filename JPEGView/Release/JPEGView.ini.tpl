@@ -363,3 +363,12 @@ LandscapeModeParams=-1 -1 -1 -1 0.5 1.0 0.75 0.4 -1 -1 -1 -1
 ;UserCmd2="KeyCode: Q  Cmd: 'cmd /c move %filename% "%mypictures%\trash\"' Confirm: 'Really move file to %mypictures%\trash\%filetitle%' HelpText: 'Q\tMove file to trash directory' Flags: 'WaitForTerminate ReloadFileList MoveToNext'"
 ;UserCmd3="KeyCode: W  Cmd: 'cmd /c copy %filename% "%mypictures%\trash\%filetitle%"' Confirm: 'Really copy file to %mypictures%\trash\%filetitle%' HelpText: 'W\tCopy file to trash directory' Flags: 'WaitForTerminate'"
 ;UserCmd4="KeyCode: A  Cmd: 'cmd /u /c echo %filename% >> "%mydocuments%\test.txt"' HelpText: 'A\tAppend to file list'"
+
+; Open with menu commands, shown in the 'Open with..' submenu of the JPEGView context menu.
+; These commands must be named OpenWith# where # stands for a number. The first open with command has the number zero (OpenWith0)
+; and the numbering of the commands must be continuous.
+; Open with commands must have the following form:
+; OpenWith#="Cmd: '%Cmd%' Menuitem: '%menu%' [KeyCode: %Key%] [Confirm: '%confirm%'] [Flags: '%flags%']"
+; For an explanation of the different options, refer to the user command documentation above.
+; Example for a menu entry that opens the current image in MS Paint:
+;OpenWith0="Cmd: 'C:\WINDOWS\system32\mspaint.exe %filename%' Menuitem: 'Microsoft Paint' Flags: 'ShellExecute'"

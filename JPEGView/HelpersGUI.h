@@ -61,7 +61,12 @@ namespace HelpersGUI {
 
 	// Creates the submenu containing the user commands in hMenu, returns if there are any menu items
 	bool CreateUserCommandsMenu(HMENU hMenu);
+	// Creates the submenu containing the open with.. commands in hMenu, returns if there are any menu items
+	bool CreateOpenWithCommandsMenu(HMENU hMenu);
 
 	// Finds a user command given the menu index in the menu as created above
 	CUserCommand* FindUserCommand(int index);
+	// Finds a open with command given the menu index in the menu as created above
+	CUserCommand* FindOpenWithCommand(int index);
+	
 }

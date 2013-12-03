@@ -25,6 +25,7 @@
 #include "FileOpenDialog.h"
 #include "BatchCopyDlg.h"
 #include "FileExtensionsDlg.h"
+#include "ManageOpenWithDlg.h"
 #include "AboutDlg.h"
 #include "CropSizeDlg.h"
 #include "ResizeFilter.h"
@@ -901,7 +902,7 @@ LRESULT CMainDlg::OnKeyDown(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOO
 		bHandled = true;
 		m_pCropCtl->AbortCropping();
 	} else if (!bCtrl && m_nLastLoadError == HelpersGUI::FileLoad_NoFilesInDirectory && !m_sStartupFile.IsEmpty()) {
-		// search in subfolders if initially provider directory has no images
+		// search in subfolders if initial directory has no images
 		bHandled = true;
 		m_pFileList->SetNavigationMode(Helpers::NM_LoopSubDirectories);
 		GotoImage(POS_Next);
@@ -949,6 +950,8 @@ LRESULT CMainDlg::OnSysKeyDown(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, 
 		int nCommand = m_pKeyMap->GetCommandIdForKey(wParam, true, false, bShift);
 		if (nCommand > 0) {
 			ExecuteCommand(nCommand);
+		} else if (m_pFileList->Current() != NULL) {
+			HandleUserCommands(CKeyMap::GetCombinedKeyCode(wParam, true, false, bShift));
 		}
 	}
 	return 1;
@@ -1096,9 +1099,10 @@ LRESULT CMainDlg::OnContextMenu(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam,
 	::CheckMenuItem(hMenuAutoZoomMode,  m_eAutoZoomMode*10 + IDM_AUTO_ZOOM_FIT_NO_ZOOM, MF_CHECKED);
 	HMENU hMenuSettings = ::GetSubMenu(hMenuTrackPopup, SUBMENU_POS_SETTINGS);
 	HMENU hMenuModDate = ::GetSubMenu(hMenuTrackPopup, SUBMENU_POS_MODDATE);
-	HMENU hUserCommands = ::GetSubMenu(hMenuTrackPopup, SUBMENU_POS_USER_COMMANDS);
+	HMENU hMenuUserCommands = ::GetSubMenu(hMenuTrackPopup, SUBMENU_POS_USER_COMMANDS);
+	HMENU hMenuOpenWithCommands = ::GetSubMenu(hMenuTrackPopup, SUBMENU_POS_OPENWITH);
 
-	if (!HelpersGUI::CreateUserCommandsMenu(hUserCommands)) {
+	if (!HelpersGUI::CreateUserCommandsMenu(hMenuUserCommands)) {
 		::DeleteMenu(hMenuTrackPopup, SUBMENU_POS_USER_COMMANDS + 1, MF_BYPOSITION);
 		::DeleteMenu(hMenuTrackPopup, SUBMENU_POS_USER_COMMANDS, MF_BYPOSITION);
 		::DeleteMenu(hMenuTrackPopup, SUBMENU_POS_USER_COMMANDS - 1, MF_BYPOSITION);
@@ -1151,6 +1155,9 @@ LRESULT CMainDlg::OnContextMenu(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam,
 		if (m_pCurrentImage->GetEXIFReader() == NULL || !m_pCurrentImage->GetEXIFReader()->GetAcquisitionTimePresent()) {
 			::EnableMenuItem(hMenuModDate, IDM_TOUCH_IMAGE_EXIF, MF_BYCOMMAND | MF_GRAYED);
 		}
+	}
+	if (!HelpersGUI::CreateOpenWithCommandsMenu(hMenuOpenWithCommands) || m_pCurrentImage == NULL) {
+		::DeleteMenu(hMenuTrackPopup, SUBMENU_POS_OPENWITH, MF_BYPOSITION);
 	}
 	if (m_bMovieMode) {
 		::EnableMenuItem(hMenuTrackPopup, IDM_SAVE, MF_BYCOMMAND | MF_GRAYED);
@@ -1557,6 +1564,9 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 			if (!m_bFullScreenMode) {
 				CRect windowRect;
 				this->SetWindowLongW(GWL_STYLE, this->GetWindowLongW(GWL_STYLE) | WS_OVERLAPPEDWINDOW | WS_VISIBLE);
+				HICON hIconSmall = (HICON)::LoadImage(_Module.GetResourceInstance(), MAKEINTRESOURCE(IDR_MAINFRAME), 
+					IMAGE_ICON, ::GetSystemMetrics(SM_CXSMICON), ::GetSystemMetrics(SM_CYSMICON), LR_DEFAULTCOLOR);
+				SetIcon(hIconSmall, FALSE);
 				CRect defaultWindowRect = CMultiMonitorSupport::GetDefaultWindowRect();
 				double dZoom = -1;
 				windowRect = CSettingsProvider::This().ExplicitWindowRect() ? defaultWindowRect : Helpers::GetWindowRectMatchingImageSize(m_hWnd, CSize(MIN_WND_WIDTH, MIN_WND_HEIGHT), defaultWindowRect.Size(), dZoom, m_pCurrentImage, false, true);
@@ -1624,6 +1634,12 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 		case IDM_EDIT_GLOBAL_CONFIG:
 		case IDM_EDIT_USER_CONFIG:
 			EditINIFile(nCommand == IDM_EDIT_GLOBAL_CONFIG);
+			break;
+		case IDM_MANAGE_OPEN_WITH_MENU:
+			{
+				CManageOpenWithDlg dlgManageOpenWithMenu;
+				dlgManageOpenWithMenu.DoModal();
+			}
 			break;
         case IDM_SET_AS_DEFAULT_VIEWER:
             SetAsDefaultViewer();
@@ -1801,6 +1817,9 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 	if (nCommand >= IDM_FIRST_USER_CMD && nCommand <= IDM_LAST_USER_CMD) {
 		ExecuteUserCommand(HelpersGUI::FindUserCommand(nCommand - IDM_FIRST_USER_CMD));
 	}
+	if (nCommand >= IDM_FIRST_OPENWITH_CMD && nCommand <= IDM_LAST_OPENWITH_CMD) {
+		ExecuteUserCommand(HelpersGUI::FindOpenWithCommand(nCommand - IDM_FIRST_OPENWITH_CMD));
+	}
 }
 
 bool CMainDlg::OpenFile(bool bFullScreen, bool bAfterStartup) {
@@ -1947,7 +1966,15 @@ void CMainDlg::HandleUserCommands(uint32 virtualKeyCode) {
 	for (iter = userCmdList.begin( ); iter != userCmdList.end( ); iter++ ) {
 		if ((*iter)->GetKeyCode() == virtualKeyCode) {
 			ExecuteUserCommand(*iter);
-			break;
+			return;
+		}
+	}
+	// iterate over open with command list
+	std::list<CUserCommand*> & openWithCmdList = CSettingsProvider::This().OpenWithCommandList();
+	for (iter = openWithCmdList.begin( ); iter != openWithCmdList.end( ); iter++ ) {
+		if ((*iter)->GetKeyCode() == virtualKeyCode) {
+			ExecuteUserCommand(*iter);
+			return;
 		}
 	}
 }
