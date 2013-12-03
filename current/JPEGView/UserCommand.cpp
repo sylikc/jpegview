@@ -24,6 +24,28 @@ static CString ParseString(const CString & sSource, int nStartIdx) {
 	return sSource.Mid(nStart + 1, nEnd - nStart - 1);
 }
 
+// Parses the key code from the command line (keycode: code). Returns virtual key code with modifier keys.
+static int ParseKeyCode(const CString & sCmdLineLower, LPCTSTR lpCmdLine) {
+	int nIdxKeyCode = sCmdLineLower.Find(_T("keycode:"));
+	if (nIdxKeyCode < 0) {
+		return -1;
+	}
+	TCHAR key[32];
+	if (_stscanf(&(lpCmdLine[nIdxKeyCode + 8]), _T("%31s"), &key) != 1) {
+		return -1;
+	}
+	int nKeyCode = CKeyMap::GetVirtualKeyCode(key);
+	if (nKeyCode == -1) {
+		if (_stscanf(&(lpCmdLine[nIdxKeyCode + 8]), _T("%d"), &nKeyCode) != 1) {
+			return -1;
+		}
+		if (nKeyCode < 0 || nKeyCode > 255) {
+			return -1;
+		}
+	}
+	return nKeyCode;
+}
+
 // Replaces file name and adds quotes if needed (if there is no \ before or after)
 static void SmartNameReplace(CString& strSource, LPCTSTR sOldText, LPCTSTR sNewText) {
 	int nIndex = strSource.Find(sOldText);
@@ -110,11 +132,12 @@ static CString ReplacePlaceholders(CString sMsg, LPCTSTR sFileName, const CRect&
 // CUserCommand
 //////////////////////////////////////////////////////////////////////////////////////
 
-CUserCommand::CUserCommand(const CString & sCommandLine) {
+CUserCommand::CUserCommand(int index, const CString & sCommandLine, bool allowNoMenuAssignment) {
 	CString sCmdLineLower = sCommandLine;
 	sCmdLineLower.MakeLower();
 	LPCTSTR lpCmdLine = (LPCTSTR)sCommandLine;
 
+	m_nIndex = index;
 	m_bValid = false;
 	m_bWaitForProcess = false;
 	m_bReloadFileList = false;
@@ -127,26 +150,7 @@ CUserCommand::CUserCommand(const CString & sCommandLine) {
 	m_bUseShellExecute = false;
 	m_nKeyCode = -1;
 
-	// Keycode (virtual keycode)
-	int nIdxKeyCode = sCmdLineLower.Find(_T("keycode:"));
-	if (nIdxKeyCode < 0) {
-		return;
-	}
-	TCHAR key[32];
-	if (_stscanf(&(lpCmdLine[nIdxKeyCode + 8]), _T("%31s"), &key) != 1) {
-		return;
-	}
-	m_nKeyCode = CKeyMap::GetVirtualKeyCode(key);
-	if (m_nKeyCode == -1) {
-		if (_stscanf(&(lpCmdLine[nIdxKeyCode + 8]), _T("%d"), &m_nKeyCode) != 1) {
-			return;
-		}
-		if (m_nKeyCode < 0 || m_nKeyCode > 255) {
-			return;
-		}
-	}
-
-	// Command to execute
+	// Command to execute (mandatory)
 	int nIdxCmd = sCmdLineLower.Find(_T("cmd:"));
 	if (nIdxCmd < 0) {
 		return;
@@ -156,11 +160,21 @@ CUserCommand::CUserCommand(const CString & sCommandLine) {
 		return;
 	}
 
+	// Keycode (virtual keycode)
+	m_nKeyCode = ParseKeyCode(sCmdLineLower, lpCmdLine);
+
 	// Menu item text (optional)
 	int nIdxMenuText = sCmdLineLower.Find(_T("menuitem:"));
 	if (nIdxMenuText >= 0) {
 		m_sMenuItemText = ParseString(sCommandLine, nIdxMenuText + 9);
 	}
+
+	if (!allowNoMenuAssignment && m_sMenuItemText.IsEmpty())
+		return;
+
+	// Either key code or menu item must be set
+	if (m_nKeyCode <= 0 && m_sMenuItemText.IsEmpty())
+		return;
 
 	// Confirm message (optional)
 	int nIdxConfirm = sCmdLineLower.Find(_T("confirm:"));
@@ -219,6 +233,12 @@ CUserCommand::CUserCommand(const CString & sCommandLine) {
 CUserCommand::~CUserCommand(void) {
 }
 
+CString CUserCommand::GetExecutable() const {
+	CString sEXE, sParameters, sStartupPath;
+	_ParseCommandline(m_sCommand, true, sEXE, sParameters, sStartupPath);
+	return sEXE;
+}
+
 bool CUserCommand::CanExecute(HWND hWnd, LPCTSTR sFileName) const
 {
 	if (!m_bValid || sFileName == NULL) {
@@ -259,12 +279,13 @@ bool CUserCommand::Execute(HWND hWnd, LPCTSTR sFileName, const CRect& selectionR
 	if (m_sCommand.Find(_T("jpegtran ") == 0)) {
 		sFileNameInCommandLine = Helpers::ReplacePathByShortForm(sFileName);
 	}
+	bool hasSpaces = sFileNameInCommandLine.Find(_T(' ')) != -1;
 
 	CString sCommandLine = ReplacePlaceholders(m_sCommand, sFileNameInCommandLine, selectionRect, m_bUseShortFileName);
 	bool bSuccess = true;
 	if (m_bUseShellExecute) {
 		CString sEXE, sParameters, sStartupPath;
-		_ParseCommandline(sCommandLine, sEXE, sParameters, sStartupPath);
+		_ParseCommandline(sCommandLine, !hasSpaces, sEXE, sParameters, sStartupPath);
 		int nRetVal = (int)::ShellExecute(hWnd, _T("open"), sEXE, sParameters, sStartupPath, SW_SHOW);
 		bSuccess = nRetVal > 32;
 	} else {
@@ -301,7 +322,7 @@ bool CUserCommand::Execute(HWND hWnd, LPCTSTR sFileName, const CRect& selectionR
 	return bSuccess;
 }
 
-void CUserCommand::_ParseCommandline(const CString& sCommandLine, 
+void CUserCommand::_ParseCommandline(const CString& sCommandLine, bool removeHypen,
 									 CString& sEXE, CString& sParameters, CString& sStartupPath) const {
 	if (sCommandLine.GetLength() == 0) {
 		return;
@@ -324,7 +345,7 @@ void CUserCommand::_ParseCommandline(const CString& sCommandLine,
 	if (nIndex < sCommandLine.GetLength()) {
 		sParameters = CString((LPCTSTR)sCommandLine + nIndex);
 		// remove enclosing hypens, some programs do not like this for parameters
-		if (sParameters[0] == _T('"') && sParameters[sParameters.GetLength()-1] == _T('"')) {
+		if (removeHypen && sParameters[0] == _T('"') && sParameters[sParameters.GetLength()-1] == _T('"')) {
 			sParameters = sParameters.Mid(1, sParameters.GetLength()-2);
 		}
 	} else {

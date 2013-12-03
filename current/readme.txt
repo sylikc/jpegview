@@ -35,24 +35,29 @@ Bugs fixed:
 - Fixed (sporadic) crash when deleting images permanently with the 'Del' key or when executing other user commands
 - Registration of file extensions in Windows 8 improved. Consider however that Windows 8 protects the standard
   file associations. For changing these associations the 'Default programs' dialog of Windows 8 must be used.
+- Showing system menu and icon in Windows7/8 when switching from full screen to windowed mode
 New features:
 - New supported file format: TGA (8, 15, 16, 24, 32 bits) - only for reading
 - New INI file setting:
   UseEmbeddedColorProfiles=[true/false]
   Setting this to true will enable color management for JPEG images and TIFF images (to the extend GDI+ supports it).
-  Default is false because enabling this setting has some disadvantages:
+  Default is 'false' because enabling this setting has some disadvantages:
   - Turbo JPEG does not support embedded profiles, so GDI+ needs to be used what is much slower
-  - GDI+ cannot read some valid JPEG files (e.g. grayscale JPEGs)
-  Notice that GDI+ does not support V4 ICC color profiles.
+  - GDI+ cannot read some valid JPEG files (e.g. some grayscale JPEGs, observed with Windows XP)
+  Notice that GDI+ does not support V4 ICC color profiles in Windows XP. It does support these in Windows 7/8.
 - New INI file settings:
   DefaultGUIFont=fontName fontSize [bold]
   FileNameFont=fontName fontSize [bold]
-  Enables to change the GUI font, its size and weight
+  Enables to change the GUI font, its size in points and its weight
 - Esc key can now be re-defined in keymap (e.g. to display to 'Open file' dialog)
   Default remains to exit JPEGView
 - User commands extensions
   - Shortcuts with modifier keys can now be assigned to user commands. Shortcut format is as in the keymap, e.g. 'Ctrl+P'
-  - User commands can optionally be bound to a menu entry in the submenu 'User commands' in the JPEGView context menu
+  - User commands can optionally be bound to a menu item in the submenu 'User commands' in the JPEGView context menu
+- 'Open with' menu
+  - In Settings/Admin it is possible to define applications to be started in the 'Open with' submenu of the JPEGView context menu.
+    The applications get passed the current image file name as argument on process startup.
+    It is also possible to assign a shortcut key for such an application.
   
 [1.0.30]
 Bugs fixed:

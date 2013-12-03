@@ -101,6 +101,7 @@ public:
     bool ReloadWhenDisplayedImageChanged() { return m_bReloadWhenDisplayedImageChanged; }
 
 	std::list<CUserCommand*> & UserCommandList() { return m_userCommands; }
+	std::list<CUserCommand*> & OpenWithCommandList() { return m_openWithCommands; }
 
 	// This will only save a subset of settings to the inifile located in AppData\JPEGView\JPEGView.ini.
 	// Note that this INI file has precedence over the ini file at the program directory
@@ -112,6 +113,18 @@ public:
 
     // Saves the sticky window size to the INI file
     void SaveStickyWindowRect(CRect rect);
+
+	// Deletes the open with command, returns index of the deleted command, -1 if invalid
+	int DeleteOpenWithCommand(CUserCommand* pCommand);
+
+	// Adds a new open with command
+	void AddOpenWithCommand(const CString& sCommandString);
+
+	// Replaces the existing open with command by a new command
+	void ChangeOpenWithCommand(CUserCommand* pCommand, const CString& sCommandString);
+
+	// Returns the next index for an open with entry
+	int GetNextOpenWithIndex() { return m_nNextOpenWithIndex; }
 
 	// Gets the path where the global INI file and the EXE is located
 	LPCTSTR GetEXEPath() { return m_sEXEPath; }
@@ -128,6 +141,7 @@ private:
 	CString m_sIniNameUser;
 	bool m_bUserINIExists;
 	bool m_bStoreToEXEPath;
+	int m_nNextOpenWithIndex;
 
 	double m_dContrast;
 	double m_dGamma;
@@ -212,6 +226,7 @@ private:
     bool m_bReloadWhenDisplayedImageChanged;
 
 	std::list<CUserCommand*> m_userCommands;
+	std::list<CUserCommand*> m_openWithCommands;
 
 	void MakeSureUserINIExists();
     CString ReplacePlaceholdersFileNameFormat(const CString& sFileNameFormat);

@@ -157,6 +157,7 @@
     <ClCompile Include="JPEGView.cpp" />
     <ClCompile Include="KeyMap.cpp" />
     <ClCompile Include="LocalDensityCorr.cpp" />
+    <ClCompile Include="ManageOpenWithDlg.cpp" />
     <ClCompile Include="MultiMonitorSupport.cpp" />
     <ClCompile Include="NLS.cpp" />
     <ClCompile Include="ParameterDB.cpp" />
@@ -229,6 +230,7 @@
     <ClInclude Include="JPEGProvider.h" />
     <ClInclude Include="KeyMap.h" />
     <ClInclude Include="LocalDensityCorr.h" />
+    <ClInclude Include="ManageOpenWithDlg.h" />
     <ClInclude Include="MessageDef.h" />
     <ClInclude Include="MultiMonitorSupport.h" />
     <ClInclude Include="NLS.h" />

@@ -338,3 +338,22 @@ Windows 8 blocks JPEGView from changing the default program for these file endin
 Use the 'Default Programs' configuration dialog from the operating system instead.	Benutzen Sie stattdessen den 'Standardprogramme' Konfigurationsdialog des Betriebssystems.
 Alternatively, right click an image file of the given type in Windows Explorer and select 'Open with... > Choose default program'	Alternativ können Sie eine Bilddatei des entsprechenden Typs im Windows Explorer rechtsklicken und 'Öffnen mit... > Standardprogram festlegen' anwählen.
 User commands	Benutzerkommandos
+Open image with	Bilddatei öffnen mit
+Manage 'Open image with' menu...	Menü 'Bilddatei öffnen mit' verwalten...
+Menu entries:	Menüeinträge:
+Title:	Titel:
+Application:	Anwendung:
+Shortcut key:	Tastenkürzel:
+Browse...	Auswählen...
+New	Neu
+Delete	Löschen
+Modifier keys:	Umschalttasten:
+Known keys:	Bekannte Tasten:
+Combine keys with '+'	Tasten mit '+' kombinieren
+Example:	Beispiel:
+Shortcut Help	Tastenkürzel
+[new entry]	[neuer Eintrag]
+Applications	Anwendungen
+Select application	Anwendung auswählen
+Save	Speichern
+Edit	Editieren
