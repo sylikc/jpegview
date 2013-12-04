@@ -31,6 +31,7 @@
 #define IDM_SORT_CREATION_DATE 	7010			// sorting order by creation date
 #define IDM_SORT_NAME		7020			// sorting order by name
 #define IDM_SORT_RANDOM		7030			// sorting order random
+#define IDM_SORT_SIZE		7040			// sorting order file size in bytes
 #define IDM_SORT_UPCOUNTING	7100			// sort upcounting
 #define IDM_SORT_DOWNCOUNTING	7110			// sort downcounting
 #define IDM_ROTATE_90		8000			// rotate image 90 deg

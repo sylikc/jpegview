@@ -236,6 +236,7 @@ BEGIN
 		  MENUITEM "Modification date",			IDM_SORT_MOD_DATE
 		  MENUITEM "Creation date",				IDM_SORT_CREATION_DATE
 		  MENUITEM "File name",					IDM_SORT_NAME
+		  MENUITEM "File size",					IDM_SORT_SIZE
 		  MENUITEM "Random",					IDM_SORT_RANDOM
 		  MENUITEM SEPARATOR
 		  MENUITEM "Upcounting",				IDM_SORT_UPCOUNTING

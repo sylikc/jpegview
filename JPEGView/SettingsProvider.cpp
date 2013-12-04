@@ -203,10 +203,12 @@ void CSettingsProvider::ReadWriteableINISettings() {
 		m_eSorting = Helpers::FS_FileName;
 	} else if (sSorting.CompareNoCase(_T("Random")) == 0) {
 		m_eSorting = Helpers::FS_Random;
-	} else {
+	} else if (sSorting.CompareNoCase(_T("FileSize")) == 0) {
+		m_eSorting = Helpers::FS_FileSize;
+	}else {
 		m_eSorting = Helpers::FS_LastModTime;
 	}
-
+	
 	m_bIsSortedUpcounting = GetBool(_T("IsSortedUpcounting"), true);
 	
 	CString sNavigation = GetString(_T("FolderNavigation"), _T("LoopFolder"));
@@ -356,6 +358,8 @@ void CSettingsProvider::SaveSettings(const CImageProcessingParams& procParams,
 		sSorting = _T("LastModDate");
 	} else if (eFileSorting == Helpers::FS_Random) {
 		sSorting = _T("Random");
+	} else if (eFileSorting == Helpers::FS_FileSize) {
+		sSorting = _T("FileSize");
 	}
 	WriteString(_T("FileDisplayOrder"), sSorting);
 

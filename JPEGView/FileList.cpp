@@ -20,7 +20,7 @@ static void AddToFileList(std::list<CFileDesc> & fileList, CFindFile & fileFind)
 	    FILETIME lastWriteTime, creationTime;
 	    fileFind.GetLastWriteTime(&lastWriteTime);
 	    fileFind.GetCreationTime(&creationTime);
-	    CFileDesc thisFile(fileFind.GetFilePath(), &lastWriteTime, &creationTime);
+	    CFileDesc thisFile(fileFind.GetFilePath(), &lastWriteTime, &creationTime, fileFind.GetFileSize());
 	    fileList.push_back(thisFile);
     }
 }
@@ -61,12 +61,13 @@ static bool UseLogicalStringCompare() {
 // CFileDesc
 ///////////////////////////////////////////////////////////////////////////////////
 
-CFileDesc::CFileDesc(const CString & sName, const FILETIME* lastModTime, const FILETIME* creationTime) {
+CFileDesc::CFileDesc(const CString & sName, const FILETIME* lastModTime, const FILETIME* creationTime, __int64 fileSize) {
 	m_sName = sName;
 	m_sTitle = (LPCTSTR)m_sName + sName.ReverseFind(_T('\\')) + 1;
 	memcpy(&m_lastModTime, lastModTime, sizeof(FILETIME));
 	memcpy(&m_creationTime, creationTime, sizeof(FILETIME));
 	m_nRandomOrderNumber = rand();
+	m_fileSize = fileSize;
 }
 
 bool CFileDesc::SortUpcounting(const CFileDesc& other) const {
@@ -82,6 +83,8 @@ bool CFileDesc::SortUpcounting(const CFileDesc& other) const {
 		}
 	} else if (sm_eSorting == Helpers::FS_Random) {
 		return m_nRandomOrderNumber < other.m_nRandomOrderNumber;
+	} else if (sm_eSorting == Helpers::FS_FileSize) {
+		return m_fileSize < other.m_fileSize;
 	} else {
         if (UseLogicalStringCompare()) {
 		    // If the filename contains numbers, we want to sort the files

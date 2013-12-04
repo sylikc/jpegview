@@ -171,7 +171,7 @@ CPUCoresUsed=0
 DownSamplingFilter=BestQuality
 
 ; Sorting order of the files when displaying the image files in a folder
-; Can be LastModDate, CreationDate, FileName or Random
+; Can be LastModDate, CreationDate, FileName, FileSize or Random
 FileDisplayOrder=LastModDate
 
 ; Sort files upcounting or downcounting

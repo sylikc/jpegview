@@ -33,6 +33,7 @@
 #define IDM_SORT_CREATION_DATE 	7010			// сортировать по датам создания
 #define IDM_SORT_NAME		7020			// сортировать по именам
 #define IDM_SORT_RANDOM		7030			// сортировать в случайном порядке
+#define IDM_SORT_SIZE		7040			// sorting order file size in bytes
 #define IDM_SORT_UPCOUNTING	7100			// sort upcounting
 #define IDM_SORT_DOWNCOUNTING	7110			// sort downcounting
 #define IDM_ROTATE_90		8000			// повернуть изображение на 90° вправо

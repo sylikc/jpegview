@@ -48,6 +48,7 @@ New features:
 - Files can be sorted upcounting (default) or downcounting in all display order modes (by date, name, etc)
   - Can be set in the context menu of JPEGView
   - Stored to INI file
+- New display order mode: Sort by file size
 - New INI file setting:
   UseEmbeddedColorProfiles=[true/false]
   Setting this to true will enable color management for JPEG images and TIFF images (to the extend GDI+ supports it).

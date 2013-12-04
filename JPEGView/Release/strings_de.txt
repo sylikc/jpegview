@@ -359,3 +359,4 @@ Save	Speichern
 Edit	Editieren
 Upcounting	Aufsteigend
 Downcounting	Absteigend
+File size	Dateigrösse

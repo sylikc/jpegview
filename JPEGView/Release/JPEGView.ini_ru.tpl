@@ -172,7 +172,8 @@ CPUCoresUsed=0
 DownSamplingFilter=BestQuality
 
 ; Порядок сортировки файлов при просмотре серии изображений в папке.
-; Может принимать значения 'LastModDate' (дата изменения), 'CreationDate' (дата создания) или 'FileName' (имя файла).
+; Может принимать значения 'LastModDate' (дата изменения), 'CreationDate' (дата создания) или 'FileName' (имя файла)
+; or 'Random' or 'FileSize'
 FileDisplayOrder=FileName
 
 ; Sort files upcounting or downcounting
