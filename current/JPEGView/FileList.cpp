@@ -11,6 +11,7 @@
 
 // static intializers
 Helpers::ESorting CFileDesc::sm_eSorting = Helpers::FS_LastModTime;
+bool CFileDesc::sm_bSortUpcounting = true;
 Helpers::ENavigationMode CFileList::sm_eMode = Helpers::NM_LoopDirectory;
 
 // Helper to add the current file of filefind object to the list
@@ -27,7 +28,7 @@ static void AddToFileList(std::list<CFileDesc> & fileList, CFindFile & fileFind)
 static bool s_bUseLogicalStringCompare = true;
 static bool s_bUseLogicalStringCompareValid = false;
 
-// Use by method below
+// Used by method below
 static bool IsNoLogicalStrCmpSetInRegistryHive(HKEY hKeyRoot) {
     HKEY key;
     if (RegOpenKeyEx(hKeyRoot, _T("Software\\Microsoft\\Windows\\CurrentVersion\\Policies\\Explorer"), 0, KEY_READ, &key) == ERROR_SUCCESS) {
@@ -68,7 +69,7 @@ CFileDesc::CFileDesc(const CString & sName, const FILETIME* lastModTime, const F
 	m_nRandomOrderNumber = rand();
 }
 
-bool CFileDesc::operator < (const CFileDesc& other) const {
+bool CFileDesc::SortUpcounting(const CFileDesc& other) const {
 	if (sm_eSorting == Helpers::FS_CreationTime || sm_eSorting == Helpers::FS_LastModTime) {
 		const FILETIME* pTime = (sm_eSorting == Helpers::FS_LastModTime) ? &m_lastModTime : &m_creationTime;
 		const FILETIME* pTimeOther = (sm_eSorting == Helpers::FS_LastModTime) ? &(other.m_lastModTime) : &(other.m_creationTime);
@@ -90,6 +91,10 @@ bool CFileDesc::operator < (const CFileDesc& other) const {
 		    return _tcsicoll(m_sTitle, other.m_sTitle) < 0;
         }
 	}
+}
+
+bool CFileDesc::operator < (const CFileDesc& other) const {
+	return SortUpcounting(other) ^ (!sm_bSortUpcounting);
 }
 
 
@@ -169,10 +174,11 @@ static LPCTSTR* GetSupportedFileEndingList() {
     return sFileEndings;
 }
 
-CFileList::CFileList(const CString & sInitialFile, CDirectoryWatcher & directoryWatcher, Helpers::ESorting eInitialSorting, bool bWrapAroundFolder, int nLevel)
+CFileList::CFileList(const CString & sInitialFile, CDirectoryWatcher & directoryWatcher, 
+	Helpers::ESorting eInitialSorting, bool isSortedUpcounting, bool bWrapAroundFolder, int nLevel)
     : m_directoryWatcher(directoryWatcher) {
 
-	CFileDesc::SetSorting(eInitialSorting);
+	CFileDesc::SetSorting(eInitialSorting, isSortedUpcounting);
 	m_bDeleteHistory = true;
 	m_bWrapAroundFolder = bWrapAroundFolder;
 	m_sInitialFile = sInitialFile;
@@ -455,10 +461,10 @@ LPCTSTR CFileList::PeekNextPrev(int nIndex, bool bForward, bool bToggle) {
 	}
 }
 
-void CFileList::SetSorting(Helpers::ESorting eSorting) {
-	if (eSorting != CFileDesc::GetSorting()) {
+void CFileList::SetSorting(Helpers::ESorting eSorting, bool sortUpcounting) {
+	if (eSorting != CFileDesc::GetSorting() || sortUpcounting != CFileDesc::IsSortedUpcounting()) {
 		CString sThisFile = (m_iter != m_fileList.end()) ? m_iter->GetName() : "";
-		CFileDesc::SetSorting(eSorting);
+		CFileDesc::SetSorting(eSorting, sortUpcounting);
 		m_fileList.sort();
 		m_iter = FindFile(sThisFile);
 		m_iterStart = m_bWrapAroundFolder ? m_iter : m_fileList.begin();
@@ -467,6 +473,10 @@ void CFileList::SetSorting(Helpers::ESorting eSorting) {
 
 Helpers::ESorting CFileList::GetSorting() const {
 	return CFileDesc::GetSorting();
+}
+
+bool CFileList::IsSortedUpcounting() const {
+	return CFileDesc::IsSortedUpcounting();
 }
 
 void CFileList::SetNavigationMode(Helpers::ENavigationMode eMode) {
@@ -714,7 +724,7 @@ CFileList* CFileList::TryCreateFileList(const CString& directory, int nNewLevel)
 		pList = pList->m_prev;
 	}
 
-	CFileList* pNewList = new CFileList(directory, m_directoryWatcher, CFileDesc::GetSorting(), m_bWrapAroundFolder, nNewLevel);
+	CFileList* pNewList = new CFileList(directory, m_directoryWatcher, CFileDesc::GetSorting(), CFileDesc::IsSortedUpcounting(), m_bWrapAroundFolder, nNewLevel);
 	if (pNewList->m_fileList.size() > 0) {
 		pNewList->m_prev = this;
 		m_next = pNewList;

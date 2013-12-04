@@ -357,3 +357,5 @@ Applications	Anwendungen
 Select application	Anwendung auswählen
 Save	Speichern
 Edit	Editieren
+Upcounting	Aufsteigend
+Downcounting	Absteigend

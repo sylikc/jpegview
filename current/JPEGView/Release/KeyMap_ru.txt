@@ -33,6 +33,8 @@
 #define IDM_SORT_CREATION_DATE 	7010			// сортировать по датам создания
 #define IDM_SORT_NAME		7020			// сортировать по именам
 #define IDM_SORT_RANDOM		7030			// сортировать в случайном порядке
+#define IDM_SORT_UPCOUNTING	7100			// sort upcounting
+#define IDM_SORT_DOWNCOUNTING	7110			// sort downcounting
 #define IDM_ROTATE_90		8000			// повернуть изображение на 90° вправо
 #define IDM_ROTATE_270		9000			// повернуть изображение на 90° влево
 #define IDM_ROTATE          	9100			// показать диалоговое окно поворота на произвольный угол
@@ -74,6 +76,7 @@
 #define IDM_BACKUP_PARAMDB	12620			// сделать резервную копию БД параметров
 #define IDM_RESTORE_PARAMDB	12630			// восстановить БД параметров из резервной копии
 #define IDM_ABOUT		12900			// показать окно "О программе"
+#define IDM_EXIT		13000			// exit JPEGView application
 #define IDM_TOGGLE		14100			// переключение между отмеченным и текущим изображениями
 #define IDM_MARK_FOR_TOGGLE	14101			// отметить текущее изображение для переключения
 #define IDM_COLOR_CORRECTION_INC 14200			// усилить цветовую коррекцию
@@ -101,9 +104,9 @@
 #define IDM_CONTEXT_MENU	16000			// показать контекстное меню
 
 // Следующий ниже раздел содержит назначения клавиш. Некоторые клавиши предопределены и не могут быть переназначены:
-// F1 - справка, ESC - выход, 0..9 - слайдшоу
+// F1 - справка, Alt+F4 - выход, 0..9 - слайдшоу
 // Распознаваемые клавиши (названия): 
-// Alt, Ctrl, Shift, Return, Space, End, Home, Back, Tab, PgDn, PgUp
+// Alt, Ctrl, Shift, Esc, Return, Space, End, Home, Back, Tab, PgDn, PgUp
 // Left, Right, Up, Down, Insert, Del, Plus, Minus, Mul, Div, Comma, Period
 // A .. Z  F1 .. F12
 
@@ -114,6 +117,8 @@
 // MouseL, MouseR, MouseM, MouseX1, MouseX2, MouseDblClk
 // (левая, правая, средняя, дополнительные кнопки, двойной щелчок левой кнопкой)
 
+// Uncomment the following line if you want to exit JPEGView with the Esc key immediatly when playing an animation or a slideshow
+// Esc                    IDM_EXIT
 PgDn                    IDM_NEXT
 Right                   IDM_NEXT
 Space                   IDM_NEXT

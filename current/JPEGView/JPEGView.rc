@@ -237,6 +237,9 @@ BEGIN
 		  MENUITEM "Creation date",				IDM_SORT_CREATION_DATE
 		  MENUITEM "File name",					IDM_SORT_NAME
 		  MENUITEM "Random",					IDM_SORT_RANDOM
+		  MENUITEM SEPARATOR
+		  MENUITEM "Upcounting",				IDM_SORT_UPCOUNTING
+		  MENUITEM "Downcounting",				IDM_SORT_DOWNCOUNTING
         END
       POPUP "Play folder as slideshow/movie" 
         BEGIN
