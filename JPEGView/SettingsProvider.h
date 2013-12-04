@@ -41,6 +41,7 @@ public:
 	int NumberOfCoresToUse() { return m_nNumCores; }
 	EFilterType DownsamplingFilter() { return m_eDownsamplingFilter; }
 	Helpers::ESorting Sorting() { return m_eSorting; }
+	bool IsSortedUpcounting() { return m_bIsSortedUpcounting; }
 	Helpers::ENavigationMode Navigation() { return m_eNavigation; }
 	bool NavigateWithMouseWheel() { return m_bNavigateMouseWheel; }
 	Helpers::EAutoZoomMode AutoZoomMode() { return m_eAutoZoomMode; }
@@ -106,7 +107,7 @@ public:
 	// This will only save a subset of settings to the inifile located in AppData\JPEGView\JPEGView.ini.
 	// Note that this INI file has precedence over the ini file at the program directory
 	void SaveSettings(const CImageProcessingParams& procParams, EProcessingFlags eProcFlags, 
-		Helpers::ESorting eFileSorting, Helpers::EAutoZoomMode eAutoZoomMode, bool bShowNavPanel);
+		Helpers::ESorting eFileSorting, bool isSortedUpcounting, Helpers::EAutoZoomMode eAutoZoomMode, bool bShowNavPanel);
 
 	// Saves the pattern used in the copy/rename dialog to rename files
 	void SaveCopyRenamePattern(const CString& sPattern);
@@ -168,6 +169,7 @@ private:
 	int m_nNumCores;
 	EFilterType m_eDownsamplingFilter;
 	Helpers::ESorting m_eSorting;
+	bool m_bIsSortedUpcounting;
 	Helpers::ENavigationMode m_eNavigation;
 	bool m_bNavigateMouseWheel;
 	Helpers::EAutoZoomMode m_eAutoZoomMode;

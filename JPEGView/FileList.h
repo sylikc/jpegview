@@ -12,10 +12,12 @@ public:
 
 	// STL sort only needs this operator to order CFileDesc objects
 	bool operator < (const CFileDesc& other) const;
+	bool SortUpcounting(const CFileDesc& other) const;
 
 	// Get and set the sorting method - the sorting method is global
 	static Helpers::ESorting GetSorting() { return sm_eSorting; }
-	static void SetSorting(Helpers::ESorting eSorting) { sm_eSorting = eSorting; }
+	static bool IsSortedUpcounting() { return sm_bSortUpcounting; }
+	static void SetSorting(Helpers::ESorting eSorting, bool bUpcounting) { sm_eSorting = eSorting; sm_bSortUpcounting = bUpcounting; }
 
 	// Full name of file
 	const CString& GetName() const { return m_sName; }
@@ -34,6 +36,7 @@ public:
 
 private:
 	static Helpers::ESorting sm_eSorting;
+	static bool sm_bSortUpcounting;
 
 	CString m_sName;
 	LPCTSTR m_sTitle;
@@ -51,7 +54,8 @@ public:
 	// (must end with backslash in this case) or a text file containing file names to display.
 	// Supported text files are ANSI, Unicode or UTF-8.
 	// nLevel is increased when recursively create lists for sub-folders
-	CFileList(const CString & sInitialFile, CDirectoryWatcher & directoryWatcher, Helpers::ESorting eInitialSorting, bool bWrapAroundFolder, int nLevel = 0);
+	CFileList(const CString & sInitialFile, CDirectoryWatcher & directoryWatcher, 
+		Helpers::ESorting eInitialSorting, bool isSortedUpcounting, bool bWrapAroundFolder, int nLevel = 0);
 	~CFileList();
 
 	// Gets a list of all supported file endings, separated by semicolon
@@ -93,9 +97,10 @@ public:
 	int CurrentIndex() const;
 
 	// Sets the sorting of the file list and resorts the list
-	void SetSorting(Helpers::ESorting eSorting);
+	void SetSorting(Helpers::ESorting eSorting, bool sortUpcounting);
 	// Gets the sorting mode
 	Helpers::ESorting GetSorting() const;
+	bool IsSortedUpcounting() const;
 
 	// Set the directory navigation mode
 	void SetNavigationMode(Helpers::ENavigationMode eMode);

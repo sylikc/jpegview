@@ -38,6 +38,16 @@ Bugs fixed:
 - Showing system menu and icon in Windows7/8 when switching from full screen to windowed mode
 New features:
 - New supported file format: TGA (8, 15, 16, 24, 32 bits) - only for reading
+- User commands extensions
+  - Shortcuts with modifier keys can now be assigned to user commands. Shortcut format is as in the keymap, e.g. 'Ctrl+P'
+  - User commands can optionally be bound to a menu item in the submenu 'User commands' in the JPEGView context menu
+- 'Open with' menu
+  - In Settings/Admin it is possible to define applications to be started in the 'Open with' submenu of the JPEGView context menu.
+    The applications get passed the current image file name as argument on process startup.
+    It is also possible to assign a shortcut key for such an application.
+- Files can be sorted upcounting (default) or downcounting in all display order modes (by date, name, etc)
+  - Can be set in the context menu of JPEGView
+  - Stored to INI file
 - New INI file setting:
   UseEmbeddedColorProfiles=[true/false]
   Setting this to true will enable color management for JPEG images and TIFF images (to the extend GDI+ supports it).
@@ -51,13 +61,6 @@ New features:
   Enables to change the GUI font, its size in points and its weight
 - Esc key can now be re-defined in keymap (e.g. to display to 'Open file' dialog)
   Default remains to exit JPEGView
-- User commands extensions
-  - Shortcuts with modifier keys can now be assigned to user commands. Shortcut format is as in the keymap, e.g. 'Ctrl+P'
-  - User commands can optionally be bound to a menu item in the submenu 'User commands' in the JPEGView context menu
-- 'Open with' menu
-  - In Settings/Admin it is possible to define applications to be started in the 'Open with' submenu of the JPEGView context menu.
-    The applications get passed the current image file name as argument on process startup.
-    It is also possible to assign a shortcut key for such an application.
   
 [1.0.30]
 Bugs fixed:

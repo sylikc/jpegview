@@ -353,7 +353,8 @@ LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam
 	::ShowCursor(m_bMouseOn);
 
 	// intitialize navigation with startup file (and folder)
-	m_pFileList = new CFileList(m_sStartupFile, *m_pDirectoryWatcher, (m_eForcedSorting == Helpers::FS_Undefined) ? sp.Sorting() : m_eForcedSorting, sp.WrapAroundFolder());
+	m_pFileList = new CFileList(m_sStartupFile, *m_pDirectoryWatcher,
+		(m_eForcedSorting == Helpers::FS_Undefined) ? sp.Sorting() : m_eForcedSorting, sp.IsSortedUpcounting(), sp.WrapAroundFolder());
 	m_pFileList->SetNavigationMode(sp.Navigation());
 
 	// create thread pool for processing requests on multiple CPU cores
@@ -1089,6 +1090,11 @@ LRESULT CMainDlg::OnContextMenu(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam,
 	::CheckMenuItem(hMenuNavigation,  m_pFileList->GetNavigationMode()*10 + IDM_LOOP_FOLDER, MF_CHECKED);
 	HMENU hMenuOrdering = ::GetSubMenu(hMenuTrackPopup, SUBMENU_POS_DISPLAY_ORDER);
 	::CheckMenuItem(hMenuOrdering,  m_pFileList->GetSorting()*10 + IDM_SORT_MOD_DATE, MF_CHECKED);
+	::CheckMenuItem(hMenuOrdering, m_pFileList->IsSortedUpcounting() ? IDM_SORT_UPCOUNTING : IDM_SORT_DOWNCOUNTING, MF_CHECKED);
+	if (m_pFileList->GetSorting() == Helpers::FS_Random) {
+		::EnableMenuItem(hMenuOrdering, IDM_SORT_UPCOUNTING, MF_BYCOMMAND | MF_GRAYED);
+		::EnableMenuItem(hMenuOrdering, IDM_SORT_DOWNCOUNTING, MF_BYCOMMAND | MF_GRAYED);
+	}
 	HMENU hMenuMovie = ::GetSubMenu(hMenuTrackPopup, SUBMENU_POS_MOVIE);
 	if (!m_bMovieMode) ::EnableMenuItem(hMenuMovie, IDM_STOP_MOVIE, MF_BYCOMMAND | MF_GRAYED);
 	HMENU hMenuZoom = ::GetSubMenu(hMenuTrackPopup, SUBMENU_POS_ZOOM);
@@ -1320,8 +1326,15 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 		case IDM_SORT_RANDOM:
 			m_pFileList->SetSorting((nCommand == IDM_SORT_CREATION_DATE) ? Helpers::FS_CreationTime : 
 				(nCommand == IDM_SORT_MOD_DATE) ? Helpers::FS_LastModTime : 
-				(nCommand == IDM_SORT_RANDOM) ? Helpers::FS_Random : Helpers::FS_FileName);
+				(nCommand == IDM_SORT_RANDOM) ? Helpers::FS_Random : Helpers::FS_FileName, m_pFileList->IsSortedUpcounting());
 			if (m_bShowHelp || m_pEXIFDisplayCtl->IsActive() || m_bShowFileName) {
+				this->Invalidate(FALSE);
+			}
+			break;
+		case IDM_SORT_UPCOUNTING:
+		case IDM_SORT_DOWNCOUNTING:
+			m_pFileList->SetSorting(m_pFileList->GetSorting(), nCommand == IDM_SORT_UPCOUNTING);
+			if (m_pEXIFDisplayCtl->IsActive() || m_bShowFileName) {
 				this->Invalidate(FALSE);
 			}
 			break;
@@ -1839,9 +1852,10 @@ bool CMainDlg::OpenFile(bool bFullScreen, bool bAfterStartup) {
 void CMainDlg::OpenFile(LPCTSTR sFileName, bool bAfterStartup) {
 	// recreate file list based on image opened
 	Helpers::ESorting eOldSorting = m_pFileList->GetSorting();
+	bool oOldUpcounting = m_pFileList->IsSortedUpcounting();
 	delete m_pFileList;
 	m_sStartupFile = sFileName;
-	m_pFileList = new CFileList(m_sStartupFile, *m_pDirectoryWatcher, eOldSorting, CSettingsProvider::This().WrapAroundFolder());
+	m_pFileList = new CFileList(m_sStartupFile, *m_pDirectoryWatcher, eOldSorting, oOldUpcounting, CSettingsProvider::This().WrapAroundFolder());
 	// free current image and all read ahead images
 	InitParametersForNewImage();
 	m_pJPEGProvider->NotifyNotUsed(m_pCurrentImage);
@@ -2637,10 +2651,11 @@ void CMainDlg::SaveParameters() {
 
 	EProcessingFlags eFlags = CreateDefaultProcessingFlags(m_bKeepParams);
 	CString sText = HelpersGUI::GetINIFileSaveConfirmationText(*m_pImageProcParams, eFlags,
-		m_pFileList->GetSorting(), m_eAutoZoomMode, m_pNavPanelCtl->IsActive());
+		m_pFileList->GetSorting(), m_pFileList->IsSortedUpcounting(), m_eAutoZoomMode, m_pNavPanelCtl->IsActive());
 
 	if (IDYES == this->MessageBox(sText, CNLS::GetString(_T("Confirm save default parameters")), MB_YESNO | MB_ICONQUESTION)) {
-		CSettingsProvider::This().SaveSettings(*m_pImageProcParams, eFlags, m_pFileList->GetSorting(), m_eAutoZoomMode, m_pNavPanelCtl->IsActive());
+		CSettingsProvider::This().SaveSettings(*m_pImageProcParams, eFlags, m_pFileList->GetSorting(), m_pFileList->IsSortedUpcounting(),
+			m_eAutoZoomMode, m_pNavPanelCtl->IsActive());
 	}
 }
 

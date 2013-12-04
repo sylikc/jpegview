@@ -206,6 +206,8 @@ void CSettingsProvider::ReadWriteableINISettings() {
 	} else {
 		m_eSorting = Helpers::FS_LastModTime;
 	}
+
+	m_bIsSortedUpcounting = GetBool(_T("IsSortedUpcounting"), true);
 	
 	CString sNavigation = GetString(_T("FolderNavigation"), _T("LoopFolder"));
 	if (sNavigation.CompareNoCase(_T("LoopSameFolderLevel")) == 0) {
@@ -328,7 +330,7 @@ CImageProcessingParams CSettingsProvider::LandscapeModeParams(const CImageProces
 }
 
 void CSettingsProvider::SaveSettings(const CImageProcessingParams& procParams, 
-									 EProcessingFlags eProcFlags, Helpers::ESorting eFileSorting,
+									 EProcessingFlags eProcFlags, Helpers::ESorting eFileSorting, bool isSortedUpcounting,
 									 Helpers::EAutoZoomMode eAutoZoomMode,
 									 bool bShowNavPanel) {
 	MakeSureUserINIExists();
@@ -356,6 +358,8 @@ void CSettingsProvider::SaveSettings(const CImageProcessingParams& procParams,
 		sSorting = _T("Random");
 	}
 	WriteString(_T("FileDisplayOrder"), sSorting);
+
+	WriteBool(_T("IsSortedUpcounting"), isSortedUpcounting);
 
 	LPCTSTR sAutoZoomMode = _T("FitNoZoom");
 	if (eAutoZoomMode == Helpers::ZM_FillScreen) {

@@ -175,6 +175,9 @@ DownSamplingFilter=BestQuality
 ; Может принимать значения 'LastModDate' (дата изменения), 'CreationDate' (дата создания) или 'FileName' (имя файла).
 FileDisplayOrder=FileName
 
+; Sort files upcounting or downcounting
+IsSortedUpcounting=true
+
 ; Навигация внутри или между папок.
 ; 'LoopFolder'		– цикличный просмотр содержимого исходной папки без выхода из неё.
 ; 'LoopSameFolderLevel'	– переходить в следующую папку на том же уровне иерархии.
@@ -366,3 +369,12 @@ LandscapeModeParams=-1 -1 -1 -1 0.5 1.0 0.75 0.4 -1 -1 -1 -1
 ;UserCmd2="KeyCode: Q  Cmd: 'cmd /c move %filename% "%mypictures%\trash\"' Confirm: 'Вы действительно хотите переместить файл в %mypictures%\trash\%filetitle%' HelpText: 'Q\tПереместить файл в папку с браком' Flags: 'WaitForTerminate ReloadFileList MoveToNext'"
 ;UserCmd3="KeyCode: W  Cmd: 'cmd /c copy %filename% "%mypictures%\trash\%filetitle%"' Confirm: 'Вы действительно хотите скопировать файл в %mypictures%\trash\%filetitle%' HelpText: 'W\tСкопировать файл в папку с браком' Flags: 'WaitForTerminate'"
 ;UserCmd4="KeyCode: A  Cmd: 'cmd /u /c echo %filename% >> "%mydocuments%\test.txt"' HelpText: 'A\tДобавить в список файлов'"
+
+; Open with menu commands, shown in the 'Open with..' submenu of the JPEGView context menu.
+; These commands must be named OpenWith# where # stands for a number. The first open with command has the number zero (OpenWith0)
+; and the numbering of the commands must be continuous.
+; Open with commands must have the following form:
+; OpenWith#="Cmd: '%Cmd%' Menuitem: '%menu%' [KeyCode: %Key%] [Confirm: '%confirm%'] [Flags: '%flags%']"
+; For an explanation of the different options, refer to the user command documentation above.
+; Example for a menu entry that opens the current image in MS Paint:
+;OpenWith0="Cmd: 'C:\WINDOWS\system32\mspaint.exe %filename%' Menuitem: 'Microsoft Paint' Flags: 'ShellExecute'"

@@ -46,7 +46,7 @@ namespace HelpersGUI {
 
 	// Gets the text for confirmation of saving of settings to INI file
 	CString GetINIFileSaveConfirmationText(const CImageProcessingParams& procParams, 
-									 EProcessingFlags eProcFlags, Helpers::ESorting eFileSorting,
+									 EProcessingFlags eProcFlags, Helpers::ESorting eFileSorting, bool isSortedUpcounting,
 									 Helpers::EAutoZoomMode eAutoZoomMode,
 									 bool bShowNavPanel);
 
