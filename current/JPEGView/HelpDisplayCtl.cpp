@@ -74,7 +74,8 @@ void CHelpDisplayCtl::GenerateHelpDisplay() {
 	m_pHelpDisplay->AddLineInfo(_KeyDesc(IDM_SORT_CREATION_DATE, IDM_SORT_MOD_DATE) + _T("/") + _KeyDesc(IDM_SORT_NAME, IDM_SORT_RANDOM), 
 		(m_pMainDlg->GetFileList()->GetSorting() == Helpers::FS_LastModTime) ? _KeyDesc(IDM_SORT_MOD_DATE) :
 		(m_pMainDlg->GetFileList()->GetSorting() == Helpers::FS_FileName) ? _KeyDesc(IDM_SORT_NAME) : 
-		(m_pMainDlg->GetFileList()->GetSorting() == Helpers::FS_Random) ? _KeyDesc(IDM_SORT_RANDOM) : _KeyDesc(IDM_SORT_CREATION_DATE), 
+		(m_pMainDlg->GetFileList()->GetSorting() == Helpers::FS_Random) ? _KeyDesc(IDM_SORT_RANDOM) : 
+		(m_pMainDlg->GetFileList()->GetSorting() == Helpers::FS_FileSize) ? _KeyDesc(IDM_SORT_SIZE) : _KeyDesc(IDM_SORT_CREATION_DATE), 
 		CNLS::GetString(_T("Sort images by creation date, resp. modification date, resp. file name")));
 	m_pHelpDisplay->AddLine(_KeyDesc(IDM_PREV), CNLS::GetString(_T("Goto previous image")));
 	m_pHelpDisplay->AddLine(_KeyDesc(IDM_NEXT), CNLS::GetString(_T("Goto next image")));

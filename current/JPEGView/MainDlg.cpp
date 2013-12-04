@@ -1089,7 +1089,12 @@ LRESULT CMainDlg::OnContextMenu(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam,
 	HMENU hMenuNavigation = ::GetSubMenu(hMenuTrackPopup, SUBMENU_POS_NAVIGATION);
 	::CheckMenuItem(hMenuNavigation,  m_pFileList->GetNavigationMode()*10 + IDM_LOOP_FOLDER, MF_CHECKED);
 	HMENU hMenuOrdering = ::GetSubMenu(hMenuTrackPopup, SUBMENU_POS_DISPLAY_ORDER);
-	::CheckMenuItem(hMenuOrdering,  m_pFileList->GetSorting()*10 + IDM_SORT_MOD_DATE, MF_CHECKED);
+	::CheckMenuItem(hMenuOrdering,  
+		(m_pFileList->GetSorting() == Helpers::FS_LastModTime) ? IDM_SORT_MOD_DATE :
+		(m_pFileList->GetSorting() == Helpers::FS_CreationTime) ? IDM_SORT_CREATION_DATE :
+		(m_pFileList->GetSorting() == Helpers::FS_FileName) ? IDM_SORT_NAME :
+		(m_pFileList->GetSorting() == Helpers::FS_Random) ? IDM_SORT_RANDOM : IDM_SORT_SIZE
+		, MF_CHECKED);
 	::CheckMenuItem(hMenuOrdering, m_pFileList->IsSortedUpcounting() ? IDM_SORT_UPCOUNTING : IDM_SORT_DOWNCOUNTING, MF_CHECKED);
 	if (m_pFileList->GetSorting() == Helpers::FS_Random) {
 		::EnableMenuItem(hMenuOrdering, IDM_SORT_UPCOUNTING, MF_BYCOMMAND | MF_GRAYED);
@@ -1324,9 +1329,12 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 		case IDM_SORT_CREATION_DATE:
 		case IDM_SORT_NAME:
 		case IDM_SORT_RANDOM:
-			m_pFileList->SetSorting((nCommand == IDM_SORT_CREATION_DATE) ? Helpers::FS_CreationTime : 
+		case IDM_SORT_SIZE:
+			m_pFileList->SetSorting(
+				(nCommand == IDM_SORT_CREATION_DATE) ? Helpers::FS_CreationTime : 
 				(nCommand == IDM_SORT_MOD_DATE) ? Helpers::FS_LastModTime : 
-				(nCommand == IDM_SORT_RANDOM) ? Helpers::FS_Random : Helpers::FS_FileName, m_pFileList->IsSortedUpcounting());
+				(nCommand == IDM_SORT_RANDOM) ? Helpers::FS_Random : 
+				(nCommand == IDM_SORT_SIZE) ? Helpers::FS_FileSize : Helpers::FS_FileName, m_pFileList->IsSortedUpcounting());
 			if (m_bShowHelp || m_pEXIFDisplayCtl->IsActive() || m_bShowFileName) {
 				this->Invalidate(FALSE);
 			}

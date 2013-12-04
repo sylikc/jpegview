@@ -21,7 +21,8 @@ namespace Helpers {
 		FS_LastModTime,
 		FS_CreationTime,
 		FS_FileName,
-		FS_Random
+		FS_Random,
+		FS_FileSize
 	};
 
 	// Navigation mode over directories

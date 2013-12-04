@@ -98,7 +98,8 @@ static Helpers::ESorting ParseCommandLineForSorting(LPCTSTR sCommandLine) {
             (_totupper(sSortingMode[1]) == _T('M')) ? Helpers::FS_LastModTime :
             (_totupper(sSortingMode[1]) == _T('C')) ? Helpers::FS_CreationTime :
             (_totupper(sSortingMode[1]) == _T('N')) ? Helpers::FS_FileName :
-            (_totupper(sSortingMode[1]) == _T('Z')) ? Helpers::FS_Random : Helpers::FS_Undefined;
+            (_totupper(sSortingMode[1]) == _T('Z')) ? Helpers::FS_Random :
+			(_totupper(sSortingMode[1]) == _T('S')) ? Helpers::FS_FileSize : Helpers::FS_Undefined;
     }
     return Helpers::FS_Undefined; 
 }

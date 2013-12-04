@@ -8,7 +8,7 @@ class CDirectoryWatcher;
 class CFileDesc 
 {
 public:
-	CFileDesc(const CString & sName, const FILETIME* lastModTime, const FILETIME* creationTime);
+	CFileDesc(const CString & sName, const FILETIME* lastModTime, const FILETIME* creationTime, __int64 fileSize);
 
 	// STL sort only needs this operator to order CFileDesc objects
 	bool operator < (const CFileDesc& other) const;
@@ -34,6 +34,9 @@ public:
 	// Gets creation time
 	const FILETIME& GetCreationTime() const { return m_creationTime; }
 
+	// Gets file size in bytes
+	__int64 GetFileSize() const { return m_fileSize; } 
+
 private:
 	static Helpers::ESorting sm_eSorting;
 	static bool sm_bSortUpcounting;
@@ -43,6 +46,7 @@ private:
 	FILETIME m_lastModTime;
 	FILETIME m_creationTime;
 	int m_nRandomOrderNumber;
+	__int64 m_fileSize;
 };
 
 
