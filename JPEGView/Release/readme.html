@@ -1,1142 +1,1192 @@
 ﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <HTML>
-	<head>
-		<title>Readme for JPEGView</title>
-		<meta name="author" content="David Kleiner"/>
-	</head>
-	<body text="#000000" bgcolor="#FFFFFF">
-		<table>
-			<colgroup>
-				<col width="250" span="1"/>
-				<col/>
-			</colgroup>
-			<tr>
-				<td valign="top">
-					<h2>Index</h2>
-					<a href="#Introduction">Introduction</a><br/>
-					<a href="#Installation">Installation</a><br/>
-					<a href="#Using">Using JPEGView</a><br/>
-					&nbsp;&nbsp;<a href="#GettingStarted">Getting started</a><br/>
-					&nbsp;&nbsp;<a href="#NavPanel">Navigation panel</a><br/>
-					&nbsp;&nbsp;<a href="#Viewing">Viewing images</a><br/>
-					&nbsp;&nbsp;&nbsp;&nbsp;<a href="#Navigation">Navigation</a><br/>
-					&nbsp;&nbsp;&nbsp;&nbsp;<a href="#ImageInfo">Image Information</a><br/>
-					&nbsp;&nbsp;&nbsp;&nbsp;<a href="#ZoomPan">Zoom and Pan</a><br/>
-					&nbsp;&nbsp;&nbsp;&nbsp;<a href="#AutoScaleMode">Auto Scale Mode</a><br/>
-					&nbsp;&nbsp;&nbsp;&nbsp;<a href="#Rotate">Rotate</a><br/>
-					&nbsp;&nbsp;&nbsp;&nbsp;<a href="#Crop">Crop</a><br/>
-                    &nbsp;&nbsp;&nbsp;&nbsp;<a href="#LosslessJPEG">Lossless JPEG Transformations</a><br/>
-					&nbsp;&nbsp;<a href="#SlideShow">Slideshows and Movies</a><br/>
-					&nbsp;&nbsp;&nbsp;&nbsp;<a href="#Slideshows">Slideshows</a><br/>
-					&nbsp;&nbsp;&nbsp;&nbsp;<a href="#Movies">Movies</a><br/>
-					&nbsp;&nbsp;<a href="#Processing">Processing images</a><br/>
-					&nbsp;&nbsp;&nbsp;&nbsp;<a href="#Processing">Available processings</a><br/>
-					&nbsp;&nbsp;&nbsp;&nbsp;<a href="#KeepingParams">Keeping parameters between images</a><br/>
-					&nbsp;&nbsp;&nbsp;&nbsp;<a href="#Comparing">Comparing to original image</a><br/>
-					&nbsp;&nbsp;<a href="#Saving">Saving and renaming images</a><br/>
-					&nbsp;&nbsp;<a href="#Clipboard">Clipboard</a><br/>
-					<a href="#ParameterDB">Parameter database</a><br/>
-					<a href="#INIFile">INI file settings</a><br/>
-                    <a href="#CmdLine">Command line parameters</a><br/>
-					<a href="#KeyMap">Changing keyboard shortcuts</a><br/>
-                    <a href="#RAWFiles">Viewing camera RAW files</a><br/>
-					<a href="#External">Calling external programs or batch files</a><br/>
-					<a href="#Trouble">Troubleshooting</a><br/>
-					<a href="#Copyright">License &amp; Copyright</a><br/>
-				</td>
+  <head>
+    <title>Readme for JPEGView</title>
+    <meta name="author" content="David Kleiner"/>
+  </head>
+  <body text="#000000" bgcolor="#FFFFFF">
+    <table>
+      <colgroup>
+        <col width="250" span="1"/>
+        <col/>
+      </colgroup>
+      <tr>
+        <td valign="top">
+          <h2>Index</h2>
+          <a href="#Introduction">Introduction</a><br/>
+          <a href="#Installation">Installation</a><br/>
+          <a href="#Using">Using JPEGView</a><br/>
+          &nbsp;&nbsp;<a href="#GettingStarted">Getting started</a><br/>
+          &nbsp;&nbsp;<a href="#NavPanel">Navigation panel</a><br/>
+          &nbsp;&nbsp;<a href="#Viewing">Viewing images</a><br/>
+          &nbsp;&nbsp;&nbsp;&nbsp;<a href="#Navigation">Navigation</a><br/>
+          &nbsp;&nbsp;&nbsp;&nbsp;<a href="#ImageInfo">Image Information</a><br/>
+          &nbsp;&nbsp;&nbsp;&nbsp;<a href="#ZoomPan">Zoom and Pan</a><br/>
+          &nbsp;&nbsp;&nbsp;&nbsp;<a href="#AutoScaleMode">Auto Scale Mode</a><br/>
+          &nbsp;&nbsp;&nbsp;&nbsp;<a href="#Rotate">Rotate</a><br/>
+          &nbsp;&nbsp;&nbsp;&nbsp;<a href="#Crop">Crop</a><br/>
+          &nbsp;&nbsp;&nbsp;&nbsp;<a href="#LosslessJPEG">Lossless JPEG Transformations</a><br/>
+          &nbsp;&nbsp;<a href="#SlideShow">Slideshows and Movies</a><br/>
+          &nbsp;&nbsp;&nbsp;&nbsp;<a href="#Slideshows">Slideshows</a><br/>
+          &nbsp;&nbsp;&nbsp;&nbsp;<a href="#Movies">Movies</a><br/>
+          &nbsp;&nbsp;<a href="#Processing">Processing images</a><br/>
+          &nbsp;&nbsp;&nbsp;&nbsp;<a href="#Processing">Available processings</a><br/>
+          &nbsp;&nbsp;&nbsp;&nbsp;<a href="#KeepingParams">Keeping parameters between images</a><br/>
+          &nbsp;&nbsp;&nbsp;&nbsp;<a href="#Comparing">Comparing to original image</a><br/>
+          &nbsp;&nbsp;<a href="#Saving">Saving and renaming images</a><br/>
+          &nbsp;&nbsp;<a href="#Clipboard">Clipboard</a><br/>
+          <a href="#ParameterDB">Parameter database</a><br/>
+          <a href="#INIFile">INI file settings</a><br/>
+          <a href="#CmdLine">Command line parameters</a><br/>
+          <a href="#KeyMap">Changing keyboard shortcuts</a><br/>
+          <a href="#RAWFiles">Viewing camera RAW files</a><br/>
+          <a href="#External">Calling external programs or batch files</a><br/>
+          <a href="#OpenWith">Opening image with external application</a><br/>
+          <a href="#Trouble">Troubleshooting</a><br/>
+          <a href="#Copyright">License &amp; Copyright</a><br/>
+        </td>
 
-				<td>
-					<a name="Top"></a>
-					<h1>JPEGView Readme</h1>
-					Revision: 27-Oct-2013
-					<a name="Introduction"></a>
-					<h2>Introduction</h2>
-					JPEGView is a viewer/editor for JPEG, BMP, WEBP, PNG, GIF and TIFF images. It is designed to view images from digital cameras
-					full screen and with highest quality possible. Basic image editing functionality is provided - allowing to correct typical
-					problems as color cast, high/low contrast and under- or overexposure very quickly and interactively during review of the
-					images. JPEGView does not replace a full blown image editor - such an editor will just be needed less often.<br/>
-					<b>Features:</b>
-					<ul style="margin-top:0in;margin-bottom:0in">
-						<li>
-							Supported image formats
-							<ul style="margin-top:0in;margin-bottom:0in">
-								<li>JPEG (including EXIF)</li>
-								<li>BMP (Windows Bitmap)</li>
-								<li>WEBP</li>
-                                <li>JPEG XR (Windows XP: <a href="http://www.microsoft.com/download/en/details.aspx?id=32">WIC</a> must be installed)</li>
-								<li>PNG</li>
-								<li>GIF</li>
-								<li>TIFF</li>
-                                <li>Camera RAW (embedded JPEGs, see <a href="#RAWFiles">here for details</a>)<br/>
-                              </li>
-							</ul>
-						</li>
-						<li>
-							Fullscreen viewing
-							<ul style="margin-top:0in;margin-bottom:0in">
-								<li>Image centric - nothing else visible by default</li>
-								<li>Multiple monitor support</li>
-								<li>Window mode also supported (Toggle with Ctrl-W)</li>
-							</ul>
-						</li>
-						<li>
-							Small and fast
-							<ul style="margin-top:0in;margin-bottom:0in">
-								<li>Executable is only 900 KB</li>
-								<li>C++/MMX/SSE code</li>
-								<li>Support for multiple CPU cores to speedup processing</li>
-								<li>Minimal dependencies on external libraries</li>
-							</ul>
-						</li>
-						<li>
-							High quality resizing of images
-							<ul style="margin-top:0in;margin-bottom:0in">
-								<li>Downsampling filter preserves sharpness</li>
-								<li>Bicubic interpolation for upsampling</li>
-							</ul>
-						</li>
-						<li>
-							Interactive image processing and improvement
-							<ul style="margin-top:0in;margin-bottom:0in">
-								<li>Real time and full screen image processing</li>
-								<li>Contrast, Brightness and Saturation adaptation</li>
-								<li>Unsharp masking</li>
-								<li>Cyan-Red, Magenta-Green, Yellow-Blue color balance</li>
-								<li>Local brightness correction to lighten shadows and darken highlights</li>
-								<li>Automatic color and contrast correction</li>
-								<li>Rotation in 90 deg steps</li>
-								<li>Free image rotation for horizon correction</li>
-                                <li>Perspective correction</li>
-                                <li>Lossless JPEG transformations</li>
-								<li>Crop image (also lossless for JPEGs)</li>
-								<li>Landscape picture improvement mode</li>
-							</ul>
-						</li>
-						<li>
-							Viewing and image processing parameters can be saved per image
-							<ul style="margin-top:0in;margin-bottom:0in">
-								<li>Image file remains untouched</li>
-								<li>Database entries remain valid when image file is moved or renamed</li>
-							</ul>
-						</li>
-						<li>
-							Slide shows and movie playing
-							<ul style="margin-top:0in;margin-bottom:0in">
-								<li>Plays slide shows given by text file</li>
-                                <li>Multiple transition effects for slide shows</li>
-								<li>
-									Plays all images in folder as movie with configurable frame rate.<br/>
-									All image processing remains functional while playing.
-								</li>
-							</ul>
-						</li>
-						<li>
-							Batch rename and copy
-							<ul style="margin-top:0in;margin-bottom:0in">
-								<li>Copies and renames files from digicam to target folders</li>
-								<li>Creates target folders as needed</li>
-								<li>Supports various placeholders for renaming files</li>
-							</ul>
-						</li>
-					</ul>
+        <td>
+          <a name="Top"></a>
+          <h1>JPEGView Readme</h1>
+          Revision: 04-Dec-2013
+          <a name="Introduction"></a>
+          <h2>Introduction</h2>
+          JPEGView is a viewer/editor for JPEG, BMP, WEBP, PNG, TGA, GIF and TIFF images. It is designed to view images from digital cameras
+          full screen and with highest quality possible. Basic image editing functionality is provided - allowing to correct typical
+          problems as color cast, high/low contrast and under- or overexposure very quickly and interactively during review of the
+          images. JPEGView does not replace a full blown image editor - such an editor will just be needed less often.<br/>
+          <b>Features:</b>
+          <ul style="margin-top:0in;margin-bottom:0in">
+            <li>
+              Supported image formats
+              <ul style="margin-top:0in;margin-bottom:0in">
+                <li>JPEG (including EXIF)</li>
+                <li>BMP (Windows Bitmap)</li>
+                <li>WEBP</li>
+                <li>
+                  JPEG XR (Windows XP: <a href="http://www.microsoft.com/download/en/details.aspx?id=32">WIC</a> must be installed)
+                </li>
+                <li>PNG</li>
+                <li>GIF</li>
+                <li>TIFF</li>
+                <li>TGA</li>
+                <li>
+                  Camera RAW (embedded JPEGs, see <a href="#RAWFiles">here for details</a>)<br/>
+                </li>
+              </ul>
+            </li>
+            <li>
+              Fullscreen viewing
+              <ul style="margin-top:0in;margin-bottom:0in">
+                <li>Image centric - nothing else visible by default</li>
+                <li>Multiple monitor support</li>
+                <li>Window mode also supported (Toggle with Ctrl-W)</li>
+              </ul>
+            </li>
+            <li>
+              Small and fast
+              <ul style="margin-top:0in;margin-bottom:0in">
+                <li>Executable is only 1 MB</li>
+                <li>C++/MMX/SSE code</li>
+                <li>Support for multiple CPU cores to speedup processing</li>
+                <li>Minimal dependencies on external libraries</li>
+              </ul>
+            </li>
+            <li>
+              High quality resizing of images
+              <ul style="margin-top:0in;margin-bottom:0in">
+                <li>Downsampling filter preserves sharpness</li>
+                <li>Bicubic interpolation for upsampling</li>
+              </ul>
+            </li>
+            <li>
+              Interactive image processing and improvement
+              <ul style="margin-top:0in;margin-bottom:0in">
+                <li>Real time and full screen image processing</li>
+                <li>Contrast, Brightness and Saturation adaptation</li>
+                <li>Unsharp masking</li>
+                <li>Cyan-Red, Magenta-Green, Yellow-Blue color balance</li>
+                <li>Local brightness correction to lighten shadows and darken highlights</li>
+                <li>Automatic color and contrast correction</li>
+                <li>Rotation in 90 deg steps</li>
+                <li>Free image rotation for horizon correction</li>
+                <li>Perspective correction</li>
+                <li>Lossless JPEG transformations</li>
+                <li>Crop image (also lossless for JPEGs)</li>
+                <li>Landscape picture improvement mode</li>
+              </ul>
+            </li>
+            <li>
+              Viewing and image processing parameters can be saved per image
+              <ul style="margin-top:0in;margin-bottom:0in">
+                <li>Image file remains untouched</li>
+                <li>Database entries remain valid when image file is moved or renamed</li>
+              </ul>
+            </li>
+            <li>
+              Slide shows and movie playing
+              <ul style="margin-top:0in;margin-bottom:0in">
+                <li>Plays slide shows given by text file</li>
+                <li>Multiple transition effects for slide shows</li>
+                <li>
+                  Plays all images in folder as movie with configurable frame rate.<br/>
+                  All image processing remains functional while playing.
+                </li>
+              </ul>
+            </li>
+            <li>
+              Batch rename and copy
+              <ul style="margin-top:0in;margin-bottom:0in">
+                <li>Copies and renames files from digicam to target folders</li>
+                <li>Creates target folders as needed</li>
+                <li>Supports various placeholders for renaming files</li>
+              </ul>
+            </li>
+            <li>
+              Extensible and highly configurable
+              <ul style="margin-top:0in;margin-bottom:0in">
+                <li>Allows defining <a href="#External">user commands</a></li>
+                <li>Allows opening images with <a href="#OpenWith">external applications</a></li>
+                <li>Allows changing all <a href="#KeyMap">keyboard shortcuts</a></li>
+                <li>Plenty of configurable items in the INI file</li>
+              </ul>
+            </li>
+          </ul>
 
-					<a name="Installation"></a>
-					<h2>Installation</h2>
-					There is no installer for JPEGView because none is needed. Just copy or extract all files to a folder
-					on your harddisk (e.g. C:\Program Files\JPEGView\).<br/>
-					To define JPEGView as your default viewer for image files, perform the following steps:
-					<ul style="margin-top:0in;margin-bottom:0in">
-						<li>Open the context menu of JPEGView (right mouse click)</li>
-						<li>On the context menu, choose 'Settings/Administration' - 'Set as default viewer'</li>
-						<li>
-							On the dialog that is appearing, the file extensions of the supported image file formats are listed,
-                            together with the information if the corresponding extension is currently bound to JPEGView.
-						</li>
-						<li>Select the file extensions to be opened by JPEGView and confirm with OK</li>
-					</ul>
-					<b>Hardware Requirements</b><br/>
-					<ul style="margin-top:0in;margin-bottom:0in">
-						<li>
-							256 MB RAM<br/>
-							512 MB RAM is required if images with more than 10 MegaPixels are viewed,
-							less is acceptable if only small images (less than 5 MegaPixels) are viewed.
-						</li>
-						<li>
-							CPU should be SSE2 capable (perfect is a CPU with 128 bit SSE2 processing and multiple CPU cores)<br/>
-							Other CPUs also work but performance decreases somewhat
-						</li>
-						<li>A mouse with a scroll wheel (for zooming) and navigation buttons on the side is highly recommended</li>
-                        <li>If you are using JPEGView on a touch-screen: You may increase the size of the buttons on the navigation
-                        panel by increasing the value of 'ScaleFactorNavPanel' in the INI file.</li>
-					</ul>
-					<b>Supported Systems</b><br/>
-					<ul style="margin-top:0in;margin-bottom:0in">
-						<li>Windows 7</li>
-						<li>Windows Vista</li>
-						<li>Windows XP</li>
-						<li>Windows 2000 : Not supported anymore, use version 1.0.21</li>
-                        <li>Windows 8? (untested)</li>
-					</ul>
-					<b>Supported Languages</b><br/>
-					<ul style="margin-top:0in;margin-bottom:0in">
-						<li>English</li>
-						<li>German</li>
-						<li>Spanish</li>
-                        <li>Chinese</li>
-						<li>Portuguese</li>
-						<li>Italian</li>
-						<li>French</li>
-						<li>Korean</li>
-						<li>Romanian</li>
-						<li>Russian</li>
-						<li>Swedish</li>
-						<li>Czech</li>
-						<li>Greek</li>
-						<li>Basque</li>
-                        <li>Belarusan</li>
-					</ul>
-					By default JPEGView uses the same language as the operating system. However another language can be forced using the INI file.
-					Translations to other languages can be done very easily by providing an UTF8 coded text mapping file, see
-					<a href="./strings_de.txt">strings_de.txt</a> as an example.<br/>
-					If you want that your translation is included into the next JPEGView release, contact me at
-					<a href="mailto:jpegview@gmail.com">jpegview@gmail.com</a><br/>
-					<b>Registry</b><br/>
-					JPEGView does not touch the registry except when registering file extensions to be displayed with
-					JPEGView. This will add some registry entries in the 'Current User' branch of the registry.<br/>
-					<b>Created Files during Runtime</b><br/>
-					The only location where files are written (the parameter DB and the user INI file)
-					is in 'Documents and Settings\<i>Username</i>\Application Data\JPEGView\' (exception of this rule: see next section)<br/>
-					Note that these files are only created when they are needed, e.g. when the first parameter set is stored to the parameter DB.<br/>
-					<b>Forcing user data storage in EXE path</b><br/>
-					By setting StoreToEXEPath=true in the global INI file,
-					the storage location for the user INI file and the parameter DB can be changed to the EXE path of JPEGView. This makes
-					sense when using JPEGView from an USB memory stick to prevent storing data on the host system.<br/>
-					<b>Restricted Rights</b><br/>
-					JPEGView runs without problems on accounts with restricted rights. Setting JPEGView as default viewer for already registered file
-                    extensions may fail without administrator rights when using Windows Vista, Windows 7 or later.
-					<br/><br/><b>
-						<a href="#Top">Top of Page</a>
-					</b><br/>
+          <a name="Installation"></a>
+          <h2>Installation</h2>
+          There is no installer for JPEGView because none is needed. Just copy or extract all files to a folder
+          on your harddisk (e.g. C:\Program Files\JPEGView\).<br/>
+          To define JPEGView as your default viewer for image files, perform the following steps:
+          <ul style="margin-top:0in;margin-bottom:0in">
+            <li>Open the context menu of JPEGView (right mouse click)</li>
+            <li>On the context menu, choose 'Settings/Administration' - 'Set as default viewer'</li>
+            <li>
+              On the dialog that is appearing, the file extensions of the supported image file formats are listed,
+              together with the information if the corresponding extension is currently bound to JPEGView.
+            </li>
+            <li>Select the file extensions to be opened by JPEGView and confirm with OK</li>
+            <li>
+              Windows 8: Some file extensions are protected by the operating system. Use the Windows 8 default programs
+              dialog to change the default program for these.
+            </li>
+          </ul>
+          <b>Hardware Requirements</b><br/>
+          <ul style="margin-top:0in;margin-bottom:0in">
+            <li>
+              256 MB RAM<br/>
+              512 MB RAM is required if images with more than 10 MegaPixels are viewed,
+              less is acceptable if only small images (less than 5 MegaPixels) are viewed.
+            </li>
+            <li>
+              CPU should be SSE2 capable (perfect is a CPU with 128 bit SSE2 processing and multiple CPU cores)<br/>
+              Other CPUs also work but performance decreases somewhat
+            </li>
+            <li>A mouse with a scroll wheel (for zooming) and navigation buttons on the side is highly recommended</li>
+            <li>
+              If you are using JPEGView on a touch-screen: You may increase the size of the buttons on the navigation
+              panel by increasing the value of 'ScaleFactorNavPanel' in the INI file.
+            </li>
+          </ul>
+          <b>Supported Systems</b><br/>
+          <ul style="margin-top:0in;margin-bottom:0in">
+            <li>Windows 8 / 8.1</li>
+            <li>Windows 7</li>
+            <li>Windows Vista</li>
+            <li>Windows XP</li>
+            <li>Windows 2000 : Not supported anymore, use version 1.0.21</li>
+          </ul>
+          <b>Supported Languages</b><br/>
+          <ul style="margin-top:0in;margin-bottom:0in">
+            <li>English</li>
+            <li>German</li>
+            <li>Spanish</li>
+            <li>Chinese</li>
+            <li>Portuguese</li>
+            <li>Italian</li>
+            <li>French</li>
+            <li>Korean</li>
+            <li>Romanian</li>
+            <li>Russian</li>
+            <li>Swedish</li>
+            <li>Czech</li>
+            <li>Greek</li>
+            <li>Basque</li>
+            <li>Belorussian</li>
+          </ul>
+          By default JPEGView uses the same language as the operating system. However another language can be forced using the INI file.
+          Translations to other languages can be done very easily by providing an UTF8 coded text mapping file, see
+          <a href="./strings_de.txt">strings_de.txt</a> as an example.<br/>
+          If you want that your translation is included into the next JPEGView release, contact me at
+          <a href="mailto:jpegview@gmail.com">jpegview@gmail.com</a><br/>
+          <b>Registry</b><br/>
+          JPEGView does not touch the registry except when registering file extensions to be displayed with
+          JPEGView. This will add some registry entries in the 'Current User' branch of the registry.<br/>
+          <b>Created Files during Runtime</b><br/>
+          The only location where files are written (the parameter DB and the user INI file)
+          is in 'Documents and Settings\<i>Username</i>\Application Data\JPEGView\' (exception of this rule: see next section)<br/>
+          Note that these files are only created when they are needed, e.g. when the first parameter set is stored to the parameter DB.<br/>
+          <b>Forcing user data storage in EXE path</b><br/>
+          By setting StoreToEXEPath=true in the global INI file,
+          the storage location for the user INI file and the parameter DB can be changed to the EXE path of JPEGView. This makes
+          sense when using JPEGView from an USB memory stick to prevent storing data on the host system.<br/>
+          <b>Restricted Rights</b><br/>
+          JPEGView runs without problems on accounts with restricted rights. Setting JPEGView as default viewer for already registered file
+          extensions may fail without administrator rights when using Windows Vista, Windows 7 or later.
+          <br/><br/><b>
+            <a href="#Top">Top of Page</a>
+          </b><br/>
 
-					<a name="Using"></a>
-					<h2>Using JPEGView</h2>
-					<a name="GettingStarted"></a>
-					<h3>Getting started</h3>
-					For getting started, the following commands in JPEGView are the most important ones:<br/>
-					<ul style="margin-top:0in;margin-bottom:0in">
-						<li>
-							<kbd>F1</kbd> displays help on JPEGView
-						</li>
-						<li>
-							<kbd>F2</kbd> displays information about the current image
-						</li>
-						<li>
-							<kbd>PgDn/PgUp</kbd> navigates to next/previous image (Alternative: 'forward' and 'back' mouse buttons)
-						</li>
-						<li>Mouse wheel zooms in and out</li>
-						<li>Dragging mouse while left mouse button is pressed will pan the image</li>
-						<li>Move mouse pointer to bottom of screen for image processing, parameter DB access and file renaming</li>
-						<li>Move mouse pointer to top of screen for minimizing or closing the application</li>
-						<li>Right mouse button displays the context menu</li>
-						<li>
-							<kbd>ESC</kbd> terminates the application
-						</li>
-					</ul>
-					<a name="NavPanel"></a>
-					<h3>Navigation panel</h3>
-					<img src="Navpanel.png" alt="Navigation panel" border="0"/>
-					<br/>
-					From left to right:<br/>
-					- First image in folder, Previous image, Next image, Last image in folder<br/>
-                    - Zoom mode, when active zooming can be done by pressing the left mouse button and dragging the mouse to the left and right<br/>
-					- Actual image size / Fit image to screen<br/>
-					- Window mode / Full screen mode<br/>
-					- Rotate clockwise, Rotate counter-clockwise<br/>
-					- Rotate image by any angle, e.g. to perform horizon correction<br/>
-                    - Perspecive correction, corrects tilted vertical edges<br/>
-					- Keep image processing parameters and zoom/pan between images<br/>
-					- Toggle landscape picture enhancement mode<br/>
-					- Toggle display of image information (EXIF)<br/>
+          <a name="Using"></a>
+          <h2>Using JPEGView</h2>
+          <a name="GettingStarted"></a>
+          <h3>Getting started</h3>
+          For getting started, the following commands in JPEGView are the most important ones:<br/>
+          <ul style="margin-top:0in;margin-bottom:0in">
+            <li>
+              <kbd>F1</kbd> displays help on JPEGView
+            </li>
+            <li>
+              <kbd>F2</kbd> displays information about the current image
+            </li>
+            <li>
+              <kbd>PgDn/PgUp</kbd> navigates to next/previous image (Alternative: 'forward' and 'back' mouse buttons)
+            </li>
+            <li>Mouse wheel zooms in and out</li>
+            <li>Dragging mouse while left mouse button is pressed will pan the image</li>
+            <li>Move mouse pointer to bottom of screen for image processing, parameter DB access and file renaming</li>
+            <li>Move mouse pointer to top of screen for minimizing or closing the application</li>
+            <li>Right mouse button displays the context menu</li>
+            <li>
+              <kbd>ESC</kbd> terminates the application
+            </li>
+          </ul>
+          <a name="NavPanel"></a>
+          <h3>Navigation panel</h3>
+          <img src="Navpanel.png" alt="Navigation panel" border="0"/>
+          <br/>
+          From left to right:<br/>
+          - First image in folder, Previous image, Next image, Last image in folder<br/>
+          - Zoom mode, when active zooming can be done by pressing the left mouse button and dragging the mouse to the left and right<br/>
+          - Actual image size / Fit image to screen<br/>
+          - Window mode / Full screen mode<br/>
+          - Rotate clockwise, Rotate counter-clockwise<br/>
+          - Rotate image by any angle, e.g. to perform horizon correction<br/>
+          - Perspecive correction, corrects tilted vertical edges<br/>
+          - Keep image processing parameters and zoom/pan between images<br/>
+          - Toggle landscape picture enhancement mode<br/>
+          - Toggle display of image information (EXIF)<br/>
 
-					<h4>Full screen mode / Window mode</h4>
-					By default JPEGView starts in full screen mode on the largest monitor attached to the computer.
-					A window mode is also supported. Toggling between full screen and window mode is done with <kbd>F11</kbd> or with
-					the button on the navigation panel.<br/>
-					By changing the INI file, it is possible to force JPEGView to start in window mode and to use a different monitor
-					respectively window position and size. Note that when changing the window size with the mouse, the image is not
-					scaled automatically to fit the new size. Press then <kbd>Enter</kbd> key to fit the image to the window.
-					<br/><b>
-						<a href="#Top">Top of Page</a>
-					</b><br/>
+          <h4>Full screen mode / Window mode</h4>
+          By default JPEGView starts in full screen mode on the largest monitor attached to the computer.
+          A window mode is also supported. Toggling between full screen and window mode is done with <kbd>F11</kbd> or with
+          the button on the navigation panel.<br/>
+          By changing the INI file, it is possible to force JPEGView to start in window mode and to use a different monitor
+          respectively window position and size. Note that when changing the window size with the mouse, the image is not
+          scaled automatically to fit the new size. Press then <kbd>Enter</kbd> key to fit the image to the window.
+          <br/><b>
+            <a href="#Top">Top of Page</a>
+          </b><br/>
 
-					<a name="Viewing"></a>
-					<h3>Viewing Images</h3>
-					<a name="Navigation"></a>
-					<h4>Navigation</h4>
-					To navigate between images, the following commands are supported:
-					<ul style="margin-top:0in;margin-bottom:0in">
-						<li>
-							Next image<br/>
-							Keyboard: <kbd>PgDn or 'Left arrow'</kbd><br/>
-							Mouse: 'Forward' mouse button (normally on left side of mouse)
-						</li>
-						<li>
-							Previous image<br/>
-							Keyboard: <kbd>PgUp or 'Right arrow'</kbd><br/>
-							Mouse: 'Back' mouse button
-						</li>
-						<li>
-							First image in folder (according to sort order, see below)<br/>
-							Keyboard: <kbd>Home</kbd>
-						</li>
-						<li>
-							Last image in folder (according to sort order, see below)<br/>
-							Keyboard: <kbd>End</kbd>
-						</li>
-						<li>
-							Mark image for toggling<br/>
-							Keyboard: <kbd>Ctrl-M</kbd>
-						</li>
-						<li>
-							Toggle between current image and marked image<br/>
-							Note that toggling only works between images in the same folder<br/>
-							Keyboard: <kbd>Ctrl-Left arrow</kbd> or <kbd>Ctrl-Right arrow</kbd>
-						</li>
-						<li>
-							Reload image<br/>
-							Keyboard: <kbd>Ctrl-R</kbd><br/>
-						</li>
-						<li>
-							Open image or folder<br/>
-							Keyboard: <kbd>Ctrl-O</kbd><br/>
-							The standard 'File Open' dialog is shown and allows displaying images from other folders.
-							Alternatively, a text file containing file names for a <a href="#SlideShow">slide show</a> can be opened.
-						</li>
-						<li>
-							Drag and drop image or folder from Windows Explorer to JPEGView window.
-						</li>
-					</ul>
-					The basic navigation command (First image in folder, Previous image, Next image, Last image in folder) are also
-					available on the navigation panel, transparently blended over the image.<br/>
-					JPEGView uses a second thread to read ahead and process the next image. Guessing the next image is based on
-					the last navigations.<br/><br/>
+          <a name="Viewing"></a>
+          <h3>Viewing Images</h3>
+          <a name="Navigation"></a>
+          <h4>Navigation</h4>
+          To navigate between images, the following commands are supported:
+          <ul style="margin-top:0in;margin-bottom:0in">
+            <li>
+              Next image<br/>
+              Keyboard: <kbd>PgDn or 'Left arrow'</kbd><br/>
+              Mouse: 'Forward' mouse button (normally on left side of mouse)
+            </li>
+            <li>
+              Previous image<br/>
+              Keyboard: <kbd>PgUp or 'Right arrow'</kbd><br/>
+              Mouse: 'Back' mouse button
+            </li>
+            <li>
+              First image in folder (according to sort order, see below)<br/>
+              Keyboard: <kbd>Home</kbd>
+            </li>
+            <li>
+              Last image in folder (according to sort order, see below)<br/>
+              Keyboard: <kbd>End</kbd>
+            </li>
+            <li>
+              Mark image for toggling<br/>
+              Keyboard: <kbd>Ctrl-M</kbd>
+            </li>
+            <li>
+              Toggle between current image and marked image<br/>
+              Note that toggling only works between images in the same folder<br/>
+              Keyboard: <kbd>Ctrl-Left arrow</kbd> or <kbd>Ctrl-Right arrow</kbd>
+            </li>
+            <li>
+              Reload image<br/>
+              Keyboard: <kbd>Ctrl-R</kbd><br/>
+            </li>
+            <li>
+              Open image or folder<br/>
+              Keyboard: <kbd>Ctrl-O</kbd><br/>
+              The standard 'File Open' dialog is shown and allows displaying images from other folders.
+              Alternatively, a text file containing file names for a <a href="#SlideShow">slide show</a> can be opened.
+            </li>
+            <li>
+              Drag and drop image or folder from Windows Explorer to JPEGView window.
+            </li>
+          </ul>
+          The basic navigation command (First image in folder, Previous image, Next image, Last image in folder) are also
+          available on the navigation panel, transparently blended over the image.<br/>
+          JPEGView uses a second thread to read ahead and process the next image. Guessing the next image is based on
+          the last navigations.<br/><br/>
 
-					JPEGView supports the following navigation modes:
-					<ul style="margin-top:0in;margin-bottom:0in">
-						<li>
-							<kbd>F7</kbd>: (Default) Display all files in current folder, wrap around to first image when finished<br/>
-							The file name of the current file and it's position in the folder can be displayed using <kbd>Ctrl-F2</kbd>.
-						</li>
-						<li>
-							<kbd>F8</kbd>: Display all files in current folder, when finished recursively display images in subfolders.<br/>
-							Subfolders in the same root directory are traversed in alphabetic order.
-						</li>
-						<li>
-							<kbd>F9</kbd>: Display all files in current folder, when finished advance to next sibling folder
-							(folder on same level as current folder)
-						</li>
-					</ul>
-					<a name="DisplayOrder"></a>
-					The default navigation mode can be changed in the <a href="#INIFile">INI file</a>.<br/><br/>
-					The display-order within one folder is also configurable:
-					<ul style="margin-top:0in;margin-bottom:0in">
-						<li>
-							<kbd>m</kbd>: (Default) Order files according to date/time of last modification
-						</li>
-						<li>
-							<kbd>c</kbd>: Order files according to date/time of creation
-						</li>
-						<li>
-							<kbd>n</kbd>: Order files according to file name
-						</li>
-						<li>
-							<kbd>z</kbd>: Random file order
-						</li>
-					</ul>
-					The default ordering can be changed in the  <a href="#INIFile">INI file</a>.<br/>
-					<a name="ImageInfo"></a>
-					<h4>Image Information</h4>
-					<h5>Image and EXIF information</h5>
-					Use <kbd>F2</kbd> to display information about the current image, including the value of some EXIF tags, e.g. date and
-					time the image was taken and exposure information. Optionally the histogram of the image can be displayed below the
-					EXIF information. The histogram is updated immediately when the image is processed.
-					<h5>File name and path</h5>
-					Use <kbd>Ctrl-F2</kbd> to display the full path and file name of the current image.
-					<a name="ZoomPan"></a>
-					<h4>Zoom and Pan</h4>
-					Images can be zoomed and panned interactively. While zooming, a lower quality image processing mode is used. The
-					image will be processed automatically with the high quality resize filters as soon as no zoom command is received for
-					about half a second.<br/>
-					By default, images that are larger than the screen are scaled down to fit the screen. Images that are smaller than the screen
-					are not scaled by default. Use the following commands to change the zoom factor:
-					<ul style="margin-top:0in;margin-bottom:0in">
-						<li>
-							Fit image to screen<br/>
-							Keyboard: <kbd>Enter</kbd>
-						    Mouse: Double click on the image
-						</li>
-						<li>
-							Fill screen with crop (no black borders)<br/>
-							Keyboard: <kbd>Ctrl-Enter</kbd>
-						</li>
-						<li>
-							Zoom to 100 % (One image pixel corresponds to one screen pixel)<br/>
-							Keyboard: <kbd>Space</kbd><br/>
-							Toggles back to 'Fit to screen' when zoom is already 100 %<br/>
-							Note that the point under the mouse cursor remains fixed during zoom - allows zooming to point of interest
-						</li>
-						<li>
-							Enlarge view to span all monitors (only available on multi monitor systems)<br/>
-							Keyboard: <kbd>F12</kbd><br/>
-							Panoramas look great in this mode if you have multiple screen.<br/>
-							Pressing <kbd>F12</kbd> again toggles back to normal one-screen mode.
-						</li>
-						<li>
-							Free Zoom<br/>
-							Keyboard: <kbd>'Plus' or Ctrl-'Arrow up'</kbd> to zoom in, <kbd>'Minus' or Ctrl-'Arrow down'</kbd> to zoom out<br/>
-							Mouse: Mouse wheel or <kbd>Shift-</kbd>left mouse click and drag mouse to the left and right<br/>
-						</li>
-						<li>
-							Pan<br/>
-							Keyboard: <kbd>Shift+'Arrows'</kbd><br/>
-							Mouse: Left mouse and drag<br/>
-							Pan is only supported when the image is larger than the screen
-						</li>
-					</ul>
-					<br/>Because almost all images from digital cameras must be sampled down for a typical monitor, the downsampling filter
-					has been choosen carefully to provide an optimal image quality. The downsampling filter uses a 7 x 7 to 15 x 15
-					(depending on resize-factor) Lanczos-like filter kernel. This kernel produces only a small amout of aliasing while
-					preserving or even slightly enhancing the sharpness of the image. You can see the difference to simple point sampling when
-					pressing <kbd>F3</kbd> what toggles between point sampling and filter based sampling.
-					<a name="AutoScaleMode"></a>
-					<h4>Auto Scale Mode</h4>
-					The auto scale mode determines how images are fitted to the screen. The default auto scale mode is read from the
-					INI file, however the mode can also be changed during runtime with the context menu, submenu 'Auto scale mode'.<br/>
-					The following modes are supported:
-					<ul style="margin-top:0in;margin-bottom:0in">
-						<li>
-							Fit to screen (no zoom)<br/>
-							Images that are larger than the screen are scaled down to fit. No image areas are cropped but black borders
-							will be visible when the image aspect ratio and the screen aspect ratio do not match. Images that are smaller
-							than the screen are not enlarged.
-						</li>
-						<li>
-							Fill with crop (no zoom)<br/>
-							Images that are larger than the screen are scaled down to fill the entire screen. Cropping occurs if necessary to
-							avoid black borders. Images that are smaller than the screen are not enlarged.<br/>
-							This mode is suited for viewing 4:3 images on a 16:9 wide screen without black borders.<br/>
-							Note: Cropping is limited to approximately 30 % of the image in this mode. If more would be cropped, fit to screen is used instead.
-							As a result, portrait images will not be cropped on the screen.
-						</li>
-						<li>
-							Fit to screen<br/>
-							Images are scaled (up or down) to fit the screen. No image areas are cropped but black borders can be visible.
-						</li>
-						<li>
-							Fill with crop<br/>
-							Images are scaled (up or down) to fill the entire screen. Unlimited cropping may occurs if necessary to avoid
-							black borders.
-						</li>
-					</ul>
-					<a name="Rotate"></a>
-					<h4>Rotate</h4>
-					With the <kbd>'Arrow down'</kbd> and <kbd>'Arrow up'</kbd> keys, the current image can be rotated clockwise, respectively
-					counter-clockwise. Note that JPEGView looks for the rotation tag in the EXIF data to rotate the image automatically. Some
-					cameras have an orientation sensor and set this tag.<br/>
-					To rotate a JPEG image lossless on disk, use the <kbd>R</kbd> and <kbd>T</kbd> keys.
-					<a name="Crop"></a>
-					<h4>Crop</h4>
-					When the <kbd>Ctrl</kbd> key and the left mouse button are pressed and the mouse is dragged, a selection on the image can be
-					defined. After having defined a selection, a context menu provides the following commands:
-					<ul style="margin-top:0in;margin-bottom:0in">
-						<li>
-							Crop image selection<br/>
-							Crops the image selection and re-applies all image processing with the current parameters to the cropped image.
-							When the color and contrast correction is active, the cropped image may looks different afterwards. Note that a crop
-							operation cannot be stored to the parameter DB.
-						</li>
-						<li>
-							Lossless crop (for JPEG images only)<br/>
-							Crops the image selection without recompression of the JPEG image. The cropped image must be stored as a new JPEG file.
-							Note that lossless crop cannot be more exact than to 8 or 16 pixel boundaries due to the structure of JPEG images. 
-						</li>
-						<li>
-							Copy image selection to clipboard<br/>
-							Note that this command will copy the image selection in original resolution and not in screen resolution.
-						</li>
-						<li>
-							Crop Mode<br/>
-							Sets the crop mode - either to free croping, fixed size cropping or cropping with a fixed aspect ratio.
-							Note that the default fixed crop size can be set in the INI file.
-						</li>
-						<li>Zoom to selection</li>
-					</ul>
-					Hint: Use a large zoom factor and the point-sampling mode (F3 key) to crop with pixel precision.<br/>
-                    Note: When the crop-menu appears, the crop rectangle can still be edited by clicking on the handles or on the border of
-                    the rectangle. Use the right mouse button to display the crop-menu again when the crop rectangle has the desired size.
-					<br/><br/><b>
-						<a href="#Top">Top of Page</a>
-					</b><br/>
+          JPEGView supports the following navigation modes:
+          <ul style="margin-top:0in;margin-bottom:0in">
+            <li>
+              <kbd>F7</kbd>: (Default) Display all files in current folder, wrap around to first image when finished<br/>
+              The file name of the current file and it's position in the folder can be displayed using <kbd>Ctrl-F2</kbd>.
+            </li>
+            <li>
+              <kbd>F8</kbd>: Display all files in current folder, when finished recursively display images in subfolders.<br/>
+              Subfolders in the same root directory are traversed in alphabetic order.
+            </li>
+            <li>
+              <kbd>F9</kbd>: Display all files in current folder, when finished advance to next sibling folder
+              (folder on same level as current folder)
+            </li>
+          </ul>
+          <a name="DisplayOrder"></a>
+          The default navigation mode can be changed in the <a href="#INIFile">INI file</a>.<br/><br/>
+          The display-order within one folder is also configurable:
+          <ul style="margin-top:0in;margin-bottom:0in">
+            <li>
+              <kbd>m</kbd>: (Default) Order files according to date/time of last modification
+            </li>
+            <li>
+              <kbd>c</kbd>: Order files according to date/time of creation
+            </li>
+            <li>
+              <kbd>n</kbd>: Order files according to file name
+            </li>
+            <li>
+              <kbd>z</kbd>: Random file order
+            </li>
+          </ul>
+          The default ordering can be changed in the  <a href="#INIFile">INI file</a>.<br/>
+          <a name="ImageInfo"></a>
+          <h4>Image Information</h4>
+          <h5>Image and EXIF information</h5>
+          Use <kbd>F2</kbd> to display information about the current image, including the value of some EXIF tags, e.g. date and
+          time the image was taken and exposure information. Optionally the histogram of the image can be displayed below the
+          EXIF information. The histogram is updated immediately when the image is processed.
+          <h5>File name and path</h5>
+          Use <kbd>Ctrl-F2</kbd> to display the full path and file name of the current image.
+          <a name="ZoomPan"></a>
+          <h4>Zoom and Pan</h4>
+          Images can be zoomed and panned interactively. While zooming, a lower quality image processing mode is used. The
+          image will be processed automatically with the high quality resize filters as soon as no zoom command is received for
+          about half a second.<br/>
+          By default, images that are larger than the screen are scaled down to fit the screen. Images that are smaller than the screen
+          are not scaled by default. Use the following commands to change the zoom factor:
+          <ul style="margin-top:0in;margin-bottom:0in">
+            <li>
+              Fit image to screen<br/>
+              Keyboard: <kbd>Enter</kbd>
+              Mouse: Double click on the image
+            </li>
+            <li>
+              Fill screen with crop (no black borders)<br/>
+              Keyboard: <kbd>Ctrl-Enter</kbd>
+            </li>
+            <li>
+              Zoom to 100 % (One image pixel corresponds to one screen pixel)<br/>
+              Keyboard: <kbd>Space</kbd><br/>
+              Toggles back to 'Fit to screen' when zoom is already 100 %<br/>
+              Note that the point under the mouse cursor remains fixed during zoom - allows zooming to point of interest
+            </li>
+            <li>
+              Enlarge view to span all monitors (only available on multi monitor systems)<br/>
+              Keyboard: <kbd>F12</kbd><br/>
+              Panoramas look great in this mode if you have multiple screen.<br/>
+              Pressing <kbd>F12</kbd> again toggles back to normal one-screen mode.
+            </li>
+            <li>
+              Free Zoom<br/>
+              Keyboard: <kbd>'Plus' or Ctrl-'Arrow up'</kbd> to zoom in, <kbd>'Minus' or Ctrl-'Arrow down'</kbd> to zoom out<br/>
+              Mouse: Mouse wheel or <kbd>Shift-</kbd>left mouse click and drag mouse to the left and right<br/>
+            </li>
+            <li>
+              Pan<br/>
+              Keyboard: <kbd>Shift+'Arrows'</kbd><br/>
+              Mouse: Left mouse and drag<br/>
+              Pan is only supported when the image is larger than the screen
+            </li>
+          </ul>
+          <br/>Because almost all images from digital cameras must be sampled down for a typical monitor, the downsampling filter
+          has been choosen carefully to provide an optimal image quality. The downsampling filter uses a 7 x 7 to 15 x 15
+          (depending on resize-factor) Lanczos-like filter kernel. This kernel produces only a small amout of aliasing while
+          preserving or even slightly enhancing the sharpness of the image. You can see the difference to simple point sampling when
+          pressing <kbd>F3</kbd> what toggles between point sampling and filter based sampling.
+          <a name="AutoScaleMode"></a>
+          <h4>Auto Scale Mode</h4>
+          The auto scale mode determines how images are fitted to the screen. The default auto scale mode is read from the
+          INI file, however the mode can also be changed during runtime with the context menu, submenu 'Auto scale mode'.<br/>
+          The following modes are supported:
+          <ul style="margin-top:0in;margin-bottom:0in">
+            <li>
+              Fit to screen (no zoom)<br/>
+              Images that are larger than the screen are scaled down to fit. No image areas are cropped but black borders
+              will be visible when the image aspect ratio and the screen aspect ratio do not match. Images that are smaller
+              than the screen are not enlarged.
+            </li>
+            <li>
+              Fill with crop (no zoom)<br/>
+              Images that are larger than the screen are scaled down to fill the entire screen. Cropping occurs if necessary to
+              avoid black borders. Images that are smaller than the screen are not enlarged.<br/>
+              This mode is suited for viewing 4:3 images on a 16:9 wide screen without black borders.<br/>
+              Note: Cropping is limited to approximately 30 % of the image in this mode. If more would be cropped, fit to screen is used instead.
+              As a result, portrait images will not be cropped on the screen.
+            </li>
+            <li>
+              Fit to screen<br/>
+              Images are scaled (up or down) to fit the screen. No image areas are cropped but black borders can be visible.
+            </li>
+            <li>
+              Fill with crop<br/>
+              Images are scaled (up or down) to fill the entire screen. Unlimited cropping may occurs if necessary to avoid
+              black borders.
+            </li>
+          </ul>
+          <a name="Rotate"></a>
+          <h4>Rotate</h4>
+          With the <kbd>'Arrow down'</kbd> and <kbd>'Arrow up'</kbd> keys, the current image can be rotated clockwise, respectively
+          counter-clockwise. Note that JPEGView looks for the rotation tag in the EXIF data to rotate the image automatically. Some
+          cameras have an orientation sensor and set this tag.<br/>
+          To rotate a JPEG image lossless on disk, use the <kbd>R</kbd> and <kbd>T</kbd> keys.
+          <a name="Crop"></a>
+          <h4>Crop</h4>
+          When the <kbd>Ctrl</kbd> key and the left mouse button are pressed and the mouse is dragged, a selection on the image can be
+          defined. After having defined a selection, a context menu provides the following commands:
+          <ul style="margin-top:0in;margin-bottom:0in">
+            <li>
+              Crop image selection<br/>
+              Crops the image selection and re-applies all image processing with the current parameters to the cropped image.
+              When the color and contrast correction is active, the cropped image may looks different afterwards. Note that a crop
+              operation cannot be stored to the parameter DB.
+            </li>
+            <li>
+              Lossless crop (for JPEG images only)<br/>
+              Crops the image selection without recompression of the JPEG image. The cropped image must be stored as a new JPEG file.
+              Note that lossless crop cannot be more exact than to 8 or 16 pixel boundaries due to the structure of JPEG images.
+            </li>
+            <li>
+              Copy image selection to clipboard<br/>
+              Note that this command will copy the image selection in original resolution and not in screen resolution.
+            </li>
+            <li>
+              Crop Mode<br/>
+              Sets the crop mode - either to free croping, fixed size cropping or cropping with a fixed aspect ratio.
+              Note that the default fixed crop size can be set in the INI file.
+            </li>
+            <li>Zoom to selection</li>
+          </ul>
+          Hint: Use a large zoom factor and the point-sampling mode (F3 key) to crop with pixel precision.<br/>
+          Note: When the crop-menu appears, the crop rectangle can still be edited by clicking on the handles or on the border of
+          the rectangle. Use the right mouse button to display the crop-menu again when the crop rectangle has the desired size.
+          <br/><br/><b>
+            <a href="#Top">Top of Page</a>
+          </b><br/>
 
-                  <a name="LosslessJPEG"></a>
-                  <h3>Lossless JPEG Transformations</h3>
-                  The JPEG compression scheme consists of multiple steps. Some of the steps are lossless, others are lossy. Because of the
-                  lossy steps, each editing operation involving a recompression results in a (moderate) quality decrease. Lossless JPEG 
-                  transformations do not include any of the lossy compression steps and therefore should be prefered whenever possible. 
-                  However only a very limited number of operations can be done lossless on JPEG images:
-                  <ul style="margin-top:0in;margin-bottom:0in">
-                    <li>
-                      Rotation in steps of 90 degrees
-                    </li>
-                    <li>
-                      Mirror horizontally and vertically
-                    </li>
-                    <li>
-                      Crop
-                    </li>
-                  </ul>
-                  Note: Due to the structure of JPEG files, all these transformations only work if the width and height of the JPEG image is a multiple of the JPEG compression
-		  block size. This block size is 8 or 16 pixels, depending on the chrominance subsampling used for the image.
-                  <br/><br/><b>
-                    <a href="#Top">Top of Page</a>
-                  </b><br/>
-                  
-                  <a name="SlideShow"></a>
-					<h3>Slide Shows</h3>
-					A text file containing file names can be passed on the command line to JPEGView. Alternatively such a file can be loaded
-					using the 'Open image' command. The following text file formats are supported:
-					<ul style="margin-top:0in;margin-bottom:0in">
-						<li>ANSI coded text file</li>
-						<li>Unicode (UTF16) text file</li>
-						<li>UTF8 coded text file</li>
-					</ul>
-					All text formats must contain one file name per line. The file names must use paths relative to the folder of the slide show
-					text file or absolute paths and must be terminated either with a hyphen ("), with a newline character or with a &lt; character.<br/>
-					The following examples show possible line formats:<br/>
-					<code>
-						d:\Images\test.jpg<br/>
-						test.jpg<br/>
-						"d:\My Documents\test.jpg"<br/>
-						&lt;image&gt;d:\My Documents\test2.jpg&lt;/image&gt;<br/>
-					</code>
-					Note that the parser searches for a path marker (looking for :\ or \\) and ignores all text before the first found
-					path marker. Starting from the path marker, the parser searches forward for an end marker (newline, " or &lt;) and
-					everything after that end marker until end of line is also ignored.<br/>
-					A slide show file list is a sort of virtual folder containing all images listed in the slide show file.
-					<a name="Slideshows"></a>
-					<h4>Using Slide Shows</h4>
-					The following commands can be used to control a slide show:
-					<ul style="margin-top:0in;margin-bottom:0in">
-						<li>
-							<kbd>PgDn/PgUp/Home/End</kbd> : Navigates to next/previous/first/last image of slide show
-						</li>
-						<li>
-							<kbd>1 .. 9</kbd> : Starts the slide show with a delay of n seconds between the images
-						</li>
-						<li>
-							<kbd>Ctrl + [Shift] + 1 .. 9</kbd> : Uses a delay of n/10 of a second, respectively n/100 of a second
-						</li>
-						<li>
-							<kbd>Esc</kbd> : Stops the slide show
-						</li>
-					</ul>
-                    If the current context is a folder and not a slide show list, the slideshow is performed with the images
-                    in the folder. The folder navigation mode and the sorting order are taken into account in this case - with
-                    a slide show list they have no effect. For showing the images in a folder in random order, press 'z' before
-                    starting the slide show (this sets random sorting order).
-                    <h4>Transition Effects</h4>
-                    Different transition effects can be used to switch between images when playing a slide show.
-                    The use of transition effects has the following limitations:
-                    <ul style="margin-top:0in;margin-bottom:0in">
-                      <li>
-                        Transition effects are only available in full screen mode
-                      </li>
-                      <li>
-                        When playing a slide show with transition effects, reaction on commands may be somewhat slow.
-                        The ESC key always immediatly terminates the slide show.
-                      </li>
-                    </ul>
-                    Use the INI file to set the default transition effect and the default transition effect speed.
-					<a name="Movies"></a>
-					<h4>Playing Image Series as Movie</h4>
-					The slide show feature can be used to play a series of images in a folder or given by a text file as a movie:
-					<ul style="margin-top:0in;margin-bottom:0in">
-						<li>
-							First set the display order for the files. The order is either given by a text file or by choosing the
-							<a href="#DisplayOrder">display order mode</a> for folders accordingly.
-						</li>
-						<li>
-							Press the <kbd>Home</kbd> key to go to the first frame of the movie.
-						</li>
-						<li>
-							Start the movie using the context menu 'Play folder as movie' or the <kbd>Ctrl+[Shift]+Number</kbd> keys.
-							Of course the number of frames per seconds is limited by the computing power available to decode and process the frames.
-							JPEGView will never skip frames - if more
-							frames are requested than possible, the frames are displayed as fast as possible. During movie playing, high quality
-							resampling, contrast correction and local brightness correction are disabled to speed up processing.
-						</li>
-						<li>Keeping parameters between the frames is enabled during movie playing - corrections apply to the whole movie.</li>
-						<li>
-							To stop the movie, press the <kbd>Esc</kbd> key.
-						</li>
-					</ul>
-					<br/><br/><b>
-						<a href="#Top">Top of Page</a>
-					</b><br/>
+          <a name="LosslessJPEG"></a>
+          <h3>Lossless JPEG Transformations</h3>
+          The JPEG compression scheme consists of multiple steps. Some of the steps are lossless, others are lossy. Because of the
+          lossy steps, each editing operation involving a recompression results in a (moderate) quality decrease. Lossless JPEG
+          transformations do not include any of the lossy compression steps and therefore should be prefered whenever possible.
+          However only a very limited number of operations can be done lossless on JPEG images:
+          <ul style="margin-top:0in;margin-bottom:0in">
+            <li>
+              Rotation in steps of 90 degrees
+            </li>
+            <li>
+              Mirror horizontally and vertically
+            </li>
+            <li>
+              Crop
+            </li>
+          </ul>
+          Note: Due to the structure of JPEG files, all these transformations only work if the width and height of the JPEG image is a multiple of the JPEG compression
+          block size. This block size is 8 or 16 pixels, depending on the chrominance subsampling used for the image.
+          <br/><br/><b>
+            <a href="#Top">Top of Page</a>
+          </b><br/>
 
-					<a name="Processing"></a>
-					<h3>Processing Images</h3>
-					JPEGView provides some basic image processing. All image processing is done interactively on the fullscreen image what
-					allows to see the effect of the processing immediately. The processed image can be stored either by storing the
-					applied parameters in the parameter DB (the image remains untouched), by copying the processed image to the clipboard to
-					further process it with an external program or by saving the processed image to a JPEG file.<br/>
-					The following image processing commands are supported:
-					<ul style="margin-top:0in;margin-bottom:0in">
-						<li>
-							<b>Contrast</b><br/>
-							Keyboard: <kbd>Ctrl - +/-</kbd><br/>
-							Mouse: Use processing panel<br/>
-							Increases or decreases the global contrast of the image. Technically, the steepness
-							of an S-curve is changed by this parameter.
-						</li>
-						<li>
-							<b>Brightness</b><br/>
-							Keyboard: <kbd>Shift - +/-</kbd><br/>
-							Mouse: Use processing panel<br/>
-							Increases or decreases the global brightness of the image. Technically, a exponent of
-							a gamma curve is changed by this parameter.
-						</li>
-						<li>
-							<b>Saturation</b><br/>
-							Keyboard: <kbd>none</kbd><br/>
-							Mouse: Use processing panel<br/>
-							Increases or decreases the color saturation of the image.
-						</li>
-						<li>
-							<b>Downsampling Sharpness</b><br/>
-							Keyboard: <kbd>Alt - +/-</kbd><br/>
-							Mouse: Use processing panel. Note that this slider is only visible when the window/screen is large enough.<br/>
-							Increases or decreases sharpness of the image. If the default sharpening filter is used, sharpness
-							only applies to images that are downsampled but not for images displayed with 100% zoom. The
-							filter to be used can be set in the INI file.
-						</li>
-						<li>
-							<b>Unsharp Mask</b><br/>
-							Keyboard: <kbd>none</kbd><br/>
-							Mouse: Use processing panel, 'Unsharp Mask' button.<br/>
-							Unsharp masking is an adaptive sharpening filter that creates a smoothed version of the original image (thus the name 'unsharp').
-							The filter then adds the difference of the original image and the smoothed image to the original image:<br/>
-							Sharpened Image = Original Image + Amount * ( Original Image - Smoothed Image)<br/>
-							The 'Radius' parameter sets the radius of the smoothing kernel, the 'Amount' parameter sets the amount of sharpening and the
-							'Threshold' value sets the miminal difference of original and smoothed image to apply the filter to a pixel.<br/>
-							Note that unsharp masking is previewed always in 100 % zoom.
-						</li>
-						<li>
-							<b>Free Rotate</b><br/>
-							Keyboard: <kbd>none</kbd><br/>
-							Mouse: Use navigation panel, 'Free Rotate' button.<br/>
-							In preview mode the image can be rotated with the mouse in real time, but with low quality. Grid lines help performing horizon correction.
-							Alternatively, horizon correction can be done by drawing a line along the horizon or along a vertical structure. The rotation angle will be calculated so
-							that this line is exactly horizontal, respecitively vertical.
-							Activate this mode with the right most tool button on the panel.<br/>
-							Press the 'Apply' button to apply the rotation to the original image with high quality (bicubic interpolation). By default the
-							rotated image is cropped automatically to avoid black borders. This behavior can be changed with the middle tool button on the rotation panel.
-						</li>
-                        <li>
-                          <b>Perspective Correction</b><br/>
-                          Keyboard: <kbd>none</kbd><br/>
-                          Mouse: Use navigation panel, 'Perspective Correction' button.<br/>
-                          When a picture of a building is taken from ground level, the vertical edges of the building are usually tilted because the camera is not aligned
-                          horizontally when taking the picture. Perspective correction can be used to correct for this effect - at least partially.<br/>
-                          In preview mode the image can be tilted with the mouse in real time, but with low quality. Grid lines help during the process.<br/>
-                          Press the 'Apply' button to apply the correction to the original image with high quality (bicubic interpolation). By default the
-                          corrected image is cropped automatically to avoid black borders. This behavior can be changed with the right tool button on the panel.
-                        </li>
-						<li>
-							<b>Color balance</b><br/>
-							Mouse: Use processing panel<br/>
-							Changes the color balance of the image by changing the cyan-red, magenta-green and yellow-blue
-							color balance.
-						</li>
-						<li>
-							<b>Local brightness</b><br/>
-							Keyboard: <kbd>F6</kbd><br/>
-							Mouse: Use processing panel<br/>
-							Toggle local brightness correction. Local brightness correction lightens shadows and darkens
-							highlights by applying a smoothed additive/subtractive mask to the image. It can be used to correct images with
-							hard contrasts and uncovers details in dark shadows or in overexposed areas.
-						</li>
-						<li>
-							<b>Color and contrast correction</b><br/>
-							Keyboard: <kbd>F5</kbd><br/>
-							Mouse: Use processing panel<br/>
-							Toggle color and contrast correction. Color correction tries to reduce global color casts. Contrast
-							correction enhances contrast by moving the black point of the image (darkest area) towards black and the white point
-							(brightest area) towards white. The color and contrast correction algorithm can be configured in the INI file.
-						</li>
-						<li>
-							<b>Landscape picture enhancement mode</b><br/>
-							Keyboard: <kbd>Ctrl-L</kbd><br/>
-							Mouse: Use navigation panel<br/>
-							Toggle landscape picture enhancement mode. The landscape picture mode is simply a special parameter set optimized
-							for landscapes pictures. It will brighten shadows, darken highlights and enhance contrast when needed. The parameter
-							set used in landscape mode can be configured in the INI file (setting "LandscapeModeParams").
-						</li>
-					</ul>
-					Most image processing can be done interactively with the mouse on the processing panel that appears when the mouse
-					cursor is moved to the bottom of the screen.<br/>
-					Default settings for most of the image processing parameters can be given in the <a href="#INIFile">INI file</a>.<br/>
-					<b>Tips</b><br/>
-					<ul style="margin-top:0in;margin-bottom:0in">
-						<li>Clicking on the number on the right of the sliders will temporarily reset the value to the default value. The value remains reset
-						until the mouse button is released.</li>
-						<li>Double clicking above a slider will permanently reset its value to the default value.</li>
-					</ul>
-					<a name="KeepingParams"></a>
-					<h4>Keeping parameters between images</h4>
-					By default, all image processing parameters (including zoom and pan) are reset to the default values given in the INI file
-					when the next image is displayed. Using the <kbd>F4</kbd> key, the behavior can be changed to keeping the parameters between
-					images. Pressing <kbd>F4</kbd> again will toggle back to not-keeping the parameters.<br/>
-					<b>Note:</b> While keeping parameters mode is active, the parameter DB cannot be used. Parameter DB values are ignored while
-					this mode is active.
-					<a name="Comparing"></a>
-					<h4>Comparing processed image with original image</h4>
-					When JPEGView displays a new image, it creates a second set of image processing parameters and initializes it with zero,
-					meaning that the original, unprocessed image will be displayed when this set is applied.
-					<kbd>Ctrl-A</kbd> toggles between the two sets - allowing to compare the processed image with the original image.
-					Note that it is possible to change both sets of parameters - however the second set will always be reset to zero when
-					a new image is displayed.
-					<br/><br/><b>
-						<a href="#Top">Top of Page</a>
-					</b><br/>
+          <a name="SlideShow"></a>
+          <h3>Slide Shows</h3>
+          A text file containing file names can be passed on the command line to JPEGView. Alternatively such a file can be loaded
+          using the 'Open image' command. The following text file formats are supported:
+          <ul style="margin-top:0in;margin-bottom:0in">
+            <li>ANSI coded text file</li>
+            <li>Unicode (UTF16) text file</li>
+            <li>UTF8 coded text file</li>
+          </ul>
+          All text formats must contain one file name per line. The file names must use paths relative to the folder of the slide show
+          text file or absolute paths and must be terminated either with a hyphen ("), with a newline character or with a &lt; character.<br/>
+          The following examples show possible line formats:<br/>
+          <code>
+            d:\Images\test.jpg<br/>
+            test.jpg<br/>
+            "d:\My Documents\test.jpg"<br/>
+            &lt;image&gt;d:\My Documents\test2.jpg&lt;/image&gt;<br/>
+          </code>
+          Note that the parser searches for a path marker (looking for :\ or \\) and ignores all text before the first found
+          path marker. Starting from the path marker, the parser searches forward for an end marker (newline, " or &lt;) and
+          everything after that end marker until end of line is also ignored.<br/>
+          A slide show file list is a sort of virtual folder containing all images listed in the slide show file.
+          <a name="Slideshows"></a>
+          <h4>Using Slide Shows</h4>
+          The following commands can be used to control a slide show:
+          <ul style="margin-top:0in;margin-bottom:0in">
+            <li>
+              <kbd>PgDn/PgUp/Home/End</kbd> : Navigates to next/previous/first/last image of slide show
+            </li>
+            <li>
+              <kbd>1 .. 9</kbd> : Starts the slide show with a delay of n seconds between the images
+            </li>
+            <li>
+              <kbd>Ctrl + [Shift] + 1 .. 9</kbd> : Uses a delay of n/10 of a second, respectively n/100 of a second
+            </li>
+            <li>
+              <kbd>Esc</kbd> : Stops the slide show
+            </li>
+          </ul>
+          If the current context is a folder and not a slide show list, the slideshow is performed with the images
+          in the folder. The folder navigation mode and the sorting order are taken into account in this case - with
+          a slide show list they have no effect. For showing the images in a folder in random order, press 'z' before
+          starting the slide show (this sets random sorting order).
+          <h4>Transition Effects</h4>
+          Different transition effects can be used to switch between images when playing a slide show.
+          The use of transition effects has the following limitations:
+          <ul style="margin-top:0in;margin-bottom:0in">
+            <li>
+              Transition effects are only available in full screen mode
+            </li>
+            <li>
+              When playing a slide show with transition effects, reaction on commands may be somewhat slow.
+              The ESC key always immediatly terminates the slide show.
+            </li>
+          </ul>
+          Use the INI file to set the default transition effect and the default transition effect speed.
+          <a name="Movies"></a>
+          <h4>Playing Image Series as Movie</h4>
+          The slide show feature can be used to play a series of images in a folder or given by a text file as a movie:
+          <ul style="margin-top:0in;margin-bottom:0in">
+            <li>
+              First set the display order for the files. The order is either given by a text file or by choosing the
+              <a href="#DisplayOrder">display order mode</a> for folders accordingly.
+            </li>
+            <li>
+              Press the <kbd>Home</kbd> key to go to the first frame of the movie.
+            </li>
+            <li>
+              Start the movie using the context menu 'Play folder as movie' or the <kbd>Ctrl+[Shift]+Number</kbd> keys.
+              Of course the number of frames per seconds is limited by the computing power available to decode and process the frames.
+              JPEGView will never skip frames - if more
+              frames are requested than possible, the frames are displayed as fast as possible. During movie playing, high quality
+              resampling, contrast correction and local brightness correction are disabled to speed up processing.
+            </li>
+            <li>Keeping parameters between the frames is enabled during movie playing - corrections apply to the whole movie.</li>
+            <li>
+              To stop the movie, press the <kbd>Esc</kbd> key.
+            </li>
+          </ul>
+          <br/><br/><b>
+            <a href="#Top">Top of Page</a>
+          </b><br/>
 
-					<a name="Saving"></a>
-					<h3>Saving and renaming Images</h3>
-					<h4>Saving images</h4>
-					Processed images can be saved as JPEG, BMP, PNG or TIFF files using the 'Save image' (<kbd>Ctrl-S</kbd>) command.
-					The image is saved in its original size: Performed rotations are taken into account, zoom and pan are not.
-					To save an image in screen size, use the <kbd>Ctrl-Shift-S</kbd> keyboard shortcut.<br/>
-					<b>Note:</b> The quality of the saved JPEG file can be set in the <a href="#INIFile">INI file</a>.<br/>
-					JPEGView will automatically create a <a href="#ParameterDB">parameter DB</a> entry for the saved image having
-					all image processing disabled.
-					This prevents that JPEGView will double-apply automatic image improvements next time the image is displayed.<br/>
-					<b>Note:</b> When saving images, JPEGView will prompt for a new file name. If you want that Ctrl-S just overrides the
-					original file without showing a dialog, use the INI file setting OverrideOriginalFileWithoutSaveDialog=true.<br/>
-					Use this setting with care, be aware of the risk!<br/>
-				<b>EXIF information</b><br/>
-					EXIF information is copied to the target JPEG image if it was present in the source JPEG image. An embedded thumbnail image
-					is updated - rotation and image processing is applied to the thumbnail image.<br/>
+          <a name="Processing"></a>
+          <h3>Processing Images</h3>
+          JPEGView provides some basic image processing. All image processing is done interactively on the fullscreen image what
+          allows to see the effect of the processing immediately. The processed image can be stored either by storing the
+          applied parameters in the parameter DB (the image remains untouched), by copying the processed image to the clipboard to
+          further process it with an external program or by saving the processed image to a JPEG file.<br/>
+          The following image processing commands are supported:
+          <ul style="margin-top:0in;margin-bottom:0in">
+            <li>
+              <b>Contrast</b><br/>
+              Keyboard: <kbd>Ctrl - +/-</kbd><br/>
+              Mouse: Use processing panel<br/>
+              Increases or decreases the global contrast of the image. Technically, the steepness
+              of an S-curve is changed by this parameter.
+            </li>
+            <li>
+              <b>Brightness</b><br/>
+              Keyboard: <kbd>Shift - +/-</kbd><br/>
+              Mouse: Use processing panel<br/>
+              Increases or decreases the global brightness of the image. Technically, a exponent of
+              a gamma curve is changed by this parameter.
+            </li>
+            <li>
+              <b>Saturation</b><br/>
+              Keyboard: <kbd>none</kbd><br/>
+              Mouse: Use processing panel<br/>
+              Increases or decreases the color saturation of the image.
+            </li>
+            <li>
+              <b>Downsampling Sharpness</b><br/>
+              Keyboard: <kbd>Alt - +/-</kbd><br/>
+              Mouse: Use processing panel. Note that this slider is only visible when the window/screen is large enough.<br/>
+              Increases or decreases sharpness of the image. If the default sharpening filter is used, sharpness
+              only applies to images that are downsampled but not for images displayed with 100% zoom. The
+              filter to be used can be set in the INI file.
+            </li>
+            <li>
+              <b>Unsharp Mask</b><br/>
+              Keyboard: <kbd>none</kbd><br/>
+              Mouse: Use processing panel, 'Unsharp Mask' button.<br/>
+              Unsharp masking is an adaptive sharpening filter that creates a smoothed version of the original image (thus the name 'unsharp').
+              The filter then adds the difference of the original image and the smoothed image to the original image:<br/>
+              Sharpened Image = Original Image + Amount * ( Original Image - Smoothed Image)<br/>
+              The 'Radius' parameter sets the radius of the smoothing kernel, the 'Amount' parameter sets the amount of sharpening and the
+              'Threshold' value sets the miminal difference of original and smoothed image to apply the filter to a pixel.<br/>
+              Note that unsharp masking is previewed always in 100 % zoom.
+            </li>
+            <li>
+              <b>Free Rotate</b><br/>
+              Keyboard: <kbd>none</kbd><br/>
+              Mouse: Use navigation panel, 'Free Rotate' button.<br/>
+              In preview mode the image can be rotated with the mouse in real time, but with low quality. Grid lines help performing horizon correction.
+              Alternatively, horizon correction can be done by drawing a line along the horizon or along a vertical structure. The rotation angle will be calculated so
+              that this line is exactly horizontal, respecitively vertical.
+              Activate this mode with the right most tool button on the panel.<br/>
+              Press the 'Apply' button to apply the rotation to the original image with high quality (bicubic interpolation). By default the
+              rotated image is cropped automatically to avoid black borders. This behavior can be changed with the middle tool button on the rotation panel.
+            </li>
+            <li>
+              <b>Perspective Correction</b><br/>
+              Keyboard: <kbd>none</kbd><br/>
+              Mouse: Use navigation panel, 'Perspective Correction' button.<br/>
+              When a picture of a building is taken from ground level, the vertical edges of the building are usually tilted because the camera is not aligned
+              horizontally when taking the picture. Perspective correction can be used to correct for this effect - at least partially.<br/>
+              In preview mode the image can be tilted with the mouse in real time, but with low quality. Grid lines help during the process.<br/>
+              Press the 'Apply' button to apply the correction to the original image with high quality (bicubic interpolation). By default the
+              corrected image is cropped automatically to avoid black borders. This behavior can be changed with the right tool button on the panel.
+            </li>
+            <li>
+              <b>Color balance</b><br/>
+              Mouse: Use processing panel<br/>
+              Changes the color balance of the image by changing the cyan-red, magenta-green and yellow-blue
+              color balance.
+            </li>
+            <li>
+              <b>Local brightness</b><br/>
+              Keyboard: <kbd>F6</kbd><br/>
+              Mouse: Use processing panel<br/>
+              Toggle local brightness correction. Local brightness correction lightens shadows and darkens
+              highlights by applying a smoothed additive/subtractive mask to the image. It can be used to correct images with
+              hard contrasts and uncovers details in dark shadows or in overexposed areas.
+            </li>
+            <li>
+              <b>Color and contrast correction</b><br/>
+              Keyboard: <kbd>F5</kbd><br/>
+              Mouse: Use processing panel<br/>
+              Toggle color and contrast correction. Color correction tries to reduce global color casts. Contrast
+              correction enhances contrast by moving the black point of the image (darkest area) towards black and the white point
+              (brightest area) towards white. The color and contrast correction algorithm can be configured in the INI file.
+            </li>
+            <li>
+              <b>Landscape picture enhancement mode</b><br/>
+              Keyboard: <kbd>Ctrl-L</kbd><br/>
+              Mouse: Use navigation panel<br/>
+              Toggle landscape picture enhancement mode. The landscape picture mode is simply a special parameter set optimized
+              for landscapes pictures. It will brighten shadows, darken highlights and enhance contrast when needed. The parameter
+              set used in landscape mode can be configured in the INI file (setting "LandscapeModeParams").
+            </li>
+          </ul>
+          Most image processing can be done interactively with the mouse on the processing panel that appears when the mouse
+          cursor is moved to the bottom of the screen.<br/>
+          Default settings for most of the image processing parameters can be given in the <a href="#INIFile">INI file</a>.<br/>
+          <b>Tips</b><br/>
+          <ul style="margin-top:0in;margin-bottom:0in">
+            <li>
+              Clicking on the number on the right of the sliders will temporarily reset the value to the default value. The value remains reset
+              until the mouse button is released.
+            </li>
+            <li>Double clicking above a slider will permanently reset its value to the default value.</li>
+          </ul>
+          <a name="KeepingParams"></a>
+          <h4>Keeping parameters between images</h4>
+          By default, all image processing parameters (including zoom and pan) are reset to the default values given in the INI file
+          when the next image is displayed. Using the <kbd>F4</kbd> key, the behavior can be changed to keeping the parameters between
+          images. Pressing <kbd>F4</kbd> again will toggle back to not-keeping the parameters.<br/>
+          <b>Note:</b> While keeping parameters mode is active, the parameter DB cannot be used. Parameter DB values are ignored while
+          this mode is active.
+          <a name="Comparing"></a>
+          <h4>Comparing processed image with original image</h4>
+          When JPEGView displays a new image, it creates a second set of image processing parameters and initializes it with zero,
+          meaning that the original, unprocessed image will be displayed when this set is applied.
+          <kbd>Ctrl-A</kbd> toggles between the two sets - allowing to compare the processed image with the original image.
+          Note that it is possible to change both sets of parameters - however the second set will always be reset to zero when
+          a new image is displayed.
+          <br/><br/><b>
+            <a href="#Top">Top of Page</a>
+          </b><br/>
 
-					<h4>Renaming images</h4>
-					On the processing panel, images can be renamed by clicking on the file name with the mouse. To
-					confirm the new name, press <kbd>Enter</kbd> or click outside of the edit control. To cancel renaming, press <kbd>Esc</kbd>.
-					Note that renaming images is not possible when a slide show file is loaded because this would invalidate the slide show file.
+          <a name="Saving"></a>
+          <h3>Saving and renaming Images</h3>
+          <h4>Saving images</h4>
+          Processed images can be saved as JPEG, BMP, PNG or TIFF files using the 'Save image' (<kbd>Ctrl-S</kbd>) command.
+          The image is saved in its original size: Performed rotations are taken into account, zoom and pan are not.
+          To save an image in screen size, use the <kbd>Ctrl-Shift-S</kbd> keyboard shortcut.<br/>
+          <b>Note:</b> The quality of the saved JPEG file can be set in the <a href="#INIFile">INI file</a>.<br/>
+          JPEGView will automatically create a <a href="#ParameterDB">parameter DB</a> entry for the saved image having
+          all image processing disabled.
+          This prevents that JPEGView will double-apply automatic image improvements next time the image is displayed.<br/>
+          <b>Note:</b> When saving images, JPEGView will prompt for a new file name. If you want that Ctrl-S just overrides the
+          original file without showing a dialog, use the INI file setting OverrideOriginalFileWithoutSaveDialog=true.<br/>
+          Use this setting with care, be aware of the risk!<br/>
+          <b>EXIF information</b><br/>
+          EXIF information is copied to the target JPEG image if it was present in the source JPEG image. An embedded thumbnail image
+          is updated - rotation and image processing is applied to the thumbnail image.<br/>
 
-					<h4>Batch rename/copy</h4>
-					Using the context menu entry 'Batch rename/copy' a series of files from the current folder can be renamed and/or copied to
-					another folder:
-					<ol start="1" type="1">
-						<li>
-							First select the files to be renamed. Use the <kbd>Ctrl</kbd> and <kbd>Shift</kbd> keys to select multiple files and click the checkboxes.
-						</li>
-						<li>
-							Enter the target file name pattern. When not using a backslash in the pattern, the files are renamed in the current
-							folder, else they are copied to the target folder as given. Target folders not yet existing are created as needed.<br/>
-							Several placeholders are supported. See some examples below. A template pattern can be saved when needed.
-						</li>
-						<li>Before really renaming the files, always verify the new names by pressing the 'Preview' button.</li>
-						<li>
-							To rename the selected files, press the 'Rename' button. Renaming/copying can take a while, especially when
-							the source or target is a slow USB device.
-						</li>
-					</ol>
-					<b>Examples</b><br/><br/>
-					<b>%pictures%\Digicam\%2y-%m-%M\%f</b><br/>
-					Source image: IMG00244.JPG, created June 12, 2007<br/>
-					Target: 'My pictures'\Digicam\07-06-June\IMG00244.JPG<br/>
-					The folder 'Digicam\07-06-June\' is created when needed.<br/><br/>
-					<b>%pictures%\Digicam\%M %y\Trip to Barcelona %x.%e</b><br/>
-					Source image: IMG00244.JPG, created June 12, 2007<br/>
-					Target: 'My pictures'\Digicam\June 2007\Trip to Barcelona 1.JPG<br/>
-					<br/><br/><b>
-						<a href="#Top">Top of Page</a>
-					</b><br/>
+          <h4>Renaming images</h4>
+          On the processing panel, images can be renamed by clicking on the file name with the mouse. To
+          confirm the new name, press <kbd>Enter</kbd> or click outside of the edit control. To cancel renaming, press <kbd>Esc</kbd>.
+          Note that renaming images is not possible when a slide show file is loaded because this would invalidate the slide show file.
 
-					<a name="Clipboard"></a>
-					<h3>Copying Images to the Clipboard</h3>
-					<b>Copy screen</b><br/>
-					Keyboard: <kbd>Ctrl-C</kbd><br/>
-					Copies the image (respectively the visible image section) as displayed on the screen to the clipboard. This is similar to the
-					<kbd>PrtSc</kbd> function, however text overlays and areas outside of the image are not included.<br/>
-					<b>Copy processed image in its original size</b><br/>
-					Keyboard: <kbd>Ctrl-X</kbd><br/>
-					Copies the processed image in its original size to the clipboard. Rotation is taken into account, zoom and pan is not.
-					This command is useful when the corrected image shall be processed and saved in an external application.
-					<h3>Pasting Images from the Clipboard</h3>
-					Keyboard: <kbd>Ctrl-V</kbd><br/>
-					Paste image from clipboard and fit to screen.<br/>
-					For pasted images, storing the parameters to the parameter DB is not possible
-					because they have no representation on the file system. However these images can be processed and saved.
-					<br/><br/><b>
-						<a href="#Top">Top of Page</a>
-					</b><br/>
+          <h4>Batch rename/copy</h4>
+          Using the context menu entry 'Batch rename/copy' a series of files from the current folder can be renamed and/or copied to
+          another folder:
+          <ol start="1" type="1">
+            <li>
+              First select the files to be renamed. Use the <kbd>Ctrl</kbd> and <kbd>Shift</kbd> keys to select multiple files and click the checkboxes.
+            </li>
+            <li>
+              Enter the target file name pattern. When not using a backslash in the pattern, the files are renamed in the current
+              folder, else they are copied to the target folder as given. Target folders not yet existing are created as needed.<br/>
+              Several placeholders are supported. See some examples below. A template pattern can be saved when needed.
+            </li>
+            <li>Before really renaming the files, always verify the new names by pressing the 'Preview' button.</li>
+            <li>
+              To rename the selected files, press the 'Rename' button. Renaming/copying can take a while, especially when
+              the source or target is a slow USB device.
+            </li>
+          </ol>
+          <b>Examples</b><br/><br/>
+          <b>%pictures%\Digicam\%2y-%m-%M\%f</b><br/>
+          Source image: IMG00244.JPG, created June 12, 2007<br/>
+          Target: 'My pictures'\Digicam\07-06-June\IMG00244.JPG<br/>
+          The folder 'Digicam\07-06-June\' is created when needed.<br/><br/>
+          <b>%pictures%\Digicam\%M %y\Trip to Barcelona %x.%e</b><br/>
+          Source image: IMG00244.JPG, created June 12, 2007<br/>
+          Target: 'My pictures'\Digicam\June 2007\Trip to Barcelona 1.JPG<br/>
+          <br/><br/><b>
+            <a href="#Top">Top of Page</a>
+          </b><br/>
 
-					<a name="ParameterDB"></a>
-					<h2>Parameter Database</h2>
-					The currently visible section, rotation and the image processing parameters can be bound to the image by storing them to the
-					parameter DB. If this image is displayed in JPEGView later on, the stored parameters will be loaded and applied automatically.
-					<ul style="margin-top:0in;margin-bottom:0in">
-						<li>
-							<b>Add image to the parameter DB</b><br/>
-							Keyboard: <kbd>S</kbd><br/>
-							Mouse: Use processing panel
-						</li>
-						<li>
-							<b>Remove image from the parameter DB</b><br/>
-							Keyboard: <kbd>D</kbd><br/>
-							Mouse: Use processing panel
-						</li>
-						<li>
-							<b>Backup parameter DB</b><br/>
-							Use this command in the context menu to backup the parameter DB to another folder or disk.
-						</li>
-						<li>
-							<b>Restore parameter DB</b><br/>
-							Use this command in the context menu to restore the parameter DB from a backuped version.
-							Note that when restoring the parameter DB, the selected DB is merged with the current DB - so this
-							command can also be used to merge two parameter DBs. In case of conflicting entries in the merge,
-							the system asks which entries shall have priority.
-						</li>
-					</ul>
-					Using the parameter DB has the advantage that the original image remains untouched. The parameter DB entry for an
-					image is found using a hash value of the image file what has the following advantages:
-					<ul style="margin-top:0in;margin-bottom:0in">
-						<li>Moving the image to a different folder or renaming the image does not break the link</li>
-						<li>Two copies of the same image have the same parameter DB entry</li>
-					</ul>
-					For JPEG images, the hash value is created on the compressed pixel data but not on the EXIF and comment blocks. Changing
-					the EXIF data or commenting the JPEG image will not invalidate the parameter DB entry.<br/>
-					The following parameters are stored in the parameter DB:
-					<ul style="margin-top:0in;margin-bottom:0in">
-						<li>
-							Visible section of image<br/>
-							The visible section is stored resolution independent - the same section will be displayed on a monitor with a higher
-							resolution (but the zoom factor will be different then).
-						</li>
-						<li>Rotation of image (only 90 deg step rotation, not the free angle rotation)</li>
-						<li>Contrast value</li>
-						<li>Brightness value</li>
-						<li>Saturation value</li>
-						<li>Sharpness value (but no Unsharp Mask)</li>
-						<li>Color balance values</li>
-						<li>Local brighness correction on/off</li>
-						<li>Lighten shadows value</li>
-						<li>Darken highlights value</li>
-						<li>Deep shadows value</li>
-						<li>Color and contrast correction on/off</li>
-						<li>Color correction amount</li>
-						<li>Contrast correction amount</li>
-						<li>High quality resizing on/off</li>
-					</ul>
-					The parameter database is located in 'Documents and Settings\<i>Username</i>\Application Data\JPEGView\ParamDB.db',
-					respectively in the EXE path when StoreToEXEPath=true is set in the INI file.
-					It uses 40 bytes per stored parameter set and is limitated to 100000 entries.<br/>
-					<b>Note:</b> The parameter DB settings have precedence over any image processing settings in the INI file.
-					<br/><br/><b>
-						<a href="#Top">Top of Page</a>
-					</b><br/>
+          <a name="Clipboard"></a>
+          <h3>Copying Images to the Clipboard</h3>
+          <b>Copy screen</b><br/>
+          Keyboard: <kbd>Ctrl-C</kbd><br/>
+          Copies the image (respectively the visible image section) as displayed on the screen to the clipboard. This is similar to the
+          <kbd>PrtSc</kbd> function, however text overlays and areas outside of the image are not included.<br/>
+          <b>Copy processed image in its original size</b><br/>
+          Keyboard: <kbd>Ctrl-X</kbd><br/>
+          Copies the processed image in its original size to the clipboard. Rotation is taken into account, zoom and pan is not.
+          This command is useful when the corrected image shall be processed and saved in an external application.
+          <h3>Pasting Images from the Clipboard</h3>
+          Keyboard: <kbd>Ctrl-V</kbd><br/>
+          Paste image from clipboard and fit to screen.<br/>
+          For pasted images, storing the parameters to the parameter DB is not possible
+          because they have no representation on the file system. However these images can be processed and saved.
+          <br/><br/><b>
+            <a href="#Top">Top of Page</a>
+          </b><br/>
 
-					<a name="INIFile"></a>
-					<h2>JPEGView.ini file</h2>
-					The INI file of JPEGView allows configuring a lot of parameters of the application. A two level hierarchy of INI files is
-					used. If a setting is found in the user INI file, it has precedence over the same setting in the global INI file.
-					<ul style="margin-top:0in;margin-bottom:0in">
-						<li>
-							User INI file<br/>
-							'Documents and Settings\<i>Username</i>\Application Data\JPEGView\JPEGView.ini'
-						</li>
-						<li>
-							Global INI file<br/>
-							'<i>Path of JPEGView.exe</i>\JPEGView.ini'
-						</li>
-					</ul>
-					The global and user INI file can be edited by using the commands 'Edit global settings' and 'Edit user settings' in
-					the context menu. Note that changes to these files do not take effect until JPEGView is restarted.<br/>
-					Some parameters can be written to the user INI file with the command 'Save parameters to INI' located in the
-					context menu.
-					<ul style="margin-top:0in;margin-bottom:0in">
-						<li>Default contrast</li>
-						<li>Default brightness</li>
-						<li>Default saturation</li>
-						<li>Default sharpness</li>
-						<li>Default color balance</li>
-						<li>Local brighness correction on/off by default</li>
-						<li>Color and contrast correction on/off by default</li>
-						<li>Default sorting order</li>
-						<li>Default auto zoom mode</li>
-						<li>Navigation panel on/off</li>
-					</ul>
-					The values set for the current image are written to the INI file when using this command. Be
-					aware that these values are then used as default values for all images!<br/><br/>
-					<b>Note:</b> No user INI file is used if the key StoreToEXEPath is set
-					to true in the global INI file. All saved setting are directly written to the global INI file in this case.
-					<h3>INI file settings</h3>
-					The INI file settings are explained in detail in the <a href="./JPEGView.ini">INI file itself</a>.
-					Only an overview on the available settings is given here:
-					<ul style="margin-top:0in;margin-bottom:0in">
-						<li>Default image processing parameters: Contrast, brightness, sharpness, color balance</li>
-						<li>Default background color</li>
-						<li>Show file name by default</li>
-						<li>Show file info by default</li>
-						<li>Show navigation panel by default</li>
-						<li>Blending factor for navigation panel</li>
-						<li>Keep parameters by default</li>
-						<li>Force CPU type (if autodetection fails)</li>
-						<li>Force number of CPU cores to be used</li>
-						<li>Used filter kernel for downsampling images</li>
-						<li>Default sorting order</li>
-						<li>Default navigation mode</li>
-						<li>Default auto zoom mode</li>
-						<li>Quality (and file size) of saved JPEG images</li>
-						<li>Monitor to use (for multi monitor systems)</li>
-						<li>Color and contrast correction settings</li>
-						<li>Folders to explicitely include/exclude from auto color and contrast correction</li>
-						<li>Local brighness correction settings</li>
-						<li>Folders to explicitely include/exclude from local brightness correction</li>
-						<li>Parameters used in landscape enhancement mode</li>
-						<li>
-							Definition of <a href="#External">user commands</a>
-						</li>
-					</ul><br/>
+          <a name="ParameterDB"></a>
+          <h2>Parameter Database</h2>
+          The currently visible section, rotation and the image processing parameters can be bound to the image by storing them to the
+          parameter DB. If this image is displayed in JPEGView later on, the stored parameters will be loaded and applied automatically.
+          <ul style="margin-top:0in;margin-bottom:0in">
+            <li>
+              <b>Add image to the parameter DB</b><br/>
+              Keyboard: <kbd>S</kbd><br/>
+              Mouse: Use processing panel
+            </li>
+            <li>
+              <b>Remove image from the parameter DB</b><br/>
+              Keyboard: <kbd>D</kbd><br/>
+              Mouse: Use processing panel
+            </li>
+            <li>
+              <b>Backup parameter DB</b><br/>
+              Use this command in the context menu to backup the parameter DB to another folder or disk.
+            </li>
+            <li>
+              <b>Restore parameter DB</b><br/>
+              Use this command in the context menu to restore the parameter DB from a backuped version.
+              Note that when restoring the parameter DB, the selected DB is merged with the current DB - so this
+              command can also be used to merge two parameter DBs. In case of conflicting entries in the merge,
+              the system asks which entries shall have priority.
+            </li>
+          </ul>
+          Using the parameter DB has the advantage that the original image remains untouched. The parameter DB entry for an
+          image is found using a hash value of the image file what has the following advantages:
+          <ul style="margin-top:0in;margin-bottom:0in">
+            <li>Moving the image to a different folder or renaming the image does not break the link</li>
+            <li>Two copies of the same image have the same parameter DB entry</li>
+          </ul>
+          For JPEG images, the hash value is created on the compressed pixel data but not on the EXIF and comment blocks. Changing
+          the EXIF data or commenting the JPEG image will not invalidate the parameter DB entry.<br/>
+          The following parameters are stored in the parameter DB:
+          <ul style="margin-top:0in;margin-bottom:0in">
+            <li>
+              Visible section of image<br/>
+              The visible section is stored resolution independent - the same section will be displayed on a monitor with a higher
+              resolution (but the zoom factor will be different then).
+            </li>
+            <li>Rotation of image (only 90 deg step rotation, not the free angle rotation)</li>
+            <li>Contrast value</li>
+            <li>Brightness value</li>
+            <li>Saturation value</li>
+            <li>Sharpness value (but no Unsharp Mask)</li>
+            <li>Color balance values</li>
+            <li>Local brighness correction on/off</li>
+            <li>Lighten shadows value</li>
+            <li>Darken highlights value</li>
+            <li>Deep shadows value</li>
+            <li>Color and contrast correction on/off</li>
+            <li>Color correction amount</li>
+            <li>Contrast correction amount</li>
+            <li>High quality resizing on/off</li>
+          </ul>
+          The parameter database is located in 'Documents and Settings\<i>Username</i>\Application Data\JPEGView\ParamDB.db',
+          respectively in the EXE path when StoreToEXEPath=true is set in the INI file.
+          It uses 40 bytes per stored parameter set and is limitated to 100000 entries.<br/>
+          <b>Note:</b> The parameter DB settings have precedence over any image processing settings in the INI file.
+          <br/><br/><b>
+            <a href="#Top">Top of Page</a>
+          </b><br/>
 
-					A note on the support for multiple CPU cores (CPUCoresUsed setting):<br/>
-					By default, JPEGView uses all cores of the CPU for processing images. To force JPEGView to use
-					a given number of parallel processing threads, use the CPUCoresUsed setting.
-					Note that no more than 4 cores (and therefore 4 processing threads) are supported.
-					One additional thread is always created to read ahead the next image - this cannot be suppressed by the INI file.
-					<br/><br/><b>
-						<a href="#Top">Top of Page</a>
-					</b><br/>
-                  
-                  <a name="CmdLine"></a>
-                  <h2>Command line parameters</h2>
+          <a name="INIFile"></a>
+          <h2>JPEGView.ini file</h2>
+          The INI file of JPEGView allows configuring a lot of parameters of the application. A two level hierarchy of INI files is
+          used. If a setting is found in the user INI file, it has precedence over the same setting in the global INI file.
+          <ul style="margin-top:0in;margin-bottom:0in">
+            <li>
+              User INI file<br/>
+              'Documents and Settings\<i>Username</i>\Application Data\JPEGView\JPEGView.ini'
+            </li>
+            <li>
+              Global INI file<br/>
+              '<i>Path of JPEGView.exe</i>\JPEGView.ini'
+            </li>
+          </ul>
+          The global and user INI file can be edited by using the commands 'Edit global settings' and 'Edit user settings' in
+          the context menu. Note that changes to these files do not take effect until JPEGView is restarted.<br/>
+          Some parameters can be written to the user INI file with the command 'Save parameters to INI' located in the
+          context menu.
+          <ul style="margin-top:0in;margin-bottom:0in">
+            <li>Default contrast</li>
+            <li>Default brightness</li>
+            <li>Default saturation</li>
+            <li>Default sharpness</li>
+            <li>Default color balance</li>
+            <li>Local brighness correction on/off by default</li>
+            <li>Color and contrast correction on/off by default</li>
+            <li>Default sorting order</li>
+            <li>Default auto zoom mode</li>
+            <li>Navigation panel on/off</li>
+          </ul>
+          The values set for the current image are written to the INI file when using this command. Be
+          aware that these values are then used as default values for all images!<br/><br/>
+          <b>Note:</b> No user INI file is used if the key StoreToEXEPath is set
+          to true in the global INI file. All saved setting are directly written to the global INI file in this case.
+          <h3>INI file settings</h3>
+          The INI file settings are explained in detail in the <a href="./JPEGView.ini">INI file itself</a>.
+          Only an overview on the available settings is given here:
+          <ul style="margin-top:0in;margin-bottom:0in">
+            <li>Default image processing parameters: Contrast, brightness, sharpness, color balance</li>
+            <li>Default background color</li>
+            <li>Show file name by default</li>
+            <li>Show file info by default</li>
+            <li>Show navigation panel by default</li>
+            <li>Blending factor for navigation panel</li>
+            <li>Keep parameters by default</li>
+            <li>Force CPU type (if autodetection fails)</li>
+            <li>Force number of CPU cores to be used</li>
+            <li>Used filter kernel for downsampling images</li>
+            <li>Default sorting order</li>
+            <li>Default navigation mode</li>
+            <li>Default auto zoom mode</li>
+            <li>Quality (and file size) of saved JPEG images</li>
+            <li>Monitor to use (for multi monitor systems)</li>
+            <li>Color and contrast correction settings</li>
+            <li>Folders to explicitely include/exclude from auto color and contrast correction</li>
+            <li>Local brighness correction settings</li>
+            <li>Folders to explicitely include/exclude from local brightness correction</li>
+            <li>Parameters used in landscape enhancement mode</li>
+            <li>
+              Definition of <a href="#External">user commands</a>
+            </li>
+          </ul><br/>
 
-                  JPEGView supports the following command line parameters:
-                  <ul style="margin-top:0in;margin-bottom:0in">
-                    <li>
-                      <code>filename</code><br/>
-                      File name of the file to load or folder to show. If this is a file name, it must be a valid
-                      image file name or a file name of a text file that contains a list of files to display. If it is a folder name, JPEGView
-                      displays the image files in this folder.<br/>
-                      If a file name is given, it must be given before all other parameters in the command line.<br/>
-                      Note: No slide show is started automatically. Use the /slideshow parameter for that.
-                    </li>
-                    <li>
-                      <code>/slideshow [time in seconds]</code><br/>
-                      Automatically starts a slide show after startup. Example:<br/>
-                      <code>jpegview.exe myfilelist.txt /slideshow 3</code><br/>
-                      Starts a slideshow of the files listed in "myfilelist.txt" with an interval of 3 seconds between the images.
-                    </li>
-                    <li>
-                      <code>/effect [effect]</code><br/>
-                      Sets the transition effect for full screen slideshows. The parameter has no effect if not used in fullscreen mode.<br/>
-                      Possible effects are: None, Blend, SlideLR, SlideRL, SlideTB, SlideBT, RollLR, RollRL, RollTB, RollBT, ScrollLR, ScrollRL, ScrollTB, ScrollBT<br/>
-                      Example:<br/>
-                      <code>jpegview.exe myfilelist.txt /slideshow 3 /effect blend /fullscreen</code>
-                    </li>
-                    <li>
-                      <code>/transitiontime [time in milliseconds]</code><br/>
-                      Sets the transition time for the effect in full screen slideshows. Example:<br/>
-                      <code>jpegview.exe myfilelist.txt /slideshow 3 /effect blend /transitiontime 250 /fullscreen</code>
-                    </li>
-                    <li>
-                      <code>/monitor [monitor index]</code><br/>
-                      Sets the monitor to display JPEGView, overriding the INI file setting. 0 stands for the primary monitor,
-                      any number bigger than 0 for the secondary monitor with the corresponding index. Example:<br/>
-                      <code>jpegview.exe "d:\pictures\jan 2013\" /slideshow 3 /fullscreen /monitor 1</code>
-                    </li>
-                    <li>
-                      <code>/autoexit</code><br/>
-                      Terminates JPEGView automatically after having finished the slide show if combined with the /slideshow parameter.<br/>
-                      Setting this parameter also changes the behavior of the ESC key: JPEGView terminates immediately when pressing the ESC key,
-                      also while playing a slideshow or an animated GIF.<br/>
-                      Note that WrapAroundFolder must be set to false in the INI file - otherwise the slideshow does not finish when the
-                      end of the folder is reached.
-                      <br/>
-                    </li>
-                    <li>
-                      <code>/fullscreen</code><br/>
-                      Starts JPEGView in full screen mode, ignoring the INI file setting that is currently active.
-                      <br/>
-                    </li>
-                    <li>
-                      <code>/order [mode]</code><br/>
-                      Forces file ordering mode 'mode', ignoring the INI file setting that is currently active.<br/>
-                      [mode] can be M, C, N or Z, for the file ordering modes 'M: modification date', 'C: creation date', 'N: file name', 'Z: random'<br/>
-                      Example: <code>jpegview.exe c:\pictures /slideshow 2 /order z /fullscreen</code><br/>
-                      Shows a slideshow of the files in the folder "c:\pictures" using random ordering and an interval of 2 seconds, forcing full screen mode for the slide show.
-                    </li>
-                  </ul>
-                  
-                  <br/><b>
-                    <a href="#Top">Top of Page</a>
-                  </b><br/>
+          A note on the support for multiple CPU cores (CPUCoresUsed setting):<br/>
+          By default, JPEGView uses all cores of the CPU for processing images. To force JPEGView to use
+          a given number of parallel processing threads, use the CPUCoresUsed setting.
+          Note that no more than 4 cores (and therefore 4 processing threads) are supported.
+          One additional thread is always created to read ahead the next image - this cannot be suppressed by the INI file.
+          <br/><br/><b>
+            <a href="#Top">Top of Page</a>
+          </b><br/>
 
-                  <a name="KeyMap"></a>
-					<h2>Keymap - changing keyboard and mouse shortcuts</h2>
-					The mapping of keys to commands can be changed by editing the <a href="./KeyMap.txt">keymap file</a>.<br/>
-					Using the keymap file it is also possible to define additional keyboard shortcuts for command that are
-					not mapped by default. The keymap file also allows defining a command that gets executed when pressing one
-                    of the mouse buttons. Be aware that by doing so, the default mouse button functionality will be disabled.<br/>
-                    When editing this file, make sure you follow the instructions mentioned in the keymap file itself.
+          <a name="CmdLine"></a>
+          <h2>Command line parameters</h2>
 
-                  <a name="RAWFiles"></a>
-                  <h2>Adding support for viewing camera RAW files to JPEGView</h2>
-                  JPEGView has built in support to view the JPEG images embedded in many camera RAW files. These embedded JPEGs often
-                  have a smaller resolution than the RAW image itself but can be decoded and displayed very quickly.<br/>
-                  Support for viewing the full size camera RAW images is provided indirectly by using the Microsoft Camera Codec pack.<br/>
-                  This codec pack is only available for Windows Vista SP2 and Windows 7, but not for Windows XP!<br/>
-                  To add support for viewing full size camera RAW files:
-                  <ul style="margin-top:0in;margin-bottom:0in">
-                    <li>
-                      Download and install the <a href="http://www.microsoft.com/download/en/details.aspx?id=26829">Microsoft Camera Codec pack.</a><br/>
-                      Check if your camera model is supported by the codec pack.
-                    </li>
-                    <li>
-                      Add the extension(s) of the camera RAW files to be read by JPEGView to the user INI file, setting 'FilesProcessedByWIC'.<br/>
-                      Context menu: Settings/Admin > Edit user settings...<br/>
-                      Example for adding the extension "cr2", used by Canon cameras:<br/>
-                      <code>FilesProcessedByWIC=*.wdp;*.mdp;*.hdp;<b>*.cr2</b></code>
-                    </li>
-                    <li>
-                      Save the INI file and restart JPEGView.
-                    </li>
-                  </ul>
-                  <b>Be warned that decoding the full size RAW images is much, much slower than just decoding the embedded JPEG!</b>
-                  <a name="External"></a>
-					<h2>Calling external programs or batch files</h2>
-					In the INI file, external commands can be defined and be bound to a key that is not used in JPEGView internally.
-					The file name of the currently displayed image can be passed to the external command or program.<br/>
-					Refer to the <a href="./JPEGView.ini">INI file itself</a> for a description of the format and the features.<br/>
-					JPEGView itself uses this mechanism to implement the following commands:
-					<ul style="margin-top:0in;margin-bottom:0in">
-						<li>
-							<kbd>Del</kbd> : Delete the current image file permanently - calls the command processor (cmd.exe) to
-							delete the file.
-						</li>
-					</ul>
-					Other commands can be added as needed, e.g. starting your favorite image editor.
-					<br/><br/><b>
-						<a href="#Top">Top of Page</a>
-					</b><br/>
+          JPEGView supports the following command line parameters:
+          <ul style="margin-top:0in;margin-bottom:0in">
+            <li>
+              <code>filename</code><br/>
+              File name of the file to load or folder to show. If this is a file name, it must be a valid
+              image file name or a file name of a text file that contains a list of files to display. If it is a folder name, JPEGView
+              displays the image files in this folder.<br/>
+              If a file name is given, it must be given before all other parameters in the command line.<br/>
+              Note: No slide show is started automatically. Use the /slideshow parameter for that.
+            </li>
+            <li>
+              <code>/slideshow [time in seconds]</code><br/>
+              Automatically starts a slide show after startup. Example:<br/>
+              <code>jpegview.exe myfilelist.txt /slideshow 3</code><br/>
+              Starts a slideshow of the files listed in "myfilelist.txt" with an interval of 3 seconds between the images.
+            </li>
+            <li>
+              <code>/effect [effect]</code><br/>
+              Sets the transition effect for full screen slideshows. The parameter has no effect if not used in fullscreen mode.<br/>
+              Possible effects are: None, Blend, SlideLR, SlideRL, SlideTB, SlideBT, RollLR, RollRL, RollTB, RollBT, ScrollLR, ScrollRL, ScrollTB, ScrollBT<br/>
+              Example:<br/>
+              <code>jpegview.exe myfilelist.txt /slideshow 3 /effect blend /fullscreen</code>
+            </li>
+            <li>
+              <code>/transitiontime [time in milliseconds]</code><br/>
+              Sets the transition time for the effect in full screen slideshows. Example:<br/>
+              <code>jpegview.exe myfilelist.txt /slideshow 3 /effect blend /transitiontime 250 /fullscreen</code>
+            </li>
+            <li>
+              <code>/monitor [monitor index]</code><br/>
+              Sets the monitor to display JPEGView, overriding the INI file setting. 0 stands for the primary monitor,
+              any number bigger than 0 for the secondary monitor with the corresponding index. Example:<br/>
+              <code>jpegview.exe "d:\pictures\jan 2013\" /slideshow 3 /fullscreen /monitor 1</code>
+            </li>
+            <li>
+              <code>/autoexit</code><br/>
+              Terminates JPEGView automatically after having finished the slide show if combined with the /slideshow parameter.<br/>
+              Setting this parameter also changes the behavior of the ESC key: JPEGView terminates immediately when pressing the ESC key,
+              also while playing a slideshow or an animated GIF.<br/>
+              Note that WrapAroundFolder must be set to false in the INI file - otherwise the slideshow does not finish when the
+              end of the folder is reached.
+              <br/>
+            </li>
+            <li>
+              <code>/fullscreen</code><br/>
+              Starts JPEGView in full screen mode, ignoring the INI file setting that is currently active.
+              <br/>
+            </li>
+            <li>
+              <code>/order [mode]</code><br/>
+              Forces file ordering mode 'mode', ignoring the INI file setting that is currently active.<br/>
+              [mode] can be M, C, N or Z, for the file ordering modes 'M: modification date', 'C: creation date', 'N: file name', 'Z: random'<br/>
+              Example: <code>jpegview.exe c:\pictures /slideshow 2 /order z /fullscreen</code><br/>
+              Shows a slideshow of the files in the folder "c:\pictures" using random ordering and an interval of 2 seconds, forcing full screen mode for the slide show.
+            </li>
+          </ul>
 
-					<a name="Trouble"></a>
-					<h2>Troubleshooting</h2>
-					<b>JPEGView crashes when displaying an image</b><br/>
-					Maybe the CPU detection failed. Try to set the CPU type manually in the INI File (key 'CPUType'). Set this
-					key to 'Generic' - this is slower but should run on all CPUs.<br/><br/>
-					<b>
-						The file type .JPG can not be assigned to JPEGView using the method described in the
-						<a href="#Installation">installation section.</a> JPEGView never appears in the list of programs for JPG files even
-						when it is added with 'Browse'.
-					</b><br/>
-					Maybe JPEGView was moved to another folder while the file type was already registered to it. In this case Windows
-					loses the connection and this cannot be fixed with the Windows Explorer. Start regedit.exe and check the path in
-					'HKEY_CLASSES_ROOT\Applications\JPEGView.exe\shell\open\command'. Correct the path if it points to an invalid location.<br/><br/>
-					
-					<b>The language of the user interface is in English instead of 'Portuguese/French/whatever'</b><br/>
-					Normally JPEGView selects the UI language automatically to match the operating system language.
-					This auto detection may has failed. To force a specific language, set the<br/>
-					Language=language_code<br/>
-                  setting in the INI file to the desired language code. The supported codes are listed in the INI file.<br/><br/>
-                     <b>
-						<a href="#Top">Top of Page</a>
-					</b><br/>
+          <br/><b>
+            <a href="#Top">Top of Page</a>
+          </b><br/>
 
-					<a name="Copyright"></a>
-					<h2>License &amp; Copyright</h2>
-					Copyright &copy; 2006-2013 David Kleiner<br/><br/>
-					This program is free software; you can redistribute it and/or modify
-					it under the terms of the GNU General Public License as published by
-					the Free Software Foundation, version 2.
-					The full text of the GPL can be found <a href="http://opensource.org/licenses/gpl-2.0.php">here.</a><br/>
-					JPEGView is hosted by <a href="http://www.sourceforge.net">SourceForge.</a> You can check for a new version,
-					get the source code or report a bug using the following URL:<br/>
-					<a href="https://sourceforge.net/projects/jpegview/">https://sourceforge.net/projects/jpegview/</a><br/>
-					Alternatively you can use the following e-mail address to contact me:<br/>
-					<a href="mailto:jpegview@gmail.com">jpegview@gmail.com</a>
-					<br/><br/>
-					JPEGView contains the following binary library to read JPEG images:<br/>
-                    - Turbo JPEG, Copyright (C)2009-2011 D. R. Commander.  All Rights Reserved.<br/>
-                      Turbo JPEG is based on libjpeg, &copy; 1994-2010, Independent JPEG Group.<br/>
-					<br/>
-					JPEGView includes or uses the following source code libraries:<br/>
-					- Windows Template Library 8.0 (build 6137) 5/17/06, Copyright &copy; 2006 Microsoft Corporation<br/>
-					- WebP codec provided by Google <a href="http://www.code.google.com/speed/webp/">http://www.code.google.com/speed/webp/</a>, &copy; Google<br/>
-                    - <a href="http://www.cybercom.net/~dcoffin/dcraw/">dcraw</a>, &copy; 1997-2011 by Dave Coffin<br/>
-					<br/>
-					Developed and compiled with Visual Studio 2010, C++ Express Edition
-					<br/><br/>
-					Thanks to:<br/>
-					<ul style="margin-top:0in;margin-bottom:0in">
-						<li>
-							Armel for testing, bug reporting and suggestions for improvements since the very first versions
-						</li>
-						<li>
-							Michi, Patrik and Michael for additional testing and ideas
-						</li>
-						<li>
-                            Anonymous for integration of dcraw, for viewing JPEGs embedded in camera RAW
-						</li>
-						<li>
-							Franco Bianconi and Daniel Sánchez Vargas for the Spanish translation
-						</li>
-						<li>
-							winPenPack Team and Massimo Pietrolonardo for the Italian translation
-						</li>
-						<li>
-							Adil Tiadi and Fabrice for the French translation
-						</li>
-						<li>
-							Anonymous for the Korean translation
-						</li>
-						<li>
-							Silviu Laurentiu for the Romanian translation
-						</li>
-						<li>
-							Dmitry Yerokhin for the Russian translation
-						</li>
-						<li>
-							&Aring;ke Engelbrektson for the Swedish translation
-						</li>
-						<li>
-							Carpegieri Torezan for the Portuguese (Brasilian) translation
-						</li>
-						<li>
-							Milos Koutny for the Czech translation
-						</li>
-						<li>
-							Paris Setos for the Greek translation
-						</li>
-						<li>
-							Sérgio Marques for the Portuguese translation
-						</li>
-						<li>
-							Xabier Aramendi for the Basque translation
-						</li>
-                    	<li>
-                           	Yia Guo for the Chinese translation
-                        </li>
-                      <li>
-                            Uladzimir Panada for the Belarusan translation
-                      </li>
-					</ul>
-					<br/><br/><b>
-						<a href="#Top">Top of Page</a>
-					</b><br/>
+          <a name="KeyMap"></a>
+          <h2>Keymap - changing keyboard and mouse shortcuts</h2>
+          The mapping of keys to commands can be changed by editing the <a href="./KeyMap.txt">keymap file</a>.<br/>
+          Using the keymap file it is also possible to define additional keyboard shortcuts for command that are
+          not mapped by default. The keymap file also allows defining a command that gets executed when pressing one
+          of the mouse buttons. Be aware that by doing so, the default mouse button functionality will be disabled.<br/>
+          When editing this file, make sure you follow the instructions mentioned in the keymap file itself.
 
-				</td>
-			</tr>
-		</table>
-	</body>
+          <a name="RAWFiles"></a>
+          <h2>Adding support for viewing camera RAW files to JPEGView</h2>
+          JPEGView has built in support to view the JPEG images embedded in many camera RAW files. These embedded JPEGs often
+          have a smaller resolution than the RAW image itself but can be decoded and displayed very quickly.<br/>
+          Support for viewing the full size camera RAW images is provided indirectly by using the Microsoft Camera Codec pack.<br/>
+          This codec pack is only available for Windows Vista SP2 and Windows 7, but not for Windows XP!<br/>
+          To add support for viewing full size camera RAW files:
+          <ul style="margin-top:0in;margin-bottom:0in">
+            <li>
+              Download and install the <a href="http://www.microsoft.com/download/en/details.aspx?id=26829">Microsoft Camera Codec pack.</a><br/>
+              Check if your camera model is supported by the codec pack.
+            </li>
+            <li>
+              Add the extension(s) of the camera RAW files to be read by JPEGView to the user INI file, setting 'FilesProcessedByWIC'.<br/>
+              Context menu: Settings/Admin > Edit user settings...<br/>
+              Example for adding the extension "cr2", used by Canon cameras:<br/>
+              <code>
+                FilesProcessedByWIC=*.wdp;*.mdp;*.hdp;<b>*.cr2</b>
+              </code>
+            </li>
+            <li>
+              Save the INI file and restart JPEGView.
+            </li>
+          </ul>
+          <b>Be warned that decoding the full size RAW images is much, much slower than just decoding the embedded JPEG!</b>
+          <a name="External"></a>
+          <h2>Calling external programs or batch files</h2>
+          In the INI file, user commands can be defined. User command can call any external program or batch file and can be integrated into JPEGView using:
+          <ul style="margin-top:0in;margin-bottom:0in">
+            <li>
+              Binding to a keyboard shortcut.
+            </li>
+            <li>
+              Binding to a menu item in the 'User Commands' submenu of the JPEGView context menu.
+            </li>
+          </ul>
+          Refer to the <a href="./JPEGView.ini">INI file itself</a> for a full description of the format and the features.<br/>
+          JPEGView itself uses this mechanism to implement the following commands:
+          <ul style="margin-top:0in;margin-bottom:0in">
+            <li>
+              <kbd>Del</kbd> : Delete the current image file permanently - calls the command processor (cmd.exe) to
+              delete the file.
+            </li>
+          </ul>
+          Other commands can be added as needed, e.g. moving an image to a specific folder.
+          <br/><br/><b>
+            <a href="#Top">Top of Page</a>
+          </b><br/>
+
+          <a name="OpenWith"></a>
+          <h2>Opening images with external applications</h2>
+          JPEGView supports opening the currently displayed image in an external application (e.g. GIMP) if the application supports passing a file
+          name on the command line (as most applications do).<br/>
+          To define external applications, use the 'Settings/Admin' - 'Manage 'Open with' menu' dialog.
+          The defined applications are visible in the 'Open with' submenu of the JPEGView context menu. Binding an application to a keyboard shortcut is also possible.
+          <br/><br/>
+          <b>
+            <a href="#Top">Top of Page</a>
+          </b><br/>
+          
+          <a name="Trouble"></a>
+          <h2>Troubleshooting</h2>
+          <b>JPEGView crashes when displaying an image</b><br/>
+          Maybe the CPU detection failed. Try to set the CPU type manually in the INI File (key 'CPUType'). Set this
+          key to 'Generic' - this is slower but should run on all CPUs.<br/><br/>
+          <b>
+            The file type .JPG can not be assigned to JPEGView using the method described in the
+            <a href="#Installation">installation section.</a> JPEGView never appears in the list of programs for JPG files even
+            when it is added with 'Browse'.
+          </b><br/>
+          Maybe JPEGView was moved to another folder while the file type was already registered to it. In this case Windows
+          loses the connection and this cannot be fixed with the Windows Explorer. Start regedit.exe and check the path in
+          'HKEY_CLASSES_ROOT\Applications\JPEGView.exe\shell\open\command'. Correct the path if it points to an invalid location.<br/><br/>
+
+          <b>The language of the user interface is in English instead of 'Portuguese/French/whatever'</b><br/>
+          Normally JPEGView selects the UI language automatically to match the operating system language.
+          This auto detection may has failed. To force a specific language, set the<br/>
+          Language=language_code<br/>
+          setting in the INI file to the desired language code. The supported codes are listed in the INI file.<br/><br/>
+          
+          <b>The colors of images do not look the same compared to other viewers and to the Internet browser</b><br/>
+          By default, JPEGView is not interpreting embedded color profiles in JPEG and TIFF images. You can force using these
+          color profiles by setting the following key to true in the INI file: <br/>
+          UseEmbeddedColorProfiles=true<br/>
+          Be aware the this slows down loading of JPEG images considerably (also when no color profile is embedded)
+          because it forces JPEGView to read the JPEG image with GDI+ instead of using the optimized TJPEG library.
+          <br/><br/>
+          <b>
+            <a href="#Top">Top of Page</a>
+          </b><br/>
+
+          <a name="Copyright"></a>
+          <h2>License &amp; Copyright</h2>
+          Copyright &copy; 2006-2013 David Kleiner<br/><br/>
+          This program is free software; you can redistribute it and/or modify
+          it under the terms of the GNU General Public License as published by
+          the Free Software Foundation, version 2.
+          The full text of the GPL can be found <a href="http://opensource.org/licenses/gpl-2.0.php">here.</a><br/>
+          JPEGView is hosted by <a href="http://www.sourceforge.net">SourceForge.</a> You can check for a new version,
+          get the source code or report a bug using the following URL:<br/>
+          <a href="https://sourceforge.net/projects/jpegview/">https://sourceforge.net/projects/jpegview/</a><br/>
+          Alternatively you can use the following e-mail address to contact me:<br/>
+          <a href="mailto:jpegview@gmail.com">jpegview@gmail.com</a>
+          <br/><br/>
+          JPEGView contains the following binary library to read JPEG images:<br/>
+          - Turbo JPEG, Copyright (C)2009-2011 D. R. Commander.  All Rights Reserved.<br/>
+          Turbo JPEG is based on libjpeg, &copy; 1994-2010, Independent JPEG Group.<br/>
+          <br/>
+          JPEGView includes or uses the following source code libraries:<br/>
+          - Windows Template Library 8.0 (build 6137) 5/17/06, Copyright &copy; 2006 Microsoft Corporation<br/>
+          - WebP codec provided by Google <a href="http://www.code.google.com/speed/webp/">http://www.code.google.com/speed/webp/</a>, &copy; Google<br/>
+          - <a href="http://www.cybercom.net/~dcoffin/dcraw/">dcraw</a>, &copy; 1997-2011 by Dave Coffin<br/>
+          <br/>
+          Developed and compiled with Visual Studio 2010, C++ Express Edition
+          <br/><br/>
+          Thanks to:<br/>
+          <ul style="margin-top:0in;margin-bottom:0in">
+            <li>
+              Armel for testing, bug reporting and suggestions for improvements since the very first versions
+            </li>
+            <li>
+              Michi, Patrik and Michael for additional testing and ideas
+            </li>
+            <li>
+              Anonymous for integration of dcraw, for viewing JPEGs embedded in camera RAW
+            </li>
+            <li>
+              Franco Bianconi and Daniel Sánchez Vargas for the Spanish translation
+            </li>
+            <li>
+              winPenPack Team and Massimo Pietrolonardo for the Italian translation
+            </li>
+            <li>
+              Adil Tiadi and Fabrice for the French translation
+            </li>
+            <li>
+              Anonymous for the Korean translation
+            </li>
+            <li>
+              Silviu Laurentiu for the Romanian translation
+            </li>
+            <li>
+              Dmitry Yerokhin for the Russian translation
+            </li>
+            <li>
+              &Aring;ke Engelbrektson for the Swedish translation
+            </li>
+            <li>
+              Carpegieri Torezan for the Portuguese (Brasilian) translation
+            </li>
+            <li>
+              Milos Koutny for the Czech translation
+            </li>
+            <li>
+              Paris Setos for the Greek translation
+            </li>
+            <li>
+              Sérgio Marques for the Portuguese translation
+            </li>
+            <li>
+              Xabier Aramendi for the Basque translation
+            </li>
+            <li>
+              Yia Guo for the Chinese translation
+            </li>
+            <li>
+              Uladzimir Panada for the Belarusan translation
+            </li>
+          </ul>
+          <br/><br/><b>
+            <a href="#Top">Top of Page</a>
+          </b><br/>
+
+        </td>
+      </tr>
+    </table>
+  </body>
 </HTML>
