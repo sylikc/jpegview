@@ -286,6 +286,7 @@ CButtonCtrl::CButtonCtrl(CPanel* pPanel, LPCTSTR sButtonText,
 	m_bDragging = false;
 	m_bActive = false;
 	m_extendedArea = CRect(0, 0, 0, 0);
+	m_dimmingFactor = 0.0f;
 }
 
 CButtonCtrl::CButtonCtrl(CPanel* pPanel, PaintHandler* paintHandler, ButtonPressedHandler* buttonPressedHandler,
@@ -299,6 +300,7 @@ CButtonCtrl::CButtonCtrl(CPanel* pPanel, PaintHandler* paintHandler, ButtonPress
 	m_bDragging = false;
 	m_bActive = false;
 	m_extendedArea = CRect(0, 0, 0, 0);
+	m_dimmingFactor = 0.0f;
 }
 
 void CButtonCtrl::SetActive(bool bActive) {
@@ -359,6 +361,23 @@ bool CButtonCtrl::OnMouseMove(int nX, int nY) {
 }
 
 void CButtonCtrl::Draw(CDC & dc, CRect position, bool bBlack) {
+	// dim the button background if requested
+	if (m_dimmingFactor > 1e-6f) {
+		CDC memDCblack;
+		memDCblack.CreateCompatibleDC(dc);
+		CBitmap bitmapBlack;
+		bitmapBlack.CreateCompatibleBitmap(dc, position.Width(), position.Height());
+		memDCblack.SelectBitmap(bitmapBlack);
+		memDCblack.FillRect(CRect(0, 0, position.Width(), position.Height()), (HBRUSH)::GetStockObject(BLACK_BRUSH));
+	
+		BLENDFUNCTION blendFunc;
+		memset(&blendFunc, 0, sizeof(blendFunc));
+		blendFunc.BlendOp = AC_SRC_OVER;
+		blendFunc.SourceConstantAlpha = (unsigned char)(m_dimmingFactor*255 + 0.5f);
+		blendFunc.AlphaFormat = 0;
+		dc.AlphaBlend(position.left, position.top, position.Width(), position.Height(), memDCblack, 0, 0, position.Width(), position.Height(), blendFunc);
+	}
+
 	dc.SelectStockBrush(HOLLOW_BRUSH);
 	HPEN hPen, hOldPen;
 	HPEN hPen2 = NULL;

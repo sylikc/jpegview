@@ -62,6 +62,7 @@ New features:
   Enables to change the GUI font, its size in points and its weight
 - Esc key can now be re-defined in keymap (e.g. to display to 'Open file' dialog)
   Default remains to exit JPEGView
+- Some minor changes in navigation panel appearance
   
 [1.0.30]
 Bugs fixed:

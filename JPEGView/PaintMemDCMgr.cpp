@@ -53,6 +53,12 @@ HBITMAP CPaintMemDCMgr::PrepareRectForMemDCPainting(CDC & memDC, CDC & paintDC, 
 // Blits the DIB data section to target DC using dimming (blending with a black bitmap)
 void CPaintMemDCMgr::BitBltBlended(CDC & dc, CDC & paintDC, const CSize& dcSize, void* pDIBData, BITMAPINFO* pbmInfo, 
 						  const CPoint& dibStart, const CSize& dibSize, float fDimFactor) {
+	if (fDimFactor < 1e-6f) {
+		// no dimming
+		dc.SetDIBitsToDevice(dibStart.x, dibStart.y, 
+			dibSize.cx, dibSize.cy, 0, 0, 0, dibSize.cy, pDIBData, pbmInfo, DIB_RGB_COLORS);
+		return;
+	}
 	int nW = dcSize.cx;
 	int nH = dcSize.cy;
 	CDC memDCblack;
