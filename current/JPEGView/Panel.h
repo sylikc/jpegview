@@ -5,6 +5,8 @@
 
 typedef std::map<int, CUICtrl*>::iterator ControlsIterator;
 
+typedef std::map<int, CUICtrl*>::const_iterator ControlsConstIterator;
+
 // Interface to get notifications on mouse capturing and releasing by controls
 class INotifiyMouseCapture
 {
@@ -27,6 +29,9 @@ public:
 	// Gets the control with this ID, null if no such control
 	CUICtrl* GetControl(int nID);
 	template<class T> T GetControl(int nID) { return dynamic_cast<T>(GetControl(nID)); }
+
+	// Gets the controls
+	const std::map<int, CUICtrl*> & GetControls() { return m_controls; }
 
 	// Mouse events must be passed to the panel using the two methods below.
 	// The mouse event is consumed by a UI control if the return value is true.

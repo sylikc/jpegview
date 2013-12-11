@@ -116,12 +116,12 @@ bool CNavigationPanelCtl::OnMouseMove(int nX, int nY) {
 	m_nMouseY = nY;
 
 	if (bModalPanelShown) {
-		m_bMouseInNavPanel = false;
+		SetMouseInNavPanel(false);
 	} else {
 		if (!bImageProcPanelShown) {
 			bool bMouseInNavPanel = PanelRect().PtInRect(CPoint(nX, nY));
 			if (!bMouseInNavPanel && m_bMouseInNavPanel) {
-				m_bMouseInNavPanel = false;
+				SetMouseInNavPanel(false);
 				m_pNavPanel->GetTooltipMgr().EnableTooltips(false);
 				m_pMainDlg->InvalidateRect(PanelRect(), FALSE);
 			} else if (bMouseInNavPanel && !m_bMouseInNavPanel) {
@@ -130,7 +130,7 @@ bool CNavigationPanelCtl::OnMouseMove(int nX, int nY) {
 			return CPanelController::OnMouseMove(nX, nY);
 		} else {
 			m_pNavPanel->GetTooltipMgr().EnableTooltips(false);
-			m_bMouseInNavPanel = false;
+			SetMouseInNavPanel(false);
 		}
 	}
 
@@ -143,7 +143,7 @@ bool CNavigationPanelCtl::OnTimer(int nTimerId) {
 		if (m_bEnabled && !m_pMainDlg->GetImageProcPanelCtl()->IsVisible()) {
 			bool bMouseInNavPanel = PanelRect().PtInRect(CPoint(m_nMouseX, m_nMouseY));
 			if (bMouseInNavPanel && !m_bMouseInNavPanel) {
-				m_bMouseInNavPanel = true;
+				SetMouseInNavPanel(true);
 				m_pNavPanel->GetTooltipMgr().EnableTooltips(true);
 				m_pMainDlg->InvalidateRect(PanelRect(), FALSE);
 				EndNavPanelAnimation();
@@ -167,7 +167,7 @@ bool CNavigationPanelCtl::OnTimer(int nTimerId) {
 bool CNavigationPanelCtl::CheckMouseInNavPanel(int nX, int nY) {
 	bool bMouseInNavPanel = !m_pMainDlg->GetPanelMgr()->IsModalPanelShown() && PanelRect().PtInRect(CPoint(nX, nY));
 	if (bMouseInNavPanel && !m_bMouseInNavPanel) {
-		m_bMouseInNavPanel = true;
+		SetMouseInNavPanel(true);
 		m_pNavPanel->GetTooltipMgr().EnableTooltips(true);
 		m_pMainDlg->InvalidateRect(PanelRect(), FALSE);
 	}
@@ -276,7 +276,7 @@ void CNavigationPanelCtl::HideNavPanelTemporary(bool bForce) {
 		m_pMainDlg->InvalidateRect(PanelRect(), FALSE);
 		m_bFadeOut = true;
 	}
-    if (bForce) m_bMouseInNavPanel = false;
+    if (bForce) SetMouseInNavPanel(false);
 }
 
 void CNavigationPanelCtl::ShowNavPanelTemporary() {
@@ -287,6 +287,20 @@ void CNavigationPanelCtl::ShowNavPanelTemporary() {
 		m_bFadeOut = true;
 		::KillTimer(m_pMainDlg->GetHWND(), NAVPANEL_ANI_TIMER_EVENT_ID);
 		::KillTimer(m_pMainDlg->GetHWND(), NAVPANEL_START_ANI_TIMER_EVENT_ID);
+	}
+}
+
+void CNavigationPanelCtl::SetMouseInNavPanel(bool value) {
+	if (m_bMouseInNavPanel != value) {
+		m_bMouseInNavPanel = value;
+		ControlsConstIterator iter;
+		const std::map<int, CUICtrl*> & controls = m_pNavPanel->GetControls();
+		for (iter = controls.begin(); iter != controls.end( ); iter++ ) {
+			CButtonCtrl* pButton = dynamic_cast<CButtonCtrl*>(iter->second);
+			if (pButton != NULL) {
+				pButton->SetDimmingFactor(m_bMouseInNavPanel ? 0.12f : 0.0f);
+			}
+		}
 	}
 }
 

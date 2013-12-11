@@ -224,6 +224,9 @@ public:
 
 	bool IsUserPaintButton() { return m_paintHandler != NULL; }
 
+	// Sets the dimming factor for the button background, 0 for no dimming 1.0 for blackness
+	void SetDimmingFactor(float factor) { m_dimmingFactor = factor; }
+
 public:
 	virtual CSize GetMinSize();
 	virtual bool OnMouseLButton(EMouseEvent eMouseEvent, int nX, int nY);
@@ -235,6 +238,7 @@ protected:
 private:
 	CString m_sText;
 	CSize m_textSize;
+	float m_dimmingFactor;
 	bool m_bDragging;
 	bool m_bActive;
 	CRect m_extendedArea;

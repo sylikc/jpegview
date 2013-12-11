@@ -16,7 +16,7 @@ public:
 	float CurrentBlendingFactor() { return m_fCurrentBlendingFactorNavPanel; }
 
 	virtual bool BlendPanel() { return !m_bMouseInNavPanel; }
-	virtual float DimFactor() { return 0.5f; }
+	virtual float DimFactor() { return 0.0f; }
 
 	void AdjustMaximalWidth(int nMaxWidth);
 
@@ -55,6 +55,7 @@ private:
 	CDC* m_pMemDCAnimation;
 	HBITMAP m_hOffScreenBitmapAnimation;
 
+	void SetMouseInNavPanel(bool value);
 	bool CheckMouseInNavPanel(int nX, int nY);
 	void DoNavPanelAnimation();
 	void StartNavPanelTimer(int nMilliseconds);
