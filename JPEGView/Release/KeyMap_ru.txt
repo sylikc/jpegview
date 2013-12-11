@@ -1,4 +1,4 @@
-// Файл с назначениями клавиш для программы JPEGView.		Перевод (130118): Дмитрий Ерохин (erodim@mail.ru)
+// Файл с назначениями клавиш для программы JPEGView.		Перевод (131206): Дмитрий Ерохин (erodim@mail.ru)
 // Не повредите этот файл, иначе не будут работать никакие клавиши!
 // На одну команду можно назначать несколько клавиш, но нельзя назначать несколько команд на одну клавишу!
 // Чтобы использовать этот файл вместо исходного (англоязычного), его нужно переименовать в KeyMap.txt
@@ -33,9 +33,9 @@
 #define IDM_SORT_CREATION_DATE 	7010			// сортировать по датам создания
 #define IDM_SORT_NAME		7020			// сортировать по именам
 #define IDM_SORT_RANDOM		7030			// сортировать в случайном порядке
-#define IDM_SORT_SIZE		7040			// sorting order file size in bytes
-#define IDM_SORT_UPCOUNTING	7100			// sort upcounting
-#define IDM_SORT_DOWNCOUNTING	7110			// sort downcounting
+#define IDM_SORT_SIZE		7040			// сортировать по размерам файлов в байтах
+#define IDM_SORT_UPCOUNTING	7100			// сортировать по возрастанию
+#define IDM_SORT_DOWNCOUNTING	7110			// сортировать по убыванию
 #define IDM_ROTATE_90		8000			// повернуть изображение на 90° вправо
 #define IDM_ROTATE_270		9000			// повернуть изображение на 90° влево
 #define IDM_ROTATE          	9100			// показать диалоговое окно поворота на произвольный угол
@@ -77,7 +77,7 @@
 #define IDM_BACKUP_PARAMDB	12620			// сделать резервную копию БД параметров
 #define IDM_RESTORE_PARAMDB	12630			// восстановить БД параметров из резервной копии
 #define IDM_ABOUT		12900			// показать окно "О программе"
-#define IDM_EXIT		13000			// exit JPEGView application
+#define IDM_EXIT		13000			// выйти из программы JPEGView
 #define IDM_TOGGLE		14100			// переключение между отмеченным и текущим изображениями
 #define IDM_MARK_FOR_TOGGLE	14101			// отметить текущее изображение для переключения
 #define IDM_COLOR_CORRECTION_INC 14200			// усилить цветовую коррекцию
@@ -118,7 +118,7 @@
 // MouseL, MouseR, MouseM, MouseX1, MouseX2, MouseDblClk
 // (левая, правая, средняя, дополнительные кнопки, двойной щелчок левой кнопкой)
 
-// Uncomment the following line if you want to exit JPEGView with the Esc key immediatly when playing an animation or a slideshow
+// Раскомментируйте следующую строку, если хотите, чтобы программа JPEGView немедленно прекращала работу по нажатию Esc при воспроизведении анимации или слайдшоу
 // Esc                    IDM_EXIT
 PgDn                    IDM_NEXT
 Right                   IDM_NEXT

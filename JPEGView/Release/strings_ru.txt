@@ -5,7 +5,7 @@
 //TranslatorName=Dmitry Yerokhin
 //Contact=erodim@mail.ru
 //TranslatorURL=none
-//LastUpdated=Oct 31, 2013
+//LastUpdated=Dec 6, 2013
 //
 Contrast	Контрастность
 Brightness	Яркость
@@ -342,3 +342,29 @@ However this will fail if the current user has no administration privileges.	О�
 Insufficient rights to remove the restrictions. Continue?	Недостаточно прав для удаления ограничений. Продолжить?
 No image loaded!	Не загружено изображение!
 Right mouse button: Context menu	Правая кнопка мыши: контекстное меню
+Windows 8 blocks JPEGView from changing the default program for these file endings.	Windows 8 не позволяет JPEGView изменять стандартную программу для файлов с этими расширениями.
+Use the 'Default Programs' configuration dialog from the operating system instead.	Используйте системное диалоговое окно 'Программы по умолчанию'.
+Alternatively, right click an image file of the given type in Windows Explorer and select 'Open with... > Choose default program'	Кроме того, можно щёлкнуть правой кнопкой мыши по графическому файлу нужного типа в Проводнике Windows и выбрать 'Открыть с помощью > Выбрать программу'.
+User commands	Пользовательские команды
+Open image with	Открыть изображение в...
+Manage 'Open image with' menu...	Настройка меню 'Открыть в...'
+Menu entries:	Элементы в меню
+Title:	Название:
+Application:	Программа:
+Shortcut key:	Быстрый вызов:
+Browse...	Обзор
+New	Создать
+Delete	Удалить
+Modifier keys:	Модификаторы:
+Known keys:	Известные клавиши:
+Combine keys with '+'	Сочетайте клавиши с '+'
+Example:	Пример:
+Shortcut Help	Справка по клавишам
+[new entry]	[новый элемент]
+Applications	Программы
+Select application	Выберите программу
+Save	Сохранить
+Edit	Изменить
+Upcounting	По возрастанию
+Downcounting	По убыванию
+File size	Размер файла
