@@ -1,6 +1,6 @@
 [JPEGView]
-; Пользовательский файл конфигурации для программы JPEGView версии 1.0.30
-; Перевод (131028): Дмитрий Ерохин (erodim@mail.ru)
+; Пользовательский файл конфигурации для программы JPEGView версии 1.0.31
+; Перевод (131206): Дмитрий Ерохин (erodim@mail.ru)
 
 ; Этот пользовательский INI-файл создан из шаблона JPEGView.ini.tpl
 ; Параметры в этом файле имеют более высокий приоритет, чем аналогичные параметры в глобальном INI-файле, находящемся в папке с EXE-файлом программы.
@@ -54,9 +54,9 @@ SelectionColor=255 205 0
 SliderColor=255 0 80
 FileNameColor=255 255 255
 
-; GUI font, format: "font name" fontSizeInPoints [bold]
-; 'Default' for the default GUI font of Windows
-; Example: DefaultGUIFont="Arial" 9.0 bold
+; Шрифт графического интерфейса в формате "имя шрифта" размерШрифтаВпунктах [bold]
+; Укажите значение 'Default', чтобы использовать стандартный шрифт Windows для графического интерфейса
+; Пример: DefaultGUIFont="Arial" 9.0 bold
 DefaultGUIFont=Default
 
 ; Исходная фиксированная коррекция контрастности, применяемая ко всем изображениям (в диапазоне от -0.5 до 0.5).
@@ -127,7 +127,7 @@ ShowFileName=false
 ; %filesize% : размер файла с изображением на диске
 FileNameFormat=%index%  %filepath%
 
-; Font for the file name display, see DefaultGUIFont key for the format
+; Шрифт для отображения имени файла, см. формат в описании ключа DefaultGUIFont
 FileNameFont=Default
 
 ; Установите в 'true', чтобы при показе файла о нём сразу выводилась информация (и EXIF-данные, если это возможно).
@@ -172,11 +172,11 @@ CPUCoresUsed=0
 DownSamplingFilter=BestQuality
 
 ; Порядок сортировки файлов при просмотре серии изображений в папке.
-; Может принимать значения 'LastModDate' (дата изменения), 'CreationDate' (дата создания) или 'FileName' (имя файла)
-; or 'Random' or 'FileSize'
+; Может принимать значения 'LastModDate' (дата изменения), 'CreationDate' (дата создания), 'FileName' (имя файла),
+; 'Random' или 'FileSize'.
 FileDisplayOrder=FileName
 
-; Sort files upcounting or downcounting
+; Направление сортировки файлов - по возрастанию (true) или убыванию (false)
 IsSortedUpcounting=true
 
 ; Навигация внутри или между папок.
@@ -200,8 +200,8 @@ WrapAroundFolder=true
 ; Если 'true', то автоматически поворачивать изображения JPEG согласно тегу ориентации в EXIF, если таковой имеется.
 AutoRotateEXIF=true
 
-; If true, embedded ICC color profiles are used for JPEG and TIFF. This forces using GDI+ for JPEGs and therefore
-; results in much slower loading of JPEGs! Only set to true if you really need this.
+; Если 'true', то для файлов JPEG и TIFF будут использоваться встроенные в них цветовые профили ICC. При этом для JPEG используется GDI+,
+; поэтому показ JPEG-изображений будет значительно медленнее! Включайте, только если это действительно вам нужно.
 UseEmbeddedColorProfiles=false
 
 ; Режим автомасштабирования.
@@ -225,8 +225,8 @@ SlideShowEffectTime=250
 ; Установите в 'true', чтобы открывать все изображения в одном и том же окне JPEGView.
 SingleInstance=false
 
-; Принудительно использовать GDI+ для чтения файлов JPEG. Используйте только в случае проблем с чтением JPEG посредством стандартной библиотеки Turbo JPEG.
-; Имейте в виду, что GDI+ медленнее, чем JPEG-библиотека Turbo JPEG
+; Принудительно использовать GDI+ для чтения файлов JPEG. Используйте только в случае проблем с чтением JPEG посредством стандартной библиотеки Intel.
+; Имейте в виду, что GDI+ медленнее, чем библиотека Turbo JPEG.
 ForceGDIPlus=false
 
 ; Качество сохранения файлов JPEG (в диапазоне 0..100, где 100 – наивысшее качество).
@@ -371,11 +371,11 @@ LandscapeModeParams=-1 -1 -1 -1 0.5 1.0 0.75 0.4 -1 -1 -1 -1
 ;UserCmd3="KeyCode: W  Cmd: 'cmd /c copy %filename% "%mypictures%\trash\%filetitle%"' Confirm: 'Вы действительно хотите скопировать файл в %mypictures%\trash\%filetitle%' HelpText: 'W\tСкопировать файл в папку с браком' Flags: 'WaitForTerminate'"
 ;UserCmd4="KeyCode: A  Cmd: 'cmd /u /c echo %filename% >> "%mydocuments%\test.txt"' HelpText: 'A\tДобавить в список файлов'"
 
-; Open with menu commands, shown in the 'Open with..' submenu of the JPEGView context menu.
-; These commands must be named OpenWith# where # stands for a number. The first open with command has the number zero (OpenWith0)
-; and the numbering of the commands must be continuous.
-; Open with commands must have the following form:
+; Команды, отображаемые в подменю 'Открыть в...' в контекстном меню JPEGView.
+; Эти команды должны начинаться с 'OpenWith#', где # означает номер команды. Первая команда имеет номер ноль (OpenWith0),
+; нумерация команд должна быть последовательной.
+; Команды 'Открыть в...' должны иметь следующую форму:
 ; OpenWith#="Cmd: '%Cmd%' Menuitem: '%menu%' [KeyCode: %Key%] [Confirm: '%confirm%'] [Flags: '%flags%']"
-; For an explanation of the different options, refer to the user command documentation above.
-; Example for a menu entry that opens the current image in MS Paint:
+; Описание параметров см. выше в пояснениях пользовательских команд.
+; Пример элемента меню, открывающий текущее изображение в программе MS Paint:
 ;OpenWith0="Cmd: 'C:\WINDOWS\system32\mspaint.exe %filename%' Menuitem: 'Microsoft Paint' Flags: 'ShellExecute'"

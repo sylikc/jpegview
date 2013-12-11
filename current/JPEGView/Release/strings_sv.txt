@@ -2,7 +2,7 @@
 //TranslatorName = Åke Engelbrektson
 //TranslatorContact = eson57@gmail.com
 //TranslatorURL = http://svenskasprakfiler.se
-//LastUpdated = 2013-03-09
+//LastUpdated = 2013-12-08
 //
 Contrast	Kontrast
 Brightness	Ljus
@@ -339,3 +339,29 @@ However this will fail if the current user has no administration privileges.	Det
 Insufficient rights to remove the restrictions. Continue?	Otillräckliga rättigheter för att ta bort restriktionerna. Vill du fortsätta?
 No image loaded!	Ingen bild inläst
 Right mouse button: Context menu	Höger musknapp: Kontextmeny
+Windows 8 blocks JPEGView from changing the default program for these file endings.	Windows 8 blockerar JPEGViews försök att ändra standardprogram för dessa filändelser.
+Use the 'Default Programs' configuration dialog from the operating system instead.	Använd istället operativsystemets inställningsdialog för 'Standardprogram'.
+Alternatively, right click an image file of the given type in Windows Explorer and select 'Open with... > Choose default program'	Alternativt, högerklicka på en bild i Utforskaren och välj 'Öppna med', samt välj önskat standardprogram.
+User commands	Användarkommandon
+Open image with	Öppna bild med
+Manage 'Open image with' menu...	Hantera menyn 'Öppna bild med'...
+Menu entries:	Menyposter:
+Title:	Namn:
+Application:	Program:
+Shortcut key:	Tangentbordsgenväg:
+Browse...	Bläddra...
+New	Ny
+Delete	Ta bort
+Modifier keys:	Modifierartangenter:
+Known keys:	Giltiga tangenter:
+Combine keys with '+'	Kombinera tangenter med '+'
+Example:	Exempel:
+Shortcut Help	Genvägshjälp
+[new entry]	[ny post]
+Applications	Program
+Select application	Välj program
+Save	Spara
+Edit	Redigera
+Upcounting	Stigande	
+Downcounting	Fallande	
+File size	Filstorlek

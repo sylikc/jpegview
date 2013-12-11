@@ -337,3 +337,29 @@ Insufficient rights to remove the restrictions. Continue?	Não possui privilégi
 Actual size of image	Tamanho real da imagem
 No image loaded!	Nenhuma imagem carregada!
 Right mouse button: Context menu	Botão direito do rato: menu de contexto
+Windows 8 blocks JPEGView from changing the default program for these file endings.	O Windows 8 não permite que o JPEGView modifique o programa pré-definido para este tipo de ficheiros.
+Use the 'Default Programs' configuration dialog from the operating system instead.  Utilize o diálogo de configuração "Programas pré-definidos" do sistema operativo.
+Alternatively, right click an image file of the given type in Windows Explorer and select 'Open with... > Choose default program' Em alternativa pode clicar com o botão direito do rato num ficheiro de imagem do tipo indicado no Windows Explorer e selecione 'Abrir com...' > 'Escolher programa pré-definido'
+User commands	Comandos do utilizador
+Open image with	Abrir imagem com
+Manage 'Open image with' menu...  Gerir menu 'Abrir imagem com'...
+Menu entries:	Entradas de menu:
+Title:	Título:
+Application:	Aplicação:
+Shortcut key:	Tecla de atalho:
+Browse...	Procurar...
+New	Nova
+Delete	Eliminar
+Modifier keys:	Teclas modificadoras:
+Known keys:	Teclas reconhecidas:
+Combine keys with '+'	Combinar teclas com '+'
+Example:	Exemplo:
+Shortcut Help	Ajuda de atalhos
+[new entry]	[nova entrada]
+Applications	Aplicações
+Select application	Escolha a aplicação
+Save	Gravar
+Edit	Editar
+Upcounting	Ascendente
+Downcounting	Descendente
+File size	Tamanho do ficheiro
