@@ -336,3 +336,29 @@ However this will fail if the current user has no administration privileges.	Com
 Insufficient rights to remove the restrictions. Continue?	Permessi insufficenti per rimuovere le restrizioni. Continuare?
 No image loaded!	Nessuna immagine caricata!
 Right mouse button: Context menu	Tasto destro mouse: Menu contestuale
+Windows 8 blocks JPEGView from changing the default program for these file endings.	Windows 8 impedisce a JPEGView di cambiare il programma di default per le seguenti estensioni.
+Use the 'Default Programs' configuration dialog from the operating system instead.	Usare la videata per la definizione dei programmi predefiniti presente nel sistema operativo.
+Alternatively, right click an image file of the given type in Windows Explorer and select 'Open with... > Choose default program'	In alternativa, da 'Esplora Risorse', cliccare con il tasto destro sul file interessato e selezionare 'Apri con...' > 'Programma Predefinito'
+User commands	Comandi utente
+Open image with	Apri immagine con
+Manage 'Open image with' menu...	Organizza menu 'Apri immagine con...'
+Menu entries:	Opzioni Menu:
+Title:	Titolo:
+Application:	Applicazione:
+Shortcut key:	Tasto di scelta rapida:
+Browse...	Sfoglia...
+New	Nuovo
+Delete	Cancella
+Modifier keys:	 Tasti di modifica
+Known keys:	Tasti standard
+Combine keys with '+'	Combina i tasti con '+'
+Example:	Esempio:
+Shortcut Help	Aiuto per scorciatoie
+[new entry]	[nuova voce]
+Applications	Applicazioni
+Select application	Seleziona applicazione
+Save	Salva
+Edit	Modifica
+Upcounting	Crescente
+Downcounting	Decrescente
+File size	Dimensione File
