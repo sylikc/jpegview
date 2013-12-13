@@ -103,6 +103,7 @@ public:
 	
 	void SetPosition(CRect position) { m_position = position; }
 protected:
+	virtual void PreDraw(CDC & dc, CRect position);
 	virtual void Draw(CDC & dc, CRect position, bool bBlack) = 0;
 	
 	CPanel* m_pPanel;
@@ -233,6 +234,7 @@ public:
 	virtual bool OnMouseMove(int nX, int nY);
 
 protected:
+	virtual void PreDraw(CDC & dc, CRect position);
 	virtual void Draw(CDC & dc, CRect position, bool bBlack);
 
 private:

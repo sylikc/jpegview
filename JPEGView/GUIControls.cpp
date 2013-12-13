@@ -46,6 +46,7 @@ void CUICtrl::OnPaint(CDC & dc, const CPoint& offset) {
 
 	CRect pos(m_position);
 	pos.OffsetRect(offset);
+	PreDraw(dc, pos);
 	pos.OffsetRect(-1, 0); Draw(dc, pos, true);
 	pos.OffsetRect(2, 0); Draw(dc, pos, true);
 	pos.OffsetRect(-1, -1); Draw(dc, pos, true);
@@ -70,6 +71,9 @@ void CUICtrl::SetTooltip(LPCTSTR sTooltipText) {
 
 void CUICtrl::SetTooltipHandler(TooltipHandler ttHandler, void* pContext) {
 	m_pPanel->GetTooltipMgr().AddTooltipHandler(this, ttHandler, pContext);
+}
+
+void CUICtrl::PreDraw(CDC & dc, CRect position) {
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////
@@ -360,7 +364,7 @@ bool CButtonCtrl::OnMouseMove(int nX, int nY) {
 	return false;
 }
 
-void CButtonCtrl::Draw(CDC & dc, CRect position, bool bBlack) {
+void CButtonCtrl::PreDraw(CDC & dc, CRect position) {
 	// dim the button background if requested
 	if (m_dimmingFactor > 1e-6f) {
 		CDC memDCblack;
@@ -377,7 +381,9 @@ void CButtonCtrl::Draw(CDC & dc, CRect position, bool bBlack) {
 		blendFunc.AlphaFormat = 0;
 		dc.AlphaBlend(position.left, position.top, position.Width(), position.Height(), memDCblack, 0, 0, position.Width(), position.Height(), blendFunc);
 	}
+}
 
+void CButtonCtrl::Draw(CDC & dc, CRect position, bool bBlack) {
 	dc.SelectStockBrush(HOLLOW_BRUSH);
 	HPEN hPen, hOldPen;
 	HPEN hPen2 = NULL;
