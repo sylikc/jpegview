@@ -349,8 +349,8 @@ Shortcut key:	Tasto di scelta rapida:
 Browse...	Sfoglia...
 New	Nuovo
 Delete	Cancella
-Modifier keys:	 Tasti di modifica
-Known keys:	Tasti standard
+Modifier keys:	 Tasti di modifica:
+Known keys:	Tasti standard:
 Combine keys with '+'	Combina i tasti con '+'
 Example:	Esempio:
 Shortcut Help	Aiuto per scorciatoie
@@ -361,4 +361,4 @@ Save	Salva
 Edit	Modifica
 Upcounting	Crescente
 Downcounting	Decrescente
-File size	Dimensione File
+File size	Dimensione file
