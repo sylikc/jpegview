@@ -298,7 +298,7 @@ void CNavigationPanelCtl::SetMouseInNavPanel(bool value) {
 		for (iter = controls.begin(); iter != controls.end( ); iter++ ) {
 			CButtonCtrl* pButton = dynamic_cast<CButtonCtrl*>(iter->second);
 			if (pButton != NULL) {
-				pButton->SetDimmingFactor(m_bMouseInNavPanel ? 0.12f : 0.0f);
+				pButton->SetDimmingFactor(m_bMouseInNavPanel ? 0.5f : 0.0f);
 			}
 		}
 	}
