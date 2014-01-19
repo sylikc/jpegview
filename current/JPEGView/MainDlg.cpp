@@ -2008,20 +2008,27 @@ void CMainDlg::ExecuteUserCommand(CUserCommand* pUserCommand) {
 		bool bReloadCurrent = false;
 		// First go to next, then execute the command and reload current file.
         // Otherwise we get into troubles when the current image was deleted or moved.
+		CFileList* oldFileList = m_pFileList;
 		if (pUserCommand->MoveToNextAfterCommand()) {
             // don't send a request if we reload all, it would be canceled anyway later
 			GotoImage(POS_AwayFromCurrent, pUserCommand->NeedsReloadAll() ? NO_REQUEST : 0);
 		}
         if (pUserCommand->Execute(this->m_hWnd, sCurrentFileName)) {
+			if (pUserCommand->NeedsReloadAll() || pUserCommand->NeedsReloadFileList()) {
+				m_pFileList->Reload(NULL, false);
+				if (oldFileList != m_pFileList) {
+					// If GotoImage(POS_AwayFromCurrent) changed the file list, the old file list also needs to be reloaded
+					oldFileList->Reload(NULL, false);
+				}
+				m_pFileList->DeleteHistory(true);
+			}
 			if (pUserCommand->NeedsReloadAll()) {
-				m_pFileList->Reload();
 				m_pJPEGProvider->NotifyNotUsed(m_pCurrentImage);
 				m_pJPEGProvider->ClearAllRequests();
 				m_pCurrentImage = NULL;
 				bReloadCurrent = true;
 			} else {
 				if (pUserCommand->NeedsReloadFileList()) {
-					m_pFileList->Reload();
 					bReloadCurrent = m_pFileList->Current() == NULL; // needs "reload" in this case
                     Invalidate();
 				}

@@ -27,6 +27,9 @@ to JPEGView\Debug
 Changelog
 *********
 
+[1.0.31.1]
+Bugs fixed:
+- Fixed crash when deleting files in 'Show folders and subfolders' navigation mode
 [1.0.31]
 Bugs fixed:
 - Read ahead no longer turned off when failed to read one image

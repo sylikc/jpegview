@@ -246,6 +246,7 @@ void CFileList::Reload(LPCTSTR sFileName, bool clearForwardHistory) {
 	if (sCurrent == NULL) {
 		sCurrent = Current();
 		if (sCurrent == NULL) {
+			m_fileList.clear();
 			return;
 		}
 	}
@@ -258,6 +259,7 @@ void CFileList::Reload(LPCTSTR sFileName, bool clearForwardHistory) {
 		while (pFileList != NULL && pFileList->m_prev != NULL) {
 			CFileList* thisList = pFileList;
 			pFileList = pFileList->m_next;
+			thisList->m_bDeleteHistory = false;
 			delete thisList;
 		}
 		m_next = NULL;
@@ -541,11 +543,7 @@ bool CFileList::CanOpenCurrentFileForReading() const
 	return false;
 }
 
-///////////////////////////////////////////////////////////////////////////////////
-// Private
-///////////////////////////////////////////////////////////////////////////////////
-
-void CFileList::DeleteHistory() {
+void CFileList::DeleteHistory(bool onlyForward) {
 	// delete the chain of CFileLists forward and backward and only leave the current node alive
 	CFileList* pFileList = this->m_next;
 	while (pFileList != NULL && pFileList->m_prev != NULL) {
@@ -554,16 +552,23 @@ void CFileList::DeleteHistory() {
 		thisList->m_bDeleteHistory = false; // prevent multiple delete
 		delete thisList;
 	}
-	pFileList = this->m_prev;
-	while (pFileList != NULL) {
-		CFileList* thisList = pFileList;
-		pFileList = pFileList->m_prev;
-		thisList->m_bDeleteHistory = false;  // prevent multiple delete
-		delete thisList;
+	if (!onlyForward) {
+		pFileList = this->m_prev;
+		while (pFileList != NULL) {
+			CFileList* thisList = pFileList;
+			pFileList = pFileList->m_prev;
+			thisList->m_bDeleteHistory = false;  // prevent multiple delete
+			delete thisList;
+		}
+		m_prev = NULL;
 	}
 	m_next = NULL;
-	m_prev = NULL;
+	
 }
+
+///////////////////////////////////////////////////////////////////////////////////
+// Private
+///////////////////////////////////////////////////////////////////////////////////
 
 void CFileList::MoveIterToLast() {
 	std::list<CFileDesc>::iterator lastIter = m_iter;

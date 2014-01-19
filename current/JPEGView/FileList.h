@@ -135,6 +135,9 @@ public:
 	// Returns the raw file list of the current folder
 	std::list<CFileDesc> & GetFileList() { return m_fileList; }
 
+	// delete the chain of CFileLists forward and backward and only leave the current node alive
+	void DeleteHistory(bool onlyForward = false);
+
 private:
 	static Helpers::ENavigationMode sm_eMode;
 
@@ -158,7 +161,6 @@ private:
 
     CDirectoryWatcher & m_directoryWatcher;
 
-	void DeleteHistory();
 	void MoveIterToLast();
 	void NextInFolder();
 	std::list<CFileDesc>::iterator FindFile(const CString& sName);
