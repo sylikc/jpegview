@@ -774,6 +774,7 @@ CString GetFileInfoString(LPCTSTR sFormat, CJPEGImage* pImage, CFileList* pFilel
     }
     
     CString sFileInfo(sFormat);
+	sFileInfo.Replace(_T("\\t"), _T("        "));
     if (_tcsstr(sFormat, _T("<f>")) != NULL) {
         CString sFileName = isClipboardImage ? _T("Clipboard Image") : pFilelist->CurrentFileTitle() + GetMultiframeIndex(pImage);
         sFileInfo.Replace(_T("<f>"), sFileName);
@@ -809,7 +810,6 @@ CString GetFileInfoString(LPCTSTR sFormat, CJPEGImage* pImage, CFileList* pFilel
         }
         sFileInfo.Replace(_T("<l>"), sFileSize);
     }
-    sFileInfo.Replace(_T("\\t"), _T("        "));
     sFileInfo.TrimLeft();
     sFileInfo.TrimRight();
     return sFileInfo;
