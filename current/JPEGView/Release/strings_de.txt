@@ -133,7 +133,7 @@ Rotate 180	Rotieren 180
 Auto correction	Auto-Korrektur
 Local density correction	Lokale Helligkeitskorrektur
 Keep parameters	Parameter beibehalten
-Save parameters to INI...	Parameter in INI Datei speichern...
+Set current parameters as default values...	Aktuelle Parameter als Standardwerte setzen...
 Save parameters to DB	In Parameter DB speichern
 Clear parameters from DB	Aus Parameter DB löschen
 Zoom	Zoom
