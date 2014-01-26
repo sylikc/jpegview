@@ -56,15 +56,15 @@ FileNameColor=255 255 255
 ; Example: DefaultGUIFont="Arial" 9.0 bold
 DefaultGUIFont=Default
 
-; Initial fixed contrast correction to apply to all images. Must be in -0.5 .. 0.5
+; Contrast correction to apply to all images. Must be in -0.5 .. 0.5
 ; Values > 0 increase contrast, values < 0 decrease contrast
 Contrast=0.0
 
-; Initial fixed gamma correction to apply to all images. Must be between 0.5 and 2
+; Gamma correction to apply to all images. Must be between 0.5 and 2
 ; Use gamma<1 to increase brightness and gamma>1 to decrease brightness
 Gamma=1.0
 
-; Color saturation. Must be in 0.0 .. 2.0
+; Color saturation to apply to all images. Must be in 0.0 .. 2.0
 ; 0.0 means gray scale image, 1.0 no additional color saturation, 2.0 maximal saturation
 Saturation=1.0
 
@@ -92,7 +92,7 @@ YellowBlue=0.0
 HighQualityResampling=true
 
 ; Start in full screen or windowed mode
-; 'true' or 'false' to always start in fullscreen, respectively windowed mode
+; 'true' or 'false' to always start in full screen, respectively windowed mode
 ; 'auto' to choose best mode depending on image size of first image - windowed when it is small, full screen when it is large
 ShowFullScreen=auto
 
@@ -110,12 +110,12 @@ StickyWindowRect=
 ; The initial crop window size when using 'Fixed Size' crop mode
 DefaultFixedCropSize=320 200
 
-; Set to true to initially display the filename of each image in the upper, left corner of the screen
+; Set to true to initially display the file name of each image in the upper, left corner of the screen
 ShowFileName=false
 
 ; The elements to show when showing the file name.
 ; Possible elements:
-; %filename% : file name
+; %filename% : File name
 ; %filepath% : File name and path
 ; %index%    : Index of image in folder, e.g. [1/12]
 ; %zoom%     : Current zoom factor
