@@ -23,12 +23,18 @@ namespace HelpersGUI {
 	// Scaling factor from screen DPI, 96 dpi -> 1.0, 120 dpi -> 1.2
 	extern float ScreenScaling;
 
+	// Scales a pixel value given in 96 DPI to screen pixels, taking the screen DPI into account
+	int ScaleToScreen(int value);
+
 	// Creates a bold version of the font that is currently selected in the given DC
 	// The caller is responsible for deleting the returned font when no longer used
 	HFONT CreateBoldFontOfSelectedFont(CDC & dc);
 
 	// Selects the default GUI font into the given DC.
 	void SelectDefaultGUIFont(HDC dc);
+
+	// Selectes the default system font
+	void SelectDefaultSystemFont(HDC dc);
 
 	// Selects the default file name font into the given DC.
 	void SelectDefaultFileNameFont(HDC dc);
@@ -38,6 +44,9 @@ namespace HelpersGUI {
 
 	// Draws a text with a black outline to improve readability
 	void DrawTextBordered(CDC& dc, LPCTSTR sText, const CRect& rect, UINT nFormat);
+
+	// Draws a rectangle with line width 1 pixel, respectively 2 pixels for high resolution DPI (> 196 dpi)
+	void DrawRectangle(CDC & dc, const CRect& rect);
 
 	// Draws a 32 bit DIB centered in the given target area, filling the remaining area with the given brush
 	// The bmInfo struct will be initialized by this method and does not need to be preinitialized.

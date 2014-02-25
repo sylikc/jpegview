@@ -7,9 +7,10 @@
 #include "SettingsProvider.h"
 #include "Panel.h"
 
-CZoomNavigatorCtl::CZoomNavigatorCtl(CMainDlg* pMainDlg, CPanel* pImageProcPanel) {
+CZoomNavigatorCtl::CZoomNavigatorCtl(CMainDlg* pMainDlg, CPanel* pImageProcPanel, CPanel* pNavigationPanel) {
 	m_pMainDlg = pMainDlg;
 	m_pImageProcPanel = pImageProcPanel;
+	m_pNavigationPanel = pNavigationPanel;
 	m_bDragging = false;
 	m_capturedPosZoomNavSection = CPoint(0, 0);
 }
@@ -39,7 +40,7 @@ bool CZoomNavigatorCtl::IsActive() {
 
 CRect CZoomNavigatorCtl::PanelRect() {
 	if (IsActive()) {
-		CRect rect = CZoomNavigator::GetNavigatorRect(m_pMainDlg->GetCurrentImage(), m_pImageProcPanel->PanelRect());
+		CRect rect = CZoomNavigator::GetNavigatorRect(m_pMainDlg->GetCurrentImage(), m_pImageProcPanel->PanelRect(), m_pNavigationPanel->PanelRect());
 		rect.InflateRect(1, 1);
 		return rect;
 	}
@@ -56,7 +57,7 @@ void CZoomNavigatorCtl::DoDragging(int nDeltaX, int nDeltaY) {
 		const CSize& virtualImageSize = m_pMainDlg->VirtualImageSize();
 		int nNewX = m_capturedPosZoomNavSection.x + nDeltaX;
 		int nNewY = m_capturedPosZoomNavSection.y + nDeltaY;
-		CRect fullRect = CZoomNavigator::GetNavigatorRect(m_pMainDlg->GetCurrentImage(), m_pImageProcPanel->PanelRect());
+		CRect fullRect = CZoomNavigator::GetNavigatorRect(m_pMainDlg->GetCurrentImage(), m_pImageProcPanel->PanelRect(), m_pNavigationPanel->PanelRect());
 		CPoint newOffsets = CJPEGImage::ConvertOffset(fullRect.Size(), m_zoomNavigator.LastVisibleRect().Size(), CPoint(nNewX - fullRect.left, nNewY - fullRect.top));
 		m_pMainDlg->PerformPan((int)(newOffsets.x * (float)virtualImageSize.cx/fullRect.Width()), 
 			(int)(newOffsets.y * (float)virtualImageSize.cy/fullRect.Height()), true);
@@ -116,7 +117,7 @@ void CZoomNavigatorCtl::OnPaint(CPaintDC& paintDC, CRectF visRectZoomNavigator, 
 								EProcessingFlags eProcessingFlags, double dRotationAngle, const CTrapezoid* pTrapezoid) {
 	if (IsVisible()) {
 		m_zoomNavigator.PaintZoomNavigator(m_pMainDlg->GetCurrentImage(), visRectZoomNavigator,
-			CZoomNavigator::GetNavigatorRect(m_pMainDlg->GetCurrentImage(), m_pImageProcPanel->PanelRect()),
+			CZoomNavigator::GetNavigatorRect(m_pMainDlg->GetCurrentImage(), m_pImageProcPanel->PanelRect(), m_pNavigationPanel->PanelRect()),
 			m_pMainDlg->GetMousePos(), *pImageProcParams, eProcessingFlags, 
 			dRotationAngle, pTrapezoid, paintDC);
 	} else {
@@ -132,7 +133,7 @@ void CZoomNavigatorCtl::InvalidateZoomNavigatorRect() {
 
 bool CZoomNavigatorCtl::IsPointInZoomNavigatorThumbnail(const CPoint& pt) {
 	if (IsVisible()) {
-		CRect rect = CZoomNavigator::GetNavigatorRect(m_pMainDlg->GetCurrentImage(), m_pImageProcPanel->PanelRect());
+		CRect rect = CZoomNavigator::GetNavigatorRect(m_pMainDlg->GetCurrentImage(), m_pImageProcPanel->PanelRect(), m_pNavigationPanel->PanelRect());
 		return rect.PtInRect(pt);
 	}
 	return false;

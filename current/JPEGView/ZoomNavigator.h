@@ -29,8 +29,9 @@ public:
 	static CRectF GetVisibleRect(CSize sizeFull, CSize sizeClipped, CPoint offset);
 
 	// Gets the position of the navigator rectangle (thumbnail image rect) în client coordinates.
-	// The zoom navigator is placed relative to the image processing panel rectangle (panelRect)
-	static CRect GetNavigatorRect(CJPEGImage* pImage, const CRect& panelRect);
+	// The zoom navigator is placed relative to the image processing panel rectangle (panelRect) and
+	// the navigator panel rectangle (navigatorRect)
+	static CRect GetNavigatorRect(CJPEGImage* pImage, const CRect& panelRect, const CRect& navigatorRect);
 
 	// Gets the maximal bounds of the navigator
 	static CRect GetNavigatorBound(const CRect& panelRect);
@@ -60,4 +61,6 @@ private:
 	CRect m_lastSectionRect;
 	CRect m_lastNavigatorRect;
 	CPoint m_lastPanRectPoint;
+
+	static CSize GetThumbSize(int width);
 };

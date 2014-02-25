@@ -2,6 +2,7 @@
 #include "TransformPanel.h"
 #include "ImageProcessingPanel.h"
 #include "Helpers.h"
+#include "HelpersGUI.h"
 #include "NLS.h"
 
 #define PANEL_BORDER 12
@@ -128,7 +129,7 @@ void CTransformPanel::PaintAutoCropBtn(void* pContext, const CRect& rect, CDC& d
 
 void CTransformPanel::PaintKeepARBtn(void* pContext, const CRect& rect, CDC& dc) {
 	CFont font;
-	font.CreatePointFont(1200 * rect.Width() / 300, _T("Arial"), dc, true, false);
+	font.CreatePointFont((int)(1200 * rect.Width() / 300 / HelpersGUI::ScreenScaling), _T("Arial"), dc, true, false);
 	HFONT oldFont = dc.SelectFont(font);
 	dc.DrawText(_T("AR"), 2, (LPRECT)&rect, DT_CENTER | DT_VCENTER | DT_SINGLELINE | DT_NOCLIP);
 	dc.SelectFont(oldFont);

@@ -31,8 +31,11 @@ Changelog
 Bugs fixed:
 - Fixed crash when deleting files in 'Show folders and subfolders' navigation mode
 - Filenames with \t in path are now displayed correctly when using customized file name display format
+New features:
+- JPEGView is now fully high DPI capable (e.g. 200 % -> 192 dpi) and scales all GUI elements properly to high DPI settings.
+  This fixes problems on high DPI screens.
 Other changes:
-- Moved menu item to store current paramters as default in INI file to 'Setting/Configuration' submenu
+- Moved menu item to store current parameters as default in INI file to 'Setting/Configuration' submenu
 
 [1.0.31]
 Bugs fixed:

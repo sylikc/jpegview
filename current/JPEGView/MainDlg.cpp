@@ -290,10 +290,9 @@ void CMainDlg::SetStartupInfo(LPCTSTR sStartupFile, int nAutostartSlideShow, Hel
 LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/) {	
 	UpdateWindowTitle();
 
-	// get the scaling of the screen (DPI) compared to 96 DPI (design value)
+	// set the scaling of the screen (DPI) compared to 96 DPI (design value)
 	CPaintDC dc(this->m_hWnd);
-	m_fScaling = ::GetDeviceCaps(dc, LOGPIXELSX)/96.0f;
-	HelpersGUI::ScreenScaling = m_fScaling;
+	HelpersGUI::ScreenScaling = ::GetDeviceCaps(dc, LOGPIXELSX)/96.0f;
 
     ::SetClassLongPtr(m_hWnd, GCLP_HCURSOR, NULL);
 
@@ -338,7 +337,7 @@ LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam
 	m_pPanelMgr->AddPanelController(m_pInfoButtonPanelCtl);
 
 	// Create zoom navigator
-	m_pZoomNavigatorCtl = new CZoomNavigatorCtl(this, m_pImageProcPanelCtl->GetPanel());
+	m_pZoomNavigatorCtl = new CZoomNavigatorCtl(this, m_pImageProcPanelCtl->GetPanel(), m_pNavPanelCtl->GetPanel());
 
 	// set icons (for toolbar)
 	HICON hIcon = (HICON)::LoadImage(_Module.GetResourceInstance(), MAKEINTRESOURCE(IDR_MAINFRAME), 
@@ -505,7 +504,7 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 	memDCMgr.IncludeIntoClippingRegion(dc, excludedClippingRects);
 
 	// paint zoom navigator
-	CTrapezoid trapezoid = m_pTiltCorrectionPanelCtl->IsVisible() ? m_pTiltCorrectionPanelCtl->GetCurrentTrapezoid(CZoomNavigator::GetNavigatorRect(m_pCurrentImage, m_pImageProcPanelCtl->PanelRect()).Size()) : CTrapezoid();
+	CTrapezoid trapezoid = m_pTiltCorrectionPanelCtl->IsVisible() ? m_pTiltCorrectionPanelCtl->GetCurrentTrapezoid(CZoomNavigator::GetNavigatorRect(m_pCurrentImage, m_pImageProcPanelCtl->PanelRect(), m_pNavPanelCtl->PanelRect()).Size()) : CTrapezoid();
 	m_pZoomNavigatorCtl->OnPaint(dc, visRectZoomNavigator, m_pImageProcParams,
 		CreateProcessingFlags(!m_pRotationPanelCtl->IsVisible() && !m_pTiltCorrectionPanelCtl->IsVisible(), m_bAutoContrast, false, m_bLDC, false, m_bLandscapeMode), 
 		m_pRotationPanelCtl->IsVisible() ? m_pRotationPanelCtl->GetLQRotationAngle() : 0.0, 
@@ -620,7 +619,7 @@ void CMainDlg::BlendBlackRect(CDC & targetDC, CPanel& panel, float fBlendFactor)
 void CMainDlg::DisplayErrors(CJPEGImage* pCurrentImage, const CRect& clientRect, CDC& dc) {
     dc.SetTextColor(CSettingsProvider::This().ColorGUI());
 	if (m_sStartupFile.IsEmpty() && m_pCurrentImage == NULL) {
-		CRect rectText(0, clientRect.Height()/2 - Scale(40), clientRect.Width(), clientRect.Height());
+		CRect rectText(0, clientRect.Height()/2 - HelpersGUI::ScaleToScreen(40), clientRect.Width(), clientRect.Height());
         if (m_isBeforeFileSelected) {
 		    dc.DrawText(CNLS::GetString(_T("Select file to display in 'File Open' dialog")), -1, &rectText, DT_CENTER | DT_WORDBREAK | DT_NOPREFIX);
         } else {
@@ -644,7 +643,7 @@ void CMainDlg::DisplayFileName(const CRect& imageProcessingArea, CDC& dc) {
 	if (m_bShowFileName) {
 		HelpersGUI::SelectDefaultFileNameFont(dc);
 		CString sFileName = Helpers::GetFileInfoString(CSettingsProvider::This().FileNameFormat(), m_pCurrentImage, m_pFileList, m_dZoom);
-		HelpersGUI::DrawTextBordered(dc, sFileName, CRect(Scale(2) + imageProcessingArea.left, 0, imageProcessingArea.right, Scale(30)), DT_LEFT); 
+		HelpersGUI::DrawTextBordered(dc, sFileName, CRect(HelpersGUI::ScaleToScreen(2) + imageProcessingArea.left, 0, imageProcessingArea.right, HelpersGUI::ScaleToScreen(30)), DT_LEFT); 
 	}
 }
 
@@ -652,12 +651,12 @@ LRESULT CMainDlg::OnSize(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BO
 	bool bKeepFitToScreen = !m_bResizeForNewImage && fabs(m_dZoom - GetZoomFactorForFitToScreen(false, false)) < 0.01;
 	this->GetClientRect(&m_clientRect);
 	this->Invalidate(FALSE);
-	if (m_clientRect.Width() < 800) {
+	if (m_clientRect.Width() < HelpersGUI::ScaleToScreen(800)) {
 		m_bShowHelp = false;
 		m_pImageProcPanelCtl->SetVisible(false);
 	}
 	if (m_pNavPanelCtl != NULL) {
-		m_pNavPanelCtl->AdjustMaximalWidth(m_clientRect.Width() - 16);
+		m_pNavPanelCtl->AdjustMaximalWidth(m_clientRect.Width() - HelpersGUI::ScaleToScreen(16));
 	}
 	m_nMouseX = m_nMouseY = -1;
 
@@ -1235,7 +1234,7 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 	switch (nCommand) {
 		case IDM_HELP:
 			m_bShowHelp = !m_bShowHelp;
-			if (m_clientRect.Width() < 800 || m_pCropCtl->IsCropping()) {
+			if (m_clientRect.Width() < HelpersGUI::ScaleToScreen(800) || m_pCropCtl->IsCropping()) {
 				m_bShowHelp = false;
 			}
 			this->Invalidate(FALSE);
@@ -2760,18 +2759,18 @@ void CMainDlg::ToggleMonitor() {
 }
 
 CRect CMainDlg::GetZoomTextRect(CRect imageProcessingArea) {
-	int nZoomTextRectBottomOffset = (m_clientRect.Width() < 800) ? 25 : ZOOM_TEXT_RECT_OFFSET;
-	int nStartX = imageProcessingArea.right - Scale(ZOOM_TEXT_RECT_WIDTH + ZOOM_TEXT_RECT_OFFSET);
+	int nZoomTextRectBottomOffset = (m_clientRect.Width() < HelpersGUI::ScaleToScreen(800)) ? 25 : ZOOM_TEXT_RECT_OFFSET;
+	int nStartX = imageProcessingArea.right - HelpersGUI::ScaleToScreen(ZOOM_TEXT_RECT_WIDTH + ZOOM_TEXT_RECT_OFFSET);
 	if (m_pImageProcPanelCtl->IsVisible()) {
 		nStartX = max(nStartX, m_pImageProcPanelCtl->GetUnsharpMaskButtonRect().right);
 	}
-	int nEndX = nStartX + Scale(ZOOM_TEXT_RECT_WIDTH);
+	int nEndX = nStartX + HelpersGUI::ScaleToScreen(ZOOM_TEXT_RECT_WIDTH);
 	if (m_pImageProcPanelCtl->IsVisible()) {
 		nEndX = min(nEndX, imageProcessingArea.right - 2);
 	}
 	return CRect(nStartX, 
-		imageProcessingArea.bottom - Scale(ZOOM_TEXT_RECT_HEIGHT + nZoomTextRectBottomOffset), 
-		nEndX, imageProcessingArea.bottom - Scale(nZoomTextRectBottomOffset));
+		imageProcessingArea.bottom - HelpersGUI::ScaleToScreen(ZOOM_TEXT_RECT_HEIGHT + nZoomTextRectBottomOffset), 
+		nEndX, imageProcessingArea.bottom - HelpersGUI::ScaleToScreen(nZoomTextRectBottomOffset));
 }
 
 void CMainDlg::EditINIFile(bool bGlobalINI) {

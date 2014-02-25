@@ -512,8 +512,8 @@ CRect GetWindowRectMatchingImageSize(HWND hWnd, CSize minSize, CSize maxSize, do
 	dZoom = ((double)(nRequiredWidth - nBorderWidth))/nOrigWidthUnzoomed;
 	CRect wndRect;
 	::GetWindowRect(hWnd, &wndRect);
-	int nNewLeft = wndRect.CenterPoint().x - nRequiredWidth / 2;
-	int nNewTop = wndRect.CenterPoint().y - nRequiredHeight / 2;
+	int nNewLeft = (wndRect.left + wndRect.right - nRequiredWidth) / 2;
+	int nNewTop = (wndRect.top + wndRect.bottom - nRequiredHeight) / 2;
 	nNewLeft = max(workingArea.left, min(workingArea.right - nRequiredWidth, nNewLeft));
 	nNewTop = max(workingArea.top, min(workingArea.bottom - nRequiredHeight, nNewTop));
 	CRect windowRect;

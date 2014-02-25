@@ -4,7 +4,7 @@
 // to the given window.
 class CDirectoryWatcher {
 public:
-    // The messages are set to the given window.
+    // The messages are sent to the given window.
     CDirectoryWatcher(HWND hTargetWindow);
     virtual ~CDirectoryWatcher(void);
 
