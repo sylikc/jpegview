@@ -5,13 +5,27 @@
 #include "BasicProcessing.h"
 #include <gdiplus.h>
 
-void CClipboard::CopyImageToClipboard(HWND hWnd, CJPEGImage * pImage) {
+static void CopyOriginalFileNameToClipboard(LPCWSTR filename) {
+	int fileNameLength = wcslen(filename);
+    DWORD fileNameLengthBytes = sizeof(wchar_t) * (fileNameLength + 1);
+    DROPFILES df = {sizeof(DROPFILES), {0, 0}, 0, TRUE};
+    HGLOBAL hMem = ::GlobalAlloc(GMEM_ZEROINIT|GMEM_MOVEABLE|GMEM_DDESHARE, sizeof(DROPFILES) + fileNameLengthBytes + sizeof(wchar_t)); // for double NULL char
+    int offset = sizeof(DROPFILES) / sizeof(wchar_t);
+	WCHAR *pGlobal = (WCHAR *) ::GlobalLock(hMem);
+    ::CopyMemory(pGlobal, &df, sizeof(DROPFILES));
+    ::CopyMemory(pGlobal + offset, filename, fileNameLengthBytes); // that's pGlobal + 20 bytes (the size of DROPFILES);
+	pGlobal[offset + fileNameLength + 1] = 0; // add additional NULL character
+    ::GlobalUnlock(hMem);
+    ::SetClipboardData(CF_HDROP, hMem);
+}
+
+void CClipboard::CopyImageToClipboard(HWND hWnd, CJPEGImage * pImage, LPCTSTR fileName) {
 	if (pImage == NULL || pImage->DIBPixelsLastProcessed(true) == NULL) {
 		return;
 	}
 
 	pImage->EnableDimming(false);
-	DoCopy(hWnd, pImage->DIBWidth(), pImage->DIBHeight(), pImage->DIBPixelsLastProcessed(true));
+	DoCopy(hWnd, pImage->DIBWidth(), pImage->DIBHeight(), pImage->DIBPixelsLastProcessed(true), pImage->IsClipboardImage() ? NULL : fileName);
 	pImage->EnableDimming(true);
 }
 
@@ -33,7 +47,7 @@ void CClipboard::CopyFullImageToClipboard(HWND hWnd, CJPEGImage * pImage, const 
 
 	pImage->EnableDimming(false);
 	void* pDIB = pImage->GetDIB(pImage->OrigSize(), clipRect.Size(), clipRect.TopLeft(), procParams, eFlags);
-	DoCopy(hWnd, clipRect.Width(), clipRect.Height(), pDIB);
+	DoCopy(hWnd, clipRect.Width(), clipRect.Height(), pDIB, NULL);
 	pImage->EnableDimming(true);
 }
 
@@ -80,7 +94,7 @@ CJPEGImage* CClipboard::PasteImageFromClipboard(HWND hWnd, const CImageProcessin
 }
 
 
-void CClipboard::DoCopy(HWND hWnd, int nWidth, int nHeight, const void* pSourceImageDIB32) {
+void CClipboard::DoCopy(HWND hWnd, int nWidth, int nHeight, const void* pSourceImageDIB32, LPCTSTR fileName) {
 	if (!::OpenClipboard(hWnd)) {
         return;
 	}
@@ -115,7 +129,11 @@ void CClipboard::DoCopy(HWND hWnd, int nWidth, int nHeight, const void* pSourceI
 	CBasicProcessing::Convert32bppTo24bppDIB(nWidth, nHeight, pDIBPixelsTarget, pSourceImageDIB32, true);
 
 	::GlobalUnlock(hMem); 
-	::SetClipboardData(CF_DIB, hMem); 
+	::SetClipboardData(CF_DIB, hMem);
+
+	if (fileName != NULL) {
+		CopyOriginalFileNameToClipboard(fileName);
+	}
 
 	::CloseClipboard();
 }

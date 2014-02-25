@@ -34,6 +34,7 @@ Bugs fixed:
 New features:
 - JPEGView is now fully high DPI capable (e.g. 200 % -> 192 dpi) and scales all GUI elements properly to high DPI settings.
   This fixes problems on high DPI screens.
+- Ctrl-C also copies the file name to the clipboard so that Windows Explorer pastes the original file
 Other changes:
 - Moved menu item to store current parameters as default in INI file to 'Setting/Configuration' submenu
 

@@ -8,7 +8,7 @@ class CJPEGImage;
 class CClipboard {
 public:
 	// Copies the image pixels of the currently visible rectangle of the image as a 24 bpp DIB to the clipboard
-	static void CopyImageToClipboard(HWND hWnd, CJPEGImage * pImage);
+	static void CopyImageToClipboard(HWND hWnd, CJPEGImage * pImage, LPCTSTR fileName);
 
 	// Copy processed full size image to clipboard
 	static void CopyFullImageToClipboard(HWND hWnd, CJPEGImage * pImage, const CImageProcessingParams& procParams,
@@ -24,5 +24,5 @@ public:
 private:
 	CClipboard(void);
 
-	static void DoCopy(HWND hWnd, int nWidth, int nHeight, const void* pSourceImageDIB32);
+	static void DoCopy(HWND hWnd, int nWidth, int nHeight, const void* pSourceImageDIB32, LPCTSTR fileName);
 };
