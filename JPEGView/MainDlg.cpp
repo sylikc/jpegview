@@ -248,7 +248,6 @@ CMainDlg::CMainDlg(bool bForceFullScreen) {
 	m_bMouseOn = false;
     m_bKeepParametersBeforeAnimation = false;
     m_bIsAnimationPlaying = false;
-	m_fScaling = 1.0f;
     m_bUseLosslessWEBP = false;
     m_isBeforeFileSelected = true;
 
@@ -1271,7 +1270,7 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 			break;
 		case IDM_COPY:
 			if (m_pCurrentImage != NULL) {
-				CClipboard::CopyImageToClipboard(this->m_hWnd, m_pCurrentImage);
+				CClipboard::CopyImageToClipboard(this->m_hWnd, m_pCurrentImage, m_pFileList->Current());
 			}
 			break;
 		case IDM_COPY_FULL:
