@@ -226,9 +226,6 @@ private:
 	CJPEGImage * m_pCurrentImage; // currently displayed image
 	bool m_bOutOfMemoryLastImage; // true if the last image could not be requested because not enough memory
 	int m_nLastLoadError; // one of HelpersGUI::EFileLoadError
-
-	// DPI scaling factor, 1.0 for 96 DPI
-	float m_fScaling;
 	
 	// Current parameter set
 	int m_nRotation; // this can only be 0, 90, 180 or 270
@@ -343,7 +340,6 @@ private:
 	void ExchangeProcessingParams();
 	void SaveParameters();
 	void AfterNewImageLoaded(bool bSynchronize, bool bAfterStartup);
-	int Scale(int nValue) { return (int)(m_fScaling*nValue); }
 	CRect ScreenToDIB(const CSize& sizeDIB, const CRect& rect);
 	void ToggleMonitor();
 	CRect GetZoomTextRect(CRect imageProcessingArea);

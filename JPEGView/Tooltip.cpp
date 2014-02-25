@@ -62,13 +62,13 @@ CRect CTooltip::CalculateTooltipRect() const {
 	::DrawText(dc, sTooltip, sTooltip.GetLength(), &rectText, DT_CENTER | DT_VCENTER | DT_CALCRECT | DT_NOPREFIX | DT_SINGLELINE);
 	::ReleaseDC(m_hWnd, dc);
 
-	const int BORDERX = 6;
-	const int BORDERY = 7;
+	const int BORDERX = HelpersGUI::ScaleToScreen(6);
+	const int BORDERY = HelpersGUI::ScaleToScreen(7);
 	CRect clientRect;
 	::GetClientRect(m_hWnd, &clientRect);
 	CRect boundRect = m_pBoundCtrl->GetPosition();
 	int nLeft = min(clientRect.Width() - rectText.Width() - BORDERX*2, max(0, boundRect.CenterPoint().x - rectText.Width()/2));
-	int nTop = boundRect.bottom + 6;
+	int nTop = boundRect.bottom + HelpersGUI::ScaleToScreen(6);
 	return CRect(nLeft, nTop, nLeft + rectText.Width() + BORDERX*2, nTop + rectText.Height() + BORDERY*2 - 1);
 }
 

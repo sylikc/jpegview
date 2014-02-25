@@ -149,6 +149,10 @@ void CPanel::PaintFrameAroundPanel(CDC & dc, const CRect& rect, const CPoint& of
 	CRect rectCopy = rect;
 	rectCopy.OffsetRect(offset);
 	dc.Rectangle(rectCopy);
+	if (HelpersGUI::ScreenScaling >= 2) {
+		rectCopy.DeflateRect(1, 1);
+		dc.Rectangle(rectCopy);
+	}
 	dc.SelectPen(hOldPen);
 	::DeleteObject(hPen);
 }

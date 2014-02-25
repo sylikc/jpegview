@@ -99,7 +99,13 @@ namespace HelpersGUI {
 	float ScreenScaling = -1.0f;
 
 	HFONT DefaultGUIFont = NULL;
+	HFONT SystemFont = NULL;
 	HFONT DefaultFileNameFont = NULL;
+
+	int ScaleToScreen(int value)
+	{
+		return (int)(value * ScreenScaling + 0.5f);
+	}
 
 	HFONT CreateBoldFontOfSelectedFont(CDC & dc) {
 		TCHAR buff[LF_FACESIZE];
@@ -125,12 +131,18 @@ namespace HelpersGUI {
 		::SelectObject(dc, DefaultGUIFont);
 	}
 
+	void SelectDefaultSystemFont(HDC dc) {
+		if (SystemFont == NULL) {
+			SystemFont = CreateFontFromINIDescription(dc, _T("\"Arial\" 12.0 bold"));
+		}
+		::SelectObject(dc, SystemFont);
+	}
+
 	void SelectDefaultFileNameFont(HDC dc) {
 		if (DefaultFileNameFont == NULL) {
 			DefaultFileNameFont = CreateFontFromINIDescription(dc, CSettingsProvider::This().FileNameFont());
 			if (DefaultFileNameFont == NULL)
-				DefaultFileNameFont = ::CreateFont(16, 0, 0, 0, FW_BOLD, FALSE, FALSE, FALSE, DEFAULT_CHARSET, OUT_DEFAULT_PRECIS,
-					CLIP_DEFAULT_PRECIS, CLEARTYPE_QUALITY, VARIABLE_PITCH, _T("Arial"));
+				DefaultFileNameFont = CreateFontFromINIDescription(dc, _T("\"Arial\" 10.0 bold"));
 		}
 		::SelectObject(dc, DefaultFileNameFont);
 	}
@@ -204,6 +216,15 @@ namespace HelpersGUI {
 		textRect.OffsetRect(0, -1);
 		dc.SetTextColor(oldColor);
 		dc.DrawText(sText, -1, &textRect, nFormat | DT_NOPREFIX);
+	}
+
+	void DrawRectangle(CDC & dc, const CRect& rect) {
+		dc.Rectangle(rect);
+		if (HelpersGUI::ScreenScaling >= 2) {
+			CRect copy(rect);
+			copy.DeflateRect(1, 1);
+			dc.Rectangle(copy);
+		}
 	}
 
 	CPoint DrawDIB32bppWithBlackBorders(CDC& dc, BITMAPINFO& bmInfo, void* pDIBData, HBRUSH backBrush, const CRect& targetArea, CSize dibSize, CPoint offset) {
@@ -317,7 +338,7 @@ namespace HelpersGUI {
 		const int BUF_LEN = 512;
 		TCHAR buff[BUF_LEN];
 		buff[0] = 0;
-		CRect rectText(0, clientRect.Height()/2 - (int)(ScreenScaling*40), clientRect.Width(), clientRect.Height());
+		CRect rectText(0, clientRect.Height()/2 - HelpersGUI::ScaleToScreen(40), clientRect.Width(), clientRect.Height());
 		switch (nFileLoadError) {
 			case FileLoad_PasteFromClipboardFailed:
 				_tcsncpy_s(buff, BUF_LEN, CNLS::GetString(_T("Pasting image from clipboard failed!")), BUF_LEN);

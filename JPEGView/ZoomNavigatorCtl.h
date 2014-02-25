@@ -11,7 +11,7 @@ class CPanel;
 class CZoomNavigatorCtl
 {
 public:
-	CZoomNavigatorCtl(CMainDlg* pMainDlg, CPanel* pImageProcPanel);
+	CZoomNavigatorCtl(CMainDlg* pMainDlg, CPanel* pImageProcPanel, CPanel* pNavigationPanel);
 
 	bool IsVisible();
 	bool IsActive();
@@ -42,6 +42,7 @@ public:
 private:
 	CMainDlg* m_pMainDlg;
 	CPanel* m_pImageProcPanel;
+	CPanel* m_pNavigationPanel;
 	bool m_bDragging;
 	CPoint m_capturedPosZoomNavSection;
 	CZoomNavigator m_zoomNavigator;

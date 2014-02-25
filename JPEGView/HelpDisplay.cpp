@@ -13,10 +13,10 @@ static const COLORREF colorInfoLight = RGB(160, 0, 0);
 CHelpDisplay::CHelpDisplay(CPaintDC & dc) : m_dc(dc) {
 	m_fScaling = HelpersGUI::ScreenScaling;
 	CSize size;
-	dc.SelectStockFont(SYSTEM_FONT);
+	HelpersGUI::SelectDefaultGUIFont(dc);
 	dc.GetTextExtent(_T("teststring"), 10, &size);
 	m_nTab1 =  (int) (size.cx * 2.1f);
-	m_nTab2 = (int) (size.cx * 3.1f);
+	m_nTab2 = (int) (size.cx * 4.2f);
 	m_nSizeX = m_nSizeY = m_nIncY = 0;
 	m_pTextBuffStart = new TCHAR[MAX_BUFF];
 	m_nTextBuffIndex = 0;
@@ -48,7 +48,7 @@ void CHelpDisplay::AddLineInfo(LPCTSTR sKey, bool bInfo, LPCTSTR sHelp) {
 
 CSize CHelpDisplay::GetSize() {
 	// Measure
-	m_dc.SelectStockFont(DEFAULT_GUI_FONT);
+	HelpersGUI::SelectDefaultGUIFont(m_dc);
 	m_nSizeX = 0;
 	m_nSizeY = 0;
 	m_nIncY = 0;
@@ -80,7 +80,7 @@ void CHelpDisplay::Show(const CRect & screenRect) {
 	}
 
 	// Paint
-	m_dc.SelectStockFont(SYSTEM_FONT);
+	HelpersGUI::SelectDefaultSystemFont(m_dc);
 	CBrush brushBk1; brushBk1.CreateSolidBrush(::GetSysColor(COLOR_3DFACE) - 0x00060606);
 	CRect fullRect(CPoint(screenRect.Width()/2 - m_nSizeX/2, screenRect.Height()/2 - m_nSizeY/2),
 		CSize(m_nSizeX, m_nSizeY));
@@ -110,7 +110,7 @@ void CHelpDisplay::Show(const CRect & screenRect) {
 		}
 		nStartY += m_nIncY;
 		if (nI == 1) {
-			m_dc.SelectStockFont(DEFAULT_GUI_FONT);
+			HelpersGUI::SelectDefaultGUIFont(m_dc);
 			nStartY += 3;
 		}
 	}

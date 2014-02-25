@@ -60,8 +60,8 @@ LRESULT CFileExtensionsDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARA
 
 	DWORD nNewStyle = LVS_EX_FULLROWSELECT | LVS_EX_GRIDLINES | LVS_EX_CHECKBOXES;
 	m_lvFileExtensions.SetExtendedListViewStyle(nNewStyle, nNewStyle);
-	m_lvFileExtensions.InsertColumn(0, CNLS::GetString(_T("Extension")), LVCFMT_LEFT, (int)(HelpersGUI::ScreenScaling*120));
-	m_lvFileExtensions.InsertColumn(1, CNLS::GetString(_T("File type")), LVCFMT_LEFT, (int)(HelpersGUI::ScreenScaling*365));
+	m_lvFileExtensions.InsertColumn(0, CNLS::GetString(_T("Extension")), LVCFMT_LEFT, HelpersGUI::ScaleToScreen(120));
+	m_lvFileExtensions.InsertColumn(1, CNLS::GetString(_T("File type")), LVCFMT_LEFT, HelpersGUI::ScaleToScreen(365));
 
     FillFileExtensionsList();
 

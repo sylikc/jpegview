@@ -15,6 +15,7 @@
 #include "UnsharpMaskPanelCtl.h"
 #include "NavigationPanelCtl.h"
 #include "SettingsProvider.h"
+#include "HelpersGUI.h"
 #include "Helpers.h"
 #include "NLS.h"
 
@@ -99,7 +100,7 @@ bool CImageProcPanelCtl::OnMouseMove(int nX, int nY) {
 	if (!m_bEnabled) {
 		return false;
 	}
-	if (m_pMainDlg->ClientRect().Width() < 800 || m_pMainDlg->GetPanelMgr()->IsModalPanelShown()) {
+	if (m_pMainDlg->ClientRect().Width() < HelpersGUI::ScaleToScreen(800) || m_pMainDlg->GetPanelMgr()->IsModalPanelShown()) {
 		SetVisible(false);
 		return false;
 	}

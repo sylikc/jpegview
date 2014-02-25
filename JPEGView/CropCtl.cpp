@@ -123,7 +123,7 @@ void CCropCtl::StartCropping(int nX, int nY) {
 			m_cropStart = CPoint((int)fX, (int) fY);
 			m_cropMouse = CPoint(nX, nY);
 			m_cropEnd = CPoint(INT_MIN, INT_MIN);
-			m_nHandleSize = (int)(HelpersGUI::ScreenScaling * HANDLE_SIZE + 0.5f);
+			m_nHandleSize = HelpersGUI::ScaleToScreen(HANDLE_SIZE);
 			if ((m_nHandleSize & 1) == 0) m_nHandleSize++; // must be odd
 		}
 	}

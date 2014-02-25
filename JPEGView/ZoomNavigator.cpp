@@ -2,16 +2,21 @@
 #include "ZoomNavigator.h"
 #include "JPEGImage.h"
 #include "Helpers.h"
+#include "HelpersGUI.h"
 #include <math.h>
 
-static const int cnThumbWL = 320;
+// in 96 DPI
+static const int cnThumbWL = 320; // maximal thumb size
 static const int cnThumbHL = 240;
 
-static const int cnThumbW = 200;
+static const int cnThumbW = 200; // normal thumb size
 static const int cnThumbH = 150;
 
-static const int cnThumbWS = 150;
+static const int cnThumbWS = 133; // minimal thumb size
 static const int cnThumbHS = 100;
+
+static const int cnLimit1 = 800; // width of window where normal thumb size is reached
+static const int cnLimit2 = 1400; // width of window where maximal thumb size is reached
 
 CZoomNavigator::CZoomNavigator() {
 	m_lastSectionRect = CRect(0, 0, 0, 0);
@@ -26,25 +31,38 @@ CRectF CZoomNavigator::GetVisibleRect(CSize sizeFull, CSize sizeClipped, CPoint 
 }
 
 CRect CZoomNavigator::GetNavigatorBound(const CRect& panelRect) {
-	int nThumbW = (panelRect.Width() < 800) ? cnThumbWS : (panelRect.Width() < 1400) ? cnThumbW : cnThumbWL;
-	int nThumbH = (panelRect.Width() < 800) ? cnThumbHS : (panelRect.Width() < 1400) ? cnThumbH : cnThumbHL;
-	int nLeft = panelRect.right - nThumbW;
-	int nTop = panelRect.top - nThumbH;
-	return CRect(nLeft, nTop, nLeft + nThumbW, nTop + nThumbH);
+	CSize thumbSize = GetThumbSize(panelRect.Width());
+	int nLeft = panelRect.right - thumbSize.cx;
+	int nTop = panelRect.top - thumbSize.cy;
+	return CRect(nLeft, nTop, nLeft + thumbSize.cx, nTop + thumbSize.cy);
 }
 
-CRect CZoomNavigator::GetNavigatorRect(CJPEGImage* pImage, const CRect& panelRect) {
-	int nThumbW = (panelRect.Width() < 800) ? cnThumbWS : (panelRect.Width() < 1400) ? cnThumbW : cnThumbWL;
-	int nThumbH = (panelRect.Width() < 800) ? cnThumbHS : (panelRect.Width() < 1400) ? cnThumbH : cnThumbHL;
+CRect CZoomNavigator::GetNavigatorRect(CJPEGImage* pImage, const CRect& panelRect, const CRect& navigatorRect) {
+	CSize thumbSize = GetThumbSize(panelRect.Width());
 	double dZoom;
-	CSize sizeThumb = Helpers::GetImageRect(pImage->OrigWidth(), pImage->OrigHeight(), nThumbH, nThumbH, 
+	CSize sizeThumbOriginal = Helpers::GetImageRect(pImage->OrigWidth(), pImage->OrigHeight(), thumbSize.cy, thumbSize.cy, 
 		Helpers::ZM_FitToScreenNoZoom, dZoom);
-	int xDest = panelRect.right - nThumbW - 1 + (nThumbW - sizeThumb.cx) / 2;
-	int yDest = panelRect.top - nThumbH - 1 + (nThumbH - sizeThumb.cy) / 2;
-	if (panelRect.Width() < 800) {
+	int xDest = panelRect.right - thumbSize.cx - 1 + (thumbSize.cx - sizeThumbOriginal.cx) / 2;
+	int yDest = panelRect.top - thumbSize.cy - 1 + (thumbSize.cy - sizeThumbOriginal.cy) / 2;
+	if (panelRect.Width() < HelpersGUI::ScaleToScreen(cnLimit1)) {
 		yDest += panelRect.Height() / 3;
 	}
-	return CRect(xDest, yDest, xDest + max(1, sizeThumb.cx), yDest + max(1, sizeThumb.cy));
+	int yBottom = yDest + max(1, sizeThumbOriginal.cy);
+	if (yBottom >= navigatorRect.top && xDest < navigatorRect.right) {
+		// collides with navigator rectangle
+		yDest -= (yBottom - navigatorRect.top + 1);
+	}
+	return CRect(xDest, yDest, xDest + max(1, sizeThumbOriginal.cx), yDest + max(1, sizeThumbOriginal.cy));
+}
+
+CSize CZoomNavigator::GetThumbSize(int width) {
+	const float fAspectRatio = 0.66666666f;
+	float factor = (float)(cnThumbW - cnThumbWL) / (cnLimit1 - cnLimit2);
+	float offset = cnThumbWL - factor * cnLimit2;
+	int thumbWidth = (int)(factor * width + offset + 0.5f);
+	thumbWidth = min(cnThumbWL, max(cnThumbWS, thumbWidth));
+	int thumbHeight = (int)(thumbWidth * fAspectRatio + 0.5f);
+	return CSize(HelpersGUI::ScaleToScreen(thumbWidth), HelpersGUI::ScaleToScreen(thumbHeight));
 }
 
 void CZoomNavigator::PaintZoomNavigator(CJPEGImage* pImage, const CRectF& visRect, const CRect& navigatorRect,
@@ -76,7 +94,7 @@ void CZoomNavigator::PaintZoomNavigator(CJPEGImage* pImage, const CRectF& visRec
 			&bmInfo, DIB_RGB_COLORS);
 		dc.SelectStockBrush(HOLLOW_BRUSH);
 		dc.SelectStockPen(WHITE_PEN);
-		dc.Rectangle(xDest - 1, yDest - 1, xDest + xSize + 1, yDest + ySize + 1);
+		HelpersGUI::DrawRectangle(dc, CRect(xDest - 1, yDest - 1, xDest + xSize + 1, yDest + ySize + 1));
 
 		CRect rectVisible(xDest + (int)(xSize*visRect.Left + 0.5f), yDest + (int)(ySize*visRect.Top + 0.5f),
 			xDest + (int)(xSize*visRect.Right + 0.5f), yDest + (int)(ySize*visRect.Bottom + 0.5f));

@@ -89,7 +89,7 @@ CTextCtrl::CTextCtrl(CPanel* pPanel, LPCTSTR sTextInit, bool bEditable,
 	 m_textChangedHandler = textChangedHandler;
 	 m_pContext = pContext;
 	 m_textSize = CSize(0, 0);
-	 m_nMaxTextWidth = 200;
+	 m_nMaxTextWidth = HelpersGUI::ScaleToScreen(200);
 	 m_pEdit = NULL;
 	 m_hBoldFont = NULL;
 	 SetText((sTextInit == NULL) ? _T("") : sTextInit);
@@ -139,7 +139,7 @@ void CTextCtrl::TerminateEditMode(bool bAcceptNewName) {
 			}
 		}
 		CRect rect(m_position);
-		rect.right = rect.left + m_textSize.cx + 20;
+		rect.right = rect.left + m_textSize.cx + HelpersGUI::ScaleToScreen(20);
 		::InvalidateRect(m_pPanel->GetHWND(), &rect, FALSE);
 	}
 }
@@ -317,7 +317,7 @@ void CButtonCtrl::SetActive(bool bActive) {
 }
 
 CSize CButtonCtrl::GetMinSize() {
-	return CSize(m_textSize.cx + 26, m_textSize.cy + 6);
+	return CSize(m_textSize.cx + HelpersGUI::ScaleToScreen(26), m_textSize.cy + HelpersGUI::ScaleToScreen(6));
 }
 
 bool CButtonCtrl::OnMouseLButton(EMouseEvent eMouseEvent, int nX, int nY) {
@@ -393,7 +393,7 @@ void CButtonCtrl::Draw(CDC & dc, CRect position, bool bBlack) {
 		hPen = ::CreatePen(PS_SOLID, 1, (m_bDragging && m_bHighlight) ? CSettingsProvider::This().ColorHighlight() : m_bActive ? CSettingsProvider::This().ColorSelected() : CSettingsProvider::This().ColorGUI());
 		hOldPen = dc.SelectPen(hPen);
 	}
-	dc.Rectangle(position);
+	HelpersGUI::DrawRectangle(dc, position);
 	if (m_sText.GetLength() > 0) {
 		HelpersGUI::SelectDefaultGUIFont(dc);
 		dc.SetBkMode(TRANSPARENT);
@@ -519,16 +519,16 @@ bool CSliderDouble::OnMouseMove(int nX, int nY) {
 			if (!m_bHighlight) {
 				m_bHighlight = true;
 				CRect invRect(&m_sliderRect);
-				invRect.OffsetRect(0, -8);
+				invRect.OffsetRect(0, -HelpersGUI::ScaleToScreen(8));
 				::InvalidateRect(m_pPanel->GetHWND(), &invRect, FALSE);
 			}
 		} else if (m_bHighlight) {
 			m_bHighlight = false;
 			CRect invRect(&m_sliderRect);
-			invRect.OffsetRect(0, -8);
+			invRect.OffsetRect(0, -HelpersGUI::ScaleToScreen(8));
 			::InvalidateRect(m_pPanel->GetHWND(), &invRect, FALSE);
 		}
-		CRect numberRect(m_sliderRect.right + 2, m_position.top, m_position.right, m_position.bottom);
+		CRect numberRect(m_sliderRect.right + HelpersGUI::ScaleToScreen(2), m_position.top, m_position.right, m_position.bottom);
 		if (numberRect.PtInRect(mousePos)) {
 			if (!m_bHighlightNumber && abs(*m_pValue - m_dDefaultValue) > 5e-3) {
 				m_bHighlightNumber = true;
@@ -569,7 +569,7 @@ void CSliderDouble::Draw(CDC & dc, CRect position, bool bBlack) {
 	int nXPos = position.right - m_nNumberWidth;
 	m_nSliderStart = nXPos - m_nSliderLen;
 	DrawRuler(dc, m_nSliderStart, nXPos, nYMid, bBlack, m_bHighlight);
-	m_sliderRect = CRect(m_nSliderStart - m_nSliderHeight, nYMid - 2, nXPos + m_nSliderHeight, nYMid + m_nSliderHeight + 8);
+	m_sliderRect = CRect(m_nSliderStart - m_nSliderHeight, nYMid - HelpersGUI::ScaleToScreen(2), nXPos + m_nSliderHeight, nYMid + m_nSliderHeight + HelpersGUI::ScaleToScreen(8));
 	m_sliderRect.OffsetRect(m_pos2Screen.x, m_pos2Screen.y);
 }
 
@@ -594,17 +594,18 @@ void CSliderDouble::DrawRuler(CDC & dc, int nXStart, int nXEnd, int nY, bool bBl
 		else nSub = 3;
 
 		dc.MoveTo((int)(fX + 0.5f), nY);
-		dc.LineTo((int)(fX + 0.5f), nY  - nSub);
+		dc.LineTo((int)(fX + 0.5f), nY  - HelpersGUI::ScaleToScreen(nSub));
 		fX += fStep;
 	}
 
 	if (m_pEnable == NULL || *m_pEnable) {
 		int nSliderPos = ValueToSliderPos(*m_pValue, nXStart, nXEnd);
 		if (!bBlack) dc.SelectPen(hPenRed);
-		dc.MoveTo(nSliderPos, nY+3);
-		dc.LineTo(nSliderPos - m_nSliderHeight, nY + 3 + m_nSliderHeight);
-		dc.LineTo(nSliderPos + m_nSliderHeight, nY + 3 + m_nSliderHeight);
-		dc.LineTo(nSliderPos, nY + 3);
+		int nYP = nY + HelpersGUI::ScaleToScreen(3);
+		dc.MoveTo(nSliderPos, nYP);
+		dc.LineTo(nSliderPos - m_nSliderHeight, nYP + m_nSliderHeight);
+		dc.LineTo(nSliderPos + m_nSliderHeight, nYP + m_nSliderHeight);
+		dc.LineTo(nSliderPos, nYP);
 	}
 
 	if (!bBlack) {
@@ -612,6 +613,12 @@ void CSliderDouble::DrawRuler(CDC & dc, int nXStart, int nXEnd, int nY, bool bBl
 		::DeleteObject(hPen);
 		::DeleteObject(hPenRed);
 	}
+}
+
+static void DrawCheckOnePass(CDC & dc, const CRect& position) {
+	dc.MoveTo(position.left, position.top + position.Height()/2 - 1);
+	dc.LineTo(position.left + position.Width()/3, position.bottom - 2);
+	dc.LineTo(position.right - 1, position.top - 1);
 }
 
 void CSliderDouble::DrawCheck(CDC & dc, CRect position, bool bBlack, bool bHighlight) {
@@ -624,11 +631,13 @@ void CSliderDouble::DrawCheck(CDC & dc, CRect position, bool bBlack, bool bHighl
 	}
 
 	dc.SelectStockBrush(HOLLOW_BRUSH);
-	dc.Rectangle(position);
+	HelpersGUI::DrawRectangle(dc, position);
 	if (*m_pEnable) {
-		dc.MoveTo(position.left, position.top + position.Height()/2 - 1);
-		dc.LineTo(position.left + position.Width()/3, position.bottom - 2);
-		dc.LineTo(position.right - 1, position.top - 1);
+		DrawCheckOnePass(dc, position);
+		if (HelpersGUI::ScreenScaling >= 2) {
+			position.OffsetRect(1, 0);
+			DrawCheckOnePass(dc, position);
+		}
 	}
 
 	if (!bBlack) {

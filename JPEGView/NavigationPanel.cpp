@@ -2,6 +2,7 @@
 #include "NavigationPanel.h"
 #include "ImageProcessingPanel.h"
 #include "Helpers.h"
+#include "HelpersGUI.h"
 #include "SettingsProvider.h"
 #include "NLS.h"
 
@@ -71,7 +72,7 @@ CRect CNavigationPanel::PanelRect() {
 
 	CRect sliderRect = m_pImageProcPanel->PanelRect();
 	m_clientRect = CRect(CPoint((sliderRect.right + sliderRect.left - m_nWidth)/2, 
-		((sliderRect.Width() < 800 || !CSettingsProvider::This().ShowBottomPanel()) ? (sliderRect.bottom - 26) : sliderRect.top) - m_nHeight),
+		((sliderRect.Width() < HelpersGUI::ScaleToScreen(800) || !CSettingsProvider::This().ShowBottomPanel()) ? (sliderRect.bottom - HelpersGUI::ScaleToScreen(26)) : sliderRect.top) - m_nHeight),
 		CSize(m_nWidth, m_nHeight));
 	return m_clientRect;
 }
