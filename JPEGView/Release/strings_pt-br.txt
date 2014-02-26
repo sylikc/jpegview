@@ -134,7 +134,7 @@ Rotate 180	Rotação 180
 Auto correction	Auto correção
 Local density correction	Correção da densidade local
 Keep parameters	Mantener parámetros
-Save parameters to INI...	Salvar parâmetros a INI...
+Set current parameters as default values...	Salvar parâmetros a INI...
 Save parameters to DB	Salvar parâmetros a BD
 Clear parameters from DB	Limpiar parâmetros de BD
 Zoom	Zoom

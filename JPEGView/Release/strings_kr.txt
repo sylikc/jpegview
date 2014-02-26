@@ -133,7 +133,7 @@ Rotate -90	회전 -90°
 Auto correction	자동 보정
 Local density correction	부분 농도 보정
 Keep parameters	매개변수 유지
-Save parameters to INI...	매개변수를 INI로 저장...
+Set current parameters as default values...	매개변수를 INI로 저장...
 Save parameters to DB	DB에 매개변수 저장하기
 Clear parameters from DB	DB의 매개변수 지우기
 Zoom	배율

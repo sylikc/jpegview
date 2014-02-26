@@ -139,7 +139,7 @@ Rotate 180	Повернуть на 180°
 Auto correction	Автокоррекция
 Local density correction	Коррекция светов/теней
 Keep parameters	Помнить параметры обработки при смене изображений
-Save parameters to INI...	Сохранить параметры в INI-файле...
+Set current parameters as default values...	Сохранить параметры в INI-файле...
 Save parameters to DB	Сохранить параметры в базе данных
 Clear parameters from DB	Удалить параметры из базы данных
 Zoom	Масштабирование

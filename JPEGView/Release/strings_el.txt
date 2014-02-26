@@ -133,7 +133,7 @@ Rotate 180	Περιστροφή 180
 Auto correction	Αυτόματη διόρθωση
 Local density correction	Διόρθωση Local Density
 Keep parameters	Διατήρηση παραμέτρων
-Save parameters to INI...	Αποθήκευσε παραμέτρους στο INI...
+Set current parameters as default values...	Αποθήκευσε παραμέτρους στο INI...
 Save parameters to DB	Αποθήκευσε παραμέτρους στη ΒΔ
 Clear parameters from DB	Σβήσε παραμέτρους από τη ΒΔ
 Zoom	Ζουμάρισμα
