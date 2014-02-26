@@ -133,7 +133,7 @@ Rotate -90	паварот на -90°
 Auto correction	Аўтакарэкцыя колеру і кантрасту
 Local density correction	Лакальная карэкцыя шчыльнасьці
 Keep parameters	Ужываць параметры апрацоўкі надалей
-Save parameters to INI...	Захаваць параметры апрацоўкі ў INI-файле...
+Set current parameters as default values...	Захаваць параметры апрацоўкі ў INI-файле...
 Save parameters to DB	Захаваць параметры апрацоўкі ў базе зьвестак
 Clear parameters from DB	Выдаліць параметры апрацоўкі з базы зьвестак
 Zoom	Маштаб

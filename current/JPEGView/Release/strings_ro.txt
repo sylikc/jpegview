@@ -133,7 +133,7 @@ Rotate 180	Roteşte cu 180gr.
 Auto correction	Autocorectare
 Local density correction	Corectează densitatea locală
 Keep parameters	Păstreză Parametrii
-Save parameters to INI...	Salvează Parametrii în INI
+Set current parameters as default values...	Salvează Parametrii în INI...
 Save parameters to DB	Salvează setările în Parametrii DB
 Clear parameters from DB	Şterge setările salvate în Parametrii DB
 Zoom	Măreşte

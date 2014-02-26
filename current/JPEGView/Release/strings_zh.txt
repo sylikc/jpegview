@@ -136,7 +136,7 @@ Rotate 180      旋转 180°
 Auto correction	自动校正
 Local density correction	局部密度校正
 Keep parameters	保持参数
-Save parameters to INI...	保存参数到INI...
+Set current parameters as default values...	保存参数到INI...
 Save parameters to DB	参数保存到数据库
 Clear parameters from DB	清除参数数据库
 Zoom	缩放

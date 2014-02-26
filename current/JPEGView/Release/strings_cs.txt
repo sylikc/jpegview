@@ -134,7 +134,7 @@ Rotate 180	Otočit 180
 Auto correction	Auto korekce
 Local density correction	Lokální korekce hustoty: 
 Keep parameters	Uchovat parametry
-Save parameters to INI...	Uložit parametry do INI...
+Set current parameters as default values...	Uložit parametry do INI...
 Save parameters to DB	Uložit parametry to DB
 Clear parameters from DB	Smazat parametry z DB
 Zoom	Měřítko
