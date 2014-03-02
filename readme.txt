@@ -27,6 +27,10 @@ to JPEGView\Debug
 Changelog
 *********
 
+[1.0.32.0]
+Other changes:
+- Ctrl-X also copies the file name to the clipboard (as Ctrl-C)
+
 [1.0.31.1]
 Bugs fixed:
 - Fixed crash when deleting files in 'Show folders and subfolders' navigation mode

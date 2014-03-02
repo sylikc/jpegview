@@ -30,12 +30,12 @@ void CClipboard::CopyImageToClipboard(HWND hWnd, CJPEGImage * pImage, LPCTSTR fi
 }
 
 void CClipboard::CopyFullImageToClipboard(HWND hWnd, CJPEGImage * pImage, const CImageProcessingParams& procParams,
-										  EProcessingFlags eFlags) {
-	CopyFullImageToClipboard(hWnd, pImage, procParams, eFlags, CRect(0, 0, pImage->OrigWidth(), pImage->OrigHeight()));
+										  EProcessingFlags eFlags, LPCTSTR fileName) {
+	CopyFullImageToClipboard(hWnd, pImage, procParams, eFlags, CRect(0, 0, pImage->OrigWidth(), pImage->OrigHeight()), fileName);
 }
 
 void CClipboard::CopyFullImageToClipboard(HWND hWnd, CJPEGImage * pImage, const CImageProcessingParams& procParams,
-										  EProcessingFlags eFlags, CRect clipRect) {
+										  EProcessingFlags eFlags, CRect clipRect, LPCTSTR fileName) {
 	if (pImage == NULL) {
 		return;
 	}
@@ -47,7 +47,7 @@ void CClipboard::CopyFullImageToClipboard(HWND hWnd, CJPEGImage * pImage, const 
 
 	pImage->EnableDimming(false);
 	void* pDIB = pImage->GetDIB(pImage->OrigSize(), clipRect.Size(), clipRect.TopLeft(), procParams, eFlags);
-	DoCopy(hWnd, clipRect.Width(), clipRect.Height(), pDIB, NULL);
+	DoCopy(hWnd, clipRect.Width(), clipRect.Height(), pDIB, pImage->IsClipboardImage() ? NULL : fileName);
 	pImage->EnableDimming(true);
 }
 

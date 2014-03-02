@@ -1275,7 +1275,7 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 			break;
 		case IDM_COPY_FULL:
 			if (m_pCurrentImage != NULL) {
-				CClipboard::CopyFullImageToClipboard(this->m_hWnd, m_pCurrentImage, *m_pImageProcParams, CreateDefaultProcessingFlags());
+				CClipboard::CopyFullImageToClipboard(this->m_hWnd, m_pCurrentImage, *m_pImageProcParams, CreateDefaultProcessingFlags(), m_pFileList->Current());
 				this->Invalidate(FALSE);
 			}
 			break;
@@ -1713,7 +1713,7 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 			if (m_pCurrentImage != NULL) {
 				CClipboard::CopyFullImageToClipboard(this->m_hWnd, m_pCurrentImage, *m_pImageProcParams, 
 					CreateDefaultProcessingFlags(),
-					m_pCropCtl->GetImageCropRect());
+					m_pCropCtl->GetImageCropRect(), NULL);
 				this->Invalidate(FALSE);
 			}
 			break;
