@@ -12,11 +12,11 @@ public:
 
 	// Copy processed full size image to clipboard
 	static void CopyFullImageToClipboard(HWND hWnd, CJPEGImage * pImage, const CImageProcessingParams& procParams,
-		EProcessingFlags eFlags);
+		EProcessingFlags eFlags, LPCTSTR fileName);
 
 	// Copy section of full size image to clipboard
 	static void CopyFullImageToClipboard(HWND hWnd, CJPEGImage * pImage, const CImageProcessingParams& procParams,
-		EProcessingFlags eFlags, CRect clipRect);
+		EProcessingFlags eFlags, CRect clipRect, LPCTSTR fileName);
 
 	// Paste image from clipboard
 	static CJPEGImage* PasteImageFromClipboard(HWND hWnd, const CImageProcessingParams& procParams, EProcessingFlags eFlags);
