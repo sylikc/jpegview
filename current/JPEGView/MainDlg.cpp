@@ -908,7 +908,7 @@ LRESULT CMainDlg::OnKeyDown(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOO
 	} else if (wParam >= '1' && wParam <= '9' && (!bShift || bCtrl)) {
 		// Start the slideshow
 		bHandled = true;
-		int nValue = wParam - '1' + 1;
+		int nValue = (int)wParam - '1' + 1;
 		if (bCtrl && bShift) {
 			nValue *= 10; // 1/100 seconds
 		} else if (bCtrl) {
@@ -921,7 +921,7 @@ LRESULT CMainDlg::OnKeyDown(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOO
 		bHandled = true;
 		ExecuteCommand(IDM_HELP);
 	} else {
-		int nCommand = m_pKeyMap->GetCommandIdForKey(wParam, bAlt, bCtrl, bShift);
+		int nCommand = m_pKeyMap->GetCommandIdForKey((int)wParam, bAlt, bCtrl, bShift);
 		if (nCommand > 0) {
 			bHandled = true;
 			ExecuteCommand(nCommand);
@@ -931,7 +931,7 @@ LRESULT CMainDlg::OnKeyDown(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOO
 	if (!bHandled) {
 		// look if any of the user commands wants to handle this key
 		if (m_pFileList->Current() != NULL) {
-			HandleUserCommands(CKeyMap::GetCombinedKeyCode(wParam, bAlt, bCtrl, bShift));
+			HandleUserCommands(CKeyMap::GetCombinedKeyCode((int)wParam, bAlt, bCtrl, bShift));
 		}
 	}
 
@@ -946,11 +946,11 @@ LRESULT CMainDlg::OnSysKeyDown(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, 
 	if (wParam == VK_F4) {
 		CleanupAndTerminate();
 	} else {
-		int nCommand = m_pKeyMap->GetCommandIdForKey(wParam, true, false, bShift);
+		int nCommand = m_pKeyMap->GetCommandIdForKey((int)wParam, true, false, bShift);
 		if (nCommand > 0) {
 			ExecuteCommand(nCommand);
 		} else if (m_pFileList->Current() != NULL) {
-			HandleUserCommands(CKeyMap::GetCombinedKeyCode(wParam, true, false, bShift));
+			HandleUserCommands(CKeyMap::GetCombinedKeyCode((int)wParam, true, false, bShift));
 		}
 	}
 	return 1;

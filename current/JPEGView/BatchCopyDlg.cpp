@@ -14,7 +14,7 @@ static int FindNumberFormat(LPCTSTR strText) {
 	LPCTSTR s = strText;
 	while (*s != 0 && s[1] != 0 && s[2] != 0) {
 		if (*s == _T('%') && s[1] >= _T('2') && s[1] <= _T('9')) {
-			return s - strText;
+			return (int)(s - strText);
 		}
 		s++;
 	}
@@ -46,7 +46,7 @@ static CString MakeAbsolutePath(LPCTSTR strFileName, LPCTSTR strDirectory) {
 // Finds the first number string in the given string, including leading zeros
 static CString FindNumber(LPCTSTR strFileName) {
 	int nStartIdx = -1;
-	int nLen = _tcslen(strFileName);
+	int nLen = (int)_tcslen(strFileName);
 	for (int i = 0; i < nLen; i++) {
 		if (strFileName[i] >= _T('0') && strFileName[i] <= _T('9')) {
 			if (nStartIdx < 0) nStartIdx = i;
@@ -209,7 +209,7 @@ LRESULT CBatchCopyDlg::OnRename(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*/
 			bool bSuccess = true;
 			DWORD lastError = 0;
 			if (bCopyNeeded) {
-				CString strNewPath(strNewName, _tcsrchr(strNewName, _T('\\')) - strNewName);
+				CString strNewPath(strNewName, (int)(_tcsrchr(strNewName, _T('\\')) - strNewName));
 				// First create directory if it does not yet exist
 				if (::GetFileAttributes(strNewPath) == INVALID_FILE_ATTRIBUTES) {
 					int nErrorCode = ::SHCreateDirectoryEx(NULL, strNewPath, NULL);
@@ -330,7 +330,8 @@ int CBatchCopyDlg::CreateItemList() {
 CString CBatchCopyDlg::GetPatternText() {
 	TCHAR strPattern[MAX_PATH];
 	((short*)strPattern)[0] = MAX_PATH;
-	m_edtPattern.GetLine(0, strPattern);
+	int numChars = m_edtPattern.GetLine(0, strPattern);
+	strPattern[numChars] = 0;
 	return CString(strPattern);
 }
 
@@ -344,7 +345,7 @@ bool CBatchCopyDlg::IsCopyNeeded(LPCTSTR strName, LPCTSTR strDirectory) {
 	LPTSTR notUsed;
 	TCHAR buffFullPathName[MAX_PATH];
 	::GetFullPathName(strDirectory, MAX_PATH, buffFullPathName, &notUsed);
-	int nPathLen = _tcsrchr(strNewName, _T('\\')) - strNewName;
+	int nPathLen = (int)(_tcsrchr(strNewName, _T('\\')) - strNewName);
 	return _tcsnicmp(strNewName, buffFullPathName, nPathLen) != 0;
 }
 
@@ -373,7 +374,7 @@ CString CBatchCopyDlg::ReplacePlaceholders(LPCTSTR strPattern, int nIndex, const
 	}
 	LPCTSTR pStartExt = _tcsrchr(fileDesc.GetTitle(), _T('.'));
 	if (strNewName.Find(_T("%F")) != -1) {
-		CString sTitle(fileDesc.GetTitle(), (pStartExt == NULL) ? _tcslen(fileDesc.GetTitle()) : pStartExt - fileDesc.GetTitle());
+		CString sTitle(fileDesc.GetTitle(), (int)((pStartExt == NULL) ? _tcslen(fileDesc.GetTitle()) : pStartExt - fileDesc.GetTitle()));
 		strNewName.Replace(_T("%F"), sTitle);
 	}
 	if (strNewName.Find(_T("%e")) != -1 && pStartExt != NULL) {

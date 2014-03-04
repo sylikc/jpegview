@@ -15,14 +15,14 @@ static CSize GetTextRect(HWND hWnd, LPCTSTR sText) {
 	CPaintDC dc(hWnd);
 	HelpersGUI::SelectDefaultGUIFont(dc);
 	CSize textlen;
-	dc.GetTextExtent(sText, _tcslen(sText), &textlen);
+	dc.GetTextExtent(sText, (int)_tcslen(sText), &textlen);
 	return textlen;
 }
 
 static CSize GetTextRect(CDC & dc, LPCTSTR sText) {
 	HelpersGUI::SelectDefaultGUIFont(dc);
 	CSize textlen;
-	dc.GetTextExtent(sText, _tcslen(sText), &textlen);
+	dc.GetTextExtent(sText, (int)_tcslen(sText), &textlen);
 	return textlen;
 }
 
@@ -124,7 +124,7 @@ void CTextCtrl::TerminateEditMode(bool bAcceptNewName) {
 		TCHAR newName[MAX_PATH];
 		m_pEdit->GetWindowText(newName, MAX_PATH);
 		::RemoveProp(m_pEdit->m_hWnd, WINPROP_THIS);
-		::SetWindowLong(m_pEdit->m_hWnd, GWL_WNDPROC, (LONG) m_OrigEditProc); 
+		::SetWindowLongPtr(m_pEdit->m_hWnd, GWLP_WNDPROC, (LONG_PTR)m_OrigEditProc);
 		m_pEdit->DestroyWindow();
 		delete m_pEdit;
 		::SetFocus(m_pPanel->GetHWND());
@@ -160,7 +160,7 @@ bool CTextCtrl::OnMouseLButton(EMouseEvent eMouseEvent, int nX, int nY) {
 				
 				// Subclass edit control to capture the ESC and ENTER keys
 				// ms-help://MS.VSExpressCC.v80/MS.VSIPCC.v80/MS.PSDKSVR2003R2.1033/winui/winui/windowsuserinterface/windowing/windowprocedures/usingwindowprocedures.htm
-				m_OrigEditProc = (WNDPROC) ::SetWindowLong(m_pEdit->m_hWnd, GWL_WNDPROC, (LONG) EditSubclassProc); 
+				m_OrigEditProc = (WNDPROC) ::SetWindowLongPtr(m_pEdit->m_hWnd, GWLP_WNDPROC, (LONG_PTR)EditSubclassProc);
 				SetProp(m_pEdit->m_hWnd, WINPROP_THIS, (HANDLE) this);
 
 				m_pEdit->SetFont((HFONT)::GetStockObject(DEFAULT_GUI_FONT));
@@ -225,7 +225,7 @@ CSize CTextCtrl::GetTextRectangle(HWND hWnd, LPCTSTR sText) {
 		CreateBoldFont(dc);
 		dc.SelectFont(m_hBoldFont);
 		CSize textlen;
-		dc.GetTextExtent(sText, _tcslen(sText), &textlen);
+		dc.GetTextExtent(sText, (int)_tcslen(sText), &textlen);
 		dc.SelectStockFont(DEFAULT_GUI_FONT);
 		return textlen;
 	} else {
@@ -551,7 +551,7 @@ void CSliderDouble::OnPaint(CDC & dc, const CPoint& offset)  {
 void CSliderDouble::Draw(CDC & dc, CRect position, bool bBlack) {
 	dc.SetTextColor(bBlack ? 0 : m_bHighlightNumber ? CSettingsProvider::This().ColorHighlight() : CSettingsProvider::This().ColorGUI());
 	TCHAR buff[16]; _stprintf_s(buff, 16, _T("%.2f"), *m_pValue);
-	dc.DrawText(buff, _tcslen(buff), &position, DT_VCENTER | DT_SINGLELINE | DT_RIGHT | DT_NOPREFIX);
+	dc.DrawText(buff, (int)_tcslen(buff), &position, DT_VCENTER | DT_SINGLELINE | DT_RIGHT | DT_NOPREFIX);
 
 	if (m_pEnable != NULL) {
 		m_checkRect = CRect(CPoint(position.left, position.top + ((position.Height() - m_nCheckHeight) >> 1)),
@@ -563,7 +563,7 @@ void CSliderDouble::Draw(CDC & dc, CRect position, bool bBlack) {
 		position.left += m_nCheckHeight + m_nCheckHeight/2;
 	}
 	dc.SetTextColor(bBlack ? 0 : CSettingsProvider::This().ColorGUI());
-	dc.DrawText(m_sName, _tcslen(m_sName), &position, DT_VCENTER | DT_SINGLELINE | DT_NOPREFIX);
+	dc.DrawText(m_sName, (int)_tcslen(m_sName), &position, DT_VCENTER | DT_SINGLELINE | DT_NOPREFIX);
 	
 	int nYMid = position.top + ((position.bottom - position.top) >> 1);
 	int nXPos = position.right - m_nNumberWidth;

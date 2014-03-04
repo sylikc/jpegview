@@ -111,7 +111,7 @@ static Helpers::ETransitionEffect ParseCommandLineForSlideShowEffect(LPCTSTR sCo
     }
     sEffect = sEffect + _tcslen(_T("/effect")) + 1;
     LPCTSTR posSpace = _tcschr(sEffect, _T(' '));
-    CString effect = (posSpace == NULL) ? CString(sEffect) : CString(sEffect, posSpace - sEffect);
+    CString effect = (posSpace == NULL) ? CString(sEffect) : CString(sEffect, (int)(posSpace - sEffect));
     return Helpers::ConvertTransitionEffectFromString(effect);
 }
 
@@ -163,9 +163,10 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR lp
             copyData.dwData = KEY_MAGIC;
             copyData.cbData = (sStartupFile.GetLength() + 1) * sizeof(TCHAR);
             copyData.lpData = (LPVOID)(LPCTSTR)sStartupFile;
-            DWORD result = 0;
-            LRESULT res = ::SendMessageTimeout(_HWNDOtherInstance, WM_COPYDATA, 0, (LPARAM)&copyData, 0, 250, &result);
-            bFileLoadedByExistingInstance = result == KEY_MAGIC;
+			ULONG_PTR result = 0;
+			PDWORD_PTR resultPtr = &result;
+			LRESULT res = ::SendMessageTimeout(_HWNDOtherInstance, WM_COPYDATA, 0, (LPARAM)&copyData, 0, 250, resultPtr);
+			bFileLoadedByExistingInstance = *resultPtr == (ULONG_PTR)KEY_MAGIC;
         }
 	}
 
@@ -182,7 +183,7 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR lp
 		dlgMain.SetStartupInfo(sStartupFile, nAutostartSlideShow, eSorting, eTransitionEffect, nTransitionTime, bAutoExit, nDisplayMonitor);
 
 		try {
-			nRet = dlgMain.DoModal();
+			nRet = (int)dlgMain.DoModal();
             if (CSettingsProvider::This().StickyWindowSize() && !dlgMain.IsFullScreenMode()) {
                 CSettingsProvider::This().SaveStickyWindowRect(dlgMain.WindowRectOnClose());
             }

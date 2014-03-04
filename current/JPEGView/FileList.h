@@ -96,7 +96,7 @@ public:
 	// Get the n-next file, does not change the internal state
 	LPCTSTR PeekNextPrev(int nIndex, bool bForward, bool bToggle);
 	// Number of files in file list (for current directory)
-	int Size() const { return m_fileList.size(); }
+	int Size() const { return (int)m_fileList.size(); }
 	// Index of current file in file list (zero based)
 	int CurrentIndex() const;
 

@@ -26,7 +26,7 @@ CInfoButtonPanel::CInfoButtonPanel(HWND hWnd, INotifiyMouseCapture* pNotifyMouse
 CRect CInfoButtonPanel::PanelRect() {
 	if (m_nWidth == 0) {
 		int nButtonSize = m_nHeight - 4 * WNDBUTTON_BORDER;
-		m_nWidth = 4 * WNDBUTTON_BORDER + (m_controls.size() - 1) * WNDBUTTON_BORDER * 3 + m_controls.size() * nButtonSize;
+		m_nWidth = 4 * WNDBUTTON_BORDER + ((int)m_controls.size() - 1) * WNDBUTTON_BORDER * 3 + (int)m_controls.size() * nButtonSize;
 	}
 
 	CRect sliderRect = m_pImageProcPanel->PanelRect();

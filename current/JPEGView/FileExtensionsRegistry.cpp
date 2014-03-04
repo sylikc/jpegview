@@ -38,7 +38,7 @@ static bool GetRegistryStringValue(HKEY key, LPCTSTR name, CString & outValue) {
 // Sets a string value in the registry, given an open key and the name of the string value to set.
 // If the name is NULL, the default value for the key is set.
 static bool SetRegistryStringValue(HKEY key, LPCTSTR name, LPCTSTR stringValue) {
-    return RegSetValueEx(key, name, 0, REG_SZ, (const BYTE *)stringValue, (_tcslen(stringValue) + 1) * sizeof(TCHAR)) == ERROR_SUCCESS;
+	return RegSetValueEx(key, name, 0, REG_SZ, (const BYTE *)stringValue, ((int)_tcslen(stringValue) + 1) * sizeof(TCHAR)) == ERROR_SUCCESS;
 }
 
 // Checks if JPEGView is registered as application in the registry
@@ -439,12 +439,15 @@ static RegResult ResetPermissionsForRegistryKey(LPCTSTR subKeyRelativeToHKCU)
 ///////////////////////////////////////////////////////////////////////////////////
 
 CFileExtensionsRegistry::CFileExtensionsRegistry() {
+#pragma warning(push)
+#pragma warning(disable:4996)
     // Starting with Windows Vista, the Windows Explorer uses a different location
     // to register file extensions
     OSVERSIONINFO osvi;
     ZeroMemory(&osvi, sizeof(OSVERSIONINFO));
     osvi.dwOSVersionInfoSize = sizeof(OSVERSIONINFO);
     GetVersionEx(&osvi);
+#pragma warning(pop)
 
     m_bNewRegistryFormat = osvi.dwMajorVersion >= 6;
 	m_bIsWindows8 = osvi.dwMajorVersion >= 6 && osvi.dwMinorVersion >= 2;
@@ -470,7 +473,7 @@ bool CFileExtensionsRegistry::RegisterJPEGView() {
 
 bool CFileExtensionsRegistry::CheckIfOpenedByJPEGView(LPCTSTR sExtensionList, bool& outRegisteredInHKLM) {
     bool bOk = false;
-    int nNumChars = _tcslen(sExtensionList);
+	int nNumChars = (int)_tcslen(sExtensionList);
     int nStart = 0;
     outRegisteredInHKLM = false;
     for (int i = 0; i <= nNumChars; i++) {
@@ -495,7 +498,7 @@ bool CFileExtensionsRegistry::CheckIfOpenedByJPEGView(LPCTSTR sExtensionList, bo
 }
 
 RegResult CFileExtensionsRegistry::RegisterFileExtension(LPCTSTR sExtension, bool bChangeDACLIfRequired) {
-    int nNumChars = _tcslen(sExtension);
+	int nNumChars = (int)_tcslen(sExtension);
     if (nNumChars >= 3) {
         CString sExtensionStripped(&((LPCTSTR)sExtension)[1]);
         sExtensionStripped.MakeLower();
@@ -507,7 +510,7 @@ RegResult CFileExtensionsRegistry::RegisterFileExtension(LPCTSTR sExtension, boo
 }
 
 RegResult CFileExtensionsRegistry::UnregisterFileExtension(LPCTSTR sExtension, bool bChangeDACLIfRequired) {
-    int nNumChars = _tcslen(sExtension);
+	int nNumChars = (int)_tcslen(sExtension);
     if (nNumChars >= 3) {
         CString sExtensionStripped(&((LPCTSTR)sExtension)[1]);
         sExtensionStripped.MakeLower();

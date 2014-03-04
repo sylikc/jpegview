@@ -452,6 +452,9 @@
     <ClInclude Include="ManageOpenWithDlg.h">
       <Filter>Header Files\Dialogs</Filter>
     </ClInclude>
+    <ClInclude Include="MaxImageDef.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="res\JPEGView.ico">

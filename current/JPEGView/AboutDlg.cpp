@@ -46,9 +46,17 @@ LRESULT CAboutDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lPara
 	SetIcon(hIconSmall, FALSE);
 
 #ifdef _DEBUG
-	LPCTSTR sTitle = _T("About JPEGView... (Debug version)");
+#ifdef _WIN64
+	LPCTSTR sTitle = _T("About JPEGView... (Debug version, 64 bit)");
+#else
+	LPCTSTR sTitle = _T("About JPEGView... (Debug version, 32 bit)");
+#endif
+#else
+#ifdef _WIN64
+	LPCTSTR sTitle = CNLS::GetString(_T("About JPEGView (64 bit version)..."));
 #else
 	LPCTSTR sTitle = CNLS::GetString(_T("About JPEGView..."));
+#endif
 #endif
 	this->SetWindowText(sTitle);
 

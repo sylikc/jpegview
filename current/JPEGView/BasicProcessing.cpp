@@ -1665,6 +1665,126 @@ static void* RotateToDIB(const CXMMImage* pSourceImg, uint8* pTarget = NULL) {
 // High quality filtering (SSE implementation)
 /////////////////////////////////////////////////////////////////////////////////////////////
 
+#ifdef _WIN64
+// Apply filter in y direction in SSE
+// No inline assembly is supported in 64 bit mode, thus intrinsics are used instead.
+// nSourceHeight: Height of source image, only here to match interface of C++ implementation
+// nTargetHeight: Height of target image after resampling
+// nWidth: Width of source image
+// nStartY_FP: 16.16 fixed point number, denoting the y-start subpixel coordinate
+// nStartX: Start of filtering in x-direction (not an FP number)
+// nIncrementY_FP: 16.16 fixed point number, denoting the increment for the y coordinates
+// filter: filter to apply
+// nFilterOffset: Offset into filter (to filter.Indices array)
+// pSourceImg: Source image
+// The filter is applied to 'nTargetHeight' rows of the input image at positions
+// nStartY_FP, nStartY_FP+nIncrementY_FP, ... 
+// In X direction, the filter is applied starting from column /nStartX\ to (including) \nStartX+nWidth-1/
+// where the /\ symbol denotes padding to lower 8 pixel boundary and \/ padding to the upper 8 pixel
+// boundary.
+static CXMMImage* ApplyFilter_SSE(int nSourceHeight, int nTargetHeight, int nWidth,
+	int nStartY_FP, int nStartX, int nIncrementY_FP,
+	const XMMFilterKernelBlock& filter,
+	int nFilterOffset, const CXMMImage* pSourceImg) {
+
+	int nStartXAligned = nStartX & ~7;
+	int nEndXAligned = (nStartX + nWidth + 7) & ~7;
+	CXMMImage* tempImage = new CXMMImage(nEndXAligned - nStartXAligned, nTargetHeight);
+	if (tempImage->AlignedPtr() == NULL) {
+		delete tempImage;
+		return NULL;
+	}
+
+	int nCurY = nStartY_FP;
+	int nChannelLenBytes = pSourceImg->GetPaddedWidth() * sizeof(short);
+	int nRowLenBytes = nChannelLenBytes * 3;
+	int nNumberOfBlocksX = (nEndXAligned - nStartXAligned) >> 3;
+	const uint8* pSourceStart = (const uint8*)pSourceImg->AlignedPtr() + nStartXAligned * sizeof(short);
+	XMMFilterKernel** pKernelIndexStart = filter.Indices;
+
+	DECLARE_ALIGNED_DQWORD(ONE_XMM, 16383); // 1.0 in fixed point notation
+
+	__m128i xmm0 = *((__m128i*)ONE_XMM);
+	__m128i xmm1 = _mm_setzero_si128();
+	__m128i xmm2;
+	__m128i xmm3;
+	__m128i xmm4 = _mm_setzero_si128();
+	__m128i xmm5 = _mm_setzero_si128();
+	__m128i xmm6 = _mm_setzero_si128();
+	__m128i xmm7;
+
+	__m128i* pDestination = (__m128i*)tempImage->AlignedPtr();
+
+	for (int y = 0; y < nTargetHeight; y++) {
+		uint32 nCurYInt = (uint32)nCurY >> 16; // integer part of Y
+		int filterIndex = y + nFilterOffset;
+		XMMFilterKernel* pKernel = pKernelIndexStart[filterIndex];
+		int filterLen = pKernel->FilterLen;
+		int filterOffset = pKernel->FilterOffset;
+		const __m128i* pFilterStart = (__m128i*)&(pKernel->Kernel);
+		const __m128i* pSourceRow = (const __m128i*)(pSourceStart + ((int)nCurYInt - filterOffset) * nRowLenBytes);
+
+		for (int x = 0; x < nNumberOfBlocksX; x++) {
+			const __m128i* pSource = pSourceRow;
+			const __m128i* pFilter = pFilterStart;
+			xmm4 = _mm_setzero_si128();
+			xmm5 = _mm_setzero_si128();
+			xmm6 = _mm_setzero_si128();
+			for (int i = 0; i < filterLen; i++) {
+				xmm7 = *pFilter;
+
+				// the pixel data RED channel
+				xmm2 = *pSource;
+				xmm2 = _mm_add_epi16(xmm2, xmm2);
+				xmm2 = _mm_mulhi_epi16(xmm2, xmm7);
+				xmm2 = _mm_add_epi16(xmm2, xmm2);
+				xmm4 = _mm_adds_epi16(xmm4, xmm2);
+				pSource = (__m128i*)((uint8*)pSource + nChannelLenBytes);
+
+				// the pixel data GREEN channel
+				xmm3 = *pSource;
+				xmm3 = _mm_add_epi16(xmm3, xmm3);
+				xmm3 = _mm_mulhi_epi16(xmm3, xmm7);
+				xmm3 = _mm_add_epi16(xmm3, xmm3);
+				xmm5 = _mm_adds_epi16(xmm5, xmm3);
+				pSource = (__m128i*)((uint8*)pSource + nChannelLenBytes);
+
+				// the pixel data BLUE channel
+				xmm2 = *pSource;
+				xmm2 = _mm_add_epi16(xmm2, xmm2);
+				xmm2 = _mm_mulhi_epi16(xmm2, xmm7);
+				xmm2 = _mm_add_epi16(xmm2, xmm2);
+				xmm6 = _mm_adds_epi16(xmm6, xmm2);
+				pSource = (__m128i*)((uint8*)pSource + nChannelLenBytes);
+
+				pFilter++;
+			}
+
+			// limit to range 0 (in xmm1), 16383 (in xmm0)
+			xmm4 = _mm_min_epi16(xmm4, xmm0);
+			xmm5 = _mm_min_epi16(xmm5, xmm0);
+			xmm6 = _mm_min_epi16(xmm6, xmm0);
+
+			xmm1 = _mm_setzero_si128();
+
+			xmm4 = _mm_max_epi16(xmm4, xmm1);
+			xmm5 = _mm_max_epi16(xmm5, xmm1);
+			xmm6 = _mm_max_epi16(xmm6, xmm1);
+
+			// store result in blocks
+			*pDestination++ = xmm4;
+			*pDestination++ = xmm5;
+			*pDestination++ = xmm6;
+
+			pSourceRow++;
+		};
+
+		nCurY += nIncrementY_FP;
+	};
+
+	return tempImage;
+}
+#else
 // Apply filter in y direction in SSE
 // nSourceHeight: Height of source image, only here to match interface of C++ implementation
 // nTargetHeight: Height of target image after resampling
@@ -1809,11 +1929,21 @@ FilterKernelLoop:
 
 	return tempImage;
 }
+#endif
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 // High quality filtering (MMX implementation)
 /////////////////////////////////////////////////////////////////////////////////////////////
 
+#ifdef _WIN64
+// Not used in 64 bit - uses always SSE version for 64 bit
+static CXMMImage* ApplyFilter_MMX(int nSourceHeight, int nTargetHeight, int nWidth,
+	int nStartY_FP, int nStartX, int nIncrementY_FP,
+	const XMMFilterKernelBlock& filter,
+	int nFilterOffset, const CXMMImage* pSourceImg) {
+	return NULL;
+}
+#else
 // Apply filter in y direction in MMX
 static CXMMImage* ApplyFilter_MMX(int nSourceHeight, int nTargetHeight, int nWidth,
 								  int nStartY_FP, int nStartX, int nIncrementY_FP,
@@ -1960,6 +2090,7 @@ FilterKernelLoop:
 
 	return tempImage;
 }
+#endif
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 // High quality downsampling (SSE/MMX implementation)

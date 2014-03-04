@@ -146,6 +146,9 @@ CPUType ProbeCPU(void) {
 		return cpuType;
 	}
 
+#ifdef _WIN64
+	return CPU_SSE; // 64 bit always supports SSE
+#else
 	// Structured exception handling is mantatory, try/catch(...) does not catch such severe stuff.
 	cpuType = CPU_Generic;
 	__try {
@@ -182,45 +185,36 @@ GiveUp:
 		return cpuType;
 	}
 	return cpuType;
+#endif
 }
 
 // returns if the CPU supports some form of hardware multiprocessing, e.g. hyperthreading or multicore
 static bool CPUSupportsHWMultiprocessing(void) {   
-	unsigned int Regedx      = 0;
-
 	if (ProbeCPU() == CPU_SSE) {
-		_asm {
-			mov eax, 1
-			cpuid
-			mov Regedx, edx
-		}
-		return (Regedx & 0x10000000);  
+		int output[4];
+		__cpuid(output, 1);
+		return (output[3] & 0x10000000);
 	} else {
 		return false;
 	}  
 }
 
 int NumCoresPerPhysicalProc(void) {
-	unsigned int Regeax = 0;
-	
 	if (!CPUSupportsHWMultiprocessing()) {
 		return 1;
 	}
-	_asm {
-		xor eax, eax
-		cpuid
-		cmp eax, 4			// check if cpuid supports leaf 4
-		jl single_core		// Single core
-		mov eax, 4			
-		mov ecx, 0			// start with index = 0; Leaf 4 reports
-		cpuid				// at least one valid cache level
-		mov Regeax, eax
-		jmp multi_core
-single_core:
-		xor eax, eax		
-multi_core:
-	}
-	return (int)((Regeax & 0xFC000000) >> 26) + 1;
+
+	int output[4];
+
+	// check if cpuid supports leaf 4
+	__cpuid(output, 0);
+	if (output[0] < 4)
+		return 1; // not support, single core
+
+	// start with index = 0; Leaf 4 reports
+	__cpuidex(output, 4, 0);
+
+	return (int)((output[0] & 0xFC000000) >> 26) + 1;
 }
 
 bool PatternMatch(LPCTSTR & sMatchingPattern, LPCTSTR sString, LPCTSTR sPattern) {
@@ -240,7 +234,7 @@ bool PatternMatch(LPCTSTR & sMatchingPattern, LPCTSTR sString, LPCTSTR sPattern)
 			}
 			LPCTSTR pPatStart = pInPat;
 			while (*pPatStart != 0 && *pPatStart != _T('*') && *pPatStart != _T(';')) pPatStart++;
-			int nPatLen = pPatStart - pInPat;
+			int nPatLen = (int)(pPatStart - pInPat);
 			if (nPatLen > 0) {
 				if (bAsterix) {
 					while (*pInStr != 0 && _tcsnicmp(pInPat, pInStr, nPatLen) != 0) pInStr++;
@@ -359,7 +353,7 @@ __int64 CalculateJPEGFileHash(void* pJPEGStream, int nStreamLength) {
 	if (pPixelStart == NULL) {
 		return 0;
 	}
-	int nIndex = (uint8*)pPixelStart - (uint8*)pJPEGStream + 1;
+	int nIndex = (int)((uint8*)pPixelStart - (uint8*)pJPEGStream + 1);
 	
 	// take whole stream in case of inconsistency or if remaining part is too small
 	if (nStreamLength - nIndex < 4) {
@@ -483,6 +477,8 @@ double GetExactTickCount() {
 }
 
 CRect GetWindowRectMatchingImageSize(HWND hWnd, CSize minSize, CSize maxSize, double& dZoom, CJPEGImage* pImage, bool bForceCenterWindow, bool bKeepAspectRatio) {
+	const int SM_CXP_ADDEDBORDER = 92;
+	
 	int nOrigWidth = (pImage == NULL) ? ::GetSystemMetrics(SM_CXSCREEN) / 2 : pImage->OrigWidth();
 	int nOrigWidthUnzoomed = nOrigWidth;
 	int nOrigHeight = (pImage == NULL) ? ::GetSystemMetrics(SM_CYSCREEN) / 2 : pImage->OrigHeight();
@@ -490,8 +486,9 @@ CRect GetWindowRectMatchingImageSize(HWND hWnd, CSize minSize, CSize maxSize, do
 		nOrigWidth = (int) (nOrigWidth * dZoom + 0.5);
 		nOrigHeight = (int) (nOrigHeight * dZoom + 0.5);
 	}
-	int nBorderWidth = ::GetSystemMetrics(SM_CXSIZEFRAME) * 2;
-	int nBorderHeight = ::GetSystemMetrics(SM_CYSIZEFRAME) * 2 + ::GetSystemMetrics(SM_CYCAPTION);
+
+	int nBorderWidth = (::GetSystemMetrics(SM_CXSIZEFRAME) + ::GetSystemMetrics(SM_CXP_ADDEDBORDER)) * 2;
+	int nBorderHeight = (::GetSystemMetrics(SM_CYSIZEFRAME) + ::GetSystemMetrics(SM_CXP_ADDEDBORDER)) * 2 + ::GetSystemMetrics(SM_CYCAPTION);
 	int nRequiredWidth = nBorderWidth + nOrigWidth;
 	int nRequiredHeight = nBorderHeight + nOrigHeight;
 	CRect workingArea = CMultiMonitorSupport::GetWorkingRect(hWnd);
@@ -516,7 +513,7 @@ CRect GetWindowRectMatchingImageSize(HWND hWnd, CSize minSize, CSize maxSize, do
 	int nNewTop = (wndRect.top + wndRect.bottom - nRequiredHeight) / 2;
 	nNewLeft = max(workingArea.left, min(workingArea.right - nRequiredWidth, nNewLeft));
 	nNewTop = max(workingArea.top, min(workingArea.bottom - nRequiredHeight, nNewTop));
-	CRect windowRect;
+
 	if (!bForceCenterWindow) {
 		return CRect(CPoint(nNewLeft, nNewTop), CSize(nRequiredWidth, nRequiredHeight));
 	} else {
@@ -660,7 +657,7 @@ CString GetShortFilePath(LPCTSTR sPath) {
 CString ReplacePathByShortForm(LPCTSTR sPath) {
 	LPCTSTR sLast = _tcsrchr(sPath, _T('\\'));
 	if (sLast != NULL) {
-		CString sShortPath = GetShortFilePath(CString(sPath).Left(sLast - sPath));
+		CString sShortPath = GetShortFilePath(CString(sPath).Left((int)(sLast - sPath)));
 		return sShortPath + sLast;
 	}
 	return CString(sPath);

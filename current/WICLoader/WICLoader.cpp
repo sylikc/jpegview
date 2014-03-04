@@ -1,6 +1,7 @@
 // Exported methods of the WICLoader DLL
 
 #include "stdafx.h"
+#include "MaxImageDef.h"
 
 #pragma comment(lib, "WindowsCodecs.lib")
 
@@ -62,14 +63,18 @@ __declspec(dllexport) byte* __stdcall LoadImageWithWIC(LPCWSTR fileName, Allocat
         IFS(piDecoder->GetFrame(0, &piBitmapFrame));
         if (SUCCEEDED(hr)) {
             piBitmapFrame->GetSize(width, height);
-            bitmapBuffer = allocator(*width * *height * 4);
-            if (bitmapBuffer != NULL) {
-                hr = CopyWICBitmapToBuffer(piBitmapFrame, bitmapBuffer);
-                if (!SUCCEEDED(hr)) {
-                    deallocator(bitmapBuffer);
-                    bitmapBuffer = NULL;
-                }
-            }
+			if (*width <= MAX_IMAGE_DIMENSION && *height <= MAX_IMAGE_DIMENSION) {
+				if ((double)*width * *height <= MAX_IMAGE_PIXELS) {
+					bitmapBuffer = allocator(*width * *height * 4);
+					if (bitmapBuffer != NULL) {
+						hr = CopyWICBitmapToBuffer(piBitmapFrame, bitmapBuffer);
+						if (!SUCCEEDED(hr)) {
+							deallocator(bitmapBuffer);
+							bitmapBuffer = NULL;
+						}
+					}
+				}
+			}
             piBitmapFrame->Release();
             piBitmapFrame = NULL;
         }

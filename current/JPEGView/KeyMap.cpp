@@ -174,7 +174,7 @@ CKeyMap::CKeyMap(LPCTSTR sKeyMapFile) {
 			if (sValue == NULL) continue;
 			int nValue = _ttoi(sValue);
 			if (nValue == 0) continue;
-			int nSymbolLen = _tcslen(sSymbol);
+			int nSymbolLen = (int)_tcslen(sSymbol);
 			if (pSymbolTable + nSymbolLen + 1 <= pSymbolTableEnd) {
 				_tcscpy(pSymbolTable, sSymbol);
 				m_symbolMap[pSymbolTable] = nValue;

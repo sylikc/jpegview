@@ -80,7 +80,7 @@ EXIFResult SetModificationDateToEXIFAllFiles(LPCTSTR sDirectory) {
 	}
 
 	EXIFResult result;
-	result.NumberOfSucceededFiles = listFileNames.size() - nNumFailed;
+	result.NumberOfSucceededFiles = (int)listFileNames.size() - nNumFailed;
 	result.NumberOfFailedFiles = nNumFailed;
 	return result;
 }

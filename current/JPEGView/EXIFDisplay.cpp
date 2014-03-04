@@ -15,7 +15,7 @@ static LPTSTR CopyStrAlloc(LPCTSTR str) {
 	if (str == NULL) {
 		return NULL;
 	}
-	int nLen = _tcslen(str);
+	int nLen = (int)_tcslen(str);
 	TCHAR* pNewStr = new TCHAR[nLen + 1];
 	_tcscpy_s(pNewStr, nLen + 1, str);
 	return pNewStr;
@@ -159,15 +159,15 @@ CRect CEXIFDisplay::PanelRect() {
 		int nMaxLenght1 = 0, nMaxLength2 = 0;
 		CSize size;
 		if (m_sPrefix != NULL) {
-			::GetTextExtentPoint32(dc, m_sPrefix, _tcslen(m_sPrefix), &size);
+			::GetTextExtentPoint32(dc, m_sPrefix, (int)_tcslen(m_sPrefix), &size);
 			nTitleLength = m_nPrefixLenght = size.cx;
 			m_nTitleHeight = size.cy + HelpersGUI::ScaleToScreen(9);
 		}
 		if (m_sTitle != NULL) {
-			::GetTextExtentPoint32(dc, m_sTitle, _tcslen(m_sTitle), &size);
+			::GetTextExtentPoint32(dc, m_sTitle, (int)_tcslen(m_sTitle), &size);
 			if (size.cx > HelpersGUI::ScaleToScreen(MAX_WIDTH)) {
 				CRect rectTitle(0, 0, HelpersGUI::ScaleToScreen(MAX_WIDTH), HelpersGUI::ScaleToScreen(2));
-				::DrawText(dc, m_sTitle, _tcslen(m_sTitle), &rectTitle, DT_CALCRECT | DT_NOPREFIX | DT_WORDBREAK | DT_WORD_ELLIPSIS);
+				::DrawText(dc, m_sTitle, (int)_tcslen(m_sTitle), &rectTitle, DT_CALCRECT | DT_NOPREFIX | DT_WORDBREAK | DT_WORD_ELLIPSIS);
 				m_nTitleWidth = rectTitle.Width();
 				nTitleLength += m_nTitleWidth;
 				m_nTitleHeight = max(m_nTitleHeight, rectTitle.Height() + HelpersGUI::ScaleToScreen(9));
@@ -187,14 +187,14 @@ CRect CEXIFDisplay::PanelRect() {
 		std::list<TextLine>::iterator iter;
 		for (iter = m_lines.begin( ); iter != m_lines.end( ); iter++ ) {
 			if (iter->Desc != NULL) {
-				::GetTextExtentPoint32(dc, iter->Desc, _tcslen(iter->Desc), &size);
+				::GetTextExtentPoint32(dc, iter->Desc, (int)_tcslen(iter->Desc), &size);
 				m_nLineHeight = max(m_nLineHeight, size.cy);
 				nMaxLenght1 = max(nMaxLenght1, size.cx);
 			}
 			nLen2 = nLen1;
 			nLen1 = 0;
 			if (iter->Value != NULL) {
-				::GetTextExtentPoint32(dc, iter->Value, _tcslen(iter->Value), &size);
+				::GetTextExtentPoint32(dc, iter->Value, (int)_tcslen(iter->Value), &size);
 				m_nLineHeight = max(m_nLineHeight, size.cy);
 				nMaxLength2 = max(nMaxLength2, size.cx);
 				nLen1 = size.cx;
@@ -211,11 +211,11 @@ CRect CEXIFDisplay::PanelRect() {
 		}
 
 		m_size = CSize(nNeededWidthNoBorders + m_nGap*2 + nExpansionX, 
-			m_nTitleHeight + m_lines.size()*m_nLineHeight + m_nGap*2 + nExpansionY);
+			m_nTitleHeight + (int)m_lines.size()*m_nLineHeight + m_nGap * 2 + nExpansionY);
 
 		if (m_sComment != NULL) {
 			CRect rectComment(0, 0, m_size.cx - m_nGap*2, HelpersGUI::ScaleToScreen(200));
-			::DrawText(dc, m_sComment, _tcslen(m_sComment), &rectComment, DT_CALCRECT | DT_NOPREFIX | DT_WORDBREAK | DT_WORD_ELLIPSIS);
+			::DrawText(dc, m_sComment, (int)_tcslen(m_sComment), &rectComment, DT_CALCRECT | DT_NOPREFIX | DT_WORDBREAK | DT_WORD_ELLIPSIS);
 			m_nCommentHeight = min(3 * m_nLineHeight, rectComment.Height());
 			m_size.cy += (m_nGap >> 1) + m_nCommentHeight;
 		}
@@ -243,12 +243,12 @@ void CEXIFDisplay::OnPaint(CDC & dc, const CPoint& offset) {
 	::SetBkMode(dc, TRANSPARENT);
 	::SetTextColor(dc, RGB(255, 255, 255));
 	if (m_sPrefix != NULL) {
-		::TextOut(dc, nX + m_nGap, nY + m_nGap, m_sPrefix, _tcslen(m_sPrefix));
+		::TextOut(dc, nX + m_nGap, nY + m_nGap, m_sPrefix, (int)_tcslen(m_sPrefix));
 	}
 	if (m_sTitle != NULL) {
 		int nXStart = nX + m_nGap + m_nPrefixLenght;
 		CRect rectTitle(nXStart, nY + m_nGap, nXStart + m_nTitleWidth, nY + m_nGap + m_nTitleHeight);
-		::DrawText(dc, m_sTitle, _tcslen(m_sTitle), &rectTitle, DT_NOPREFIX | DT_WORDBREAK | DT_WORD_ELLIPSIS);
+		::DrawText(dc, m_sTitle, (int)_tcslen(m_sTitle), &rectTitle, DT_NOPREFIX | DT_WORDBREAK | DT_WORD_ELLIPSIS);
 	}
 
 	::SetTextColor(dc, RGB(243, 242, 231));
@@ -258,7 +258,7 @@ void CEXIFDisplay::OnPaint(CDC & dc, const CPoint& offset) {
 
 	if (m_sComment != NULL) {
 		CRect rectComment(nX + m_nGap, nRunningY, nX + m_size.cx - m_nGap, nRunningY + m_nCommentHeight);
-		::DrawText(dc, m_sComment, _tcslen(m_sComment), &rectComment, DT_NOPREFIX | DT_WORDBREAK | DT_WORD_ELLIPSIS);
+		::DrawText(dc, m_sComment, (int)_tcslen(m_sComment), &rectComment, DT_NOPREFIX | DT_WORDBREAK | DT_WORD_ELLIPSIS);
 		nRunningY += m_nCommentHeight;
 		nRunningY += m_nGap >> 1;
 	}
@@ -266,10 +266,10 @@ void CEXIFDisplay::OnPaint(CDC & dc, const CPoint& offset) {
 	std::list<TextLine>::iterator iter;
 	for (iter = m_lines.begin( ); iter != m_lines.end( ); iter++ ) {
 		if (iter->Desc != NULL) {
-			::TextOut(dc, nX + m_nGap, nRunningY, iter->Desc, _tcslen(iter->Desc));
+			::TextOut(dc, nX + m_nGap, nRunningY, iter->Desc, (int)_tcslen(iter->Desc));
 		}
 		if (iter->Value != NULL) {
-			::TextOut(dc, nX + m_nGap + m_nTab1, nRunningY, iter->Value, _tcslen(iter->Value));
+			::TextOut(dc, nX + m_nGap + m_nTab1, nRunningY, iter->Value, (int)_tcslen(iter->Value));
 		}
 		nRunningY += m_nLineHeight;
 	}
