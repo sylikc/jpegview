@@ -16,6 +16,8 @@
 ; 'it'    Italian
 ; 'fr'    French
 ; 'kr'    Korean
+; 'zh'    Chinese
+; 'zh-tw' Chinese (Taiwan)
 ; 'ro'    Romanian
 ; 'ru'    Russian
 ; 'sv'    Swedish

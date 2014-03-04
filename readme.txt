@@ -20,6 +20,7 @@ Bugs fixed:
 - Window size in windowed mode was some pixels too small due to invalid reporting of window border size by OS
 New features:
 - 32 and 64 bit versions
+- Traditional Chinese (Taiwan) translation
 Other changes:
 - Ctrl-X also copies the file name to the clipboard (as Ctrl-C)
 - Using Visual Studio 2013 to compile the project
