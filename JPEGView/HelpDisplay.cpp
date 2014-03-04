@@ -55,16 +55,16 @@ CSize CHelpDisplay::GetSize() {
 	std::list<TextLine>::iterator iter;
 	for (iter = m_lines.begin( ); iter != m_lines.end( ); iter++ ) {
 		CSize size;
-		m_dc.GetTextExtent(iter->Key, _tcslen(iter->Key), &size);
+		m_dc.GetTextExtent(iter->Key, (int)_tcslen(iter->Key), &size);
 		m_nSizeX = max(m_nSizeX, size.cx);
 		if (m_nIncY == 0) m_nIncY = size.cy;
 		m_nSizeY += m_nIncY;
 		if (iter->Info != NULL) {
-			m_dc.GetTextExtent(iter->Info, _tcslen(iter->Info), &size);
+			m_dc.GetTextExtent(iter->Info, (int)_tcslen(iter->Info), &size);
 			m_nSizeX = max(m_nSizeX, size.cx + m_nTab1);
 		}
 		if (iter->Help != NULL) {
-			m_dc.GetTextExtent(iter->Help, _tcslen(iter->Help), &size);
+			m_dc.GetTextExtent(iter->Help, (int)_tcslen(iter->Help), &size);
 			m_nSizeX = max(m_nSizeX, size.cx + m_nTab2);
 		}
 	}
@@ -95,18 +95,18 @@ void CHelpDisplay::Show(const CRect & screenRect) {
 		if ((nI++ & 1) == 0 && nI > 2) {
 			m_dc.FillRect(CRect(fullRect.left + 1, nStartY, fullRect.right - 1, nStartY + m_nIncY), brushBk1);
 		}
-        int nKeyLen = _tcslen(iter->Key);
+		int nKeyLen = (int)_tcslen(iter->Key);
 		m_dc.SetTextColor(iter->Color);
 		m_dc.TextOut(nStartX, nStartY, iter->Key, nKeyLen);
         CSize textLenKey;
         m_dc.GetTextExtent(iter->Key, nKeyLen, &textLenKey);
 		if (iter->Info != NULL) {
 			m_dc.SetTextColor(iter->ColorInfo);
-			m_dc.TextOut(max(nStartX + m_nTab1, nStartX + textLenKey.cx + 2), nStartY, iter->Info, _tcslen(iter->Info));
+			m_dc.TextOut(max(nStartX + m_nTab1, nStartX + textLenKey.cx + 2), nStartY, iter->Info, (int)_tcslen(iter->Info));
 		}
 		if (iter->Help != NULL) {
 			m_dc.SetTextColor(iter->Color);
-			m_dc.TextOut(nStartX + m_nTab2, nStartY, iter->Help, _tcslen(iter->Help));
+			m_dc.TextOut(nStartX + m_nTab2, nStartY, iter->Help, (int)_tcslen(iter->Help));
 		}
 		nStartY += m_nIncY;
 		if (nI == 1) {

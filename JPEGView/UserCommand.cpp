@@ -50,7 +50,7 @@ static int ParseKeyCode(const CString & sCmdLineLower, LPCTSTR lpCmdLine) {
 static void SmartNameReplace(CString& strSource, LPCTSTR sOldText, LPCTSTR sNewText) {
 	int nIndex = strSource.Find(sOldText);
 	if (nIndex >= 0) {
-		int nOldTextLen = _tcslen(sOldText);
+		int nOldTextLen = (int)_tcslen(sOldText);
 		bool bBackSlashBefore = (nIndex  > 0 && strSource.GetAt(nIndex - 1) == _T('\\'));
 		bool bBackSlashAfter = (nIndex+nOldTextLen < strSource.GetLength()) && (strSource.GetAt(nIndex+nOldTextLen) == _T('\\'));
 		if (!bBackSlashBefore && !bBackSlashAfter) {
@@ -94,7 +94,7 @@ static CString ReplacePlaceholders(CString sMsg, LPCTSTR sFileName, const CRect&
 	SmartNameReplace(sNewMsg, _T("%filetitle%"), sFileTitle);
 	if (sMsg.Find(_T("%directory%")) >= 0) {
 		CString sDirectory = sFileName;
-		sDirectory = sDirectory.Mid(0, sFileTitle - sFileName - 1);
+		sDirectory = sDirectory.Mid(0, (int)(sFileTitle - sFileName - 1));
 		if (sDirectory.IsEmpty()) {
 			sDirectory = _T("."); // current dir
 		}

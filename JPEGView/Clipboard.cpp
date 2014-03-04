@@ -3,10 +3,11 @@
 #include "JPEGImage.h"
 #include "Helpers.h"
 #include "BasicProcessing.h"
+#include "MaxImageDef.h"
 #include <gdiplus.h>
 
 static void CopyOriginalFileNameToClipboard(LPCWSTR filename) {
-	int fileNameLength = wcslen(filename);
+	int fileNameLength = (int)wcslen(filename);
     DWORD fileNameLengthBytes = sizeof(wchar_t) * (fileNameLength + 1);
     DROPFILES df = {sizeof(DROPFILES), {0, 0}, 0, TRUE};
     HGLOBAL hMem = ::GlobalAlloc(GMEM_ZEROINIT|GMEM_MOVEABLE|GMEM_DDESHARE, sizeof(DROPFILES) + fileNameLengthBytes + sizeof(wchar_t)); // for double NULL char
@@ -71,18 +72,20 @@ CJPEGImage* CClipboard::PasteImageFromClipboard(HWND hWnd, const CImageProcessin
 			}
 			char* pDIBBits = (char*)pbmInfo + pbmInfo->bmiHeader.biSize + nNumColors*sizeof(RGBQUAD);
 
-			Gdiplus::Bitmap* pBitmap = new Gdiplus::Bitmap(pbmInfo, pDIBBits);
-			if (pBitmap->GetLastStatus() == Gdiplus::Ok) {
-				Gdiplus::Rect bmRect(0, 0, pBitmap->GetWidth(), pBitmap->GetHeight());
-				Gdiplus::BitmapData bmData;
-				if (pBitmap->LockBits(&bmRect, Gdiplus::ImageLockModeRead, PixelFormat32bppRGB, &bmData) == Gdiplus::Ok) {
-					assert(bmData.PixelFormat == PixelFormat32bppRGB);
-					void* pDIB = CBasicProcessing::ConvertGdiplus32bppRGB(bmRect.Width, bmRect.Height, bmData.Stride, bmData.Scan0);
-					pImage = (pDIB == NULL) ? NULL : new CJPEGImage(bmRect.Width, bmRect.Height, pDIB, NULL, 4, 0, IF_CLIPBOARD, false, 0, 1, 0);
-					pBitmap->UnlockBits(&bmData);
+			if (pbmInfo->bmiHeader.biWidth <= MAX_IMAGE_DIMENSION && abs(pbmInfo->bmiHeader.biHeight) <= MAX_IMAGE_DIMENSION) {
+				Gdiplus::Bitmap* pBitmap = new Gdiplus::Bitmap(pbmInfo, pDIBBits);
+				if (pBitmap->GetLastStatus() == Gdiplus::Ok) {
+					Gdiplus::Rect bmRect(0, 0, pBitmap->GetWidth(), pBitmap->GetHeight());
+					Gdiplus::BitmapData bmData;
+					if (pBitmap->LockBits(&bmRect, Gdiplus::ImageLockModeRead, PixelFormat32bppRGB, &bmData) == Gdiplus::Ok) {
+						assert(bmData.PixelFormat == PixelFormat32bppRGB);
+						void* pDIB = CBasicProcessing::ConvertGdiplus32bppRGB(bmRect.Width, bmRect.Height, bmData.Stride, bmData.Scan0);
+						pImage = (pDIB == NULL) ? NULL : new CJPEGImage(bmRect.Width, bmRect.Height, pDIB, NULL, 4, 0, IF_CLIPBOARD, false, 0, 1, 0);
+						pBitmap->UnlockBits(&bmData);
+					}
 				}
+				delete pBitmap;
 			}
-			delete pBitmap;
 
 			::GlobalUnlock(handle);
 		}

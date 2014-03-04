@@ -12,7 +12,7 @@
 // Helpers
 //////////////////////////////////////////////////////////////////////////////////////
 
-inline static int16 round(double d) {
+inline static int16 roundToInt16(double d) {
 	return (d < 0) ? (int16)(d - 0.5) : (int16)(d + 0.5);
 }
 
@@ -44,7 +44,7 @@ static void GetBicubicFilter(uint16 nFrac, int16* pFilter) {
 		dSum += dFilter[i];
 	}
 	for (int i = 0; i < BICUBIC_FILTER_LEN; i++) {
-		pFilter[i] = round(CResizeFilter::FP_ONE * dFilter[i] / dSum);
+		pFilter[i] = roundToInt16(CResizeFilter::FP_ONE * dFilter[i] / dSum);
 	}
 
 	NormalizeFilter(pFilter, BICUBIC_FILTER_LEN);
@@ -229,7 +229,7 @@ void CResizeFilter::CalculateXMMFilterKernels() {
 	}
 
 	for (int i = 0; i < m_nTargetSize; i++) {
-		int nIndex = m_kernels.Indices[i] - m_kernels.Kernels;
+		int nIndex = (int)(m_kernels.Indices[i] - m_kernels.Kernels);
 		m_kernelsXMM.Indices[i] = pKernelStartAddress[nIndex];
 	}
 
@@ -399,7 +399,7 @@ int16* CResizeFilter::GetFilter(uint16 nFrac, EFilterType eFilter) {
 	}
 	int nSum = 0;
 	for (int i = 0; i < m_nFilterLen; i++) {
-		m_Filter[i] = round(FP_ONE * dFilter[i] / dSum);
+		m_Filter[i] = roundToInt16(FP_ONE * dFilter[i] / dSum);
 		nSum += m_Filter[i];
 	}
 	m_Filter[0] += (int16)(FP_ONE - nSum);
@@ -577,7 +577,7 @@ FilterKernel CGaussFilter::CalculateKernel(double dRadius) {
 	filterKernel.FilterOffset = (nFilterLen - 1) >> 1;
 	int j = 0;
 	for (int i = filterKernel.FilterOffset; i >= 0; i--) {
-		filterKernel.Kernel[i] = round(kernel[j] * FP_ONE);
+		filterKernel.Kernel[i] = roundToInt16(kernel[j] * FP_ONE);
 		filterKernel.Kernel[filterKernel.FilterOffset + j] = filterKernel.Kernel[i];
 		j++;
 	}

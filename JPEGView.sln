@@ -1,7 +1,13 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual C++ Express 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.21005.1
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "JPEGView", "JPEGView\JPEGView.vcxproj", "{F6D355BF-A245-46FA-AE41-DAA541556245}"
+	ProjectSection(ProjectDependencies) = postProject
+		{238F5CD4-8E56-4831-8A1F-525281EBD79E} = {238F5CD4-8E56-4831-8A1F-525281EBD79E}
+		{91D548E5-3C0D-4AE3-9429-391910852D8C} = {91D548E5-3C0D-4AE3-9429-391910852D8C}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WICLoader", "WICLoader\WICLoader.vcxproj", "{91D548E5-3C0D-4AE3-9429-391910852D8C}"
 EndProject
@@ -10,21 +16,35 @@ EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
+		Debug|x64 = Debug|x64
 		Release|Win32 = Release|Win32
+		Release|x64 = Release|x64
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{F6D355BF-A245-46FA-AE41-DAA541556245}.Debug|Win32.ActiveCfg = Debug|Win32
 		{F6D355BF-A245-46FA-AE41-DAA541556245}.Debug|Win32.Build.0 = Debug|Win32
+		{F6D355BF-A245-46FA-AE41-DAA541556245}.Debug|x64.ActiveCfg = Debug|x64
+		{F6D355BF-A245-46FA-AE41-DAA541556245}.Debug|x64.Build.0 = Debug|x64
 		{F6D355BF-A245-46FA-AE41-DAA541556245}.Release|Win32.ActiveCfg = Release|Win32
 		{F6D355BF-A245-46FA-AE41-DAA541556245}.Release|Win32.Build.0 = Release|Win32
+		{F6D355BF-A245-46FA-AE41-DAA541556245}.Release|x64.ActiveCfg = Release|x64
+		{F6D355BF-A245-46FA-AE41-DAA541556245}.Release|x64.Build.0 = Release|x64
 		{91D548E5-3C0D-4AE3-9429-391910852D8C}.Debug|Win32.ActiveCfg = Debug|Win32
 		{91D548E5-3C0D-4AE3-9429-391910852D8C}.Debug|Win32.Build.0 = Debug|Win32
+		{91D548E5-3C0D-4AE3-9429-391910852D8C}.Debug|x64.ActiveCfg = Debug|x64
+		{91D548E5-3C0D-4AE3-9429-391910852D8C}.Debug|x64.Build.0 = Debug|x64
 		{91D548E5-3C0D-4AE3-9429-391910852D8C}.Release|Win32.ActiveCfg = Release|Win32
 		{91D548E5-3C0D-4AE3-9429-391910852D8C}.Release|Win32.Build.0 = Release|Win32
+		{91D548E5-3C0D-4AE3-9429-391910852D8C}.Release|x64.ActiveCfg = Release|x64
+		{91D548E5-3C0D-4AE3-9429-391910852D8C}.Release|x64.Build.0 = Release|x64
 		{238F5CD4-8E56-4831-8A1F-525281EBD79E}.Debug|Win32.ActiveCfg = Debug|Win32
 		{238F5CD4-8E56-4831-8A1F-525281EBD79E}.Debug|Win32.Build.0 = Debug|Win32
+		{238F5CD4-8E56-4831-8A1F-525281EBD79E}.Debug|x64.ActiveCfg = Debug|x64
+		{238F5CD4-8E56-4831-8A1F-525281EBD79E}.Debug|x64.Build.0 = Debug|x64
 		{238F5CD4-8E56-4831-8A1F-525281EBD79E}.Release|Win32.ActiveCfg = Release|Win32
 		{238F5CD4-8E56-4831-8A1F-525281EBD79E}.Release|Win32.Build.0 = Release|Win32
+		{238F5CD4-8E56-4831-8A1F-525281EBD79E}.Release|x64.ActiveCfg = Release|x64
+		{238F5CD4-8E56-4831-8A1F-525281EBD79E}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

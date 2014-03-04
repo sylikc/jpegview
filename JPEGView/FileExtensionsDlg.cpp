@@ -291,7 +291,7 @@ void CFileExtensionsDlg::FillFileExtensionsList() {
 }
 
 void CFileExtensionsDlg::InsertExtensions(LPCTSTR sExtensionList, LPCTSTR sHint) {
-    int nNumChars = _tcslen(sExtensionList);
+	int nNumChars = (int)_tcslen(sExtensionList);
     int nStart = 0;
     for (int i = 0; i <= nNumChars; i++) {
         if (sExtensionList[i] == _T(';') || sExtensionList[i] == 0) {

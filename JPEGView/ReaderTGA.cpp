@@ -3,6 +3,7 @@
 #include "JPEGImage.h"
 #include "Helpers.h"
 #include "BasicProcessing.h"
+#include "MaxImageDef.h"
 
 // The TGA reader has been adapted and extended from the TGA reader used in an example of the BOINC project
 // http://www.filewatcher.com/p/boinc-server-maker_7.0.27+dfsg-5_armhf.deb.5191030/usr/share/doc/boinc-server-maker/examples/tgalib.h.html
@@ -57,9 +58,6 @@ static inline uint32 AlphaBlendBackground(uint32 pixel, uint32 backgroundColor)
 
 
 CJPEGImage* CReaderTGA::ReadTgaImage(LPCTSTR strFileName, COLORREF backgroundColor, bool& bOutOfMemory) {
-
-    const int MAX_IMAGE_SIZE_BYTES = 256 * 1024 * 1024; // 256 MB
-    const int MAX_IMAGE_DIMENSION = 65535;
 
     bOutOfMemory = false;
 
@@ -128,8 +126,9 @@ CJPEGImage* CReaderTGA::ReadTgaImage(LPCTSTR strFileName, COLORREF backgroundCol
     // check memory footprint
     int targetChannels = (bits == 32) ? 4 : 3;
     int targetStride = Helpers::DoPadding(width * targetChannels, 4);
-    double numberOfBytesRequired = (double)targetStride * height;
-    if (numberOfBytesRequired > MAX_IMAGE_SIZE_BYTES)
+	uint32 numberOfBytesRequired = targetStride * height;
+
+	if ((double)width * height > MAX_IMAGE_PIXELS)
     {
         bOutOfMemory = true;
         fclose(pFile);
@@ -137,7 +136,7 @@ CJPEGImage* CReaderTGA::ReadTgaImage(LPCTSTR strFileName, COLORREF backgroundCol
     }
 	
     // Allocate memory which will hold our image data
-	byte* pImageData = new(std::nothrow) byte[(uint32)numberOfBytesRequired];
+	byte* pImageData = new(std::nothrow) byte[numberOfBytesRequired];
     if (pImageData == NULL)
     {
         bOutOfMemory = true;

@@ -2,6 +2,7 @@
 #include "stdafx.h"
 #include "TJPEGWrapper.h"
 #include "libjpeg-turbo\include\turbojpeg.h"
+#include "MaxImageDef.h"
 
 void * TurboJpeg::ReadImage(int &width,
                        int &height,
@@ -11,9 +12,6 @@ void * TurboJpeg::ReadImage(int &width,
                        const void *buffer,
                        int sizebytes)
 {
-    const int MAX_PIXELS = 1024*1024*100; // 100 MPixel
-    const unsigned int MAX_IMAGE_DIMENSION = 65535;
-
     outOfMemory = false;
     width = height = 0;
     nchannels = 3;
@@ -29,7 +27,7 @@ void * TurboJpeg::ReadImage(int &width,
     int nResult = tjDecompressHeader2(hDecoder, (unsigned char*)buffer, sizebytes, &width, &height, &nSubSampling);
     if (nResult == 0){
         chromoSubsampling = (TJSAMP)nSubSampling;
-        if (abs(width*height) > MAX_PIXELS) {
+		if (abs((double)width * height) > MAX_IMAGE_PIXELS) {
             outOfMemory = true;
         } else if (width <= MAX_IMAGE_DIMENSION && height <= MAX_IMAGE_DIMENSION) {
             pPixelData = new(std::nothrow) unsigned char[TJPAD(width * 3) * height];

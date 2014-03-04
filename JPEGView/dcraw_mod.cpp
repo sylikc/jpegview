@@ -42,6 +42,7 @@
 #include <direct.h>
 #include <sys/types.h>
 #include "TJPEGWrapper.h"
+#include "MaxImageDef.h"
 #include "dcraw_mod.h"
 /*
    NO_JPEG disables decoding of compressed Kodak DC120 files.
@@ -587,6 +588,14 @@ void CLASS jpeg_thumb (CJPEGImage** Image, bool& bOutOfMemory);
 void CLASS ppm_thumb (CJPEGImage** Image, bool& bOutOfMemory)
 {
 	byte *thumb;
+	if ((double)thumb_width * thumb_height > MAX_IMAGE_PIXELS) {
+		bOutOfMemory = true;
+		return;
+	}
+	if (thumb_width > MAX_IMAGE_DIMENSION || thumb_height > MAX_IMAGE_DIMENSION) {
+		return;
+	}
+
 	thumb_length = thumb_width*thumb_height*3;
 	thumb = (byte *) malloc (thumb_length);
 	fread(thumb, 1, thumb_length, ifp);
@@ -619,7 +628,7 @@ void CLASS ppm_thumb (CJPEGImage** Image, bool& bOutOfMemory)
 	
 	free(thumb);
 
-	(*Image) = new CJPEGImage(thumb_width, thumb_height, data, 0, 3, 0, IF_WindowsBMP, false, 0, 1, 0);
+	*Image = new CJPEGImage(thumb_width, thumb_height, data, 0, 3, 0, IF_WindowsBMP, false, 0, 1, 0);
 }
 
 //void CLASS layer_thumb (FILE *tfp)
@@ -1952,7 +1961,7 @@ void CLASS parse_ciff (int offset, int length)
 	  fread (artist, 64, 1, ifp);
 	if (type == 0x080a) {
 	  fread (make, 64, 1, ifp);
-	  fseek (ifp, strlen(make) - 63, SEEK_CUR);
+	  fseek(ifp, (int)strlen(make) - 63, SEEK_CUR);
 	  fread (model, 64, 1, ifp);
 	}
 	if (type == 0x1810) {
@@ -2668,7 +2677,7 @@ void CLASS identify()
   while (*--cp == ' ') *cp = 0;
   cp = model + strlen(model);
   while (*--cp == ' ') *cp = 0;
-  i = strlen(make);			/* Remove make from model */
+  i = (int)strlen(make);			/* Remove make from model */
   if (!strncasecmp (model, make, i) && model[i++] == ' ')
 	memmove (model, model+i, 64-i);
   if (!strncmp (model,"Digital Camera ",15))
@@ -3672,10 +3681,11 @@ void CLASS jpeg_thumb(CJPEGImage** Image, bool& bOutOfMemory)
 	int kkk = 0;
 	char *thumb;
 	
+	*Image = NULL;
+
 	thumb = (char *) malloc (thumb_length);
 	if (thumb == NULL) {
 		bOutOfMemory = true;
-		*Image = NULL;
 		return;
 	}
 
@@ -3684,7 +3694,6 @@ void CLASS jpeg_thumb(CJPEGImage** Image, bool& bOutOfMemory)
 	int nWidth, nHeight, nBPP;
     TJSAMP eChromoSubSampling;
 	void* pPixelData = TurboJpeg::ReadImage(nWidth, nHeight, nBPP, eChromoSubSampling, bOutOfMemory, thumb, thumb_length);
-
 
 	if (pPixelData != NULL && (nBPP == 3 || nBPP == 1))
 	{
@@ -3696,9 +3705,8 @@ void CLASS jpeg_thumb(CJPEGImage** Image, bool& bOutOfMemory)
 	{
 		bOutOfMemory = true;
 	}
-		else
+	else
 	{
-		// failed, try GDI+
 		delete[] pPixelData;
 	}
 	
@@ -3715,9 +3723,9 @@ int dcraw_main (LPCTSTR filename, CJPEGImage** Image, bool& bOutOfMemory)
 #ifndef _UNICODE
 	CHAR *fn = (CHAR *)filename;
 #else
-	int lenFileName = wcslen(filename) * 2;
+	int lenFileName = (int)wcslen(filename) * 2;
 	CHAR *fn = new CHAR[lenFileName];
-	WideCharToMultiByte(CP_ACP, 0, filename, wcslen(filename), fn, lenFileName, NULL, NULL);
+	WideCharToMultiByte(CP_ACP, 0, filename, (int)wcslen(filename), fn, lenFileName, NULL, NULL);
 #endif
 
 	ifname = fn;

@@ -51,7 +51,7 @@ void CWorkThread::ProcessAsync(CRequestBase* pRequest) {
 
 bool CWorkThread::RequestQueueEmpty() {
 	::EnterCriticalSection(&m_csList);
-	int nSize = m_requestList.size();
+	int nSize = (int)m_requestList.size();
 	::LeaveCriticalSection(&m_csList);
 	return nSize == 0;
 }

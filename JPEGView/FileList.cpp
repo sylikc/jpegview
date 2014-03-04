@@ -797,7 +797,7 @@ bool CFileList::TryReadingSlideShowList(const CString & sSlideShowFile) {
 	bool bUnicode;
     bool bUTF8Marker = false;
     int nSeekPos = 0;
-	int nRealProbe = fread(buff, 1, NUMPROBE, fptr);
+	int nRealProbe = (int)fread(buff, 1, NUMPROBE, fptr);
 	if (nRealProbe < 16) {
 		// file is too short for a good guess
 		bUnicode = false;
@@ -830,7 +830,7 @@ bool CFileList::TryReadingSlideShowList(const CString & sSlideShowFile) {
 		if ((fptr = _tfopen(sSlideShowFile,_T("r, ccs=UTF-8"))) == NULL) {
 			return false;
 		}
-		nSeekPos = bIsUTF8EncodedXML ? max(0, strchr((char*)buff, '<') - (char*)buff) : 3;
+		nSeekPos = bIsUTF8EncodedXML ? max(0, (int)(strchr((char*)buff, '<') - (char*)buff)) : 3;
 		bUnicode = true;
 	}
 
@@ -839,7 +839,7 @@ bool CFileList::TryReadingSlideShowList(const CString & sSlideShowFile) {
 	char* fileBuffOrig = fileBuff;
 	wchar_t* wideFileBuff = (wchar_t*)fileBuff; // same buffer interpreted as Unicode
 	fseek(fptr, nSeekPos, SEEK_SET);
-	int nRealFileSizeChars = fread(fileBuff, 1, FILE_BUFFER_SIZE, fptr);
+	int nRealFileSizeChars = (int)fread(fileBuff, 1, FILE_BUFFER_SIZE, fptr);
 	if (bUnicode) nRealFileSizeChars = nRealFileSizeChars/2;
 
 	const int LINE_BUFF_SIZE = 512;

@@ -11,6 +11,7 @@
 #include "BasicProcessing.h"
 #include "dcraw_mod.h"
 #include "TJPEGWrapper.h"
+#include "MaxImageDef.h"
 
 using namespace Gdiplus;
 
@@ -28,7 +29,7 @@ static EImageFormat GetImageFormat(LPCTSTR sFileName) {
 		return IF_Unknown;
 	}
 	unsigned char header[16];
-	int nSize = fread((void*)header, 1, 16, fptr);
+	int nSize = (int)fread((void*)header, 1, 16, fptr);
 	fclose(fptr);
 	if (nSize < 2) {
 		return IF_Unknown;
@@ -67,8 +68,6 @@ static EImageFormat GetBitmapFormat(Gdiplus::Bitmap * pBitmap) {
 static CJPEGImage* ConvertGDIPlusBitmapToJPEGImage(Gdiplus::Bitmap* pBitmap, int nFrameIndex, void* pEXIFData, 
     __int64 nJPEGHash, bool &isOutOfMemory, bool &isAnimatedGIF) {
 
-    const unsigned int MAX_IMAGE_DIMENSION = 65535;
-
 	isOutOfMemory = false;
     isAnimatedGIF = false;
     Gdiplus::Status lastStatus = pBitmap->GetLastStatus();
@@ -81,6 +80,11 @@ static CJPEGImage* ConvertGDIPlusBitmapToJPEGImage(Gdiplus::Bitmap* pBitmap, int
     {
         return NULL;
     }
+	if ((double)pBitmap->GetWidth() * pBitmap->GetHeight() > MAX_IMAGE_PIXELS)
+	{
+		isOutOfMemory = true;
+		return NULL;
+	}
 
     EImageFormat eImageFormat = GetBitmapFormat(pBitmap);
 
@@ -290,9 +294,6 @@ void CImageLoadThread::DeleteCachedGDIBitmap() {
 }
 
 void CImageLoadThread::ProcessReadJPEGRequest(CRequest * request) {
-
-	const unsigned int MAX_JPEG_FILE_SIZE = 1024*1024*50; // 50 MB
-
 	HANDLE hFile = ::CreateFile(request->FileName, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, 0, NULL);
 	if (hFile == INVALID_HANDLE_VALUE) {
 		return;
@@ -392,14 +393,10 @@ void CImageLoadThread::ProcessReadTGARequest(CRequest * request) {
 	}
 }
 
-__declspec(dllimport) int Webp_Dll_GetInfo(const uint8* data, uint32 data_size, int* width, int* height);
+__declspec(dllimport) int Webp_Dll_GetInfo(const uint8* data, size_t data_size, int* width, int* height);
 __declspec(dllimport) uint8* Webp_Dll_DecodeBGRInto(const uint8* data, uint32 data_size, uint8* output_buffer, int output_buffer_size, int output_stride);
 
 void CImageLoadThread::ProcessReadWEBPRequest(CRequest * request) {
-	const unsigned int MAX_WEBP_FILE_SIZE = 1024*1024*50; // 50 MB
-	const unsigned int MAX_IMAGE_PIXELS = 1024*1024*100; // 100 MPixels
-    const unsigned int MAX_IMAGE_DIMENSION = 65535;
-
 	HANDLE hFile = ::CreateFile(request->FileName, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, 0, NULL);
 	if (hFile == INVALID_HANDLE_VALUE) {
 		return;
@@ -425,7 +422,7 @@ void CImageLoadThread::ProcessReadWEBPRequest(CRequest * request) {
 			int nWidth, nHeight;
 			if (Webp_Dll_GetInfo((uint8*)pBuffer, nFileSize, &nWidth, &nHeight)) {
                 if (nWidth <= MAX_IMAGE_DIMENSION && nHeight <= MAX_IMAGE_DIMENSION) {
-				    if (nWidth * nHeight <= MAX_IMAGE_PIXELS) {
+				    if ((double)nWidth * nHeight <= MAX_IMAGE_PIXELS) {
 					    int nStride = Helpers::DoPadding(nWidth*3, 4);
 					    uint8* pPixelData = new(std::nothrow) unsigned char[nStride * nHeight];
 					    if (pPixelData != NULL) {

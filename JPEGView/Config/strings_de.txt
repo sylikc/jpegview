@@ -201,6 +201,7 @@ no	nein
 Show navigation panel	Navigationsleiste anzeigen
 Show/hide navigation panel	Naviationsleiste anzeigen/nicht anzeigen
 About JPEGView...	Über JPEGView...
+About JPEGView (64 bit version)...	Über JPEGView (64 bit Version)...
 SIMD mode used:	Verwendeter SIMD Modus:
 Number of CPU cores used:	Verwendete CPU Kerne:
 Licensed under the GNU general public license (GPL), see readme file for details:	Lizenz: GNU General Public License (GPL), für weitere Informationen siehe:

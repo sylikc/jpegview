@@ -171,7 +171,7 @@ bool CImageProcPanelCtl::RenameCurrentFile(LPCTSTR sNewFileTitle) {
 		}
 	}
 	LPCTSTR sPosOld = _tcsrchr(sCurrentFileName, _T('\\'));
-	int nNumChrDir = (sPosOld == NULL) ? 0 : (sPosOld - sCurrentFileName);
+	int nNumChrDir = (sPosOld == NULL) ? 0 : (int)(sPosOld - sCurrentFileName);
 	sNewFileName = CString(sCurrentFileName, nNumChrDir) + _T('\\') + sNewFileName;
 
 	// Rename the file

@@ -8,7 +8,7 @@
 #include "Helpers.h"
 #include <math.h>
 
-static int round(float value) {
+static int roundToInt(float value) {
 	return (value > 0) ? (int)(value + 0.5f) : (int)(value - 0.5f);
 }
 
@@ -31,8 +31,8 @@ CTrapezoid CTiltCorrectionPanelCtl::GetCurrentTrapezoid(CSize targetSize) {
 	float fFactorX = ((float)(fullImageSize.cx - 1))/(origImageSize.cx - 1);
 	float fLeftDeltaX = m_fLeftDeltaX * fFactorX;
 	float fRightDeltaX = m_fRightDeltaX * fFactorX;
-	return CTrapezoid(round(fLeftDeltaX), round(fRightDeltaX + fullImageSize.cx - 1), 
-		 0, round(-fLeftDeltaX), round(-fRightDeltaX + fullImageSize.cx - 1), fullImageSize.cy - 1);
+	return CTrapezoid(roundToInt(fLeftDeltaX), roundToInt(fRightDeltaX + fullImageSize.cx - 1),
+		0, roundToInt(-fLeftDeltaX), roundToInt(-fRightDeltaX + fullImageSize.cx - 1), fullImageSize.cy - 1);
 }
 
 void* CTiltCorrectionPanelCtl::GetDIBForPreview(CSize fullTargetSize, CSize clippingSize, CPoint targetOffset,

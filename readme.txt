@@ -3,33 +3,26 @@ JPEGView source code readme
 
 To compile JPEGView you need:
 
-- Visual Studio 2010 (VC 10 C++ Express Edition also works, see below what you additionally need).
+- Visual Studio 2013 (professional version)
 - Windows Template Library (WTL), Version 8.1 (http://sourceforge.net/projects/wtl/)
-When using the Express Edition: 
-- ATL header files. 'Borrow' the files from a standard or professional edition of Visual Studio 10.0
-  or google for it. Copy the files to $(VCInstallDir)\atlmfc\include (e.g. C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\atlmfc\include)
-  The ATL header files cannot be included into the JPEGView source code distribution due to copyright issues.
-- To edit resource files (.rc) a resource editor (e.g. www.radasm.com/resed/) is recommended. The Express Edition has no
-  integrated resource editor.
 
 The include directories of WTL must be added to the include directories for VC++:
-In Visual Studio 2010: Properties of JPEGView project > VC++-Directories-Include Directories and Library Directories
+In Visual Studio 2013: Properties of JPEGView project > VC++-Directories-Include Directories and Library Directories
 
 Please note: Windows XP SP2 or later is needed to run the compiled binary.
-
-
-Debug version:
-Before compiling the debug version for the first time, copy the files included in this distribution
-from JPEGView\Release
-to JPEGView\Debug
 
 
 Changelog
 *********
 
 [1.0.32.0]
+Bugs fixed:
+- Window size in windowed mode was some pixels too small due to invalid reporting of window border size by OS
+New features:
+- 32 and 64 bit versions
 Other changes:
 - Ctrl-X also copies the file name to the clipboard (as Ctrl-C)
+- Using Visual Studio 2013 to compile the project
 
 [1.0.31.1]
 Bugs fixed:

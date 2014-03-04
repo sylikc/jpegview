@@ -3,6 +3,7 @@
 #include "JPEGImage.h"
 #include "Helpers.h"
 #include "BasicProcessing.h"
+#include "MaxImageDef.h"
 
 //////////////////////////////////////////////////////////////////////////////////
 // BITMAP reading
@@ -39,9 +40,6 @@ CJPEGImage* CReaderBMP::ReadBmpImage(LPCTSTR strFileName, bool& bOutOfMemory) {
 	BMINFOHEADER infoheader;
 	FILE *fptr;
 
-	const int MAX_FILE_SIZE_BYTES = 100 * 1024 * 1024; // 100 MB
-    const int MAX_IMAGE_DIMENSION = 65535;
-
 	bOutOfMemory = false;
 
 	/* Open file */
@@ -71,6 +69,11 @@ CJPEGImage* CReaderBMP::ReadBmpImage(LPCTSTR strFileName, bool& bOutOfMemory) {
         fclose(fptr);
 		return NULL;
     }
+	if ((double)infoheader.width * abs(infoheader.height) > MAX_IMAGE_PIXELS) {
+		fclose(fptr);
+		bOutOfMemory = true;
+		return NULL;
+	}
 
 	// read palette for 8 bpp DIBs
 	uint8 palette[4*256];
@@ -97,9 +100,9 @@ CJPEGImage* CReaderBMP::ReadBmpImage(LPCTSTR strFileName, bool& bOutOfMemory) {
 	int bytesPerPixel = infoheader.bits/8;
 	int paddedWidth = Helpers::DoPadding(infoheader.width*bytesPerPixel, 4);
 	int fileSizeBytes = infoheader.height*paddedWidth;
-	if (fileSizeBytes <= 0 || fileSizeBytes > MAX_FILE_SIZE_BYTES) {
+	if (fileSizeBytes <= 0 || fileSizeBytes > MAX_BMP_FILE_SIZE) {
 		fclose(fptr);
-		bOutOfMemory = fileSizeBytes > MAX_FILE_SIZE_BYTES;
+		bOutOfMemory = fileSizeBytes > MAX_BMP_FILE_SIZE;
 		return NULL; // corrupt or manipulated header
 	}
 

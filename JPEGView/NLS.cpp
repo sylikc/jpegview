@@ -87,7 +87,7 @@ void CNLS::ReadStringTable(LPCTSTR sFileName) {
 				*pRunning = 0;
 				if (*pStartTranslated != 0) {
 					// copy strings to permanent buffer
-					int nTargetBuffSize = pRunning - pStartLine + 1;
+					int nTargetBuffSize = (int)(pRunning - pStartLine + 1);
 					TCHAR* pTargetBuff = new TCHAR[nTargetBuffSize];
 					memcpy(pTargetBuff, pStartLine, nTargetBuffSize*sizeof(TCHAR));
 					TCHAR* pTranslated = pTargetBuff + (pStartTranslated - pStartLine);
