@@ -129,6 +129,9 @@ public:
 	// Returns if the current file exists
 	bool CurrentFileExists() const;
 
+	// Deletes the file (to recycle bin)
+	bool DeleteFile(LPCTSTR fileNameWithPath) const;
+
     // Returns if the current file exists and can be opened for reading
     bool CanOpenCurrentFileForReading() const;
 

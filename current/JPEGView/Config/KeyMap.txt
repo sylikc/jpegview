@@ -14,6 +14,8 @@
 #define IDM_COPY_FULL		2500			// copy image to clipboard in original size
 #define IDM_PASTE		2550			// paste image from clipboard
 #define IDM_BATCH_COPY		2600			// open batch copy dialog
+#define IDM_MOVE_TO_RECYCLE_BIN	2620			// delete the current file on disk - no confirmation (by moving it to the recycle bin)
+#define IDM_MOVE_TO_RECYCLE_BIN_CONFIRM 2621		// delete the current file on disk - with user confirmation (by moving it to the recycle bin)
 #define IDM_TOUCH_IMAGE		2700			// set modification time to current time
 #define IDM_TOUCH_IMAGE_EXIF 	2710			// set modification time to EXIF time
 #define IDM_TOUCH_IMAGE_EXIF_FOLDER 2720		// set modification time to EXIF time for all images in folder
@@ -126,6 +128,7 @@ Ctrl+Left               IDM_TOGGLE
 Ctrl+Right              IDM_TOGGLE
 Home                    IDM_FIRST
 End                     IDM_LAST
+Del                     IDM_MOVE_TO_RECYCLE_BIN_CONFIRM
 Plus                    IDM_ZOOM_INC
 Ctrl+Shift+Plus         IDM_CONTRAST_CORRECTION_INC
 Ctrl+Alt+Plus           IDM_COLOR_CORRECTION_INC

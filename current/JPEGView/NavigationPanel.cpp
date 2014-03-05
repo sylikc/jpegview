@@ -29,18 +29,20 @@ CNavigationPanel::CNavigationPanel(HWND hWnd, INotifiyMouseCapture* pNotifyMouse
 	AddUserPaintButton(ID_btnNext, CNLS::GetString(_T("Show next image")), &PaintNextBtn);
 	AddUserPaintButton(ID_btnEnd, CNLS::GetString(_T("Show last image in folder")), &PaintEndBtn);
 	AddGap(ID_gap2, 8);
+	AddUserPaintButton(ID_btnDelete, CNLS::GetString(_T("Delete image file")), &PaintDeleteBtn);
+	AddGap(ID_gap3, 8);
 	AddUserPaintButton(ID_btnZoomMode, CNLS::GetString(_T("Zoom mode (drag mouse to zoom)")), &PaintZoomModeBtn);
 	AddUserPaintButton(ID_btnFitToScreen, &ZoomFitToggleTooltip, &PaintZoomFitToggleBtn, NULL, this);
 	AddUserPaintButton(ID_btnWindowMode, &WindowModeTooltip, &PaintWindowModeBtn, NULL, pFullScreenMode);
-	AddGap(ID_gap3, 8);
+	AddGap(ID_gap4, 8);
 	AddUserPaintButton(ID_btnRotateCW, CNLS::GetString(_T("Rotate image 90 deg clockwise")), &PaintRotateCWBtn);
 	AddUserPaintButton(ID_btnRotateCCW, CNLS::GetString(_T("Rotate image 90 deg counter-clockwise")), &PaintRotateCCWBtn);
 	AddUserPaintButton(ID_btnRotateFree, CNLS::GetString(_T("Rotate image by user-defined angle")), &PaintFreeRotBtn);
 	AddUserPaintButton(ID_btnPerspectiveCorrection, CNLS::GetString(_T("Correct converging lines (perspective correction)")), &PaintPerspectiveBtn);
-	AddGap(ID_gap4, 8);
+	AddGap(ID_gap5, 8);
 	AddUserPaintButton(ID_btnKeepParams, CNLS::GetString(_T("Keep processing parameters between images")), &PaintKeepParamsBtn);
 	AddUserPaintButton(ID_btnLandscapeMode, CNLS::GetString(_T("Landscape picture enhancement mode")), &PaintLandscapeModeBtn);
-	AddGap(ID_gap5, 16);
+	AddGap(ID_gap6, 16);
 	AddUserPaintButton(ID_btnShowInfo, CNLS::GetString(_T("Display image (EXIF) information")), &PaintInfoBtn);
 
 	m_nOptimalWidth = PanelRect().Width();
@@ -184,6 +186,17 @@ void CNavigationPanel::PaintEndBtn(void* pContext, const CRect& rect, CDC& dc) {
 
 	dc.MoveTo(r.right, r.top);
 	dc.LineTo(r.right, r.bottom);
+}
+
+void CNavigationPanel::PaintDeleteBtn(void* pContext, const CRect& rect, CDC& dc) {
+	CRect r = Helpers::InflateRect(rect, 0.3f);
+
+	int size = r.right - r.left;
+	dc.MoveTo(r.left + 1, r.top + 1);
+	dc.LineTo(r.left + size, r.top + size);
+
+	dc.MoveTo(r.left + 1, r.top + size - 1);
+	dc.LineTo(r.left + size , r.top);
 }
 
 void CNavigationPanel::PaintZoomModeBtn(void* pContext, const CRect& rect, CDC& dc) {
