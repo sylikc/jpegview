@@ -1289,6 +1289,23 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 				BatchCopy();
 			}
 			break;
+		case IDM_MOVE_TO_RECYCLE_BIN:
+		case IDM_MOVE_TO_RECYCLE_BIN_CONFIRM:
+			if (m_pCurrentImage != NULL && m_pFileList != NULL && !m_pCurrentImage->IsClipboardImage()) {
+				if (nCommand != IDM_MOVE_TO_RECYCLE_BIN_CONFIRM || 
+					IDYES == ::MessageBox(m_hWnd, CNLS::GetString(_T("Do you really want to delete the current image file on disk?")), CNLS::GetString(_T("Confirm")), MB_YESNOCANCEL | MB_ICONWARNING)) {
+					CFileList* fileListOfDeletedImage = m_pFileList;
+					LPCTSTR currentFileName = CurrentFileName(false);
+					GotoImage(POS_AwayFromCurrent, NO_REQUEST);
+					if (m_pFileList->DeleteFile(currentFileName)) {
+						fileListOfDeletedImage->Reload(NULL, false);
+						m_pFileList->DeleteHistory(true);
+						Invalidate();
+						GotoImage(POS_Current);
+					}
+				}
+			}
+			break;
 		case IDM_SHOW_FILEINFO:
 			m_pEXIFDisplayCtl->SetActive(!m_pEXIFDisplayCtl->IsActive());
 			m_pNavPanelCtl->GetNavPanel()->GetBtnShowInfo()->SetActive(m_pEXIFDisplayCtl->IsActive());

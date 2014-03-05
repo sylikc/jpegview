@@ -34,16 +34,28 @@ void CHelpDisplay::AddLine(LPCTSTR sLine) {
 	AddTextLine(colorLines, colorInfo, sLine, NULL, NULL);
 }
 
-void CHelpDisplay::AddLine(LPCTSTR sKey, LPCTSTR sHelp) {
-	AddTextLine(colorLines, colorInfo, sKey, NULL, sHelp);
+bool CHelpDisplay::AddLine(LPCTSTR sKey, LPCTSTR sHelp) {
+	if (_tcscmp(sKey, _T("n.a.")) != 0) {
+		AddTextLine(colorLines, colorInfo, sKey, NULL, sHelp);
+		return true;
+	}
+	return false;
 }
 
-void CHelpDisplay::AddLineInfo(LPCTSTR sKey, LPCTSTR sInfo, LPCTSTR sHelp) {
-	AddTextLine(colorLines, colorInfo, sKey, sInfo, sHelp);
+bool CHelpDisplay::AddLineInfo(LPCTSTR sKey, LPCTSTR sInfo, LPCTSTR sHelp) {
+	if (_tcscmp(sKey, _T("n.a.")) != 0) {
+		AddTextLine(colorLines, colorInfo, sKey, sInfo, sHelp);
+		return true;
+	}
+	return false;
 }
 
-void CHelpDisplay::AddLineInfo(LPCTSTR sKey, bool bInfo, LPCTSTR sHelp) {
-	AddTextLine(colorLines, bInfo ? colorInfoLight : colorInfo, sKey, bInfo ? CNLS::GetString(_T("on")) : CNLS::GetString(_T("off")), sHelp);
+bool CHelpDisplay::AddLineInfo(LPCTSTR sKey, bool bInfo, LPCTSTR sHelp) {
+	if (_tcscmp(sKey, _T("n.a.")) != 0) {
+		AddTextLine(colorLines, bInfo ? colorInfoLight : colorInfo, sKey, bInfo ? CNLS::GetString(_T("on")) : CNLS::GetString(_T("off")), sHelp);
+		return true;
+	}
+	return false;
 }
 
 CSize CHelpDisplay::GetSize() {

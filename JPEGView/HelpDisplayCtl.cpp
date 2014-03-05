@@ -46,8 +46,9 @@ void CHelpDisplayCtl::GenerateHelpDisplay() {
 	m_pHelpDisplay->AddLineInfo(_KeyDesc(IDM_SHOW_FILEINFO), m_pMainDlg->GetEXIFDisplayCtl()->IsActive(), CNLS::GetString(_T("Show/hide picture information (EXIF data)")));
 	m_pHelpDisplay->AddLineInfo(_KeyDesc(IDM_SHOW_FILENAME), m_pMainDlg->IsShowFileName(), CNLS::GetString(_T("Show/hide file name")));
 	m_pHelpDisplay->AddLineInfo(_KeyDesc(IDM_TOGGLE_RESAMPLING_QUALITY), m_pMainDlg->IsHQResampling(), CNLS::GetString(_T("Enable/disable high quality resampling")));
-	m_pHelpDisplay->AddLineInfo(_KeyDesc(IDM_KEEP_PARAMETERS), m_pMainDlg->IsKeepParams(), CNLS::GetString(_T("Enable/disable keeping of geometry related (zoom/pan/rotation)")));
-	m_pHelpDisplay->AddLineInfo(_T(""),  LPCTSTR(NULL), CNLS::GetString(_T("and image processing (brightness/contrast/sharpen) parameters between images")));
+	if (m_pHelpDisplay->AddLineInfo(_KeyDesc(IDM_KEEP_PARAMETERS), m_pMainDlg->IsKeepParams(), CNLS::GetString(_T("Enable/disable keeping of geometry related (zoom/pan/rotation)")))) {
+		m_pHelpDisplay->AddLineInfo(_T(""), LPCTSTR(NULL), CNLS::GetString(_T("and image processing (brightness/contrast/sharpen) parameters between images")));
+	}
 	m_pHelpDisplay->AddLineInfo(_KeyDesc(IDM_AUTO_CORRECTION), m_pMainDlg->IsAutoContrast(), CNLS::GetString(_T("Enable/disable automatic contrast correction (histogram equalization)")));
 	m_pHelpDisplay->AddLineInfo(_KeyDesc(IDM_AUTO_CORRECTION_SECTION), m_pMainDlg->IsAutoContrastSection(), CNLS::GetString(_T("Apply auto contrast correction using only visible section of image")));
 	m_pHelpDisplay->AddLineInfo(_KeyDesc(IDM_LDC), m_pMainDlg->IsLDC(), CNLS::GetString(_T("Enable/disable automatic density correction (local brightness correction)")));
@@ -71,7 +72,7 @@ void CHelpDisplayCtl::GenerateHelpDisplay() {
 	m_pHelpDisplay->AddLine(_KeyDesc(IDM_SAVE_SCREEN), CNLS::GetString(_T("Save processed image to JPEG file (screen size)")));
 	_stprintf_s(buffMI, 256, CNLS::GetString(_T("Save (%s)/ delete (%s) image processing parameters in/from parameter DB")), _KeyDesc(IDM_SAVE_PARAM_DB), _KeyDesc(IDM_CLEAR_PARAM_DB));
 	m_pHelpDisplay->AddLine(_KeyDesc(IDM_SAVE_PARAM_DB, IDM_CLEAR_PARAM_DB), buffMI);
-	m_pHelpDisplay->AddLineInfo(_KeyDesc(IDM_SORT_CREATION_DATE, IDM_SORT_MOD_DATE) + _T("/") + _KeyDesc(IDM_SORT_NAME, IDM_SORT_RANDOM), 
+	m_pHelpDisplay->AddLineInfo(_KeyDesc(IDM_SORT_CREATION_DATE, IDM_SORT_MOD_DATE, IDM_SORT_NAME, IDM_SORT_RANDOM), 
 		(m_pMainDlg->GetFileList()->GetSorting() == Helpers::FS_LastModTime) ? _KeyDesc(IDM_SORT_MOD_DATE) :
 		(m_pMainDlg->GetFileList()->GetSorting() == Helpers::FS_FileName) ? _KeyDesc(IDM_SORT_NAME) : 
 		(m_pMainDlg->GetFileList()->GetSorting() == Helpers::FS_Random) ? _KeyDesc(IDM_SORT_RANDOM) : 
@@ -103,6 +104,7 @@ void CHelpDisplayCtl::GenerateHelpDisplay() {
 	m_pHelpDisplay->AddLine(CNLS::GetString(_T("Ctrl + Left mouse")), CNLS::GetString(_T("Crop image")));
 	m_pHelpDisplay->AddLine(CNLS::GetString(_T("Forward mouse button")), CNLS::GetString(_T("Next image")));
 	m_pHelpDisplay->AddLine(CNLS::GetString(_T("Back mouse button")), CNLS::GetString(_T("Previous image")));
+	m_pHelpDisplay->AddLine(_KeyDesc(IDM_MOVE_TO_RECYCLE_BIN_CONFIRM, IDM_MOVE_TO_RECYCLE_BIN), CNLS::GetString(_T("Delete image file")));
 	std::list<CUserCommand*>::iterator iter;
 	std::list<CUserCommand*> & userCmdList = CSettingsProvider::This().UserCommandList();
 	for (iter = userCmdList.begin( ); iter != userCmdList.end( ); iter++ ) {
@@ -113,9 +115,41 @@ void CHelpDisplayCtl::GenerateHelpDisplay() {
 }
 
 CString CHelpDisplayCtl::_KeyDesc(int nCommandId) {
-	return m_pMainDlg->GetKeyMap()->GetKeyStringForCommand(nCommandId);
+	CString keyDesc = m_pMainDlg->GetKeyMap()->GetKeyStringForCommand(nCommandId);
+	if (keyDesc.IsEmpty())
+		return CString(_T("n.a."));
+	return keyDesc;
 }
 
 CString CHelpDisplayCtl::_KeyDesc(int nCommandId1, int nCommandId2) {
-	return m_pMainDlg->GetKeyMap()->GetKeyStringForCommand(nCommandId1) + _T("/") + m_pMainDlg->GetKeyMap()->GetKeyStringForCommand(nCommandId2);
+	CString keyDesc1 = m_pMainDlg->GetKeyMap()->GetKeyStringForCommand(nCommandId1);
+	CString keyDesc2 = m_pMainDlg->GetKeyMap()->GetKeyStringForCommand(nCommandId2);
+	if (keyDesc1.IsEmpty() || keyDesc2.IsEmpty()) {
+		if (keyDesc1.IsEmpty() && keyDesc2.IsEmpty()) {
+			return CString(_T("n.a."));
+		}
+		return keyDesc1.IsEmpty() ? keyDesc2 : keyDesc1;
+	}
+	return keyDesc1 + _T("/") + keyDesc2;
+}
+
+CString CHelpDisplayCtl::_KeyDesc(int nCommandId1, int nCommandId2, int nCommandId3, int nCommandId4) {
+	CString keyDesc1 = m_pMainDlg->GetKeyMap()->GetKeyStringForCommand(nCommandId1);
+	CString keyDesc2 = m_pMainDlg->GetKeyMap()->GetKeyStringForCommand(nCommandId2);
+	CString keyDesc3 = m_pMainDlg->GetKeyMap()->GetKeyStringForCommand(nCommandId3);
+	CString keyDesc4 = m_pMainDlg->GetKeyMap()->GetKeyStringForCommand(nCommandId4);
+	CString result = keyDesc1;
+	if (!keyDesc2.IsEmpty()) {
+		if (!result.IsEmpty()) result += _T("/");
+		result += keyDesc2;
+	}
+	if (!keyDesc3.IsEmpty()) {
+		if (!result.IsEmpty()) result += _T("/");
+		result += keyDesc3;
+	}
+	if (!keyDesc4.IsEmpty()) {
+		if (!result.IsEmpty()) result += _T("/");
+		result += keyDesc4;
+	}
+	return result.IsEmpty() ? CString(_T("n.a.")) : result;
 }

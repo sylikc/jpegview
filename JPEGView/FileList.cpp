@@ -282,6 +282,28 @@ bool CFileList::CurrentFileExists() const {
 	return false;
 }
 
+bool CFileList::DeleteFile(LPCTSTR fileNameWithPath) const {
+	if (fileNameWithPath != NULL) {
+		// append a double null character
+		TCHAR fileName[MAX_PATH + 1];
+		_tcscpy(fileName, fileNameWithPath);
+		fileName[_tcslen(fileName) + 1] = 0;
+
+		SHFILEOPSTRUCT fileOp;
+		memset(&fileOp, 0, sizeof(SHFILEOPSTRUCT));
+		fileOp.hwnd = NULL;
+		fileOp.wFunc = FO_DELETE;
+		fileOp.pFrom = fileName;
+		fileOp.pTo = NULL;
+		fileOp.fFlags = FOF_ALLOWUNDO | FOF_NOCONFIRMATION;
+		fileOp.hNameMappings = NULL;
+		if (::SHFileOperation(&fileOp) == 0) {
+			return true;
+		}
+	}
+	return false;
+}
+
 void CFileList::FileHasRenamed(LPCTSTR sOldFileName, LPCTSTR sNewFileName) {
 	if (_tcsicmp(sOldFileName, m_sInitialFile) == 0) {
 		m_sInitialFile = sNewFileName;

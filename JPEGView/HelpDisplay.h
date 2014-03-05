@@ -11,9 +11,9 @@ public:
 	// Methods to create the help text lines
 	void AddTitle(LPCTSTR sTitle);
 	void AddLine(LPCTSTR sLine);
-	void AddLine(LPCTSTR sKey, LPCTSTR sHelp);
-	void AddLineInfo(LPCTSTR sKey, LPCTSTR sInfo, LPCTSTR sHelp);
-	void AddLineInfo(LPCTSTR sKey, bool bInfo, LPCTSTR sHelp);
+	bool AddLine(LPCTSTR sKey, LPCTSTR sHelp);
+	bool AddLineInfo(LPCTSTR sKey, LPCTSTR sInfo, LPCTSTR sHelp);
+	bool AddLineInfo(LPCTSTR sKey, bool bInfo, LPCTSTR sHelp);
 
 	// Call Show() to render the help screen on the given screen rectangle (it is centered there)
 	void Show(const CRect & screenRect);

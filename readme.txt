@@ -20,6 +20,9 @@ Bugs fixed:
 - Window size in windowed mode was some pixels too small due to invalid reporting of window border size by OS
 New features:
 - 32 and 64 bit versions
+- Extended image file deletion:
+  - Button on navigation panel and 'Del' key deletes the current image file in same same way Explorer does (by moving to recycle bin)
+  - 'Shift+Del' deletes the current image file permanently
 - Traditional Chinese (Taiwan) translation
 Other changes:
 - Ctrl-X also copies the file name to the clipboard (as Ctrl-C)

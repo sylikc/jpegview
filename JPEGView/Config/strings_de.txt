@@ -361,3 +361,5 @@ Edit	Editieren
 Upcounting	Aufsteigend
 Downcounting	Absteigend
 File size	Dateigrösse
+Do you really want to delete the current image file on disk?	Soll die aktuelle Bilddatei wirklich gelöscht werden?
+Delete image file	Bilddatei löschen
