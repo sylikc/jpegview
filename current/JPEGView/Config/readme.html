@@ -49,7 +49,7 @@
         <td>
           <a name="Top"></a>
           <h1>JPEGView Readme</h1>
-          Revision: 04-Dec-2013
+          Revision: 06-Mar-2014
           <a name="Introduction"></a>
           <h2>Introduction</h2>
           JPEGView is a viewer/editor for JPEG, BMP, WEBP, PNG, TGA, GIF and TIFF images. It is designed to view images from digital cameras
@@ -89,7 +89,7 @@
               <ul style="margin-top:0in;margin-bottom:0in">
                 <li>Executable is only 1 MB</li>
                 <li>C++/MMX/SSE code</li>
-		<li>32 bit and 64 bit versions</li>
+		        <li>32 bit and 64 bit versions</li>
                 <li>Support for multiple CPU cores to speedup processing</li>
                 <li>Minimal dependencies on external libraries</li>
               </ul>
@@ -178,7 +178,7 @@
             <li>
               256 MB RAM<br/>
               512 MB RAM is required if images with more than 10 MegaPixels are viewed,
-              less is acceptable if only small images (less than 5 MegaPixels) are viewed.
+              less than 256 MB is acceptable if only small images (less than 5 MegaPixels) are viewed.
             </li>
             <li>
               CPU should be SSE2 capable (perfect is a CPU with 128 bit SSE2 processing and multiple CPU cores)<br/>
@@ -195,7 +195,7 @@
             <li>Windows 8 / 8.1</li>
             <li>Windows 7</li>
             <li>Windows Vista</li>
-            <li>Windows XP</li>
+            <li>Windows XP (SP2 required)</li>
             <li>Windows 2000 : Not supported anymore, use version 1.0.21</li>
           </ul>
           <b>Supported Languages</b><br/>
@@ -269,6 +269,7 @@
           <br/>
           From left to right:<br/>
           - First image in folder, Previous image, Next image, Last image in folder<br/>
+          - Delete image file (to recycle bin, use Shift+Del to delete image files permanently)<br />
           - Zoom mode, when active zooming can be done by pressing the left mouse button and dragging the mouse to the left and right<br/>
           - Actual image size / Fit image to screen<br/>
           - Window mode / Full screen mode<br/>
@@ -1018,7 +1019,7 @@
           JPEGView has built in support to view the JPEG images embedded in many camera RAW files. These embedded JPEGs often
           have a smaller resolution than the RAW image itself but can be decoded and displayed very quickly.<br/>
           Support for viewing the full size camera RAW images is provided indirectly by using the Microsoft Camera Codec pack.<br/>
-          This codec pack is only available for Windows Vista SP2 and Windows 7, but not for Windows XP!<br/>
+          This codec pack is only available for Windows Vista SP2 and Windows 7/8, but not for Windows XP!<br/>
           To add support for viewing full size camera RAW files:
           <ul style="margin-top:0in;margin-bottom:0in">
             <li>
@@ -1117,16 +1118,16 @@
           Alternatively you can use the following e-mail address to contact me:<br/>
           <a href="mailto:jpegview@gmail.com">jpegview@gmail.com</a>
           <br/><br/>
-          JPEGView contains the following binary library to read JPEG images:<br/>
+          JPEGView contains the following binary libraries:<br/>
           - Turbo JPEG, Copyright (C)2009-2011 D. R. Commander.  All Rights Reserved.<br/>
           Turbo JPEG is based on libjpeg, &copy; 1994-2010, Independent JPEG Group.<br/>
+          - WebP codec provided by Google <a href="https://developers.google.com/speed/webp/">https://developers.google.com/speed/webp</a>, &copy; Google Inc.<br />
           <br/>
           JPEGView includes or uses the following source code libraries:<br/>
-          - Windows Template Library 8.0 (build 6137) 5/17/06, Copyright &copy; 2006 Microsoft Corporation<br/>
-          - WebP codec provided by Google <a href="https://developers.google.com/speed/webp/">https://developers.google.com/speed/webp</a>, &copy; Google<br/>
+          - Windows Template Library 8.1, Copyright &copy; 2006 Microsoft Corporation<br/>
           - <a href="http://www.cybercom.net/~dcoffin/dcraw/">dcraw</a>, &copy; 1997-2011 by Dave Coffin<br/>
           <br/>
-          Developed and compiled with Visual Studio 2013 Professional
+          Developed and compiled with Visual Studio 2010/2013 Professional
           <br/><br/>
           Thanks to:<br/>
           <ul style="margin-top:0in;margin-bottom:0in">
@@ -1176,7 +1177,7 @@
               Xabier Aramendi for the Basque translation
             </li>
             <li>
-              Yia Guo for the Chinese translation
+              Yia Guo and 风逸兰 for the Chinese translations
             </li>
             <li>
               Uladzimir Panada for the Belarusan translation

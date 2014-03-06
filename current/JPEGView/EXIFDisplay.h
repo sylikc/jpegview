@@ -72,6 +72,7 @@ private:
 	int m_nCommentHeight; 
 	std::list<TextLine> m_lines;
 	const CHistogram* m_pHistogram;
+	bool m_titleIsSingleLine;
 
 	void PaintHistogram(CDC & dc, int nXStart, int nYBaseLine);
 

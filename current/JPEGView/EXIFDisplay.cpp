@@ -152,6 +152,7 @@ CRect CEXIFDisplay::PanelRect() {
 			::SelectObject(dc, m_hTitleFont);
 		}
 
+		m_titleIsSingleLine = true;
 		m_nTitleHeight = 0;
 		m_nPrefixLenght = 0;
 		m_nTitleWidth = 0;
@@ -166,6 +167,7 @@ CRect CEXIFDisplay::PanelRect() {
 		if (m_sTitle != NULL) {
 			::GetTextExtentPoint32(dc, m_sTitle, (int)_tcslen(m_sTitle), &size);
 			if (size.cx > HelpersGUI::ScaleToScreen(MAX_WIDTH)) {
+				m_titleIsSingleLine = false;
 				CRect rectTitle(0, 0, HelpersGUI::ScaleToScreen(MAX_WIDTH), HelpersGUI::ScaleToScreen(2));
 				::DrawText(dc, m_sTitle, (int)_tcslen(m_sTitle), &rectTitle, DT_CALCRECT | DT_NOPREFIX | DT_WORDBREAK | DT_WORD_ELLIPSIS);
 				m_nTitleWidth = rectTitle.Width();
@@ -247,8 +249,12 @@ void CEXIFDisplay::OnPaint(CDC & dc, const CPoint& offset) {
 	}
 	if (m_sTitle != NULL) {
 		int nXStart = nX + m_nGap + m_nPrefixLenght;
-		CRect rectTitle(nXStart, nY + m_nGap, nXStart + m_nTitleWidth, nY + m_nGap + m_nTitleHeight);
-		::DrawText(dc, m_sTitle, (int)_tcslen(m_sTitle), &rectTitle, DT_NOPREFIX | DT_WORDBREAK | DT_WORD_ELLIPSIS);
+		if (m_titleIsSingleLine) {
+			::TextOut(dc, nXStart, nY + m_nGap, m_sTitle, (int)_tcslen(m_sTitle));
+		} else {
+			CRect rectTitle(nXStart, nY + m_nGap, nXStart + m_nTitleWidth, nY + m_nGap + m_nTitleHeight);
+			::DrawText(dc, m_sTitle, (int)_tcslen(m_sTitle), &rectTitle, DT_NOPREFIX | DT_WORDBREAK | DT_WORD_ELLIPSIS);
+		}
 	}
 
 	::SetTextColor(dc, RGB(243, 242, 231));
