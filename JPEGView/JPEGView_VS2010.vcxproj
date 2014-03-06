@@ -1,0 +1,308 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{F6D355BF-A245-46FA-AE41-DAA541556245}</ProjectGuid>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">x86\$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">obj\x86\$(Configuration)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</LinkIncremental>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">x86\$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">obj\x86\$(Configuration)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkIncremental>
+    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(VCInstallDir)WTL\Include;$(IncludePath)</IncludePath>
+    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(LibraryPath)</LibraryPath>
+    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(VCInstallDir)WTL\Include;$(IncludePath)</IncludePath>
+    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(LibraryPath)</LibraryPath>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">JPEGView</TargetName>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">JPEGView</TargetName>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Midl>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MkTypLibCompatible>false</MkTypLibCompatible>
+      <TargetEnvironment>Win32</TargetEnvironment>
+      <GenerateStublessProxies>true</GenerateStublessProxies>
+      <TypeLibraryName>$(IntDir)JPEGView.tlb</TypeLibraryName>
+      <HeaderFileName>JPEGView.h</HeaderFileName>
+      <DllDataFileName>
+      </DllDataFileName>
+      <InterfaceIdentifierFileName>JPEGView_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>JPEGView_p.c</ProxyFileName>
+    </Midl>
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;STRICT;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <ExceptionHandling>Async</ExceptionHandling>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <OpenMPSupport>false</OpenMPSupport>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0409</Culture>
+      <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Link>
+      <AdditionalDependencies>gdiplus.lib;WICLoader.lib;turbojpeg-static.lib;webp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>x86\$(Configuration);libjpeg-turbo\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <ModuleDefinitionFile>
+      </ModuleDefinitionFile>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <TargetMachine>MachineX86</TargetMachine>
+      <DelayLoadDLLs>WICLoader.dll;webp.dll</DelayLoadDLLs>
+      <IgnoreSpecificDefaultLibraries>LIBCMT</IgnoreSpecificDefaultLibraries>
+    </Link>
+    <Manifest>
+      <EnableDPIAwareness>true</EnableDPIAwareness>
+    </Manifest>
+    <PostBuildEvent>
+      <Command>xcopy "$(ProjectDir)Config\*" "$(ProjectDir)\$(OutDir)" /Y /C /D</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Midl>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MkTypLibCompatible>false</MkTypLibCompatible>
+      <TargetEnvironment>Win32</TargetEnvironment>
+      <GenerateStublessProxies>true</GenerateStublessProxies>
+      <TypeLibraryName>$(IntDir)JPEGView.tlb</TypeLibraryName>
+      <HeaderFileName>JPEGView.h</HeaderFileName>
+      <DllDataFileName>
+      </DllDataFileName>
+      <InterfaceIdentifierFileName>JPEGView_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>JPEGView_p.c</ProxyFileName>
+    </Midl>
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;STRICT;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>false</StringPooling>
+      <ExceptionHandling>Async</ExceptionHandling>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
+      <FunctionLevelLinking>false</FunctionLevelLinking>
+      <FloatingPointExceptions>false</FloatingPointExceptions>
+      <CreateHotpatchableImage>false</CreateHotpatchableImage>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <OpenMPSupport>false</OpenMPSupport>
+      <CompileAs>CompileAsCpp</CompileAs>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0409</Culture>
+      <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Link>
+      <AdditionalDependencies>gdiplus.lib;WICLoader.lib;turbojpeg-static.lib;webp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>x86\$(Configuration);libjpeg-turbo\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <TargetMachine>MachineX86</TargetMachine>
+      <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
+      <DelayLoadDLLs>WICLoader.dll;webp.dll</DelayLoadDLLs>
+    </Link>
+    <Manifest>
+      <EnableDPIAwareness>true</EnableDPIAwareness>
+    </Manifest>
+    <PostBuildEvent>
+      <Command>xcopy "$(ProjectDir)Config\*" "$(ProjectDir)\$(OutDir)" /Y /C /D</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="BasicProcessing.cpp" />
+    <ClCompile Include="Clipboard.cpp" />
+    <ClCompile Include="dcraw_mod.cpp" />
+    <ClCompile Include="DirectoryWatcher.cpp" />
+    <ClCompile Include="EXIFHelpers.cpp" />
+    <ClCompile Include="EXIFReader.cpp" />
+    <ClCompile Include="FileExtensionsDlg.cpp" />
+    <ClCompile Include="FileExtensionsRegistry.cpp" />
+    <ClCompile Include="FileList.cpp" />
+    <ClCompile Include="Helpers.cpp" />
+    <ClCompile Include="HelpersGUI.cpp" />
+    <ClCompile Include="HistogramCorr.cpp" />
+    <ClCompile Include="ImageLoadThread.cpp" />
+    <ClCompile Include="InfoButtonPanel.cpp" />
+    <ClCompile Include="InfoButtonPanelCtl.cpp" />
+    <ClCompile Include="JPEGImage.cpp" />
+    <ClCompile Include="JPEGLosslessTransform.cpp" />
+    <ClCompile Include="JPEGProvider.cpp" />
+    <ClCompile Include="JPEGView.cpp" />
+    <ClCompile Include="KeyMap.cpp" />
+    <ClCompile Include="LocalDensityCorr.cpp" />
+    <ClCompile Include="ManageOpenWithDlg.cpp" />
+    <ClCompile Include="MultiMonitorSupport.cpp" />
+    <ClCompile Include="NLS.cpp" />
+    <ClCompile Include="ParameterDB.cpp" />
+    <ClCompile Include="ProcessingThreadPool.cpp" />
+    <ClCompile Include="ReaderBMP.cpp" />
+    <ClCompile Include="ReaderTGA.cpp" />
+    <ClCompile Include="ResizeFilter.cpp" />
+    <ClCompile Include="SaveImage.cpp" />
+    <ClCompile Include="SettingsProvider.cpp" />
+    <ClCompile Include="stdafx.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="TiltCorrectionPanel.cpp" />
+    <ClCompile Include="TiltCorrectionPanelCtl.cpp" />
+    <ClCompile Include="TJPEGWrapper.cpp" />
+    <ClCompile Include="TransformPanel.cpp" />
+    <ClCompile Include="TransformPanelCtl.cpp" />
+    <ClCompile Include="UserCommand.cpp" />
+    <ClCompile Include="WorkThread.cpp" />
+    <ClCompile Include="XMMImage.cpp" />
+    <ClCompile Include="EXIFDisplay.cpp" />
+    <ClCompile Include="GUIControls.cpp" />
+    <ClCompile Include="HelpDisplay.cpp" />
+    <ClCompile Include="ImageProcessingPanel.cpp" />
+    <ClCompile Include="NavigationPanel.cpp" />
+    <ClCompile Include="PaintMemDCMgr.cpp" />
+    <ClCompile Include="Panel.cpp" />
+    <ClCompile Include="RotationPanel.cpp" />
+    <ClCompile Include="Tooltip.cpp" />
+    <ClCompile Include="UnsharpMaskPanel.cpp" />
+    <ClCompile Include="WndButtonPanel.cpp" />
+    <ClCompile Include="ZoomNavigator.cpp" />
+    <ClCompile Include="EXIFDisplayCtl.cpp" />
+    <ClCompile Include="HelpDisplayCtl.cpp" />
+    <ClCompile Include="ImageProcPanelCtl.cpp" />
+    <ClCompile Include="NavigationPanelCtl.cpp" />
+    <ClCompile Include="PanelController.cpp" />
+    <ClCompile Include="PanelMgr.cpp" />
+    <ClCompile Include="RotationPanelCtl.cpp" />
+    <ClCompile Include="UnsharpMaskPanelCtl.cpp" />
+    <ClCompile Include="WndButtonPanelCtl.cpp" />
+    <ClCompile Include="ZoomNavigatorCtl.cpp" />
+    <ClCompile Include="AboutDlg.cpp" />
+    <ClCompile Include="BatchCopyDlg.cpp" />
+    <ClCompile Include="CropCtl.cpp" />
+    <ClCompile Include="CropSizeDlg.cpp" />
+    <ClCompile Include="FileOpenDialog.cpp" />
+    <ClCompile Include="MainDlg.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="BasicProcessing.h" />
+    <ClInclude Include="Clipboard.h" />
+    <ClInclude Include="dcraw_mod.h" />
+    <ClInclude Include="DirectoryWatcher.h" />
+    <ClInclude Include="EXIFHelpers.h" />
+    <ClInclude Include="EXIFReader.h" />
+    <ClInclude Include="FileExtensionsDlg.h" />
+    <ClInclude Include="FileExtensionsRegistry.h" />
+    <ClInclude Include="FileList.h" />
+    <ClInclude Include="Helpers.h" />
+    <ClInclude Include="HelpersGUI.h" />
+    <ClInclude Include="HistogramCorr.h" />
+    <ClInclude Include="ImageLoadThread.h" />
+    <ClInclude Include="ImageProcessingTypes.h" />
+    <ClInclude Include="InfoButtonPanel.h" />
+    <ClInclude Include="InfoButtonPanelCtl.h" />
+    <ClInclude Include="JPEGImage.h" />
+    <ClInclude Include="JPEGLosslessTransform.h" />
+    <ClInclude Include="JPEGProvider.h" />
+    <ClInclude Include="KeyMap.h" />
+    <ClInclude Include="LocalDensityCorr.h" />
+    <ClInclude Include="ManageOpenWithDlg.h" />
+    <ClInclude Include="MaxImageDef.h" />
+    <ClInclude Include="MessageDef.h" />
+    <ClInclude Include="MultiMonitorSupport.h" />
+    <ClInclude Include="NLS.h" />
+    <ClInclude Include="ParameterDB.h" />
+    <ClInclude Include="ProcessingThreadPool.h" />
+    <ClInclude Include="ProcessParams.h" />
+    <ClInclude Include="ReaderBMP.h" />
+    <ClInclude Include="ReaderTGA.h" />
+    <ClInclude Include="ResizeFilter.h" />
+    <ClInclude Include="SaveImage.h" />
+    <ClInclude Include="SettingsProvider.h" />
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="TiltCorrectionPanel.h" />
+    <ClInclude Include="TiltCorrectionPanelCtl.h" />
+    <ClInclude Include="TimerEventIDs.h" />
+    <ClInclude Include="TJPEGWrapper.h" />
+    <ClInclude Include="TransformPanel.h" />
+    <ClInclude Include="TransformPanelCtl.h" />
+    <ClInclude Include="UserCommand.h" />
+    <ClInclude Include="WorkThread.h" />
+    <ClInclude Include="XMMImage.h" />
+    <ClInclude Include="EXIFDisplay.h" />
+    <ClInclude Include="GUIControls.h" />
+    <ClInclude Include="HelpDisplay.h" />
+    <ClInclude Include="ImageProcessingPanel.h" />
+    <ClInclude Include="NavigationPanel.h" />
+    <ClInclude Include="PaintMemDCMgr.h" />
+    <ClInclude Include="Panel.h" />
+    <ClInclude Include="RotationPanel.h" />
+    <ClInclude Include="UnsharpMaskPanel.h" />
+    <ClInclude Include="WndButtonPanel.h" />
+    <ClInclude Include="ZoomNavigator.h" />
+    <ClInclude Include="EXIFDisplayCtl.h" />
+    <ClInclude Include="HelpDisplayCtl.h" />
+    <ClInclude Include="ImageProcPanelCtl.h" />
+    <ClInclude Include="NavigationPanelCtl.h" />
+    <ClInclude Include="PanelController.h" />
+    <ClInclude Include="PanelMgr.h" />
+    <ClInclude Include="RotationPanelCtl.h" />
+    <ClInclude Include="UnsharpMaskPanelCtl.h" />
+    <ClInclude Include="WndButtonPanelCtl.h" />
+    <ClInclude Include="ZoomNavigatorCtl.h" />
+    <ClInclude Include="AboutDlg.h" />
+    <ClInclude Include="BatchCopyDlg.h" />
+    <ClInclude Include="CropCtl.h" />
+    <ClInclude Include="CropSizeDlg.h" />
+    <ClInclude Include="FileOpenDialog.h" />
+    <ClInclude Include="MainDlg.h" />
+    <ClInclude Include="resource.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\JPEGView.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="JPEGView.rc" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

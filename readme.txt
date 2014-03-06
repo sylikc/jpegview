@@ -3,11 +3,12 @@ JPEGView source code readme
 
 To compile JPEGView you need:
 
-- Visual Studio 2013 (professional version)
+- Visual Studio 2010 (JPEGView 32 bit version supported) or
+  Visual Studio 2013 professional (JPEGView 32 and 64 bit versions supported)
 - Windows Template Library (WTL), Version 8.1 (http://sourceforge.net/projects/wtl/)
 
 The include directories of WTL must be added to the include directories for VC++:
-In Visual Studio 2013: Properties of JPEGView project > VC++-Directories-Include Directories and Library Directories
+In Visual Studio: Properties of JPEGView project > VC++-Directories-Include Directories and Library Directories
 
 Please note: Windows XP SP2 or later is needed to run the compiled binary.
 
@@ -18,15 +19,16 @@ Changelog
 [1.0.32.0]
 Bugs fixed:
 - Window size in windowed mode was some pixels too small due to invalid reporting of window border size by OS
+- Fixed wrong line break in file titles in info panel for long file names
 New features:
-- 32 and 64 bit versions
+- 64 bit version (in addition to existing 32 bit version)
 - Extended image file deletion:
   - Button on navigation panel and 'Del' key deletes the current image file in same same way Explorer does (by moving to recycle bin)
   - 'Shift+Del' deletes the current image file permanently
 - Traditional Chinese (Taiwan) translation
 Other changes:
 - Ctrl-X also copies the file name to the clipboard (as Ctrl-C)
-- Using Visual Studio 2013 to compile the project
+- Using Visual Studio 2013 to compile the 64 bit version
 
 [1.0.31.1]
 Bugs fixed:
