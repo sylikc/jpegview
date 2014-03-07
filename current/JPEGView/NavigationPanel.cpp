@@ -5,6 +5,8 @@
 #include "HelpersGUI.h"
 #include "SettingsProvider.h"
 #include "NLS.h"
+#include "KeyMap.h"
+#include "resource.h"
 
 #define NAV_PANEL_HEIGHT 32
 #define NAV_PANEL_BORDER 6
@@ -14,7 +16,7 @@
 // CNavigationPanel
 /////////////////////////////////////////////////////////////////////////////////////////////
 
-CNavigationPanel::CNavigationPanel(HWND hWnd, INotifiyMouseCapture* pNotifyMouseCapture, CPanel* pImageProcPanel, bool* pFullScreenMode,
+CNavigationPanel::CNavigationPanel(HWND hWnd, INotifiyMouseCapture* pNotifyMouseCapture, CPanel* pImageProcPanel, CKeyMap* keyMap, bool* pFullScreenMode,
 		DecisionMethod* isCurrentImageFitToScreen, void* pDecisionMethodParam) : CPanel(hWnd, pNotifyMouseCapture) {
 	m_pImageProcPanel = pImageProcPanel;
 	m_clientRect = CRect(0, 0, 0, 0);
@@ -22,30 +24,44 @@ CNavigationPanel::CNavigationPanel(HWND hWnd, INotifiyMouseCapture* pNotifyMouse
 	SetScaledWidth(1.0f);
 	m_isCurrentImageFitToScreen = isCurrentImageFitToScreen;
 	m_pDecisionMethodParam = pDecisionMethodParam;
+	m_keyMap = keyMap;
+	m_pFullScreenMode = pFullScreenMode;
 
-	AddUserPaintButton(ID_btnHome, CNLS::GetString(_T("Show first image in folder")), &PaintHomeBtn);
-	AddUserPaintButton(ID_btnPrev, CNLS::GetString(_T("Show previous image")), &PaintPrevBtn);
+	AddUserPaintButton(ID_btnHome, GetTooltip(keyMap, _T("Show first image in folder"), IDM_FIRST), &PaintHomeBtn);
+	AddUserPaintButton(ID_btnPrev, GetTooltip(keyMap, _T("Show previous image"), IDM_PREV), &PaintPrevBtn);
 	AddGap(ID_gap1, 4);
-	AddUserPaintButton(ID_btnNext, CNLS::GetString(_T("Show next image")), &PaintNextBtn);
-	AddUserPaintButton(ID_btnEnd, CNLS::GetString(_T("Show last image in folder")), &PaintEndBtn);
+	AddUserPaintButton(ID_btnNext, GetTooltip(keyMap, _T("Show next image"), IDM_NEXT), &PaintNextBtn);
+	AddUserPaintButton(ID_btnEnd, GetTooltip(keyMap, _T("Show last image in folder"), IDM_LAST), &PaintEndBtn);
 	AddGap(ID_gap2, 8);
-	AddUserPaintButton(ID_btnDelete, CNLS::GetString(_T("Delete image file")), &PaintDeleteBtn);
+	AddUserPaintButton(ID_btnDelete, GetTooltip(keyMap, _T("Delete image file"), 
+		keyMap->GetKeyStringForCommand(IDM_MOVE_TO_RECYCLE_BIN).IsEmpty() ? IDM_MOVE_TO_RECYCLE_BIN_CONFIRM : IDM_MOVE_TO_RECYCLE_BIN), &PaintDeleteBtn);
 	AddGap(ID_gap3, 8);
-	AddUserPaintButton(ID_btnZoomMode, CNLS::GetString(_T("Zoom mode (drag mouse to zoom)")), &PaintZoomModeBtn);
+	AddUserPaintButton(ID_btnZoomMode, GetTooltip(keyMap, _T("Zoom mode (drag mouse to zoom)"), IDM_ZOOM_MODE), &PaintZoomModeBtn);
 	AddUserPaintButton(ID_btnFitToScreen, &ZoomFitToggleTooltip, &PaintZoomFitToggleBtn, NULL, this);
-	AddUserPaintButton(ID_btnWindowMode, &WindowModeTooltip, &PaintWindowModeBtn, NULL, pFullScreenMode);
+	AddUserPaintButton(ID_btnWindowMode, &WindowModeTooltip, &PaintWindowModeBtn, NULL, this);
 	AddGap(ID_gap4, 8);
-	AddUserPaintButton(ID_btnRotateCW, CNLS::GetString(_T("Rotate image 90 deg clockwise")), &PaintRotateCWBtn);
-	AddUserPaintButton(ID_btnRotateCCW, CNLS::GetString(_T("Rotate image 90 deg counter-clockwise")), &PaintRotateCCWBtn);
-	AddUserPaintButton(ID_btnRotateFree, CNLS::GetString(_T("Rotate image by user-defined angle")), &PaintFreeRotBtn);
-	AddUserPaintButton(ID_btnPerspectiveCorrection, CNLS::GetString(_T("Correct converging lines (perspective correction)")), &PaintPerspectiveBtn);
+	AddUserPaintButton(ID_btnRotateCW, GetTooltip(keyMap, _T("Rotate image 90 deg clockwise"), IDM_ROTATE_90), &PaintRotateCWBtn);
+	AddUserPaintButton(ID_btnRotateCCW, GetTooltip(keyMap, _T("Rotate image 90 deg counter-clockwise"), IDM_ROTATE_270), &PaintRotateCCWBtn);
+	AddUserPaintButton(ID_btnRotateFree, GetTooltip(keyMap, _T("Rotate image by user-defined angle"), IDM_ROTATE), &PaintFreeRotBtn);
+	AddUserPaintButton(ID_btnPerspectiveCorrection, GetTooltip(keyMap, _T("Correct converging lines (perspective correction)"), IDM_PERSPECTIVE), &PaintPerspectiveBtn);
 	AddGap(ID_gap5, 8);
-	AddUserPaintButton(ID_btnKeepParams, CNLS::GetString(_T("Keep processing parameters between images")), &PaintKeepParamsBtn);
-	AddUserPaintButton(ID_btnLandscapeMode, CNLS::GetString(_T("Landscape picture enhancement mode")), &PaintLandscapeModeBtn);
+	AddUserPaintButton(ID_btnKeepParams, GetTooltip(keyMap, _T("Keep processing parameters between images"), IDM_KEEP_PARAMETERS), &PaintKeepParamsBtn);
+	AddUserPaintButton(ID_btnLandscapeMode, GetTooltip(keyMap, _T("Landscape picture enhancement mode"), IDM_LANDSCAPE_MODE), &PaintLandscapeModeBtn);
 	AddGap(ID_gap6, 16);
-	AddUserPaintButton(ID_btnShowInfo, CNLS::GetString(_T("Display image (EXIF) information")), &PaintInfoBtn);
+	AddUserPaintButton(ID_btnShowInfo, GetTooltip(keyMap, _T("Display image (EXIF) information"), IDM_SHOW_FILEINFO), &PaintInfoBtn);
 
 	m_nOptimalWidth = PanelRect().Width();
+}
+
+CString CNavigationPanel::GetTooltip(CKeyMap* keyMap, LPCTSTR tooltip, int command)
+{
+	CString shortCut = keyMap->GetKeyStringForCommand(command);
+	if (shortCut.IsEmpty()) {
+		return CString(CNLS::GetString(tooltip));
+	}
+	CString result;
+	result.Format(_T("%s (%s)"), CNLS::GetString(tooltip), shortCut);
+	return result;
 }
 
 void CNavigationPanel::AddGap(int nID, int nGap) {
@@ -374,19 +390,24 @@ void CNavigationPanel::PaintInfoBtn(void* pContext, const CRect& rect, CDC& dc) 
 	dc.SelectFont(oldFont);
 }
 
+static CString staticTooltip;
+
 LPCTSTR CNavigationPanel::WindowModeTooltip(void* pContext) {
-	if (*((bool*)pContext)) {
-		return CNLS::GetString(_T("Window mode"));
+	CNavigationPanel* pNavPanel = (CNavigationPanel*)pContext;
+	if (*(pNavPanel->m_pFullScreenMode)) {
+		staticTooltip = pNavPanel->GetTooltip(pNavPanel->m_keyMap, _T("Window mode"), IDM_FULL_SCREEN_MODE);
 	} else {
-		return CNLS::GetString(_T("Full screen mode"));
+		staticTooltip = pNavPanel->GetTooltip(pNavPanel->m_keyMap, _T("Full screen mode"), IDM_FULL_SCREEN_MODE);
 	}
+	return staticTooltip;
 }
 
 LPCTSTR CNavigationPanel::ZoomFitToggleTooltip(void* pContext) {
 	CNavigationPanel* pNavPanel = (CNavigationPanel*)pContext;
 	if (pNavPanel->m_isCurrentImageFitToScreen(pNavPanel->m_pDecisionMethodParam)) {
-		return CNLS::GetString(_T("Actual size of image"));
+		staticTooltip = pNavPanel->GetTooltip(pNavPanel->m_keyMap, _T("Actual size of image"), IDM_TOGGLE_FIT_TO_SCREEN_100_PERCENTS);
 	} else {
-		return CNLS::GetString(_T("Fit image to screen"));
+		staticTooltip = pNavPanel->GetTooltip(pNavPanel->m_keyMap, _T("Fit image to screen"), IDM_TOGGLE_FIT_TO_SCREEN_100_PERCENTS);
 	}
+	return staticTooltip;
 }
