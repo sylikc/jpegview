@@ -2,6 +2,8 @@
 
 #include "Panel.h"
 
+class CKeyMap;
+
 // Navigation panel containing buttons and sliders
 class CNavigationPanel : public CPanel {
 public:
@@ -31,7 +33,7 @@ public:
 	};
 public:
 	// The panel is on the given window above the image processing panel
-	CNavigationPanel(HWND hWnd, INotifiyMouseCapture* pNotifyMouseCapture, CPanel* pImageProcPanel, bool* pFullScreenMode,
+	CNavigationPanel(HWND hWnd, INotifiyMouseCapture* pNotifyMouseCapture, CPanel* pImageProcPanel, CKeyMap* keyMap, bool* pFullScreenMode,
 		DecisionMethod* isCurrentImageFitToScreen, void* pDecisionMethodParam);
 
 	CButtonCtrl* GetBtnHome() { return GetControl<CButtonCtrl*>(ID_btnHome); }
@@ -81,9 +83,12 @@ private:
 	static LPCTSTR WindowModeTooltip(void* pContext);
 	static LPCTSTR ZoomFitToggleTooltip(void* pContext);
 
+	CString GetTooltip(CKeyMap* keyMap, LPCTSTR tooltip, int command);
 	void AddGap(int nID, int nGap);
 	void SetScaledWidth(float fScale);
 
+	CKeyMap* m_keyMap;
+	bool* m_pFullScreenMode;
 	DecisionMethod* m_isCurrentImageFitToScreen;
 	void* m_pDecisionMethodParam;
 	CPanel* m_pImageProcPanel;

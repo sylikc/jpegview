@@ -22,9 +22,10 @@ Bugs fixed:
 - Fixed wrong line break in file titles in info panel for long file names
 New features:
 - 64 bit version (in addition to existing 32 bit version)
-- Extended image file deletion:
-  - Button on navigation panel and 'Del' key deletes the current image file in same same way Explorer does (by moving to recycle bin)
+- Improvements in image file deletion:
+  - Button on navigation panel and 'Del' key deletes the current image file in the same same way Explorer does (by moving to recycle bin)
   - 'Shift+Del' deletes the current image file permanently
+- Showing keyboard shortcuts in tooltips of the toolbox buttons
 - Traditional Chinese (Taiwan) translation
 Other changes:
 - Ctrl-X also copies the file name to the clipboard (as Ctrl-C)
