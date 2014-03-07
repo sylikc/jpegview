@@ -15,8 +15,17 @@ bool CFileDesc::sm_bSortUpcounting = true;
 Helpers::ENavigationMode CFileList::sm_eMode = Helpers::NM_LoopDirectory;
 
 // Helper to add the current file of filefind object to the list
-static void AddToFileList(std::list<CFileDesc> & fileList, CFindFile & fileFind) {
+static void AddToFileList(std::list<CFileDesc> & fileList, CFindFile & fileFind, LPCTSTR expectedExtension) {
     if (!fileFind.IsDirectory()) {
+		if (expectedExtension != NULL) {
+			// compare if the extension is the expected extension
+			// this is required because a strange behavior of CFindFile: If searching for "*.tif", .tiff files are also found
+			CString fileName = fileFind.GetFileName();
+			int lastDot = fileName.ReverseFind(_T('.'));
+			if (_tcsicmp(((LPCTSTR)fileName) + lastDot + 1, expectedExtension) != 0) {
+				return;
+			}
+		}
 	    FILETIME lastWriteTime, creationTime;
 	    fileFind.GetLastWriteTime(&lastWriteTime);
 	    fileFind.GetCreationTime(&creationTime);
@@ -214,7 +223,7 @@ CFileList::CFileList(const CString & sInitialFile, CDirectoryWatcher & directory
 			// neither image file nor directory nor list of file names - try to read anyway but normally will fail
 			CFindFile fileFind;
 			fileFind.FindFile(sInitialFile);
-			AddToFileList(m_fileList, fileFind);
+			AddToFileList(m_fileList, fileFind, NULL);
 			m_iter = m_iterStart = m_fileList.begin();
 		}
 	} else {
@@ -771,11 +780,10 @@ void CFileList::FindFiles() {
 		CFindFile fileFind;
         LPCTSTR* allFileEndings = GetSupportedFileEndingList();
 		for (int i = 0; i < nNumEndings; i++) {
-			// Windows bug: *.tif also finds *.tiff, so only search for *.tif else we have duplicated files...
-			if (_tcsicmp(allFileEndings[i], _T("tiff")) != 0 && fileFind.FindFile(m_sDirectory + _T("\\*.") + allFileEndings[i])) {
-				AddToFileList(m_fileList, fileFind);
+			if (fileFind.FindFile(m_sDirectory + _T("\\*.") + allFileEndings[i])) {
+				AddToFileList(m_fileList, fileFind, allFileEndings[i]);
 				while (fileFind.FindNextFile()) {
-					AddToFileList(m_fileList, fileFind);
+					AddToFileList(m_fileList, fileFind, allFileEndings[i]);
 				}
 			}
 		}
@@ -952,7 +960,7 @@ bool CFileList::TryReadingSlideShowList(const CString & sSlideShowFile) {
 			CFindFile fileFind;
             CString sPath = bRelativePath ? (m_sDirectory + _T('\\') + pStart) : pStart;
 			if (fileFind.FindFile(sPath)) {
-				AddToFileList(m_fileList, fileFind);
+				AddToFileList(m_fileList, fileFind, NULL);
 			}
 		}
 	} while (nTotalChars < nRealFileSizeChars);
