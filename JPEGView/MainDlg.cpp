@@ -2409,6 +2409,11 @@ void CMainDlg::ResetZoomTo100Percents(bool bZoomToMouse) {
 CProcessParams CMainDlg::CreateProcessParams(bool bNoProcessingAfterLoad) {
 	int nClientWidth = m_clientRect.Width();
 	int nClientHeight = m_clientRect.Height();
+	if (nClientWidth == 0 && nClientHeight == 0) {
+		CRect rect = CMultiMonitorSupport::GetMonitorRect(m_hWnd);
+		nClientWidth = rect.Width();
+		nClientHeight = rect.Height();
+	}
 	Helpers::EAutoZoomMode eAutoZoomMode = m_eAutoZoomMode;
 	if (IsAdjustWindowToImage() && !bNoProcessingAfterLoad) {
 		CSize maxClientSize = Helpers::GetMaxClientSize(m_hWnd);
