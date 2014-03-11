@@ -20,6 +20,7 @@ Changelog
 Bugs fixed:
 - Window size in windowed mode was some pixels too small due to invalid reporting of window border size by OS
 - Fixed wrong line break in file titles in info panel for long file names
+- SingleInstance=true, fixed error on loading image when window was minimized
 New features:
 - 64 bit version (in addition to existing 32 bit version)
 - Improvements in image file deletion:
