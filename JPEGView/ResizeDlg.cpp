@@ -2,7 +2,7 @@
 #include "ResizeDlg.h"
 #include "NLS.h"
 #include "MaxImageDef.h"
-#include <math.h>
+#include "Helpers.h"
 
 double CResizeDlg::sm_dPercents = 100.0;
 int CResizeDlg::sm_nSelectedFilter = 2;
@@ -57,9 +57,9 @@ LRESULT CResizeDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lPar
 	m_cbFilter.SetCurSel(sm_nSelectedFilter);
 
 	m_blockUpdate = true;
-	SetNumber(m_edtPercents, (int)(round(sm_dPercents)));
-	SetNumber(m_edtWidth, (int)round(sm_dPercents * 0.01 * m_originalSize.cx));
-	SetNumber(m_edtHeight, (int)round(sm_dPercents * 0.01 * m_originalSize.cy));
+	SetNumber(m_edtPercents, Helpers::RoundToInt(sm_dPercents));
+	SetNumber(m_edtWidth, Helpers::RoundToInt(sm_dPercents * 0.01 * m_originalSize.cx));
+	SetNumber(m_edtHeight, Helpers::RoundToInt(sm_dPercents * 0.01 * m_originalSize.cy));
 	m_blockUpdate = false;
 
 	m_dLastPercent = sm_dPercents;
@@ -111,8 +111,8 @@ LRESULT CResizeDlg::OnPercentChanged(WORD /*wNotifyCode*/, WORD wID, HWND /*hWnd
 	if (m_blockUpdate) return 0;
 	m_blockUpdate = true;
 	m_dLastPercent = ConvertToNumber(m_edtPercents);
-	SetNumber(m_edtWidth, (int)round(m_dLastPercent * 0.01 * m_originalSize.cx));
-	SetNumber(m_edtHeight, (int)round(m_dLastPercent * 0.01 * m_originalSize.cy));
+	SetNumber(m_edtWidth, Helpers::RoundToInt(m_dLastPercent * 0.01 * m_originalSize.cx));
+	SetNumber(m_edtHeight, Helpers::RoundToInt(m_dLastPercent * 0.01 * m_originalSize.cy));
 	m_blockUpdate = false;
 	return 0;
 }
@@ -122,8 +122,8 @@ LRESULT CResizeDlg::OnWidthChanged(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCt
 	m_blockUpdate = true;
 	int nWidth = ConvertToNumber(m_edtWidth);
 	m_dLastPercent = 100.0 * nWidth / m_originalSize.cx;
-	SetNumber(m_edtPercents, (int)round(m_dLastPercent));
-	SetNumber(m_edtHeight, (int)round(m_dLastPercent * 0.01 * m_originalSize.cy));
+	SetNumber(m_edtPercents, Helpers::RoundToInt(m_dLastPercent));
+	SetNumber(m_edtHeight, Helpers::RoundToInt(m_dLastPercent * 0.01 * m_originalSize.cy));
 	m_blockUpdate = false;
 	return 0;
 }
@@ -133,8 +133,8 @@ LRESULT CResizeDlg::OnHeightChanged(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndC
 	m_blockUpdate = true;
 	int nHeight = ConvertToNumber(m_edtHeight);
 	m_dLastPercent = 100.0 * nHeight / m_originalSize.cy;
-	SetNumber(m_edtPercents, (int)round(m_dLastPercent));
-	SetNumber(m_edtWidth, (int)round(m_dLastPercent * 0.01 * m_originalSize.cx));
+	SetNumber(m_edtPercents, Helpers::RoundToInt(m_dLastPercent));
+	SetNumber(m_edtWidth, Helpers::RoundToInt(m_dLastPercent * 0.01 * m_originalSize.cx));
 	m_blockUpdate = false;
 	return 0;
 }
