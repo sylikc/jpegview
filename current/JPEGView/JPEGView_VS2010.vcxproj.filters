@@ -237,6 +237,9 @@
     <ClCompile Include="ManageOpenWithDlg.cpp">
       <Filter>Source Files\Dialogs</Filter>
     </ClCompile>
+    <ClCompile Include="ResizeDlg.cpp">
+      <Filter>Source Files\Dialogs</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BasicProcessing.h">
@@ -454,6 +457,9 @@
     </ClInclude>
     <ClInclude Include="MaxImageDef.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ResizeDlg.h">
+      <Filter>Header Files\Dialogs</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

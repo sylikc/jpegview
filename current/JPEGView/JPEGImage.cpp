@@ -413,7 +413,7 @@ bool CJPEGImage::ResizeOriginalPixels(EResizeFilter filter, CSize newSize) {
 	int currentHeight = m_nOrigHeight;
 	int channels = m_nIJLChannels;
 	double totalFactor = (double)currentWidth / newWidth;
-	int steps = (totalFactor > 5) ? (int)ceil(log(totalFactor) / log(5)) : 1;
+	int steps = (totalFactor > 5) ? (int)ceil(log(totalFactor) / log(5.0)) : 1;
 	double factor = (steps > 1) ? pow(totalFactor, 1.0 / steps) : 1.0;
 	for (int i = 0; i < steps; i++) {
 		EResizeFilter usedFilter;
