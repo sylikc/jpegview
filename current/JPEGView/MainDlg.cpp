@@ -28,6 +28,7 @@
 #include "ManageOpenWithDlg.h"
 #include "AboutDlg.h"
 #include "CropSizeDlg.h"
+#include "ResizeDlg.h"
 #include "ResizeFilter.h"
 #include "EXIFReader.h"
 #include "EXIFHelpers.h"
@@ -1458,6 +1459,18 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 		case IDM_ROTATE:
 			m_pCropCtl->AbortCropping();
 			GetRotationPanelCtl()->SetVisible(true);
+			break;
+		case IDM_CHANGESIZE:
+			if (m_pCurrentImage != NULL) {
+				MouseOn();
+				CResizeDlg dlgResize(m_pCurrentImage->OrigSize());
+				if (dlgResize.DoModal(m_hWnd) == IDOK) {
+					HCURSOR hOldCursor = ::SetCursor(::LoadCursor(NULL, MAKEINTRESOURCE(IDC_WAIT)));
+					m_pCurrentImage->ResizeOriginalPixels(dlgResize.GetFilter(), dlgResize.GetNewSize());
+					::SetCursor(hOldCursor);
+					this->Invalidate(FALSE);
+				}
+			}
 			break;
 		case IDM_PERSPECTIVE:
 			m_pCropCtl->AbortCropping();

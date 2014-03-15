@@ -1,0 +1,71 @@
+******************************************************************************
+*****************************   Installation   *******************************
+******************************************************************************
+1. Choose between 32 bit and 64 version
+JPEGView is provided in a 32 bit version and a 64 bit version. If you are using the 64 bit edition of Windows 7, 8 or 8.1, it is recommended to use the 64 bit version, in all other cases or when in doubt use the 32 bit version. With the 64 bit version, you can load images with more than 100 MegaPixels.
+
+2. Extract directory
+JPEGView can be installed by simply extracting the directory with the chosen version to an arbitrary location on your hard disk, e.g.:
+For the 32 bit version: JPEGView_X.Y.Z.zip\JPEGView32\  --> C:\Program Files (x86)\JPEGView32\
+For the 64 bit version: JPEGView_X.Y.Z.zip\JPEGView64\  --> C:\Program Files (x86)\JPEGView64\
+
+******************************************************************************
+*****************************   Deinstallation   *****************************
+******************************************************************************
+To remove JPEGView, just delete the folder JPEGView32 respectively JPEGView64 from your hard disk.
+In case you have set JPEGView as default viewer for some file types, you should restore the old default viewer:
+JPEGView context menu > Settings/Admin > Set as default viewer...
+Uncheck all file types and press 'OK'.
+
+******************************************************************************
+******************************   Why JPEGView ? ******************************
+******************************************************************************
+1. Yet another image viewer...
+Compared to many other image viewers, JPEGView has a rather different philosophy: Minimal GUI - maximal image.
+Therefore your first impression after having started JPEGView is probably disappointing - a 'file open' dialog allows choosing an image that is then shown - nothing else seems to be there. If you have been searching for an image viewer with classic menu, tool bar, side bar, status bar and browsing panel you should probably continue with the section 'Deinstallation' and use IrfanView or XnView instead.
+
+2. Still here?
+If you want to try out a different approach with minimal GUI but nevertheless lots of functionality behind that minimal GUI, you may give a try to JPEGView. Be assured that there is more to discover!
+
+******************************************************************************
+******************************   First steps   *******************************
+******************************************************************************
+1. Start JPEGView and choose an image that is larger than your primary screen
+This makes JPEGView displaying the image in full screen mode what is better suited for this tutorial. You can toggle between full screen mode and window mode with the F11 key at any time.
+
+2. Move your mouse - a semi-transparent panel with icons appears on the lower part of the screen
+This is the navigation panel providing some basic navigation and other commands.
+Move the mouse pointer over the icons and a tooltip explains the functionality.
+
+3. Move your mouse to the bottom of the screen - the image processing panel appears
+This panel provides some basic image processing that can be applied to the image.
+
+4. Move the mouse back to the center of the screen - the image processing panel disappears again.
+   Use the mouse wheel (or the + and - keys) to zoom in and out.
+When zoomed in, on the right side of the screen a thumbnail view appears, showing the zoomed section.
+
+5. While having zoomed in, press the left mouse button and drag the mouse
+The image is panned.
+
+6. Move the mouse to the thumbnail view area. If the thumbnail is not shown currently, it will show up when the mouse is near. In the thumbnail image, press the left mouse button and drag the mouse.
+The image is panned. JPEGView has no scrollbars and this is the way to scroll a zoomed image very quickly.
+
+7. Move the mouse to the top of the screen - some standard windows buttons appear.
+The functionality of these buttons is obvious. But don't close, minimize or restore the window now.
+
+8. Move the mouse to the center of the screen and press the right mouse button.
+The context menu of JPEGView appears, providing access to most functionality of JPEGView.
+
+9. That's it for the first steps. Terminate JPEGView with the 'Esc' key.
+
+******************************************************************************
+*************************   Set as default viewer   **************************
+******************************************************************************
+Because JPEGView has no built in image browser, it's optimal usage scenario is to browse images with the Windows Explorer and start JPEGView by double clicking an image in the Explorer. You can then go through the images in the folder in JPEGView using the arrow keys or the navigation panel buttons. To enable this use case, JPEGView needs to be registered as default program for the image types it supports (i.e. jpg, gif, tif, bmp, etc).
+
+1. Start JPEGView, load an image and open the context menu (right mouse click)
+Choose: Settings/Admin > Set as default viewer...
+Select the file types to be opened by JPEGView and press 'OK'.
+
+Windows 8 users: This operating system protects some file types. For these file types manual registration in the Windows Explorer is required. You will get a message from JPEGView for the affected file types.
+

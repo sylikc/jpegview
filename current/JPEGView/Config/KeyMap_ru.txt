@@ -41,6 +41,7 @@
 #define IDM_ROTATE_90		8000			// повернуть изображение на 90° вправо
 #define IDM_ROTATE_270		9000			// повернуть изображение на 90° влево
 #define IDM_ROTATE          	9100			// показать диалоговое окно поворота на произвольный угол
+#define IDM_CHANGESIZE		9120			// show dialog to change size of image
 #define IDM_PERSPECTIVE         9150			// показать диалоговое окно коррекции перспективы
 #define IDM_MIRROR_H        	9200			// зеркально перевернуть изображение по горизонтали
 #define IDM_MIRROR_V        	9300			// зеркально перевернуть изображение по вертикали

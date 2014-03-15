@@ -150,6 +150,26 @@ BEGIN
     LTEXT           "",IDC_OW_SHORTCUT_LABEL,205,128,70,10,NOT WS_GROUP
 END
 
+IDD_RESIZE DIALOGEX 0, 0, 309, 104
+STYLE DS_SETFONT | DS_FIXEDSYS | DS_CENTER | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
+EXSTYLE WS_EX_TOOLWINDOW
+FONT 8, "MS Shell Dlg", 0, 0, 0x1
+BEGIN
+    EDITTEXT        IDC_RS_ED_PERCENTS,87,7,88,14,ES_AUTOHSCROLL | ES_NUMBER
+    EDITTEXT        IDC_RS_ED_WIDTH,87,23,88,14,ES_AUTOHSCROLL | ES_NUMBER
+    EDITTEXT        IDC_RS_ED_HEIGHT,87,39,88,14,ES_AUTOHSCROLL | ES_NUMBER
+    COMBOBOX        IDC_RS_CB_FILTER,87,55,88,50,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    DEFPUSHBUTTON   "OK",IDOK,167,83,63,14
+    PUSHBUTTON      "Cancel",IDCANCEL,239,83,63,14
+    LTEXT           "Filter",IDC_RS_LABEL_FILTER,7,56,69,12
+    LTEXT           "New size:",IDC_RS_LABEL_NEW_PERCENTS,7,8,69,12
+    LTEXT           "New height:",IDC_RS_LABEL_NEW_HEIGHT,7,40,69,12
+    LTEXT           "New width:",IDC_RS_LABEL_NEW__WIDTH,7,24,69,12
+    LTEXT           "%",IDC_RS_LABEL_PERCENTS,184,9,25,9
+    LTEXT           "Pixel",IDC_RS_PIXELS,184,25,69,12
+    LTEXT           "Pixel",IDC_RS_PIXELS2,184,42,69,12
+END
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -161,20 +181,21 @@ GUIDELINES DESIGNINFO
 BEGIN
     IDD_MAINDLG, DIALOG
     BEGIN
+    END
+
+    IDD_SET_CROP_SIZE, DIALOG
+    BEGIN
+    END
+
+    IDD_RESIZE, DIALOG
+    BEGIN
         LEFTMARGIN, 7
-        RIGHTMARGIN, 180
+        RIGHTMARGIN, 302
         TOPMARGIN, 7
-        BOTTOMMARGIN, 91
+        BOTTOMMARGIN, 97
     END
 END
 #endif    // APSTUDIO_INVOKED
-
-
-/////////////////////////////////////////////////////////////////////////////
-//
-// Accelerator
-//
-
 
 
 /////////////////////////////////////////////////////////////////////////////
@@ -285,6 +306,7 @@ BEGIN
             MENUITEM "Rotate +90",                  IDM_ROTATE_90
             MENUITEM "Rotate -90",                  IDM_ROTATE_270
             MENUITEM "Rotate...",                   IDM_ROTATE
+            MENUITEM "Change size...",              IDM_CHANGESIZE
             MENUITEM "Perspective correction...",   IDM_PERSPECTIVE
             MENUITEM SEPARATOR
             MENUITEM "Mirror horizontally",         IDM_MIRROR_H

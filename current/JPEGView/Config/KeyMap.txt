@@ -39,6 +39,7 @@
 #define IDM_ROTATE_90		8000			// rotate image 90 deg
 #define IDM_ROTATE_270		9000			// rotate image 270 deg
 #define IDM_ROTATE          	9100			// show free rotation dialog
+#define IDM_CHANGESIZE		9120			// show dialog to change size of image
 #define IDM_PERSPECTIVE         9150			// show perpective correction dialog
 #define IDM_MIRROR_H        	9200			// mirror image horizontally
 #define IDM_MIRROR_V        	9300			// mirror image vertically

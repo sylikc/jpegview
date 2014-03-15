@@ -363,3 +363,15 @@ Downcounting	Absteigend
 File size	Dateigrösse
 Do you really want to delete the current image file on disk?	Soll die aktuelle Bilddatei wirklich gelöscht werden?
 Delete image file	Bilddatei löschen
+Change size...	Grösse ändern...
+Resize Image	Bildgrösse ändern
+OK	OK
+New size:	Neue Grösse:
+New width:	Neue Breite:
+New height:	Neue Höhe:
+Filter:	Filter:
+Box	Box
+Lanczos/Bicubic	Lanczos/Bikubisch
+Sharpen low	Schärfen (wenig)
+Sharpen medium	Schärfen (mittel)
+The new size is too large - width or height is larger than 65535 or total number of pixels is too large!	Die neue Bildgrösse ist zu gross - Breite oder Höhe ist grösser als 65535 oder die Gesamtzahl der Bildpunkte ist zu gross!

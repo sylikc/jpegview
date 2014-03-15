@@ -71,6 +71,19 @@
 #define IDC_OW_SHORTCUT_HELP 1013
 #define IDC_OW_EDIT 1014
 
+#define IDD_RESIZE                      5000
+#define IDC_RS_CB_FILTER                2000
+#define IDC_RS_LABEL_NEW_PERCENTS       2001
+#define IDC_RS_LABEL_FILTER             2002
+#define IDC_RS_LABEL_NEW_HEIGHT         2003
+#define IDC_RS_LABEL_NEW__WIDTH         2004
+#define IDC_RS_ED_PERCENTS              2005
+#define IDC_RS_ED_HEIGHT                2006
+#define IDC_RS_ED_WIDTH                 2007
+#define IDC_RS_LABEL_PERCENTS           2008
+#define IDC_RS_PIXELS                   2009
+#define IDC_RS_PIXELS2                  2010
+
 #define IDM_DEFAULT_ESC		255
 #define IDM_STOP_MOVIE		1000
 #define IDM_MINIMIZE		1010
@@ -143,6 +156,7 @@
 #define IDM_ROTATE_90		8000
 #define IDM_ROTATE_270		9000
 #define IDM_ROTATE          9100
+#define IDM_CHANGESIZE      9120
 #define IDM_PERSPECTIVE     9150
 #define IDM_MIRROR_H        9200
 #define IDM_MIRROR_V        9300
