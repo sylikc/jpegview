@@ -23,11 +23,12 @@ Bugs fixed:
 - SingleInstance=true, fixed error on loading image when window was minimized
 New features:
 - 64 bit version (in addition to existing 32 bit version)
+- New image processing: Change size (in menu Transform image > Change size)
 - Improvements in image file deletion:
   - Button on navigation panel and 'Del' key deletes the current image file in the same same way Explorer does (by moving to recycle bin)
   - 'Shift+Del' deletes the current image file permanently
 - Showing keyboard shortcuts in tooltips of the toolbox buttons
-- Traditional Chinese (Taiwan) translation
+- Traditional Chinese (Taiwan) translation and updated Chinese translation
 Other changes:
 - Ctrl-X also copies the file name to the clipboard (as Ctrl-C)
 - Using Visual Studio 2013 to compile the 64 bit version

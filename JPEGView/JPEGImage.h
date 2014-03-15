@@ -117,6 +117,9 @@ public:
 	// Returns false if not enough memory to perform the operation
 	bool TrapezoidOriginalPixels(const CTrapezoid& trapezoid, bool bAutoCrop, bool bKeepAspectRatio);
 
+	// Resizes the original pixels to the given target size
+	bool ResizeOriginalPixels(EResizeFilter filter, CSize newSize);
+
 	// Gets the hash value of the pixels, for JPEGs it on the compressed pixels
 	__int64 GetPixelHash() const { return m_nPixelHash; }
 
@@ -410,6 +413,9 @@ private:
 	// Resample to given target size. Returns resampled DIB
 	void* Resample(CSize fullTargetSize, CSize clippingSize, CPoint targetOffset, 
 		EProcessingFlags eProcFlags, double dSharpen, double dRotation, EResizeType eResizeType);
+
+	// Resize to given target size. Returns resampled DIB. Used when resizing original pixels.
+	void* InternalResize(void* pixels, int channels, EResizeFilter filter, CSize targetSize, CSize sourceSize);
 
 	// Apply the given unsharp mask to m_pDIBPixels (can be null to not apply an unsharp mask, then NULL is returned)
 	void* ApplyUnsharpMask(const CUnsharpMaskParams * pUnsharpMaskParams, bool bNoChangesLDCandLUT);

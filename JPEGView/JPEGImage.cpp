@@ -8,6 +8,7 @@
 #include "LocalDensityCorr.h"
 #include "ParameterDB.h"
 #include "EXIFReader.h"
+#include "MaxImageDef.h"
 #include "libjpeg-turbo\include\turbojpeg.h"
 #include <math.h>
 #include <assert.h>
@@ -390,6 +391,56 @@ bool CJPEGImage::TrapezoidOriginalPixels(const CTrapezoid& trapezoid, bool bAuto
 	return true;
 }
 
+bool CJPEGImage::ResizeOriginalPixels(EResizeFilter filter, CSize newSize) {
+	int newWidth = newSize.cx, newHeight = newSize.cy;
+	if (newWidth <= 0 || newHeight <= 0) {
+		return false;
+	}
+	if (((long long)newWidth) * newHeight > MAX_IMAGE_PIXELS) {
+		return false;
+	}
+	if (newWidth > MAX_IMAGE_DIMENSION || newHeight > MAX_IMAGE_DIMENSION) {
+		return false;
+	}
+	if (newWidth == m_nOrigWidth && newHeight == m_nOrigHeight) {
+		return true;
+	}
+
+	InvalidateAllCachedPixelData();
+
+	void* pResizedPixels = m_pIJLPixels;
+	int currentWidth = m_nOrigWidth;
+	int currentHeight = m_nOrigHeight;
+	int channels = m_nIJLChannels;
+	double totalFactor = (double)currentWidth / newWidth;
+	int steps = (totalFactor > 5) ? (int)ceil(log(totalFactor) / log(5)) : 1;
+	double factor = (steps > 1) ? pow(totalFactor, 1.0 / steps) : 1.0;
+	for (int i = 0; i < steps; i++) {
+		EResizeFilter usedFilter;
+		int oldWidth = currentWidth, oldHeight = currentHeight;
+		if (i != steps - 1 && filter != Resize_PointFilter) {
+			currentWidth = (int)(currentWidth / factor);
+			currentHeight = (int)(currentHeight / factor);
+			usedFilter = (filter == Resize_SharpenMedian) ? Resize_SharpenLow : Resize_NoAliasing;
+		} else {
+			currentWidth = newWidth;
+			currentHeight = newHeight;
+			usedFilter = filter;
+		}
+		void* pOldPixels = pResizedPixels;
+		pResizedPixels = InternalResize(pResizedPixels, channels, usedFilter, CSize(currentWidth, currentHeight), CSize(oldWidth, oldHeight));
+		delete[] pOldPixels;
+		channels = 4;
+	}
+
+	m_nOrigWidth = newWidth;
+	m_nOrigHeight = newHeight;
+	m_nIJLChannels = 4;
+	m_pIJLPixels = pResizedPixels;
+
+	return true;
+}
+
 void CJPEGImage::ResampleWithPan(void* & pDIBPixels, void* & pDIBPixelsLUTProcessed, CSize fullTargetSize, 
 								 CSize clippingSize, CPoint targetOffset, CRect oldClippingRect,
 								 EProcessingFlags eProcFlags, const CImageProcessingParams & imageProcParams, 
@@ -549,6 +600,36 @@ void* CJPEGImage::Resample(CSize fullTargetSize, CSize clippingSize, CPoint targ
 		} else {
 			return CBasicProcessing::PointSample(fullTargetSize, targetOffset, clippingSize, 
 				CSize(m_nOrigWidth, m_nOrigHeight), m_pIJLPixels, m_nIJLChannels);
+		}
+	}
+}
+
+void* CJPEGImage::InternalResize(void* pixels, int channels, EResizeFilter filter, CSize targetSize, CSize sourceSize) {
+	EResizeType eResizeType = GetResizeType(targetSize, sourceSize);
+	Helpers::CPUType cpu = CSettingsProvider::This().AlgorithmImplementation();
+
+	if (filter == Resize_PointFilter) {
+		return CBasicProcessing::PointSample(targetSize, CPoint(0, 0), targetSize, sourceSize, pixels, channels);
+	}
+
+	EFilterType downSamplingFilter = (filter == Resize_NoAliasing) ? Filter_Downsampling_No_Aliasing : Filter_Downsampling_Best_Quality;
+	double dSharpen = (filter == Resize_SharpenLow) ? 0.15 : (filter == Resize_SharpenMedian) ? 0.3 : 0.0;
+
+	if (cpu == Helpers::CPU_SSE || cpu == Helpers::CPU_MMX) {
+		if (eResizeType == UpSample) {
+			return CBasicProcessing::SampleUp_HQ_SSE_MMX(targetSize, CPoint(0, 0), targetSize,
+				sourceSize, pixels, channels, cpu == Helpers::CPU_SSE);
+		} else {
+			return CBasicProcessing::SampleDown_HQ_SSE_MMX(targetSize, CPoint(0, 0), targetSize,
+				sourceSize, pixels, channels, dSharpen, downSamplingFilter, cpu == Helpers::CPU_SSE);
+		}
+	} else {
+		if (eResizeType == UpSample) {
+			return CBasicProcessing::SampleUp_HQ(targetSize, CPoint(0, 0), targetSize,
+				sourceSize, pixels, channels);
+		} else {
+			return CBasicProcessing::SampleDown_HQ(targetSize, CPoint(0, 0), targetSize,
+				sourceSize, pixels, channels, dSharpen, downSamplingFilter);
 		}
 	}
 }
