@@ -10,7 +10,7 @@ For the 32 bit version: JPEGView_X.Y.Z.zip\JPEGView32\  --> C:\Program Files (x8
 For the 64 bit version: JPEGView_X.Y.Z.zip\JPEGView64\  --> C:\Program Files (x86)\JPEGView64\
 
 ******************************************************************************
-*****************************   Deinstallation   *****************************
+*****************************   Uninstallation   *****************************
 ******************************************************************************
 To remove JPEGView, just delete the folder JPEGView32 respectively JPEGView64 from your hard disk.
 In case you have set JPEGView as default viewer for some file types, you should restore the old default viewer:
@@ -22,7 +22,7 @@ Uncheck all file types and press 'OK'.
 ******************************************************************************
 1. Yet another image viewer...
 Compared to many other image viewers, JPEGView has a rather different philosophy: Minimal GUI - maximal image.
-Therefore your first impression after having started JPEGView is probably disappointing - a 'file open' dialog allows choosing an image that is then shown - nothing else seems to be there. If you have been searching for an image viewer with classic menu, tool bar, side bar, status bar and browsing panel you should probably continue with the section 'Deinstallation' and use IrfanView or XnView instead.
+Therefore your first impression after having started JPEGView is probably disappointing - a 'file open' dialog allows choosing an image that is then shown - nothing else seems to be there. If you have been searching for an image viewer with classic menu, tool bar, side bar, status bar and browsing panel you should probably continue with the section 'Uninstallation' and use IrfanView or XnView instead.
 
 2. Still here?
 If you want to try out a different approach with minimal GUI but nevertheless lots of functionality behind that minimal GUI, you may give a try to JPEGView. Be assured that there is more to discover!

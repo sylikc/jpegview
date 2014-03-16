@@ -21,6 +21,8 @@ Bugs fixed:
 - Window size in windowed mode was some pixels too small due to invalid reporting of window border size by OS
 - Fixed wrong line break in file titles in info panel for long file names
 - SingleInstance=true, fixed error on loading image when window was minimized
+- Lossless JPEG-transformations cannot be applied anymore after the original pixels have been modified, e.g. by a crop.
+  This would lead to unexpected results.
 New features:
 - 64 bit version (in addition to existing 32 bit version)
 - New image processing: Change size (in menu Transform image > Change size)

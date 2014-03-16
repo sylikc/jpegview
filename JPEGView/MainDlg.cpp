@@ -1138,7 +1138,7 @@ LRESULT CMainDlg::OnContextMenu(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam,
 	bool bCanPaste = ::IsClipboardFormatAvailable(CF_DIB);
 	if (!bCanPaste) ::EnableMenuItem(hMenuTrackPopup, IDM_PASTE, MF_BYCOMMAND | MF_GRAYED);
 
-    bool bCanDoLosslessJPEGTransform = (m_pCurrentImage != NULL) && m_pCurrentImage->GetImageFormat() == IF_JPEG;
+	bool bCanDoLosslessJPEGTransform = (m_pCurrentImage != NULL) && m_pCurrentImage->GetImageFormat() == IF_JPEG && !m_pCurrentImage->IsDestructivlyProcessed();
 
     if (!bCanDoLosslessJPEGTransform) ::EnableMenuItem(hMenuTrackPopup, SUBMENU_POS_TRANSFORM_LOSSLESS, MF_BYPOSITION | MF_GRAYED);
 
@@ -1731,7 +1731,7 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 			break;
 		case IDM_CROP_SEL:
 			if (m_pCurrentImage != NULL) {
-				m_pCurrentImage->Crop(m_pCropCtl->GetImageCropRect());
+				m_pCurrentImage->Crop(m_pCropCtl->GetImageCropRect(false));
 				this->Invalidate(FALSE);
 				AdjustWindowToImage(false);
 			}
@@ -1743,7 +1743,7 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 			if (m_pCurrentImage != NULL) {
 				CClipboard::CopyFullImageToClipboard(this->m_hWnd, m_pCurrentImage, *m_pImageProcParams, 
 					CreateDefaultProcessingFlags(),
-					m_pCropCtl->GetImageCropRect(), NULL);
+					m_pCropCtl->GetImageCropRect(false), NULL);
 				this->Invalidate(FALSE);
 			}
 			break;
@@ -2363,7 +2363,7 @@ bool CMainDlg::PerformPan(int dx, int dy, bool bAbsolute) {
 }
 
 void CMainDlg::ZoomToSelection() {
-	CRect zoomRect(m_pCropCtl->GetImageCropRect());
+	CRect zoomRect(m_pCropCtl->GetImageCropRect(false));
 	if (zoomRect.Width() > 0 && zoomRect.Height() > 0 && m_pCurrentImage != NULL) {
 		float fZoom;
 		CPoint offsets;

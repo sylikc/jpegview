@@ -195,7 +195,7 @@ int CCropCtl::ShowCropContextMenu() {
 	if (hMenu != NULL) {
 		HMENU hMenuTrackPopup = ::GetSubMenu(hMenu, 0);
 		int nSubMenuPosCropMode = SUBMENU_POS_CROPMODE;
-		if (m_pMainDlg->GetCurrentImage()->GetImageFormat() != IF_JPEG) {
+		if (m_pMainDlg->GetCurrentImage()->GetImageFormat() != IF_JPEG || m_pMainDlg->GetCurrentImage()->IsDestructivlyProcessed()) {
 			::DeleteMenu(hMenuTrackPopup, IDM_LOSSLESS_CROP_SEL, MF_BYCOMMAND);
 			nSubMenuPosCropMode--;
 		}
@@ -419,18 +419,33 @@ CRect CCropCtl::GetScreenCropRect() {
 	}
 }
 
-CRect CCropCtl::GetImageCropRect() {
+CRect CCropCtl::GetImageCropRect(bool losslessCrop) {
 	CJPEGImage* pCurrentImage = m_pMainDlg->GetCurrentImage();
 	if (pCurrentImage == NULL) {
 		return CRect(0, 0, 0, 0);
 	} else {
-		return CRect(max(0, min(m_cropStart.x, m_cropEnd.x)), max(0, min(m_cropStart.y, m_cropEnd.y)),
+		CRect cropRect = CRect(max(0, min(m_cropStart.x, m_cropEnd.x)), max(0, min(m_cropStart.y, m_cropEnd.y)),
 			min(pCurrentImage->OrigWidth(), max(m_cropStart.x, m_cropEnd.x) + 1), min(pCurrentImage->OrigHeight(), max(m_cropStart.y, m_cropEnd.y) + 1));
+		if (losslessCrop) {
+			switch (pCurrentImage->GetRotation())
+			{
+			case 90:
+				cropRect = CRect(cropRect.top, pCurrentImage->OrigWidth() - cropRect.right, cropRect.bottom, pCurrentImage->OrigWidth() - cropRect.left);
+				break;
+			case 180:
+				cropRect = CRect(pCurrentImage->OrigWidth() - cropRect.right, pCurrentImage->OrigHeight() - cropRect.bottom, pCurrentImage->OrigWidth() - cropRect.left, pCurrentImage->OrigHeight() - cropRect.top);
+				break;
+			case 270:
+				cropRect = CRect(pCurrentImage->OrigHeight() - cropRect.bottom, cropRect.left, pCurrentImage->OrigHeight() - cropRect.top, cropRect.right);
+				break;
+			}
+		}
+		return cropRect;
 	}
 }
 
 void CCropCtl::CropLossless() {
-	CRect cropRect = GetImageCropRect();
+	CRect cropRect = GetImageCropRect(true);
 	if (cropRect.IsRectEmpty()) {
 		return;
 	}
