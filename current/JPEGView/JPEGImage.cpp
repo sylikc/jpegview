@@ -95,6 +95,7 @@ CJPEGImage::CJPEGImage(int nWidth, int nHeight, void* pIJLPixels, void* pEXIFDat
 	m_pCachedProcessedHistogram = NULL;
 
 	m_bCropped = false;
+	m_bIsDestructivlyProcessed = false;
 	m_nRotation = 0;
 	m_bRotationByEXIF = false;
 	m_bFirstReprocessing = true;
@@ -156,7 +157,7 @@ CJPEGImage::~CJPEGImage(void) {
 }
 
 bool CJPEGImage::CanUseLosslessJPEGTransformations() {
-    return m_eImageFormat == IF_JPEG && (m_nOrigWidth % tjMCUWidth[m_eJPEGChromoSampling]) == 0 &&
+	return m_eImageFormat == IF_JPEG && (m_nOrigWidth % tjMCUWidth[m_eJPEGChromoSampling]) == 0 &&
         (m_nOrigHeight % tjMCUHeight[m_eJPEGChromoSampling]) == 0;
 }
 
@@ -275,6 +276,8 @@ bool CJPEGImage::ApplyUnsharpMaskToOriginalPixels(const CUnsharpMaskParams & uns
 
 	m_dUnsharpMaskTickCount = Helpers::GetExactTickCount() - dStartTime;
 
+	m_bIsDestructivlyProcessed = true;
+
 	return bSuccess;
 }
 
@@ -350,6 +353,8 @@ bool CJPEGImage::RotateOriginalPixels(double dRotation, bool bAutoCrop, bool bKe
 	m_nOrigHeight = newSize.cy;
 	m_nIJLChannels = 4;
 	m_pIJLPixels = pRotatedPixels;
+	m_bIsDestructivlyProcessed = true;
+
 	return true;
 }
 
@@ -388,6 +393,8 @@ bool CJPEGImage::TrapezoidOriginalPixels(const CTrapezoid& trapezoid, bool bAuto
 	m_nOrigHeight = newSize.cy;
 	m_nIJLChannels = 4;
 	m_pIJLPixels = pTransformedPixels;
+	m_bIsDestructivlyProcessed = true;
+
 	return true;
 }
 
@@ -437,6 +444,7 @@ bool CJPEGImage::ResizeOriginalPixels(EResizeFilter filter, CSize newSize) {
 	m_nOrigHeight = newHeight;
 	m_nIJLChannels = 4;
 	m_pIJLPixels = pResizedPixels;
+	m_bIsDestructivlyProcessed = true;
 
 	return true;
 }
@@ -687,6 +695,7 @@ bool CJPEGImage::Mirror(bool bHorizontally) {
 	if (pNewIJL == NULL) return false;
 	delete[] m_pIJLPixels;
 	m_pIJLPixels = pNewIJL;
+	m_bIsDestructivlyProcessed = true;
 
 	m_dLastOpTickCount = Helpers::GetExactTickCount() - dStartTickCount;
 	return true;
@@ -708,6 +717,8 @@ bool CJPEGImage::Crop(CRect cropRect) {
 	m_nOrigWidth = cropRect.Width();
 	m_nOrigHeight = cropRect.Height();
 	m_bCropped = true;
+	m_bIsDestructivlyProcessed = true;
+
 	return true;
 }
 

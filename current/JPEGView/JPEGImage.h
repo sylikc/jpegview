@@ -139,6 +139,9 @@ public:
 	void DIBToOrig(float & fX, float & fY);
 	void OrigToDIB(float & fX, float & fY);
 
+	// Gets the rotation applied to the pixels, 0, 90, 180 or 270 degrees
+	int GetRotation() {return m_nRotation; }
+
     // Gets or sets the JPEG chromo sampling. See turbojpeg.h for the TJSAMP enumeration.
     TJSAMP GetJPEGChromoSampling() { return m_eJPEGChromoSampling; }
     void SetJPEGChromoSampling(TJSAMP eSampling) { m_eJPEGChromoSampling = eSampling; }
@@ -170,6 +173,9 @@ public:
 
 	// Returns if this image has been cropped or not
 	bool IsCropped() { return m_bCropped; }
+
+	// Returns if this image's original pixels have been processed destructively (e.g. cropped or rotated by non-90 degrees steps)
+	bool IsDestructivlyProcessed() { return m_bIsDestructivlyProcessed; }
 
 	// raw access to input pixels - do not delete or store the pointer returned
 	void* IJLPixels() { return  m_pIJLPixels; }
@@ -364,6 +370,7 @@ private:
 	float m_fLightenShadowFactor;
 
 	bool m_bCropped; // Image has been cropped
+	bool m_bIsDestructivlyProcessed; // Original image pixels destructively processed (i.e. cropped or size changed)
 	uint32 m_nRotation; // current rotation angle
 	bool m_bRotationByEXIF; // is the rotation given by EXIF
 

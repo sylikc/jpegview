@@ -34,7 +34,7 @@ public:
 	void SetCropRectAR(double dRatio) {  m_dCropRectAspectRatio = dRatio; }
 
 	// Cropping rectangle in image coordinates (in original size image)
-	CRect GetImageCropRect();
+	CRect GetImageCropRect(bool losslessCrop);
 
     CropMode GetCropMode();
 

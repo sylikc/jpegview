@@ -675,6 +675,14 @@
               corrected image is cropped automatically to avoid black borders. This behavior can be changed with the right tool button on the panel.
             </li>
             <li>
+                <b>Change Size</b><br />
+                Keyboard: <kbd>none</kbd><br />
+                Mouse: Use context menu, 'Transform image &gt; Change size...' menu item.<br />
+                This will resize the image to the specified new size using one of the selectable filters. The 'Box' filter is just
+                repeating pixels (upsampling), respectively deleting pixels (downsampling). The other filters are higher order reconstruction filters
+                that balance between no aliasing and improved sharpness.
+            </li>
+            <li>
               <b>Color balance</b><br/>
               Mouse: Use processing panel<br/>
               Changes the color balance of the image by changing the cyan-red, magenta-green and yellow-blue
@@ -801,7 +809,9 @@
           Paste image from clipboard and fit to screen.<br/>
           For pasted images, storing the parameters to the parameter DB is not possible
           because they have no representation on the file system. However these images can be processed and saved.
-          <br/><br/><b>
+          <br/><br/>
+          Tip: Ctrl-C also enables to paste the current image file to a new location in the Windows Explorer using Ctrl-V.
+          <br /><br /><b>
             <a href="#Top">Top of Page</a>
           </b><br/>
 
