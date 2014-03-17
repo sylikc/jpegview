@@ -365,3 +365,17 @@ Edit	Redigera
 Upcounting	Stigande	
 Downcounting	Fallande	
 File size	Filstorlek
+Do you really want to delete the current image file on disk?	Vill du verkligen ta bort den aktuella bildfilen från disken?
+Delete image file	Ta bort bildfil
+Change size...	Ändra storlek...
+Resize Image	Ändra bildstorlek
+OK	OK
+New size:	Ny storlek:
+New width:	Ny bredd:
+New height:	Ny höjd:
+Filter:	Filter:
+Box	Box
+Lanczos/Bicubic	Lanczos/Bicubic
+Sharpen low	Låg skärpa
+Sharpen medium	Medium skärpa
+The new size is too large - width or height is larger than 65535 or total number of pixels is too large!	Den nya storleken är för stor - Bredd eller höjd är större än 65535, eller totala pixelantalet är för stort!
