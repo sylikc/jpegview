@@ -5,7 +5,7 @@
 //TranslatorName=Dmitry Yerokhin
 //Contact=erodim@mail.ru
 //TranslatorURL=none
-//LastUpdated=Dec 6, 2013
+//LastUpdated=Feb 28, 2014
 //
 Contrast	Контрастность
 Brightness	Яркость
@@ -139,7 +139,7 @@ Rotate 180	Повернуть на 180°
 Auto correction	Автокоррекция
 Local density correction	Коррекция светов/теней
 Keep parameters	Помнить параметры обработки при смене изображений
-Set current parameters as default values...	Сохранить параметры в INI-файле...
+Set current parameters as default values...	Сохранить текущие параметры как стандартные значения...
 Save parameters to DB	Сохранить параметры в базе данных
 Clear parameters from DB	Удалить параметры из базы данных
 Zoom	Масштабирование
@@ -368,3 +368,17 @@ Edit	Изменить
 Upcounting	По возрастанию
 Downcounting	По убыванию
 File size	Размер файла
+Do you really want to delete the current image file on disk?	Вы действительно хотите удалить текущий графический файл с диска?
+Delete image file	Удалить графический файл
+Change size...	Изменить размер...
+Resize Image	Изменение размера изображения
+OK	OK
+New size:	Новый размер:
+New width:	Новая ширина:
+New height:	Новая высота:
+Filter:	Фильтр
+Box	Box
+Lanczos/Bicubic	Lanczos/бикубический
+Sharpen low	Резкость слабо
+Sharpen medium	Резкость средне
+The new size is too large - width or height is larger than 65535 or total number of pixels is too large!	Новый размер слишком велик - ширина или высота больше 65535 пикселов, либо слишком большое общее количество пикселов!
