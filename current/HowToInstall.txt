@@ -66,6 +66,5 @@ Because JPEGView has no built in image browser, it's optimal usage scenario is t
 1. Start JPEGView, load an image and open the context menu (right mouse click)
 Choose: Settings/Admin > Set as default viewer...
 Select the file types to be opened by JPEGView and press 'OK'.
-
-Windows 8 users: This operating system protects some file types. For these file types manual registration in the Windows Explorer is required. You will get a message from JPEGView for the affected file types.
+Windows 8: The 'default programs' dialog from the Control Panel is shown to perform the associations.
 

@@ -2,6 +2,8 @@
 #include "FileExtensionsRegistry.h"
 #include "Helpers.h"
 #include "SettingsProvider.h"
+#include "NLS.h"
+#include "FileList.h"
 
 ///////////////////////////////////////////////////////////////////////////////////
 // Helpers
@@ -33,6 +35,20 @@ static bool GetRegistryStringValue(HKEY key, LPCTSTR name, CString & outValue) {
     bOk = bOk && (type == REG_SZ || type == REG_EXPAND_SZ);
     if (bOk) outValue = buff;
     return bOk;
+}
+
+// Checks if a registry key relative to HKEY_CURRENT_USER has the specified string value.
+// If expectedValue is NULL, it is just checked if the keyName exists.
+static bool ExistsAndHasStringValue(LPCTSTR path, LPCTSTR keyName, LPCTSTR expectedValue) {
+	HKEY key;
+	if (RegOpenKeyEx(HKEY_CURRENT_USER, path, 0, KEY_READ, &key) == ERROR_SUCCESS) {
+		CString value;
+		bool bOk = GetRegistryStringValue(key, keyName, value);
+		bOk = bOk && (expectedValue == NULL || _tcsicmp(value, expectedValue) == 0);
+		RegCloseKey(key);
+		return bOk;
+	}
+	return false;
 }
 
 // Sets a string value in the registry, given an open key and the name of the string value to set.
@@ -439,18 +455,11 @@ static RegResult ResetPermissionsForRegistryKey(LPCTSTR subKeyRelativeToHKCU)
 ///////////////////////////////////////////////////////////////////////////////////
 
 CFileExtensionsRegistry::CFileExtensionsRegistry() {
-#pragma warning(push)
-#pragma warning(disable:4996)
-    // Starting with Windows Vista, the Windows Explorer uses a different location
-    // to register file extensions
-    OSVERSIONINFO osvi;
-    ZeroMemory(&osvi, sizeof(OSVERSIONINFO));
-    osvi.dwOSVersionInfoSize = sizeof(OSVERSIONINFO);
-    GetVersionEx(&osvi);
-#pragma warning(pop)
-
-    m_bNewRegistryFormat = osvi.dwMajorVersion >= 6;
-	m_bIsWindows8 = osvi.dwMajorVersion >= 6 && osvi.dwMinorVersion >= 2;
+	int version = CFileExtensionsRegistrationWindows8::GetWindowsVersion();
+	// Starting with Windows Vista, the Windows Explorer uses a different location
+	// to register file extensions
+	m_bNewRegistryFormat = version >= 600;
+	m_bIsWindows8 = version >= 602;
     m_bIsJPEGViewRegistered = IsRegistered();
 }
 
@@ -519,4 +528,108 @@ RegResult CFileExtensionsRegistry::UnregisterFileExtension(LPCTSTR sExtension, b
         }
     }
     return Reg_Internal;
+}
+
+CFileExtensionsRegistrationWindows8::CFileExtensionsRegistrationWindows8() {
+}
+
+int CFileExtensionsRegistrationWindows8::GetWindowsVersion() {
+#pragma warning(push)
+#pragma warning(disable:4996)
+	OSVERSIONINFO osvi;
+	ZeroMemory(&osvi, sizeof(OSVERSIONINFO));
+	osvi.dwOSVersionInfoSize = sizeof(OSVERSIONINFO);
+	GetVersionEx(&osvi);
+#pragma warning(pop)
+	return osvi.dwMajorVersion * 100 + osvi.dwMinorVersion;
+}
+
+bool CFileExtensionsRegistrationWindows8::RegisterJPEGView() {
+	// ProgId
+	CString startupCommand;
+	startupCommand.Format(_T("\"%sJPEGView.exe\" \"%%1\""), CSettingsProvider::This().GetEXEPath());
+	if (!WriteStringValue(_T("Software\\Classes\\JPEGViewImageFile\\shell\\open\\command"), NULL, startupCommand)) {
+		return false;
+	}
+
+	// Set as RegisteredApplications and declare capabilities
+	if (!WriteStringValue(_T("Software\\RegisteredApplications"), _T("JPEGView"), _T("Software\\JPEGView\\Capabilities"))) {
+		return false;
+	}
+	if (!WriteStringValue(_T("Software\\JPEGView\\Capabilities"), _T("ApplicationDescription"), 
+		CNLS::GetString(_T("JPEGView is a lean, fast and highly configurable viewer/editor for JPEG, BMP, PNG, WEBP, TGA, GIF and TIFF images with a minimal GUI.")))) {
+		return false;
+	}
+	if (!WriteStringValue(_T("Software\\JPEGView\\Capabilities"), _T("ApplicationName"), _T("JPEGView"))) {
+		return false;
+	}
+	
+	// Declare all supported file endings
+	CString fileEndings = CFileList::GetSupportedFileEndings();
+	int lenght = fileEndings.GetLength();
+	LPTSTR buffer = fileEndings.GetBuffer(lenght + 1);
+	LPCTSTR fileEnding = buffer;
+	for (int i = 0; i <= lenght; i++) {
+		if (buffer[i] == _T(';') || buffer[i] == 0) {
+			fileEnding++; // strip the *
+			buffer[i] = 0;
+			if (!WriteStringValue(_T("Software\\JPEGView\\Capabilities\\FileAssociations"), fileEnding, _T("JPEGViewImageFile"))) {
+				return false;
+			}
+			fileEnding = &(buffer[i + 1]); 
+		}
+	}
+	fileEndings.ReleaseBuffer();
+
+	return true;
+}
+
+// Redefined because WINVER is set to Windows XP to make JPEGView running under XP, therefore these interface is not defined 
+MIDL_INTERFACE("1f76a169-f994-40ac-8fc8-0959e8874710")
+IApplicationAssociationRegistrationUI_ : public IUnknown
+{
+public:
+	virtual HRESULT STDMETHODCALLTYPE LaunchAdvancedAssociationUI(
+		/* [string][in] */ __RPC__in_string LPCWSTR pszAppRegistryName) = 0;
+
+};
+
+void CFileExtensionsRegistrationWindows8::LaunchApplicationAssociationDialog() {
+	const GUID CLSID_ApplicationAssociationRegistrationUI_ = { 0x1968106d, 0xf3b5, 0x44cf, { 0x89, 0x0e, 0x11, 0x6f, 0xcb, 0x9e, 0xce, 0xf1 } };
+
+	IApplicationAssociationRegistrationUI_ *applicationAssociationRegistrationUI = NULL;
+
+	::CoCreateInstance(CLSID_ApplicationAssociationRegistrationUI_,
+		NULL,
+		CLSCTX_INPROC_SERVER,
+		__uuidof(IApplicationAssociationRegistrationUI_),
+		(LPVOID*)&applicationAssociationRegistrationUI);
+
+	if (applicationAssociationRegistrationUI) {
+		applicationAssociationRegistrationUI->AddRef();
+		applicationAssociationRegistrationUI->LaunchAdvancedAssociationUI(L"JPEGView");
+		applicationAssociationRegistrationUI->Release();
+	}
+}
+
+bool CFileExtensionsRegistrationWindows8::WriteStringValue(LPCTSTR path, LPCTSTR keyName, LPCTSTR value) {
+	if (!ExistsAndHasStringValue(path, keyName, value)) {
+		HKEY key;
+		if (RegOpenKeyEx(HKEY_CURRENT_USER, path, 0, KEY_WRITE, &key) != ERROR_SUCCESS) {
+			if (RegCreateKeyEx(HKEY_CURRENT_USER, path, 0, NULL, 0, KEY_WRITE | KEY_READ, NULL, &key, NULL) != ERROR_SUCCESS) {
+				m_lastFailedRegistryKey = path;
+				return false;
+			}
+		}
+
+		bool canWrite = SetRegistryStringValue(key, keyName, value);
+		if (!canWrite)
+			m_lastFailedRegistryKey = CString(path) + _T('-') + ((keyName == NULL) ? _T("[Default]") : keyName);
+
+		RegCloseKey(key);
+
+		return canWrite;
+	}
+	// String value already exists and has the correct value
+	return true;
 }
