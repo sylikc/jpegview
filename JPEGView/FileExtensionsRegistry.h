@@ -11,6 +11,8 @@ enum RegResult {
 };
 
 // Class to support registring file extensions in the Windows registry to be opened by JPEGView
+// This class only works for Windows <= Windows 7. For windows 8, the only way to register file extensions
+// is to call the default programs dialog from Windows.
 class CFileExtensionsRegistry
 {
 public:
@@ -36,4 +38,32 @@ private:
     bool m_bNewRegistryFormat;
 	bool m_bIsWindows8;
     bool m_bIsJPEGViewRegistered;
+};
+
+// Class to register file extensions in windows 8. To do so, JPEGView must be registered in RegisteredApplications
+// and its capabilities (i.e. file extensions it supports) must be published in the registry.
+// Finally the 'Default programs' dialog from Windows 8 needs to be called to perform the actual registration.
+class CFileExtensionsRegistrationWindows8
+{
+public:
+	CFileExtensionsRegistrationWindows8();
+
+	// Returns the windows version in the format Major * 100 + Minor, e.g. 602 for Windows 8
+	static int GetWindowsVersion();
+
+	// Register JPEGView in HKEY_CURRENT_USER\Software\RegisteredApplications
+	// Also publishes the capabilities and creates a ProgId for JPEGView.
+	// Everything is done under HKEY_CURRENT_USER
+	bool RegisterJPEGView();
+
+	// Launches the Windows 8 application association dialog (Default programs)
+	void LaunchApplicationAssociationDialog();
+
+	// Gets the key name of the last failed key to write
+	CString GetLastFailedRegistryKey() { return m_lastFailedRegistryKey; }
+
+private:
+	CString m_lastFailedRegistryKey;
+
+	bool WriteStringValue(LPCTSTR path, LPCTSTR keyName, LPCTSTR value);
 };

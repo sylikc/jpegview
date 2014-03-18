@@ -25,6 +25,7 @@
 #include "FileOpenDialog.h"
 #include "BatchCopyDlg.h"
 #include "FileExtensionsDlg.h"
+#include "FileExtensionsRegistry.h"
 #include "ManageOpenWithDlg.h"
 #include "AboutDlg.h"
 #include "CropSizeDlg.h"
@@ -1999,8 +2000,21 @@ void CMainDlg::SetAsDefaultViewer() {
 	}
 	MouseOn();
 
-	CFileExtensionsDlg dlgSetAsDefaultViewer;
-	dlgSetAsDefaultViewer.DoModal();
+	if (CFileExtensionsRegistrationWindows8::GetWindowsVersion() >= 602) {
+		// Its Windows 8 or later
+		CFileExtensionsRegistrationWindows8 registry;
+		if (registry.RegisterJPEGView()) {
+			registry.LaunchApplicationAssociationDialog();
+		} else {
+			CString sError = CNLS::GetString(_T("Error while writing the following registry key:"));
+			sError += _T("\n");
+			sError += registry.GetLastFailedRegistryKey();
+			::MessageBox(m_hWnd, sError, CNLS::GetString(_T("Error")), MB_OK | MB_ICONERROR);
+		}
+	} else {
+		CFileExtensionsDlg dlgSetAsDefaultViewer;
+		dlgSetAsDefaultViewer.DoModal();
+	}
 	Invalidate(FALSE);
 }
 

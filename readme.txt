@@ -10,7 +10,9 @@ To compile JPEGView you need:
 The include directories of WTL must be added to the include directories for VC++:
 In Visual Studio: Properties of JPEGView project > VC++-Directories-Include Directories and Library Directories
 
-Please note: Windows XP SP2 or later is needed to run the compiled binary.
+Please note: 
+Windows XP SP2 or later is needed to run the 32 bit version.
+64 bit Windows 7 or later is needed to run the 64 bit version.
 
 
 Changelog
@@ -20,9 +22,9 @@ Changelog
 Bugs fixed:
 - Window size in windowed mode was some pixels too small due to invalid reporting of window border size by OS
 - Fixed wrong line break in file titles in info panel for long file names
-- SingleInstance=true, fixed error on loading image when window was minimized
+- SingleInstance=true, fixed error on loading image in case window was minimized
 - Lossless JPEG-transformations cannot be applied anymore after the original pixels have been modified, e.g. by a crop.
-  This would lead to unexpected results.
+  Applying the transformations in this case would lead to unexpected results.
 New features:
 - 64 bit version (in addition to existing 32 bit version)
 - New image processing: Change size (in menu Transform image > Change size)
@@ -32,6 +34,8 @@ New features:
 - Showing keyboard shortcuts in tooltips of the toolbox buttons
 - Traditional Chinese (Taiwan) translation and updated Chinese translation
 Other changes:
+- Settings/Admin > Set as default viewer: Calls the file association dialog from control panel to perform
+  the associations in Windows 8, because this is the only way under Windows 8 to properly change file associations.
 - Ctrl-X also copies the file name to the clipboard (as Ctrl-C)
 - Using Visual Studio 2013 to compile the 64 bit version
 

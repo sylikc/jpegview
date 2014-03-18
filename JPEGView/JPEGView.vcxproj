@@ -380,6 +380,7 @@
     <ClInclude Include="JPEGImage.h" />
     <ClInclude Include="JPEGLosslessTransform.h" />
     <ClInclude Include="JPEGProvider.h" />
+    <ClInclude Include="JPEGView.h" />
     <ClInclude Include="KeyMap.h" />
     <ClInclude Include="LocalDensityCorr.h" />
     <ClInclude Include="ManageOpenWithDlg.h" />
