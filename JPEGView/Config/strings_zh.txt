@@ -365,17 +365,18 @@ Edit	编辑
 Upcounting	加计数
 Downcounting	减计数
 File size	档案大小
-Do you really want to delete the current image file on disk?	您真的想要刪除磁碟上的目前圖像檔案嗎?
-Delete image file	刪除圖像檔案
-Change size...	變更大小...
-Resize Image	重新調整圖像大小
-OK	確定
+Do you really want to delete the current image file on disk?	您真的想要删除磁碟上的目前图像档案吗?
+Delete image file	删除图像档案
+Change size...	变更大小...
+Resize Image	重新调整图像大小
+OK	确定
 New size:	新的大小:
-New width:	新的寬度:
+New width:	新的宽度:
 New height:	新的高度:
-Filter:	過濾器:
+Filter:	过滤器:
 Box	方框
 Lanczos/Bicubic	Lanczos/Bicubic
-Sharpen low	低度銳化
-Sharpen medium	中度銳化
-The new size is too large - width or height is larger than 65535 or total number of pixels is too large!	新的圖像大小太大 - 寬度或高度大於 65536 或是總像素數太大!
+Sharpen low	低度锐化
+Sharpen medium	中度锐化
+The new size is too large - width or height is larger than 65535 or total number of pixels is too large!	新的图像大小太大 - 宽度或高度大于 65536 或是总像素数太大!
+
