@@ -379,4 +379,5 @@ Lanczos/Bicubic	Lanczos/Bicubic
 Sharpen low	低度锐化
 Sharpen medium	中度锐化
 The new size is too large - width or height is larger than 65535 or total number of pixels is too large!	新的图像大小太大 - 宽度或高度大于 65536 或是总像素数太大!
+JPEGView is a lean, fast and highly configurable viewer/editor for JPEG, BMP, PNG, WEBP, TGA, GIF and TIFF images with a minimal GUI.	JPEGView 是一款实用、快速及具有高度组态性的检视器/编辑器，使用最小的图形使用者界面，适用于 JPEG、BMP、PNG、WEBP、TGA、GIF 和 TIFF 图像。
 
