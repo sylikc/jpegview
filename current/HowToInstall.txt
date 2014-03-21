@@ -7,7 +7,7 @@ JPEGView is provided in a 32 bit version and a 64 bit version. If you are using 
 2. Extract directory
 JPEGView can be installed by simply extracting the directory with the chosen version to an arbitrary location on your hard disk, e.g.:
 For the 32 bit version: JPEGView_X.Y.Z.zip\JPEGView32\  --> C:\Program Files (x86)\JPEGView32\
-For the 64 bit version: JPEGView_X.Y.Z.zip\JPEGView64\  --> C:\Program Files (x86)\JPEGView64\
+For the 64 bit version: JPEGView_X.Y.Z.zip\JPEGView64\  --> C:\Program Files\JPEGView64\
 
 ******************************************************************************
 *****************************   Uninstallation   *****************************
