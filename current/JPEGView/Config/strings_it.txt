@@ -362,3 +362,17 @@ Edit	Modifica
 Upcounting	Crescente
 Downcounting	Decrescente
 File size	Dimensione file
+Do you really want to delete the current image file on disk?	Vuoi veramente cancellare l'immagine dal disco?
+Delete image file	Cancellazione immagine
+Change size...	Modifica dimensioni...
+Resize Image	Ridimensiona Immagine
+OK	OK
+New size:	Nuova dimensione
+New width:	Nuova larghezza:
+New height:	Nuova altezza:
+Filter:	Filtro:
+Box	Box
+Lanczos/Bicubic	Lanczos/Bicubic
+Sharpen low	Contrasto basso 
+Sharpen medium	Contrasto medio
+The new size is too large - width or height is larger than 65535 or total number of pixels is too large!	La nuova dimensione è troppo grande - larghezza o altezza sono maggiori di 65535 oppure il numero totale di pixel è troppo grande!
