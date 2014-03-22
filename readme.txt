@@ -18,6 +18,10 @@ Windows XP SP2 or later is needed to run the 32 bit version.
 Changelog
 *********
 
+[1.0.33.0]
+Other changes:
+- Expanding environment variables in user commands and open with commands
+
 [1.0.32.0]
 Bugs fixed:
 - Window size in windowed mode was some pixels too small due to invalid reporting of window border size by OS

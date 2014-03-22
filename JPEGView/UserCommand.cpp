@@ -62,7 +62,7 @@ static void SmartNameReplace(CString& strSource, LPCTSTR sOldText, LPCTSTR sNewT
 }
 
 // replaces the defined placeholder strings in the input string
-static CString ReplacePlaceholders(CString sMsg, LPCTSTR sFileName, const CRect& selectionRect, bool bUseShortFileName) {
+static CString ReplacePlaceholders(CString sMsg, LPCTSTR sFileName, const CRect& selectionRect, bool bUseShortFileName, bool bExpandEnvironmentVariables) {
 	const int BUFFER_LEN = MAX_PATH;
 	TCHAR buffer[BUFFER_LEN];
 	CString sNewMsg = sMsg;
@@ -124,6 +124,14 @@ static CString ReplacePlaceholders(CString sMsg, LPCTSTR sFileName, const CRect&
 			sNewMsg.Replace(_T("%exedrive%"), (LPCTSTR)(&letter));
 		}
     }
+
+	if (bExpandEnvironmentVariables) {
+		const int MAX_COMMAND_LINE_LEN = 1024;
+		TCHAR buffer[MAX_COMMAND_LINE_LEN];
+		if (::ExpandEnvironmentStrings(sNewMsg, (LPTSTR)buffer, MAX_COMMAND_LINE_LEN)) {
+			sNewMsg = buffer;
+		}
+	}
 
 	return sNewMsg;
 }
@@ -247,7 +255,7 @@ bool CUserCommand::CanExecute(HWND hWnd, LPCTSTR sFileName) const
 	if (m_sConfirmMsg.GetLength() > 0) {
 		CString sMsg = CNLS::GetString(m_sConfirmMsg);
 		sMsg.Replace(_T("\\n"), _T("\n"));
-		sMsg = ReplacePlaceholders(sMsg, sFileName, CRect(0, 0, 0, 0), false);
+		sMsg = ReplacePlaceholders(sMsg, sFileName, CRect(0, 0, 0, 0), false, false);
 		if (IDYES != ::MessageBox(hWnd, sMsg, CNLS::GetString(_T("Confirm")), MB_YESNOCANCEL | MB_ICONWARNING)) {
 			return false;
 		}
@@ -276,12 +284,12 @@ bool CUserCommand::Execute(HWND hWnd, LPCTSTR sFileName, const CRect& selectionR
 	}
 
 	CString sFileNameInCommandLine = sFileName;
-	if (m_sCommand.Find(_T("jpegtran ") == 0)) {
+	if (m_sCommand.Find(_T("jpegtran ")) == 0) {
 		sFileNameInCommandLine = Helpers::ReplacePathByShortForm(sFileName);
 	}
 	bool hasSpaces = sFileNameInCommandLine.Find(_T(' ')) != -1;
 
-	CString sCommandLine = ReplacePlaceholders(m_sCommand, sFileNameInCommandLine, selectionRect, m_bUseShortFileName);
+	CString sCommandLine = ReplacePlaceholders(m_sCommand, sFileNameInCommandLine, selectionRect, m_bUseShortFileName, true);
 	bool bSuccess = true;
 	if (m_bUseShellExecute) {
 		CString sEXE, sParameters, sStartupPath;
