@@ -119,6 +119,33 @@ void CTextCtrl::SetBold(bool bValue) {
 	m_pPanel->RequestRepositioning();
 }
 
+bool CTextCtrl::EnterEditMode() {
+	if (!IsShown() || !m_bEditable) return false;
+	if (m_pEdit != NULL) return true; // already in edit mode
+
+	CRect rectEdit = m_position;
+	int nDiff = m_position.Height() / 6;
+	rectEdit.left -= 2;
+	rectEdit.right = rectEdit.left + m_nMaxTextWidth;
+	rectEdit.top += nDiff + 1;
+	rectEdit.bottom -= nDiff - 1;
+	m_pEdit = new CEdit();
+	m_pEdit->Create(m_pPanel->GetHWND(), _U_RECT(&rectEdit), 0, WS_BORDER | WS_CHILD | ES_AUTOHSCROLL, 0);
+
+	// Subclass edit control to capture the ESC and ENTER keys
+	// ms-help://MS.VSExpressCC.v80/MS.VSIPCC.v80/MS.PSDKSVR2003R2.1033/winui/winui/windowsuserinterface/windowing/windowprocedures/usingwindowprocedures.htm
+	m_OrigEditProc = (WNDPROC) ::SetWindowLongPtr(m_pEdit->m_hWnd, GWLP_WNDPROC, (LONG_PTR)EditSubclassProc);
+	SetProp(m_pEdit->m_hWnd, WINPROP_THIS, (HANDLE) this);
+
+	m_pEdit->SetFont((HFONT)::GetStockObject(DEFAULT_GUI_FONT));
+	m_pEdit->SetWindowText(m_sText);
+	m_pEdit->LimitText(256);
+	m_pEdit->ShowWindow(SW_SHOW);
+	m_pEdit->SetFocus();
+	m_pEdit->SetSelAll();
+	return true;
+}
+
 void CTextCtrl::TerminateEditMode(bool bAcceptNewName) {
 	if (m_pEdit) {
 		TCHAR newName[MAX_PATH];
@@ -148,28 +175,10 @@ bool CTextCtrl::OnMouseLButton(EMouseEvent eMouseEvent, int nX, int nY) {
 	if (m_bEditable) {
 		CPoint mousePos(nX, nY);
 		if (m_position.PtInRect(mousePos)) {
-			if (m_pEdit == NULL && eMouseEvent == MouseEvent_BtnDown) {
-				CRect rectEdit = m_position;
-				int nDiff = m_position.Height()/6;
-				rectEdit.left -= 2;
-				rectEdit.right = rectEdit.left + m_nMaxTextWidth;
-				rectEdit.top += nDiff + 1;
-				rectEdit.bottom -= nDiff - 1;
-				m_pEdit = new CEdit();
-				m_pEdit->Create(m_pPanel->GetHWND(), _U_RECT(&rectEdit), 0, WS_BORDER | WS_CHILD | ES_AUTOHSCROLL, 0);
-				
-				// Subclass edit control to capture the ESC and ENTER keys
-				// ms-help://MS.VSExpressCC.v80/MS.VSIPCC.v80/MS.PSDKSVR2003R2.1033/winui/winui/windowsuserinterface/windowing/windowprocedures/usingwindowprocedures.htm
-				m_OrigEditProc = (WNDPROC) ::SetWindowLongPtr(m_pEdit->m_hWnd, GWLP_WNDPROC, (LONG_PTR)EditSubclassProc);
-				SetProp(m_pEdit->m_hWnd, WINPROP_THIS, (HANDLE) this);
-
-				m_pEdit->SetFont((HFONT)::GetStockObject(DEFAULT_GUI_FONT));
-				m_pEdit->SetWindowText(m_sText);
-				m_pEdit->LimitText(256);
-                m_pEdit->ShowWindow(SW_SHOW);
-				m_pEdit->SetFocus();
-				m_pEdit->SetSelAll();
+			if (eMouseEvent == MouseEvent_BtnDown) {
+				EnterEditMode();
 			}
+			return true;
 		} else {
 			TerminateEditMode(true);
 		}

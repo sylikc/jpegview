@@ -1291,6 +1291,9 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 				BatchCopy();
 			}
 			break;
+		case IDM_RENAME:
+			m_pImageProcPanelCtl->EnterRenameCurrentFile();
+			break;
 		case IDM_MOVE_TO_RECYCLE_BIN:
 		case IDM_MOVE_TO_RECYCLE_BIN_CONFIRM:
 			if (m_pCurrentImage != NULL && m_pFileList != NULL && !m_pCurrentImage->IsClipboardImage()) {

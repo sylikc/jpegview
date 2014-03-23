@@ -4,7 +4,19 @@
 1. Choose between 32 bit and 64 version
 JPEGView is provided in a 32 bit version and a 64 bit version. If you are using the 64 bit edition of Windows 7, 8 or 8.1, it is recommended to use the 64 bit version, in all other cases or when in doubt use the 32 bit version. With the 64 bit version, you can load images with more than 100 MegaPixels.
 
-2. Extract directory
+2. Check operation system requirements
+JPEGView32:
+ Windows XP SP2 or SP3 (it does NOT work with SP1 only)
+ Windows XP 64 bit SP2
+ Windows Vista SP2
+ Windows 7
+ Windows 8/8.1
+JPEGView64:
+ Windows 7 64 bit edition
+ Windows 8/8.1 64 bit edition
+ (not supported: Windows XP 64 bit)
+
+3. Extract directory
 JPEGView can be installed by simply extracting the directory with the chosen version to an arbitrary location on your hard disk, e.g.:
 For the 32 bit version: JPEGView_X.Y.Z.zip\JPEGView32\  --> C:\Program Files (x86)\JPEGView32\
 For the 64 bit version: JPEGView_X.Y.Z.zip\JPEGView64\  --> C:\Program Files\JPEGView64\
@@ -13,9 +25,11 @@ For the 64 bit version: JPEGView_X.Y.Z.zip\JPEGView64\  --> C:\Program Files\JPE
 *****************************   Uninstallation   *****************************
 ******************************************************************************
 To remove JPEGView, just delete the folder JPEGView32 respectively JPEGView64 from your hard disk.
+
 In case you have set JPEGView as default viewer for some file types, you should restore the old default viewer:
 JPEGView context menu > Settings/Admin > Set as default viewer...
 Uncheck all file types and press 'OK'.
+Windows 8: You need to choose another default program for the associated file types: Go to the control panel, choose Programs > Default Programs > Set Default Programs, select another viewer (e.g. the built in Photo Viewer) in the list on the left and finally click 'Set this program as default' on the right.
 
 ******************************************************************************
 ******************************   Why JPEGView ? ******************************
@@ -63,7 +77,7 @@ The context menu of JPEGView appears, providing access to most functionality of 
 ******************************************************************************
 Because JPEGView has no built in image browser, it's optimal usage scenario is to browse images with the Windows Explorer and start JPEGView by double clicking an image in the Explorer. You can then go through the images in the folder in JPEGView using the arrow keys or the navigation panel buttons. To enable this use case, JPEGView needs to be registered as default program for the image types it supports (i.e. jpg, gif, tif, bmp, etc).
 
-1. Start JPEGView, load an image and open the context menu (right mouse click)
+1. Start JPEGView, load an image and open the context menu (right mouse click).
 Choose: Settings/Admin > Set as default viewer...
 Select the file types to be opened by JPEGView and press 'OK'.
 Windows 8: The 'default programs' dialog from the Control Panel is shown to perform the associations.

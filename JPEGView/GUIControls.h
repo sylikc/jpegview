@@ -168,6 +168,8 @@ public:
 	void SetRightAligned(bool bValue) { m_bRightAligned = bValue; }
 	// Sets if the text is bold or not
 	void SetBold(bool bValue);
+	// enters the edit mode if the text is editable and visible, returns if entered in edit mode
+	bool EnterEditMode();
 	// terminates the edit mode and accept the text change if the flag is true. If false, the text change is undone.
 	void TerminateEditMode(bool bAcceptNewName);
 

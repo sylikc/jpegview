@@ -16,6 +16,7 @@
 #define IDM_COPY_FULL		2500			// скопировать изображение в буфер обмена с исходным размером
 #define IDM_PASTE		2550			// вставить изображение из буфера обмена
 #define IDM_BATCH_COPY		2600			// открыть диалоговое окно пакетного копирования
+#define IDM_RENAME		2610			// rename current file, only works when image processing panel can be shown (i.e. panel not disabled in INI and window size big enough)
 #define IDM_MOVE_TO_RECYCLE_BIN	2620			// удалить текущий файл с диска - без подтверждения (переместить в Корзину)
 #define IDM_MOVE_TO_RECYCLE_BIN_CONFIRM 2621		// удалить текущий файл с диска - с запросом подтверждения (переместить в Корзину)
 #define IDM_TOUCH_IMAGE		2700			// установить время изменения по текущему времени
