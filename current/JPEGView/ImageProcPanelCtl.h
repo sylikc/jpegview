@@ -29,6 +29,8 @@ public:
 	// Called by main dialog e.g. when saving or deleting parameter DB entry
 	void ShowHideSaveDBButtons();
 
+	bool EnterRenameCurrentFile();
+
 	CRect GetUnsharpMaskButtonRect();
 
 private:
@@ -38,6 +40,7 @@ private:
 	CImageProcessingPanel* m_pImageProcPanel;
 
 	bool RenameCurrentFile(LPCTSTR sNewFileTitle);
+	bool CanMakeVisible();
 
 	static void OnUnsharpMask(void* pContext, int nParameter, CButtonCtrl & sender);
 	static bool OnRenameFile(void* pContext, CTextCtrl & sender, LPCTSTR sChangedText);

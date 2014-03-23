@@ -49,6 +49,9 @@ public:
 	// Request recalculation of the layout
 	virtual void RequestRepositioning() { m_clientRect = CRect(0, 0, 0, 0); }
 
+	// Updates the layout synchronously. Normally the layout is updated on painting.
+	void UpdateLayout() { RepositionAll(); }
+
 protected:
 	virtual void RepositionAll();
 

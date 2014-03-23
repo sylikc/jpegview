@@ -36,6 +36,13 @@ CImageProcPanelCtl::~CImageProcPanelCtl() {
 	m_pImageProcPanel = NULL;
 }
 
+bool CImageProcPanelCtl::CanMakeVisible() {
+	if (m_pMainDlg->ClientRect().Width() < HelpersGUI::ScaleToScreen(800) || m_pMainDlg->GetPanelMgr()->IsModalPanelShown()) {
+		return false;
+	}
+	return true;
+}
+
 void CImageProcPanelCtl::SetVisible(bool bVisible) {
 	if (m_bVisible != bVisible) {
 		m_bVisible = bVisible;
@@ -100,7 +107,7 @@ bool CImageProcPanelCtl::OnMouseMove(int nX, int nY) {
 	if (!m_bEnabled) {
 		return false;
 	}
-	if (m_pMainDlg->ClientRect().Width() < HelpersGUI::ScaleToScreen(800) || m_pMainDlg->GetPanelMgr()->IsModalPanelShown()) {
+	if (!CanMakeVisible()) {
 		SetVisible(false);
 		return false;
 	}
@@ -140,6 +147,22 @@ void CImageProcPanelCtl::ShowHideSaveDBButtons() {
 	m_pImageProcPanel->GetBtnSaveTo()->SetShow(CurrentImage() != NULL && !CurrentImage()->IsClipboardImage() && bFlags);
 	m_pImageProcPanel->GetBtnRemoveFrom()->SetShow(CurrentImage() != NULL && bFlags && CurrentImage()->IsInParamDB());
 	m_pMainDlg->InvalidateRect(PanelRect(), FALSE);
+}
+
+bool CImageProcPanelCtl::EnterRenameCurrentFile() {
+	if (!m_bEnabled) {
+		return false;
+	}
+	if (!CanMakeVisible()) {
+		return false;
+	}
+	CTextCtrl* pFileNameCtrl = m_pImageProcPanel->GetTextFilename();
+	if (pFileNameCtrl->GetText()[0] == 0 || !pFileNameCtrl->IsShown()) {
+		return false;
+	}
+	SetVisible(true);
+	m_pImageProcPanel->UpdateLayout();
+	return m_pImageProcPanel->GetTextFilename()->EnterEditMode();
 }
 
 CRect CImageProcPanelCtl::GetUnsharpMaskButtonRect() {
