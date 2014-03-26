@@ -476,6 +476,13 @@ double GetExactTickCount() {
 	}
 }
 
+CSize GetTotalBorderSize() {
+	const int SM_CXP_ADDEDBORDER = 92;
+	int nBorderWidth = (::GetSystemMetrics(SM_CXSIZEFRAME) + ::GetSystemMetrics(SM_CXP_ADDEDBORDER)) * 2;
+	int nBorderHeight = (::GetSystemMetrics(SM_CYSIZEFRAME) + ::GetSystemMetrics(SM_CXP_ADDEDBORDER)) * 2 + ::GetSystemMetrics(SM_CYCAPTION);
+	return CSize(nBorderWidth, nBorderHeight);
+}
+
 CRect GetWindowRectMatchingImageSize(HWND hWnd, CSize minSize, CSize maxSize, double& dZoom, CJPEGImage* pImage, bool bForceCenterWindow, bool bKeepAspectRatio) {
 	const int SM_CXP_ADDEDBORDER = 92;
 	
@@ -487,26 +494,25 @@ CRect GetWindowRectMatchingImageSize(HWND hWnd, CSize minSize, CSize maxSize, do
 		nOrigHeight = (int) (nOrigHeight * dZoom + 0.5);
 	}
 
-	int nBorderWidth = (::GetSystemMetrics(SM_CXSIZEFRAME) + ::GetSystemMetrics(SM_CXP_ADDEDBORDER)) * 2;
-	int nBorderHeight = (::GetSystemMetrics(SM_CYSIZEFRAME) + ::GetSystemMetrics(SM_CXP_ADDEDBORDER)) * 2 + ::GetSystemMetrics(SM_CYCAPTION);
-	int nRequiredWidth = nBorderWidth + nOrigWidth;
-	int nRequiredHeight = nBorderHeight + nOrigHeight;
+	CSize borderSize = GetTotalBorderSize();
+	int nRequiredWidth = borderSize.cx + nOrigWidth;
+	int nRequiredHeight = borderSize.cy + nOrigHeight;
 	CRect workingArea = CMultiMonitorSupport::GetWorkingRect(hWnd);
 	if (bKeepAspectRatio && (nRequiredWidth > workingArea.Width() || nRequiredHeight > workingArea.Height())) {
 		double dZoom;
 		CSize imageRect = Helpers::GetImageRect(nOrigWidth, nOrigHeight, 
-			min(maxSize.cx, workingArea.Width() - nBorderWidth), 
-			min(maxSize.cy, workingArea.Height() - nBorderHeight), 
+			min(maxSize.cx, workingArea.Width() - borderSize.cx),
+			min(maxSize.cy, workingArea.Height() - borderSize.cy),
 			false, false, false, dZoom);
-		nRequiredWidth = imageRect.cx + nBorderWidth;
-		nRequiredHeight = imageRect.cy + nBorderHeight;
+		nRequiredWidth = imageRect.cx + borderSize.cx;
+		nRequiredHeight = imageRect.cy + borderSize.cy;
 	} else {
 		nRequiredWidth = min(maxSize.cx, min(workingArea.Width(), nRequiredWidth));
 		nRequiredHeight = min(maxSize.cy, min(workingArea.Height(), nRequiredHeight));
 	}
 	nRequiredWidth = max(minSize.cx, nRequiredWidth);
 	nRequiredHeight = max(minSize.cy, nRequiredHeight);
-	dZoom = ((double)(nRequiredWidth - nBorderWidth))/nOrigWidthUnzoomed;
+	dZoom = ((double)(nRequiredWidth - borderSize.cx)) / nOrigWidthUnzoomed;
 	CRect wndRect;
 	::GetWindowRect(hWnd, &wndRect);
 	int nNewLeft = (wndRect.left + wndRect.right - nRequiredWidth) / 2;
@@ -526,9 +532,8 @@ bool CanDisplayImageWithoutResize(HWND hWnd, CJPEGImage* pImage) {
 		return true;
 	}
 	CRect workingArea = CMultiMonitorSupport::GetWorkingRect(hWnd);
-	int nBorderWidth = ::GetSystemMetrics(SM_CXSIZEFRAME) * 2;
-	int nBorderHeight = ::GetSystemMetrics(SM_CYSIZEFRAME) * 2 + ::GetSystemMetrics(SM_CYCAPTION);
-	return pImage->OrigWidth() + nBorderWidth <= workingArea.Width() && pImage->OrigHeight() + nBorderHeight <= workingArea.Height();
+	CSize borderSize = GetTotalBorderSize();
+	return pImage->OrigWidth() + borderSize.cx <= workingArea.Width() && pImage->OrigHeight() + borderSize.cy <= workingArea.Height();
 }
 
 CRect CalculateMaxIncludedRectKeepAR(const CTrapezoid& trapezoid, double dAspectRatio) {
@@ -561,8 +566,8 @@ CRect CalculateMaxIncludedRectKeepAR(const CTrapezoid& trapezoid, double dAspect
 
 CSize GetMaxClientSize(HWND hWnd) {
 	CRect workingArea = CMultiMonitorSupport::GetWorkingRect(hWnd);
-	return CSize(workingArea.Width() - 2 * ::GetSystemMetrics(SM_CXSIZEFRAME), 
-		workingArea.Height() - 2 * ::GetSystemMetrics(SM_CYSIZEFRAME) - ::GetSystemMetrics(SM_CYCAPTION));
+	CSize borderSize = GetTotalBorderSize();
+	return CSize(workingArea.Width() - borderSize.cx, workingArea.Height() - borderSize.cy);
 }
 
 ETransitionEffect ConvertTransitionEffectFromString(LPCTSTR str) {
