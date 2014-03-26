@@ -18,7 +18,10 @@ Windows XP SP2 or later is needed to run the 32 bit version.
 Changelog
 *********
 
-[1.0.33.0]
+[1.0.32.1]
+Bugs fixed:
+- Prefetching image of correct size in windowed mode - prefetching was actually not working in this situation
+  and thus performance was poor in 1.0.32 in windowed mode.
 Other changes:
 - Expanding environment variables in user commands and open with commands
 - New command available for mapping to a key: IDM_RENAME to rename current file.

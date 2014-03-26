@@ -113,6 +113,10 @@ namespace Helpers {
 	// Gets the maximum client size for a framed window that fits into the working area of the screen the given window is placed on
 	CSize GetMaxClientSize(HWND hWnd);
 
+	// Gets the total border size of a window. This includes the frame sizes and the size of the window caption area.
+	// The window size equals the client area size plus this border size
+	CSize GetTotalBorderSize();
+
     // Converts the transition effect from string (as in INI or command line parameter) to enum
     ETransitionEffect ConvertTransitionEffectFromString(LPCTSTR str);
 

@@ -104,8 +104,9 @@ CRect CMultiMonitorSupport::GetDefaultWindowRect() {
 		CRect monitorRect = CMultiMonitorSupport::GetMonitorRect(settings.DisplayMonitor());
 		int nDesiredWidth = monitorRect.Width()*2/3;
 		int nDesiredHeight = nDesiredWidth*3/4;
-		nDesiredWidth += ::GetSystemMetrics(SM_CXSIZEFRAME) * 2;
-		nDesiredHeight += ::GetSystemMetrics(SM_CYSIZEFRAME) * 2 + ::GetSystemMetrics(SM_CYCAPTION);
+		CSize borderSize = Helpers::GetTotalBorderSize();
+		nDesiredWidth += borderSize.cx;
+		nDesiredHeight += borderSize.cy;
 		windowRect = CRect(CPoint(monitorRect.left + (monitorRect.Width() - nDesiredWidth) / 2, monitorRect.top + (monitorRect.Height() - nDesiredHeight) / 2), CSize(nDesiredWidth, nDesiredHeight));
 	}
 	return windowRect;
@@ -121,7 +122,6 @@ CRect CMultiMonitorSupport::GetDefaultClientRectInWindowMode(bool bAutoFitWndToI
 		return CRect(0, 0, monitorRect.Width(), monitorRect.Height());
 	}
 	CRect wndRect = CMultiMonitorSupport::GetDefaultWindowRect();
-	int nBorderWidth = ::GetSystemMetrics(SM_CXSIZEFRAME) * 2;
-	int nBorderHeight = ::GetSystemMetrics(SM_CYSIZEFRAME) * 2 + ::GetSystemMetrics(SM_CYCAPTION);
-	return CRect(0, 0, wndRect.Width() - nBorderWidth, wndRect.Height() - nBorderHeight);
+	CSize borderSize = Helpers::GetTotalBorderSize();
+	return CRect(0, 0, wndRect.Width() - borderSize.cx, wndRect.Height() - borderSize.cy);
 }
