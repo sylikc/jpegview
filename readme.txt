@@ -22,10 +22,12 @@ Changelog
 Bugs fixed:
 - Prefetching image of correct size in windowed mode - prefetching was actually not working in this situation
   and thus performance was poor in 1.0.32 in windowed mode.
+- Auto-zoom-mode 'Fill with crop': Handling portrait orientation images correctly in all cases
 Other changes:
 - Expanding environment variables in user commands and open with commands
 - New command available for mapping to a key: IDM_RENAME to rename current file.
   By default this command is not mapped to a key and only availabe by clicking on the file name on the bottom panel.
+- Updated Portuguese translation
 
 [1.0.32.0]
 Bugs fixed:

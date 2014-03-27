@@ -45,8 +45,11 @@ CSize GetImageRect(int nWidth, int nHeight, int nScreenWidth, int nScreenHeight,
 	double dARMax = max(dAR1, dAR2);
 	double dAR = bFillCrop ? dARMin : dARMax;
 	if (dAR <= 1.0 && !bAllowZoomIn) {
-		dZoom = 1.0;
-		return CSize(nWidth, nHeight);
+		if (bFillCrop) dAR = dARMax;
+		if (dAR <= 1.0) {
+			dZoom = 1.0;
+			return CSize(nWidth, nHeight);
+		}
 	}
 	if (bFillCrop && bLimitAR) {
 		if (((nWidth/dAR * nHeight/dAR) / (nScreenWidth * nScreenHeight)) > 1.5) {
