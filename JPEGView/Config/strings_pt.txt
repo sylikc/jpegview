@@ -1,7 +1,7 @@
 ﻿// This file must be encoded with UTF-8 (e.g. with Windows Notepad)
 // Filename is 'strings_%languagecode%.txt' where %languagecode% is the ISO 639 language code e.g. 'fr' for French
 // Format is: English string<tab>Translated string<newline>
-// Translated by Sérgio Marques, 2011
+// Translated by Sérgio Marques, 2011-2014
 // This file is distributed under the same license as the JPEGView package
 // Portuguese translation of JPEGView package
 Contrast	Contraste
@@ -107,8 +107,8 @@ Error saving file	Erro ao gravar o ficheiro
 Error writing file to disk!	Erro ao gravar o ficheiro no disco!
 Confirm	Confirmação
 Do you really want to permanently delete the file %filename%?	Pretende mesmo eliminar permanentemente o ficheiro %filename%?
-Rotate the following file lossless by 90 deg?\n%filename%	Rodar o ficheiro \n%filename% em 90º, mas sem perda de qualidade
-Rotate the following file lossless by 270 deg?\n%filename%	Rodar o ficheiro \n%filename% em 270º, mas sem perda de qualidade
+Rotate the following file lossless by 90 deg?\n%filename%	Rodar o ficheiro \n%filename% em 90º, mas sem perda de qualidade?
+Rotate the following file lossless by 270 deg?\n%filename%	Rodar o ficheiro \n%filename% em 270º, mas sem perda de qualidade?
 Open image...	Abrir imagem...
 Save processed image...	Gravar imagem processada...
 Reload image	Recarregar imagem
@@ -150,9 +150,9 @@ Exit	Sair
 Cyan-Red	Ciano Vermelho
 Magenta-Green	Magenta Verde
 Yellow-Blue	Amarelo Azul
-C - R	C - Y
-M - G	M - G
-Y - B	Y - B
+C - R	C - V
+M - G	M - V
+Y - B	A - A
 Batch rename/copy of files	Copiar/mudar nome de ficheiros em lote
 Image files in folder	Ficheiros de imagem na pasta
 Placeholders:	Marcadores de posição:
@@ -215,12 +215,12 @@ Show last image in folder	Mostrar a última imagem da pasta
 Rotate image 90 deg clockwise	Rodar para a direita em 90º
 Rotate image 90 deg counter-clockwise	Rodar para a esquerda em 90º
 Landscape picture enhancement mode	Modo de melhoria da imagem na horizontal
-Display image (EXIF) information	Exibir informações da imagem (EXIF)
-Toggle between screens (only for multi-monitor systems)	Alternar entre  ecrãs (só para sistemas com vários monitores)
+Display image (EXIF) information	Mostrar informações da imagem (EXIF)
+Toggle between screens (only for multi-monitor systems)	Alternar entre ecrãs (só para sistemas com vários monitores)
 Enable/disable full screen mode	Ativar/desativar o modo de ecrã completo
 Full screen mode	Modo de ecrã completo
 Window mode	Modo de janela
-Save as (in screen size/resolution)	Gravar como (no tamanho de ecrã/resolução)
+Save as (in screen size/resolution)	Gravar como (no tamanho/resolução do ecrã)
 Save processed image to JPEG file (screen size)	Gravar imagem procesada como ficheiro JPEG (no tamanho do ecrã)
 Settings/Admin	Definições/Administração
 Edit global settings...	Editar definições gerais...
@@ -228,7 +228,7 @@ Edit user settings...	Editar definições de utilizador...
 Backup parameter DB...	Criar cópia de segurança dos parâmetros da BD...
 Restore parameter DB...	Restaurar cópia de segurança dos parâmetros da BD...
 No user INI file exits yet. Create user INI file from INI file template?	Não existe qualquer ficheiro INI. Criar ficheiro INI com base no modelo de ficheiros INI?
-Copying parameter DB to file '%s' failed. Reason: %s	Falha ao copiar o ficheiro de parâmetros da BD "%s2. Motivo: %s
+Copying parameter DB to file '%s' failed. Reason: %s	Falha ao copiar o ficheiro de parâmetros da BD %s2. Motivo: %s
 Select parameter DB to restore	Selecione o ficheiro de parâmetros de BD a restaurar
 Conflicting entries in Param DB	Existem entradas com conflitos nos parâmetros da BD
 The imported param DB contains entries already present in active param DB.	O ficheiro de parâmetros da BD a importar contém entradas já existentes nos parâmetros ativos.
@@ -248,7 +248,7 @@ to current date	a data atual
 to EXIF date	a data EXIF
 Mark image for toggling. Use %s to toggle between marked and current image	Marque a imagem a alternar. Utilize %s para trocar entre a imagem marcada e a imagem atual
 Saturation	Saturação
-Unsharp mask...	Máscara de desfocagem
+Unsharp mask...	Máscara de desfocagem...
 Apply Unsharp Mask	Aplicar máscara de desfocagem
 Radius	Raio
 Amount	Valor
@@ -276,12 +276,12 @@ Transform image	Transformar imagem
 Rotate...	Rodar...
 Mirror horizontally	Espelhar horizontalmente
 Mirror vertically	Espelhar verticalmente
-Random	Aleatório 
+Random	Aleatório
 Zoom mode (drag mouse to zoom)	Modo de ampliação (arraste o rato para ampliar)
 Correct converging lines (perspective correction)	Corrigir linhas de convergência (correção de perspetiva)
 Perspective Correction	Correção de perspetiva
 Perspective correction...	Correção de perspetiva... 
-Auto crop corrected image (avoids black border)	Recortar automaticamente a imagem corrigida (evitar contornos a negro)
+Auto crop corrected image (avoids black border)	Recortar automaticamente a imagem corrigida (evita contornos a negro)
 Click and drag the mouse vertically to correct image tilt.	Clique e arraste o rato na vertical para corrigir a inclinação
 Drag at the left or right border for asymmetric correction.	Clique no contono esquerdo ou direito para corrigir a simetria
 Fit window to image	Ajustar janela à imagem
@@ -294,7 +294,7 @@ Writing the resulting JPEG file to disk failed	Ocorreu um erro ao gravar o fiche
 Performing the transformation failed	Ocorreu um erro durante a transformação!
 The transformation can be applied if the image is trimmed to the next matching size but this will remove some border pixels.	A transformação pode ser aplicada de ajustar a imagem ao tamanho mais próximo mas alguns pixeis serão removidos.
 Trim the image and apply transformation? Trimming cannot be undone!	Ajustar imagem e transformar? Esta operação não pode ser desfeita!
-Note: Set the key 'TrimWithoutPromptLosslessJPEG=true' in the INI file to always trim without showing this message.	Nota: Defina a chave 'TrimWithoutPromptLosslessJPEG=true' no ficheiro INI se quiser utilizar esta ação sem comfirmação.
+Note: Set the key 'TrimWithoutPromptLosslessJPEG=true' in the INI file to always trim without showing this message.	Nota: defina a chave 'TrimWithoutPromptLosslessJPEG=true' no ficheiro INI se quiser utilizar esta ação sem comfirmação.
 Transition Effect	Efeito de transição
 None	Nenhum
 Blend	Sobreposição
@@ -341,10 +341,10 @@ No image loaded!	Nenhuma imagem carregada!
 Right mouse button: Context menu	Botão direito do rato: menu de contexto
 Windows 8 blocks JPEGView from changing the default program for these file endings.	O Windows 8 não permite que o JPEGView modifique o programa pré-definido para este tipo de ficheiros.
 Use the 'Default Programs' configuration dialog from the operating system instead.  Utilize o diálogo de configuração "Programas pré-definidos" do sistema operativo.
-Alternatively, right click an image file of the given type in Windows Explorer and select 'Open with... > Choose default program' Em alternativa pode clicar com o botão direito do rato num ficheiro de imagem do tipo indicado no Windows Explorer e selecione 'Abrir com...' > 'Escolher programa pré-definido'
+Alternatively, right click an image file of the given type in Windows Explorer and select 'Open with... > Choose default program'	Em alternativa pode clicar com o botão direito do rato num ficheiro de imagem do tipo indicado no Windows Explorer e selecione 'Abrir com...' > 'Escolher programa pré-definido'
 User commands	Comandos do utilizador
 Open image with	Abrir imagem com
-Manage 'Open image with' menu...  Gerir menu 'Abrir imagem com'...
+Manage 'Open image with' menu...	Gerir menu 'Abrir imagem com'...
 Menu entries:	Entradas de menu:
 Title:	Título:
 Application:	Aplicação:
