@@ -27,6 +27,8 @@ Other changes:
 - Expanding environment variables in user commands and open with commands
 - New command available for mapping to a key: IDM_RENAME to rename current file.
   By default this command is not mapped to a key and only availabe by clicking on the file name on the bottom panel.
+- When deleting files with the navigation panel button (x), a confirmation is required for files that are deleted permanently.
+  This is the case for drives that have no recylce bin, like memory sticks or network drives.
 - Updated Portuguese translation
 
 [1.0.32.0]
