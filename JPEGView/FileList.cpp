@@ -291,6 +291,24 @@ bool CFileList::CurrentFileExists() const {
 	return false;
 }
 
+bool CFileList::DriveHasRecycleBin(LPCTSTR filePath) {
+	TCHAR driveLetter[3];
+	if (_tcslen(filePath) < 3) return false;
+	driveLetter[0] = filePath[0];
+	driveLetter[1] = filePath[1];
+	driveLetter[2] = 0;
+
+	if (driveLetter[0] == _T('\\') && driveLetter[1] == _T('\\')) return false; // remote drive, no recycle bin
+
+	CString recycleBin = CString((LPCTSTR(driveLetter))) + _T("\\$Recycle.Bin\\");
+
+	DWORD attributes = ::GetFileAttributes(recycleBin);
+	if (attributes == INVALID_FILE_ATTRIBUTES) return false;
+	if (attributes & FILE_ATTRIBUTE_DIRECTORY) return true; // this is a directory!
+
+	return false; // this is not a directory!
+}
+
 bool CFileList::DeleteFile(LPCTSTR fileNameWithPath) const {
 	if (fileNameWithPath != NULL) {
 		// append a double null character
