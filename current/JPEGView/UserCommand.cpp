@@ -168,6 +168,8 @@ CUserCommand::CUserCommand(int index, const CString & sCommandLine, bool allowNo
 		return;
 	}
 
+	m_bIsDeleteCommand = m_sCommand.Find(_T("cmd /c del ")) == 0;
+
 	// Keycode (virtual keycode)
 	m_nKeyCode = ParseKeyCode(sCmdLineLower, lpCmdLine);
 
@@ -250,6 +252,9 @@ CString CUserCommand::GetExecutable() const {
 bool CUserCommand::CanExecute(HWND hWnd, LPCTSTR sFileName) const
 {
 	if (!m_bValid || sFileName == NULL) {
+		return false;
+	}
+	if (m_bIsDeleteCommand && !CSettingsProvider::This().AllowFileDeletion()) {
 		return false;
 	}
 	if (m_sConfirmMsg.GetLength() > 0) {

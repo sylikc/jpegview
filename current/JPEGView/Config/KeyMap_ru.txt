@@ -19,6 +19,7 @@
 #define IDM_RENAME		2610			// rename current file, only works when image processing panel can be shown (i.e. panel not disabled in INI and window size big enough)
 #define IDM_MOVE_TO_RECYCLE_BIN	2620			// удалить текущий файл с диска - без подтверждени€ (переместить в  орзину)
 #define IDM_MOVE_TO_RECYCLE_BIN_CONFIRM 2621		// удалить текущий файл с диска - с запросом подтверждени€ (переместить в  орзину)
+#define IDM_MOVE_TO_RECYCLE_BIN_CONFIRM_PERMANENT_DELETE 2622 // delete the current file on disk - confirmation when no recycle bin for this drive
 #define IDM_TOUCH_IMAGE		2700			// установить врем€ изменени€ по текущему времени
 #define IDM_TOUCH_IMAGE_EXIF 	2710			// установить врем€ изменени€ по времени в EXIF
 #define IDM_TOUCH_IMAGE_EXIF_FOLDER 2720		// установить врем€ изменени€ по времени в EXIF дл€ всех изображений в папке

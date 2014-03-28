@@ -70,6 +70,8 @@ public:
 	bool CreateParamDBEntryOnSave() { return m_bCreateParamDBEntryOnSave; }
 	bool SaveWithoutPrompt() { return m_bSaveWithoutPrompt; }
     bool TrimWithoutPromptLosslessJPEG() { return m_bTrimWithoutPromptLosslessJPEG; }
+	Helpers::EDeleteConfirmation DeleteConfirmation() { return m_eDeleteConfirmation; }
+	bool AllowFileDeletion() { return m_bAllowFileDeletion; }
 	bool WrapAroundFolder() { return m_bWrapAroundFolder && m_eNavigation == Helpers::NM_LoopDirectory; }
 	bool ExchangeXButtons() { return m_bExchangeXButtons; }
 	bool AutoRotateEXIF() { return m_bAutoRotateEXIF; }
@@ -196,6 +198,8 @@ private:
 	bool m_bCreateParamDBEntryOnSave;
 	bool m_bWrapAroundFolder;
 	bool m_bSaveWithoutPrompt;
+	Helpers::EDeleteConfirmation m_eDeleteConfirmation;
+	bool m_bAllowFileDeletion;
     bool m_bTrimWithoutPromptLosslessJPEG;
 	bool m_bExchangeXButtons;
 	bool m_bAutoRotateEXIF;

@@ -17,6 +17,7 @@
 #define IDM_RENAME		2610			// rename current file, only works when image processing panel can be shown (i.e. panel not disabled in INI and window size big enough)
 #define IDM_MOVE_TO_RECYCLE_BIN	2620			// delete the current file on disk - no confirmation (by moving it to the recycle bin)
 #define IDM_MOVE_TO_RECYCLE_BIN_CONFIRM 2621		// delete the current file on disk - with user confirmation (by moving it to the recycle bin)
+#define IDM_MOVE_TO_RECYCLE_BIN_CONFIRM_PERMANENT_DELETE 2622 // delete the current file on disk - confirmation when no recycle bin for this drive
 #define IDM_TOUCH_IMAGE		2700			// set modification time to current time
 #define IDM_TOUCH_IMAGE_EXIF 	2710			// set modification time to EXIF time
 #define IDM_TOUCH_IMAGE_EXIF_FOLDER 2720		// set modification time to EXIF time for all images in folder

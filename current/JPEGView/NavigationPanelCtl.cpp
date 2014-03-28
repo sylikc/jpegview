@@ -12,6 +12,20 @@
 #include "PanelMgr.h"
 #include "PaintMemDCMgr.h"
 
+// Gets the command ID of the file deletion command according to the INI file setting
+static int GetDeleteCommandId() {
+	Helpers::EDeleteConfirmation confirmation = CSettingsProvider::This().DeleteConfirmation();
+	switch (confirmation)
+	{
+	case Helpers::DC_Never:
+		return IDM_MOVE_TO_RECYCLE_BIN;
+	case Helpers::DC_OnlyWhenNoRecycleBin:
+		return IDM_MOVE_TO_RECYCLE_BIN_CONFIRM_PERMANENT_DELETE;
+	default:
+		return IDM_MOVE_TO_RECYCLE_BIN_CONFIRM;
+	}
+}
+
 CNavigationPanelCtl::CNavigationPanelCtl(CMainDlg* pMainDlg, CPanel* pImageProcPanel, bool* pFullScreenMode) : CPanelController(pMainDlg, false) {
 	m_bEnabled = CSettingsProvider::This().ShowNavPanel();
 	m_nMouseX = m_nMouseY = 0;
@@ -27,7 +41,9 @@ CNavigationPanelCtl::CNavigationPanelCtl(CMainDlg* pMainDlg, CPanel* pImageProcP
 	m_pNavPanel->GetBtnPrev()->SetButtonPressedHandler(&OnGotoImage, this, CMainDlg::POS_Previous);
 	m_pNavPanel->GetBtnNext()->SetButtonPressedHandler(&OnGotoImage, this, CMainDlg::POS_Next);
 	m_pNavPanel->GetBtnEnd()->SetButtonPressedHandler(&OnGotoImage, this, CMainDlg::POS_Last);
-	m_pNavPanel->GetBtnDelete()->SetButtonPressedHandler(&CMainDlg::OnExecuteCommand, pMainDlg, IDM_MOVE_TO_RECYCLE_BIN);
+	if (CSettingsProvider::This().AllowFileDeletion()) {
+		m_pNavPanel->GetBtnDelete()->SetButtonPressedHandler(&CMainDlg::OnExecuteCommand, pMainDlg, GetDeleteCommandId());
+	}
 	m_pNavPanel->GetBtnZoomMode()->SetButtonPressedHandler(&CMainDlg::OnExecuteCommand, pMainDlg, IDM_ZOOM_MODE, pMainDlg->IsInZoomMode());
 	m_pNavPanel->GetBtnFitToScreen()->SetButtonPressedHandler(&OnToggleZoomFit, this);
 	m_pNavPanel->GetBtnWindowMode()->SetButtonPressedHandler(&OnToggleWindowMode, this);

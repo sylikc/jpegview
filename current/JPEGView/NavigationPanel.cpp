@@ -33,9 +33,11 @@ CNavigationPanel::CNavigationPanel(HWND hWnd, INotifiyMouseCapture* pNotifyMouse
 	AddUserPaintButton(ID_btnNext, GetTooltip(keyMap, _T("Show next image"), IDM_NEXT), &PaintNextBtn);
 	AddUserPaintButton(ID_btnEnd, GetTooltip(keyMap, _T("Show last image in folder"), IDM_LAST), &PaintEndBtn);
 	AddGap(ID_gap2, 8);
-	AddUserPaintButton(ID_btnDelete, GetTooltip(keyMap, _T("Delete image file"), 
-		keyMap->GetKeyStringForCommand(IDM_MOVE_TO_RECYCLE_BIN).IsEmpty() ? IDM_MOVE_TO_RECYCLE_BIN_CONFIRM : IDM_MOVE_TO_RECYCLE_BIN), &PaintDeleteBtn);
-	AddGap(ID_gap3, 8);
+	if (CSettingsProvider::This().AllowFileDeletion()) {
+		AddUserPaintButton(ID_btnDelete, GetTooltip(keyMap, _T("Delete image file"),
+			keyMap->GetKeyStringForCommand(IDM_MOVE_TO_RECYCLE_BIN).IsEmpty() ? IDM_MOVE_TO_RECYCLE_BIN_CONFIRM : IDM_MOVE_TO_RECYCLE_BIN), &PaintDeleteBtn); 
+		AddGap(ID_gap3, 8);
+	}
 	AddUserPaintButton(ID_btnZoomMode, GetTooltip(keyMap, _T("Zoom mode (drag mouse to zoom)"), IDM_ZOOM_MODE), &PaintZoomModeBtn);
 	AddUserPaintButton(ID_btnFitToScreen, &ZoomFitToggleTooltip, &PaintZoomFitToggleBtn, NULL, this);
 	AddUserPaintButton(ID_btnWindowMode, &WindowModeTooltip, &PaintWindowModeBtn, NULL, this);
