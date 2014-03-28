@@ -233,6 +233,15 @@ void CSettingsProvider::ReadWriteableINISettings() {
 		m_eAutoZoomMode = Helpers::ZM_FitToScreenNoZoom;
 	}
 
+	CString sDeleteConfirmation = GetString(_T("DeleteConfirmation"), _T("OnlyWhenNoRecycleBin"));
+	if (sDeleteConfirmation.CompareNoCase(_T("OnlyWhenNoRecycleBin")) == 0) {
+		m_eDeleteConfirmation = Helpers::DC_OnlyWhenNoRecycleBin;
+	} else if (sDeleteConfirmation.CompareNoCase(_T("Never")) == 0) {
+		m_eDeleteConfirmation = Helpers::DC_Never;
+	} else {
+		m_eDeleteConfirmation = Helpers::DC_Always;
+	}
+
 	m_nMaxSlideShowFileListSize = GetInt(_T("MaxSlideShowFileListSizeKB"), 200, 100, 10000);
     m_eSlideShowTransitionEffect = Helpers::ConvertTransitionEffectFromString(GetString(_T("SlideShowTransitionEffect"), _T("")));
     m_nSlideShowEffectTimeMs = GetInt(_T("SlideShowEffectTime"), 200, 100, 5000);
@@ -247,6 +256,7 @@ void CSettingsProvider::ReadWriteableINISettings() {
 	m_bWrapAroundFolder = GetBool(_T("WrapAroundFolder"), true);
 	m_bSaveWithoutPrompt = GetBool(_T("OverrideOriginalFileWithoutSaveDialog"), false);
     m_bTrimWithoutPromptLosslessJPEG = GetBool(_T("TrimWithoutPromptLosslessJPEG"), false);
+	m_bAllowFileDeletion = GetBool(_T("AllowFileDeletion"), true);
 	m_bExchangeXButtons = GetBool(_T("ExchangeXButtons"), true);
 	m_bAutoRotateEXIF = GetBool(_T("AutoRotateEXIF"), true);
     m_bUseEmbeddedColorProfiles = GetBool(_T("UseEmbeddedColorProfiles"), false);

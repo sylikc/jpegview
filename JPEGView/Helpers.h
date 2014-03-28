@@ -59,6 +59,13 @@ namespace Helpers {
         TE_ScrollBT,
     };
 
+	// Confirmation required for file deletion
+	enum EDeleteConfirmation {
+		DC_Always,
+		DC_OnlyWhenNoRecycleBin,
+		DC_Never
+	};
+
 	// Maximum and minimum allowed zoom factors for images
 	const double ZoomMax = 16.0;
 	const double ZoomMin = 0.1;

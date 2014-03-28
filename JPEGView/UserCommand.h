@@ -66,6 +66,7 @@ private:
 	bool m_bMoveToNextAfterCommand;
 	bool m_bKeepModDate;
 	bool m_bUseShellExecute;
+	bool m_bIsDeleteCommand;
 	CString m_sHelpKey;
 	CString m_sHelpText;
 

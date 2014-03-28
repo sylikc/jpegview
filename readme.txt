@@ -27,6 +27,9 @@ Other changes:
 - Expanding environment variables in user commands and open with commands
 - New command available for mapping to a key: IDM_RENAME to rename current file.
   By default this command is not mapped to a key and only availabe by clicking on the file name on the bottom panel.
+- Finer granularity control over deleting files (confirmations, availability)
+  AllowFileDeletion=false : Allows disabling file deleting in JPEGView
+  DeleteConfirmation=Always/OnlyWhenNoRecycleBin/Never : Controls confirmation when deleting with navigation panel button
 - When deleting files with the navigation panel button (x), a confirmation is required for files that are deleted permanently.
   This is the case for drives that have no recylce bin, like memory sticks or network drives.
 - Updated Portuguese translation

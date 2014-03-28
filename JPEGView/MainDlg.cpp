@@ -1296,9 +1296,11 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 			break;
 		case IDM_MOVE_TO_RECYCLE_BIN:
 		case IDM_MOVE_TO_RECYCLE_BIN_CONFIRM:
-			if (m_pCurrentImage != NULL && m_pFileList != NULL && !m_pCurrentImage->IsClipboardImage()) {
+		case IDM_MOVE_TO_RECYCLE_BIN_CONFIRM_PERMANENT_DELETE:
+			if (m_pCurrentImage != NULL && m_pFileList != NULL && !m_pCurrentImage->IsClipboardImage() && CSettingsProvider::This().AllowFileDeletion()) {
 				LPCTSTR currentFileName = CurrentFileName(false);
-				bool noConfirmation = nCommand != IDM_MOVE_TO_RECYCLE_BIN_CONFIRM && CFileList::DriveHasRecycleBin(currentFileName);
+				bool noConfirmation = nCommand == IDM_MOVE_TO_RECYCLE_BIN ||
+					(nCommand == IDM_MOVE_TO_RECYCLE_BIN_CONFIRM_PERMANENT_DELETE && CFileList::DriveHasRecycleBin(currentFileName));
 				if (noConfirmation ||
 					IDYES == ::MessageBox(m_hWnd, CString(CNLS::GetString(_T("Do you really want to delete the current image file on disk?"))) + _T("\n") + currentFileName, CNLS::GetString(_T("Confirm")), MB_YESNOCANCEL | MB_ICONWARNING)) {
 					CFileList* fileListOfDeletedImage = m_pFileList;
