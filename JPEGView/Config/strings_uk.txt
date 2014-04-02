@@ -1,0 +1,372 @@
+﻿// Цей файл повинен мати кодування UTF-8 (підійде, наприклад, Блокнот Windows)
+// Назва файлу повинна мати вигляд 'strings_%languagecode%.txt' (де %languagecode% - код мови згідно ISO 639, приклад: strings_fr.txt - це французька)
+// Формат: Англійський рядок<tab>Перекладений рядок<cr/lf>
+//Language=Ukrainian
+//TranslatorName=Bonsai
+//Contact=none
+//TranslatorURL=none
+//LastUpdated=Mar 26, 2014
+//
+Contrast	Контрастність
+Brightness	Яскравість
+Sharpen	Різкість
+Lighten Shadows	Висвітлити тіні
+Darken Highlights	Притемнити світло
+Deep Shadows	Глибокі тіні
+Color Correction	Корекція кольору
+Contrast Correction	Корекція контрастності
+Parameter DB:	Параметри:
+Save to	Зберегти в БД
+Remove from	Видалити з БД
+Rename:	Перейменувати:
+No file or folder name was provided as command line parameter!	У командному рядку не вказано ім'я файлу або папки
+To use JPEGView, associate JPG, JPEG and BMP files with JPEGView.	Для зручності використання JPEGView асоціюйте програму з файлами JPG, JPEG та BMP.
+Press ESC to exit...	Натисніть ESC для виходу...
+The file '%s' could not be read!	Неможливо прочитати файл '%s'.
+The file '%s' does not contain a list of file names!	В файлі '%s' немає списку імен файлів.
+The directory '%s' does not contain any image files!	В папці '%s' немає підтримуваних графічних файлів.
+Press any key to search the subdirectories for image files.	Натисніть будь-яку клавішу для пошуку графічних файлів у вкладених папках.
+JPEGView Help	Довідка JPEGView
+Current image	Поточне зображення
+Close help text display / Close JPEGView	Закрити довідку/JPEGView
+Show/hide this help text	Показати/приховати цей текст довідки
+Show/hide picture information (EXIF data)	Показати/приховати дані про зображення (EXIF)
+Show/hide file name	Показати/приховати ім'я файлу
+Enable/disable high quality resampling	Увімкнути/вимкнути покращене ресемплювання
+Enable/disable keeping of geometry related (zoom/pan/rotation)	Увімкнути/вимкнути збереження геометрії (масштаб/переміщення/поворот)
+and image processing (brightness/contrast/sharpen) parameters between images	і обробку (яскравість/контрастність/різкість) між зображеннями
+Enable/disable automatic contrast correction (histogram equalization)	Увімкнути/вимкнути автокоррекцію контрастності (підстроювання гістограми)
+Apply auto contrast correction using only visible section of image	Застосувати автокорекцію контрастності тільки до видимої області зображення
+Enable/disable automatic density correction (local brightness correction)	Увімкнути/вимкнути автокорекцію інтенсивності (локальне підстроювання яскравості - ЛПЯ)
+Increase/decrease lightening of shadows (LDC must be on)	Посилити/послабити висвітлювання тіней (потрібно увімкнути ЛПЯ)
+Increase/decrease darkening of highlights (LDC must be on)	Посилити/послабити притемнення світла (потрібно увімкнути ЛПЯ)
+Loop through files in current folder	Циклічний перегляд файлів у поточній папці
+Loop through files in current directory and all subfolders	Циклічний перегляд файлів у поточній папці та її підпапках
+Loop through files in current directory and all sibling folders (folders on same level)	Циклічний перегляд файлів у поточній папці і всіх папках того ж рівня
+Maximize/restore to/from virtual desktop (only for multi-monitor systems)	Відчинити/відновити на/з віртуальний робочий стіл (для мультимоніторних систем)
+Copy screen to clipboard/ Copy processed full size image to clipboard	Скопіювати в буфер обміну екран/оброблене повнорозмірне зображення
+Open new image or slideshow file	Відкрити нове зображення або файл із слайдшоу
+Save processed image to JPEG file (original size)	Зберегти оброблене зображення як файл JPEG (вихідного розміру)
+Save (%s)/ delete (%s) image processing parameters in/from parameter DB	Зберегти (%s) / видалити (%s) параметри обробки зображення в базі даних
+Sort images by creation date, resp. modification date, resp. file name	Сортування зображень: за датою створення (C), зміни (M), іменем файла (N), випадково (Z)
+Goto previous image	Перейти до попереднього зображення
+Goto next image	Перейти до наступного зображення
+PgUp or Left	PgUp або стрілка вліво
+PgDn or Right	PgDn або стрілка вправо
+Goto first/last image of current folder (using sort order as defined)	Перейти до першого/останнього зображення у поточній папці (відповідно з сортуванням)
+Increase/decrease brightness	Збільшити/зменшити яскравість
+Increase/decrease contrast	Збільшити/зменшити контрастність
+Increase/decrease sharpness	Збільшити/зменшити різкість
+Increase/decrease auto color cast correction amount	Збільшити/зменшити автокорекцію кольору
+Increase/decrease auto contrast correction amount	Збільшити/зменшити автокорекцію контрастності
+Enable/disable landscape picture enhancement mode	Увімкнути/вимкнути режим поліпшення зображень
+Slide show with timeout of n seconds (ESC to stop)	Запустити слайдшоу з інтервалом N сек (ESC - стоп)
+Set timeout to n/10 sec, respectively n/100 sec (Ctrl+Shift)	Задати інтервал N/10 сек або N/100 сек (Ctrl+Shift)
+Rotate image and fit to screen	Повернути зображення і вписати в екран
+Fit image to screen	Вписати зображення в екран
+Zoom 1:1 (100 %)	Масштаб 1:1 (100%)
+Zoom in (%s)/Zoom out (%s)	Збільшити (%s)/зменшити (%s)
+Zoom in/out image	Збільшити/зменшити зображення (масштабувати)
+Pan image	Перемістити зображення
+Crop image	Обрізати зображення
+Next image	Наступне зображення
+Previous image	Попереднє зображення
+up/down	Стрілки вгору/вниз
+Mouse wheel	Ролик миші
+Left mouse & drag	Перетягування з ЛКМ
+Ctrl + L mouse	Ctrl + ЛКМ
+Forward mouse button	Кнопка миші 'Вперед'
+Back mouse button	Кнопка миші 'Назад'
+Delete current file on disk permanently	Остаточно видалити поточний файл з диска
+Rotate current file on disk lossless by 90 deg (W/H must be multiple of 16)	Повернути поточний файл на диску без втрат на 90° вправо (Ш/В повинні бути кратні 16)
+Rotate current file on disk lossless by 270 deg (W/H must be multiple of 16)	Повернути поточний файл на диску без втрат на 90° вліво (Ш/В повинні бути кратні 16)
+The file is read-only!	Цей файл тільки для читання!
+Can't rename file	Неможливо перейменувати файл
+New name contains backslash character!	У новому імені міститься зворотна коса риска (\).
+Renaming file failed!	Помилка при перейменуванні файлу.
+Reason: 	Причина: 
+on	вкл.
+off	викл.
+Do you really want to save the following parameters as default to the INI file	Ви справді хочете зберегти ці параметри в INI-файлі як стандартні
+Auto contrast and color correction: 	Автокорекція контрастності і кольору: 
+Local density correction: 	Корекція світла/тіней: 
+Order files by: 	Сортування файлів: 
+Creation date/time	Дата/час створення
+Last modification date/time	Дата/час зміни
+File name	Ім'я файла
+These values will override the values from the INI file located in the program folder of JPEGView!	Ці значення перевизначать установки в INI-файлі в папці з JPEGView.
+Confirm save default parameters	Зберегти параметри за замовчуванням?
+Images	Зображення
+All Files	Всі файли
+Parameter DB file '%s' could not be opened!	Неможливо відкрити файл '%s' з БД параметрів.
+Parameter DB file '%s' is not valid (invalid header)!	Невірний файл '%s' з БД параметрів (неприпустимий заголовок).
+Cannot write to parameter DB file '%s'!	Неможливо виконати запис у файл '%s' з БД параметрів.
+Cannot read from parameter DB file '%s'!	Неможливо виконати читання з файлу '%s' з БД параметрів.
+Cannot read parameter DB file '%s' because it is too large!	Неможливо прочитати файл '%s' з БД параметрів: він занадто великий.
+The parameter DB file '%s' has been created by a newer version of JPEGView!	Файл '%s' з БД параметрів створений більш новою версією JPEGView.
+The old parameter DB file '%s' could not be renamed during conversion to new format!	Не вдалося перейменувати старий файл '%s' з БД параметрів при перетворенні в новий формат.
+Parameter DB error	Помилка в БД параметрів
+Error saving file	Помилка збереження файлу
+Error writing file to disk!	Помилка запису файлу на диск.
+Confirm	Підтвердіть
+Do you really want to permanently delete the file %filename%?	Ви справді хочете видалити файл %filename%?
+Rotate the following file lossless by 90 deg?\n%filename%	Повернути цей файл без втрат на 90° вправо?\n%filename%
+Rotate the following file lossless by 270 deg?\n%filename%	Повернути цей файл без втрат на 90° вліво?\n%filename%
+Open image...	Відкрити зображення...
+Save processed image...	Зберегти оброблене зображення...
+Reload image	Перезавантажити зображення
+Copy to clipboard	Скопіювати в буфер обміну
+Copy original size image	Скопіювати в буфер обміну з початковим розміром
+Paste from clipboard	Вставити з буфера обміну
+Batch rename/copy...	Пакетне перейменування/копіювання...
+Show picture info (EXIF)	Відомості про зображення (EXIF)
+Show filename	Ім'я файла
+Navigation	Навігація
+Loop folder	Циклічно в папці
+Loop recursively	Циклічно з вкладеними папками
+Loop siblings	Циклічно з папками того ж рівня вкладеності
+Display order	Порядок виводу (сортування)
+Modification date	Дата зміни
+Creation date	Дата створення
+Play folder as slideshow/movie	Слайдшоу/фільм з файлів у папці
+Slideshow	Слайдшоу
+Movie	Фільм
+Waiting time	Інтервал
+Stop slide show/movie	Зупинити слайдшоу/фільм
+Rotate +90	Повернути на 90° вправо
+Rotate -90	Повернути на 90° вліво
+Rotate 180	Повернути на 180°
+Auto correction	Автокорекція
+Local density correction	Корекція світла/тіней
+Keep parameters	Пам'ятати параметри обробки при зміні зображень
+Save parameters to INI...	Зберегти параметри в INI-файлі...
+Save parameters to DB	Зберегти параметри в базі даних
+Clear parameters from DB	Видалити параметри з бази даних
+Zoom	Масштабування
+Fit to screen	Підгонка під екран
+Fill with crop	Заповнення з обрізкою
+Span all screens	На всі екрани
+Auto zoom mode	Автомасштабування
+Fit to screen (no zoom)	Підгонка під екран (без збільшення)
+Fill with crop (no zoom)	Заповнення з обрізкою (без збільшення)
+Exit	Вихід
+Cyan-Red	Блакитний-Червоний
+Magenta-Green	Пурпуровий-Зелений
+Yellow-Blue	Жовтий-Синій
+C - R	C - R
+M - G	M - G
+Y - B	Y - B
+Batch rename/copy of files	Пакетне перейменування/копіювання файлів
+Image files in folder	Графічні файли в папці
+Placeholders:	Заповнювачі:
+Number (consecutively numbered)	номер (послідовний)
+Number with N digits	номер з N цифрами
+Extracted number from original file name	номер з вихідного імені файлу
+Original file name (with extension)	вихідне ім'я файлу (з розширенням)
+Original file name (without extension)	вихідне ім'я файлу (без розширення)
+Original file extension	вихідне розширення файлу
+'My Pictures' folder	папка 'Мої малюнки'
+Day / Month / Year (as numbers)	день/місяць/рік (цифрами)
+Year short form (2 digits)	рік коротко (дві цифри)
+Month / Short form (text)	місяць/коротка форма (текст)
+Target folders that are not yet existing are created as needed.	Неіснуючі папки призначення створюються за потребою.
+Date placeholders use the modification date of the image.	Заповнювачі дати підставляють дату зміни зображення.
+Rename/copy images to:	Перейменувати/скопіювати зображення у:
+Rename	Перейменувати
+Preview	Попередній перегляд
+Save as template	Зберегти як шаблон
+Close	Закрити
+Old name	Старе ім'я
+Date	Дата
+New name (>> : file gets copied)	Нове ім'я (>> : файл скопійований)
+Select all	Вибрати все
+Select none	Зняти весь вибір
+The file '%s' could not be %s.	Для файла '%s' неможливо виконати операцію %s.
+copied	скопійовано
+renamed	перейменовано
+Continue rename/copy?	Продовжити перейменування/копіювання?
+Error during rename/copy	Помилка при перейменуванні/копіюванні
+%d file(s) renamed, %d file(s) copied, %d folder(s) created	Файлів перейменовано: %d, скопійовано: %d, створено папок: %d
+Crop Selection	Обрізати виділене
+Copy Selection to Clipboard	Скопіювати виділене в буфер обміну
+Zoom to Selection	Масштабувати до виділеного
+Pasting image from clipboard failed!	Помилка при вставці зображення з буфера обміну.
+Image width:	Ширина:
+Image height:	Висота:
+Acquisition date:	Дата зйомки:
+Camera model:	Модель камери:
+Exposure time (s):	Витримка (з):
+Exposure bias (EV):	Експокорекція (EV):
+Flash fired:	Спалах:
+Focal length (mm):	Фокусна відстань (мм):
+F-Number:	Діафрагма:
+ISO Speed:	Чутливість ISO:
+Modification date:	Дата зміни:
+yes	так
+no	ні
+Show navigation panel	Панель навігації
+Show/hide navigation panel	Показати/приховати панель навігації
+About JPEGView...	Про програму JPEGView...
+SIMD mode used:	Режим SIMD:
+Number of CPU cores used:	Використовується ядер ЦП:
+Licensed under the GNU general public license (GPL), see readme file for details:	Ліцензія: GNU General Public License (GPL), див. подробиці у файлі:
+Project home page:	Домашня сторінка проекту:
+Show first image in folder	Перше зображення в папці
+Show previous image	Попереднє зображення
+Show next image	Наступне зображення
+Show last image in folder	Останнє зображення в папці
+Rotate image 90 deg clockwise	Повернути на 90° вправо
+Rotate image 90 deg counter-clockwise	Повернути на 90° вліво
+Landscape picture enhancement mode	Режим поліпшення зображень
+Display image (EXIF) information	Відомості про зображення (EXIF)
+Actual size of image	Справжній розмір зображення
+Toggle between screens (only for multi-monitor systems)	Переключитися між екранами (в мультимоніторних системах)
+Enable/disable full screen mode	Увімкнути/вимкнути повноекранний режим
+Full screen mode	Повноекранний режим
+Window mode	Віконний режим
+Save as (in screen size/resolution)	Зберегти як (в екранному розмірі/розд. здатності)
+Save processed image to JPEG file (screen size)	Зберегти оброблене зображення як файл JPEG (екранного розміру)
+Settings/Admin	Налаштування
+Edit global settings...	Змінити загальні параметри...
+Edit user settings...	Змінити параметри користувача...
+Backup parameter DB...	Зробити резервну копію БД з параметрами...
+Restore parameter DB...	Відновити з копії БД з параметрами...
+No user INI file exits yet. Create user INI file from INI file template?	Користувацького INI-файла ще не існує. Створити його з шаблону INI-файла?
+Copying parameter DB to file '%s' failed. Reason: %s	Помилка копіювання БД параметрів у файл '%s'. Причина: %s
+Select parameter DB to restore	Виберіть БД параметрів для відновлення
+Conflicting entries in Param DB	Конфлікт записів у БД параметрів
+The imported param DB contains entries already present in active param DB.	Імпортована БД параметрів містить записи, які вже присутні в активній БД.
+Shall existing entries be preserved (Yes) or be overriden by the imported entries (No)?	Наявні записи слід зберегти (Так), чи перезаписати їх імпортованими (Ні)?
+Select file to display in 'File Open' dialog	Виберіть файл для показу в діалозі відкриття файлів
+Crop Mode	Режим обрізки
+Free	Довільно
+Fixed size...	Фіксований розмір ...
+Set Fixed Crop Size	Вибрати розмір обрізки
+Width	Ширина
+Height	Висота
+Pixels	пкс
+Screen Pixels	Екранні пікселі
+Image Pixels	Вихідні пікселі
+Set modification date	Встановити дату зміни
+to current date	за поточною датою
+to EXIF date	за датою в EXIF
+Mark image for toggling. Use %s to toggle between marked and current image	Відзначити файл (%s - перемикання між зазначеним і поточним зображеннями)
+Saturation	Насиченість
+Unsharp mask...	Нерізка маска...
+Apply Unsharp Mask	Застосувати нерізку маску
+Radius	Радіус
+Amount	Величина
+Threshold	Поріг
+Apply	Застосувати
+Cancel	Скасувати
+Keep processing parameters between images	Пам'ятати параметри обробки при зміні зображень
+Show histogram	Показати гістограму
+Hide histogram	Приховати гістограму
+Crop Selection Lossless...	Обрізати виділене без втрат ...
+Save cropped image	Зберегти обрізане зображення
+Rotate image by user-defined angle	Повернути на довільний кут
+Rotate Image	Поворот зображення
+Show grid lines	Сітка
+Auto crop rotated image (avoids black border)	Автообрізка зображення при повороті (уникати чорних полів)
+Align image to horizontal or vertical line	Вирівнювання зображення по горизонтальній або вертикальній лінії
+Use the mouse to draw a line that shall be horizontal or vertical.	Проведіть мишею лінію, яка повинна стати горизонтальною або вертикальною.
+Rotate the image by dragging with the mouse.	Обертайте зображення, перетягуючи по ньому мишу.
+The operation failed because not enough memory is available!	Помилка операції: недостатньо пам'яті.
+to EXIF date (all files in folder)	за датою в EXIF (для всіх файлів у папці)
+Number of JPEG files in folder: %d	Файлів JPEG в папці: %d
+EXIF date successfully set on %d images, failed on %d images	Установка EXIF-дати: %d - так, %d - ні
+Reason: Not enough memory available	Причина: недостатньо пам'яті
+Transform image	Перетворення зображення
+Rotate...	Повернути на довільний кут ...
+Mirror horizontally	Дзеркально перевернути по горизонталі
+Mirror vertically	Дзеркально перевернути по вертикалі
+Random	Випадково
+Zoom mode (drag mouse to zoom)	Режим масштабування (перетягуванням миші)
+Correct converging lines (perspective correction)	Корекція збіжних ліній (перспективи)
+Perspective Correction	Корекція перспективи
+Perspective correction...	Корекція перспективи...
+Auto crop corrected image (avoids black border)	Автообрізка при корекції (уникати чорних полів)
+Click and drag the mouse vertically to correct image tilt.	Перетягуйте мишу вертикально, щоб усунути/змінити нахил зображення.
+Drag at the left or right border for asymmetric correction.	Перетягуйте мишу до лівого або правого краю для несиметричної корекції.
+Fit window to image	Підгонка вікна по зображенню
+Keep aspect ratio on crop	Дотримання пропорцій при обрізанні
+Lossless JPEG transformations	Перетворення JPEG без втрат
+Performing the lossless transformation failed!	Помилка перетворення без втрат даних!
+Image width and height must be dividable by the JPEG block size (8 or 16) for lossless transformations!	Для перетворення без втрат, ширина і висота зображення повинні бути кратні розміру блока JPEG (8 або 16).
+Reading the JPEG file from disk failed	Помилка читання з диска файлу JPEG
+Writing the resulting JPEG file to disk failed	Помилка запису на диск результуючого файлу JPEG
+Performing the transformation failed	Помилка перетворення
+The transformation can be applied if the image is trimmed to the next matching size but this will remove some border pixels.	Перетворення можна виконати, якщо обрізати зображення до найближчого кратного блоку значення. При цьому деяка кількість пікселів з країв зображення буде видалена
+Trim the image and apply transformation? Trimming cannot be undone!	Обрізати зображення і виконати перетворення? Обрізка не може бути скасована!
+Note: Set the key 'TrimWithoutPromptLosslessJPEG=true' in the INI file to always trim without showing this message.	Примітка: щоб обрізка виконувалася без показу цього повідомлення, встановіть у INI-файлі ключ 'TrimWithoutPromptLosslessJPEG=true'.
+Transition Effect	Ефект зміни слайдів
+None	Нмає
+Blend	Змішування
+Slide from right	Зсув справа
+Slide from left	Зсув зліва
+Slide from top	Зсув зверху
+Slide from bottom	Зсув знизу
+Roll from right	Згортка справа
+Roll from left	Згортка зліва
+Roll from top	Згортка зверху
+Roll from bottom	Згортка знизу
+Scroll from right	Прокрутка справа
+Scroll from left	Прокрутка зліва
+Scroll from top	Прокрутка зверху
+Scroll from bottom	Прокрутка знизу
+Transition Speed	Тривалість ефекту
+Very fast	Дуже швидко
+Fast	Швидко
+Normal	Помірно
+Slow	Повільно
+Very slow	Дуже повільно
+Error	Помилка
+Warning	Увага
+Error while writing the following registry key:	Помилка при записі ключа реєстру:
+Set as default viewer...	Призначити програмою перегляду за замовчуванням...
+Set JPEGView as default image viewer	Призначити JPEGView стандартною програмою перегляду графіки
+JPEGView is registered as default viewer for the selected file formats.	Встановіть/зніміть позначки у типів файлів для реєстрації/скасування реєстрації JPEGView як стандартної програми їх перегляду.
+Registration applies to the current user only.	Реєстрація діє тільки для поточного користувача.
+Extension	Розширення
+File type	Тип файла
+The following file extensions cannot be unregistered because they have been registered in the 'local machine' registry area.	У цих файлових розширень не можна зняти реєстрацію, оскільки в реєстрі вони зареєстровані в гілці 'Local Machine'.
+Registering or unregistering file extensions in this registry area requires administration privileges and cannot be done in JPEGView.	Реєстрація та скасування реєстрації файлових розширень в цій області реєстру вимагає прав адміністратора і не може бути виконана у JPEGView.
+Press 'OK' to continue with registration or 'Cancel' to not modify any registrations.	Натисніть OK, щоб виконати реєстрацію. Натисніть 'Скасування', щоб не змінювати ніяких реєстрацій файлів.
+Unregistering not possible	Скасування реєстрації неможливе
+%s images	Зображення %s
+%s images (processed by Window Imaging Component - WIC)	Зображення %s (обробка Window Imaging Component - WIC)
+%s camera raw images (embedded JPEGs only)	Raw-зображення %s (тільки вбудовані JPEG)
+The following image extensions are protected by the operating system.	Наступні розширення графічних файлів захищені операційною системою.
+JPEGView can try to remove the restrictions automatically.	JPEGView може спробувати видалити обмеження автоматично.
+However this will fail if the current user has no administration privileges.	Проте якщо у поточного користувача немає прав адміністратора, це не спрацює.
+Insufficient rights to remove the restrictions. Continue?	Недостатньо прав для видалення обмежень. Продовжити?
+No image loaded!	Не завантажене зображення!
+Right mouse button: Context menu	Права кнопка миші: контекстне меню
+Windows 8 blocks JPEGView from changing the default program for these file endings.	Windows 8 не дозволяє JPEGView змінювати стандартну програму для файлів з цими розширеннями.
+Use the 'Default Programs' configuration dialog from the operating system instead.	Використовуйте системне діалогове вікно 'Програми за замовчуванням'.
+Alternatively, right click an image file of the given type in Windows Explorer and select 'Open with... > Choose default program'	Крім того, можна натиснути правою кнопкою миші по графічному файлу потрібного типу у Провіднику Windows і вибрати 'Відкрити за допомогою > Вибрати програму'.
+User commands	Користувацькі команди
+Open image with	Відкрити зображення у...
+Manage 'Open image with' menu...	Налаштування меню 'Відкрити у...'
+Menu entries:	Елементи в меню
+Title:	Назва:
+Application:	Програма:
+Shortcut key:	Швидкий виклик:
+Browse...	Огляд
+New	Створити
+Delete	Видалити
+Modifier keys:	Модифікатори:
+Known keys:	Відомі клавіші:
+Combine keys with '+'	Поєднуйте клавіші з '+'
+Example:	Приклад:
+Shortcut Help	Довідка по клавішах
+[new entry]	[новий елемент]
+Applications	Програми
+Select application	Виберіть програму
+Save	Зберегти
+Edit	Змінити
+Upcounting	За зростанням
+Downcounting	За зменшенням
+File size	Розмір файла
+Delete image file	Видалити файл зображення
+
