@@ -902,7 +902,7 @@ LRESULT CMainDlg::OnKeyDown(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOO
 	} else if (wParam == VK_ESCAPE && m_pCropCtl->IsCropping()) {
 		bHandled = true;
 		m_pCropCtl->AbortCropping();
-	} else if (!bCtrl && m_nLastLoadError == HelpersGUI::FileLoad_NoFilesInDirectory && !m_sStartupFile.IsEmpty()) {
+	} else if (!bCtrl && wParam != VK_ESCAPE && m_nLastLoadError == HelpersGUI::FileLoad_NoFilesInDirectory && !m_sStartupFile.IsEmpty()) {
 		// search in subfolders if initial directory has no images
 		bHandled = true;
 		m_pFileList->SetNavigationMode(Helpers::NM_LoopSubDirectories);
@@ -1297,6 +1297,7 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 		case IDM_MOVE_TO_RECYCLE_BIN:
 		case IDM_MOVE_TO_RECYCLE_BIN_CONFIRM:
 		case IDM_MOVE_TO_RECYCLE_BIN_CONFIRM_PERMANENT_DELETE:
+			MouseOn();
 			if (m_pCurrentImage != NULL && m_pFileList != NULL && !m_pCurrentImage->IsClipboardImage() && CSettingsProvider::This().AllowFileDeletion()) {
 				LPCTSTR currentFileName = CurrentFileName(false);
 				bool noConfirmation = nCommand == IDM_MOVE_TO_RECYCLE_BIN ||
@@ -1502,6 +1503,7 @@ void CMainDlg::ExecuteCommand(int nCommand) {
                 bool bAskIfToTrim = !(bCanTransformWithoutTrim || CSettingsProvider::This().TrimWithoutPromptLosslessJPEG());
                 bool bPerformTransformation = true;
                 bool bTrim = false;
+				MouseOn();
                 if (bAskIfToTrim) {
                     bTrim = IDYES == ::MessageBox(m_hWnd, CString(CNLS::GetString(_T("Image width and height must be dividable by the JPEG block size (8 or 16) for lossless transformations!"))) + _T("\n") +
                         CNLS::GetString(_T("The transformation can be applied if the image is trimmed to the next matching size but this will remove some border pixels.")) + _T("\n") +
@@ -1801,6 +1803,7 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 			break;
 		case IDM_TOUCH_IMAGE_EXIF_FOLDER:
 			if (m_pCurrentImage != NULL && m_pFileList->CurrentDirectory() != NULL) {
+				MouseOn();
 				EXIFHelpers::EXIFResult result = EXIFHelpers::SetModificationDateToEXIFAllFiles(m_pFileList->CurrentDirectory());
 				TCHAR buff1[128];
 				_stprintf_s(buff1, 128, CNLS::GetString(_T("Number of JPEG files in folder: %d")), result.NumberOfSucceededFiles + result.NumberOfFailedFiles);

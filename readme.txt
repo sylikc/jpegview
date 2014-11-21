@@ -18,6 +18,12 @@ Windows XP SP2 or later is needed to run the 32 bit version.
 Changelog
 *********
 
+[1.0.32.2]
+Bugs fixed:
+- More tolerance on corrupt EXIF data offsets - image is now displayed in this case (without EXIF of course)
+- Showing mouse cursor before asking for confirmations if mouse cursor was off before
+- ESC works again when no image is loaded into JPEGView (e.g. because the last image in a folder was deleted)
+
 [1.0.32.1]
 Bugs fixed:
 - Prefetching image of correct size in windowed mode - prefetching was actually not working in this situation
