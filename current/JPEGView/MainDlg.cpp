@@ -303,6 +303,7 @@ LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam
 	CSettingsProvider& sp = CSettingsProvider::This();
 	m_nMonitor = sp.DisplayMonitor();
 	m_monitorRect = CMultiMonitorSupport::GetMonitorRect(m_nMonitor);
+	this->SetWindowPos(HWND_TOP, m_monitorRect.left, m_monitorRect.top, m_monitorRect.Width(), m_monitorRect.Height(), SWP_NOZORDER | SWP_NOCOPYBITS);
 	m_clientRect = m_bFullScreenMode ? m_monitorRect : CMultiMonitorSupport::GetDefaultClientRectInWindowMode(sp.AutoFullScreen());
 
 	// Create image processing panel at bottom of screen
