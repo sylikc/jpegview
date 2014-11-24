@@ -2,6 +2,8 @@
 #include "FileOpenDialog.h"
 #include "NLS.h"
 #include "Helpers.h"
+#include "SettingsProvider.h"
+#include "MultiMonitorSupport.h"
 #include "dlgs.h"
 
 bool CFileOpenDialog::m_bSized = false;
@@ -49,11 +51,13 @@ void CFileOpenDialog::SizeDialog() {
 	if (!m_bSized || m_bFullScreen) {
 		HWND wndParent = this->GetParent(); // real dialog is parent of us
 
-		int nScreenX = ::GetSystemMetrics(SM_CXSCREEN);
-		int nScreenY = ::GetSystemMetrics(SM_CYSCREEN);
+		CSettingsProvider& sp = CSettingsProvider::This();
+		CRect monitorRect = CMultiMonitorSupport::GetMonitorRect(sp.DisplayMonitor());
+		int nScreenX = monitorRect.Width();
+		int nScreenY = monitorRect.Height();
 		int nSizeX = nScreenX*90/100;
 		int nSizeY = nScreenY*90/100;
-		::MoveWindow(wndParent, (nScreenX-nSizeX)/2, (nScreenY-nSizeY)/2, 
+		::MoveWindow(wndParent, monitorRect.left + (nScreenX - nSizeX) / 2, monitorRect.top + (nScreenY - nSizeY) / 2,
 			nSizeX, nSizeY, TRUE);
 		if (!m_bFullScreen) {
 			m_bSized = true;

@@ -23,6 +23,7 @@ Bugs fixed:
 - More tolerance on corrupt EXIF data offsets - image is now displayed in this case (without EXIF of course)
 - Showing mouse cursor before asking for confirmations if mouse cursor was off before
 - ESC works again when no image is loaded into JPEGView (e.g. because the last image in a folder was deleted)
+- Taking DisplayMonitor into account also in windowed mode, not only fullscreen mode
 
 [1.0.32.1]
 Bugs fixed:

@@ -289,9 +289,6 @@ bool CUserCommand::Execute(HWND hWnd, LPCTSTR sFileName, const CRect& selectionR
 	}
 
 	CString sFileNameInCommandLine = sFileName;
-	if (m_sCommand.Find(_T("jpegtran ")) == 0) {
-		sFileNameInCommandLine = Helpers::ReplacePathByShortForm(sFileName);
-	}
 	bool hasSpaces = sFileNameInCommandLine.Find(_T(' ')) != -1;
 
 	CString sCommandLine = ReplacePlaceholders(m_sCommand, sFileNameInCommandLine, selectionRect, m_bUseShortFileName, true);
