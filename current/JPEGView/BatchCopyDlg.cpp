@@ -111,6 +111,7 @@ LRESULT CBatchCopyDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*l
 		CString(_T("%pictures% : ")) + CNLS::GetString(_T("'My Pictures' folder")));
 		
 	m_lblPlaceHolders2.SetWindowText(CString(_T("%d %m %y : ")) + CNLS::GetString(_T("Day / Month / Year (as numbers)")) + _T("\n") +
+		CString(_T("%h %min : ")) + CNLS::GetString(_T("Hour / Minute (as numbers)")) + _T("\n") +
 		CString(_T("%2y : ")) + CNLS::GetString(_T("Year short form (2 digits)")) + _T("\n") +
 		CString(_T("%M %3M : ")) + CNLS::GetString(_T("Month / Short form (text)")) );
 	m_lblRemark.SetWindowText(CString(CNLS::GetString(_T("Target folders that are not yet existing are created as needed."))) + _T("\n") +
@@ -383,6 +384,16 @@ CString CBatchCopyDlg::ReplacePlaceholders(LPCTSTR strPattern, int nIndex, const
 	}
 	SYSTEMTIME systemTime;
 	FileTimeToLocalSystemTime(fileDesc.GetLastModTime(), systemTime);
+	if (strNewName.Find(_T("%h")) != -1) {
+		CString sHour;
+		sHour.Format(_T("%02d"), systemTime.wHour);
+		strNewName.Replace(_T("%h"), sHour);
+	}
+	if (strNewName.Find(_T("%min")) != -1) {
+		CString sMinute;
+		sMinute.Format(_T("%02d"), systemTime.wMinute);
+		strNewName.Replace(_T("%min"), sMinute);
+	}
 	if (strNewName.Find(_T("%d")) != -1) {
 		CString sDay;
 		sDay.Format(_T("%02d"), systemTime.wDay);
