@@ -24,6 +24,8 @@ Bugs fixed:
 - Showing mouse cursor before asking for confirmations if mouse cursor was off before
 - ESC works again when no image is loaded into JPEGView (e.g. because the last image in a folder was deleted)
 - Taking DisplayMonitor into account also in windowed mode, not only fullscreen mode
+Other changes:
+- Batch rename dialog: Supporting %h and %min placeholders for hour and minute of modification date
 
 [1.0.32.1]
 Bugs fixed:
