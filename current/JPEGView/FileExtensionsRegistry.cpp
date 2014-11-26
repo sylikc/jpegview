@@ -455,7 +455,7 @@ static RegResult ResetPermissionsForRegistryKey(LPCTSTR subKeyRelativeToHKCU)
 ///////////////////////////////////////////////////////////////////////////////////
 
 CFileExtensionsRegistry::CFileExtensionsRegistry() {
-	int version = CFileExtensionsRegistrationWindows8::GetWindowsVersion();
+	int version = Helpers::GetWindowsVersion();
 	// Starting with Windows Vista, the Windows Explorer uses a different location
 	// to register file extensions
 	m_bNewRegistryFormat = version >= 600;
@@ -531,17 +531,6 @@ RegResult CFileExtensionsRegistry::UnregisterFileExtension(LPCTSTR sExtension, b
 }
 
 CFileExtensionsRegistrationWindows8::CFileExtensionsRegistrationWindows8() {
-}
-
-int CFileExtensionsRegistrationWindows8::GetWindowsVersion() {
-#pragma warning(push)
-#pragma warning(disable:4996)
-	OSVERSIONINFO osvi;
-	ZeroMemory(&osvi, sizeof(OSVERSIONINFO));
-	osvi.dwOSVersionInfoSize = sizeof(OSVERSIONINFO);
-	GetVersionEx(&osvi);
-#pragma warning(pop)
-	return osvi.dwMajorVersion * 100 + osvi.dwMinorVersion;
 }
 
 bool CFileExtensionsRegistrationWindows8::RegisterJPEGView() {

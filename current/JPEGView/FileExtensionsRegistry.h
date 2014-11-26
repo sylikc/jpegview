@@ -48,9 +48,6 @@ class CFileExtensionsRegistrationWindows8
 public:
 	CFileExtensionsRegistrationWindows8();
 
-	// Returns the windows version in the format Major * 100 + Minor, e.g. 602 for Windows 8
-	static int GetWindowsVersion();
-
 	// Register JPEGView in HKEY_CURRENT_USER\Software\RegisteredApplications
 	// Also publishes the capabilities and creates a ProgId for JPEGView.
 	// Everything is done under HKEY_CURRENT_USER

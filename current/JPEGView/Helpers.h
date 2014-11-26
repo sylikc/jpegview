@@ -210,6 +210,9 @@ namespace Helpers {
     // replaces the file info format string by the actual values from the image and file list
     CString GetFileInfoString(LPCTSTR sFormat, CJPEGImage* pImage, CFileList* pFilelist, double dZoom);
 
+	// Returns the windows version in the format Major * 100 + Minor, e.g. 602 for Windows 8
+    int GetWindowsVersion();
+
 	// Conversion class that replaces the | by null character in a string.
 	// Caution: Uses a static buffer and can therefore only one string can be replaced concurrently
 	const int MAX_SIZE_REPLACE_PIPE = 512;
