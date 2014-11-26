@@ -50,6 +50,7 @@
 #include "KeyMap.h"
 #include "JPEGLosslessTransform.h"
 #include "DirectoryWatcher.h"
+#include "DesktopWallpaper.h"
 
 //////////////////////////////////////////////////////////////////////////////////////////////
 // Constants
@@ -303,7 +304,9 @@ LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam
 	CSettingsProvider& sp = CSettingsProvider::This();
 	m_nMonitor = sp.DisplayMonitor();
 	m_monitorRect = CMultiMonitorSupport::GetMonitorRect(m_nMonitor);
-	this->SetWindowPos(HWND_TOP, m_monitorRect.left, m_monitorRect.top, m_monitorRect.Width(), m_monitorRect.Height(), SWP_NOZORDER | SWP_NOCOPYBITS);
+	// move to correct monitor - but no redraw as Windows does not like that this early
+	::SetWindowPos(m_hWnd, HWND_TOP, m_monitorRect.left, m_monitorRect.top, m_monitorRect.Width(), m_monitorRect.Height(),
+		SWP_NOZORDER | SWP_NOCOPYBITS | SWP_NOACTIVATE | SWP_NOREDRAW);
 	m_clientRect = m_bFullScreenMode ? m_monitorRect : CMultiMonitorSupport::GetDefaultClientRectInWindowMode(sp.AutoFullScreen());
 
 	// Create image processing panel at bottom of screen
@@ -1113,6 +1116,7 @@ LRESULT CMainDlg::OnContextMenu(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam,
 	HMENU hMenuModDate = ::GetSubMenu(hMenuTrackPopup, SUBMENU_POS_MODDATE);
 	HMENU hMenuUserCommands = ::GetSubMenu(hMenuTrackPopup, SUBMENU_POS_USER_COMMANDS);
 	HMENU hMenuOpenWithCommands = ::GetSubMenu(hMenuTrackPopup, SUBMENU_POS_OPENWITH);
+	HMENU hMenuWallpaper = ::GetSubMenu(hMenuTrackPopup, SUBMENU_POS_WALLPAPER);
 
 	if (!HelpersGUI::CreateUserCommandsMenu(hMenuUserCommands)) {
 		::DeleteMenu(hMenuTrackPopup, SUBMENU_POS_USER_COMMANDS + 1, MF_BYPOSITION);
@@ -1154,6 +1158,7 @@ LRESULT CMainDlg::OnContextMenu(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam,
 		::EnableMenuItem(hMenuTrackPopup, SUBMENU_POS_ZOOM, MF_BYPOSITION  | MF_GRAYED);
 		::EnableMenuItem(hMenuTrackPopup, SUBMENU_POS_MODDATE, MF_BYPOSITION  | MF_GRAYED);
 		::EnableMenuItem(hMenuTrackPopup, SUBMENU_POS_TRANSFORM, MF_BYPOSITION  | MF_GRAYED);
+		::EnableMenuItem(hMenuTrackPopup, SUBMENU_POS_WALLPAPER, MF_BYPOSITION | MF_GRAYED);
 	} else {
 		if (m_bKeepParams || m_pCurrentImage->IsClipboardImage() ||
 			CParameterDB::This().FindEntry(m_pCurrentImage->GetPixelHash()) == NULL)
@@ -1166,6 +1171,10 @@ LRESULT CMainDlg::OnContextMenu(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam,
 		}
 		if (m_pCurrentImage->GetEXIFReader() == NULL || !m_pCurrentImage->GetEXIFReader()->GetAcquisitionTimePresent()) {
 			::EnableMenuItem(hMenuModDate, IDM_TOUCH_IMAGE_EXIF, MF_BYCOMMAND | MF_GRAYED);
+		}
+		int windowsVersion = Helpers::GetWindowsVersion();
+		if (m_pCurrentImage->IsClipboardImage() || (windowsVersion < 600 && m_pCurrentImage->GetImageFormat() != IF_WindowsBMP) || !m_pCurrentImage->IsGDIPlusFormat()) {
+			::EnableMenuItem(hMenuWallpaper, IDM_SET_WALLPAPER_ORIG, MF_BYCOMMAND | MF_GRAYED);
 		}
 	}
 	if (!HelpersGUI::CreateOpenWithCommandsMenu(hMenuOpenWithCommands) || m_pCurrentImage == NULL) {
@@ -1873,6 +1882,16 @@ void CMainDlg::ExecuteCommand(int nCommand) {
             BOOL bNotUsed;
             OnContextMenu(0, 0, (m_nMouseX & 0xFFFF) | ((m_nMouseY & 0xFFFF) << 16), bNotUsed);
             break;
+		case IDM_SET_WALLPAPER_ORIG:
+			if (m_pFileList->Current() != NULL) {
+				SetDesktopWallpaper::SetFileAsWallpaper(m_pFileList->Current());
+			}
+			break;
+		case IDM_SET_WALLPAPER_DISPLAY:
+			if (m_pCurrentImage != NULL) {
+				SetDesktopWallpaper::SetProcessedImage(*m_pCurrentImage);
+			}
+			break;
 	}
 	if (nCommand >= IDM_FIRST_USER_CMD && nCommand <= IDM_LAST_USER_CMD) {
 		ExecuteUserCommand(HelpersGUI::FindUserCommand(nCommand - IDM_FIRST_USER_CMD));
@@ -2010,7 +2029,7 @@ void CMainDlg::SetAsDefaultViewer() {
 	}
 	MouseOn();
 
-	if (CFileExtensionsRegistrationWindows8::GetWindowsVersion() >= 602) {
+	if (Helpers::GetWindowsVersion() >= 602) {
 		// Its Windows 8 or later
 		CFileExtensionsRegistrationWindows8 registry;
 		if (registry.RegisterJPEGView()) {

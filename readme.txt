@@ -24,6 +24,10 @@ Bugs fixed:
 - Showing mouse cursor before asking for confirmations if mouse cursor was off before
 - ESC works again when no image is loaded into JPEGView (e.g. because the last image in a folder was deleted)
 - Taking DisplayMonitor into account also in windowed mode, not only fullscreen mode
+New features:
+- Set current image as desktop wallpaper
+  You can either set the original image (in Windows XP only BMP is supported) or the processed image as displayed.
+  The later is using also the size as displayed.
 Other changes:
 - Batch rename dialog: Supporting %h and %min placeholders for hour and minute of modification date
 

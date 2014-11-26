@@ -820,4 +820,15 @@ CString GetFileInfoString(LPCTSTR sFormat, CJPEGImage* pImage, CFileList* pFilel
     return sFileInfo;
 }
 
+int GetWindowsVersion() {
+#pragma warning(push)
+#pragma warning(disable:4996)
+	OSVERSIONINFO osvi;
+	ZeroMemory(&osvi, sizeof(OSVERSIONINFO));
+	osvi.dwOSVersionInfoSize = sizeof(OSVERSIONINFO);
+	GetVersionEx(&osvi);
+#pragma warning(pop)
+	return osvi.dwMajorVersion * 100 + osvi.dwMinorVersion;
+}
+
 }

@@ -223,6 +223,11 @@ BEGIN
             MENUITEM "to EXIF date",                IDM_TOUCH_IMAGE_EXIF
             MENUITEM "to EXIF date (all files in folder)", IDM_TOUCH_IMAGE_EXIF_FOLDER
         END
+		POPUP "Set as desktop wallpaper"
+		BEGIN
+            MENUITEM "Use original image", IDM_SET_WALLPAPER_ORIG
+            MENUITEM "Use processed image as displayed", IDM_SET_WALLPAPER_DISPLAY
+		END
         MENUITEM SEPARATOR
         MENUITEM "Copy to clipboard",           IDM_COPY
         MENUITEM "Copy original size image",    IDM_COPY_FULL
@@ -412,8 +417,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 1,0,32,1
- PRODUCTVERSION 1,0,32,1
+ FILEVERSION 1,0,32,2
+ PRODUCTVERSION 1,0,32,2
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -430,12 +435,12 @@ BEGIN
         BEGIN
             VALUE "CompanyName", "David Kleiner"
             VALUE "FileDescription", "JPEGView"
-            VALUE "FileVersion", "1.0.32.1"
+            VALUE "FileVersion", "1.0.32.2"
             VALUE "InternalName", "JPEGView"
             VALUE "LegalCopyright", "Copyright 2006-2014 David Kleiner"
             VALUE "OriginalFilename", "JPEGView.exe"
             VALUE "ProductName", "JPEGView Application"
-            VALUE "ProductVersion", "1.0.32.1"
+            VALUE "ProductVersion", "1.0.32.2"
         END
     END
     BLOCK "VarFileInfo"
