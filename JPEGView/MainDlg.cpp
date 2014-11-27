@@ -1883,8 +1883,8 @@ void CMainDlg::ExecuteCommand(int nCommand) {
             OnContextMenu(0, 0, (m_nMouseX & 0xFFFF) | ((m_nMouseY & 0xFFFF) << 16), bNotUsed);
             break;
 		case IDM_SET_WALLPAPER_ORIG:
-			if (m_pFileList->Current() != NULL) {
-				SetDesktopWallpaper::SetFileAsWallpaper(m_pFileList->Current());
+			if (m_pFileList->Current() != NULL && m_pCurrentImage != NULL) {
+				SetDesktopWallpaper::SetFileAsWallpaper(*m_pCurrentImage, m_pFileList->Current());
 			}
 			break;
 		case IDM_SET_WALLPAPER_DISPLAY:
