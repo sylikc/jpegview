@@ -131,6 +131,10 @@ public:
 	int OrigHeight() const { return m_nOrigHeight; }
 	CSize OrigSize() const { return CSize(m_nOrigWidth, m_nOrigHeight); }
 
+	// Original image size at the time the object was constructed. The image may has been rotated or cropped in the meantime.
+	int InitOrigWidth() const { return m_nInitOrigWidth; }
+	int InitOrigHeight() const { return m_nInitOrigHeight; }
+
 	// Size of DIB - size of resampled section of the original image. If zero, no DIB is currently processed.
 	int DIBWidth() const { return m_ClippingSize.cx; }
 	int DIBHeight() const { return m_ClippingSize.cy; }
