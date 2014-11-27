@@ -17,8 +17,8 @@ namespace SetDesktopWallpaper {
 	void SetFileAsWallpaper(CJPEGImage& image, LPCTSTR fileName)
 	{
 		CRect largestMonitor = CMultiMonitorSupport::GetMonitorRect(-1);
-		bool needsFill = image.InitOrigWidth() > largestMonitor.Width() || image.InitOrigHeight() > largestMonitor.Height();
-		SetRegistryStringValue(_T("WallpaperStyle"), needsFill ? _T("1") : _T("0"));
+		bool needsFitToScreen = image.InitOrigWidth() > largestMonitor.Width() || image.InitOrigHeight() > largestMonitor.Height();
+		SetRegistryStringValue(_T("WallpaperStyle"), needsFitToScreen ? _T("6") : _T("0"));
 		SetRegistryStringValue(_T("TileWallpaper"), _T("0"));
 
 		void* parameter = (void*)fileName;
@@ -30,8 +30,19 @@ namespace SetDesktopWallpaper {
 
 	void SetProcessedImage(CJPEGImage& image)
 	{
-		SetRegistryStringValue(_T("WallpaperStyle"), _T("0"));
-		SetRegistryStringValue(_T("TileWallpaper"), _T("0"));
+		bool bitmapMatchesDesktop = false;
+		int windowsVersion = Helpers::GetWindowsVersion();
+		LPCTSTR wallpaperStyle = _T("0");
+		LPCTSTR tileWallpaper = _T("0");
+		if (windowsVersion >= 601) {
+			// Check if image spans all screens
+			CRect allScreens = CMultiMonitorSupport::GetVirtualDesktop();
+			bitmapMatchesDesktop = (allScreens.Size() == CSize(image.DIBWidth(), image.DIBHeight()));
+			if (bitmapMatchesDesktop && windowsVersion >= 602) wallpaperStyle = _T("22"); // for Windows 8 ff
+			if (bitmapMatchesDesktop && windowsVersion == 601) tileWallpaper = _T("1"); // for Windows 7
+		}
+		SetRegistryStringValue(_T("WallpaperStyle"), wallpaperStyle);
+		SetRegistryStringValue(_T("TileWallpaper"), tileWallpaper);
 
 		TCHAR tempPath[MAX_PATH];
 		if (0 == ::GetTempPath(MAX_PATH, tempPath)) return;
