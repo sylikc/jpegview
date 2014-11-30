@@ -25,6 +25,7 @@
 ; 'el'    Greek
 ; 'eu'    Basque
 ; 'bel'   Belorussian
+; 'uk'    Ukrainian
 Language=auto
 
 

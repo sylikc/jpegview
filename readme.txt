@@ -29,6 +29,10 @@ New features:
   You can either set the original image (in Windows XP only BMP is supported) or the processed image as displayed.
   The later is using also the size as displayed.
 Other changes:
+- Launching system dialog for changing file associations on 'Set as default viewer' menu entry also when running on Windows 7.
+  That is the prefered way of setting associations on Windows 7, 8 and later.
+- Removed 'Edit global settings' menu entry. This has led to confusion as users unintentionally edit the global
+  INI file instead of the user INI file and wonder why the settings are not working.
 - Batch rename dialog: Supporting %h and %min placeholders for hour and minute of modification date
 
 [1.0.32.1]

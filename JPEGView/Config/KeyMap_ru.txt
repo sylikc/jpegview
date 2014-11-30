@@ -23,6 +23,8 @@
 #define IDM_TOUCH_IMAGE		2700			// установить время изменения по текущему времени
 #define IDM_TOUCH_IMAGE_EXIF 	2710			// установить время изменения по времени в EXIF
 #define IDM_TOUCH_IMAGE_EXIF_FOLDER 2720		// установить время изменения по времени в EXIF для всех изображений в папке
+#define IDM_SET_WALLPAPER_ORIG  2770			// Set original image file as desktop wallpaper
+#define IDM_SET_WALLPAPER_DISPLAY 2774			// Set image as displayed as desktop wallpaper
 #define IDM_SHOW_FILEINFO   	2800			// включить/выключить показ информации о файле и EXIF-данных в верхнем левом углу
 #define IDM_SHOW_FILENAME	3000			// включить/выключить показ имени файла вверху экрана
 #define IDM_SHOW_NAVPANEL   	3100			// включить/выключить показ панели навигации

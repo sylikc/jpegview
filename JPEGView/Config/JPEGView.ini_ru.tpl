@@ -29,6 +29,7 @@
 ; 'cs'		чешский
 ; 'el'		греческий
 ; 'bel'		белорусский
+; 'uk'          Ukrainian
 Language=auto
 
 ; Файлы, которые должны декодироваться с помощью WIC (Windows Imaging Component).
