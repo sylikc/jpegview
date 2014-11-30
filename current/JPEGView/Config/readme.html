@@ -49,7 +49,7 @@
         <td>
           <a name="Top"></a>
           <h1>JPEGView Readme</h1>
-          Revision: 17-Mar-2014
+          Revision: 30-Nov-2014
           <a name="Introduction"></a>
           <h2>Introduction</h2>
           JPEGView is a viewer/editor for JPEG, BMP, WEBP, PNG, TGA, GIF and TIFF images. It is designed to view images from digital cameras
@@ -168,10 +168,6 @@
               together with the information if the corresponding extension is currently bound to JPEGView.
             </li>
             <li>Select the file extensions to be opened by JPEGView and confirm with OK</li>
-            <li>
-              Windows 8: Some file extensions are protected by the operating system. Use the Windows 8 default programs
-              dialog to change the default program for these.
-            </li>
           </ul>
           <b>Hardware Requirements</b><br/>
           <ul style="margin-top:0in;margin-bottom:0in">
@@ -215,6 +211,7 @@
             <li>Greek</li>
             <li>Basque</li>
             <li>Belorussian</li>
+            <li>Ukrainian</li>
           </ul>
           By default JPEGView uses the same language as the operating system. However another language can be forced using the INI file.
           Translations to other languages can be done very easily by providing an UTF8 coded text mapping file, see
@@ -226,7 +223,7 @@
           JPEGView. This will add some registry entries in the 'Current User' branch of the registry.<br/>
           <b>Created Files during Runtime</b><br/>
           The only location where files are written (the parameter DB and the user INI file)
-          is in 'Documents and Settings\<i>Username</i>\Application Data\JPEGView\' (exception of this rule: see next section)<br/>
+          is in 'Users\<i>Username</i>\AppData\roaming\JPEGView\'. Notice that the exact path depends on the Windows version. For exceptions of this rule see next section.<br/>
           Note that these files are only created when they are needed, e.g. when the first parameter set is stored to the parameter DB.<br/>
           <b>Forcing user data storage in EXE path</b><br/>
           By setting StoreToEXEPath=true in the global INI file,
@@ -887,15 +884,15 @@
           <ul style="margin-top:0in;margin-bottom:0in">
             <li>
               User INI file<br/>
-              'Documents and Settings\<i>Username</i>\Application Data\JPEGView\JPEGView.ini'
+              'Users\<i>Username</i>\AppData\roaming\JPEGView\JPEGView.ini' (path name depends on Windows version)
             </li>
             <li>
               Global INI file<br/>
               '<i>Path of JPEGView.exe</i>\JPEGView.ini'
             </li>
           </ul>
-          The global and user INI file can be edited by using the commands 'Edit global settings' and 'Edit user settings' in
-          the context menu. Note that changes to these files do not take effect until JPEGView is restarted.<br/>
+          The user INI file can be edited by using the command 'Edit user settings' in the context menu.
+          Note that changes to these files do not take effect until JPEGView is restarted.<br/>
           Some parameters can be written to the user INI file with the command 'Save parameters to INI' located in the
           context menu.
           <ul style="margin-top:0in;margin-bottom:0in">
@@ -915,7 +912,7 @@
           <b>Note:</b> No user INI file is used if the key StoreToEXEPath is set
           to true in the global INI file. All saved setting are directly written to the global INI file in this case.
           <h3>INI file settings</h3>
-          The INI file settings are explained in detail in the <a href="./JPEGView.ini">INI file itself</a>.
+          The INI file settings are explained in detail in the <a href="./JPEGView.ini">INI file (Caution: The link is to the global INI) itself</a>.
           Only an overview on the available settings is given here:
           <ul style="margin-top:0in;margin-bottom:0in">
             <li>Default image processing parameters: Contrast, brightness, sharpness, color balance</li>
@@ -1111,6 +1108,12 @@
           Be aware the this slows down loading of JPEG images considerably (also when no color profile is embedded)
           because it forces JPEGView to read the JPEG image with GDI+ instead of using the optimized TJPEG library.
           <br/><br/>
+
+          <b>The image set as desktop wallpaper does not span all screens.</b><br/>
+          In Windows 7 / 8 and later a desktop wallpaper image can span multiple screens. To create such a wallpaper, switch to fullscreen
+          mode (F11 key) and expand JPEGView to span all screens (F12 key). Then zoom in the image so that no black borders are visible on
+          any side of the screen and pan the image as desired. Finally select 'Set as desktop wallpaper' > 'Use processed image as displayed'.
+          <br /><br />
           <b>
             <a href="#Top">Top of Page</a>
           </b><br/>
@@ -1191,6 +1194,9 @@
             </li>
             <li>
               Uladzimir Panada for the Belarusan translation
+            </li>
+            <li>
+              Володимир for the Ukrainian translation
             </li>
           </ul>
           <br/><br/><b>

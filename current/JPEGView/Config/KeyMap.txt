@@ -21,6 +21,8 @@
 #define IDM_TOUCH_IMAGE		2700			// set modification time to current time
 #define IDM_TOUCH_IMAGE_EXIF 	2710			// set modification time to EXIF time
 #define IDM_TOUCH_IMAGE_EXIF_FOLDER 2720		// set modification time to EXIF time for all images in folder
+#define IDM_SET_WALLPAPER_ORIG  2770			// Set original image file as desktop wallpaper
+#define IDM_SET_WALLPAPER_DISPLAY 2774			// Set image as displayed as desktop wallpaper
 #define IDM_SHOW_FILEINFO   	2800			// toggle show file and EXIF info box in top, left corner
 #define IDM_SHOW_FILENAME	3000			// toggle show file name on top of screen
 #define IDM_SHOW_NAVPANEL   	3100			// toggle show navigation panel

@@ -1133,7 +1133,6 @@ LRESULT CMainDlg::OnContextMenu(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam,
         ::CheckMenuItem(hMenuMovie, nIndex + IDM_EFFECTTIME_VERY_FAST, MF_CHECKED);
     }
 
-	if (CSettingsProvider::This().StoreToEXEPath()) ::EnableMenuItem(hMenuSettings, IDM_EDIT_USER_CONFIG, MF_BYCOMMAND | MF_GRAYED);
 	if (CParameterDB::This().IsEmpty()) ::EnableMenuItem(hMenuSettings, IDM_BACKUP_PARAMDB, MF_BYCOMMAND | MF_GRAYED);
 	if (m_bFullScreenMode) ::EnableMenuItem(hMenuZoom, IDM_FIT_WINDOW_TO_IMAGE, MF_BYCOMMAND | MF_GRAYED);
 	if (!m_bFullScreenMode) ::EnableMenuItem(hMenuZoom, IDM_SPAN_SCREENS, MF_BYCOMMAND | MF_GRAYED);
@@ -2031,8 +2030,8 @@ void CMainDlg::SetAsDefaultViewer() {
 	}
 	MouseOn();
 
-	if (Helpers::GetWindowsVersion() >= 602) {
-		// Its Windows 8 or later
+	if (Helpers::GetWindowsVersion() >= 601) {
+		// It is Windows 7 or 8 or later, launch the system provided assiciation setting dialog
 		CFileExtensionsRegistrationWindows8 registry;
 		if (registry.RegisterJPEGView()) {
 			registry.LaunchApplicationAssociationDialog();
