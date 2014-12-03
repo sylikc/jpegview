@@ -369,4 +369,8 @@ Upcounting	За зростанням
 Downcounting	За зменшенням
 File size	Розмір файла
 Delete image file	Видалити файл зображення
+Hour / Minute (as numbers)	Година / Хвилина (цифрами)
+Set as desktop wallpaper	Встановити як шпалери
+Use original image	Використовувати оригінальні зображення
+Use processed image as displayed	Використовувати оброблене зображення, як показано
 

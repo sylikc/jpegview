@@ -228,7 +228,7 @@ Edit user settings...	Editar definições de utilizador...
 Backup parameter DB...	Criar cópia de segurança dos parâmetros da BD...
 Restore parameter DB...	Restaurar cópia de segurança dos parâmetros da BD...
 No user INI file exits yet. Create user INI file from INI file template?	Não existe qualquer ficheiro INI. Criar ficheiro INI com base no modelo de ficheiros INI?
-Copying parameter DB to file '%s' failed. Reason: %s	Falha ao copiar o ficheiro de parâmetros da BD %s2. Motivo: %s
+Copying parameter DB to file '%s' failed. Reason: %s	Falha ao copiar os parâmetros da BD para %s. Motivo: %s
 Select parameter DB to restore	Selecione o ficheiro de parâmetros de BD a restaurar
 Conflicting entries in Param DB	Existem entradas com conflitos nos parâmetros da BD
 The imported param DB contains entries already present in active param DB.	O ficheiro de parâmetros da BD a importar contém entradas já existentes nos parâmetros ativos.
@@ -380,3 +380,7 @@ Sharpen low	Acentuação ligeira
 Sharpen medium	Acentuação média
 The new size is too large - width or height is larger than 65535 or total number of pixels is too large!	O novo tamanho é muito grande. A largura ou a altura é superior a 65535 ou o número total de pixeis é muito grande!
 JPEGView is a lean, fast and highly configurable viewer/editor for JPEG, BMP, PNG, WEBP, TGA, GIF and TIFF images with a minimal GUI.	O JPEGView é um editor e visualizador de imagens JPEG, BMP, PNG, WEBP, TGA, GIF e TIFF rápido, bastante configurável e com uma interface muito simples.
+Hour / Minute (as numbers)	Hora/Minuto (numérico)
+Set as desktop wallpaper	Definir como papel de parede
+Use original image	Utilizar imagem original
+Use processed image as displayed	Utilizar imagem tal e qual como mostrada

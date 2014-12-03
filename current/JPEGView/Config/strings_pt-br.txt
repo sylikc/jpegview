@@ -378,3 +378,7 @@ Sharpen low	Acentuação ligeira
 Sharpen medium	Acentuação média
 The new size is too large - width or height is larger than 65535 or total number of pixels is too large!	O novo tamanho é muito grande. A largura ou a altura é superior a 65535 ou o número total de pixeis é muito grande!
 JPEGView is a lean, fast and highly configurable viewer/editor for JPEG, BMP, PNG, WEBP, TGA, GIF and TIFF images with a minimal GUI.	O JPEGView é um editor e visualizador de imagens JPEG, BMP, PNG, WEBP, TGA, GIF e TIFF rápido, bastante configurável e com uma interface muito simples.
+Hour / Minute (as numbers)	Hora/Minuto (numérico)
+Set as desktop wallpaper	Definir como papel de parede
+Use original image	Utilizar imagem original
+Use processed image as displayed	Utilizar imagem tal e qual como mostrada
