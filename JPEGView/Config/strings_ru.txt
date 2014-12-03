@@ -1,11 +1,11 @@
-﻿// Этот файл должен иметь кодировку UTF-8 (подойдёт, например, Блокнот Windows)
-// Имя файла должно иметь вид 'strings_%languagecode%.txt' (где %languagecode% - код языка согласно ISO 639, пример: 'fr' это французский)
+﻿// Этот файл должен иметь кодировку UTF-8 (например, подойдёт Блокнот Windows)
+// Имя файла должно иметь вид 'strings_%languagecode%.txt' (где %languagecode% - код языка согласно ISO 639, пример: 'fr' –  французский)
 // Формат: Английская строка<tab>Переведённая строка<cr/lf>
 //Language=Russian
 //TranslatorName=Dmitry Yerokhin
 //Contact=erodim@mail.ru
 //TranslatorURL=none
-//LastUpdated=Feb 28, 2014
+//LastUpdated=Dec 01, 2014
 //
 Contrast	Контрастность
 Brightness	Яркость
@@ -19,8 +19,8 @@ Parameter DB:	Параметры:
 Save to	Сохранить в БД
 Remove from	Удалить из БД
 Rename:	Переименовать:
-No file or folder name was provided as command line parameter!	В командной строке не указано имя файла или папки
-To use JPEGView, associate JPG, JPEG and BMP files with JPEGView.	Для удобства использования JPEGView ассоциируйте программу с файлами JPG, JPEG и BMP.
+No file or folder name was provided as command line parameter!	Не указано имя файла или папки в командной строке
+To use JPEGView, associate JPG, JPEG and BMP files with JPEGView.	Для удобства ассоциируйте JPEGView с файлами JPG, JPEG и BMP.
 Press ESC to exit...	Нажмите ESC для выхода...
 The file '%s' could not be read!	Невозможно прочитать файл '%s'.
 The file '%s' does not contain a list of file names!	В файле '%s' нет списка имён файлов.
@@ -42,11 +42,11 @@ Increase/decrease lightening of shadows (LDC must be on)	Усилить/осла
 Increase/decrease darkening of highlights (LDC must be on)	Усилить/ослабить притемнение светов (нужно включить ЛПЯ)
 Loop through files in current folder	Циклический просмотр файлов в текущей папке
 Loop through files in current directory and all subfolders	Циклический просмотр файлов в текущей папке и её подпапках
-Loop through files in current directory and all sibling folders (folders on same level)	Циклический просмотр файлов в текущей папке и всех папках того же уровня
+Loop through files in current directory and all sibling folders (folders on same level)	Цикличный просмотр файлов в текущей папке и всех папках того же уровня
 Maximize/restore to/from virtual desktop (only for multi-monitor systems)	Распахнуть/восстановить на/из виртуальный рабочий стол (для мультимониторных систем)
 Copy screen to clipboard/ Copy processed full size image to clipboard	Скопировать в буфер обмена экран/обработанное полноразмерное изображение
 Open new image or slideshow file	Открыть новое изображение или файл со слайдшоу
-Save processed image to JPEG file (original size)	Сохранить обработанное изображение как файл JPEG (исходного размера)
+Save processed image to JPEG file (original size)	Сохранить обработанное изображение как JPEG (исходного размера)
 Save (%s)/ delete (%s) image processing parameters in/from parameter DB	Сохранить (%s) / удалить (%s) параметры обработки изображения в базе данных
 Sort images by creation date, resp. modification date, resp. file name	Сортировка изображений: по дате создания (C), изменения (M), имени файла (N), случайно (Z)
 Goto previous image	Перейти к предыдущему изображению
@@ -60,7 +60,7 @@ Increase/decrease sharpness	Увеличить/уменьшить резкост
 Increase/decrease auto color cast correction amount	Увеличить/уменьшить автокоррекцию цвета
 Increase/decrease auto contrast correction amount	Увеличить/уменьшить автокоррекцию контрастности
 Enable/disable landscape picture enhancement mode	Включить/выключить режим улучшения изображений
-Slide show with timeout of n seconds (ESC to stop)	Запустить слайдшоу с интервалом N сек (ESC - стоп)
+Slide show with timeout of n seconds (ESC to stop)	Запустить слайдшоу с интервалом N сек (Esc - стоп)
 Set timeout to n/10 sec, respectively n/100 sec (Ctrl+Shift)	Задать интервал N/10 сек или N/100 сек (Ctrl+Shift)
 Rotate image and fit to screen	Повернуть изображение и вписать в экран
 Fit image to screen	Вписать изображение в экран
@@ -77,9 +77,9 @@ Left mouse & drag	Перетаскивание с ЛКМ
 Ctrl + L mouse	Ctrl + ЛКМ
 Forward mouse button	Кнопка мыши 'Вперёд'
 Back mouse button	Кнопка мыши 'Назад'
-Delete current file on disk permanently	Окончательно удалить текущий файл с диска
-Rotate current file on disk lossless by 90 deg (W/H must be multiple of 16)	Повернуть текущий файл на диске без потерь на 90° вправо (Ш/В должны быть кратны 16)
-Rotate current file on disk lossless by 270 deg (W/H must be multiple of 16)	Повернуть текущий файл на диске без потерь на 90° влево (Ш/В должны быть кратны 16)
+Delete current file on disk permanently	Удалить этот файл с диска окончательно
+Rotate current file on disk lossless by 90 deg (W/H must be multiple of 16)	Повернуть на 90° вправо без потерь в файле на диске (Ш/В должны быть кратны 16)
+Rotate current file on disk lossless by 270 deg (W/H must be multiple of 16)	Повернуть на 90° влево без потерь в файле на диске (Ш/В должны быть кратны 16)
 The file is read-only!	Этот файл только для чтения!
 Can't rename file	Невозможно переименовать файл
 New name contains backslash character!	В новом имени содержится обратная косая черта (\).
@@ -98,25 +98,25 @@ These values will override the values from the INI file located in the program f
 Confirm save default parameters	Сохранить параметры по умолчанию?
 Images	Изображения
 All Files	Все файлы
-Parameter DB file '%s' could not be opened!	Невозможно открыть файл '%s' c БД параметров.
-Parameter DB file '%s' is not valid (invalid header)!	Неверный файл '%s' с БД параметров (недопустимый заголовок).
-Cannot write to parameter DB file '%s'!	Невозможно выполнить запись в файл '%s' с БД параметров.
-Cannot read from parameter DB file '%s'!	Невозможно выполнить чтение из файла '%s' с БД параметров.
-Cannot read parameter DB file '%s' because it is too large!	Невозможно прочитать файл '%s' с БД параметров: он слишком велик.
-The parameter DB file '%s' has been created by a newer version of JPEGView!	Файл '%s' с БД параметров создан более новой версией JPEGView.
-The old parameter DB file '%s' could not be renamed during conversion to new format!	Не удалось переименовать старый файл '%s' с БД параметров при преобразовании в новый формат.
-Parameter DB error	Ошибка в БД параметров
+Parameter DB file '%s' could not be opened!	Невозможно открыть файл '%s' c базой параметров.
+Parameter DB file '%s' is not valid (invalid header)!	Неверный файл '%s' с базой параметров (недопустимый заголовок).
+Cannot write to parameter DB file '%s'!	Невозможно записать файл '%s' с базой параметров.
+Cannot read from parameter DB file '%s'!	Невозможно прочитать файл '%s' с базой параметров.
+Cannot read parameter DB file '%s' because it is too large!	Невозможно прочитать файл '%s' с базой параметров: он слишком велик.
+The parameter DB file '%s' has been created by a newer version of JPEGView!	Файл '%s' с базой параметров создан более новой версией JPEGView.
+The old parameter DB file '%s' could not be renamed during conversion to new format!	Не удалось переименовать старый файл '%s' с базой параметров при преобразовании в новый формат.
+Parameter DB error	Ошибка в базе параметров
 Error saving file	Ошибка сохранения файла
 Error writing file to disk!	Ошибка записи файла на диск.
 Confirm	Подтвердите
-Do you really want to permanently delete the file %filename%?	Вы действительно хотите удалить файл %filename%?
+Do you really want to permanently delete the file %filename%?	Удалить файл %filename% окончательно?
 Rotate the following file lossless by 90 deg?\n%filename%	Повернуть этот файл без потерь на 90° вправо?\n%filename%
 Rotate the following file lossless by 270 deg?\n%filename%	Повернуть этот файл без потерь на 90° влево?\n%filename%
 Open image...	Открыть изображение...
 Save processed image...	Сохранить обработанное изображение...
 Reload image	Перезагрузить изображение
 Copy to clipboard	Скопировать в буфер обмена
-Copy original size image	Скопировать в буфер обмена с исходным размером
+Copy original size image	Скопировать с исходным размером
 Paste from clipboard	Вставить из буфера обмена
 Batch rename/copy...	Пакетное переименование/копирование...
 Show picture info (EXIF)	Сведения об изображении (EXIF)
@@ -124,8 +124,8 @@ Show filename	Имя файла
 Navigation	Навигация
 Loop folder	Циклично в папке
 Loop recursively	Циклично с вложенными папками
-Loop siblings	Циклично с папками того же уровня вложенности
-Display order	Порядок вывода (сортировка)
+Loop siblings	Циклично с папками той же вложенности
+Display order	Сортировка при показе
 Modification date	Дата изменения
 Creation date	Дата создания
 Play folder as slideshow/movie	Слайдшоу/фильм из файлов в папке
@@ -138,8 +138,8 @@ Rotate -90	Повернуть на 90° влево
 Rotate 180	Повернуть на 180°
 Auto correction	Автокоррекция
 Local density correction	Коррекция светов/теней
-Keep parameters	Помнить параметры обработки при смене изображений
-Set current parameters as default values...	Сохранить текущие параметры как стандартные значения...
+Keep parameters	Запоминать параметры
+Set current parameters as default values...	Сохранить текущие параметры как стандартные...
 Save parameters to DB	Сохранить параметры в базе данных
 Clear parameters from DB	Удалить параметры из базы данных
 Zoom	Масштабирование
@@ -227,16 +227,16 @@ Window mode	Оконный режим
 Save as (in screen size/resolution)	Сохранить как (в экранном размере/разрешении)
 Save processed image to JPEG file (screen size)	Сохранить обработанное изображение как файл JPEG (экранного размера)
 Settings/Admin	Настройки
-Edit global settings...	Изменить общие параметры...
-Edit user settings...	Изменить пользовательские параметры...
+Edit global settings...	Общие настройки...
+Edit user settings...	Пользовательские настройки...
 Backup parameter DB...	Сделать резервную копию БД с параметрами...
 Restore parameter DB...	Восстановить из копии БД с параметрами...
-No user INI file exits yet. Create user INI file from INI file template?	Пользовательского INI-файла пока не существует. Создать его из шаблона INI-файла?
+No user INI file exits yet. Create user INI file from INI file template?	Пользовательского INI-файла пока нет. Создать его из шаблона INI-файла?
 Copying parameter DB to file '%s' failed. Reason: %s	Ошибка копирования БД параметров в файл '%s'. Причина: %s
 Select parameter DB to restore	Выберите БД параметров для восстановления
 Conflicting entries in Param DB	Конфликт записей в БД параметров
-The imported param DB contains entries already present in active param DB.	Импортированная БД параметров содержит записи, которые уже присутствуют в активной БД.
-Shall existing entries be preserved (Yes) or be overriden by the imported entries (No)?	Имеющиеся записи следует сохранить ('Да') или перезаписать их импортированными ('Нет')?
+The imported param DB contains entries already present in active param DB.	В импортированной БД параметров есть записи, которые уже присутствуют в активной БД.
+Shall existing entries be preserved (Yes) or be overriden by the imported entries (No)?	Сохранить имеющиеся записи ('Да') или перезаписать их импортированными ('Нет')?
 Select file to display in 'File Open' dialog	Выберите файл для показа в диалоге открытия файлов
 Crop Mode	Режим обрезки
 Free	Произвольно
@@ -250,7 +250,7 @@ Image Pixels	Исходные пикселы
 Set modification date	Установить дату изменения
 to current date	по текущей дате
 to EXIF date	по дате в EXIF
-Mark image for toggling. Use %s to toggle between marked and current image	Отметить файл (%s - переключение между отмеченным и текущим изображениями)
+Mark image for toggling. Use %s to toggle between marked and current image	Отметить файл (%s - отмеченное <-> текущее изображения)
 Saturation	Насыщенность
 Unsharp mask...	Нерезкая маска...
 Apply Unsharp Mask	Применить нерезкую маску
@@ -271,7 +271,7 @@ Auto crop rotated image (avoids black border)	Автообрезка изобр�
 Align image to horizontal or vertical line	Выравнивание изображения по горизонтальной или вертикальной линии
 Use the mouse to draw a line that shall be horizontal or vertical.	Проведите мышью линию, которая должна стать горизонтальной или вертикальной.
 Rotate the image by dragging with the mouse.	Вращайте изображение, перетаскивая по нему мышь.
-The operation failed because not enough memory is available!	Ошибка операции: недостаточно памяти.
+The operation failed because not enough memory is available!	Операция не выполнена: недостаточно памяти.
 to EXIF date (all files in folder)	по дате в EXIF (для всех файлов в папке)
 Number of JPEG files in folder: %d	Файлов JPEG в папке: %d
 EXIF date successfully set on %d images, failed on %d images	Установка EXIF-даты: %d - да, %d - нет
@@ -286,19 +286,19 @@ Correct converging lines (perspective correction)	Коррекция сходя�
 Perspective Correction	Коррекция перспективы
 Perspective correction...	Коррекция перспективы...
 Auto crop corrected image (avoids black border)	Автообрезка при коррекции (избегать чёрных полей)
-Click and drag the mouse vertically to correct image tilt.	Перетаскивайте мышь вертикально, чтобы устранить/изменить наклон изображения.
+Click and drag the mouse vertically to correct image tilt.	Перетащите мышь вертикально, чтобы устранить/изменить наклон изображения.
 Drag at the left or right border for asymmetric correction.	Перетаскивайте мышь к левому или правому краю для несимметричной коррекции.
 Fit window to image	Подгонка окна по изображению
 Keep aspect ratio on crop	Соблюдение пропорций при обрезке
 Lossless JPEG transformations	Преобразование JPEG без потерь
 Performing the lossless transformation failed!	Ошибка преобразования без потерь данных!
 Image width and height must be dividable by the JPEG block size (8 or 16) for lossless transformations!	Для преобразования без потерь ширина и высота изображения должны быть кратны размеру блока JPEG (8 или 16).
-Reading the JPEG file from disk failed	Ошибка чтения с диска файла JPEG
+Reading the JPEG file from disk failed	Ошибка чтения файла JPEG с диска
 Writing the resulting JPEG file to disk failed	Ошибка записи на диск результирующего файла JPEG
 Performing the transformation failed	Ошибка преобразования
-The transformation can be applied if the image is trimmed to the next matching size but this will remove some border pixels.	Преобразование можно выполнить, если обрезать изображение до ближайшего кратного блоку значения. При этом некоторое количество пикселов с краёв изображения будет удалено
-Trim the image and apply transformation? Trimming cannot be undone!	Обрезать изображение и выполнить преобразование? Обрезка не может быть отменена!
-Note: Set the key 'TrimWithoutPromptLosslessJPEG=true' in the INI file to always trim without showing this message.	Примечание: чтобы обрезка выполнялась без показа этого сообщения, установите в INI-файле ключ 'TrimWithoutPromptLosslessJPEG=true'.
+The transformation can be applied if the image is trimmed to the next matching size but this will remove some border pixels.	Преобразование возможно, если обрезать изображение до ближайшего кратного блоку значения (и потерять некоторое количество пикселов с краёв).
+Trim the image and apply transformation? Trimming cannot be undone!	Обрезать и преобразовать изображение? Обрезка не может быть отменена!
+Note: Set the key 'TrimWithoutPromptLosslessJPEG=true' in the INI file to always trim without showing this message.	Примечание: чтобы при обрезке не было этого сообщения, установите в INI-файле ключ 'TrimWithoutPromptLosslessJPEG=true'.
 Transition Effect	Эффект смены слайдов
 None	Нет
 Blend	Смешивание
@@ -322,7 +322,7 @@ Slow	Медленно
 Very slow	Очень медленно
 Error	Ошибка
 Warning	Внимание
-Error while writing the following registry key:	Ошибка при записи ключа реестра:
+Error while writing the following registry key:	Ошибка записи ключа реестра:
 Set as default viewer...	Назначить программой просмотра по умолчанию...
 Set JPEGView as default image viewer	Назначить JPEGView стандартной программой просмотра графики
 JPEGView is registered as default viewer for the selected file formats.	Установите/снимите отметки у типов файлов для регистрации/отмены регистрации JPEGView как стандартной программы их просмотра.
@@ -331,20 +331,20 @@ Extension	Расширение
 File type	Тип файла
 The following file extensions cannot be unregistered because they have been registered in the 'local machine' registry area.	У этих файловых расширений нельзя снять регистрацию, так как в реестре они зарегистрированы в ветви 'Local Machine'.
 Registering or unregistering file extensions in this registry area requires administration privileges and cannot be done in JPEGView.	Регистрация и отмена регистрации файловых расширений в этой области реестра требует прав администратора и не может быть выполнена в JPEGView.
-Press 'OK' to continue with registration or 'Cancel' to not modify any registrations.	Нажмите OK, чтобы выполнить регистрацию. Нажмите 'Отмена', чтобы не изменять никаких регистраций файлов.
+Press 'OK' to continue with registration or 'Cancel' to not modify any registrations.	OK - зарегистрировать, 'Отмена' - не изменять никаких регистраций файлов.
 Unregistering not possible	Отмена регистрации невозможна
 %s images	Изображения %s
 %s images (processed by Window Imaging Component - WIC)	Изображения %s (обработка Window Imaging Component - WIC)
 %s camera raw images (embedded JPEGs only)	Raw-изображения %s (только встроенные JPEG)
-The following image extensions are protected by the operating system.	Следующие расширения графических файлов защищены операционной системой.
+The following image extensions are protected by the operating system.	Эти расширения графических файлов защищены операционной системой.
 JPEGView can try to remove the restrictions automatically.	JPEGView может попытаться удалить ограничения автоматически.
-However this will fail if the current user has no administration privileges.	Однако если у текущего пользователя нет прав администратора, это не сработает.
+However this will fail if the current user has no administration privileges.	При этом текущий пользователь должен обладать правами администратора.
 Insufficient rights to remove the restrictions. Continue?	Недостаточно прав для удаления ограничений. Продолжить?
 No image loaded!	Не загружено изображение!
-Right mouse button: Context menu	Правая кнопка мыши: контекстное меню
-Windows 8 blocks JPEGView from changing the default program for these file endings.	Windows 8 не позволяет JPEGView изменять стандартную программу для файлов с этими расширениями.
+Right mouse button: Context menu	Правая кнопка мыши: Контекстное меню
+Windows 8 blocks JPEGView from changing the default program for these file endings.	Windows 8 не позволяет изменять стандартную программу для файлов с этими расширениями.
 Use the 'Default Programs' configuration dialog from the operating system instead.	Используйте системное диалоговое окно 'Программы по умолчанию'.
-Alternatively, right click an image file of the given type in Windows Explorer and select 'Open with... > Choose default program'	Кроме того, можно щёлкнуть правой кнопкой мыши по графическому файлу нужного типа в Проводнике Windows и выбрать 'Открыть с помощью > Выбрать программу'.
+Alternatively, right click an image file of the given type in Windows Explorer and select 'Open with... > Choose default program'	Также можно щёлкнуть правой кнопкой мыши по графическому файлу нужного типа в Проводнике и выбрать 'Открыть с помощью > Выбрать программу'.
 User commands	Пользовательские команды
 Open image with	Открыть изображение в...
 Manage 'Open image with' menu...	Настройка меню 'Открыть в...'
@@ -357,7 +357,7 @@ New	Создать
 Delete	Удалить
 Modifier keys:	Модификаторы:
 Known keys:	Известные клавиши:
-Combine keys with '+'	Сочетайте клавиши с '+'
+Combine keys with '+'	Сочетайте клавиши с помощью '+'
 Example:	Пример:
 Shortcut Help	Справка по клавишам
 [new entry]	[новый элемент]
@@ -368,7 +368,7 @@ Edit	Изменить
 Upcounting	По возрастанию
 Downcounting	По убыванию
 File size	Размер файла
-Do you really want to delete the current image file on disk?	Вы действительно хотите удалить текущий графический файл с диска?
+Do you really want to delete the current image file on disk?	Удалить текущий графический файл с диска?
 Delete image file	Удалить графический файл
 Change size...	Изменить размер...
 Resize Image	Изменение размера изображения
@@ -381,5 +381,9 @@ Box	Box
 Lanczos/Bicubic	Lanczos/бикубический
 Sharpen low	Резкость слабо
 Sharpen medium	Резкость средне
-The new size is too large - width or height is larger than 65535 or total number of pixels is too large!	Новый размер слишком велик - ширина или высота больше 65535 пикселов, либо слишком большое общее количество пикселов!
-JPEGView is a lean, fast and highly configurable viewer/editor for JPEG, BMP, PNG, WEBP, TGA, GIF and TIFF images with a minimal GUI.	JPEGView - это компактная и быстрая программа просмотра/редактор изображений в форматах JPEG, BMP, PNG, WEBP, TGA, GIF и TIFF с богатыми возможностями настройки и минимальным графическим интерфейсом.
+The new size is too large - width or height is larger than 65535 or total number of pixels is too large!	Новый размер слишком велик - ширина или высота превышают 65535 пикселов, либо слишком большое общее количество пикселов!
+JPEGView is a lean, fast and highly configurable viewer/editor for JPEG, BMP, PNG, WEBP, TGA, GIF and TIFF images with a minimal GUI.	JPEGView - это компактная и быстрая программа просмотра/редактор изображений в форматах JPEG, BMP, PNG, WEBP, TGA, GIF и TIFF с богатыми возможностями настройки и минималистским графическим интерфейсом.
+Hour / Minute (as numbers)	час / минута (цифрами)
+Set as desktop wallpaper	Сделать рисунком рабочего стола
+Use original image	Исходное изображение
+Use processed image as displayed	Обработанное изображение (как на экране)

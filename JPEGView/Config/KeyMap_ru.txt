@@ -1,4 +1,4 @@
-// Файл с назначениями клавиш для программы JPEGView.		Перевод (140318): Дмитрий Ерохин (erodim@mail.ru)
+// Файл с назначениями клавиш для программы JPEGView.		Перевод (141201): Дмитрий Ерохин (erodim@mail.ru)
 // Не повредите этот файл, иначе не будут работать никакие клавиши!
 // На одну команду можно назначать несколько клавиш, но нельзя назначать несколько команд на одну клавишу!
 // Чтобы использовать этот файл вместо исходного (англоязычного), его нужно переименовать в KeyMap.txt
@@ -16,15 +16,15 @@
 #define IDM_COPY_FULL		2500			// скопировать изображение в буфер обмена с исходным размером
 #define IDM_PASTE		2550			// вставить изображение из буфера обмена
 #define IDM_BATCH_COPY		2600			// открыть диалоговое окно пакетного копирования
-#define IDM_RENAME		2610			// rename current file, only works when image processing panel can be shown (i.e. panel not disabled in INI and window size big enough)
+#define IDM_RENAME		2610			// переименовать текущий файл - работает, только если возможен вывод панели обработки изображений (т.е. панель не запрещена в INI-файле и размер окна достаточно велик)
 #define IDM_MOVE_TO_RECYCLE_BIN	2620			// удалить текущий файл с диска - без подтверждения (переместить в Корзину)
 #define IDM_MOVE_TO_RECYCLE_BIN_CONFIRM 2621		// удалить текущий файл с диска - с запросом подтверждения (переместить в Корзину)
-#define IDM_MOVE_TO_RECYCLE_BIN_CONFIRM_PERMANENT_DELETE 2622 // delete the current file on disk - confirmation when no recycle bin for this drive
+#define IDM_MOVE_TO_RECYCLE_BIN_CONFIRM_PERMANENT_DELETE 2622 // удалить текущий файл с диска - с запросом, когда для данного диска не используется Корзина
 #define IDM_TOUCH_IMAGE		2700			// установить время изменения по текущему времени
 #define IDM_TOUCH_IMAGE_EXIF 	2710			// установить время изменения по времени в EXIF
 #define IDM_TOUCH_IMAGE_EXIF_FOLDER 2720		// установить время изменения по времени в EXIF для всех изображений в папке
-#define IDM_SET_WALLPAPER_ORIG  2770			// Set original image file as desktop wallpaper
-#define IDM_SET_WALLPAPER_DISPLAY 2774			// Set image as displayed as desktop wallpaper
+#define IDM_SET_WALLPAPER_ORIG  2770			// сделать исходное изображение рисунком рабочего стола Windows
+#define IDM_SET_WALLPAPER_DISPLAY 2774			// сделать показываемое на экране изображение рисунком рабочего стола Windows
 #define IDM_SHOW_FILEINFO   	2800			// включить/выключить показ информации о файле и EXIF-данных в верхнем левом углу
 #define IDM_SHOW_FILENAME	3000			// включить/выключить показ имени файла вверху экрана
 #define IDM_SHOW_NAVPANEL   	3100			// включить/выключить показ панели навигации
@@ -127,6 +127,7 @@
 
 // Раскомментируйте следующую строку, если хотите немедленно прекращать работу JPEGView клавишей Esc при воспроизведении анимации или слайдшоу
 // Esc                    IDM_EXIT
+MouseDblClk             IDM_EXIT
 PgDn                    IDM_NEXT
 Right                   IDM_NEXT
 Space                   IDM_NEXT

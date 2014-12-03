@@ -376,3 +376,7 @@ Lanczos/Bicubic	Lanczos/Bicubic
 Sharpen low	Contrasto basso 
 Sharpen medium	Contrasto medio
 The new size is too large - width or height is larger than 65535 or total number of pixels is too large!	La nuova dimensione è troppo grande - larghezza o altezza sono maggiori di 65535 oppure il numero totale di pixel è troppo grande!
+Hour / Minute (as numbers)	Ore / Minuti (come numeri)
+Set as desktop wallpaper	Imposta come sfondo del desktop
+Use original image	Usa immagine originale
+Use processed image as displayed	Usa immagine modificata come visualizzata
