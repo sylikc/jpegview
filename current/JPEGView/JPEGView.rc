@@ -357,6 +357,7 @@ BEGIN
         MENUITEM SEPARATOR
         POPUP "Settings/Admin"
         BEGIN
+			MENUITEM "Edit global settings...", IDM_EDIT_GLOBAL_CONFIG
             MENUITEM "Edit user settings...",       IDM_EDIT_USER_CONFIG
             MENUITEM "Manage 'Open image with' menu...", IDM_MANAGE_OPEN_WITH_MENU
             MENUITEM SEPARATOR

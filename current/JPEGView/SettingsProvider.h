@@ -102,6 +102,7 @@ public:
 	bool RTPreserveAspectRatio() { return m_bRTPreserveAspectRatio; }
     LPCTSTR FileNameFormat() { return m_sFileNameFormat; }
     bool ReloadWhenDisplayedImageChanged() { return m_bReloadWhenDisplayedImageChanged; }
+	bool AllowEditGlobalSettings() { return m_bAllowEditGlobalSettings; }
 
 	std::list<CUserCommand*> & UserCommandList() { return m_userCommands; }
 	std::list<CUserCommand*> & OpenWithCommandList() { return m_openWithCommands; }
@@ -230,6 +231,7 @@ private:
 	bool m_bRTPreserveAspectRatio;
     CString m_sFileNameFormat;
     bool m_bReloadWhenDisplayedImageChanged;
+	bool m_bAllowEditGlobalSettings;
 
 	std::list<CUserCommand*> m_userCommands;
 	std::list<CUserCommand*> m_openWithCommands;

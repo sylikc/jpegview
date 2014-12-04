@@ -187,7 +187,7 @@ static LPCTSTR* GetSupportedFileEndingList() {
 }
 
 CFileList::CFileList(const CString & sInitialFile, CDirectoryWatcher & directoryWatcher, 
-	Helpers::ESorting eInitialSorting, bool isSortedUpcounting, bool bWrapAroundFolder, int nLevel)
+	Helpers::ESorting eInitialSorting, bool isSortedUpcounting, bool bWrapAroundFolder, int nLevel, bool forceSorting)
     : m_directoryWatcher(directoryWatcher) {
 
 	CFileDesc::SetSorting(eInitialSorting, isSortedUpcounting);
@@ -228,6 +228,7 @@ CFileList::CFileList(const CString & sInitialFile, CDirectoryWatcher & directory
 		}
 	} else {
 		sm_eMode = Helpers::NM_LoopDirectory;
+		if (forceSorting) m_fileList.sort();
 		m_iter = m_iterStart = m_fileList.begin();
 	}
 }
