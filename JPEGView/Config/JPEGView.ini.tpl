@@ -262,6 +262,9 @@ DeleteConfirmation=OnlyWhenNoRecycleBin
 ; and disables the commands for deletion (IDM_MOVE_TO_RECYCLE_BIN etc.)
 AllowFileDeletion=true
 
+; Set to true to show the menu item that allows editing the global INI file
+AllowEditGlobalSettings=false
+
 ; Only for multi-monitor systems!
 ; Monitor to start the application on
 ; -1: Use monitor with largest resolution, primary monitor if several monitors have the same resolution

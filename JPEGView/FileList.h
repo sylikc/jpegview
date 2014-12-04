@@ -59,7 +59,7 @@ public:
 	// Supported text files are ANSI, Unicode or UTF-8.
 	// nLevel is increased when recursively create lists for sub-folders
 	CFileList(const CString & sInitialFile, CDirectoryWatcher & directoryWatcher, 
-		Helpers::ESorting eInitialSorting, bool isSortedUpcounting, bool bWrapAroundFolder, int nLevel = 0);
+		Helpers::ESorting eInitialSorting, bool isSortedUpcounting, bool bWrapAroundFolder, int nLevel = 0, bool forceSorting = false);
 	~CFileList();
 
 	// Gets a list of all supported file endings, separated by semicolon

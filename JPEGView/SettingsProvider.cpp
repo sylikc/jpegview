@@ -317,6 +317,7 @@ void CSettingsProvider::ReadWriteableINISettings() {
     m_sFileNameFormat = GetString(_T("FileNameFormat"), _T("%index% %filepath%"));
     m_sFileNameFormat = ReplacePlaceholdersFileNameFormat(m_sFileNameFormat);
     m_bReloadWhenDisplayedImageChanged = GetBool(_T("ReloadWhenDisplayedImageChanged"), true);
+	m_bAllowEditGlobalSettings = GetBool(_T("AllowEditGlobalSettings"), false);
 }
 
 CImageProcessingParams CSettingsProvider::LandscapeModeParams(const CImageProcessingParams& templParams) {

@@ -358,7 +358,8 @@ LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam
 
 	// intitialize navigation with startup file (and folder)
 	m_pFileList = new CFileList(m_sStartupFile, *m_pDirectoryWatcher,
-		(m_eForcedSorting == Helpers::FS_Undefined) ? sp.Sorting() : m_eForcedSorting, sp.IsSortedUpcounting(), sp.WrapAroundFolder());
+		(m_eForcedSorting == Helpers::FS_Undefined) ? sp.Sorting() : m_eForcedSorting, sp.IsSortedUpcounting(), sp.WrapAroundFolder(),
+		0, m_eForcedSorting != Helpers::FS_Undefined);
 	m_pFileList->SetNavigationMode(sp.Navigation());
 
 	// create thread pool for processing requests on multiple CPU cores
@@ -1139,6 +1140,10 @@ LRESULT CMainDlg::OnContextMenu(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam,
 
 	::EnableMenuItem(hMenuMovie, IDM_SLIDESHOW_START, MF_BYCOMMAND | MF_GRAYED);
 	::EnableMenuItem(hMenuMovie, IDM_MOVIE_START_FPS, MF_BYCOMMAND | MF_GRAYED);
+
+	if (!CSettingsProvider::This().AllowEditGlobalSettings()) {
+		::DeleteMenu(hMenuSettings, 0, MF_BYPOSITION);
+	}
 
 	bool bCanPaste = ::IsClipboardFormatAvailable(CF_DIB);
 	if (!bCanPaste) ::EnableMenuItem(hMenuTrackPopup, IDM_PASTE, MF_BYCOMMAND | MF_GRAYED);
@@ -2030,8 +2035,8 @@ void CMainDlg::SetAsDefaultViewer() {
 	}
 	MouseOn();
 
-	if (Helpers::GetWindowsVersion() >= 601) {
-		// It is Windows 7 or 8 or later, launch the system provided assiciation setting dialog
+	if (Helpers::GetWindowsVersion() >= 602) {
+		// It is Windows 8 or later, launch the system provided assiciation setting dialog
 		CFileExtensionsRegistrationWindows8 registry;
 		if (registry.RegisterJPEGView()) {
 			registry.LaunchApplicationAssociationDialog();
