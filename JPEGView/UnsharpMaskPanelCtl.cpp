@@ -5,6 +5,7 @@
 #include "UnsharpMaskPanelCtl.h"
 #include "UnsharpMaskPanel.h"
 #include "NavigationPanelCtl.h"
+#include "ImageProcPanelCtl.h"
 #include "SettingsProvider.h"
 #include "NLS.h"
 
@@ -97,4 +98,5 @@ void CUnsharpMaskPanelCtl::OnApplyUnsharpMask(void* pContext, int nParameter, CB
 	}
 	::SetCursor(hOldCursor);
 	pThis->TerminateUnsharpMaskPanel();
+	pThis->m_pMainDlg->GetImageProcPanelCtl()->ShowHideSaveDBButtons();
 }

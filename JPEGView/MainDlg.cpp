@@ -1492,6 +1492,7 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 					HCURSOR hOldCursor = ::SetCursor(::LoadCursor(NULL, MAKEINTRESOURCE(IDC_WAIT)));
 					m_pCurrentImage->ResizeOriginalPixels(dlgResize.GetFilter(), dlgResize.GetNewSize());
 					::SetCursor(hOldCursor);
+					m_pImageProcPanelCtl->ShowHideSaveDBButtons();
 					this->Invalidate(FALSE);
 				}
 			}
@@ -1504,6 +1505,7 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 		case IDM_MIRROR_V:
 			if (m_pCurrentImage != NULL) {
 				m_pCurrentImage->Mirror(nCommand == IDM_MIRROR_H);
+				m_pImageProcPanelCtl->ShowHideSaveDBButtons();
 				this->Invalidate(FALSE);
 			}
 			break;
@@ -1757,6 +1759,7 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 		case IDM_CROP_SEL:
 			if (m_pCurrentImage != NULL) {
 				m_pCurrentImage->Crop(m_pCropCtl->GetImageCropRect(false));
+				m_pImageProcPanelCtl->ShowHideSaveDBButtons();
 				this->Invalidate(FALSE);
 				AdjustWindowToImage(false);
 			}
