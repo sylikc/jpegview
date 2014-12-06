@@ -18,6 +18,13 @@ Windows XP SP2 or later is needed to run the 32 bit version.
 Changelog
 *********
 
+[1.0.33]
+Bugs fixed:
+New features:
+Other changes:
+- Hiding parameter DB buttons when image is processed destructively as these operations cannot be stored in the
+  parameter DB.
+
 [1.0.32.2]
 Bugs fixed:
 - More tolerance on corrupt EXIF data offsets - image is now displayed in this case (without EXIF of course)

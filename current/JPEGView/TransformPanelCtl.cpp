@@ -7,6 +7,7 @@
 #include "ZoomNavigatorCtl.h"
 #include "WndButtonPanelCtl.h"
 #include "InfoButtonPanelCtl.h"
+#include "ImageProcPanelCtl.h"
 #include "KeyMap.h"
 #include "SettingsProvider.h"
 
@@ -120,6 +121,7 @@ void CTransformPanelCtl::Apply() {
 		m_pMainDlg->ExecuteCommand(IDM_FIT_TO_SCREEN_NO_ENLARGE);
 	}
 	m_pMainDlg->AdjustWindowToImage(false);
+	m_pMainDlg->GetImageProcPanelCtl()->ShowHideSaveDBButtons();
 	InvalidateMainDlg();
 }
 

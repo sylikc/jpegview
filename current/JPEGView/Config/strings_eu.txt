@@ -132,7 +132,7 @@ Rotate -90	Itzulikatu -90
 Auto correction	Berez zuzenketa
 Local density correction	Tokiko dentsitate zuzenketa
 Keep parameters	Heutsi parametroei
-Set current parameters as default values...	Gorde parametroak INI-an...
+Set current parameters as default values...	Ezarri oraingo parametroak berezko balio bezala...
 Save parameters to DB	Gorde parametroak DB-an
 Clear parameters from DB	Garbitu DB-ko parametroak
 Zoom	Zooma
