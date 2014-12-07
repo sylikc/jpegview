@@ -49,6 +49,7 @@ protected:
 	virtual void ApplyTransformation() = 0;
 	virtual void UpdatePanelTitle() = 0;
 	virtual void ExchangeTransformationParams() = 0;
+	virtual void Reset() = 0;
 
 private:
 	void Apply();
@@ -57,6 +58,7 @@ private:
 	static void OnAutoCrop(void* pContext, int nParameter, CButtonCtrl & sender);
 	static void OnKeepAspectRatio(void* pContext, int nParameter, CButtonCtrl & sender);
 	static void OnCancel(void* pContext, int nParameter, CButtonCtrl & sender);
+	static void OnReset(void* pContext, int nParameter, CButtonCtrl & sender);
 	static void OnApply(void* pContext, int nParameter, CButtonCtrl & sender);
 
 };

@@ -529,7 +529,7 @@ bool CImageLoadThread::ProcessImageAfterLoad(CRequest * request) {
 	request->Image->SetFileDependentProcessParams(request->FileName, &(request->ProcessParams));
 
 	// First do rotation, this maybe modifies the width and height
-	if (!request->Image->VerifyRotation(request->ProcessParams.Rotation)) {
+	if (!request->Image->VerifyRotation(request->ProcessParams.RotationParams)) {
 		return false;
 	}
 

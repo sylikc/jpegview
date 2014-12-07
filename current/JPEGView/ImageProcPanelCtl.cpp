@@ -144,8 +144,8 @@ bool CImageProcPanelCtl::OnMouseMove(int nX, int nY) {
 
 void CImageProcPanelCtl::ShowHideSaveDBButtons() {
 	bool bFlags = !m_pMainDlg->IsInMovieMode() && !m_pMainDlg->IsKeepParams();
-	m_pImageProcPanel->GetBtnSaveTo()->SetShow(CurrentImage() != NULL && !CurrentImage()->IsClipboardImage() && !CurrentImage()->IsDestructivlyProcessed() && bFlags);
-	m_pImageProcPanel->GetBtnRemoveFrom()->SetShow(CurrentImage() != NULL && !CurrentImage()->IsDestructivlyProcessed() && bFlags && CurrentImage()->IsInParamDB());
+	m_pImageProcPanel->GetBtnSaveTo()->SetShow(CurrentImage() != NULL && !CurrentImage()->IsClipboardImage() && !CurrentImage()->IsProcessedNoParamDB() && bFlags);
+	m_pImageProcPanel->GetBtnRemoveFrom()->SetShow(CurrentImage() != NULL && !CurrentImage()->IsProcessedNoParamDB() && bFlags && CurrentImage()->IsInParamDB());
 	m_pMainDlg->InvalidateRect(PanelRect(), FALSE);
 }
 

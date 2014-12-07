@@ -95,6 +95,53 @@ public:
 	double Threshold;
 };
 
+// Processing flags for free rotation
+enum ERotationFlags {
+	RFLAG_None = 0,
+	RFLAG_AutoCrop = 1,
+	RFLAG_KeepAspectRatio = 2
+};
+
+static inline ERotationFlags SetRotationFlag(ERotationFlags eFlags, ERotationFlags eFlagToSet, bool bValue) {
+	return bValue ? (ERotationFlags)(eFlags | eFlagToSet) : (ERotationFlags)(eFlags & ~eFlagToSet);
+};
+
+static inline bool GetRotationFlag(ERotationFlags eFlags, ERotationFlags eFlagToGet) {
+	return (eFlags & eFlagToGet) != 0;
+}
+
+// Parameters used for image rotation
+class CRotationParams {
+public:
+	explicit CRotationParams(int rotation) {
+		Rotation = rotation;
+		FreeRotation = 0;
+		Flags = RFLAG_None;
+	}
+
+	CRotationParams(int rotation, double freeRotation, ERotationFlags flags) {
+		Rotation = rotation;
+		FreeRotation = freeRotation;
+		Flags = flags;
+	}
+
+	CRotationParams(const CRotationParams& other) {
+		Rotation = other.Rotation;
+		FreeRotation = other.FreeRotation;
+		Flags = other.Flags;
+	}
+
+	CRotationParams(const CRotationParams& other, int rotation) {
+		Rotation = rotation;
+		FreeRotation = other.FreeRotation;
+		Flags = other.Flags;
+	}
+
+	int Rotation; // Main rotation in degrees, must be in [0, 90, 180, 270]
+	double FreeRotation; // Free rotation in degrees, added to Rotation, must be in [-359...360]
+	ERotationFlags Flags;
+};
+
 // Parameters used to process an image, including geometry
 class CProcessParams {
 public:
@@ -104,14 +151,14 @@ public:
 	// offsets are relative to center of image and refer to original image size (not zoomed)
 	CProcessParams(int nTargetWidth, int nTargetHeight,
         CSize monitorSize,
-        int nRotation, double dZoom, 
+		const CRotationParams& rotationParams,
+		double dZoom,
 		Helpers::EAutoZoomMode eAutoZoomMode, CPoint offsets,
 		const CImageProcessingParams& imageProcParams,
-		EProcessingFlags eProcFlags) : ImageProcParams(imageProcParams) {
+		EProcessingFlags eProcFlags) : ImageProcParams(imageProcParams), RotationParams(rotationParams) {
 		TargetWidth = nTargetWidth;
 		TargetHeight = nTargetHeight;
         MonitorSize = monitorSize;
-		Rotation = nRotation;
 		Zoom = dZoom;
 		AutoZoomMode = eAutoZoomMode;
 		Offsets = offsets;
@@ -121,7 +168,7 @@ public:
 	int TargetWidth;
 	int TargetHeight;
     CSize MonitorSize;
-	int Rotation;
+	CRotationParams RotationParams;
 	double Zoom;
 	CPoint Offsets;
 	CImageProcessingParams ImageProcParams;

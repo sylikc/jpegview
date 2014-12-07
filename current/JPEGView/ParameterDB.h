@@ -16,10 +16,10 @@ public:
 	void SetHash(__int64 h) { hash = h; }
 
 	// Initialize the DB entry given image processing parameter, processing flags and rotation
-	void InitFromProcessParams(const CImageProcessingParams & processParams, EProcessingFlags eFlags, int nRotation);
+	void InitFromProcessParams(const CImageProcessingParams & processParams, EProcessingFlags eFlags, const CRotationParams& rotationParams);
 
 	// Write DB entry values to image processing parameters, processing flags and rotation
-	void WriteToProcessParams(CImageProcessingParams & processParams, EProcessingFlags & eFlags, int & nRotation) const;
+	void WriteToProcessParams(CImageProcessingParams & processParams, EProcessingFlags & eFlags, CRotationParams & rotationParams) const;
 
 	// Initialize section of image to be displayed
 	void InitGeometricParams(CSize sourceSize, double fZoom, CPoint offsets, CSize targetSize, bool bStoreRelativeToScreenSize);
@@ -46,7 +46,7 @@ private:
 	uint8 lightenShadowSteepness;
 	uint8 colorCorrection;
 	uint8 contrastCorrection;
-	uint8 flags; // bit 0: AutoContrast, bit 1:LDC, bit 2: HQ resampling, bit 3,4: Rotation, bit 5: ScreenAsRef
+	uint8 flags; // bit 0: AutoContrast, bit 1:LDC, bit 2: HQ resampling, bit 3,4: Rotation, bit 5: ScreenAsRef, bit 6: Auto crop after free rotation, bit 7: Keep aspect ratio after free rotation
 	uint8 colorCorrectionAmount[6]; // this equals the INI setting at creation time of DB entry
 	int16 zoomRectLeft;
 	int16 zoomRectTop;
@@ -56,7 +56,8 @@ private:
 	uint8 magentaGreen;
 	uint8 yellowBlue;
 	int8 saturation;
-	uint8 reserved[5]; // reserved for future use
+	uint16 freeRotation;
+	uint8 reserved[3]; // reserved for future use
 
 	uint8 Convert(float value, float lowerLimit, float upperLimit, bool isLog10) const;
 	float Convert(uint8 value, float lowerLimit, float upperLimit, bool isLog10) const;

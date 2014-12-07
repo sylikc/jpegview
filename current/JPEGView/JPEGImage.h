@@ -143,8 +143,8 @@ public:
 	void DIBToOrig(float & fX, float & fY);
 	void OrigToDIB(float & fX, float & fY);
 
-	// Gets the rotation applied to the pixels, 0, 90, 180 or 270 degrees
-	int GetRotation() {return m_nRotation; }
+	// Gets the rotation applied to the pixels
+	const CRotationParams& GetRotationParams() {return m_rotationParams; }
 
     // Gets or sets the JPEG chromo sampling. See turbojpeg.h for the TJSAMP enumeration.
     TJSAMP GetJPEGChromoSampling() { return m_eJPEGChromoSampling; }
@@ -160,8 +160,8 @@ public:
 	// Declare the generated DIB as invalid - forcing it to be regenerated on next access
 	void SetDIBInvalid() { m_ClippingSize = CSize(0, 0); }
 
-	// Verify that the image is currently rotated by the given angle and rotate the image if not. nRotation must be 0, 90, 180, 270
-	bool VerifyRotation(int nRotation);
+	// Verify that the image is currently rotated by the specified paramters and rotate the image if not.
+	bool VerifyRotation(const CRotationParams& rotationParams);
 
 	// Rotate the image clockwise by 90, 180 or 270 degrees. All other angles are invalid.
 	// Applies to original image!
@@ -180,6 +180,9 @@ public:
 
 	// Returns if this image's original pixels have been processed destructively (e.g. cropped or rotated by non-90 degrees steps)
 	bool IsDestructivlyProcessed() { return m_bIsDestructivlyProcessed; }
+
+	// Returns if this image has been processed in a way not supported to be stored in the parameter DB.
+	bool IsProcessedNoParamDB() { return m_bIsProcessedNoParamDB; }
 
 	// raw access to input pixels - do not delete or store the pointer returned
 	void* IJLPixels() { return  m_pIJLPixels; }
@@ -380,7 +383,8 @@ private:
 
 	bool m_bCropped; // Image has been cropped
 	bool m_bIsDestructivlyProcessed; // Original image pixels destructively processed (i.e. cropped or size changed)
-	uint32 m_nRotation; // current rotation angle
+	bool m_bIsProcessedNoParamDB;
+	CRotationParams m_rotationParams; // current rotation
 	bool m_bRotationByEXIF; // is the rotation given by EXIF
 
 	// This is the geometry that was requested during last GetDIB() call
@@ -460,13 +464,19 @@ private:
 	EProcessingFlags GetProcFlagsIncludeExcludeFolders(LPCTSTR sFileName, EProcessingFlags procFlags) const;
 
 	// Return size of original image if the image would be rotated the given amount
-	CSize SizeAfterRotation(int nRotation);
+	CSize SizeAfterRotation(const CRotationParams& rotationParams);
+
+	// Gets the new size of the image after doing a free rotation
+	static CSize GetSizeAfterFreeRotation(const CSize& sourceSize, double dRotation, bool bAutoCrop, bool bKeepAspectRatio, CPoint & offset);
 
 	// Get if from source to target size it is down or upsampling
 	EResizeType GetResizeType(CSize targetSize, CSize sourceSize);
 
 	// Gets the rotation from EXIF if available
 	int GetRotationFromEXIF(int nOrigRotation);
+
+	// Sets the m_bIsDestructivlyProcessed flag to true and resets rotation
+	void MarkAsDestructivelyProcessed();
 
 	// Called when the original pixels have changed (rotate, crop, unsharp mask), all cached pixel data gets invalid
 	void InvalidateAllCachedPixelData();

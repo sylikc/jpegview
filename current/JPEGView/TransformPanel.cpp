@@ -7,11 +7,12 @@
 
 #define PANEL_BORDER 12
 #define PANEL_GAPTITLE 10
-#define TRANSFORM_PANEL_WIDTH 360
+#define TRANSFORM_PANEL_WIDTH 385
 #define TRANSFORM_PANEL_HEIGHT 87
 #define TRANSFORM_PANEL_BUTTON_SIZE 21
 #define TRANSFORM_PANEL_GAPBUTTONX1 6
 #define TRANSFORM_PANEL_GAPBUTTONX2 12
+#define TRANSFORM_PANEL_GAPBUTTONGROUPS 24
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 // CTransformPanel
@@ -33,7 +34,13 @@ CTransformPanel::CTransformPanel(HWND hWnd, INotifiyMouseCapture* pNotifyMouseCa
 	AddUserPaintButton(ID_btnAutoCrop, sCropTooltipText, &PaintAutoCropBtn);
 	AddUserPaintButton(ID_btnKeepAR, CNLS::GetString(_T("Keep aspect ratio on crop")), &PaintKeepARBtn);
 	AddButton(ID_btnCancel, CNLS::GetString(_T("Cancel")));
+	AddButton(ID_btnReset, CNLS::GetString(_T("Reset")));
     AddButton(ID_btnApply, CNLS::GetString(_T("Apply")));
+
+	int minWidth = 4 * m_nButtonSize + 3 * (int)(m_fDPIScale*TRANSFORM_PANEL_GAPBUTTONX1) + 
+		(int)(m_fDPIScale*TRANSFORM_PANEL_GAPBUTTONGROUPS) + 2 * (int)(m_fDPIScale*TRANSFORM_PANEL_GAPBUTTONX2) +
+		2 * (int)(m_fDPIScale*PANEL_BORDER) + GetBtnCancel()->GetMinSize().cx + GetBtnReset()->GetMinSize().cx + GetBtnApply()->GetMinSize().cx;
+	m_nWidth = max(m_nWidth, minWidth);
 }
 
 CRect CTransformPanel::PanelRect() {

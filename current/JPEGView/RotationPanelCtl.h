@@ -35,6 +35,7 @@ private:
 	virtual void ApplyTransformation();
 	virtual void UpdatePanelTitle();
 	virtual void ExchangeTransformationParams();
+	virtual void Reset();
 
 	void UpdateAssistedRotationMode();
 	void PaintRotationLine(HDC hPaintDC);

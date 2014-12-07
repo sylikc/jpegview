@@ -192,6 +192,7 @@ public:
 	void MouseOff();
 	void MouseOn();
 	void GotoImage(EImagePosition ePos);
+	void ReloadImage(bool keepParameters, bool updateWindow = true);
 	void ResetZoomTo100Percents(bool bZoomToMouse);
 	void ResetZoomToFitScreen(bool bFillWithCrop, bool bAllowEnlarge, bool bAdjustWindowSize);
 	bool PerformPan(int dx, int dy, bool bAbsolute);
