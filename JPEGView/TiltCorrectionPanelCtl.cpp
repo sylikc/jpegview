@@ -99,6 +99,12 @@ void CTiltCorrectionPanelCtl::ApplyTransformation() {
 	}
 }
 
+void CTiltCorrectionPanelCtl::Reset() {
+	m_fLeftDeltaX = m_fLeftDeltaXBackup = 0;
+	m_fRightDeltaX = m_fRightDeltaXBackup = 0;
+	InvalidateMainDlg();
+}
+
 void CTiltCorrectionPanelCtl::UpdatePanelTitle() {
 	// title is static, therefore empty
 }

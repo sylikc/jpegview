@@ -118,15 +118,28 @@ void CRotationPanelCtl::EndTransforming() {
 }
 
 void CRotationPanelCtl::ApplyTransformation() {
-	if (!CurrentImage()->RotateOriginalPixels(m_dRotationLQ, m_bAutoCrop, m_bKeepAspectRatio)) {
+	double rotation = m_dRotationLQ;
+	if (!CurrentImage()->IsClipboardImage() && !CurrentImage()->IsProcessedNoParamDB() && fabs(CurrentImage()->GetRotationParams().FreeRotation) > 0.009) {
+		rotation += 2 * 3.141592653 * CurrentImage()->GetRotationParams().FreeRotation / 360;
+		// there is already rotation applied - reload image with keeping parameters (this will reset the free rotation to zero and
+		// ignore any parameter DB value for free rotation)
+		m_pMainDlg->ReloadImage(true, false);
+	}
+	if (!CurrentImage()->RotateOriginalPixels(rotation, m_bAutoCrop, m_bKeepAspectRatio)) {
 		::MessageBox(m_pMainDlg->GetHWND(), CNLS::GetString(_T("The operation failed because not enough memory is available!")),
 			_T("JPEGView"), MB_ICONSTOP | MB_OK);
 	}
 }
 
+void CRotationPanelCtl::Reset() {
+	m_dRotationLQ = m_dRotationBackup = -2 * 3.141592653 * CurrentImage()->GetRotationParams().FreeRotation / 360;
+	UpdatePanelTitle();
+	InvalidateMainDlg();
+}
+
 void CRotationPanelCtl::UpdatePanelTitle() {
 	const int BUFF_SIZE = 24;
-	double dAngleDeg = 360 * m_dRotationLQ / (2 * 3.141592653);
+	double dAngleDeg = CurrentImage()->GetRotationParams().FreeRotation + 360 * m_dRotationLQ / (2 * 3.141592653);
 	TCHAR buff[BUFF_SIZE];
 	_stprintf_s(buff, BUFF_SIZE, _T("  %.1f °"), dAngleDeg);
 	m_pTransformPanel->GetTextTitle()->SetText(CString(CNLS::GetString(_T("Rotate Image"))) + buff);

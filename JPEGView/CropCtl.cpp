@@ -427,7 +427,7 @@ CRect CCropCtl::GetImageCropRect(bool losslessCrop) {
 		CRect cropRect = CRect(max(0, min(m_cropStart.x, m_cropEnd.x)), max(0, min(m_cropStart.y, m_cropEnd.y)),
 			min(pCurrentImage->OrigWidth(), max(m_cropStart.x, m_cropEnd.x) + 1), min(pCurrentImage->OrigHeight(), max(m_cropStart.y, m_cropEnd.y) + 1));
 		if (losslessCrop) {
-			switch (pCurrentImage->GetRotation())
+			switch (pCurrentImage->GetRotationParams().Rotation)
 			{
 			case 90:
 				cropRect = CRect(cropRect.top, pCurrentImage->OrigWidth() - cropRect.right, cropRect.bottom, pCurrentImage->OrigWidth() - cropRect.left);

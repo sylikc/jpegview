@@ -101,7 +101,7 @@ CParameterDBEntry::CParameterDBEntry() {
 }
 
 void CParameterDBEntry::InitFromProcessParams(const CImageProcessingParams & processParams, 
-											  EProcessingFlags eFlags, int nRotation) {
+	EProcessingFlags eFlags, const CRotationParams& rotationParams) {
 
 	contrast = Convert((float)processParams.Contrast, -0.5f, 0.5f, false);
 	brightness = Convert((float)processParams.Gamma, 0.5f, 2.0f, false);
@@ -120,13 +120,21 @@ void CParameterDBEntry::InitFromProcessParams(const CImageProcessingParams & pro
 	if (GetProcessingFlag(eFlags, PFLAG_AutoContrast)) flags |= 1;
 	if (GetProcessingFlag(eFlags, PFLAG_LDC)) flags |= 2;
 	if (GetProcessingFlag(eFlags, PFLAG_HighQualityResampling)) flags |= 4;
-	if (nRotation == 90) {
+
+	if (rotationParams.Rotation == 90) {
 		flags |= 8;
-	} else if (nRotation == 180) {
+	} else if (rotationParams.Rotation == 180) {
 		flags |= 16;
-	} else if (nRotation == 270) {
+	} else if (rotationParams.Rotation == 270) {
 		flags |= 24;
 	}
+	if (GetRotationFlag(rotationParams.Flags, RFLAG_AutoCrop)) {
+		flags |= 64;
+	}
+	if (GetRotationFlag(rotationParams.Flags, RFLAG_KeepAspectRatio)) {
+		flags |= 128;
+	}
+	freeRotation = (int)(fmod(rotationParams.FreeRotation + 360, 360) * 100 + 0.5);
 
 	float * pCorrections = CSettingsProvider::This().ColorCorrectionAmounts();
 	for (int i = 0; i < 6; i++) {
@@ -135,7 +143,7 @@ void CParameterDBEntry::InitFromProcessParams(const CImageProcessingParams & pro
 }
 
 void CParameterDBEntry::WriteToProcessParams(CImageProcessingParams & processParams, 
-											 EProcessingFlags & eFlags, int & nRotation) const {
+						EProcessingFlags & eFlags, CRotationParams & rotationParams) const {
  	processParams.Contrast = Convert(contrast, -0.5f, 0.5f, false);
 	processParams.Gamma = Convert(brightness, 0.5f, 2.0f, false);
 	processParams.Saturation = ConvertSigned(saturation, 1.0f) + 1;
@@ -154,14 +162,17 @@ void CParameterDBEntry::WriteToProcessParams(CImageProcessingParams & processPar
 	eFlags = SetProcessingFlag(eFlags, PFLAG_HighQualityResampling, (flags & 4) != 0);
 
 	if ((flags & 24) == 0) {
-		nRotation = 0;
+		rotationParams.Rotation = 0;
 	} else if ((flags & 24) == 8) {
-		nRotation = 90;
+		rotationParams.Rotation = 90;
 	} else if ((flags & 24) == 16) {
-		nRotation = 180;
+		rotationParams.Rotation = 180;
 	} else if ((flags & 24) == 24) {
-		nRotation = 270;
+		rotationParams.Rotation = 270;
 	}
+	rotationParams.Flags = SetRotationFlag(rotationParams.Flags, RFLAG_AutoCrop, (flags & 64) != 0);
+	rotationParams.Flags = SetRotationFlag(rotationParams.Flags, RFLAG_KeepAspectRatio, (flags & 128) != 0);
+	rotationParams.FreeRotation = (freeRotation > 18000) ? freeRotation * 0.01 - 360 : freeRotation * 0.01;
 }
 
 void CParameterDBEntry::InitGeometricParams(CSize sourceSize, double fZoom, CPoint offsets, CSize targetSize, bool bStoreRelativeToScreenSize) {

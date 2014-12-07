@@ -13,6 +13,7 @@ public:
 		ID_btnAutoCrop,
 		ID_btnKeepAR,
 		ID_btnCancel,
+		ID_btnReset,
 		ID_btnApply
 	};
 public:
@@ -25,6 +26,7 @@ public:
 	CButtonCtrl* GetBtnAutoCrop() { return GetControl<CButtonCtrl*>(ID_btnAutoCrop); }
 	CButtonCtrl* GetBtnKeepAR() { return GetControl<CButtonCtrl*>(ID_btnKeepAR); }
 	CButtonCtrl* GetBtnCancel() { return GetControl<CButtonCtrl*>(ID_btnCancel); }
+	CButtonCtrl* GetBtnReset() { return GetControl<CButtonCtrl*>(ID_btnReset); }
 	CButtonCtrl* GetBtnApply() { return GetControl<CButtonCtrl*>(ID_btnApply); }
 
 	virtual CRect PanelRect();

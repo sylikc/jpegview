@@ -25,6 +25,7 @@ CTransformPanelCtl::CTransformPanelCtl(CMainDlg* pMainDlg, CPanel* pImageProcPan
 	m_pTransformPanel->GetBtnAutoCrop()->SetButtonPressedHandler(&OnAutoCrop, this, 0, m_bAutoCrop);
 	m_pTransformPanel->GetBtnKeepAR()->SetButtonPressedHandler(&OnKeepAspectRatio, this, 0, m_bKeepAspectRatio);
 	m_pTransformPanel->GetBtnCancel()->SetButtonPressedHandler(&OnCancel, this);
+	m_pTransformPanel->GetBtnReset()->SetButtonPressedHandler(&OnReset, this);
 	m_pTransformPanel->GetBtnApply()->SetButtonPressedHandler(&OnApply, this);
 }
 
@@ -148,6 +149,10 @@ void CTransformPanelCtl::OnKeepAspectRatio(void* pContext, int nParameter, CButt
 
 void CTransformPanelCtl::OnCancel(void* pContext, int nParameter, CButtonCtrl & sender) {
 	((CTransformPanelCtl*)pContext)->TerminatePanel();
+}
+
+void CTransformPanelCtl::OnReset(void* pContext, int nParameter, CButtonCtrl & sender) {
+	((CTransformPanelCtl*)pContext)->Reset();
 }
 
 void CTransformPanelCtl::OnApply(void* pContext, int nParameter, CButtonCtrl & sender) {

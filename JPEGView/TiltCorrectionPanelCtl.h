@@ -24,6 +24,7 @@ private:
 	virtual void ApplyTransformation();
 	virtual void UpdatePanelTitle();
 	virtual void ExchangeTransformationParams();
+	virtual void Reset();
 
 	enum EClickPosition {
 		CP_Left,

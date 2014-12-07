@@ -81,6 +81,7 @@ static const bool SHOW_TIMING_INFO = false; // Set to true for debugging
 static const int NO_REQUEST = 1; // used in GotoImage() method
 static const int NO_REMOVE_KEY_MSG = 2; // used in GotoImage() method
 static const int KEEP_PARAMETERS = 4; // used in GotoImage() method
+static const int NO_UPDATE_WINDOW = 8; // used in GotoImage() method
 
 static const CSize HUGE_SIZE = CSize(99999999, 99999999);
 
@@ -451,7 +452,7 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 		dc.FillRect(&m_clientRect, backBrush);
 	} else {
 		// do this as very first - may changes size of image
-		m_pCurrentImage->VerifyRotation(m_nRotation);
+		m_pCurrentImage->VerifyRotation(CRotationParams(m_pCurrentImage->GetRotationParams(), m_nRotation));
 
 		// Find out zoom multiplier if not yet known
 		if (m_dZoomMult < 0.0) {
@@ -573,7 +574,7 @@ void CMainDlg::PaintToDC(CDC& dc) {
 		dc.FillRect(&m_clientRect, backBrush);
 	} else {
         // do this as very first - may changes size of image
-		pCurrentImage->VerifyRotation(GetRotation());
+		pCurrentImage->VerifyRotation(CRotationParams(pCurrentImage->GetRotationParams(), GetRotation()));
 
 		// find out the new virtual image size and the size of the bitmap to request
         double dZoom = GetZoom();
@@ -1284,7 +1285,7 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 			}
 			break;
 		case IDM_RELOAD:
-			GotoImage(POS_Current);
+			ReloadImage(false);
 			break;
 		case IDM_COPY:
 			if (m_pCurrentImage != NULL) {
@@ -1434,7 +1435,7 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 			if (m_pCurrentImage != NULL && !m_bMovieMode && !m_bKeepParams) {
 				CParameterDBEntry newEntry;
 				EProcessingFlags procFlags = CreateProcessingFlags(m_bHQResampling, m_bAutoContrast, false, m_bLDC, false, m_bLandscapeMode);
-				newEntry.InitFromProcessParams(*m_pImageProcParams, procFlags, m_nRotation);
+				newEntry.InitFromProcessParams(*m_pImageProcParams, procFlags, m_pCurrentImage->IsAnimation() ? CRotationParams(m_nRotation) : CRotationParams(m_pCurrentImage->GetRotationParams(), m_nRotation));
 				if ((m_bUserZoom || m_bUserPan) && !m_pCurrentImage->IsCropped()) {
 					newEntry.InitGeometricParams(m_pCurrentImage->OrigSize(), m_dZoom, m_offsets, 
                         m_bAutoFitWndToImage ? CMultiMonitorSupport::GetMonitorRect(m_hWnd).Size() : m_clientRect.Size(), m_bAutoFitWndToImage);
@@ -1463,6 +1464,9 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 					m_dZoom = -1;
 					m_pCurrentImage->SetIsInParamDB(false);
 					m_pImageProcPanelCtl->ShowHideSaveDBButtons();
+					if (fabs(m_pCurrentImage->GetRotationParams().FreeRotation) > 0.009) {
+						ReloadImage(false); // free rotation cannot be restored, needs reload
+					}
 					this->Invalidate(FALSE);
 				}
 			}
@@ -1545,7 +1549,7 @@ void CMainDlg::ExecuteCommand(int nCommand) {
                                 + _T("\n") + CNLS::GetString(_T("Reason:")) + _T(" ") + HelpersGUI::LosslessTransformationResultToString(eResult), 
                                 CNLS::GetString(_T("Lossless JPEG transformations")), MB_OK | MB_ICONWARNING);
                         } else {
-                            GotoImage(POS_Current); // reload current image
+                            ReloadImage(false); // reload current image
                         }
                     }
                 }
@@ -2117,7 +2121,7 @@ void CMainDlg::ExecuteUserCommand(CUserCommand* pUserCommand) {
 				}
 			}
 			if (bReloadCurrent) {
-				GotoImage(POS_Current);
+				ReloadImage(false);
 			}
         }
 	}
@@ -2296,7 +2300,7 @@ void CMainDlg::GotoImage(EImagePosition ePos, int nFlags) {
         }
     }
 
-    if (!(ePos == POS_NextSlideShow && UseSlideShowTransitionEffect())) {
+	if (((nFlags & NO_UPDATE_WINDOW) == 0) && !(ePos == POS_NextSlideShow && UseSlideShowTransitionEffect())) {
 	    this->Invalidate(FALSE);
 	    // this will force to wait until really redrawn, preventing to process images but do not show them
 	    this->UpdateWindow();
@@ -2307,6 +2311,11 @@ void CMainDlg::GotoImage(EImagePosition ePos, int nFlags) {
 		MSG msg;
 		while (::PeekMessage(&msg, this->m_hWnd, WM_KEYFIRST, WM_KEYLAST, PM_REMOVE));
 	}
+}
+
+void CMainDlg::ReloadImage(bool keepParameters, bool updateWindow) {
+	int flags = keepParameters ? KEEP_PARAMETERS : 0;
+	GotoImage(CMainDlg::POS_Current, updateWindow ? flags : flags | NO_UPDATE_WINDOW);
 }
 
 void CMainDlg::AdjustLDC(int nMode, double dInc) {
@@ -2500,7 +2509,7 @@ CProcessParams CMainDlg::CreateProcessParams(bool bNoProcessingAfterLoad) {
 
 		return CProcessParams(nClientWidth, nClientHeight,
             CMultiMonitorSupport::GetMonitorRect(m_hWnd).Size(),
-            m_nRotationKept, 
+            CRotationParams(m_nRotationKept), 
 			m_dZoomKept,
 			eAutoZoomMode,
 			m_offsetKept,
@@ -2510,7 +2519,7 @@ CProcessParams CMainDlg::CreateProcessParams(bool bNoProcessingAfterLoad) {
 		CSettingsProvider& sp = CSettingsProvider::This();
 		return CProcessParams(nClientWidth, nClientHeight, 
             CMultiMonitorSupport::GetMonitorRect(m_hWnd).Size(),
-            0, -1, eAutoZoomMode, CPoint(0, 0), 
+			CRotationParams(0), -1, eAutoZoomMode, CPoint(0, 0),
 			_SetLandscapeModeParams(m_bLandscapeMode, GetDefaultProcessingParams()),
 			SetProcessingFlag(_SetLandscapeModeFlags(GetDefaultProcessingFlags(m_bLandscapeMode)), PFLAG_NoProcessingAfterLoad, bNoProcessingAfterLoad));
 	}

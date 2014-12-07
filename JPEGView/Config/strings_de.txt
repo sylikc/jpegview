@@ -380,3 +380,4 @@ Hour / Minute (as numbers)	Stunde / Minute (als Zahl)
 Set as desktop wallpaper	Desktop-Hintergrundbild setzen
 Use original image	Originalbild verwenden
 Use processed image as displayed	Bearbeitetes Bild wie angezeigt verwenden
+Reset	Zurücksetzen
