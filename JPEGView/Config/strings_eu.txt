@@ -31,12 +31,12 @@ Enable/disable keeping of geometry related (zoom/pan/rotation)	Gaitu/Ezgaitu geo
 and image processing (brightness/contrast/sharpen) parameters between images	eta irudi prozesatzea (dizdira/zuribeltztasuna/garbitasuna)
 Enable/disable automatic contrast correction (histogram equalization)	Gaitu/Ezgaitu berezgaitasunezko zuribeltztasun zuzenketa (histograma ekualizazioa)
 Apply auto contrast correction using only visible section of image	Ezarri berezgaitasunezko zuribeltztasun zuzenketa irudiaren atal ikusgarria bakarrik erabiliz
-Enable/disable automatic density correction (local brightness correction)	Gaitu/Ezgaitu berezgaitasunezkoa dentsitate zuzenketa (tokiko dizdira zuzenketa)
+Enable/disable automatic density correction (local brightness correction)	Gaitu/Ezgaitu berezgaitasunezko dentsitate zuzenketa (tokiko dizdira zuzenketa)
 Increase/decrease lightening of shadows (LDC must be on)	Gehitu/Gutxitu itzalen argipena (LDC eraginda egon behar da)
 Increase/decrease darkening of highlights (LDC must be on)	Gehitu/Gutxitu itzalen ilunpena (LDC eraginda egon behar da)
-Loop through files in current folder	Bigiztatu agirien artean uneko agiritegian
-Loop through files in current directory and all subfolders	Bigiztatu agirien artean uneko zuzenbidean eta azpizuzenbide guztietan
-Loop through files in current directory and all sibling folders (folders on same level)	Bigiztatu agirien artean uneko zuzenbidean eta agiritegi kidetu guztietan (maila bereko agiritegiak)
+Loop through files in current folder	Bigiztatu agirien artean oraingo agiritegian
+Loop through files in current directory and all subfolders	Bigiztatu agirien artean oraingo zuzenbidean eta azpizuzenbide guztietan
+Loop through files in current directory and all sibling folders (folders on same level)	Bigiztatu agirien artean oraingo zuzenbidean eta agiritegi kidetu guztietan (maila bereko agiritegiak)
 Maximize/restore to/from virtual desktop (only for multi-monitor systems)	Handitu/Leheneratu mahaigain birtuale-ra/-tik (monitore-anitzeko sistematan bakarrik)
 Copy screen to clipboard/ Copy processed full size image to clipboard	Kopiatu ikusleihoa gakora/ Kopiatu prozesatutako irudia neurri osoan gakora
 Open new image or slideshow file	Ireki irudi berri bat edo aurkezpen agiria
@@ -47,7 +47,7 @@ Goto previous image	Joan aurreko irudira
 Goto next image	Joan hurrengo irudira
 PgUp or Left	OrrGor edo Ezker
 PgDn or Right	OrrBeh edo Eskuin
-Goto first/last image of current folder (using sort order as defined)	Joan lehen/azken irudira uneko agiritegian (zehaztutako antolakuntza hurrenkera jarraituz)
+Goto first/last image of current folder (using sort order as defined)	Joan lehen/azken irudira oraingo agiritegian (zehaztutako antolakuntza hurrenkera jarraituz)
 Increase/decrease brightness	Gehitu/Gutxitu dizdira
 Increase/decrease contrast	Gehitu/Gutxitu zuribeltztasuna
 Increase/decrease sharpness	Gehitu/Gutxitu garbitasuna
@@ -71,9 +71,9 @@ Left mouse & drag	Saguaren ezker botoia eta arrastatu
 Ctrl + Left mouse	Ktrl + saguaren ezker botoia
 Forward mouse button	Saguaren aurrera botoia
 Back mouse button	Saguaren atzera botoia
-Delete current file on disk permanently	Ezabatu uneko agiria diskatik betirako
-Rotate current file on disk lossless by 90 deg (W/H must be multiple of 16)	Itzulikatu uneko agiria diskan 90° galeragabe (Zab./Gar. 16-ren biderki izan behar dute)
-Rotate current file on disk lossless by 270 deg (W/H must be multiple of 16)	Itzulikatu uneko agiria diskan 270° galeragabe (Zab./Gar. 16-ren biderki izan behar dute)
+Delete current file on disk permanently	Ezabatu oraingo agiria diskatik betirako
+Rotate current file on disk lossless by 90 deg (W/H must be multiple of 16)	Itzulikatu oraingo agiria diskan 90° galeragabe (Zab./Gar. 16-ren biderki izan behar dute)
+Rotate current file on disk lossless by 270 deg (W/H must be multiple of 16)	Itzulikatu oraingo agiria diskan 270° galeragabe (Zab./Gar. 16-ren biderki izan behar dute)
 The file is read-only!	Agiria irakurtzeko-bakarrik da!
 Can't rename file	Ezin da agiria berrizendatu
 New name contains backslash character!	Izen berriak ezkerbarra du!
@@ -129,6 +129,7 @@ Waiting time	Itxaronaldia
 Stop slide show/movie	Gelditu aurkezpena/filma
 Rotate +90	Itzulikatu +90
 Rotate -90	Itzulikatu -90
+Rotate 180	Itzulikatu 180
 Auto correction	Berez zuzenketa
 Local density correction	Tokiko dentsitate zuzenketa
 Keep parameters	Heutsi parametroei
@@ -200,6 +201,7 @@ no	ez
 Show navigation panel	Erakutsi nabigazio panela
 Show/hide navigation panel	Erakutsi/Ezkutatu nabigazio panela
 About JPEGView...	JPEGIkusgailuari buruz...
+About JPEGView (64 bit version)...	JPEGView-ri buruz (64 bit bertsioa)...
 SIMD mode used:	Erabilitako SIMD modua:
 Number of CPU cores used:	Erabilitako CPU nukleo zenbatekoa:
 Licensed under the GNU general public license (GPL), see readme file for details:	GNU Baimen Publiko Orokorrarenpean (GPL) baimenduta, ikusi 'irakurri' agiria xehetasun gehiagorako:
@@ -212,6 +214,7 @@ Rotate image 90 deg clockwise	Itzulikatu irudia 90 gradu ordulari orrantzen nora
 Rotate image 90 deg counter-clockwise	Itzulikatu irudia 90 gradu ordulari orratzen-aurkako norabidean
 Landscape picture enhancement mode	Landargazki irudi hobekuntza modua
 Display image (EXIF) information	Erakutsi irudiaren (EXIF) argibideak
+Actual size of image	Irudiaren oraingo neurria
 Toggle between screens (only for multi-monitor systems)	Aldatu ikusleiho artean (monitore-anitzeko sistematan bakarrik)
 Enable/disable full screen mode	Gaitu/Ezgaitu ikusleiho-osoko modua
 Full screen mode	Ikusleiho-osoko modua
@@ -242,7 +245,7 @@ Image Pixels	Irudi Pixel
 Set modification date	Ezarri aldaketa eguna
 to current date	Gaurko egunean
 to EXIF date	EXIF egunean
-Mark image for toggling. Use %s to toggle between marked and current image	Markatu irudia aldaketarako. Erabili %s markatutako eta uneko irudiaren artean aldatzeko
+Mark image for toggling. Use %s to toggle between marked and current image	Markatu irudia aldaketarako. Erabili %s markatutako eta oraingo irudiaren artean aldatzeko
 Saturation	Margoasetasuna
 Unsharp mask...	Lausotze Mozorroa
 Apply Unsharp Mask	Ezarri Lausotze Mozorroa
@@ -340,3 +343,44 @@ However this will fail if the current user has no administration privileges.	Hor
 Insufficient rights to remove the restrictions. Continue?	Ez duzu nahikoa eskubide murrizpenak kentzeko. Jarraitu?
 No image loaded!	Ez da irudirik gertatu! 
 Right mouse button: Context menu	Saguaren eskuin botoia: Hitzinguru menua
+Windows 8 blocks JPEGView from changing the default program for these file endings.	Windows 8-k JPEGView blokeatzen du agiri hauentzako berezko programa aldatzeko.
+Use the 'Default Programs' configuration dialog from the operating system instead.	Erabili 'Berezko Programak' itxurapen elkarrizketa sistema eragiletik ordez.
+Alternatively, right click an image file of the given type in Windows Explorer and select 'Open with... > Choose default program'	Aukeran, eskuin klikatu emaniko motako irudi agiri bat Windows Esploratzailean eta hautatu 'Ireki honekin... > Hautatu berezko programa'
+User commands	Erabiltzaile aginduak
+Open image with	Ireki irudia honekin
+Manage 'Open image with' menu...	Kudeatu 'Ireki irudia honekin' menua...
+Menu entries:	Menuko sarrerak:
+Title:	Izenburua:
+Application:	Aplikazioa:
+Shortcut key:	Lastertekla:
+Browse...	Bilatu...
+New	Berria
+Delete	Ezabatu
+Modifier keys:	Aldatzaile teklak:
+Known keys:	Tekla ezagunak:
+Combine keys with '+'	Batu teklak '+'-rekin
+Example:	Adibidea:
+Shortcut Help	Lastertekla Laguntza
+[new entry]	[sarrera berria]
+Applications	Aplikazioak
+Select application	Hautatu aplikazioak
+Save	Gorde
+Edit	Editatu
+Upcounting	Gora-zenbaketa
+Downcounting	Behera-zenbaketa
+File size	Agiri neurria
+Do you really want to delete the current image file on disk?	Egitan nahi duzu oraingo irudia diskatik ezabatzea?
+Delete image file	Ezabatu irudi agiria
+Change size...	Aldatu neurria...
+Resize Image	Birneurriratu Irudia
+OK	Ongi
+New size:	Neurri berria:
+New width:	Zabalera berria:
+New height:	Garaiera berria:
+Filter:	Iragazkia:
+Box	Kutxatila
+Lanczos/Bicubic	Lanczos/Bikubikoa
+Sharpen low	Itzal apala
+Sharpen medium	Itzal ertaina
+The new size is too large - width or height is larger than 65535 or total number of pixels is too large!	Neurri berria handiegia da - zabalera edo garaiera 65535 baino handiagoa da edo pixel zenbatekoa guztira handiegia da!
+JPEGView is a lean, fast and highly configurable viewer/editor for JPEG, BMP, PNG, WEBP, TGA, GIF and TIFF images with a minimal GUI.	JPEGView ikusgailu/editatzaile gihartsu, azkar eta oso itxuragarri bat da JPEG, BMP, PNG, WEBP, TGA, GIF eta TIFF irudientzat gutxienezko EIG batekin.
