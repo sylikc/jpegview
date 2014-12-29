@@ -662,7 +662,7 @@ LRESULT CMainDlg::OnSize(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BO
 	this->Invalidate(FALSE);
 	if (m_clientRect.Width() < HelpersGUI::ScaleToScreen(800)) {
 		m_bShowHelp = false;
-		m_pImageProcPanelCtl->SetVisible(false);
+		if (m_pImageProcPanelCtl != NULL) m_pImageProcPanelCtl->SetVisible(false);
 	}
 	if (m_pNavPanelCtl != NULL) {
 		m_pNavPanelCtl->AdjustMaximalWidth(m_clientRect.Width() - HelpersGUI::ScaleToScreen(16));
