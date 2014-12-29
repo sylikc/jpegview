@@ -12,6 +12,7 @@
 #define IDM_SAVE_SCREEN		1501			// сохранить в файле с экранным размером
 #define IDM_SAVE_ALLOW_NO_PROMPT 1502			// сохранить в файле с исходным размером, позволить перезапись без запроса, если разрешено в INI-файле
 #define IDM_RELOAD		1600			// перезагрузить изображение
+#define IDM_PRINT		1700			// print image
 #define IDM_COPY		2000			// скопировать изображение в буфер обмена с экранным размером
 #define IDM_COPY_FULL		2500			// скопировать изображение в буфер обмена с исходным размером
 #define IDM_PASTE		2550			// вставить изображение из буфера обмена
@@ -195,6 +196,7 @@ S                       IDM_SAVE_PARAM_DB
 D                       IDM_CLEAR_PARAM_DB
 Ctrl+Shift+E            IDM_TOUCH_IMAGE_EXIF
 Ctrl+O                  IDM_OPEN
+Ctrl+P                  IDM_PRINT
 Ctrl+R                  IDM_RELOAD
 Ctrl+X                  IDM_COPY_FULL
 Ctrl+V                  IDM_PASTE

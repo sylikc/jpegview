@@ -19,8 +19,8 @@ Changelog
 *********
 
 [1.0.33]
-Bugs fixed:
 New features:
+- Image printing
 - Free rotation is now stored in the parameter DB if no destructive processing (e.g. crop) has been applied before
 - Free rotation can be chained without error propagation because image is reloaded before rotation is applied.
   This only applies if no destructive processing (e.g. crop) has been applied in the processing chain.

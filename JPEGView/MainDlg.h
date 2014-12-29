@@ -29,6 +29,7 @@ class CCropCtl;
 class CKeyMap;
 class CDirectoryWatcher;
 class CUserCommand;
+class CPrintImage;
 
 enum EMouseEvent;
 
@@ -308,6 +309,7 @@ private:
 	CTiltCorrectionPanelCtl* m_pTiltCorrectionPanelCtl;
 	CPanelMgr* m_pPanelMgr;
 	CKeyMap* m_pKeyMap;
+	CPrintImage* m_pPrintImage;
     Helpers::ETransitionEffect m_eTransitionEffect;
     int m_nTransitionTime;
     DWORD m_nLastSlideShowImageTickCount;
