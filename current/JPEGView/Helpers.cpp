@@ -117,6 +117,22 @@ CRect InflateRect(const CRect& rect, float fAmount) {
 	return ((r.Height() & 1) == 1) ? CRect(r.left, r.top, r.right, r.bottom - 1) : r;
 }
 
+CRect FitRectIntoRect(CSize size, CRect fitRect) {
+	double ratioSource = (double)size.cx / size.cy;
+	double ratioTarget = (double)fitRect.Width() / fitRect.Height();
+	if (ratioSource > ratioTarget) {
+		// fit x
+		int targetHeight = Helpers::RoundToInt(fitRect.Width() / ratioSource);
+		int startY = fitRect.top + (fitRect.Height() - targetHeight) / 2;
+		return CRect(fitRect.left, startY, fitRect.right, startY + targetHeight);
+	} else {
+		// fit y
+		int targetWidth = Helpers::RoundToInt(fitRect.Height() * ratioSource);
+		int startX = fitRect.left + (fitRect.Width() - targetWidth) / 2;
+		return CRect(startX, fitRect.top, startX + targetWidth, fitRect.bottom);
+	}
+}
+
 void GetZoomParameters(float & fZoom, CPoint & offsets, CSize imageSize, CSize windowSize, CRect zoomRect) {
 	int nZoomWidth = zoomRect.Width();
 	int nZoomHeight = zoomRect.Height();

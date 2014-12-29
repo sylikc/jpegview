@@ -170,6 +170,54 @@ BEGIN
     LTEXT           "Pixel",IDC_RS_PIXELS2,184,42,69,12
 END
 
+IDD_PRINT DIALOGEX 0, 0, 521, 335
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | DS_CENTER | WS_POPUP | WS_CAPTION | WS_SYSMENU
+FONT 8, "MS Shell Dlg", 0, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "Print",IDOK,388,313,61,14
+    PUSHBUTTON      "Cancel",IDCANCEL,453,313,61,14
+    LTEXT           "_Printer:",IDC_PD_LABEL_PRINTER,313,6,72,8
+    LTEXT           "",IDC_PD_PRINTER,368,6,145,8
+    PUSHBUTTON      "_Change...",IDC_PD_BTN_CHANGE_PRINTER,408,23,105,14
+    LTEXT           "_Paper:",IDC_PD_PAPER_TITLE,313,52,62,8
+    COMBOBOX        IDC_PD_CB_PAPER,378,49,135,30,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "_Tray:",IDC_PD_PAPER_SOURCE_TITLE,313,71,63,8
+    COMBOBOX        IDC_PD_CB_PAPER_SOURCE,378,68,135,30,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "_Orientation:",IDC_PD_TITLE_ORIENTATION,313,91,62,18
+    COMBOBOX        IDC_PD_CB_ORIENTATION,414,87,99,30,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "_Size:",IDC_PD_SIZE_TITLE,313,113,61,8
+    CONTROL         "_Fit to paper",IDC_PD_RB_FIT,"Button",BS_AUTORADIOBUTTON | WS_GROUP,378,113,127,10
+    CONTROL         "",IDC_PD_RB_FIXED,"Button",BS_AUTORADIOBUTTON,378,133,10,10
+    EDITTEXT        IDC_PD_ED_WIDTH,390,131,38,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_PD_ED_HEIGHT,447,131,38,14,ES_AUTOHSCROLL
+    LTEXT           "x",IDC_PD_X,435,133,8,8
+    LTEXT           "cm",IDC_PD_CM,494,133,16,8
+    LTEXT           "_Margins:",IDC_PD_MARGINS_TITLE,313,154,61,8
+    LTEXT           "_Left",IDC_PD_LEFT_TITLE,390,154,47,8
+    EDITTEXT        IDC_PD_ED_LEFT,390,165,38,14,ES_AUTOHSCROLL
+    LTEXT           "_Right",IDC_PD_RIGHT_TITLE,447,154,52,8
+    EDITTEXT        IDC_PD_ED_RIGHT,447,165,38,14,ES_AUTOHSCROLL
+    LTEXT           "cm",IDC_PD_CM2,494,167,16,8
+    LTEXT           "_Top",IDC_PD_TOP_TITLE,390,182,47,8
+    EDITTEXT        IDC_PD_ED_TOP,390,193,38,14,ES_AUTOHSCROLL
+    LTEXT           "_Bottom",IDC_PD_BOTTOM_TITLE,447,182,52,8
+    EDITTEXT        IDC_PD_ED_BOTTOM,447,193,38,14,ES_AUTOHSCROLL
+    LTEXT           "cm",IDC_PD_CM3,494,195,16,8
+    LTEXT           "_Scaling mode:",IDC_PD_SCALING_TITLE,313,218,64,20
+    CONTROL         "_Printer driver",IDC_PD_RB_SCALING_DRIVER,"Button",BS_AUTORADIOBUTTON | WS_GROUP,381,216,95,10
+    CONTROL         "JPEGView",IDC_PD_RB_SCALING_JPEGVIEW,"Button",BS_AUTORADIOBUTTON,381,233,49,10
+    LTEXT           "_Alignment:",IDC_PD_ALIGNMENT_TITLE,313,253,63,19
+    CONTROL         "",IDC_PD_RB_00,"Button",BS_AUTORADIOBUTTON | BS_PUSHLIKE | WS_GROUP,381,251,19,17
+    CONTROL         "",IDC_PD_RB_10,"Button",BS_AUTORADIOBUTTON | BS_PUSHLIKE,400,251,19,17
+    CONTROL         "",IDC_PD_RB_20,"Button",BS_AUTORADIOBUTTON | BS_PUSHLIKE,419,251,19,17
+    CONTROL         "",IDC_PD_RB_01,"Button",BS_AUTORADIOBUTTON | BS_PUSHLIKE,381,268,19,17
+    CONTROL         "",IDC_PD_RB_11,"Button",BS_AUTORADIOBUTTON | BS_PUSHLIKE,400,268,19,17
+    CONTROL         "",IDC_PD_RB_21,"Button",BS_AUTORADIOBUTTON | BS_PUSHLIKE,419,268,19,17
+    CONTROL         "",IDC_PD_RB_02,"Button",BS_AUTORADIOBUTTON | BS_PUSHLIKE,381,285,19,17
+    CONTROL         "",IDC_PD_RB_12,"Button",BS_AUTORADIOBUTTON | BS_PUSHLIKE,400,285,19,17
+    CONTROL         "",IDC_PD_RB_22,"Button",BS_AUTORADIOBUTTON | BS_PUSHLIKE,419,285,19,17
+END
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -194,6 +242,14 @@ BEGIN
         TOPMARGIN, 7
         BOTTOMMARGIN, 97
     END
+
+    IDD_PRINT, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 514
+        TOPMARGIN, 6
+        BOTTOMMARGIN, 327
+    END
 END
 #endif    // APSTUDIO_INVOKED
 
@@ -216,6 +272,7 @@ BEGIN
         END
         MENUITEM "Save processed image...\t0x5de", IDM_SAVE
         MENUITEM "Reload image",                IDM_RELOAD
+        MENUITEM "Print image...",              IDM_PRINT
         MENUITEM "Batch rename/copy...",        IDM_BATCH_COPY
         POPUP "Set modification date"
         BEGIN
@@ -223,11 +280,11 @@ BEGIN
             MENUITEM "to EXIF date",                IDM_TOUCH_IMAGE_EXIF
             MENUITEM "to EXIF date (all files in folder)", IDM_TOUCH_IMAGE_EXIF_FOLDER
         END
-		POPUP "Set as desktop wallpaper"
-		BEGIN
-            MENUITEM "Use original image", IDM_SET_WALLPAPER_ORIG
+        POPUP "Set as desktop wallpaper"
+        BEGIN
+            MENUITEM "Use original image",          IDM_SET_WALLPAPER_ORIG
             MENUITEM "Use processed image as displayed", IDM_SET_WALLPAPER_DISPLAY
-		END
+        END
         MENUITEM SEPARATOR
         MENUITEM "Copy to clipboard",           IDM_COPY
         MENUITEM "Copy original size image",    IDM_COPY_FULL
@@ -357,7 +414,7 @@ BEGIN
         MENUITEM SEPARATOR
         POPUP "Settings/Admin"
         BEGIN
-			MENUITEM "Edit global settings...", IDM_EDIT_GLOBAL_CONFIG
+            MENUITEM "Edit global settings...",     IDM_EDIT_GLOBAL_CONFIG
             MENUITEM "Edit user settings...",       IDM_EDIT_USER_CONFIG
             MENUITEM "Manage 'Open image with' menu...", IDM_MANAGE_OPEN_WITH_MENU
             MENUITEM SEPARATOR
@@ -418,7 +475,7 @@ END
 
 VS_VERSION_INFO VERSIONINFO
  FILEVERSION 1,0,33,0
- PRODUCTVERSION 1, 0, 33, 0
+ PRODUCTVERSION 1,0,33,0
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L

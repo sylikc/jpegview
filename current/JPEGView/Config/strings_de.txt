@@ -381,3 +381,24 @@ Set as desktop wallpaper	Desktop-Hintergrundbild setzen
 Use original image	Originalbild verwenden
 Use processed image as displayed	Bearbeitetes Bild wie angezeigt verwenden
 Reset	Zurücksetzen
+Print image...	Bild drucken...
+Print Image	Bild drucken
+Print	Drucken
+Select Printer...	Drucker auswählen...
+Printer:	Drucker:
+Paper:	Papier:
+Source:	Quelle:
+Orientation:	Format:
+Portrait	Hochformat
+Landscape	Querformat
+Size:	Grösse:
+Fit to paper	An Papier anpassen
+cm	cm
+Scaling mode:	Skalierungsmodus:
+Printer driver	Druckertreiber
+Alignment:	Ausrichtung:
+Margins:	Ränder:
+Left	Links
+Right	Rechts
+Top	Oben
+Bottom	Unten

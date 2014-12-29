@@ -84,6 +84,48 @@
 #define IDC_RS_PIXELS                   2009
 #define IDC_RS_PIXELS2                  2010
 
+#define IDD_PRINT                       6000
+#define IDC_PD_LABEL_PRINTER            1000
+#define IDC_PD_PRINTER                  1001
+#define IDC_PD_BTN_CHANGE_PRINTER       1002
+#define IDC_PD_CB_PAPER                 2000
+#define IDC_PD_PAPER_TITLE              2001
+#define IDC_PD_CB_ORIENTATION           2002
+#define IDC_PD_TITLE_ORIENTATION        2003
+#define IDC_PD_SIZE_TITLE               2004
+#define IDC_PD_RB_FIT                   2005
+#define IDC_PD_RB_FIXED                 2006
+#define IDC_PD_ED_WIDTH                 2007
+#define IDC_PD_ED_HEIGHT                2008
+#define IDC_PD_X                        2009
+#define IDC_PD_CM                       2010
+#define IDC_PD_SCALING_TITLE            2011
+#define IDC_PD_RB_SCALING_DRIVER        2012
+#define IDC_PD_RB_SCALING_JPEGVIEW      2013
+#define IDC_PD_ALIGNMENT_TITLE          2014
+#define IDC_PD_RB_00                    2015
+#define IDC_PD_RB_10                    2016
+#define IDC_PD_RB_20                    2017
+#define IDC_PD_RB_01                    2018
+#define IDC_PD_RB_11                    2019
+#define IDC_PD_RB_21                    2020
+#define IDC_PD_RB_02                    2021
+#define IDC_PD_RB_12                    2022
+#define IDC_PD_RB_22                    2023
+#define IDC_PD_PAPER_SOURCE_TITLE       2024
+#define IDC_PD_CB_PAPER_SOURCE          2025
+#define IDC_PD_MARGINS_TITLE            2026
+#define IDC_PD_LEFT_TITLE               2027
+#define IDC_PD_ED_LEFT                  2028
+#define IDC_PD_RIGHT_TITLE              2029
+#define IDC_PD_ED_RIGHT                 2030
+#define IDC_PD_CM2                      2031
+#define IDC_PD_TOP_TITLE                2032
+#define IDC_PD_ED_TOP                   2033
+#define IDC_PD_BOTTOM_TITLE             2034
+#define IDC_PD_ED_BOTTOM                2035
+#define IDC_PD_CM3                      2036
+
 #define IDM_DEFAULT_ESC		255
 #define IDM_STOP_MOVIE		1000
 #define IDM_MINIMIZE		1010
@@ -92,6 +134,7 @@
 #define IDM_SAVE_SCREEN		1501
 #define IDM_SAVE_ALLOW_NO_PROMPT	1502
 #define IDM_RELOAD			1600
+#define IDM_PRINT			1700
 #define IDM_COPY			2000
 #define IDM_COPY_FULL		2500
 #define IDM_PASTE			2550
@@ -253,17 +296,17 @@
 // in the main menu
 // these position must be changed if menu items are inserted
 #define SUBMENU_POS_OPENWITH 3
-#define SUBMENU_POS_MODDATE 7
-#define SUBMENU_POS_WALLPAPER 8
-#define SUBMENU_POS_NAVIGATION 20
-#define SUBMENU_POS_DISPLAY_ORDER 21
-#define SUBMENU_POS_MOVIE 22
-#define SUBMENU_POS_TRANSFORM 24
-#define SUBMENU_POS_TRANSFORM_LOSSLESS 25
-#define SUBMENU_POS_ZOOM 33
-#define SUBMENU_POS_AUTOZOOMMODE 34
-#define SUBMENU_POS_SETTINGS 36
-#define SUBMENU_POS_USER_COMMANDS 38
+#define SUBMENU_POS_MODDATE 8
+#define SUBMENU_POS_WALLPAPER 9
+#define SUBMENU_POS_NAVIGATION 21
+#define SUBMENU_POS_DISPLAY_ORDER 22
+#define SUBMENU_POS_MOVIE 23
+#define SUBMENU_POS_TRANSFORM 25
+#define SUBMENU_POS_TRANSFORM_LOSSLESS 26
+#define SUBMENU_POS_ZOOM 34
+#define SUBMENU_POS_AUTOZOOMMODE 35
+#define SUBMENU_POS_SETTINGS 37
+#define SUBMENU_POS_USER_COMMANDS 39
 
 // in the crop menu
 #define SUBMENU_POS_CROPMODE 3

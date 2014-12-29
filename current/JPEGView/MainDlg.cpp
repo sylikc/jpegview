@@ -51,6 +51,7 @@
 #include "JPEGLosslessTransform.h"
 #include "DirectoryWatcher.h"
 #include "DesktopWallpaper.h"
+#include "PrintImage.h"
 
 //////////////////////////////////////////////////////////////////////////////////////////////
 // Constants
@@ -267,6 +268,7 @@ CMainDlg::CMainDlg(bool bForceFullScreen) {
 	m_pNavPanelCtl = NULL;
 	m_pCropCtl = new CCropCtl(this);
 	m_pKeyMap = new CKeyMap(CString(CSettingsProvider::This().GetEXEPath()) + _T("KeyMap.txt"));
+	m_pPrintImage = new CPrintImage();
 }
 
 CMainDlg::~CMainDlg() {
@@ -1156,6 +1158,7 @@ LRESULT CMainDlg::OnContextMenu(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam,
 	if (m_pCurrentImage == NULL) {
 		::EnableMenuItem(hMenuTrackPopup, IDM_SAVE, MF_BYCOMMAND | MF_GRAYED);
 		::EnableMenuItem(hMenuTrackPopup, IDM_RELOAD, MF_BYCOMMAND | MF_GRAYED);
+		::EnableMenuItem(hMenuTrackPopup, IDM_PRINT, MF_BYCOMMAND | MF_GRAYED);
 		::EnableMenuItem(hMenuTrackPopup, IDM_COPY, MF_BYCOMMAND | MF_GRAYED);
 		::EnableMenuItem(hMenuTrackPopup, IDM_COPY_FULL, MF_BYCOMMAND | MF_GRAYED);
 		::EnableMenuItem(hMenuTrackPopup, IDM_SAVE_PARAM_DB, MF_BYCOMMAND | MF_GRAYED);
@@ -1190,6 +1193,7 @@ LRESULT CMainDlg::OnContextMenu(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam,
 	if (m_bMovieMode) {
 		::EnableMenuItem(hMenuTrackPopup, IDM_SAVE, MF_BYCOMMAND | MF_GRAYED);
 		::EnableMenuItem(hMenuTrackPopup, IDM_RELOAD, MF_BYCOMMAND | MF_GRAYED);
+		::EnableMenuItem(hMenuTrackPopup, IDM_PRINT, MF_BYCOMMAND | MF_GRAYED);
 		::EnableMenuItem(hMenuTrackPopup, IDM_BATCH_COPY, MF_BYCOMMAND | MF_GRAYED);
 		::EnableMenuItem(hMenuTrackPopup, IDM_SAVE_PARAMETERS, MF_BYCOMMAND | MF_GRAYED);
 		::EnableMenuItem(hMenuTrackPopup, IDM_SAVE_PARAM_DB, MF_BYCOMMAND | MF_GRAYED);
@@ -1286,6 +1290,14 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 			break;
 		case IDM_RELOAD:
 			ReloadImage(false);
+			break;
+		case IDM_PRINT:
+			if (m_pCurrentImage != NULL) {
+				StopAnimation(); // stop any running animation
+				if (m_pPrintImage->Print(this->m_hWnd, m_pCurrentImage, *m_pImageProcParams, CreateDefaultProcessingFlags(), m_pFileList->Current())) {
+					this->Invalidate(FALSE);
+				}
+			}
 			break;
 		case IDM_COPY:
 			if (m_pCurrentImage != NULL) {

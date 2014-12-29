@@ -10,6 +10,7 @@
 #define IDM_SAVE_SCREEN		1501			// save to file in screen size
 #define IDM_SAVE_ALLOW_NO_PROMPT 1502			// save to file in original size, allow override without prompt when enabled in INI
 #define IDM_RELOAD		1600			// reload image
+#define IDM_PRINT		1700			// print image
 #define IDM_COPY		2000			// copy image to clipboard in screen size
 #define IDM_COPY_FULL		2500			// copy image to clipboard in original size
 #define IDM_PASTE		2550			// paste image from clipboard
@@ -190,6 +191,7 @@ S                       IDM_SAVE_PARAM_DB
 D                       IDM_CLEAR_PARAM_DB
 Ctrl+Shift+E            IDM_TOUCH_IMAGE_EXIF
 Ctrl+O                  IDM_OPEN
+Ctrl+P                  IDM_PRINT
 Ctrl+R                  IDM_RELOAD
 Ctrl+X                  IDM_COPY_FULL
 Ctrl+V                  IDM_PASTE
