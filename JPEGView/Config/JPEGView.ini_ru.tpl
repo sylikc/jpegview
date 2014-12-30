@@ -171,6 +171,12 @@ CPUType=AutoDetect
 ; Может принимать значения от 1 до 4 (или 0).
 CPUCoresUsed=0
 
+; Default print margin (all sides) in centimeters
+PrintMargin=1.0
+
+; Default print width in centimeters. Use negative numbers to set the 'Fit to paper' printing mode.
+PrintWidth=-15.0
+
 ; Фильтр ресэмплирования при уменьшении изображений. Может принимать значения «BestQuality», «NoAliasing» или «Narrow».
 ; «BestQuality»	– очень небольшое сглаживание.
 ; «NoAliasing»	– Lanczos-фильтр с почти полным отсутствием сглаживания, если резкость установлена в ноль.

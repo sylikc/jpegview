@@ -23,14 +23,14 @@ public:
 	VerticalAlignment AlignmentY;
 
 	// Uses default parameters
-	CPrintParameters() {
-		FitToPaper = true;
+	CPrintParameters(double defaultMarginCm, double defaultPrintWidthCm) {
+		FitToPaper = defaultPrintWidthCm < 0.0;
 		ScaleByPrinterDriver = true;
-		PrintWidth = 150 * 10;
-		MarginLeft = 10 * 10;
-		MarginTop = 10 * 10;
-		MarginRight = 10 * 10;
-		MarginBottom = 10 * 10;
+		PrintWidth = abs(defaultPrintWidthCm) * 100;
+		MarginLeft = defaultMarginCm * 100;
+		MarginTop = defaultMarginCm * 100;
+		MarginRight = defaultMarginCm * 100;
+		MarginBottom = defaultMarginCm * 100;
 		AlignmentX = HA_Center;
 		AlignmentY = VA_Top;
 	}

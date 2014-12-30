@@ -167,6 +167,12 @@ CPUType=AutoDetect
 ; Must be 1 to 4, or 0 for auto detect.
 CPUCoresUsed=0
 
+; Default print margin (all sides) in centimeters
+PrintMargin=1.0
+
+; Default print width in centimeters. Use negative numbers to set the 'Fit to paper' printing mode.
+PrintWidth=-15.0
+
 ; DownSamplingFilter can be BestQuality, NoAliasing or Narrow
 ; The BestQuality filter produces a very small amount of aliasing.
 ; The NoAliasing filter is a Lanczos filter that has almost no aliasing when sharpen is set to zero

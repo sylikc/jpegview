@@ -103,6 +103,8 @@ public:
     LPCTSTR FileNameFormat() { return m_sFileNameFormat; }
     bool ReloadWhenDisplayedImageChanged() { return m_bReloadWhenDisplayedImageChanged; }
 	bool AllowEditGlobalSettings() { return m_bAllowEditGlobalSettings; }
+	double PrintMargin() { return m_dPrintMargin; }
+	double DefaultPrintWidth() { return m_dDefaultPrintWidth; }
 
 	std::list<CUserCommand*> & UserCommandList() { return m_userCommands; }
 	std::list<CUserCommand*> & OpenWithCommandList() { return m_openWithCommands; }
@@ -232,6 +234,8 @@ private:
     CString m_sFileNameFormat;
     bool m_bReloadWhenDisplayedImageChanged;
 	bool m_bAllowEditGlobalSettings;
+	double m_dPrintMargin;
+	double m_dDefaultPrintWidth;
 
 	std::list<CUserCommand*> m_userCommands;
 	std::list<CUserCommand*> m_openWithCommands;

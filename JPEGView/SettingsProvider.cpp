@@ -318,6 +318,8 @@ void CSettingsProvider::ReadWriteableINISettings() {
     m_sFileNameFormat = ReplacePlaceholdersFileNameFormat(m_sFileNameFormat);
     m_bReloadWhenDisplayedImageChanged = GetBool(_T("ReloadWhenDisplayedImageChanged"), true);
 	m_bAllowEditGlobalSettings = GetBool(_T("AllowEditGlobalSettings"), false);
+	m_dPrintMargin = GetDouble(_T("PrintMargin"), 1.0, 0.0, 100.0);
+	m_dDefaultPrintWidth = GetDouble(_T("PrintWidth"), -15.0, -1000, 1000);
 }
 
 CImageProcessingParams CSettingsProvider::LandscapeModeParams(const CImageProcessingParams& templParams) {
