@@ -19,7 +19,7 @@ bool CPrintImage::Print(HWND hWnd, CJPEGImage * pImage, const CImageProcessingPa
 	}
 
 	if (m_pPrintParameters == NULL) {
-		m_pPrintParameters = new CPrintParameters();
+		m_pPrintParameters = new CPrintParameters(m_defaultMargin, m_defaultPrintWidth);
 	}
 
 	if (m_pPrinterSelectionDlg == NULL) {

@@ -268,7 +268,7 @@ CMainDlg::CMainDlg(bool bForceFullScreen) {
 	m_pNavPanelCtl = NULL;
 	m_pCropCtl = new CCropCtl(this);
 	m_pKeyMap = new CKeyMap(CString(CSettingsProvider::This().GetEXEPath()) + _T("KeyMap.txt"));
-	m_pPrintImage = new CPrintImage();
+	m_pPrintImage = new CPrintImage(CSettingsProvider::This().PrintMargin(), CSettingsProvider::This().DefaultPrintWidth());
 }
 
 CMainDlg::~CMainDlg() {
