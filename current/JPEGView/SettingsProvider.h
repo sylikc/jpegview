@@ -105,6 +105,7 @@ public:
 	bool AllowEditGlobalSettings() { return m_bAllowEditGlobalSettings; }
 	double PrintMargin() { return m_dPrintMargin; }
 	double DefaultPrintWidth() { return m_dDefaultPrintWidth; }
+	Helpers::EMeasureUnits MeasureUnit() { return m_eMeasureUnit; }
 
 	std::list<CUserCommand*> & UserCommandList() { return m_userCommands; }
 	std::list<CUserCommand*> & OpenWithCommandList() { return m_openWithCommands; }
@@ -236,6 +237,7 @@ private:
 	bool m_bAllowEditGlobalSettings;
 	double m_dPrintMargin;
 	double m_dDefaultPrintWidth;
+	Helpers::EMeasureUnits m_eMeasureUnit;
 
 	std::list<CUserCommand*> m_userCommands;
 	std::list<CUserCommand*> m_openWithCommands;
