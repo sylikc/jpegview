@@ -255,6 +255,7 @@ CMainDlg::CMainDlg(bool bForceFullScreen) {
     m_bIsAnimationPlaying = false;
     m_bUseLosslessWEBP = false;
     m_isBeforeFileSelected = true;
+	m_dLastImageDisplayTime = 0.0;
 
 	m_pPanelMgr = new CPanelMgr();
 	m_pZoomNavigatorCtl = NULL;
@@ -2312,6 +2313,15 @@ void CMainDlg::GotoImage(EImagePosition ePos, int nFlags) {
             StartAnimation();
         }
     }
+
+	// Sleep if a minimal display time is defined
+	double currentTime = Helpers::GetExactTickCount();
+	if (ePos == POS_Next || ePos == POS_Previous) {
+		double imageTime = currentTime - m_dLastImageDisplayTime;
+		double minimalTime = CSettingsProvider::This().MinimalDisplayTime();
+		if (minimalTime > 0 && (imageTime < minimalTime)) ::Sleep((int)(minimalTime - imageTime));
+	}
+	m_dLastImageDisplayTime = Helpers::GetExactTickCount();
 
 	if (((nFlags & NO_UPDATE_WINDOW) == 0) && !(ePos == POS_NextSlideShow && UseSlideShowTransitionEffect())) {
 	    this->Invalidate(FALSE);

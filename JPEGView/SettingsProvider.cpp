@@ -334,6 +334,7 @@ void CSettingsProvider::ReadWriteableINISettings() {
 	}
 
 	m_minimalWindowSize = GetSize(_T("MinimalWindowSize"), CSize(320, 240));
+	m_minimalDisplayTime = GetDouble(_T("MinimalDisplayTime"), 0.0, 0, 1000);
 }
 
 CImageProcessingParams CSettingsProvider::LandscapeModeParams(const CImageProcessingParams& templParams) {

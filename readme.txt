@@ -24,9 +24,11 @@ New features:
 - Free rotation is now stored in the parameter DB if no destructive processing (e.g. crop) has been applied before
 - Free rotation can be chained without error propagation because image is reloaded before rotation is applied.
   This only applies if no destructive processing (e.g. crop) has been applied in the processing chain.
-- New INI file setting:
-  MinimalWindowSize=w h
-  Allows setting the minimal window size in pixels
+- New INI file settings:
+  - MinimalWindowSize=width height
+    Allows setting the minimal window size in pixels
+  - MinimalDisplayTime = value
+    Minimal display time of an image when using the PgDn/PgUp keys (in milliseconds [0..1000 ms])
 Other changes:
 - Hiding parameter DB buttons when image is processed destructively as these operations cannot be stored in the
   parameter DB.
