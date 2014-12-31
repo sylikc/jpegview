@@ -5,6 +5,7 @@
 #include "HelpersGUI.h"
 #include "JPEGImage.h"
 #include "PrintParameters.h"
+#include "SettingsProvider.h"
 
 // Converts points to 1/10 millimeters
 static double PointsToMm10(int value, int dpi) {
@@ -42,6 +43,8 @@ CPrintDlg::CPrintDlg(CPrintParameters* pPrintParameters, CPrintDialogEx* pPrintD
 	m_handleDragMode = Handle_None;
 	m_dPixelsPerMm = 1;
 	m_leftMarginValid = m_rightMarginValid = m_topMarginValid = m_bottomMarginValid = true;
+
+	m_useInches = CSettingsProvider::This().MeasureUnit() == Helpers::MU_English;
 
 	m_hPrinterDC = NULL;
 }
@@ -107,7 +110,7 @@ LRESULT CPrintDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lPara
 	m_lblPaperOrientation.SetWindowText(CNLS::GetString(_T("Orientation:")));
 	m_lblSize.SetWindowText(CNLS::GetString(_T("Size:")));
 	m_rbFitToPaper.SetWindowText(CNLS::GetString(_T("Fit to paper")));
-	m_lblCM.SetWindowText(CNLS::GetString(_T("cm")));
+	m_lblCM.SetWindowText(m_useInches ? _T("in") : CNLS::GetString(_T("cm")));
 	m_lblScalingMode.SetWindowText(CNLS::GetString(_T("Scaling mode:")));
 	m_rbScalingModePrinterDriver.SetWindowText(CNLS::GetString(_T("Printer driver")));
 	m_lblAlignment.SetWindowText(CNLS::GetString(_T("Alignment:")));
@@ -116,8 +119,8 @@ LRESULT CPrintDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lPara
 	m_lblRight.SetWindowText(CNLS::GetString(_T("Right")));
 	m_lblTop.SetWindowText(CNLS::GetString(_T("Top")));
 	m_lblBottom.SetWindowText(CNLS::GetString(_T("Bottom")));
-	m_lblCM2.SetWindowText(CNLS::GetString(_T("cm")));
-	m_lblCM3.SetWindowText(CNLS::GetString(_T("cm")));
+	m_lblCM2.SetWindowText(m_useInches ? _T("in") : CNLS::GetString(_T("cm")));
+	m_lblCM3.SetWindowText(m_useInches ? _T("in") : CNLS::GetString(_T("cm")));
 
 	m_edtWidth.SetLimitText(6);
 	m_edtHeight.SetLimitText(6);
@@ -197,7 +200,8 @@ LRESULT CPrintDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, 
 	m_currentPrintableRect = printableRect;
 	
 	bool fitToPaper = m_rbFitToPaper.GetCheck() != 0;
-	CSize imageSize = fitToPaper ? Helpers::FitRectIntoRect(m_pImage->OrigSize(), printableRect).Size() : GetFixedImageSize(m_pImage->OrigSize(), CSize(paperSize), fittedPaper.Size());
+	CSize imageSize = fitToPaper ? Helpers::FitRectIntoRect(m_pImage->OrigSize(), printableRect).Size() : 
+		GetFixedImageSize(m_pImage->OrigSize(), CSize(paperSize), fittedPaper.Size());
 
 	CPrintParameters::HorizontalAlignment horizontalAlignment;
 	CPrintParameters::VerticalAlignment verticalAlignment;
@@ -211,7 +215,7 @@ LRESULT CPrintDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, 
 	dc.FillSolidRect(fittedPaper, RGB(255, 255, 255));
 	dc.Rectangle(fittedPaper);
 
-	if (pDIBData != NULL) {
+	if (pDIBData != NULL && imageSize.cx > 0 && imageSize.cy > 0) {
 		int xDest = imageRect.left;
 		int yDest = imageRect.top;
 		int xSize = imageRect.Width();
@@ -225,8 +229,7 @@ LRESULT CPrintDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, 
 		bmInfo.bmiHeader.biBitCount = 32;
 		bmInfo.bmiHeader.biCompression = BI_RGB;
 		dc.IntersectClipRect(printableRect);
-		dc.SetDIBitsToDevice(xDest, yDest, xSize, ySize, 0, 0, 0, ySize, pDIBData,
-			&bmInfo, DIB_RGB_COLORS);
+		dc.SetDIBitsToDevice(xDest, yDest, xSize, ySize, 0, 0, 0, ySize, pDIBData, &bmInfo, DIB_RGB_COLORS);
 	}
 
 	CPen dottedPen;
@@ -461,11 +464,13 @@ double CPrintDlg::ConvertToNumber(CEdit& editControl) {
 	editControl.GetWindowText(sNumber, MAX_LEN);
 	double value = -1;
 	_stscanf_s(sNumber, _T("%lf"), &value);
+	if (m_useInches) value = value * 2.54;
 	return value;
 }
 
 void CPrintDlg::SetNumber(CEdit& editControl, double number) {
 	if (number >= 0) {
+		if (m_useInches) number = number / 2.54;
 		const int MAX_LEN = 16;
 		TCHAR buffer[MAX_LEN];
 		_stprintf_s(buffer, MAX_LEN, _T("%.2f"), number);
@@ -686,10 +691,14 @@ CRect CPrintDlg::GetPrintableBoundingBox(const CRect& pixelPaperRect, const CSiz
 
 CSize CPrintDlg::GetFixedImageSize(const CSize& imageSize, const CSize& paperSizeMm10, const CSize& paperSizePixels) {
 	double width = ConvertToNumber(m_edtWidth) * 100; // now in 1/10 mm
-	if (ValidateFixedImageSize(width, paperSizeMm10)) m_dCurrentFixedPaperWidth = width;
-	double imageAR = (double)imageSize.cy / imageSize.cx;
-	double widthInPixels = paperSizePixels.cx * width / paperSizeMm10.cx;
-	return CSize(Helpers::RoundToInt(widthInPixels), Helpers::RoundToInt(widthInPixels * imageAR));
+	if (ValidateFixedImageSize(width, paperSizeMm10)) {
+		m_dCurrentFixedPaperWidth = width;
+		double imageAR = (double)imageSize.cy / imageSize.cx;
+		double widthInPixels = paperSizePixels.cx * width / paperSizeMm10.cx;
+		return CSize(Helpers::RoundToInt(widthInPixels), Helpers::RoundToInt(widthInPixels * imageAR));
+	} else {
+		return CSize(0, 0);
+	}
 }
 
 CRect CPrintDlg::Align(const CSize& size, const CRect& rect, CPrintParameters::HorizontalAlignment horizontalAlignment,

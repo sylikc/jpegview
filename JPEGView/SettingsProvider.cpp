@@ -320,6 +320,18 @@ void CSettingsProvider::ReadWriteableINISettings() {
 	m_bAllowEditGlobalSettings = GetBool(_T("AllowEditGlobalSettings"), false);
 	m_dPrintMargin = GetDouble(_T("PrintMargin"), 1.0, 0.0, 100.0);
 	m_dDefaultPrintWidth = GetDouble(_T("PrintWidth"), -15.0, -1000, 1000);
+
+	CString sUnit = GetString(_T("Units"), _T("auto"));
+	if (sUnit.CompareNoCase(_T("auto")) == 0) {
+		TCHAR buffer[2];
+		::GetLocaleInfo(LOCALE_USER_DEFAULT, LOCALE_IMEASURE, (LPTSTR)&buffer, 2);
+		buffer[1] = 0;
+		m_eMeasureUnit = (buffer[0] == _T('1')) ? Helpers::MU_English : Helpers::MU_Metric;
+	} else if (sUnit.CompareNoCase(_T("english")) == 0) {
+		m_eMeasureUnit = Helpers::MU_English;
+	} else {
+		m_eMeasureUnit = Helpers::MU_Metric;
+	}
 }
 
 CImageProcessingParams CSettingsProvider::LandscapeModeParams(const CImageProcessingParams& templParams) {

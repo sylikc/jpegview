@@ -155,6 +155,7 @@ private:
 	double m_dDeviceMarginLeft, m_dDeviceMarginTop, m_dDeviceMarginRight, m_dDeviceMarginBottom;
 	double m_dOrigMarginLeft, m_dOrigMarginTop, m_dOrigMarginRight, m_dOrigMarginBottom;
 	double m_dCurrentFixedPaperWidth;
+	double m_useInches; // not for internal values, only for user display
 
 	CRect m_currentPrintableRect;
 	CRect m_currentPaperRect;

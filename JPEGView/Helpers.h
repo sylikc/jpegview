@@ -66,6 +66,12 @@ namespace Helpers {
 		DC_Never
 	};
 
+	// Units used for measurements (e.g. lengths)
+	enum EMeasureUnits {
+		MU_Metric,
+		MU_English
+	};
+
 	// Maximum and minimum allowed zoom factors for images
 	const double ZoomMax = 16.0;
 	const double ZoomMin = 0.1;
