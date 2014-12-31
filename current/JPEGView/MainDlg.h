@@ -315,6 +315,7 @@ private:
     DWORD m_nLastSlideShowImageTickCount;
     bool m_bUseLosslessWEBP;
     bool m_isBeforeFileSelected;
+	double m_dLastImageDisplayTime;
 
 	bool OpenFile(bool bFullScreen, bool bAfterStartup);
 	void OpenFile(LPCTSTR sFileName, bool bAfterStartup);

@@ -107,6 +107,7 @@ public:
 	double DefaultPrintWidth() { return m_dDefaultPrintWidth; }
 	Helpers::EMeasureUnits MeasureUnit() { return m_eMeasureUnit; }
 	CSize MinimalWindowSize() { return m_minimalWindowSize; }
+	double MinimalDisplayTime() { return m_minimalDisplayTime; }
 
 	std::list<CUserCommand*> & UserCommandList() { return m_userCommands; }
 	std::list<CUserCommand*> & OpenWithCommandList() { return m_openWithCommands; }
@@ -240,6 +241,7 @@ private:
 	double m_dDefaultPrintWidth;
 	Helpers::EMeasureUnits m_eMeasureUnit;
 	CSize m_minimalWindowSize;
+	double m_minimalDisplayTime;
 
 	std::list<CUserCommand*> m_userCommands;
 	std::list<CUserCommand*> m_openWithCommands;
