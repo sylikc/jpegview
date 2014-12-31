@@ -682,7 +682,8 @@ LRESULT CMainDlg::OnSize(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BO
 LRESULT CMainDlg::OnGetMinMaxInfo(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, BOOL& /*bHandled*/) {
 	if (m_pJPEGProvider != NULL) {
 		MINMAXINFO* pMinMaxInfo = (MINMAXINFO*) lParam;
-		pMinMaxInfo->ptMinTrackSize = CPoint(MIN_WND_WIDTH, MIN_WND_HEIGHT);
+		CSize minimalSize = CSettingsProvider::This().MinimalWindowSize();
+		pMinMaxInfo->ptMinTrackSize = CPoint(max(0, minimalSize.cx), max(0, minimalSize.cy));
 		return 1;
 	} else {
 		return 0;

@@ -117,6 +117,9 @@ DefaultWindowRect=image
 ; Сохранённый прямоугольник окна для параметра DefaultWindowRect=sticky
 StickyWindowRect=
 
+; Minimal window size in windowed mode (in pixels)
+MinimalWindowSize=320 240
+
 ; Исходный размер окна при использовании обрезки с фиксированным размером.
 DefaultFixedCropSize=320 200
 

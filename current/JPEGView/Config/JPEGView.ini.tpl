@@ -110,6 +110,9 @@ DefaultWindowRect=image
 ; Contains the stored window rectangle in case of DefaultWindowRect=sticky
 StickyWindowRect=
 
+; Minimal window size in windowed mode (in pixels)
+MinimalWindowSize=320 240
+
 ; The initial crop window size when using 'Fixed Size' crop mode
 DefaultFixedCropSize=320 200
 

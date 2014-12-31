@@ -332,6 +332,8 @@ void CSettingsProvider::ReadWriteableINISettings() {
 	} else {
 		m_eMeasureUnit = Helpers::MU_Metric;
 	}
+
+	m_minimalWindowSize = GetSize(_T("MinimalWindowSize"), CSize(320, 240));
 }
 
 CImageProcessingParams CSettingsProvider::LandscapeModeParams(const CImageProcessingParams& templParams) {
