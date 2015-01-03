@@ -7,7 +7,7 @@
   <body text="#000000" bgcolor="#FFFFFF">
     <table>
       <colgroup>
-        <col width="250" span="1"/>
+        <col width="300" span="1"/>
         <col/>
       </colgroup>
       <tr>
@@ -16,9 +16,9 @@
           <a href="#Introduction">Introduction</a><br/>
           <a href="#Installation">Installation</a><br/>
           <a href="#Using">Using JPEGView</a><br/>
-          &nbsp;&nbsp;<a href="#GettingStarted">Getting started</a><br/>
-          &nbsp;&nbsp;<a href="#NavPanel">Navigation panel</a><br/>
-          &nbsp;&nbsp;<a href="#Viewing">Viewing images</a><br/>
+          &nbsp;&nbsp;<a href="#GettingStarted">Getting Started</a><br/>
+          &nbsp;&nbsp;<a href="#NavPanel">Navigation Panel</a><br/>
+          &nbsp;&nbsp;<a href="#Viewing">Viewing Images</a><br/>
           &nbsp;&nbsp;&nbsp;&nbsp;<a href="#Navigation">Navigation</a><br/>
           &nbsp;&nbsp;&nbsp;&nbsp;<a href="#ImageInfo">Image Information</a><br/>
           &nbsp;&nbsp;&nbsp;&nbsp;<a href="#ZoomPan">Zoom and Pan</a><br/>
@@ -29,19 +29,20 @@
           &nbsp;&nbsp;<a href="#SlideShow">Slideshows and Movies</a><br/>
           &nbsp;&nbsp;&nbsp;&nbsp;<a href="#Slideshows">Slideshows</a><br/>
           &nbsp;&nbsp;&nbsp;&nbsp;<a href="#Movies">Movies</a><br/>
-          &nbsp;&nbsp;<a href="#Processing">Processing images</a><br/>
-          &nbsp;&nbsp;&nbsp;&nbsp;<a href="#Processing">Available processings</a><br/>
-          &nbsp;&nbsp;&nbsp;&nbsp;<a href="#KeepingParams">Keeping parameters between images</a><br/>
-          &nbsp;&nbsp;&nbsp;&nbsp;<a href="#Comparing">Comparing to original image</a><br/>
-          &nbsp;&nbsp;<a href="#Saving">Saving and renaming images</a><br/>
+          &nbsp;&nbsp;<a href="#Processing">Processing Images</a><br/>
+          &nbsp;&nbsp;&nbsp;&nbsp;<a href="#Processing">Available Processings</a><br/>
+          &nbsp;&nbsp;&nbsp;&nbsp;<a href="#KeepingParams">Keeping Parameters Between Images</a><br/>
+          &nbsp;&nbsp;&nbsp;&nbsp;<a href="#Comparing">Comparing to Original Image</a><br/>
+          &nbsp;&nbsp;<a href="#Saving">Saving and Renaming Images</a><br/>
           &nbsp;&nbsp;<a href="#Clipboard">Clipboard</a><br/>
-          <a href="#ParameterDB">Parameter database</a><br/>
-          <a href="#INIFile">INI file settings</a><br/>
-          <a href="#CmdLine">Command line parameters</a><br/>
-          <a href="#KeyMap">Changing keyboard shortcuts</a><br/>
-          <a href="#RAWFiles">Viewing camera RAW files</a><br/>
-          <a href="#External">Calling external programs or batch files</a><br/>
-          <a href="#OpenWith">Opening image with external application</a><br/>
+          &nbsp;&nbsp;<a href="#Printing">Printing</a><br />
+          <a href="#ParameterDB">Parameter Database</a><br/>
+          <a href="#INIFile">INI File Settings</a><br/>
+          <a href="#CmdLine">Command Line Parameters</a><br/>
+          <a href="#KeyMap">Changing Keyboard Shortcuts</a><br/>
+          <a href="#RAWFiles">Viewing Camera RAW Files</a><br/>
+          <a href="#External">Calling External Programs or Batch Files</a><br/>
+          <a href="#OpenWith">Opening Image with External Application</a><br/>
           <a href="#Trouble">Troubleshooting</a><br/>
           <a href="#Copyright">License &amp; Copyright</a><br/>
         </td>
@@ -49,7 +50,7 @@
         <td>
           <a name="Top"></a>
           <h1>JPEGView Readme</h1>
-          Revision: 30-Nov-2014
+          Revision: 03-Jan-2015
           <a name="Introduction"></a>
           <h2>Introduction</h2>
           JPEGView is a viewer/editor for JPEG, BMP, WEBP, PNG, TGA, GIF and TIFF images. It is designed to view images from digital cameras
@@ -68,7 +69,7 @@
                   JPEG XR (Windows XP: <a href="http://www.microsoft.com/download/en/details.aspx?id=32">WIC</a> must be installed)
                 </li>
                 <li>PNG</li>
-                <li>GIF</li>
+                <li>GIF (including animated GIFs)</li>
                 <li>TIFF</li>
                 <li>TGA</li>
                 <li>
@@ -186,7 +187,7 @@
               panel by increasing the value of 'ScaleFactorNavPanel' in the INI file.
             </li>
           </ul>
-          <b>Supported Systems</b><br/>
+          <b>Supported Operating Systems</b><br/>
           <ul style="margin-top:0in;margin-bottom:0in">
             <li>Windows 8 / 8.1</li>
             <li>Windows 7</li>
@@ -239,7 +240,7 @@
           <a name="Using"></a>
           <h2>Using JPEGView</h2>
           <a name="GettingStarted"></a>
-          <h3>Getting started</h3>
+          <h3>Getting Started</h3>
           For getting started, the following commands in JPEGView are the most important ones:<br/>
           <ul style="margin-top:0in;margin-bottom:0in">
             <li>
@@ -261,7 +262,7 @@
             </li>
           </ul>
           <a name="NavPanel"></a>
-          <h3>Navigation panel</h3>
+          <h3>Navigation Panel</h3>
           <img src="Navpanel.png" alt="Navigation panel" border="0"/>
           <br/>
           From left to right:<br/>
@@ -277,7 +278,7 @@
           - Toggle landscape picture enhancement mode<br/>
           - Toggle display of image information (EXIF)<br/>
 
-          <h4>Full screen mode / Window mode</h4>
+          <h4>Full Screen Mode / Window Mode</h4>
           By default JPEGView starts in full screen mode on the largest monitor attached to the computer.
           A window mode is also supported. Toggling between full screen and window mode is done with <kbd>F11</kbd> or with
           the button on the navigation panel.<br/>
@@ -375,11 +376,11 @@
           The default ordering can be changed in the  <a href="#INIFile">INI file</a>.<br/>
           <a name="ImageInfo"></a>
           <h4>Image Information</h4>
-          <h5>Image and EXIF information</h5>
+          <h5>Image and EXIF Information</h5>
           Use <kbd>F2</kbd> to display information about the current image, including the value of some EXIF tags, e.g. date and
           time the image was taken and exposure information. Optionally the histogram of the image can be displayed below the
           EXIF information. The histogram is updated immediately when the image is processed.
-          <h5>File name and path</h5>
+          <h5>File Name and Path</h5>
           Use <kbd>Ctrl-F2</kbd> to display the full path and file name of the current image.
           <a name="ZoomPan"></a>
           <h4>Zoom and Pan</h4>
@@ -522,6 +523,9 @@
 
           <a name="SlideShow"></a>
           <h3>Slide Shows</h3>
+          JPEGView can display the content of the current folder (or folders if the navigation mode is set accordingly) as a slide show.
+          Alternatively a text file can be used to list the image files being part of a slide show.
+          <h4>Slide Show Text File</h4>
           A text file containing file names can be passed on the command line to JPEGView. Alternatively such a file can be loaded
           using the 'Open image' command. The following text file formats are supported:
           <ul style="margin-top:0in;margin-bottom:0in">
@@ -605,7 +609,7 @@
 
           <a name="Processing"></a>
           <h3>Processing Images</h3>
-          JPEGView provides some basic image processing. All image processing is done interactively on the fullscreen image what
+          JPEGView provides some basic image processing. Most image processing is done interactively on the fullscreen image what
           allows to see the effect of the processing immediately. The processed image can be stored either by storing the
           applied parameters in the parameter DB (the image remains untouched), by copying the processed image to the clipboard to
           further process it with an external program or by saving the processed image to a JPEG file.<br/>
@@ -616,20 +620,23 @@
               Keyboard: <kbd>Ctrl - +/-</kbd><br/>
               Mouse: Use processing panel<br/>
               Increases or decreases the global contrast of the image. Technically, the steepness
-              of an S-curve is changed by this parameter.
+              of an S-curve is changed by this parameter.<br/>
+              This value can be stored in the parameter DB.
             </li>
             <li>
               <b>Brightness</b><br/>
               Keyboard: <kbd>Shift - +/-</kbd><br/>
               Mouse: Use processing panel<br/>
               Increases or decreases the global brightness of the image. Technically, a exponent of
-              a gamma curve is changed by this parameter.
+              a gamma curve is changed by this parameter.<br />
+              This value can be stored in the parameter DB.
             </li>
             <li>
               <b>Saturation</b><br/>
               Keyboard: <kbd>none</kbd><br/>
               Mouse: Use processing panel<br/>
-              Increases or decreases the color saturation of the image.
+              Increases or decreases the color saturation of the image.<br />
+              This value can be stored in the parameter DB.
             </li>
             <li>
               <b>Downsampling Sharpness</b><br/>
@@ -637,7 +644,8 @@
               Mouse: Use processing panel. Note that this slider is only visible when the window/screen is large enough.<br/>
               Increases or decreases sharpness of the image. If the default sharpening filter is used, sharpness
               only applies to images that are downsampled but not for images displayed with 100% zoom. The
-              filter to be used can be set in the INI file.
+              filter to be used can be set in the INI file.<br />
+              This value can be stored in the parameter DB.
             </li>
             <li>
               <b>Unsharp Mask</b><br/>
@@ -648,7 +656,8 @@
               Sharpened Image = Original Image + Amount * ( Original Image - Smoothed Image)<br/>
               The 'Radius' parameter sets the radius of the smoothing kernel, the 'Amount' parameter sets the amount of sharpening and the
               'Threshold' value sets the miminal difference of original and smoothed image to apply the filter to a pixel.<br/>
-              Note that unsharp masking is previewed always in 100 % zoom.
+              Note that unsharp masking is previewed always in 100 % zoom.<br />
+              This value cannnot be stored in the parameter DB. The image must be saved ('Save image' in context menu) to retain the processing.
             </li>
             <li>
               <b>Free Rotate</b><br/>
@@ -659,7 +668,8 @@
               that this line is exactly horizontal, respecitively vertical.
               Activate this mode with the right most tool button on the panel.<br/>
               Press the 'Apply' button to apply the rotation to the original image with high quality (bicubic interpolation). By default the
-              rotated image is cropped automatically to avoid black borders. This behavior can be changed with the middle tool button on the rotation panel.
+              rotated image is cropped automatically to avoid black borders. This behavior can be changed with the middle tool button on the rotation panel.<br />
+              This value can be stored in the parameter DB.
             </li>
             <li>
               <b>Perspective Correction</b><br/>
@@ -669,21 +679,24 @@
               horizontally when taking the picture. Perspective correction can be used to correct for this effect - at least partially.<br/>
               In preview mode the image can be tilted with the mouse in real time, but with low quality. Grid lines help during the process.<br/>
               Press the 'Apply' button to apply the correction to the original image with high quality (bicubic interpolation). By default the
-              corrected image is cropped automatically to avoid black borders. This behavior can be changed with the right tool button on the panel.
+              corrected image is cropped automatically to avoid black borders. This behavior can be changed with the right tool button on the panel.<br />
+              This value cannnot be stored in the parameter DB. The image must be saved ('Save image' in context menu) to retain the processing.
             </li>
             <li>
-                <b>Change Size</b><br />
-                Keyboard: <kbd>none</kbd><br />
-                Mouse: Use context menu, 'Transform image &gt; Change size...' menu item.<br />
-                This will resize the image to the specified new size using one of the selectable filters. The 'Box' filter is just
-                repeating pixels (upsampling), respectively deleting pixels (downsampling). The other filters are higher order reconstruction filters
-                that balance between no aliasing and improved sharpness.
+              <b>Change Size</b><br />
+              Keyboard: <kbd>none</kbd><br />
+              Mouse: Use context menu, 'Transform image &gt; Change size...' menu item.<br />
+              This will resize the image to the specified new size using one of the selectable filters. The 'Box' filter is just
+              repeating pixels (upsampling), respectively deleting pixels (downsampling). The other filters are higher order reconstruction filters
+              that balance between no aliasing and improved sharpness.<br />
+              This value cannnot be stored in the parameter DB. The image must be saved ('Save image' in context menu) to retain the processing.
             </li>
             <li>
               <b>Color balance</b><br/>
               Mouse: Use processing panel<br/>
               Changes the color balance of the image by changing the cyan-red, magenta-green and yellow-blue
-              color balance.
+              color balance.<br />
+              This value can be stored in the parameter DB.
             </li>
             <li>
               <b>Local brightness</b><br/>
@@ -691,7 +704,8 @@
               Mouse: Use processing panel<br/>
               Toggle local brightness correction. Local brightness correction lightens shadows and darkens
               highlights by applying a smoothed additive/subtractive mask to the image. It can be used to correct images with
-              hard contrasts and uncovers details in dark shadows or in overexposed areas.
+              hard contrasts and uncovers details in dark shadows or in overexposed areas.<br />
+              This value can be stored in the parameter DB.
             </li>
             <li>
               <b>Color and contrast correction</b><br/>
@@ -699,7 +713,8 @@
               Mouse: Use processing panel<br/>
               Toggle color and contrast correction. Color correction tries to reduce global color casts. Contrast
               correction enhances contrast by moving the black point of the image (darkest area) towards black and the white point
-              (brightest area) towards white. The color and contrast correction algorithm can be configured in the INI file.
+              (brightest area) towards white. The color and contrast correction algorithm can be configured in the INI file.<br />
+              This value can be stored in the parameter DB.
             </li>
             <li>
               <b>Landscape picture enhancement mode</b><br/>
@@ -707,13 +722,14 @@
               Mouse: Use navigation panel<br/>
               Toggle landscape picture enhancement mode. The landscape picture mode is simply a special parameter set optimized
               for landscapes pictures. It will brighten shadows, darken highlights and enhance contrast when needed. The parameter
-              set used in landscape mode can be configured in the INI file (setting "LandscapeModeParams").
+              set used in landscape mode can be configured in the INI file (setting "LandscapeModeParams").<br />
+              This value can be stored in the parameter DB.
             </li>
           </ul>
           Most image processing can be done interactively with the mouse on the processing panel that appears when the mouse
           cursor is moved to the bottom of the screen.<br/>
           Default settings for most of the image processing parameters can be given in the <a href="#INIFile">INI file</a>.<br/>
-          <b>Tips</b><br/>
+          <b>Image Processing Tips</b><br/>
           <ul style="margin-top:0in;margin-bottom:0in">
             <li>
               Clicking on the number on the right of the sliders will temporarily reset the value to the default value. The value remains reset
@@ -722,14 +738,14 @@
             <li>Double clicking above a slider will permanently reset its value to the default value.</li>
           </ul>
           <a name="KeepingParams"></a>
-          <h4>Keeping parameters between images</h4>
+          <h4>Keeping Parameters Between Images</h4>
           By default, all image processing parameters (including zoom and pan) are reset to the default values given in the INI file
           when the next image is displayed. Using the <kbd>F4</kbd> key, the behavior can be changed to keeping the parameters between
           images. Pressing <kbd>F4</kbd> again will toggle back to not-keeping the parameters.<br/>
           <b>Note:</b> While keeping parameters mode is active, the parameter DB cannot be used. Parameter DB values are ignored while
           this mode is active.
           <a name="Comparing"></a>
-          <h4>Comparing processed image with original image</h4>
+          <h4>Comparing Processed Image with Original Image</h4>
           When JPEGView displays a new image, it creates a second set of image processing parameters and initializes it with zero,
           meaning that the original, unprocessed image will be displayed when this set is applied.
           <kbd>Ctrl-A</kbd> toggles between the two sets - allowing to compare the processed image with the original image.
@@ -740,8 +756,8 @@
           </b><br/>
 
           <a name="Saving"></a>
-          <h3>Saving and renaming Images</h3>
-          <h4>Saving images</h4>
+          <h3>Saving and Renaming Images</h3>
+          <h4>Saving Images</h4>
           Processed images can be saved as JPEG, BMP, PNG or TIFF files using the 'Save image' (<kbd>Ctrl-S</kbd>) command.
           The image is saved in its original size: Performed rotations are taken into account, zoom and pan are not.
           To save an image in screen size, use the <kbd>Ctrl-Shift-S</kbd> keyboard shortcut.<br/>
@@ -756,12 +772,12 @@
           EXIF information is copied to the target JPEG image if it was present in the source JPEG image. An embedded thumbnail image
           is updated - rotation and image processing is applied to the thumbnail image.<br/>
 
-          <h4>Renaming images</h4>
+          <h4>Renaming Images</h4>
           On the processing panel, images can be renamed by clicking on the file name with the mouse. To
           confirm the new name, press <kbd>Enter</kbd> or click outside of the edit control. To cancel renaming, press <kbd>Esc</kbd>.
           Note that renaming images is not possible when a slide show file is loaded because this would invalidate the slide show file.
 
-          <h4>Batch rename/copy</h4>
+          <h4>Batch Rename/Copy</h4>
           Using the context menu entry 'Batch rename/copy' a series of files from the current folder can be renamed and/or copied to
           another folder:
           <ol start="1" type="1">
@@ -812,6 +828,35 @@
             <a href="#Top">Top of Page</a>
           </b><br/>
 
+          <a name="Printing"></a>
+          <h3>Printing Images</h3>
+          Keyboard: <kbd>Ctrl-P</kbd><br />
+          Some aspects of printing can be changed in the INI file:
+          <ul style="margin-top:0in;margin-bottom:0in">
+              <li>
+                  <b>Default margins</b><br />
+                  Setting: <code>PrintMargin</code><br />
+                  Sets the default print margin (all sides) in centimeters.
+                  Notice that you cannot set this value below the physical margins as specified by the printer driver.
+              </li>
+              <li>
+                  <b>Default width of printed image</b><br />
+                  Setting: <code>PrintWidth</code><br />
+                  Sets the default print width in centimeters. Use negative numbers to set the 'Fit to paper' printing mode.
+              </li>
+              <li>
+                  <b>Units in print dialog</b><br />
+                  Setting: <code>Units</code><br />
+                  Sets the units (cm, inches) used in the print dialog. By default the units as specified by the operating system are used.
+                  Set to 'metric' or 'english' to force using centimeters, respectively inches.
+              </li>
+          </ul>
+          Notice that JPEGView uses the default printer as specified in the Windows printer configuration but allows changing the printer for
+          the time JPEGView is running. To change the default printer permanently, use the Windows printer configuration. 
+          <br /><br /><b>
+              <a href="#Top">Top of Page</a>
+          </b><br />
+
           <a name="ParameterDB"></a>
           <h2>Parameter Database</h2>
           The currently visible section, rotation and the image processing parameters can be bound to the image by storing them to the
@@ -854,7 +899,7 @@
               The visible section is stored resolution independent - the same section will be displayed on a monitor with a higher
               resolution (but the zoom factor will be different then).
             </li>
-            <li>Rotation of image (only 90 deg step rotation, not the free angle rotation)</li>
+            <li>Rotation of image</li>
             <li>Contrast value</li>
             <li>Brightness value</li>
             <li>Saturation value</li>
@@ -869,7 +914,7 @@
             <li>Contrast correction amount</li>
             <li>High quality resizing on/off</li>
           </ul>
-          The parameter database is located in 'Documents and Settings\<i>Username</i>\Application Data\JPEGView\ParamDB.db',
+          The parameter database is located in 'Users\<i>Username</i>\AppData\roaming\JPEGView\ParamDB.db',
           respectively in the EXE path when StoreToEXEPath=true is set in the INI file.
           It uses 40 bytes per stored parameter set and is limitated to 100000 entries.<br/>
           <b>Note:</b> The parameter DB settings have precedence over any image processing settings in the INI file.
@@ -878,7 +923,7 @@
           </b><br/>
 
           <a name="INIFile"></a>
-          <h2>JPEGView.ini file</h2>
+          <h2>JPEGView.ini File</h2>
           The INI file of JPEGView allows configuring a lot of parameters of the application. A two level hierarchy of INI files is
           used. If a setting is found in the user INI file, it has precedence over the same setting in the global INI file.
           <ul style="margin-top:0in;margin-bottom:0in">
@@ -911,7 +956,7 @@
           aware that these values are then used as default values for all images!<br/><br/>
           <b>Note:</b> No user INI file is used if the key StoreToEXEPath is set
           to true in the global INI file. All saved setting are directly written to the global INI file in this case.
-          <h3>INI file settings</h3>
+          <h3>INI File Settings</h3>
           The INI file settings are explained in detail in the <a href="./JPEGView.ini">INI file (Caution: The link is to the global INI) itself</a>.
           Only an overview on the available settings is given here:
           <ul style="margin-top:0in;margin-bottom:0in">
@@ -950,16 +995,16 @@
           </b><br/>
 
           <a name="CmdLine"></a>
-          <h2>Command line parameters</h2>
+          <h2>Command Line Parameters</h2>
 
           JPEGView supports the following command line parameters:
           <ul style="margin-top:0in;margin-bottom:0in">
             <li>
               <code>filename</code><br/>
               File name of the file to load or folder to show. If this is a file name, it must be a valid
-              image file name or a file name of a text file that contains a list of files to display. If it is a folder name, JPEGView
-              displays the image files in this folder.<br/>
-              If a file name is given, it must be given before all other parameters in the command line.<br/>
+              image file name or a file name of a text file that contains a list of files to display, listing one file name per line.
+              If it is a folder name, JPEGView displays the image files in this folder.<br/>
+              The file name must be specified before all other parameters in the command line.<br/>
               Note: No slide show is started automatically. Use the /slideshow parameter for that.
             </li>
             <li>
@@ -1014,15 +1059,15 @@
           </b><br/>
 
           <a name="KeyMap"></a>
-          <h2>Keymap - changing keyboard and mouse shortcuts</h2>
+          <h2>Keymap - Changing Keyboard and Mouse Shortcuts</h2>
           The mapping of keys to commands can be changed by editing the <a href="./KeyMap.txt">keymap file</a>.<br/>
-          Using the keymap file it is also possible to define additional keyboard shortcuts for command that are
+          Within the keymap file it is also possible to define additional keyboard shortcuts for command that are
           not mapped by default. The keymap file also allows defining a command that gets executed when pressing one
           of the mouse buttons. Be aware that by doing so, the default mouse button functionality will be disabled.<br/>
           When editing this file, make sure you follow the instructions mentioned in the keymap file itself.
 
           <a name="RAWFiles"></a>
-          <h2>Adding support for viewing camera RAW files to JPEGView</h2>
+          <h2>Adding Support for Viewing Camera RAW Files to JPEGView</h2>
           JPEGView has built in support to view the JPEG images embedded in many camera RAW files. These embedded JPEGs often
           have a smaller resolution than the RAW image itself but can be decoded and displayed very quickly.<br/>
           Support for viewing the full size camera RAW images is provided indirectly by using the Microsoft Camera Codec pack.<br/>
@@ -1047,7 +1092,7 @@
           </ul>
           <b>Be warned that decoding the full size RAW images is much, much slower than just decoding the embedded JPEG!</b>
           <a name="External"></a>
-          <h2>Calling external programs or batch files</h2>
+          <h2>Calling External Programs or Batch Files</h2>
           In the INI file, user commands can be defined. User command can call any external program or batch file and can be integrated into JPEGView using:
           <ul style="margin-top:0in;margin-bottom:0in">
             <li>
@@ -1061,7 +1106,7 @@
           JPEGView itself uses this mechanism to implement the following commands:
           <ul style="margin-top:0in;margin-bottom:0in">
             <li>
-              <kbd>Del</kbd> : Delete the current image file permanently - calls the command processor (cmd.exe) to
+              <kbd>Shift-Del</kbd> : Delete the current image file permanently - calls the command processor (cmd.exe) to
               delete the file.
             </li>
           </ul>
@@ -1071,7 +1116,7 @@
           </b><br/>
 
           <a name="OpenWith"></a>
-          <h2>Opening images with external applications</h2>
+          <h2>Opening Images with External Applications</h2>
           JPEGView supports opening the currently displayed image in an external application (e.g. GIMP) if the application supports passing a file
           name on the command line (as most applications do).<br/>
           To define external applications, use the 'Settings/Admin' - 'Manage 'Open with' menu' dialog.
@@ -1120,7 +1165,7 @@
 
           <a name="Copyright"></a>
           <h2>License &amp; Copyright</h2>
-          Copyright &copy; 2006-2014 David Kleiner<br/><br/>
+          Copyright &copy; 2006-2015 David Kleiner<br/><br/>
           This program is free software; you can redistribute it and/or modify
           it under the terms of the GNU General Public License as published by
           the Free Software Foundation, version 2.
