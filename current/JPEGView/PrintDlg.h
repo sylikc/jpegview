@@ -85,7 +85,11 @@ private:
 		Handle_Left,
 		Handle_Right,
 		Handle_Top,
-		Handle_Bottom
+		Handle_Bottom,
+		Handle_TopLeft,
+		Handle_TopRight,
+		Handle_BottomLeft,
+		Handle_BottomRight
 	};
 
 	CButton m_btnPrint;
@@ -163,8 +167,8 @@ private:
 	EHandle m_handleDragMode;
 	double m_dPixelsPerMm;
 	CPoint m_startDragPoint;
-	double m_startDragMargin; // in 1/10 mm
-	double m_maxMargin; // in 1/10 mm
+	double m_startDragMargin, m_startDragMargin2; // in 1/10 mm
+	double m_maxMargin, m_maxMargin2; // in 1/10 mm
 	bool m_leftMarginValid, m_rightMarginValid, m_topMarginValid, m_bottomMarginValid;
 
 	bool m_blockUpdate;
@@ -184,8 +188,16 @@ private:
 	bool SetMarginCursor(int x, int y);
 	EHandle PrintAreaHandleHit(int x, int y);
 	void DragMargin(int x, int y);
+	void SetLeftMargin(double maxMargin, double startDrag, const CPoint& delta);
+	void SetRightMargin(double maxMargin, double startDrag, const CPoint& delta);
+	void SetTopMargin(double maxMargin, double startDrag, const CPoint& delta);
+	void SetBottomMargin(double maxMargin, double startDrag, const CPoint& delta);
 	void Validate();
 	bool ValidateFixedImageSize(double width, const CSize& paperSize); // width and paper size in 1/10 mm
+	double CalculateMaxLeftMargin();
+	double CalculateMaxRightMargin();
+	double CalculateMaxTopMargin();
+	double CalculateMaxBottomMargin();
 
 	double ConvertToNumber(CEdit& editControl);
 	void SetNumber(CEdit& editControl, double number);

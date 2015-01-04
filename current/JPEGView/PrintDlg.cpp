@@ -268,19 +268,43 @@ LRESULT CPrintDlg::OnLButtonDown(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam
 		{
 		case CPrintDlg::Handle_Left:
 			m_startDragMargin = m_pPrintParameters->MarginLeft;
-			m_maxMargin = 10 * (m_currentPrintableRect.right - m_currentPaperRect.left - 2) / m_dPixelsPerMm;
+			m_maxMargin = CalculateMaxLeftMargin();
 			break;
 		case CPrintDlg::Handle_Right:
 			m_startDragMargin = m_pPrintParameters->MarginRight;
-			m_maxMargin = 10 * (m_currentPaperRect.right - m_currentPrintableRect.left - 2) / m_dPixelsPerMm;
+			m_maxMargin = CalculateMaxRightMargin();
 			break;
 		case CPrintDlg::Handle_Top:
 			m_startDragMargin = m_pPrintParameters->MarginTop;
-			m_maxMargin = 10 * (m_currentPrintableRect.bottom - m_currentPaperRect.top - 2) / m_dPixelsPerMm;
+			m_maxMargin = CalculateMaxTopMargin();
 			break;
 		case CPrintDlg::Handle_Bottom:
 			m_startDragMargin = m_pPrintParameters->MarginBottom;
-			m_maxMargin = 10 * (m_currentPaperRect.bottom - m_currentPrintableRect.top - 2) / m_dPixelsPerMm;
+			m_maxMargin = CalculateMaxBottomMargin();
+			break;
+		case CPrintDlg::Handle_TopLeft:
+			m_startDragMargin = m_pPrintParameters->MarginLeft;
+			m_maxMargin = CalculateMaxLeftMargin();
+			m_startDragMargin2 = m_pPrintParameters->MarginTop;
+			m_maxMargin2 = CalculateMaxTopMargin();
+			break;
+		case CPrintDlg::Handle_TopRight:
+			m_startDragMargin = m_pPrintParameters->MarginRight;
+			m_maxMargin = CalculateMaxRightMargin();
+			m_startDragMargin2 = m_pPrintParameters->MarginTop;
+			m_maxMargin2 = CalculateMaxTopMargin();
+			break;
+		case CPrintDlg::Handle_BottomLeft:
+			m_startDragMargin = m_pPrintParameters->MarginLeft;
+			m_maxMargin = CalculateMaxLeftMargin();
+			m_startDragMargin2 = m_pPrintParameters->MarginBottom;
+			m_maxMargin2 = CalculateMaxBottomMargin();
+			break;
+		case CPrintDlg::Handle_BottomRight:
+			m_startDragMargin = m_pPrintParameters->MarginRight;
+			m_maxMargin = CalculateMaxRightMargin();
+			m_startDragMargin2 = m_pPrintParameters->MarginBottom;
+			m_maxMargin2 = CalculateMaxBottomMargin();
 			break;
 		}
 		InvalidateRect(GetPaperPaintBoundingBox());
@@ -802,6 +826,14 @@ bool CPrintDlg::SetMarginCursor(int x, int y) {
 	case Handle_Bottom:
 		::SetCursor(::LoadCursor(NULL, IDC_SIZENS));
 		return true;
+	case Handle_TopLeft:
+	case Handle_BottomRight:
+		::SetCursor(::LoadCursor(NULL, IDC_SIZENWSE));
+		return true;
+	case Handle_TopRight:
+	case Handle_BottomLeft:
+		::SetCursor(::LoadCursor(NULL, IDC_SIZENESW));
+		return true;
 	}
 	return false;
 }
@@ -809,11 +841,21 @@ bool CPrintDlg::SetMarginCursor(int x, int y) {
 CPrintDlg::EHandle CPrintDlg::PrintAreaHandleHit(int x, int y) {
 	if (m_currentPrintableRect.IsRectNull()) return Handle_None;
 	int gap = HelpersGUI::ScaleToScreen(5);
-	if (x > m_currentPrintableRect.left - gap && x < m_currentPrintableRect.left + gap && y > m_currentPrintableRect.top && y < m_currentPrintableRect.bottom) {
-		return Handle_Left;
+	if (x > m_currentPrintableRect.left - gap && x < m_currentPrintableRect.left + gap) {
+		if (y > m_currentPrintableRect.top - gap && y < m_currentPrintableRect.top + gap)
+			return Handle_TopLeft;
+		if (y > m_currentPrintableRect.bottom - gap && y < m_currentPrintableRect.bottom + gap)
+			return Handle_BottomLeft;
+		if (y > m_currentPrintableRect.top && y < m_currentPrintableRect.bottom)
+			return Handle_Left;
 	}
-	if (x > m_currentPrintableRect.right - gap && x < m_currentPrintableRect.right + gap && y > m_currentPrintableRect.top && y < m_currentPrintableRect.bottom) {
-		return Handle_Right;
+	if (x > m_currentPrintableRect.right - gap && x < m_currentPrintableRect.right + gap) {
+		if (y > m_currentPrintableRect.top - gap && y < m_currentPrintableRect.top + gap)
+			return Handle_TopRight;
+		if (y > m_currentPrintableRect.bottom - gap && y < m_currentPrintableRect.bottom + gap)
+			return Handle_BottomRight;
+		if (y > m_currentPrintableRect.top && y < m_currentPrintableRect.bottom)
+			return Handle_Right;
 	}
 	if (y > m_currentPrintableRect.top - gap && y < m_currentPrintableRect.top + gap && x > m_currentPrintableRect.left && x < m_currentPrintableRect.right) {
 		return Handle_Top;
@@ -826,34 +868,70 @@ CPrintDlg::EHandle CPrintDlg::PrintAreaHandleHit(int x, int y) {
 
 void CPrintDlg::DragMargin(int x, int y) {
 	if (m_handleDragMode != Handle_None) {
-		const double Mm10ToCm = 0.01; // 1/10 mm to cm
 		CPoint delta = CPoint(x - m_startDragPoint.x, y - m_startDragPoint.y);
 		m_blockUpdate = true;
 		switch (m_handleDragMode) {
 		case Handle_Left:
-			m_pPrintParameters->MarginLeft = max(0.0, min(m_maxMargin, m_startDragMargin + 10 * delta.x / m_dPixelsPerMm));
-			m_leftMarginValid = true;
-			SetNumber(m_edtLeft, m_pPrintParameters->MarginLeft * Mm10ToCm);
+			SetLeftMargin(m_maxMargin, m_startDragMargin, delta);
 			break;
 		case Handle_Right:
-			m_pPrintParameters->MarginRight = max(0.0, min(m_maxMargin, m_startDragMargin - 10 * delta.x / m_dPixelsPerMm));
-			m_rightMarginValid = true;
-			SetNumber(m_edtRight, m_pPrintParameters->MarginRight * Mm10ToCm);
+			SetRightMargin(m_maxMargin, m_startDragMargin, delta);
 			break;
 		case Handle_Top:
-			m_pPrintParameters->MarginTop = max(0.0, min(m_maxMargin, m_startDragMargin + 10 * delta.y / m_dPixelsPerMm));
-			m_topMarginValid = true;
-			SetNumber(m_edtTop, m_pPrintParameters->MarginTop * Mm10ToCm);
+			SetTopMargin(m_maxMargin, m_startDragMargin, delta);
 			break;
 		case Handle_Bottom:
-			m_pPrintParameters->MarginBottom = max(0.0, min(m_maxMargin, m_startDragMargin - 10 * delta.y / m_dPixelsPerMm));
-			m_bottomMarginValid = true;
-			SetNumber(m_edtBottom, m_pPrintParameters->MarginBottom * Mm10ToCm);
+			SetBottomMargin(m_maxMargin, m_startDragMargin, delta);
+			break;
+		case Handle_TopLeft:
+			SetLeftMargin(m_maxMargin, m_startDragMargin, delta);
+			SetTopMargin(m_maxMargin2, m_startDragMargin2, delta);
+			break;
+		case Handle_TopRight:
+			SetRightMargin(m_maxMargin, m_startDragMargin, delta);
+			SetTopMargin(m_maxMargin2, m_startDragMargin2, delta);
+			break;		
+		case Handle_BottomLeft:
+			SetLeftMargin(m_maxMargin, m_startDragMargin, delta);
+			SetBottomMargin(m_maxMargin2, m_startDragMargin2, delta);
+			break;
+		case Handle_BottomRight:
+			SetRightMargin(m_maxMargin, m_startDragMargin, delta);
+			SetBottomMargin(m_maxMargin2, m_startDragMargin2, delta);
 			break;
 		}
+
 		m_blockUpdate = false;
 		InvalidateRect(GetPaperPaintBoundingBox(), FALSE);
 	}
+}
+
+void CPrintDlg::SetLeftMargin(double maxMargin, double startDrag, const CPoint& delta) {
+	const double Mm10ToCm = 0.01; // 1/10 mm to cm
+	m_pPrintParameters->MarginLeft = max(0.0, min(maxMargin, startDrag + 10 * delta.x / m_dPixelsPerMm));
+	m_leftMarginValid = true;
+	SetNumber(m_edtLeft, m_pPrintParameters->MarginLeft * Mm10ToCm);
+}
+
+void CPrintDlg::SetRightMargin(double maxMargin, double startDrag, const CPoint& delta) {
+	const double Mm10ToCm = 0.01; // 1/10 mm to cm
+	m_pPrintParameters->MarginRight = max(0.0, min(maxMargin, startDrag - 10 * delta.x / m_dPixelsPerMm));
+	m_rightMarginValid = true;
+	SetNumber(m_edtRight, m_pPrintParameters->MarginRight * Mm10ToCm);
+}
+
+void CPrintDlg::SetTopMargin(double maxMargin, double startDrag, const CPoint& delta) {
+	const double Mm10ToCm = 0.01; // 1/10 mm to cm
+	m_pPrintParameters->MarginTop = max(0.0, min(maxMargin, startDrag + 10 * delta.y / m_dPixelsPerMm));
+	m_topMarginValid = true;
+	SetNumber(m_edtTop, m_pPrintParameters->MarginTop * Mm10ToCm);
+}
+
+void CPrintDlg::SetBottomMargin(double maxMargin, double startDrag, const CPoint& delta) {
+	const double Mm10ToCm = 0.01; // 1/10 mm to cm
+	m_pPrintParameters->MarginBottom = max(0.0, min(maxMargin, startDrag - 10 * delta.y / m_dPixelsPerMm));
+	m_bottomMarginValid = true;
+	SetNumber(m_edtBottom, m_pPrintParameters->MarginBottom * Mm10ToCm);
 }
 
 void CPrintDlg::Validate() {
@@ -869,4 +947,20 @@ void CPrintDlg::Validate() {
 
 bool CPrintDlg::ValidateFixedImageSize(double width, const CSize& paperSize) {
 	return width > 0 && Helpers::RoundToInt(width) <= paperSize.cx * 2;
+}
+
+double CPrintDlg::CalculateMaxLeftMargin() {
+	return 10 * (m_currentPrintableRect.right - m_currentPaperRect.left - 2) / m_dPixelsPerMm;
+}
+
+double CPrintDlg::CalculateMaxRightMargin() {
+	return 10 * (m_currentPaperRect.right - m_currentPrintableRect.left - 2) / m_dPixelsPerMm;
+}
+
+double CPrintDlg::CalculateMaxTopMargin() {
+	return 10 * (m_currentPrintableRect.bottom - m_currentPaperRect.top - 2) / m_dPixelsPerMm;
+}
+
+double CPrintDlg::CalculateMaxBottomMargin() {
+	return 10 * (m_currentPaperRect.bottom - m_currentPrintableRect.top - 2) / m_dPixelsPerMm;
 }
