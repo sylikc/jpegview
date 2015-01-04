@@ -176,6 +176,8 @@
     <ClCompile Include="MultiMonitorSupport.cpp" />
     <ClCompile Include="NLS.cpp" />
     <ClCompile Include="ParameterDB.cpp" />
+    <ClCompile Include="PrintDlg.cpp" />
+    <ClCompile Include="PrintImage.cpp" />
     <ClCompile Include="ProcessingThreadPool.cpp" />
     <ClCompile Include="ReaderBMP.cpp" />
     <ClCompile Include="ReaderTGA.cpp" />
@@ -254,6 +256,9 @@
     <ClInclude Include="MultiMonitorSupport.h" />
     <ClInclude Include="NLS.h" />
     <ClInclude Include="ParameterDB.h" />
+    <ClInclude Include="PrintDlg.h" />
+    <ClInclude Include="PrintImage.h" />
+    <ClInclude Include="PrintParameters.h" />
     <ClInclude Include="ProcessingThreadPool.h" />
     <ClInclude Include="ProcessParams.h" />
     <ClInclude Include="ReaderBMP.h" />
