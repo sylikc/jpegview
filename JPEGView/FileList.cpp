@@ -325,7 +325,7 @@ bool CFileList::DeleteFile(LPCTSTR fileNameWithPath) const {
 		fileOp.pTo = NULL;
 		fileOp.fFlags = FOF_ALLOWUNDO | FOF_NOCONFIRMATION;
 		fileOp.hNameMappings = NULL;
-		if (::SHFileOperation(&fileOp) == 0) {
+		if (::SHFileOperation(&fileOp) == 0 && !fileOp.fAnyOperationsAborted) {
 			return true;
 		}
 	}

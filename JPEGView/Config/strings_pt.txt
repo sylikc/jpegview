@@ -384,3 +384,25 @@ Hour / Minute (as numbers)	Hora/Minuto (numérico)
 Set as desktop wallpaper	Definir como papel de parede
 Use original image	Utilizar imagem original
 Use processed image as displayed	Utilizar imagem tal e qual como mostrada
+Reset	Restaurar
+Print image...	Imprimir imagem...
+Print Image	Imprimir imagem
+Print	Imprimir
+Select Printer...	Selecionar impressora...
+Printer:	Impressora:
+Paper:	Papel:
+Source:	Origem:
+Orientation:	Orientação:
+Portrait	Vertical
+Landscape	Horizontal
+Size:	Tamanho:
+Fit to paper	Ajustar ao papel
+cm	cm
+Scaling mode:	Modo de escala:
+Printer driver	Controlador da impressora
+Alignment:	Alinhamento:
+Margins:	Margens:
+Left	Esquerda
+Right	Direita
+Top	Superior
+Bottom	Inferior
