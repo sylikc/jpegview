@@ -5,7 +5,7 @@
 //TranslatorName=Bonsai
 //Contact=none
 //TranslatorURL=none
-//LastUpdated=Mar 26, 2014
+//LastUpdated=Jan 2015
 //
 Contrast	Контрастність
 Brightness	Яскравість
@@ -373,4 +373,26 @@ Hour / Minute (as numbers)	Година / Хвилина (цифрами)
 Set as desktop wallpaper	Встановити як шпалери
 Use original image	Використовувати оригінальні зображення
 Use processed image as displayed	Використовувати оброблене зображення, як показано
+Reset	Скинути налаштування
+Print image...	Друк зображення...
+Print Image	Друк Зображення
+Print	Друк
+Select Printer...	Вибрати принтер
+Printer:	Принтер
+Paper:	Папір
+Source:	Джерело
+Orientation:	Орієнтація
+Portrait	Книжкова
+Landscape	Альбомна
+Size:	Розмір
+Fit to paper	За розміром паперу
+cm	см
+Scaling mode:	Режим збільшення
+Printer driver	Драйвер принтера
+Alignment:	Вирівнювання
+Margins:	Поля
+Left	Ліве
+Right	Праве
+Top	Верхнє
+Bottom	Нижнє
 

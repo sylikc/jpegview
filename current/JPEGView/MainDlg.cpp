@@ -1342,6 +1342,10 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 						m_pFileList->DeleteHistory(true);
 						Invalidate();
 						GotoImage(POS_Current);
+					} else {
+						Invalidate();
+						if (m_pFileList->Current() == NULL) GotoImage(POS_First);
+						else GotoImage(POS_Previous);
 					}
 				}
 			}

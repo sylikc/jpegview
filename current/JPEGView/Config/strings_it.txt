@@ -380,3 +380,25 @@ Hour / Minute (as numbers)	Ore / Minuti (come numeri)
 Set as desktop wallpaper	Imposta come sfondo del desktop
 Use original image	Usa immagine originale
 Use processed image as displayed	Usa immagine modificata come visualizzata
+Reset	Ripristina
+Print image...	Stampa Immagine...
+Print Image	Stampa Immagine
+Print	Stampa
+Select Printer...	Seleziona Stampante
+Printer:	Stampante:
+Paper:	Carta:
+Source:	Sorgente:
+Orientation:	Orientamento
+Portrait	Verticale
+Landscape	Orizzontale
+Size:	Dimensione:
+Fit to paper	Adatta alla pagina
+cm	cm
+Scaling mode:	Metodo scala:
+Printer driver	Driver stampante
+Alignment:	Allineamento:
+Margins:	Margini:
+Left	Sinistro
+Right	Destro
+Top	Superiore
+Bottom	Inferiore

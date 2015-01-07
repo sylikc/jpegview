@@ -5,7 +5,7 @@
 //TranslatorName=Dmitry Yerokhin
 //Contact=erodim@mail.ru
 //TranslatorURL=none
-//LastUpdated=Dec 01, 2014
+//LastUpdated=Jan 07, 2015
 //
 Contrast	Контрастность
 Brightness	Яркость
@@ -387,3 +387,25 @@ Hour / Minute (as numbers)	час / минута (цифрами)
 Set as desktop wallpaper	Сделать рисунком рабочего стола
 Use original image	Исходное изображение
 Use processed image as displayed	Обработанное изображение (как на экране)
+Reset	Сброс
+Print image...	Печать изображения...
+Print Image	Печать изображения
+Print	Печать
+Select Printer...	Выбрать принтер
+Printer:	Принтер:
+Paper:	Бумага:
+Source:	Источник:
+Orientation:	Ориентация:
+Portrait	Книжная
+Landscape	Альбомная
+Size:	Размер:
+Fit to paper	Вписать в лист
+cm	см
+Scaling mode:	Масштабирование:
+Printer driver	Драйвер принтера
+Alignment:	Компоновка:
+Margins:	Поля:
+Left	Слева
+Right	Справа
+Top	Сверху
+Bottom	Снизу

@@ -19,6 +19,8 @@ Changelog
 *********
 
 [1.0.33]
+Bugs fixed:
+- Error when deletion of file fails (e.g. because it is on a read-only storage)
 New features:
 - Support for image printing
 - Free rotation is now stored in the parameter DB if no destructive processing (e.g. crop) has been applied before

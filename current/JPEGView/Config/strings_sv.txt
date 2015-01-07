@@ -384,3 +384,25 @@ Hour / Minute (as numbers)	Timmar / Minuter (i siffror)
 Set as desktop wallpaper	Använd som skrivbordsbakgrund
 Use original image	Använd originalbild
 Use processed image as displayed	Använd bearbetad bild som visas
+Reset	Återställ
+Print image...	Skriv ut bild...
+Print Image	Skriv ut bild
+Print	Skriv ut
+Select Printer...	Välj skrivare...
+Printer:	Skrivare:
+Paper:	Papper:
+Source:	Källa:
+Orientation:	Orientering:
+Portrait	Porträtt
+Landscape	Landskap
+Size:	Storlek:
+Fit to paper	Anpassa till papper
+cm	cm
+Scaling mode:	Skalningsläge:
+Printer driver	Skrivardrivrutin
+Alignment:	Justering:
+Margins:	Marginaler:
+Left	Vänster
+Right	Höger
+Top	Överkant
+Bottom	Underkant
