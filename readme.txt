@@ -18,6 +18,10 @@ Windows XP SP2 or later is needed to run the 32 bit version.
 Changelog
 *********
 
+[1.0.34]
+Bugs fixed:
+- Frame remains visible when starting in full screen mode and using classic windows style
+
 [1.0.33]
 Bugs fixed:
 - Error when deletion of file fails (e.g. because it is on a read-only storage)
