@@ -39,10 +39,15 @@ CPrintDlg::CPrintDlg(CPrintParameters* pPrintParameters, CPrintDialogEx* pPrintD
 
 	m_currentPrintableRect = CRect();
 	m_currentPaperRect = CRect();
+	m_currentImageRect = CRect();
+	m_currentImageRectBeforeOffset = CRect();
 	m_usingNonStandardCursor = false;
 	m_handleDragMode = Handle_None;
 	m_dPixelsPerMm = 1;
 	m_leftMarginValid = m_rightMarginValid = m_topMarginValid = m_bottomMarginValid = true;
+	m_offset = CPoint(0, 0);
+	m_startOffset = CPoint(0, 0);
+	m_setOffsetFromPrintParameters = true;
 
 	m_useInches = CSettingsProvider::This().MeasureUnit() == Helpers::MU_English;
 
@@ -71,6 +76,7 @@ LRESULT CPrintDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lPara
 	m_cbPaperOrientation.Attach(GetDlgItem(IDC_PD_CB_ORIENTATION));
 	m_lblSize.Attach(GetDlgItem(IDC_PD_SIZE_TITLE));
 	m_rbFitToPaper.Attach(GetDlgItem(IDC_PD_RB_FIT));
+	m_rbFillWithCrop.Attach(GetDlgItem(IDC_PD_RB_FILL));
 	m_rbSize.Attach(GetDlgItem(IDC_PD_RB_FIXED));
 	m_edtWidth.Attach(GetDlgItem(IDC_PD_ED_WIDTH));
 	m_edtHeight.Attach(GetDlgItem(IDC_PD_ED_HEIGHT));
@@ -110,6 +116,7 @@ LRESULT CPrintDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lPara
 	m_lblPaperOrientation.SetWindowText(CNLS::GetString(_T("Orientation:")));
 	m_lblSize.SetWindowText(CNLS::GetString(_T("Size:")));
 	m_rbFitToPaper.SetWindowText(CNLS::GetString(_T("Fit to paper")));
+	m_rbFillWithCrop.SetWindowText(CNLS::GetString(_T("Fill paper with crop")));
 	m_lblCM.SetWindowText(m_useInches ? _T("in") : CNLS::GetString(_T("cm")));
 	m_lblScalingMode.SetWindowText(CNLS::GetString(_T("Scaling mode:")));
 	m_rbScalingModePrinterDriver.SetWindowText(CNLS::GetString(_T("Printer driver")));
@@ -139,6 +146,7 @@ LRESULT CPrintDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lPara
 	m_blockUpdate = false;
 
 	if (m_pPrintParameters->FitToPaper) m_rbFitToPaper.SetCheck(TRUE);
+	else if (m_pPrintParameters->FillWithCrop) m_rbFillWithCrop.SetCheck(TRUE);
 	else m_rbSize.SetCheck(TRUE);
 
 	if (m_pPrintParameters->ScaleByPrinterDriver) m_rbScalingModePrinterDriver.SetCheck(TRUE);
@@ -196,17 +204,29 @@ LRESULT CPrintDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, 
 
 	m_dPixelsPerMm = (double)fittedPaper.Width() / (paperSize.x * 0.1);
 
+	if (m_setOffsetFromPrintParameters) {
+		m_offset = CPoint(Helpers::RoundToInt(m_pPrintParameters->OffsetX * 0.1 * m_dPixelsPerMm), Helpers::RoundToInt(m_pPrintParameters->OffsetY * 0.1 * m_dPixelsPerMm));
+		m_setOffsetFromPrintParameters = false;
+	}
+
 	CRect printableRect = GetPrintableBoundingBox(fittedPaper, CSize(paperSize));
 	m_currentPrintableRect = printableRect;
 	
 	bool fitToPaper = m_rbFitToPaper.GetCheck() != 0;
-	CSize imageSize = fitToPaper ? Helpers::FitRectIntoRect(m_pImage->OrigSize(), printableRect).Size() : 
+	bool fillWithCrop = m_rbFillWithCrop.GetCheck() != 0;
+	CSize imageSize = 
+		fitToPaper ? Helpers::FitRectIntoRect(m_pImage->OrigSize(), printableRect).Size() :
+		fillWithCrop ? Helpers::FillRectAroundRect(m_pImage->OrigSize(), printableRect).Size() :
 		GetFixedImageSize(m_pImage->OrigSize(), CSize(paperSize), fittedPaper.Size());
 
 	CPrintParameters::HorizontalAlignment horizontalAlignment;
 	CPrintParameters::VerticalAlignment verticalAlignment;
 	GetAlignment(horizontalAlignment, verticalAlignment);
 	CRect imageRect = Align(imageSize, printableRect, horizontalAlignment, verticalAlignment);
+	m_currentImageRectBeforeOffset = imageRect;
+	imageRect.OffsetRect(LimitOffset(imageRect, printableRect, m_offset));
+
+	m_currentImageRect = imageRect;
 
 	void* pDIBData = m_pImage->GetThumbnailDIB(imageRect.Size(), m_procParams, m_eProcessingFlags);
 
@@ -253,7 +273,7 @@ LRESULT CPrintDlg::OnMouseMove(UINT /*uMsg*/, WPARAM wParam, LPARAM lParam, BOOL
 		::SetCursor(::LoadCursor(NULL, MAKEINTRESOURCE(IDC_ARROW)));
 		m_usingNonStandardCursor = false;
 	}
-	DragMargin(mouseX, mouseY);
+	PerformDragging(mouseX, mouseY);
 	return 0;
 }
 
@@ -262,6 +282,7 @@ LRESULT CPrintDlg::OnLButtonDown(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam
 	int mouseY = GET_Y_LPARAM(lParam);
 	EHandle handleHit = PrintAreaHandleHit(mouseX, mouseY);
 	if (handleHit != Handle_None) {
+		SetCapture();
 		m_handleDragMode = handleHit;
 		m_startDragPoint = CPoint(mouseX, mouseY);
 		switch (handleHit)
@@ -306,6 +327,9 @@ LRESULT CPrintDlg::OnLButtonDown(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam
 			m_startDragMargin2 = m_pPrintParameters->MarginBottom;
 			m_maxMargin2 = CalculateMaxBottomMargin();
 			break;
+		case CPrintDlg::Handle_Image:
+			m_startOffset = m_offset;
+			break;
 		}
 		InvalidateRect(GetPaperPaintBoundingBox());
 	}
@@ -314,6 +338,8 @@ LRESULT CPrintDlg::OnLButtonDown(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam
 
 LRESULT CPrintDlg::OnLButtonUp(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, BOOL& /*bHandled*/) {
 	if (m_handleDragMode != Handle_None) {
+		ReleaseCapture();
+		m_offset = LimitOffset(m_currentImageRectBeforeOffset, m_currentPrintableRect, m_offset);
 		m_handleDragMode = Handle_None;
 		InvalidateRect(GetPaperPaintBoundingBox());
 		Validate();
@@ -337,6 +363,7 @@ LRESULT CPrintDlg::OnChangePrinter(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCt
 
 LRESULT CPrintDlg::OnSetFocusToUserSize(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*/, BOOL& /*bHandled*/) {
 	m_rbFitToPaper.SetCheck(FALSE);
+	m_rbFillWithCrop.SetCheck(FALSE);
 	m_rbSize.SetCheck(TRUE);
 	InvalidateRect(GetPaperPaintBoundingBox());
 	Validate();
@@ -449,12 +476,14 @@ LRESULT CPrintDlg::OnSelectedPaperOrientationChanged(WORD /*wNotifyCode*/, WORD 
 }
 
 LRESULT CPrintDlg::OnSizingModeChanged(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*/, BOOL& /*bHandled*/) {
+	m_offset = CPoint(0, 0);
 	InvalidateRect(GetPaperPaintBoundingBox());
 	Validate();
 	return 0;
 }
 
 LRESULT CPrintDlg::OnAlignmentButtonClicked(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*/, BOOL& /*bHandled*/) {
+	m_offset = CPoint(0, 0);
 	InvalidateRect(GetPaperPaintBoundingBox());
 	return 0;
 }
@@ -464,7 +493,10 @@ LRESULT CPrintDlg::OnPrint(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*/, BOO
 	m_pPrintParameters->PrintWidth = m_dCurrentFixedPaperWidth;
 
 	m_pPrintParameters->FitToPaper = m_rbFitToPaper.GetCheck() != 0;
+	m_pPrintParameters->FillWithCrop = m_rbFillWithCrop.GetCheck() != 0;
 	m_pPrintParameters->ScaleByPrinterDriver = m_rbScalingModePrinterDriver.GetCheck() != 0;
+	m_pPrintParameters->OffsetX = 10 * m_offset.x / m_dPixelsPerMm;
+	m_pPrintParameters->OffsetY = 10 * m_offset.y / m_dPixelsPerMm;
 
 	GetAlignment(m_pPrintParameters->AlignmentX, m_pPrintParameters->AlignmentY);
 
@@ -747,6 +779,18 @@ CRect CPrintDlg::Align(const CSize& size, const CRect& rect, CPrintParameters::H
 	return CRect(rect.left + xOffset, rect.top + yOffset, rect.left + xOffset + size.cx, rect.top + yOffset + size.cy);
 }
 
+CPoint CPrintDlg::LimitOffset(const CRect& imageRect, const CRect& printableRect, const CPoint& offset) {
+	CRect rect(imageRect);
+	rect.OffsetRect(offset);
+	int minX = (imageRect.Width() > printableRect.Width()) ? printableRect.right - imageRect.Width() : printableRect.left;
+	int maxX = (imageRect.Width() > printableRect.Width()) ? printableRect.left : printableRect.right - imageRect.Width();
+	int minY = (imageRect.Height() > printableRect.Height()) ? printableRect.bottom - imageRect.Height() : printableRect.top;
+	int maxY = (imageRect.Height() > printableRect.Height()) ? printableRect.top : printableRect.bottom - imageRect.Height();
+	int left = max(minX, min(maxX, rect.left));
+	int top = max(minY, min(maxY, rect.top));
+	return CPoint(left - imageRect.left, top - imageRect.top);
+}
+
 CRect CPrintDlg::GetLocalCoordinates(HWND hWnd)
 {
 	CRect rect;
@@ -834,6 +878,9 @@ bool CPrintDlg::SetMarginCursor(int x, int y) {
 	case Handle_BottomLeft:
 		::SetCursor(::LoadCursor(NULL, IDC_SIZENESW));
 		return true;
+	case Handle_Image:
+		::SetCursor(::LoadCursor(NULL, IDC_SIZEALL));
+		return true;
 	}
 	return false;
 }
@@ -863,10 +910,15 @@ CPrintDlg::EHandle CPrintDlg::PrintAreaHandleHit(int x, int y) {
 	if (y > m_currentPrintableRect.bottom - gap && y < m_currentPrintableRect.bottom + gap && x > m_currentPrintableRect.left && x < m_currentPrintableRect.right) {
 		return Handle_Bottom;
 	}
+	CRect imageRect;
+	imageRect.IntersectRect(m_currentImageRect, m_currentPrintableRect);
+	if (x > imageRect.left && x < imageRect.right && y > imageRect.top && y < imageRect.bottom) {
+		return Handle_Image;
+	}
 	return Handle_None;
 }
 
-void CPrintDlg::DragMargin(int x, int y) {
+void CPrintDlg::PerformDragging(int x, int y) {
 	if (m_handleDragMode != Handle_None) {
 		CPoint delta = CPoint(x - m_startDragPoint.x, y - m_startDragPoint.y);
 		m_blockUpdate = true;
@@ -898,6 +950,9 @@ void CPrintDlg::DragMargin(int x, int y) {
 		case Handle_BottomRight:
 			SetRightMargin(m_maxMargin, m_startDragMargin, delta);
 			SetBottomMargin(m_maxMargin2, m_startDragMargin2, delta);
+			break;
+		case Handle_Image:
+			m_offset = m_startOffset + delta;
 			break;
 		}
 
@@ -940,7 +995,8 @@ void CPrintDlg::Validate() {
 		return;
 	}
 	bool fitToPaper = m_rbFitToPaper.GetCheck() != 0;
-	bool isValid = fitToPaper || ValidateFixedImageSize(ConvertToNumber(m_edtWidth) * 100, CSize(GetUsedPaperSize()));
+	bool fillWithCrop = m_rbFillWithCrop.GetCheck() != 0;
+	bool isValid = fitToPaper || fillWithCrop || ValidateFixedImageSize(ConvertToNumber(m_edtWidth) * 100, CSize(GetUsedPaperSize()));
 	isValid = isValid && m_leftMarginValid && m_rightMarginValid && m_topMarginValid && m_bottomMarginValid;
 	m_btnPrint.EnableWindow(isValid);
 }

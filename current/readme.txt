@@ -21,6 +21,8 @@ Changelog
 [1.0.34]
 Bugs fixed:
 - Frame remains visible when starting in full screen mode and using classic windows style
+New features:
+- Printing: Fill with crop mode and ability to move the image with the mouse within the printeable area
 
 [1.0.33]
 Bugs fixed:

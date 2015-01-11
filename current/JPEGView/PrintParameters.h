@@ -16,21 +16,25 @@ public:
 	};
 
 	bool FitToPaper;
+	bool FillWithCrop;
 	bool ScaleByPrinterDriver;
 	double PrintWidth; // in 1/10 mm. Print height is given by aspect ratio of image
 	double MarginLeft, MarginTop, MarginRight, MarginBottom; // in 1/10 mm
+	double OffsetX, OffsetY;  // in 1/10 mm
 	HorizontalAlignment AlignmentX;
 	VerticalAlignment AlignmentY;
 
 	// Uses default parameters
 	CPrintParameters(double defaultMarginCm, double defaultPrintWidthCm) {
 		FitToPaper = defaultPrintWidthCm < 0.0;
+		FillWithCrop = false;
 		ScaleByPrinterDriver = true;
 		PrintWidth = abs(defaultPrintWidthCm) * 100;
 		MarginLeft = defaultMarginCm * 100;
 		MarginTop = defaultMarginCm * 100;
 		MarginRight = defaultMarginCm * 100;
 		MarginBottom = defaultMarginCm * 100;
+		OffsetX = OffsetY = 0;
 		AlignmentX = HA_Center;
 		AlignmentY = VA_Top;
 	}

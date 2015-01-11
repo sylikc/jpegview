@@ -133,6 +133,22 @@ CRect FitRectIntoRect(CSize size, CRect fitRect) {
 	}
 }
 
+CRect FillRectAroundRect(CSize size, CRect fillRect) {
+	double ratioSource = (double)size.cx / size.cy;
+	double ratioTarget = (double)fillRect.Width() / fillRect.Height();
+	if (ratioSource > ratioTarget) {
+		// fill height
+		int targetWidth = Helpers::RoundToInt(fillRect.Height() * ratioSource);
+		int startX = fillRect.left + (fillRect.Width() - targetWidth) / 2;
+		return CRect(startX, fillRect.top, startX + targetWidth, fillRect.bottom);
+	} else {
+		// fill width
+		int targetHeight = Helpers::RoundToInt(fillRect.Width() / ratioSource);
+		int startY = fillRect.top + (fillRect.Height() - targetHeight) / 2;
+		return CRect(fillRect.left, startY, fillRect.right, startY + targetHeight);
+	}
+}
+
 void GetZoomParameters(float & fZoom, CPoint & offsets, CSize imageSize, CSize windowSize, CRect zoomRect) {
 	int nZoomWidth = zoomRect.Width();
 	int nZoomHeight = zoomRect.Height();

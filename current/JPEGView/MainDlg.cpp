@@ -2699,6 +2699,7 @@ void CMainDlg::AfterNewImageLoaded(bool bSynchronize, bool bAfterStartup) {
 	if (!m_bIsAnimationPlaying) m_pNavPanelCtl->HideNavPanelTemporary();
 	m_pPanelMgr->AfterNewImageLoaded();
 	m_pCropCtl->AbortCropping();
+	m_pPrintImage->ClearOffsets();
 	if (bSynchronize) {
 		// after loading an image, the per image processing parameters must be synchronized with
 		// the current processing parameters

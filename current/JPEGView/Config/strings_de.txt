@@ -402,3 +402,4 @@ Left	Links
 Right	Rechts
 Top	Oben
 Bottom	Unten
+Fill paper with crop	Papier füllen (mit Abschneiden)

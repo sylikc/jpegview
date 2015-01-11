@@ -3,7 +3,7 @@
 // Used by JPEGView.RC
 //
 
-#define JPEGVIEW_VERSION "1, 0, 33, 0\0"
+#define JPEGVIEW_VERSION "1, 0, 34, 0\0"
 
 
 #define IDD_ABOUTBOX				100
@@ -94,37 +94,38 @@
 #define IDC_PD_TITLE_ORIENTATION        2003
 #define IDC_PD_SIZE_TITLE               2004
 #define IDC_PD_RB_FIT                   2005
-#define IDC_PD_RB_FIXED                 2006
-#define IDC_PD_ED_WIDTH                 2007
-#define IDC_PD_ED_HEIGHT                2008
-#define IDC_PD_X                        2009
-#define IDC_PD_CM                       2010
-#define IDC_PD_SCALING_TITLE            2011
-#define IDC_PD_RB_SCALING_DRIVER        2012
-#define IDC_PD_RB_SCALING_JPEGVIEW      2013
-#define IDC_PD_ALIGNMENT_TITLE          2014
-#define IDC_PD_RB_00                    2015
-#define IDC_PD_RB_10                    2016
-#define IDC_PD_RB_20                    2017
-#define IDC_PD_RB_01                    2018
-#define IDC_PD_RB_11                    2019
-#define IDC_PD_RB_21                    2020
-#define IDC_PD_RB_02                    2021
-#define IDC_PD_RB_12                    2022
-#define IDC_PD_RB_22                    2023
-#define IDC_PD_PAPER_SOURCE_TITLE       2024
-#define IDC_PD_CB_PAPER_SOURCE          2025
-#define IDC_PD_MARGINS_TITLE            2026
-#define IDC_PD_LEFT_TITLE               2027
-#define IDC_PD_ED_LEFT                  2028
-#define IDC_PD_RIGHT_TITLE              2029
-#define IDC_PD_ED_RIGHT                 2030
-#define IDC_PD_CM2                      2031
-#define IDC_PD_TOP_TITLE                2032
-#define IDC_PD_ED_TOP                   2033
-#define IDC_PD_BOTTOM_TITLE             2034
-#define IDC_PD_ED_BOTTOM                2035
-#define IDC_PD_CM3                      2036
+#define IDC_PD_RB_FILL					2006
+#define IDC_PD_RB_FIXED                 2007
+#define IDC_PD_ED_WIDTH                 2008
+#define IDC_PD_ED_HEIGHT                2009
+#define IDC_PD_X                        2010
+#define IDC_PD_CM                       2011
+#define IDC_PD_SCALING_TITLE            2012
+#define IDC_PD_RB_SCALING_DRIVER        2013
+#define IDC_PD_RB_SCALING_JPEGVIEW      2014
+#define IDC_PD_ALIGNMENT_TITLE          2015
+#define IDC_PD_RB_00                    2016
+#define IDC_PD_RB_10                    2017
+#define IDC_PD_RB_20                    2018
+#define IDC_PD_RB_01                    2019
+#define IDC_PD_RB_11                    2020
+#define IDC_PD_RB_21                    2021
+#define IDC_PD_RB_02                    2022
+#define IDC_PD_RB_12                    2023
+#define IDC_PD_RB_22                    2024
+#define IDC_PD_PAPER_SOURCE_TITLE       2025
+#define IDC_PD_CB_PAPER_SOURCE          2026
+#define IDC_PD_MARGINS_TITLE            2027
+#define IDC_PD_LEFT_TITLE               2028
+#define IDC_PD_ED_LEFT                  2029
+#define IDC_PD_RIGHT_TITLE              2030
+#define IDC_PD_ED_RIGHT                 2031
+#define IDC_PD_CM2                      2032
+#define IDC_PD_TOP_TITLE                2033
+#define IDC_PD_ED_TOP                   2034
+#define IDC_PD_BOTTOM_TITLE             2035
+#define IDC_PD_ED_BOTTOM                2036
+#define IDC_PD_CM3                      2037
 
 #define IDM_DEFAULT_ESC		255
 #define IDM_STOP_MOVIE		1000

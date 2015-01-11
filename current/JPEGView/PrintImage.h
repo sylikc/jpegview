@@ -21,6 +21,9 @@ public:
 	bool Print(HWND hWnd, CJPEGImage * pImage, const CImageProcessingParams& procParams,
 		EProcessingFlags eFlags, LPCTSTR fileName);
 
+	// Clears the user offsets for printing, called when changing the image
+	void ClearOffsets();
+
 private:
 	CPrintDialogEx* m_pPrinterSelectionDlg;
 	CPrintParameters* m_pPrintParameters;
