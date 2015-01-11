@@ -36,6 +36,7 @@ public:
 		COMMAND_HANDLER(IDC_PD_ED_TOP, EN_CHANGE, OnTopMarginChanged)
 		COMMAND_HANDLER(IDC_PD_ED_BOTTOM, EN_CHANGE, OnBottomMarginChanged)
 		COMMAND_ID_HANDLER(IDC_PD_RB_FIT, OnSizingModeChanged)
+		COMMAND_ID_HANDLER(IDC_PD_RB_FILL, OnSizingModeChanged)
 		COMMAND_ID_HANDLER(IDC_PD_RB_FIXED, OnSizingModeChanged)
 		COMMAND_ID_HANDLER(IDC_PD_RB_00, OnAlignmentButtonClicked)
 		COMMAND_ID_HANDLER(IDC_PD_RB_10, OnAlignmentButtonClicked)
@@ -79,6 +80,8 @@ public:
 
 	static CRect Align(const CSize& size, const CRect& rect, CPrintParameters::HorizontalAlignment horizontalAlignment, CPrintParameters::VerticalAlignment verticalAlignment);
 
+	static CPoint LimitOffset(const CRect& imageRect, const CRect& printableRect, const CPoint& offset);
+
 private:
 	enum EHandle {
 		Handle_None,
@@ -89,7 +92,8 @@ private:
 		Handle_TopLeft,
 		Handle_TopRight,
 		Handle_BottomLeft,
-		Handle_BottomRight
+		Handle_BottomRight,
+		Handle_Image
 	};
 
 	CButton m_btnPrint;
@@ -106,6 +110,7 @@ private:
 	CComboBox m_cbPaperOrientation;
 	CStatic m_lblSize;
 	CButton m_rbFitToPaper;
+	CButton m_rbFillWithCrop;
 	CButton m_rbSize;
 	CEdit m_edtWidth;
 	CEdit m_edtHeight;
@@ -163,6 +168,8 @@ private:
 
 	CRect m_currentPrintableRect;
 	CRect m_currentPaperRect;
+	CRect m_currentImageRect;
+	CRect m_currentImageRectBeforeOffset;
 	bool m_usingNonStandardCursor;
 	EHandle m_handleDragMode;
 	double m_dPixelsPerMm;
@@ -170,6 +177,8 @@ private:
 	double m_startDragMargin, m_startDragMargin2; // in 1/10 mm
 	double m_maxMargin, m_maxMargin2; // in 1/10 mm
 	bool m_leftMarginValid, m_rightMarginValid, m_topMarginValid, m_bottomMarginValid;
+	CPoint m_offset, m_startOffset;
+	bool m_setOffsetFromPrintParameters;
 
 	bool m_blockUpdate;
 	bool m_lockPrinterDC;
@@ -187,7 +196,7 @@ private:
 	void GetAlignment(CPrintParameters::HorizontalAlignment& horizontalAlignment, CPrintParameters::VerticalAlignment& verticalAlignment);
 	bool SetMarginCursor(int x, int y);
 	EHandle PrintAreaHandleHit(int x, int y);
-	void DragMargin(int x, int y);
+	void PerformDragging(int x, int y);
 	void SetLeftMargin(double maxMargin, double startDrag, const CPoint& delta);
 	void SetRightMargin(double maxMargin, double startDrag, const CPoint& delta);
 	void SetTopMargin(double maxMargin, double startDrag, const CPoint& delta);

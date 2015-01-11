@@ -111,8 +111,11 @@ namespace Helpers {
 	// Inflate rectangle by given factor
 	CRect InflateRect(const CRect& rect, float fAmount);
 
-	// Fits a rectangel with the specified size into a fit rectangle and returnes the adjusted rectangle, maintaining the aspect ratio of the size
+	// Fits a rectangle with the specified size into a fit rectangle and returns the adjusted rectangle, maintaining the aspect ratio of the size
 	CRect FitRectIntoRect(CSize size, CRect fitRect);
+
+	// Fills a rectangle with the specified size around a fit rectangle and returns the adjusted rectangle, maintaining the aspect ratio of the size
+	CRect FillRectAroundRect(CSize size, CRect fillRect);
 
 	// Gets the parameters for zooming the given zoom rectangle in an image of given size to a given window size.
 	void GetZoomParameters(float & fZoom, CPoint & offsets, CSize imageSize, CSize windowSize, CRect zoomRect);

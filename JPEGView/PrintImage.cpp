@@ -12,6 +12,12 @@ static double Mm10ToInch(double value) {
 	return value * 0.01 / 2.54;
 }
 
+void CPrintImage::ClearOffsets() {
+	if (m_pPrintParameters != NULL) {
+		m_pPrintParameters->OffsetX = m_pPrintParameters->OffsetY = 0;
+	}
+}
+
 bool CPrintImage::Print(HWND hWnd, CJPEGImage * pImage, const CImageProcessingParams& procParams,
 	EProcessingFlags eFlags, LPCTSTR fileName) {
 	if (pImage == NULL) {
@@ -83,6 +89,9 @@ bool CPrintImage::DoPrint(HDC hPrinterDC, CPrintParameters* pPrintParameters, CJ
 			if (pPrintParameters->FitToPaper) {
 				imageSize = Helpers::FitRectIntoRect(CSize(pImage->OrigWidth(), Helpers::RoundToInt(pImage->OrigHeight() * dpiRatio)),
 					printableRect).Size();
+			} else if (pPrintParameters->FillWithCrop) {
+				imageSize = Helpers::FillRectAroundRect(CSize(pImage->OrigWidth(), Helpers::RoundToInt(pImage->OrigHeight() * dpiRatio)),
+					printableRect).Size(); 
 			} else {
 				double imageAR = (double)pImage->OrigHeight() / pImage->OrigWidth();
 				imageSize = CSize(Helpers::RoundToInt(dpiX * Mm10ToInch(pPrintParameters->PrintWidth)),
@@ -90,6 +99,8 @@ bool CPrintImage::DoPrint(HDC hPrinterDC, CPrintParameters* pPrintParameters, CJ
 			}
 			
 			CRect imageRect = CPrintDlg::Align(imageSize, printableRect, pPrintParameters->AlignmentX, pPrintParameters->AlignmentY);
+			CPoint offsets(Helpers::RoundToInt(dpiX * Mm10ToInch(pPrintParameters->OffsetX)), Helpers::RoundToInt(dpiY * Mm10ToInch(pPrintParameters->OffsetY)));
+			imageRect.OffsetRect(CPrintDlg::LimitOffset(imageRect, printableRect, offsets));
 
 			CSize dibSize = pPrintParameters->ScaleByPrinterDriver ? pImage->OrigSize() : imageSize;
 
