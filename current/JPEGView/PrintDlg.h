@@ -169,7 +169,6 @@ private:
 	CRect m_currentPrintableRect;
 	CRect m_currentPaperRect;
 	CRect m_currentImageRect;
-	CRect m_currentImageRectBeforeOffset;
 	bool m_usingNonStandardCursor;
 	EHandle m_handleDragMode;
 	double m_dPixelsPerMm;
@@ -178,6 +177,7 @@ private:
 	double m_maxMargin, m_maxMargin2; // in 1/10 mm
 	bool m_leftMarginValid, m_rightMarginValid, m_topMarginValid, m_bottomMarginValid;
 	CPoint m_offset, m_startOffset;
+	bool m_limitOffsetOnNextPaint;
 	bool m_setOffsetFromPrintParameters;
 
 	bool m_blockUpdate;
