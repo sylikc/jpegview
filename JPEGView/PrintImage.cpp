@@ -102,10 +102,16 @@ bool CPrintImage::DoPrint(HDC hPrinterDC, CPrintParameters* pPrintParameters, CJ
 			CPoint offsets(Helpers::RoundToInt(dpiX * Mm10ToInch(pPrintParameters->OffsetX)), Helpers::RoundToInt(dpiY * Mm10ToInch(pPrintParameters->OffsetY)));
 			imageRect.OffsetRect(CPrintDlg::LimitOffset(imageRect, printableRect, offsets));
 
-			CSize dibSize = pPrintParameters->ScaleByPrinterDriver ? pImage->OrigSize() : imageSize;
+			CRect clippedRect;
+			clippedRect.IntersectRect(imageRect, printableRect);
+			CSize clippedImageSize = clippedRect.Size();
+
+			CSize dibSize = pPrintParameters->ScaleByPrinterDriver ? pImage->OrigSize() : clippedImageSize;
+			CSize fullTargetSize = pPrintParameters->ScaleByPrinterDriver ? dibSize : imageSize;
+			CPoint offset = pPrintParameters->ScaleByPrinterDriver ? CPoint(0, 0) : CPoint(max(0, printableRect.left - imageRect.left), max(0, printableRect.top - imageRect.top));
 
 			pImage->EnableDimming(false);
-			void* pDIBData = pImage->GetDIB(dibSize, dibSize, CPoint(0, 0), procParams, eFlags);
+			void* pDIBData = pImage->GetDIB(fullTargetSize, dibSize, offset, procParams, eFlags);
 			pImage->EnableDimming(true);
 
 			if (pDIBData != NULL) {
@@ -122,8 +128,8 @@ bool CPrintImage::DoPrint(HDC hPrinterDC, CPrintParameters* pPrintParameters, CJ
 					::StretchDIBits(hPrinterDC, imageRect.left, imageRect.top, imageRect.Width(), imageRect.Height(),
 						0, 0, pImage->OrigWidth(), pImage->OrigHeight(), pDIBData, &bmInfo, DIB_RGB_COLORS, SRCCOPY);
 				} else {
-					::SetDIBitsToDevice(hPrinterDC, imageRect.left, imageRect.top, imageRect.Width(), imageRect.Height(), 0, 0, 0,
-						imageRect.Height(), pDIBData, &bmInfo, DIB_RGB_COLORS);
+					::SetDIBitsToDevice(hPrinterDC, clippedRect.left, clippedRect.top, clippedRect.Width(), clippedRect.Height(), 0, 0, 0,
+						clippedRect.Height(), pDIBData, &bmInfo, DIB_RGB_COLORS);
 				}
 				bSuccess = true;
 			}
