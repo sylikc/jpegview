@@ -530,6 +530,8 @@ void* CJPEGImage::Resample(CSize fullTargetSize, CSize clippingSize, CPoint targ
 	Helpers::CPUType cpu = CSettingsProvider::This().AlgorithmImplementation();
 	EFilterType filter = CSettingsProvider::This().DownsamplingFilter();
 
+	if (fullTargetSize.cx > 65535 || fullTargetSize.cy > 65535) return NULL;
+
 	if (GetProcessingFlag(eProcFlags, PFLAG_HighQualityResampling) && 
 		!(eResizeType == NoResize && (filter == Filter_Downsampling_Best_Quality || filter == Filter_Downsampling_No_Aliasing))) {
 		if (cpu == Helpers::CPU_SSE || cpu == Helpers::CPU_MMX) {
