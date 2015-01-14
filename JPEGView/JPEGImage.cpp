@@ -178,11 +178,15 @@ void CJPEGImage::TrimRectToMCUBlockSize(CRect& rect) {
 }
 
 void* CJPEGImage::GetThumbnailDIB(CSize size, const CImageProcessingParams & imageProcParams, EProcessingFlags eProcFlags) {
+	return GetThumbnailDIB(size, size, CPoint(0, 0), imageProcParams, eProcFlags);
+}
+
+void* CJPEGImage::GetThumbnailDIB(CSize fullTargetSize, CSize clippingSize, CPoint targetOffset, const CImageProcessingParams & imageProcParams, EProcessingFlags eProcFlags) {
 	assert(!m_bIsThumbnailImage);
 	if (m_pThumbnail == NULL) {
 		m_pThumbnail = CreateThumbnailImage();
 	}
-	return m_pThumbnail->GetDIB(size, size, CPoint(0, 0), imageProcParams, eProcFlags);
+	return m_pThumbnail->GetDIB(fullTargetSize, clippingSize, targetOffset, imageProcParams, eProcFlags);
 }
 
 void* CJPEGImage::GetThumbnailDIBRotated(CSize size, const CImageProcessingParams & imageProcParams, EProcessingFlags eProcFlags, double dRotation) {

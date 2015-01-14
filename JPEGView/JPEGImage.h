@@ -76,6 +76,11 @@ public:
 	// Gets a DIB for a thumbnail of the given size. The thumbnail should not be smaller than 400 x 300 pixels
 	void* GetThumbnailDIB(CSize size, const CImageProcessingParams & imageProcParams, EProcessingFlags eProcFlags);
 
+	// Gets a sectional DIB for a thumbnail of the given size. The thumbnail should not be smaller than 400 x 300 pixels.
+	// The parameters are the same as with GetDIB() - see there.
+	void* GetThumbnailDIB(CSize fullTargetSize, CSize clippingSize, CPoint targetOffset,
+		const CImageProcessingParams & imageProcParams, EProcessingFlags eProcFlags);
+
 	// Same as above but with low quality rotation
 	void* GetThumbnailDIBRotated(CSize size, const CImageProcessingParams & imageProcParams, EProcessingFlags eProcFlags, double dRotation);
 

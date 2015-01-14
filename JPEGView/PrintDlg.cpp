@@ -40,7 +40,6 @@ CPrintDlg::CPrintDlg(CPrintParameters* pPrintParameters, CPrintDialogEx* pPrintD
 	m_currentPrintableRect = CRect();
 	m_currentPaperRect = CRect();
 	m_currentImageRect = CRect();
-	m_currentImageRectBeforeOffset = CRect();
 	m_usingNonStandardCursor = false;
 	m_handleDragMode = Handle_None;
 	m_dPixelsPerMm = 1;
@@ -48,6 +47,7 @@ CPrintDlg::CPrintDlg(CPrintParameters* pPrintParameters, CPrintDialogEx* pPrintD
 	m_offset = CPoint(0, 0);
 	m_startOffset = CPoint(0, 0);
 	m_setOffsetFromPrintParameters = true;
+	m_limitOffsetOnNextPaint = false;
 
 	m_useInches = CSettingsProvider::This().MeasureUnit() == Helpers::MU_English;
 
@@ -223,23 +223,33 @@ LRESULT CPrintDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, 
 	CPrintParameters::VerticalAlignment verticalAlignment;
 	GetAlignment(horizontalAlignment, verticalAlignment);
 	CRect imageRect = Align(imageSize, printableRect, horizontalAlignment, verticalAlignment);
-	m_currentImageRectBeforeOffset = imageRect;
+	CRect currentImageRectBeforeOffset = imageRect;
 	imageRect.OffsetRect(LimitOffset(imageRect, printableRect, m_offset));
 
 	m_currentImageRect = imageRect;
 
-	void* pDIBData = m_pImage->GetThumbnailDIB(imageRect.Size(), m_procParams, m_eProcessingFlags);
+	if (m_limitOffsetOnNextPaint) {
+		m_offset = LimitOffset(currentImageRectBeforeOffset, m_currentPrintableRect, m_offset);
+		m_limitOffsetOnNextPaint = false;
+	}
+
+	CRect clippedRect;
+	clippedRect.IntersectRect(imageRect, printableRect);
+	CSize clippedImageSize = clippedRect.Size();
+
+	CPoint offset = CPoint(max(0, printableRect.left - imageRect.left), max(0, printableRect.top - imageRect.top));
+	void* pDIBData = m_pImage->GetThumbnailDIB(imageSize, clippedImageSize, offset, m_procParams, m_eProcessingFlags);
 
 	dc.SelectStockPen(BLACK_PEN);
 
 	dc.FillSolidRect(fittedPaper, RGB(255, 255, 255));
 	dc.Rectangle(fittedPaper);
 
-	if (pDIBData != NULL && imageSize.cx > 0 && imageSize.cy > 0) {
-		int xDest = imageRect.left;
-		int yDest = imageRect.top;
-		int xSize = imageRect.Width();
-		int ySize = imageRect.Height();
+	if (pDIBData != NULL && clippedImageSize.cx > 0 && clippedImageSize.cy > 0) {
+		int xDest = clippedRect.left;
+		int yDest = clippedRect.top;
+		int xSize = clippedRect.Width();
+		int ySize = clippedRect.Height();
 		BITMAPINFO bmInfo;
 		memset(&bmInfo, 0, sizeof(BITMAPINFO));
 		bmInfo.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
@@ -339,7 +349,7 @@ LRESULT CPrintDlg::OnLButtonDown(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam
 LRESULT CPrintDlg::OnLButtonUp(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, BOOL& /*bHandled*/) {
 	if (m_handleDragMode != Handle_None) {
 		ReleaseCapture();
-		m_offset = LimitOffset(m_currentImageRectBeforeOffset, m_currentPrintableRect, m_offset);
+		m_limitOffsetOnNextPaint = true;
 		m_handleDragMode = Handle_None;
 		InvalidateRect(GetPaperPaintBoundingBox());
 		Validate();
@@ -355,6 +365,7 @@ LRESULT CPrintDlg::OnChangePrinter(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCt
 		m_printerName = m_pPrintDlg->GetDeviceName();
 		m_portName = m_pPrintDlg->GetPortName();
 		SetupDataForCurrentPrinter();
+		m_limitOffsetOnNextPaint = true;
 		InvalidateRect(GetPaperPaintBoundingBox());
 		Validate();
 	}
@@ -376,6 +387,7 @@ LRESULT CPrintDlg::OnWidthChanged(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl
 	double dWidth = ConvertToNumber(m_edtWidth);
 	SetNumber(m_edtHeight, dWidth / m_dAspectRatioImage);
 	m_blockUpdate = false;
+	m_limitOffsetOnNextPaint = true;
 	InvalidateRect(GetPaperPaintBoundingBox());
 	Validate();
 	return 0;
@@ -387,6 +399,7 @@ LRESULT CPrintDlg::OnHeightChanged(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCt
 	double dHeight = ConvertToNumber(m_edtHeight);
 	SetNumber(m_edtWidth, dHeight * m_dAspectRatioImage);
 	m_blockUpdate = false;
+	m_limitOffsetOnNextPaint = true;
 	InvalidateRect(GetPaperPaintBoundingBox());
 	Validate();
 	return 0;
@@ -398,6 +411,7 @@ LRESULT CPrintDlg::OnLeftMarginChanged(WORD /*wNotifyCode*/, WORD wID, HWND /*hW
 	double maxMargin = 10 * (m_currentPrintableRect.right - m_currentPaperRect.left - 2) / m_dPixelsPerMm;
 	m_leftMarginValid = left >= 0 && left <= maxMargin;
 	if (m_leftMarginValid) m_pPrintParameters->MarginLeft = left;
+	m_limitOffsetOnNextPaint = true;
 	InvalidateRect(GetPaperPaintBoundingBox());
 	Validate();
 	return 0;
@@ -409,6 +423,7 @@ LRESULT CPrintDlg::OnRightMarginChanged(WORD /*wNotifyCode*/, WORD wID, HWND /*h
 	double maxMargin = 10 * (m_currentPaperRect.right - m_currentPrintableRect.left - 2) / m_dPixelsPerMm;
 	m_rightMarginValid = right >= 0 && right <= maxMargin;
 	if (m_rightMarginValid) m_pPrintParameters->MarginRight = right;
+	m_limitOffsetOnNextPaint = true;
 	InvalidateRect(GetPaperPaintBoundingBox());
 	Validate();
 	return 0;
@@ -420,6 +435,7 @@ LRESULT CPrintDlg::OnTopMarginChanged(WORD /*wNotifyCode*/, WORD wID, HWND /*hWn
 	double maxMargin = 10 * (m_currentPrintableRect.bottom - m_currentPaperRect.top - 2) / m_dPixelsPerMm;
 	m_topMarginValid = top >= 0 && top <= maxMargin;
 	if (m_topMarginValid) m_pPrintParameters->MarginTop = top;
+	m_limitOffsetOnNextPaint = true;
 	InvalidateRect(GetPaperPaintBoundingBox());
 	Validate();
 	return 0;
@@ -431,6 +447,7 @@ LRESULT CPrintDlg::OnBottomMarginChanged(WORD /*wNotifyCode*/, WORD wID, HWND /*
 	double maxMargin = 10 * (m_currentPaperRect.bottom - m_currentPrintableRect.top - 2) / m_dPixelsPerMm;
 	m_bottomMarginValid = bottom >= 0 && bottom <= maxMargin;
 	if (m_bottomMarginValid) m_pPrintParameters->MarginBottom = bottom;
+	m_limitOffsetOnNextPaint = true;
 	InvalidateRect(GetPaperPaintBoundingBox());
 	Validate();
 	return 0;
@@ -444,6 +461,7 @@ LRESULT CPrintDlg::OnSelectedPaperChanged(WORD /*wNotifyCode*/, WORD wID, HWND /
 		m_pDeviceMode->dmFields |= DM_PAPERSIZE;
 		m_pDeviceMode->dmPaperSize = m_paperTypes[selectedPaper];
 		RecreatePrinterDC();
+		m_limitOffsetOnNextPaint = true;
 		InvalidateRect(GetPaperPaintBoundingBox());
 	}
 	return 0;
@@ -457,6 +475,7 @@ LRESULT CPrintDlg::OnSelectedTrayChanged(WORD /*wNotifyCode*/, WORD wID, HWND /*
 		m_pDeviceMode->dmFields |= DM_DEFAULTSOURCE;
 		m_pDeviceMode->dmDefaultSource = m_paperTrays[selectedTray];
 		RecreatePrinterDC();
+		m_limitOffsetOnNextPaint = true;
 		InvalidateRect(GetPaperPaintBoundingBox());
 	}
 	return 0;
@@ -470,6 +489,7 @@ LRESULT CPrintDlg::OnSelectedPaperOrientationChanged(WORD /*wNotifyCode*/, WORD 
 		m_pDeviceMode->dmFields |= DM_ORIENTATION;
 		m_pDeviceMode->dmOrientation = (selectedOrientation == 0) ? DMORIENT_PORTRAIT : DMORIENT_LANDSCAPE;
 		RecreatePrinterDC();
+		m_limitOffsetOnNextPaint = true;
 		InvalidateRect(GetPaperPaintBoundingBox());
 	}
 	return 0;
@@ -1002,7 +1022,8 @@ void CPrintDlg::Validate() {
 }
 
 bool CPrintDlg::ValidateFixedImageSize(double width, const CSize& paperSize) {
-	return width > 0 && Helpers::RoundToInt(width) <= paperSize.cx * 2;
+	const int MaxFactor = 5; // the image width can be this factor larger than the paper width
+	return width > 0 && Helpers::RoundToInt(width) <= paperSize.cx * MaxFactor;
 }
 
 double CPrintDlg::CalculateMaxLeftMargin() {
