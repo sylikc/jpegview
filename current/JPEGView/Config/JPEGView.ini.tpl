@@ -244,6 +244,10 @@ SlideShowEffectTime=250
 ; Set to true to open all images in the same JPEGView window.
 SingleInstance=false
 
+; If set to true, only one single instance of JPEGView runs in full screen mode, if false multiple instances are allowed
+; The value is ignored if SingleInstance=true
+SingleFullScreenInstance=true
+
 ; Force using GDI+ for reading JPEGS. Only use when you have problems reading your JPEGs with the default Turbo JPEG library.
 ; Note that using GDI+ is slower than the Turbo JPEG JPEG library!
 ForceGDIPlus=false

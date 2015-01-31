@@ -61,6 +61,7 @@ public:
     int SlideShowEffectTimeMs() { return m_nSlideShowEffectTimeMs; }
 	bool ForceGDIPlus() { return m_bForceGDIPlus; }
     bool SingleInstance() { return m_bSingleInstance; }
+	bool SingleFullScreenInstance() { return m_bSingleFullScreenInstance; }
 	int JPEGSaveQuality() { return m_nJPEGSaveQuality; }
 	int WEBPSaveQuality() { return m_nWEBPSaveQuality; }
 	LPCTSTR DefaultSaveFormat() { return m_sDefaultSaveFormat; }
@@ -196,6 +197,7 @@ private:
     int m_nSlideShowEffectTimeMs;
 	bool m_bForceGDIPlus;
     bool m_bSingleInstance;
+	bool m_bSingleFullScreenInstance;
 	int m_nJPEGSaveQuality;
 	int m_nWEBPSaveQuality;
 	CString m_sDefaultSaveFormat;
