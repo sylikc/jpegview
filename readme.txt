@@ -21,8 +21,12 @@ Changelog
 [1.0.34]
 Bugs fixed:
 - Frame remains visible when starting in full screen mode and using classic windows style
+- Fit to screen is kept with 'Keep parameters' when zoom is required in full screen mode
 New features:
 - Printing: Fill with crop mode and ability to move the image with the mouse within the printeable area
+- New INI file settings:
+  - SingleFullScreenInstance=true/false
+    Allows multiple instances of JPEGView to run in full screen mode
 
 [1.0.33]
 Bugs fixed:
