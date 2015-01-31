@@ -241,6 +241,8 @@ private:
 	bool m_bZoomMode;
 	bool m_bZoomModeOnLeftMouse;
 	Helpers::EAutoZoomMode m_eAutoZoomMode;
+	Helpers::EAutoZoomMode m_autoZoomFitToScreen;
+	bool m_isUserFitToScreen;
 
 	CImageProcessingParams* m_pImageProcParams;
 	bool m_bHQResampling;
