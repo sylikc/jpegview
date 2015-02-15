@@ -1,7 +1,7 @@
 ﻿// This file must be encoded with UTF-8 (e.g. with Windows Notepad)
 // Filename is 'strings_%languagecode%.txt' where %languagecode% is the ISO 639 language code e.g. 'fr' for French
 // Format is: English string<tab>Translated string<newline>
-// Translated by Sérgio Marques, 2011-2014
+// Translated by Sérgio Marques, 2011-2015
 // This file is distributed under the same license as the JPEGView package
 // Portuguese translation of JPEGView package
 Contrast	Contraste
@@ -12,33 +12,33 @@ Darken Highlights	Sombras médias
 Deep Shadows	Sombras profundas
 Color Correction	Correção de cores
 Contrast Correction	Correção de contraste
-Parameter DB:	Parâmetros da BD:
+Parameter DB:	BD de parâmetros:
 Save to	Gravar como
 Remove from	Remover de
 Rename:	Mudar nome:
 No file or folder name was provided as command line parameter!	Não indicou o nome do ficheiro ou pasta como parâmetro da linha de comandos!
-To use JPEGView, associate JPG, JPEG and BMP files with JPEGView.	Para utilizar o JPEGView, associe as extensões JPG, JPEG e BMP ao JPEGView
+To use JPEGView, associate JPG, JPEG and BMP files with JPEGView.	Para utilizar o JPEGView, associe as extensões JPG, JPEG e BMP ao JPEGView.
 Press ESC to exit...	Prima ESC para sair...
-The file '%s' could not be read!	O ficheiro "%s" não pôde ser lido!
+The file '%s' could not be read!	O ficheiro "%s" não pode ser lido!
 The file '%s' does not contain a list of file names!	O ficheiro "%s" não contém uma lista de nomes de ficheiro!
 The directory '%s' does not contain any image files!	A pasta "%s" não possui imagens!
 Press any key to search the subdirectories for image files.	Prima qualquer tecla para procurar imagens nas subpastas.
 JPEGView Help	Ajuda do JPEGView
 Current image	Imagem atual
-Close help text display / Close JPEGView	Fechar texto de ajuda / Fechar JPEGView
+Close help text display / Close JPEGView	Fechar texto de ajuda/Fechar o JPEGView
 Show/hide this help text	Mostrar/ocultar este texto de ajuda
 Show/hide picture information (EXIF data)	Mostrar/ocultar informações da imagem
 Show/hide file name	Mostrar/ocultar nome do ficheiro
 Enable/disable high quality resampling	Ativar/desativar algoritmo de alta qualidade
-Enable/disable keeping of geometry related (zoom/pan/rotation)	Ativar/desativar a manutenção da geometria (tamanho/pan/rotação)
-and image processing (brightness/contrast/sharpen) parameters between images	e os parâmetros de imagens (brilho/contraste/nitidez)
+Enable/disable keeping of geometry related (zoom/pan/rotation)	Ativar/desativar manutenção de geometria (tamanho/panorâmica/rotação)
+and image processing (brightness/contrast/sharpen) parameters between images	e os parâmetros das imagens (brilho/contraste/nitidez)
 Enable/disable automatic contrast correction (histogram equalization)	Ativar/desativar correção automática de contraste (equalização de histograma)
-Apply auto contrast correction using only visible section of image	Aplicar correção automática de contraste na secção da imagem visível
+Apply auto contrast correction using only visible section of image	Aplicar correção automática de contraste na secção visível da imagem
 Enable/disable automatic density correction (local brightness correction)	Ativar/desativar correção automática da densidade (correção de brilho)
 Increase/decrease lightening of shadows (LDC must be on)	Aumentar/diminuir luz das sombras (LDC tem que estar ativo)
-Increase/decrease darkening of highlights (LDC must be on)	Aumento/diminuir intensidade de luz (LDC tem que estar ativo)
+Increase/decrease darkening of highlights (LDC must be on)	Aumentar/diminuir intensidade de luz (LDC tem que estar ativo)
 Loop through files in current folder	Mostrar ficheiros da pasta atual
-Loop through files in current directory and all subfolders	Mostrar ficheiros da pasta atual e todas as subpastas
+Loop through files in current directory and all subfolders	Mostrar ficheiros da pasta atual e de todas as subpastas
 Loop through files in current directory and all sibling folders (folders on same level)	Mostrar ficheiros da pasta atual e outros no mesmo nível
 Maximize/restore to/from virtual desktop (only for multi-monitor systems)	Maximizar/restaurar de/para ambiente de trabalho virtual (só para sistemas com vários monitores)
 Copy screen to clipboard/ Copy processed full size image to clipboard	Copiar ecrã para a área de transferência/Copiar imagem processada para a área de transferência
@@ -59,7 +59,7 @@ Increase/decrease auto contrast correction amount	Aumentar/diminuir valor de cor
 Enable/disable landscape picture enhancement mode	Ativar/desativar modo de melhoria da imagem na horizontal
 Slide show with timeout of n seconds (ESC to stop)	Apresentação com tempo limite de n segundos (ESC para  parar)
 Set timeout to n/10 sec, respectively n/100 sec (Ctrl+Shift)	Definir tempo limite para n/10 seg., respetivamente n/100 seg. (Ctrl+Shift)
-Rotate image and fit to screen	Rodar a imagem e ajustar ao ecrã
+Rotate image and fit to screen	Rodar imagem e ajustar ao ecrã
 Fit image to screen	Ajustar imagem ao ecrã
 Zoom 1:1 (100 %)	Tamanho 1:1 (100%)
 Zoom in (%s)/Zoom out (%s)	Ampliar (%s)/Reduzir (%s)
@@ -68,7 +68,7 @@ Pan image	Expandir imagem
 Crop image	Recortar imagem
 Next image	Imagem seguinte
 Previous image	Imagem anterior
-up/down	Seta para cima/Seta para baixo	
+up/down	Seta para cima/Seta para baixo
 Mouse wheel	Roda do rato
 Left mouse & drag	Botão esquerdo do rato e arraste
 Ctrl + Left mouse	Ctrl + botão esquerdo do rato
@@ -95,7 +95,7 @@ These values will override the values from the INI file located in the program f
 Confirm save default parameters	Confirmação de gravação dos parâmetros
 Images	Imagens
 All Files	Todos os ficheiros
-Parameter DB file '%s' could not be opened!	O ficheiro de parâmetros da BD "%s" não pôde ser aberto!
+Parameter DB file '%s' could not be opened!	O ficheiro de parâmetros da BD "%s" não pode ser aberto!
 Parameter DB file '%s' is not valid (invalid header)!	O ficheiro de parâmetros da BD "%s" não é válido (cabeçalho inválido)!
 Cannot write to parameter DB file '%s'!	Não foi possível escrever no ficheiro de parâmetros da BD "%s"!
 Cannot read from parameter DB file '%s'!	Não foi possível ler o ficheiro de parâmetros da BD "%s"!
@@ -136,9 +136,9 @@ Rotate 180	Rotação 180
 Auto correction	Correção automática
 Local density correction	Correção de densidade
 Keep parameters	Manter parâmetros
-Set current parameters as default values...	Gravar parâmetros no ficheiro INI...
+Set current parameters as default values...	Gravar parâmetros como valores padrão...
 Save parameters to DB	Gravar parâmetros na BD
-Clear parameters from DB	Apagar parâmetros da BD
+Clear parameters from DB	Remover parâmetros da BD
 Zoom	Ampliação
 Fit to screen	Ajustar ao ecrã
 Fill with crop	Preencher com recortes
@@ -162,15 +162,15 @@ Extracted number from original file name	Extrair número do nome do ficheiro
 Original file name (with extension)	Nome do ficheiro (com extensão)
 Original file name (without extension)	Nome do ficheiro (sem extensão)
 Original file extension	Extensão do ficheiro
-'My Pictures' folder	Pasta "Minha imagens"
-Day / Month / Year (as numbers)	Dia / Mês / Ano (como número)
+'My Pictures' folder	Pasta "Minhas imagens"
+Day / Month / Year (as numbers)	Dia/Mês/Ano (como número)
 Year short form (2 digits)	Ano em forma curta (2 dígitos)
-Month / Short form (text)	Mês / forma curta (texto)
-Target folders that are not yet existing are created as needed.	As pastas de destino que não existam, são criadas automaticamente
-Date placeholders use the modification date of the image.	Os marcadores de posição utilizam a data de modificação da imagem
+Month / Short form (text)	Mês em forma curta (texto)
+Target folders that are not yet existing are created as needed.	As pastas de destino que não existam serão criadas automaticamente
+Date placeholders use the modification date of the image.	Os marcadores de posição de data utilizam a data de modificação da imagem
 Rename/copy images to:	Copiar/mudar nome para:
 Rename	Mudar nome
-Preview	Visualizar
+Preview	Pré-visualizar
 Save as template	Gravar como modelo
 Close	Sair
 Old name	Nome anterior
@@ -180,19 +180,19 @@ Select all	Marcar todas
 Select none	Desmarcar todas
 The file '%s' could not be %s.	O ficheiro "%s" não pode ser %s
 copied	copiado
-renamed	nome mudado
+renamed	renomeado
 Continue rename/copy?	Continuar a copiar/mudar nome?
 Error during rename/copy	Erro ao copiar/mudar nome
 %d file(s) renamed, %d file(s) copied, %d folder(s) created	%d ficheiro(s) renomeado(s), %d ficheiro(s) copiado(s), %d pasta(s) criada(s)
 Crop Selection	Recortar seleção
 Copy Selection to Clipboard	Copiar seleção para a área de transferência
 Zoom to Selection	Ampliar seleção
-Pasting image from clipboard failed!	Falha ao colar a imagem!
+Pasting image from clipboard failed!	Falha ao colar a imagem da área de transferência!
 Image width:	Largura da imagem:
 Image height:	Altura da imagem:
 Acquisition date:	Data de aquisição:
 Camera model:	Modelo:
-Exposure time (s):	Tempo de exposição	(s):
+Exposure time (s):	Tempo de exposição (seg.):
 Exposure bias (EV):	Compensação da exposição (EV):
 Flash fired:	Flash disparado:
 Focal length (mm):	Distância focal (mm):
@@ -206,22 +206,22 @@ Show/hide navigation panel	Mostrar/ocultar painel de navegação
 About JPEGView...	Sobre o JPEGView...
 SIMD mode used:	Modo SIMD utilizado:
 Number of CPU cores used:	Número de CPUs utilizados:
-Licensed under the GNU general public license (GPL), see readme file for details:	Disponibilizado sob a GNU general public license (GPL). Para detalhes, consulte:
-Project home page:	Sítio web:
+Licensed under the GNU general public license (GPL), see readme file for details:	Disponibilizado nos termos da GNU General Public License (GPL). Para detalhes, consulte:
+Project home page:	Sítio web do projeto:
 Show first image in folder	Mostrar a primeira imagem da pasta
 Show previous image	Mostrar imagem anterior
 Show next image	Mostrar imagem seguinte
 Show last image in folder	Mostrar a última imagem da pasta
-Rotate image 90 deg clockwise	Rodar para a direita em 90º
-Rotate image 90 deg counter-clockwise	Rodar para a esquerda em 90º
-Landscape picture enhancement mode	Modo de melhoria da imagem na horizontal
+Rotate image 90 deg clockwise	Rodar 90º à direita
+Rotate image 90 deg counter-clockwise	Rodar 90º à esquerda
+Landscape picture enhancement mode	Modo de melhoria de imagem na horizontal
 Display image (EXIF) information	Mostrar informações da imagem (EXIF)
 Toggle between screens (only for multi-monitor systems)	Alternar entre ecrãs (só para sistemas com vários monitores)
-Enable/disable full screen mode	Ativar/desativar o modo de ecrã completo
+Enable/disable full screen mode	Ativar/desativar modo de ecrã completo
 Full screen mode	Modo de ecrã completo
 Window mode	Modo de janela
 Save as (in screen size/resolution)	Gravar como (no tamanho/resolução do ecrã)
-Save processed image to JPEG file (screen size)	Gravar imagem procesada como ficheiro JPEG (no tamanho do ecrã)
+Save processed image to JPEG file (screen size)	Gravar imagem processada como ficheiro JPEG (tamanho do ecrã)
 Settings/Admin	Definições/Administração
 Edit global settings...	Editar definições gerais...
 Edit user settings...	Editar definições de utilizador...
@@ -233,7 +233,7 @@ Select parameter DB to restore	Selecione o ficheiro de parâmetros de BD a resta
 Conflicting entries in Param DB	Existem entradas com conflitos nos parâmetros da BD
 The imported param DB contains entries already present in active param DB.	O ficheiro de parâmetros da BD a importar contém entradas já existentes nos parâmetros ativos.
 Shall existing entries be preserved (Yes) or be overriden by the imported entries (No)?	Manter entradas existentes (Sim) ou substituir pelas importadas (Não)?
-Select file to display in 'File Open' dialog	Selecione o ficheiro a exibir na caixa de diálogo "Abrir"
+Select file to display in 'File Open' dialog	Selecione o ficheiro na caixa de diálogo "Abrir"
 Crop Mode	Modo de recorte
 Free	Livre
 Fixed size...	Tamanho fixo...
@@ -268,7 +268,7 @@ Align image to horizontal or vertical line	Alinhar imagem à linha horizontal ou
 Use the mouse to draw a line that shall be horizontal or vertical.	Utilize o rato para criar uma linha horizontal ou vertical
 Rotate the image by dragging with the mouse.	Rodar imagem com o rato
 The operation failed because not enough memory is available!	A operação falhou porque a memória disponível não é suficiente!
-to EXIF date (all files in folder)	a data EXIF  (todos os ficheiros na pasta)
+to EXIF date (all files in folder)	a data EXIF (todos os ficheiros na pasta)
 Number of JPEG files in folder: %d	Número de ficheiros JPEG na pasta: %d
 EXIF date successfully set on %d images, failed on %d images	A data EXIF foi definida em %d imagens e falhou em %d
 Reason: Not enough memory available	Motivo: a memória disponível não é suficiente
@@ -321,17 +321,17 @@ Warning	Aviso
 Error while writing the following registry key:	Ocorreu um erro ao escrever a chave de registo:
 Set as default viewer...	Definir como visualizador padrão...
 Set JPEGView as default image viewer	Definir o JPEGView como visualizador padrão
-JPEGView is registered as default viewer for the selected file formats.	O JPEGView é o visualizador padrão para os formatos de ficheiro selecionados.
-Registration applies to the current user only.	Esta associação só é aplicável ao utilizador atual.
+JPEGView is registered as default viewer for the selected file formats.	O JPEGView será registado como o visualizador padrão para os formatos de ficheiro selecionados.
+Registration applies to the current user only.	Esta associação só será aplicável ao utilizador atual.
 Extension	Extensão
 File type	Tipo de ficheiro
 The following file extensions cannot be unregistered because they have been registered in the 'local machine' registry area.	Não foi possível remover a associação das seguintes extensões de ficheiros porque a associação foi registada na área de registo da máquina local.
-Registering or unregistering file extensions in this registry area requires administration privileges and cannot be done in JPEGView.	A associação ou cancelamente de associação nesta área do registo requer privilégios de administrador e não pode ser efetuada no JPEGView.
+Registering or unregistering file extensions in this registry area requires administration privileges and cannot be done in JPEGView.	A associação ou cancelamento da associação nesta área do registo requer privilégios de administrador e não pode ser efetuada no JPEGView.
 Press 'OK' to continue with registration or 'Cancel' to not modify any registrations.	Prima Aceitar para continuar ou Cancelar para não efetuar as alterações.
 Unregistering not possible	Não foi possível remover a associação
-%s images	%s imagens
-%s images (processed by Window Imaging Component - WIC)	%s imagens (processadas pelo componente Windows Imaging - WIC)
-%s camera raw images (embedded JPEGs only)	%s imagens da máquina fotográfica
+%s images	Imagens %s
+%s images (processed by Window Imaging Component - WIC)	Imagens %s (processadas pelo Windows Imaging - WIC)
+%s camera raw images (embedded JPEGs only)	Imagens %s de máquina fotográfica
 The following image extensions are protected by the operating system.	Estes tipos de ficheiro estão protegidos pelo sistema operativo.
 JPEGView can try to remove the restrictions automatically.	O JPEGView pode tentar remover as restrições automaticamente.
 However this will fail if the current user has no administration privileges.	No entanto, se o utilizador não possuir privilégios de administrador a operação não é possível.
