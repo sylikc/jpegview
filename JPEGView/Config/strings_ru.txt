@@ -5,7 +5,7 @@
 //TranslatorName=Dmitry Yerokhin
 //Contact=erodim@mail.ru
 //TranslatorURL=none
-//LastUpdated=Jan 07, 2015
+//LastUpdated=Feb 25, 2015
 //
 Contrast	Контрастность
 Brightness	Яркость
@@ -32,7 +32,7 @@ Close help text display / Close JPEGView	Закрыть справку/JPEGView
 Show/hide this help text	Показать/скрыть этот текст справки
 Show/hide picture information (EXIF data)	Показать/скрыть данные об изображении (EXIF)
 Show/hide file name	Показать/скрыть имя файла
-Enable/disable high quality resampling	Включить/выключить улучшенное ресэмплирование
+Enable/disable high quality resampling	Включить/выключить улучшенное сглаживание
 Enable/disable keeping of geometry related (zoom/pan/rotation)	Включить/выключить сохранение геометрии (масштаб/перемещение/поворот)
 and image processing (brightness/contrast/sharpen) parameters between images	и обработку (яркость/контрастность/резкость) между изображениями
 Enable/disable automatic contrast correction (histogram equalization)	Включить/выключить автокоррекцию контрастности (подстройку гистограммы)
@@ -80,10 +80,10 @@ Back mouse button	Кнопка мыши 'Назад'
 Delete current file on disk permanently	Удалить этот файл с диска окончательно
 Rotate current file on disk lossless by 90 deg (W/H must be multiple of 16)	Повернуть на 90° вправо без потерь в файле на диске (Ш/В должны быть кратны 16)
 Rotate current file on disk lossless by 270 deg (W/H must be multiple of 16)	Повернуть на 90° влево без потерь в файле на диске (Ш/В должны быть кратны 16)
-The file is read-only!	Этот файл только для чтения!
+The file is read-only!	Этот файл - только для чтения!
 Can't rename file	Невозможно переименовать файл
 New name contains backslash character!	В новом имени содержится обратная косая черта (\).
-Renaming file failed!	Ошибка при переименовании файла.
+Renaming file failed!	Ошибка переименования файла.
 Reason: 	Причина: 
 on	вкл.
 off	выкл.
@@ -94,7 +94,7 @@ Order files by: 	Сортировка файлов:
 Creation date/time	Дата/время создания
 Last modification date/time	Дата/время изменения
 File name	Имя файла
-These values will override the values from the INI file located in the program folder of JPEGView!	Эти значения переопределят установки в INI-файле в папке с JPEGView.
+These values will override the values from the INI file located in the program folder of JPEGView!	Эти значения будут иметь приоритет перед установками в INI-файле в папке с JPEGView.
 Confirm save default parameters	Сохранить параметры по умолчанию?
 Images	Изображения
 All Files	Все файлы
@@ -181,7 +181,7 @@ Date	Дата
 New name (>> : file gets copied)	Новое имя (>> : файл скопирован)
 Select all	Выбрать все
 Select none	Снять весь выбор
-The file '%s' could not be %s.	Для файла '%s' невозможно выполнить операцию %s.
+The file '%s' could not be %s.	Для файла '%s' невозможно выполнить операцию '%s'.
 copied	скопировано
 renamed	переименовано
 Continue rename/copy?	Продолжить переименование/копирование?
@@ -209,8 +209,8 @@ Show/hide navigation panel	Показать/скрыть панель навиг
 About JPEGView...	О программе JPEGView...
 SIMD mode used:	Режим SIMD:
 Number of CPU cores used:	Используется ядер ЦП:
-Licensed under the GNU general public license (GPL), see readme file for details:	Лицензия: GNU General Public License (GPL), см. подробности в файле:
-Project home page:	Домашняя страница проекта:
+Licensed under the GNU general public license (GPL), see readme file for details:	Лицензия GNU General Public License (GPL), см. подробности в файле:
+Project home page:	Веб-страница проекта:
 Show first image in folder	Первое изображение в папке
 Show previous image	Предыдущее изображение
 Show next image	Следующее изображение
@@ -229,13 +229,13 @@ Save processed image to JPEG file (screen size)	Сохранить обрабо�
 Settings/Admin	Настройки
 Edit global settings...	Общие настройки...
 Edit user settings...	Пользовательские настройки...
-Backup parameter DB...	Сделать резервную копию БД с параметрами...
-Restore parameter DB...	Восстановить из копии БД с параметрами...
+Backup parameter DB...	Сделать резервную копию базы параметров...
+Restore parameter DB...	Восстановить базу параметров из копии...
 No user INI file exits yet. Create user INI file from INI file template?	Пользовательского INI-файла пока нет. Создать его из шаблона INI-файла?
-Copying parameter DB to file '%s' failed. Reason: %s	Ошибка копирования БД параметров в файл '%s'. Причина: %s
-Select parameter DB to restore	Выберите БД параметров для восстановления
-Conflicting entries in Param DB	Конфликт записей в БД параметров
-The imported param DB contains entries already present in active param DB.	В импортированной БД параметров есть записи, которые уже присутствуют в активной БД.
+Copying parameter DB to file '%s' failed. Reason: %s	Ошибка копирования базы параметров в файл '%s'. Причина: %s
+Select parameter DB to restore	Выберите базу параметров для восстановления
+Conflicting entries in Param DB	Конфликт записей в базе параметров
+The imported param DB contains entries already present in active param DB.	В импортированной базе параметров есть записи, которые уже присутствуют в активной базе.
 Shall existing entries be preserved (Yes) or be overriden by the imported entries (No)?	Сохранить имеющиеся записи ('Да') или перезаписать их импортированными ('Нет')?
 Select file to display in 'File Open' dialog	Выберите файл для показа в диалоге открытия файлов
 Crop Mode	Режим обрезки
@@ -299,22 +299,22 @@ Performing the transformation failed	Ошибка преобразования
 The transformation can be applied if the image is trimmed to the next matching size but this will remove some border pixels.	Преобразование возможно, если обрезать изображение до ближайшего кратного блоку значения (и потерять некоторое количество пикселов с краёв).
 Trim the image and apply transformation? Trimming cannot be undone!	Обрезать и преобразовать изображение? Обрезка не может быть отменена!
 Note: Set the key 'TrimWithoutPromptLosslessJPEG=true' in the INI file to always trim without showing this message.	Примечание: чтобы при обрезке не было этого сообщения, установите в INI-файле ключ 'TrimWithoutPromptLosslessJPEG=true'.
-Transition Effect	Эффект смены слайдов
+Transition Effect	Эффект смены изображений
 None	Нет
-Blend	Смешивание
-Slide from right	Сдвиг справа
-Slide from left	Сдвиг слева
-Slide from top	Сдвиг сверху
-Slide from bottom	Сдвиг снизу
-Roll from right	Свёртка справа
-Roll from left	Свёртка слева
-Roll from top	Свёртка сверху
-Roll from bottom	Свёртка снизу
-Scroll from right	Прокрутка справа
-Scroll from left	Прокрутка слева
-Scroll from top	Прокрутка сверху
-Scroll from bottom	Прокрутка снизу
-Transition Speed	Длительность эффекта
+Blend	Растворение
+Slide from right	Сдвиг справа налево
+Slide from left	Сдвиг слева направо
+Slide from top	Сдвиг сверху вниз
+Slide from bottom	Сдвиг снизу вверх
+Roll from right	Развёртывание справа налево
+Roll from left	Развёртывание слева направо
+Roll from top	Развёртывание сверху вниз
+Roll from bottom	Развёртывание снизу вверх
+Scroll from right	Выталкивание справа налево
+Scroll from left	Выталкивание слева направо
+Scroll from top	Выталкивание сверху вниз
+Scroll from bottom	Выталкивание снизу вверх
+Transition Speed	Скорость эффекта
 Very fast	Очень быстро
 Fast	Быстро
 Normal	Умеренно
@@ -357,7 +357,7 @@ New	Создать
 Delete	Удалить
 Modifier keys:	Модификаторы:
 Known keys:	Известные клавиши:
-Combine keys with '+'	Сочетайте клавиши с помощью '+'
+Combine keys with '+'	Сочетайте клавиши плюсом ('+')
 Example:	Пример:
 Shortcut Help	Справка по клавишам
 [new entry]	[новый элемент]
@@ -382,7 +382,7 @@ Lanczos/Bicubic	Lanczos/бикубический
 Sharpen low	Резкость слабо
 Sharpen medium	Резкость средне
 The new size is too large - width or height is larger than 65535 or total number of pixels is too large!	Новый размер слишком велик - ширина или высота превышают 65535 пикселов, либо слишком большое общее количество пикселов!
-JPEGView is a lean, fast and highly configurable viewer/editor for JPEG, BMP, PNG, WEBP, TGA, GIF and TIFF images with a minimal GUI.	JPEGView - это компактная и быстрая программа просмотра/редактор изображений в форматах JPEG, BMP, PNG, WEBP, TGA, GIF и TIFF с богатыми возможностями настройки и минималистским графическим интерфейсом.
+JPEGView is a lean, fast and highly configurable viewer/editor for JPEG, BMP, PNG, WEBP, TGA, GIF and TIFF images with a minimal GUI.	JPEGView - это компактная и быстрая программа просмотра/редактор изображений JPEG, JPEG XR (HD Photo), BMP, PNG, WebP, TGA, GIF, TIFF и Raw с богатыми возможностями настройки и лаконичным интерфейсом.
 Hour / Minute (as numbers)	час / минута (цифрами)
 Set as desktop wallpaper	Сделать рисунком рабочего стола
 Use original image	Исходное изображение
