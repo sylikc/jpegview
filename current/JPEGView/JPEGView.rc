@@ -454,6 +454,7 @@ BEGIN
             MENUITEM "3 : 2",                       IDM_CROPMODE_3_2
             MENUITEM "16 : 9",                      IDM_CROPMODE_16_9
             MENUITEM "16 : 10",                     IDM_CROPMODE_16_10
+			MENUITEM "__",							IDM_CROPMODE_USER
         END
         MENUITEM SEPARATOR
         MENUITEM "Zoom to Selection",           IDM_ZOOM_SEL

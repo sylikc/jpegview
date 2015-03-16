@@ -9,6 +9,7 @@
 #include "TimerEventIDs.h"
 #include "CropSizeDlg.h"
 #include "HelpersGUI.h"
+#include "SettingsProvider.h"
 #include "NLS.h"
 #include "FileList.h"
 #include <math.h>
@@ -203,8 +204,22 @@ int CCropCtl::ShowCropContextMenu() {
 
 		CPoint posMouse = m_pMainDlg->GetMousePos();
 		m_pMainDlg->ClientToScreen(&posMouse);
+		CSettingsProvider& sp = CSettingsProvider::This();
+		CSize userCrop = sp.UserCropAspectRatio();
 
 		HMENU hMenuCropMode = ::GetSubMenu(hMenuTrackPopup, nSubMenuPosCropMode);
+
+		CString userCropString;
+		userCropString.Format(_T("%d : %d"), userCrop.cx, userCrop.cy);
+
+		MENUITEMINFO itemInfo;
+		memset(&itemInfo, 0, sizeof(MENUITEMINFO));
+		itemInfo.cbSize = sizeof(MENUITEMINFO);
+		itemInfo.fMask = MIIM_STRING;
+		itemInfo.dwTypeData = (LPTSTR)(LPCTSTR)userCropString;
+		itemInfo.cch = userCropString.GetLength();
+		::SetMenuItemInfo(hMenuCropMode, IDM_CROPMODE_USER, FALSE, &itemInfo);
+
         switch (GetCropMode())
         {
             case CM_FixedAspectRatio:
@@ -218,7 +233,9 @@ int CCropCtl::ShowCropContextMenu() {
 			        ::CheckMenuItem(hMenuCropMode,  IDM_CROPMODE_16_9, MF_CHECKED);
 		        } else if (abs(m_dCropRectAspectRatio - 1.6) < 0.001) {
 			        ::CheckMenuItem(hMenuCropMode,  IDM_CROPMODE_16_10, MF_CHECKED);
-		        }
+				} else if (abs(m_dCropRectAspectRatio - userCrop.cx / (double)userCrop.cy) < 0.001) {
+					::CheckMenuItem(hMenuCropMode, IDM_CROPMODE_USER, MF_CHECKED);
+				}
                 break;
             case CM_FixedSize:
 			    ::CheckMenuItem(hMenuCropMode,  IDM_CROPMODE_FIXED_SIZE, MF_CHECKED);
@@ -242,7 +259,7 @@ int CCropCtl::ShowCropContextMenu() {
 	// This would start another crop what is not desired.
 	if (nMenuCmd == 0) {
 		m_bDontStartCropOnNextClick = true;
-	} else if (nMenuCmd >= IDM_CROPMODE_FREE && nMenuCmd <= IDM_CROPMODE_16_10) {
+	} else if (nMenuCmd >= IDM_CROPMODE_FREE && nMenuCmd <= IDM_CROPMODE_USER) {
 		m_eHitHandle = HH_Border;
 		float fX = (float)((nMenuCmd == IDM_CROPMODE_FIXED_SIZE) ? m_cropStart.x : m_cropEnd.x);
 		float fY = (float)((nMenuCmd == IDM_CROPMODE_FIXED_SIZE) ? m_cropStart.y : m_cropEnd.y);
@@ -276,30 +293,30 @@ void CCropCtl::TrackCroppingRect(int nX, int nY, Handle eHandle) {
 			m_cropEnd = CPoint(m_cropEnd.x + nDeltaX, m_cropEnd.y + nDeltaY);
 			break;
 		case HH_Right:
-			m_cropEnd = PreserveAspectRatio(m_cropStart, CPoint(m_cropEnd.x + nDeltaX, m_cropEnd.y), true);
+			m_cropEnd = PreserveAspectRatio(m_cropStart, CPoint(m_cropEnd.x + nDeltaX, m_cropEnd.y), true, true);
 			break;
 		case HH_Left:
-			m_cropStart = PreserveAspectRatio(CPoint(m_cropStart.x + nDeltaX, m_cropStart.y), m_cropEnd, false);
+			m_cropStart = PreserveAspectRatio(CPoint(m_cropStart.x + nDeltaX, m_cropStart.y), m_cropEnd, true, false);
 			break;
 		case HH_Top:
-			m_cropStart = PreserveAspectRatio(CPoint(m_cropStart.x, m_cropStart.y + nDeltaY), m_cropEnd, false);
+			m_cropStart = PreserveAspectRatio(CPoint(m_cropStart.x, m_cropStart.y + nDeltaY), m_cropEnd, false, false);
 			break;
 		case HH_Bottom:
-			m_cropEnd = PreserveAspectRatio(m_cropStart, CPoint(m_cropEnd.x, m_cropEnd.y + nDeltaY), true);
+			m_cropEnd = PreserveAspectRatio(m_cropStart, CPoint(m_cropEnd.x, m_cropEnd.y + nDeltaY), false, true);
 			break;
 		case HH_BottomRight:
-			m_cropEnd = PreserveAspectRatio(m_cropStart, CPoint(m_cropEnd.x + nDeltaX, m_cropEnd.y + nDeltaY), true);
+			m_cropEnd = PreserveAspectRatio(m_cropStart, CPoint(m_cropEnd.x + nDeltaX, m_cropEnd.y + nDeltaY), true, true);
 			break;
 		case HH_TopRight:
-			m_cropStart = PreserveAspectRatio(CPoint(m_cropStart.x, m_cropStart.y + nDeltaY), m_cropEnd, false);
-			m_cropEnd = PreserveAspectRatio(m_cropStart, CPoint(m_cropEnd.x + nDeltaX, m_cropEnd.y), true);
+			m_cropStart = PreserveAspectRatio(CPoint(m_cropStart.x, m_cropStart.y + nDeltaY), m_cropEnd, true, false);
+			m_cropEnd = PreserveAspectRatio(m_cropStart, CPoint(m_cropEnd.x + nDeltaX, m_cropEnd.y), true, true);
 			break;
 		case HH_TopLeft:
-			m_cropStart = PreserveAspectRatio(CPoint(m_cropStart.x + nDeltaX, m_cropStart.y + nDeltaY), m_cropEnd, false);
+			m_cropStart = PreserveAspectRatio(CPoint(m_cropStart.x + nDeltaX, m_cropStart.y + nDeltaY), m_cropEnd, false, false);
 			break;
 		case HH_BottomLeft:
-			m_cropStart = PreserveAspectRatio(CPoint(m_cropStart.x + nDeltaX, m_cropStart.y), m_cropEnd, false);
-			m_cropEnd = PreserveAspectRatio(m_cropStart, CPoint(m_cropEnd.x, m_cropEnd.y + nDeltaY), true);
+			m_cropStart = PreserveAspectRatio(CPoint(m_cropStart.x + nDeltaX, m_cropStart.y), m_cropEnd, false, false);
+			m_cropEnd = PreserveAspectRatio(m_cropStart, CPoint(m_cropEnd.x, m_cropEnd.y + nDeltaY), false, true);
 			break;
 	}
 
@@ -315,7 +332,7 @@ void CCropCtl::UpdateCroppingRect(int nX, int nY, HDC hPaintDC, bool bShow) {
 	CPoint newCropEnd = CPoint((int)fX, (int) fY);
     CropMode cropMode = GetCropMode();
 	if (cropMode == CM_FixedAspectRatio) {
-		newCropEnd = PreserveAspectRatio(m_cropStart, newCropEnd, true);
+		newCropEnd = PreserveAspectRatio(m_cropStart, newCropEnd, false, true);
 	} else if (cropMode == CM_FixedSize) {
 		CSize cropSize = CCropSizeDlg::GetCropSize();
 		newCropStart = CPoint((int)fX, (int) fY);
@@ -533,21 +550,20 @@ CPoint CCropCtl::ScreenToImage(int nX, int nY) {
 	return CPoint((int)fX, (int)fY);
 }
 
-CPoint CCropCtl::PreserveAspectRatio(CPoint cropStart, CPoint cropEnd, bool bCalculateEnd) {
+CPoint CCropCtl::PreserveAspectRatio(CPoint cropStart, CPoint cropEnd, bool adjustWidth, bool bCalculateEnd) {
 	if (GetCropMode() == CM_FixedAspectRatio) {
 		CPoint newCropEnd;
 		int w = abs(cropStart.x - cropEnd.x);
 		int h = abs(cropStart.y - cropEnd.y);
-		double dRatio = (h < w) ? 1.0/m_dCropRectAspectRatio : m_dCropRectAspectRatio;
-		int newH = (int)(w * dRatio + 0.5);
-		int newW = (int)(h * (1.0/dRatio) + 0.5);
-		if (w > h) {
+		if (adjustWidth) {
+			int newH = (int)(w * 1.0 / m_dCropRectAspectRatio + 0.5);
 			if (cropStart.y > cropEnd.y) {
 				newCropEnd = CPoint(cropEnd.x, cropStart.y - newH);
 			} else {
 				newCropEnd = CPoint(cropEnd.x, cropStart.y + newH);
 			}
 		} else {
+			int newW = (int)(h * m_dCropRectAspectRatio + 0.5);
 			if (cropStart.x > cropEnd.x) {
 				newCropEnd = CPoint(cropStart.x - newW, cropEnd.y);
 			} else {
