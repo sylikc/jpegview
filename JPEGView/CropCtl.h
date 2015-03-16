@@ -82,7 +82,7 @@ private:
 	void InvalidateSceenCropRect();
 	CRect GetScreenCropRect();
 	CPoint ScreenToImage(int nX, int nY);
-	CPoint PreserveAspectRatio(CPoint cropStart, CPoint cropEnd, bool bCalculateEnd);
+	CPoint PreserveAspectRatio(CPoint cropStart, CPoint cropEnd, bool adjustWidth, bool bCalculateEnd);
 	void NormalizeCroppingRect();
 	void SetMouseCursor(int nX, int nY);
 };

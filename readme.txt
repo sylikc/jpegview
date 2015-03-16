@@ -27,6 +27,8 @@ New features:
 - New INI file settings:
   - SingleFullScreenInstance=true/false
     Allows multiple instances of JPEGView to run in full screen mode
+  - UserCropAspectRatio=x y
+    Sets the user crop aspect ratio, x and y are integers
 
 [1.0.33]
 Bugs fixed:

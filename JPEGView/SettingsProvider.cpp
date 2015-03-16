@@ -336,6 +336,10 @@ void CSettingsProvider::ReadWriteableINISettings() {
 
 	m_minimalWindowSize = GetSize(_T("MinimalWindowSize"), CSize(320, 240));
 	m_minimalDisplayTime = GetDouble(_T("MinimalDisplayTime"), 0.0, 0, 1000);
+	m_userCropAspectRatio = GetSize(_T("UserCropAspectRatio"), CSize(1, 1));
+	if (m_userCropAspectRatio.cx <= 0 || m_userCropAspectRatio.cy <= 0) {
+		m_userCropAspectRatio = CSize(1, 1);
+	}
 }
 
 CImageProcessingParams CSettingsProvider::LandscapeModeParams(const CImageProcessingParams& templParams) {

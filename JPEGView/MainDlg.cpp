@@ -1260,6 +1260,7 @@ bool CMainDlg::IsCurrentImageFitToScreen(void* pContext) {
 ///////////////////////////////////////////////////////////////////////////////////
 
 void CMainDlg::ExecuteCommand(int nCommand) {
+	CSettingsProvider& sp = CSettingsProvider::This();
 	switch (nCommand) {
 		case IDM_HELP:
 			m_bShowHelp = !m_bShowHelp;
@@ -1288,7 +1289,7 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 		case IDM_SAVE_SCREEN:
 		case IDM_SAVE_ALLOW_NO_PROMPT:
 			if (m_pCurrentImage != NULL) {
-				if (nCommand == IDM_SAVE_ALLOW_NO_PROMPT && CSettingsProvider::This().SaveWithoutPrompt() && !m_pCurrentImage->IsClipboardImage()) {
+				if (nCommand == IDM_SAVE_ALLOW_NO_PROMPT && sp.SaveWithoutPrompt() && !m_pCurrentImage->IsClipboardImage()) {
 					SaveImageNoPrompt(CurrentFileName(false), true);
 				} else {
 					SaveImage(nCommand != IDM_SAVE_SCREEN);
@@ -1334,7 +1335,7 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 		case IDM_MOVE_TO_RECYCLE_BIN_CONFIRM:
 		case IDM_MOVE_TO_RECYCLE_BIN_CONFIRM_PERMANENT_DELETE:
 			MouseOn();
-			if (m_pCurrentImage != NULL && m_pFileList != NULL && !m_pCurrentImage->IsClipboardImage() && CSettingsProvider::This().AllowFileDeletion()) {
+			if (m_pCurrentImage != NULL && m_pFileList != NULL && !m_pCurrentImage->IsClipboardImage() && sp.AllowFileDeletion()) {
 				LPCTSTR currentFileName = CurrentFileName(false);
 				bool noConfirmation = nCommand == IDM_MOVE_TO_RECYCLE_BIN ||
 					(nCommand == IDM_MOVE_TO_RECYCLE_BIN_CONFIRM_PERMANENT_DELETE && CFileList::DriveHasRecycleBin(currentFileName));
@@ -1545,7 +1546,7 @@ void CMainDlg::ExecuteCommand(int nCommand) {
         case IDM_MIRROR_V_LOSSLESS:
             if (m_pCurrentImage != NULL && m_pCurrentImage->GetImageFormat() == IF_JPEG) {
                 bool bCanTransformWithoutTrim = m_pCurrentImage->CanUseLosslessJPEGTransformations();
-                bool bAskIfToTrim = !(bCanTransformWithoutTrim || CSettingsProvider::This().TrimWithoutPromptLosslessJPEG());
+                bool bAskIfToTrim = !(bCanTransformWithoutTrim ||sp.TrimWithoutPromptLosslessJPEG());
                 bool bPerformTransformation = true;
                 bool bTrim = false;
 				MouseOn();
@@ -1566,7 +1567,7 @@ void CMainDlg::ExecuteCommand(int nCommand) {
                     }
                     if (bPerformTransformation) {
                         CJPEGLosslessTransform::EResult eResult =
-                            CJPEGLosslessTransform::PerformTransformation(m_pFileList->Current(), m_pFileList->Current(), HelpersGUI::CommandIdToLosslessTransformation(nCommand), bTrim || CSettingsProvider::This().TrimWithoutPromptLosslessJPEG());
+                            CJPEGLosslessTransform::PerformTransformation(m_pFileList->Current(), m_pFileList->Current(), HelpersGUI::CommandIdToLosslessTransformation(nCommand), bTrim || sp.TrimWithoutPromptLosslessJPEG());
                         if (eResult != CJPEGLosslessTransform::Success) {
                             ::MessageBox(m_hWnd, CString(CNLS::GetString(_T("Performing the lossless transformation failed!"))) + 
                                 + _T("\n") + CNLS::GetString(_T("Reason:")) + _T(" ") + HelpersGUI::LosslessTransformationResultToString(eResult), 
@@ -1672,12 +1673,12 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 				SetIcon(hIconSmall, FALSE);
 				CRect defaultWindowRect = CMultiMonitorSupport::GetDefaultWindowRect();
 				double dZoom = -1;
-				windowRect = CSettingsProvider::This().ExplicitWindowRect() ? defaultWindowRect : Helpers::GetWindowRectMatchingImageSize(m_hWnd, CSize(MIN_WND_WIDTH, MIN_WND_HEIGHT), defaultWindowRect.Size(), dZoom, m_pCurrentImage, false, true);
+				windowRect = sp.ExplicitWindowRect() ? defaultWindowRect : Helpers::GetWindowRectMatchingImageSize(m_hWnd, CSize(MIN_WND_WIDTH, MIN_WND_HEIGHT), defaultWindowRect.Size(), dZoom, m_pCurrentImage, false, true);
 				this->SetWindowPos(HWND_TOP, windowRect.left, windowRect.top, windowRect.Width(), windowRect.Height(), SWP_NOZORDER | SWP_NOCOPYBITS);
 				this->MouseOn();
 				m_bSpanVirtualDesktop = false;
 			} else {
-                if (!IsZoomed() && CSettingsProvider::This().ExplicitWindowRect()) {
+                if (!IsZoomed() && sp.ExplicitWindowRect()) {
                     // Save the old window rect to be able to restore it
                     CRect rect;
                     GetWindowRect(&rect);
@@ -1827,6 +1828,12 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 		case IDM_CROPMODE_16_10:
 			m_pCropCtl->SetCropRectAR(1.6);
 			break;
+		case IDM_CROPMODE_USER:
+		{
+			CSize userCrop = sp.UserCropAspectRatio();
+			m_pCropCtl->SetCropRectAR(userCrop.cx / (double)userCrop.cy);
+			break;
+		}
 		case IDM_TOUCH_IMAGE:
 		case IDM_TOUCH_IMAGE_EXIF:
 			if (m_pCurrentImage != NULL) {
