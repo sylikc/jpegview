@@ -280,14 +280,14 @@ void CJPEGProvider::RemoveUnusedImages(bool bRemoveAlsoReadAhead) {
 		int nSmallestTimeStamp = INT_MAX;
 		std::list<CImageRequest*>::iterator iter;
 		for (iter = m_requestList.begin( ); iter != m_requestList.end( ); iter++ ) {
-			if ((*iter)->InUse == false && (*iter)->Ready && ((*iter)->ReadAhead == false || bRemoveAlsoReadAhead)) {
+			if ((*iter)->InUse == false && (*iter)->Ready && ((*iter)->ReadAhead == false || bRemoveAlsoReadAhead || IsDestructivelyProcessed((*iter)->Image))) {
 				// search element with smallest timestamp
 				if ((*iter)->AccessTimeStamp < nSmallestTimeStamp) {
 					nSmallestTimeStamp = (*iter)->AccessTimeStamp;
 				}
 				// remove the readahead images - if we get here with read ahead, the strategy was wrong and
 				// the read ahead image is not used.
-				if ((*iter)->AccessTimeStamp == nTimeStampToRemove) {
+				if ((*iter)->AccessTimeStamp == nTimeStampToRemove || IsDestructivelyProcessed((*iter)->Image)) {
 					::OutputDebugString(_T("Delete request: ")); ::OutputDebugString((*iter)->FileName); ::OutputDebugString(_T("\n"));
 					DeleteElementAt(iter);
 					bRemoved = true;
@@ -342,4 +342,8 @@ void CJPEGProvider::DeleteElement(CImageRequest* pRequest) {
 	delete pRequest->Image;
 	delete pRequest;
 	m_requestList.remove(pRequest);
+}
+
+bool CJPEGProvider::IsDestructivelyProcessed(CJPEGImage* pImage) {
+	return pImage != NULL && pImage->IsDestructivlyProcessed();
 }

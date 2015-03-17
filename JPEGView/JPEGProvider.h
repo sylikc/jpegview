@@ -111,4 +111,5 @@ private:
 	void ClearOldestReadAhead();
 	void DeleteElementAt(std::list<CImageRequest*>::iterator iteratorAt);
 	void DeleteElement(CImageRequest* pRequest);
+	bool IsDestructivelyProcessed(CJPEGImage* pImage);
 };
