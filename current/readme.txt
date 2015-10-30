@@ -25,6 +25,7 @@ Bugs fixed:
 - Removing image from read-ahead cache when it was destructively processed so that it gets reloaded next time it is accessed
 New features:
 - Printing: Fill with crop mode and ability to move the image with the mouse within the printeable area
+- Japanse translation, thanks to Hiroyuki Matenokoji
 - New INI file settings:
   - SingleFullScreenInstance=true/false
     Allows multiple instances of JPEGView to run in full screen mode
