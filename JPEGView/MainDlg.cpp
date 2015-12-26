@@ -2941,10 +2941,12 @@ void CMainDlg::UpdateWindowTitle() {
 	} else {
 		CString sWindowText =  sCurrentFileName;
         sWindowText += Helpers::GetMultiframeIndex(m_pCurrentImage);
-		CEXIFReader* pEXIF = m_pCurrentImage->GetEXIFReader();
-		if (pEXIF != NULL && pEXIF->GetAcquisitionTime().wYear > 1600) {
-			sWindowText += " - " + Helpers::SystemTimeToString(pEXIF->GetAcquisitionTime());
-		}
+        if (CSettingsProvider::This().ShowEXIFDateInTitle()) {
+            CEXIFReader* pEXIF = m_pCurrentImage->GetEXIFReader();
+            if (pEXIF != NULL && pEXIF->GetAcquisitionTime().wYear > 1600) {
+                sWindowText += " - " + Helpers::SystemTimeToString(pEXIF->GetAcquisitionTime());
+            }
+        }
 		sWindowText += _T(" - JPEGView");
 		this->SetWindowText(sWindowText);
 	}

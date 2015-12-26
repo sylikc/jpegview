@@ -26,6 +26,7 @@ public:
 	bool HighQualityResampling() { return m_bHQRS; }
 	bool ShowFileName() { return m_bShowFileName; }
 	bool ShowFileInfo() { return m_bShowFileInfo; }
+    bool ShowEXIFDateInTitle() { return m_bShowEXIFDateInTitle; }
 	bool ShowHistogram() { return m_bShowHistogram; }
 	bool ShowJPEGComments() { return m_bShowJPEGComments; }
 	bool ShowNavPanel() { return m_bShowNavPanel; }
@@ -95,6 +96,7 @@ public:
 	COLORREF ColorSelected() { return m_colorSelected; }
 	COLORREF ColorSlider() { return m_colorSlider; }
     COLORREF ColorFileName() { return m_colorFileName; }
+    COLORREF ColorTransparency() { return m_colorTransparency; }
 	LPCTSTR DefaultGUIFont() { return m_defaultGUIFont; }
 	LPCTSTR FileNameFont() { return m_fileNameFont; }
 	const CUnsharpMaskParams& UnsharpMaskParams() { return m_unsharpMaskParms; }
@@ -166,6 +168,7 @@ private:
 	bool m_bHQRS;
 	bool m_bShowFileName;
 	bool m_bShowFileInfo;
+    bool m_bShowEXIFDateInTitle;
 	bool m_bShowHistogram;
 	bool m_bShowJPEGComments;
 	bool m_bShowNavPanel;
@@ -233,6 +236,7 @@ private:
 	COLORREF m_colorSelected;
 	COLORREF m_colorSlider;
     COLORREF m_colorFileName;
+    COLORREF m_colorTransparency;
 	CString m_defaultGUIFont;
 	CString m_fileNameFont;
 	CUnsharpMaskParams m_unsharpMaskParms;
