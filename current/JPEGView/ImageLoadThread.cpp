@@ -123,7 +123,7 @@ static CJPEGImage* ConvertGDIPlusBitmapToJPEGImage(Gdiplus::Bitmap* pBitmap, int
 	if (bHasAlphaChannel) {
 		pBmTarget = new Gdiplus::Bitmap(pBitmap->GetWidth(), pBitmap->GetHeight(), PixelFormat32bppRGB);
 		pBmGraphics = new Gdiplus::Graphics(pBmTarget);
-		COLORREF bkColor = CSettingsProvider::This().ColorBackground();
+		COLORREF bkColor = CSettingsProvider::This().ColorTransparency();
 		Gdiplus::SolidBrush bkBrush(Gdiplus::Color(GetRValue(bkColor), GetGValue(bkColor), GetBValue(bkColor)));
 		pBmGraphics->FillRectangle(&bkBrush, 0, 0, pBmTarget->GetWidth(), pBmTarget->GetHeight());
 		pBmGraphics->DrawImage(pBitmap, 0, 0, pBmTarget->GetWidth(), pBmTarget->GetHeight());

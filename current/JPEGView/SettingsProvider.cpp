@@ -162,6 +162,7 @@ void CSettingsProvider::ReadWriteableINISettings() {
 	m_bShowFullScreen = m_bAutoFullScreen ? true : GetBool(_T("ShowFullScreen"), true);
 	m_bShowFileName = GetBool(_T("ShowFileName"), false);
 	m_bShowFileInfo = GetBool(_T("ShowFileInfo"), false);
+    m_bShowEXIFDateInTitle = GetBool(_T("ShowEXIFDateInTitle"), true);
 	m_bShowHistogram = GetBool(_T("ShowHistogram"), false);
 	m_bShowJPEGComments = GetBool(_T("ShowJPEGComments"), true);
 	m_bShowNavPanel = GetBool(_T("ShowNavPanel"), true);
@@ -297,6 +298,7 @@ void CSettingsProvider::ReadWriteableINISettings() {
 	m_colorSelected = GetColor(_T("SelectionColor"), RGB(255, 205, 0));
 	m_colorSlider = GetColor(_T("SliderColor"), RGB(255, 0, 80));
     m_colorFileName = GetColor(_T("FileNameColor"), m_colorGUI);
+    m_colorTransparency = GetColor(_T("TransparencyColor"), m_colorBackground);
 
 	m_defaultGUIFont = GetString(_T("DefaultGUIFont"), _T("Default"));
 	m_fileNameFont = GetString(_T("FileNameFont"), _T("Default"));

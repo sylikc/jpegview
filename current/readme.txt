@@ -5,10 +5,12 @@ To compile JPEGView you need:
 
 - Visual Studio 2010 (JPEGView 32 bit version supported) or
   Visual Studio 2013 professional (JPEGView 32 and 64 bit versions supported)
-- Windows Template Library (WTL), Version 8.1 (http://sourceforge.net/projects/wtl/)
+- Windows Template Library (WTL), Version 8.1 (http://sourceforge.net/projects/wtl/) installed to
+  $(VCInstallDir)WTL\
 
 The include directories of WTL must be added to the include directories for VC++:
-In Visual Studio: Properties of JPEGView project > VC++-Directories-Include Directories and Library Directories
+In Visual Studio: Properties of JPEGView project > VC++-Directories-Include Directories and Library Directories 
+                  Include Directories: $(VCInstallDir)WTL\Include;$(IncludePath)
 
 Please note: 
 Windows XP SP2 or later is needed to run the 32 bit version.
@@ -25,12 +27,16 @@ Bugs fixed:
 - Removing image from read-ahead cache when it was destructively processed so that it gets reloaded next time it is accessed
 New features:
 - Printing: Fill with crop mode and ability to move the image with the mouse within the printeable area
-- Japanse translation, thanks to Hiroyuki Matenokoji
+- Japanese translation, thanks to Hiroyuki Matenokoji
 - New INI file settings:
   - SingleFullScreenInstance=true/false
     Allows multiple instances of JPEGView to run in full screen mode
   - UserCropAspectRatio=x y
     Sets the user crop aspect ratio, x and y are integers
+  - TransparencyColor=R G B
+    Color used for transparent parts of images
+  - ShowEXIFDateInTitle=true/false
+    Show/Hide the acquisition date from EXIF data in the window title
 
 [1.0.33]
 Bugs fixed:

@@ -18,6 +18,7 @@
 ; 'kr'    Korean
 ; 'zh'    Chinese
 ; 'zh-tw' Chinese (Taiwan)
+; 'ja'    Japanese
 ; 'ro'    Romanian
 ; 'ru'    Russian
 ; 'sv'    Swedish
@@ -46,6 +47,9 @@ ReloadWhenDisplayedImageChanged=true
 
 ; Background color, R G B, each component must be in [0..255], e.g. "128 128 128" for a middle gray
 BackgroundColor=0 0 0
+
+; Color used for transparent parts of images, R G B format as used by BackgroundColor
+TransparencyColor=0 0 0
 
 ; GUI colors, R G B format as used by BackgroundColor
 GUIColor=243 242 231
@@ -137,6 +141,9 @@ FileNameFont=Default
 
 ; Set to true to initially display the file info box (EXIF info if available)
 ShowFileInfo=false
+
+; Show the acquisition date from EXIF data in the window title
+ShowEXIFDateInTitle=true
 
 ; Set to true to show the histogram on the file info panel by default
 ShowHistogram=false
