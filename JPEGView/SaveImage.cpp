@@ -14,6 +14,83 @@
 // Helpers
 //////////////////////////////////////////////////////////////////////////////////////////////
 
+// Removes an existing comment segment (if any) and returns the new JPEG stream, NULL if no comment was found in stream
+static uint8* RemoveExistingCommentSegment(void* pJPEGStream, int& nStreamLength) {
+    uint8* pCommentSeg = (uint8*)Helpers::FindJPEGMarker(pJPEGStream, nStreamLength, 0xFE);
+    if (pCommentSeg != NULL) {
+        int nLenSegment = pCommentSeg[2] * 256 + pCommentSeg[3];
+        int nHeader = (int)(pCommentSeg - (uint8*)pJPEGStream);
+        uint8* pNewBuffer = new uint8[nStreamLength - nLenSegment];
+        memcpy(pNewBuffer, pJPEGStream, nHeader);
+        memcpy(&(pNewBuffer[nHeader]), pCommentSeg + nLenSegment, nStreamLength - nHeader - nLenSegment);
+        nStreamLength = nStreamLength - nLenSegment;
+        return pNewBuffer;
+    }
+    return NULL;
+}
+
+// Finds first JPEG marker, returns NULL if none found (invalid JPEG stream?)
+static uint8* FindFirstJPEGMarker(void* pJPEGStream, int nStreamLength) {
+    uint8* pStream = (uint8*)pJPEGStream;
+    if (pStream == NULL || nStreamLength < 3 || pStream[0] != 0xFF || pStream[1] != 0xD8) {
+        return NULL; // not a JPEG
+    }
+    int nIndex = 2;
+    do {
+        if (pStream[nIndex] == 0xFF) {
+            // block header found, skip padding bytes
+            while (pStream[nIndex] == 0xFF && nIndex < nStreamLength) nIndex++;
+            break;
+        }
+        else {
+            break; // block with pixel data found, start hashing from here
+        }
+    } while (nIndex < nStreamLength);
+
+    if (pStream[nIndex] != 0) {
+        return &(pStream[nIndex - 1]); // place on marker start
+    }
+    else {
+        return NULL;
+    }
+}
+
+// Inserts the specified string as a JPEG comment into the JPEG stream. Returns NULL in case of errors, a new JPEG stream otherwise
+static uint8* InsertCommentBlock(void* pJPEGStream, int& nStreamLength, LPCTSTR comment) {
+    const int MAX_COMMENT_LEN = 512;
+    uint8* pFirstJPGMarker = FindFirstJPEGMarker(pJPEGStream, nStreamLength);
+    if (pFirstJPGMarker == NULL) {
+        return NULL;
+    }
+
+    uint8* pNewStream = new uint8[nStreamLength + MAX_COMMENT_LEN];
+    
+    if (pFirstJPGMarker[1] == 0xE0) {
+        int nApp0Len = pFirstJPGMarker[2] * 256 + pFirstJPGMarker[3];
+        pFirstJPGMarker += 2;
+        pFirstJPGMarker += nApp0Len;
+    }
+
+    int nSizeToMarker = (int)(pFirstJPGMarker - (uint8*)pJPEGStream);
+    memcpy(pNewStream, pJPEGStream, nSizeToMarker);
+    pNewStream[nSizeToMarker] = 0xFF;
+    pNewStream[nSizeToMarker + 1] = 0xFE;
+
+    char* pBuffer = new char[MAX_COMMENT_LEN];
+    wcstombs(pBuffer, comment, MAX_COMMENT_LEN);
+    int nCommentSegLen = 2 + (int)strlen(pBuffer) + 1;
+    pNewStream[nSizeToMarker + 2] = nCommentSegLen >> 8;
+    pNewStream[nSizeToMarker + 3] = nCommentSegLen & 0xFF;
+    strcpy((char*)&(pNewStream[nSizeToMarker + 4]), pBuffer);
+    memcpy(&(pNewStream[nSizeToMarker + 2 + nCommentSegLen]), &(((uint8*)pJPEGStream)[nSizeToMarker]), nStreamLength - nSizeToMarker);
+
+    nStreamLength += nCommentSegLen + 2;
+
+    delete[] pBuffer;
+
+    return pNewStream;
+}
+
 // Gets the thumbnail DIB, returns size of thumbnail in sizeThumb
 static void* GetThumbnailDIB(CJPEGImage * pImage, CSize& sizeThumb) {
 	EProcessingFlags eFlags = pImage->GetLastProcessFlags();
@@ -48,7 +125,7 @@ static void* CompressAndSave(LPCTSTR sFileName, CJPEGImage * pImage,
 							 void* pData, int nWidth, int nHeight, int nQuality, int& nJPEGStreamLen, 
                              bool& tjFreeNeeded, bool bCopyEXIF, bool bDeleteThumbnail) {
 	nJPEGStreamLen = 0;
-    tjFreeNeeded = false;
+    tjFreeNeeded = true;
 	bool bOutOfMemory;
 	unsigned char* pTargetStream = (unsigned char*) TurboJpeg::Compress(pData, nWidth, nHeight, 
 		nJPEGStreamLen, bOutOfMemory, nQuality);
@@ -100,21 +177,38 @@ static void* CompressAndSave(LPCTSTR sFileName, CJPEGImage * pImage,
 		memcpy(pNewStream + 2 + pImage->GetEXIFDataLength() + nEXIFBlockLenCorrection, pTargetStream + 2 + nJFIFLength, nJPEGStreamLen - 2 - nJFIFLength);
 		tjFree(pTargetStream);
 		pTargetStream = pNewStream;
+        tjFreeNeeded = false;
 		nJPEGStreamLen = nJPEGStreamLen - nJFIFLength + pImage->GetEXIFDataLength() + nEXIFBlockLenCorrection;
 	}
+
+    // Take over existing JPEG comment from the old image
+    LPCTSTR sComment = pImage->GetJPEGComment();
+    if (sComment != NULL && sComment[0] != 0) {
+        uint8* pNewStream = RemoveExistingCommentSegment(pTargetStream, nJPEGStreamLen);
+        if (pNewStream != NULL) {
+            if (tjFreeNeeded) tjFree(pTargetStream); else delete[] pTargetStream;
+            pTargetStream = pNewStream;
+            tjFreeNeeded = false;
+        }
+        pNewStream = InsertCommentBlock(pTargetStream, nJPEGStreamLen, sComment);
+        if (pNewStream != NULL) {
+            if (tjFreeNeeded) tjFree(pTargetStream); else delete[] pTargetStream;
+            pTargetStream = pNewStream;
+            tjFreeNeeded = false;
+        }
+    }
 
 	bool bSuccess = fwrite(pTargetStream, 1, nJPEGStreamLen, fptr) == nJPEGStreamLen;
 	fclose(fptr);
 
 	// delete partial file if no success
 	if (!bSuccess) {
-		tjFree(pTargetStream);
+        if (tjFreeNeeded) tjFree(pTargetStream); else delete[] pTargetStream;
 		_tunlink(sFileName);
 		return NULL;
 	}
 
 	// Success, return compressed JPEG stream
-    tjFreeNeeded = true;
 	return pTargetStream;
 }
 
