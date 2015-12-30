@@ -8,6 +8,7 @@
 #include "LocalDensityCorr.h"
 #include "ParameterDB.h"
 #include "EXIFReader.h"
+#include "RawMetadata.h"
 #include "MaxImageDef.h"
 #include "libjpeg-turbo\include\turbojpeg.h"
 #include <math.h>
@@ -32,7 +33,7 @@ static void RotateInplace(const CSize& imageSize, double& dX, double& dY, double
 
 CJPEGImage::CJPEGImage(int nWidth, int nHeight, void* pIJLPixels, void* pEXIFData, int nChannels, __int64 nJPEGHash, 
                        EImageFormat eImageFormat, bool bIsAnimation, int nFrameIndex, int nNumberOfFrames, int nFrameTimeMs,
-                       CLocalDensityCorr* pLDC, bool bIsThumbnailImage) : m_rotationParams(0) {
+                       CLocalDensityCorr* pLDC, bool bIsThumbnailImage, CRawMetadata* pRawMetadata) : m_rotationParams(0) {
 	if (nChannels == 3 || nChannels == 4) {
 		m_pIJLPixels = pIJLPixels;
 		m_nIJLChannels = nChannels;
@@ -57,6 +58,8 @@ CJPEGImage::CJPEGImage(int nWidth, int nHeight, void* pIJLPixels, void* pEXIFDat
 		m_pEXIFData = NULL;
 		m_pEXIFReader = NULL;
 	}
+
+    m_pRawMetadata = pRawMetadata;
 
 	m_nPixelHash = nJPEGHash;
 	m_eImageFormat = eImageFormat;
@@ -154,6 +157,8 @@ CJPEGImage::~CJPEGImage(void) {
 	m_pHistogramThumbnail = NULL;
 	delete m_pCachedProcessedHistogram;
 	m_pCachedProcessedHistogram = NULL;
+    delete m_pRawMetadata;
+    m_pRawMetadata = NULL;
 }
 
 bool CJPEGImage::CanUseLosslessJPEGTransformations() {
@@ -1368,6 +1373,17 @@ int CJPEGImage::GetRotationFromEXIF(int nOrigRotation) {
 				return 270;
 		}
 	}
+
+    if (m_pRawMetadata != NULL && CSettingsProvider::This().AutoRotateEXIF()) {
+        // Only rotate by 90 or 270 deg if not already rotated by camera
+        if (m_pRawMetadata->GetWidth() >= m_pRawMetadata->GetHeight()) {
+            int orientation = m_pRawMetadata->GetOrientation();
+            if ((orientation & 4) != 0) {
+                m_bRotationByEXIF = true;
+                return ((orientation & 1) != 0) ? 270 : 90;
+            }
+        }
+    }
 	return nOrigRotation;
 }
 

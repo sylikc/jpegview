@@ -5,6 +5,7 @@
 class CHistogram;
 class CLocalDensityCorr;
 class CEXIFReader;
+class CRawMetadata;
 enum TJSAMP;
 
 // Represents a rectangle to dim out in the image
@@ -31,9 +32,10 @@ public:
     // Frame index is zero based and the frame time is given in milliseconds.
 	// The pLDC object is used internally for thumbnail image creation to avoid duplication. From external,
 	// its value must be NULL.
+    // If RAW metadata is specified, ownership of this memory is transferred to this class.
 	CJPEGImage(int nWidth, int nHeight, void* pIJLPixels, void* pEXIFData, int nChannels, 
 		__int64 nJPEGHash, EImageFormat eImageFormat, bool bIsAnimation, int nFrameIndex, int nNumberOfFrames, int nFrameTimeMs,
-        CLocalDensityCorr* pLDC = NULL, bool bIsThumbnailImage = false);
+        CLocalDensityCorr* pLDC = NULL, bool bIsThumbnailImage = false, CRawMetadata* pRawMetadata = NULL);
 	~CJPEGImage(void);
 
 	// Converts the target offset from 'center of image' based format to pixel coordinate format 
@@ -314,6 +316,9 @@ public:
 	void SetJPEGComment(LPCTSTR sComment) { m_sJPEGComment = CString(sComment); }
 	LPCTSTR GetJPEGComment() { return m_sJPEGComment; }
 
+    // Gets the metadata for RAW camera images, NULL if none
+    CRawMetadata* GetRawMetadata() { return m_pRawMetadata; }
+
 	// Debug: Returns if this could be a night shot (heuristic, between 0 and 1)
 	float IsNightShot() const;
 
@@ -333,6 +338,7 @@ private:
 	// The data is not modified in all other cases
 	void* m_pIJLPixels;
 	void* m_pEXIFData;
+    CRawMetadata* m_pRawMetadata;
 	int m_nEXIFSize;
 	CEXIFReader* m_pEXIFReader;
 	CString m_sJPEGComment;

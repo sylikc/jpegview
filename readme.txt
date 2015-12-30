@@ -28,6 +28,8 @@ Bugs fixed:
 New features:
 - Printing: Fill with crop mode and ability to move the image with the mouse within the printeable area
 - JPEG comment segment is taken over from existing JPEG when saving to new JPEG
+- Showing some meta data for camera RAW images with F2
+- Considering image orientation from camera RAW images
 - Japanese translation, thanks to Hiroyuki Matenokoji
 - New INI file settings:
   - SingleFullScreenInstance=true/false

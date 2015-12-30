@@ -4,6 +4,7 @@
 #include "JPEGImage.h"
 #include "EXIFDisplayCtl.h"
 #include "EXIFDisplay.h"
+#include "RawMetadata.h"
 #include "SettingsProvider.h"
 #include "HelpersGUI.h"
 #include "NLS.h"
@@ -85,6 +86,7 @@ void CEXIFDisplayCtl::FillEXIFDataDisplay() {
 	m_pEXIFDisplay->AddLine(CNLS::GetString(_T("Image height:")), CurrentImage()->OrigHeight());
 	if (!CurrentImage()->IsClipboardImage()) {
 		CEXIFReader* pEXIFReader = CurrentImage()->GetEXIFReader();
+        CRawMetadata* pRawMetaData = CurrentImage()->GetRawMetadata();
 		if (pEXIFReader != NULL) {
 			sComment = pEXIFReader->GetUserComment();
 			if (sComment == NULL || sComment[0] == 0) {
@@ -119,7 +121,39 @@ void CEXIFDisplayCtl::FillEXIFDataDisplay() {
 			if (pEXIFReader->GetISOSpeedPresent()) {
 				m_pEXIFDisplay->AddLine(CNLS::GetString(_T("ISO Speed:")), (int)pEXIFReader->GetISOSpeed());
 			}
-		} else {
+        }
+        else if (pRawMetaData != NULL) {
+            if (pRawMetaData->GetAcquisitionTime().wYear > 1985) {
+                m_pEXIFDisplay->AddLine(CNLS::GetString(_T("Acquisition date:")), pRawMetaData->GetAcquisitionTime());
+            }
+            else {
+                const FILETIME* pFileTime = pFileList->CurrentModificationTime();
+                if (pFileTime != NULL) {
+                    m_pEXIFDisplay->AddLine(CNLS::GetString(_T("Modification date:")), *pFileTime);
+                }
+            }
+            if (pRawMetaData->GetManufacturer()[0] != 0) {
+                m_pEXIFDisplay->AddLine(CNLS::GetString(_T("Camera model:")), CString(pRawMetaData->GetManufacturer()) + _T(" ") + pRawMetaData->GetModel());
+            }
+            if (pRawMetaData->GetExposureTime() > 0.0) {
+                double exposureTime = pRawMetaData->GetExposureTime();
+                Rational rational = (exposureTime < 1.0) ? Rational(1, Helpers::RoundToInt(1.0 / exposureTime)) : Rational(Helpers::RoundToInt(exposureTime), 1);
+                m_pEXIFDisplay->AddLine(CNLS::GetString(_T("Exposure time (s):")), rational);
+            }
+            if (pRawMetaData->IsFlashFired()) {
+                m_pEXIFDisplay->AddLine(CNLS::GetString(_T("Flash fired:")), CNLS::GetString(_T("yes")));
+            }
+            if (pRawMetaData->GetFocalLength() > 0.0) {
+                m_pEXIFDisplay->AddLine(CNLS::GetString(_T("Focal length (mm):")), pRawMetaData->GetFocalLength(), 1);
+            }
+            if (pRawMetaData->GetAperture() > 0.0) {
+                m_pEXIFDisplay->AddLine(CNLS::GetString(_T("F-Number:")), pRawMetaData->GetAperture(), 1);
+            }
+            if (pRawMetaData->GetIsoSpeed() > 0.0) {
+                m_pEXIFDisplay->AddLine(CNLS::GetString(_T("ISO Speed:")), (int)pRawMetaData->GetIsoSpeed());
+            }
+        }
+        else {
 			const FILETIME* pFileTime = pFileList->CurrentModificationTime();
 			if (pFileTime != NULL) {
 				m_pEXIFDisplay->AddLine(CNLS::GetString(_T("Modification date:")), *pFileTime);
