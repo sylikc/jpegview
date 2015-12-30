@@ -398,6 +398,7 @@
     <ClInclude Include="PrintParameters.h" />
     <ClInclude Include="ProcessingThreadPool.h" />
     <ClInclude Include="ProcessParams.h" />
+    <ClInclude Include="RawMetadata.h" />
     <ClInclude Include="ReaderBMP.h" />
     <ClInclude Include="ReaderTGA.h" />
     <ClInclude Include="ResizeDlg.h" />

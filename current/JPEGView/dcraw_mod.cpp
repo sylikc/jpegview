@@ -44,6 +44,8 @@
 #include "TJPEGWrapper.h"
 #include "MaxImageDef.h"
 #include "dcraw_mod.h"
+#include "RawMetadata.h"
+
 /*
    NO_JPEG disables decoding of compressed Kodak DC120 files.
    NO_LCMS disables the "-p" option.
@@ -147,6 +149,10 @@ const float d65_white[3] = { 0.950456, 1, 1.088754 };
 void (*write_thumb)(CJPEGImage** Image, bool& bOutOfMemory), (*write_fun)(CJPEGImage** Image, bool& bOutOfMemory);
 void (*load_raw)(), (*thumb_load_raw)();
 
+static CRawMetadata* CreateRawMetadata()
+{
+    return new CRawMetadata(make, model, timestamp, flash_used != 0.0f, iso_speed, shutter, focal_len, aperture, flip, thumb_width, thumb_height);
+}
 
 struct decode {
   struct decode *branch[2];
@@ -628,7 +634,7 @@ void CLASS ppm_thumb (CJPEGImage** Image, bool& bOutOfMemory)
 	
 	free(thumb);
 
-	*Image = new CJPEGImage(thumb_width, thumb_height, data, 0, 3, 0, IF_WindowsBMP, false, 0, 1, 0);
+    *Image = new CJPEGImage(thumb_width, thumb_height, data, 0, 3, 0, IF_WindowsBMP, false, 0, 1, 0, NULL, false, CreateRawMetadata());
 }
 
 //void CLASS layer_thumb (FILE *tfp)
@@ -3697,7 +3703,8 @@ void CLASS jpeg_thumb(CJPEGImage** Image, bool& bOutOfMemory)
 
 	if (pPixelData != NULL && (nBPP == 3 || nBPP == 1))
 	{
-		*Image = new CJPEGImage(nWidth, nHeight, pPixelData, Helpers::FindEXIFBlock(thumb, thumb_length), nBPP, Helpers::CalculateJPEGFileHash(thumb, thumb_length), IF_JPEG_Embedded, false, 0, 1, 0);
+		*Image = new CJPEGImage(nWidth, nHeight, pPixelData, Helpers::FindEXIFBlock(thumb, thumb_length), nBPP,
+            Helpers::CalculateJPEGFileHash(thumb, thumb_length), IF_JPEG_Embedded, false, 0, 1, 0, NULL, false, CreateRawMetadata());
 		(*Image)->SetJPEGComment(Helpers::GetJPEGComment(thumb, thumb_length));
         (*Image)->SetJPEGChromoSampling(eChromoSubSampling);
 	}
@@ -3763,6 +3770,14 @@ CJPEGImage* CReaderRAW::ReadRawImage(LPCTSTR strFileName, bool& bOutOfMemory)
 {
 	bOutOfMemory = false;
 	CJPEGImage *Image = NULL;
+    make[0] = 0; model[0] = 0;
+    flash_used = 0.0f;
+    iso_speed = 0.0f;
+    shutter = 0.0f;
+    aperture = 0.0f;
+    focal_len = 0.0f;
+    flip = 0;
+    width = 0; height = 0;
 	dcraw_main(strFileName, &Image, bOutOfMemory);
 	return Image;
 }
