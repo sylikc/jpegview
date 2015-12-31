@@ -11,9 +11,11 @@ JPEGView32:
  Windows Vista SP2
  Windows 7
  Windows 8/8.1
+ Windows 10
 JPEGView64:
  Windows 7 64 bit edition
  Windows 8/8.1 64 bit edition
+ Windows 10 64 bit edition
  (not supported: Windows XP 64 bit)
 
 3. Extract directory
@@ -29,7 +31,7 @@ To remove JPEGView, just delete the folder JPEGView32 respectively JPEGView64 fr
 In case you have set JPEGView as default viewer for some file types, you should restore the old default viewer:
 JPEGView context menu > Settings/Admin > Set as default viewer...
 Uncheck all file types and press 'OK'.
-Windows 8: You need to choose another default program for the associated file types: Go to the control panel, choose Programs > Default Programs > Set Default Programs, select another viewer (e.g. the built in Photo Viewer) in the list on the left and finally click 'Set this program as default' on the right.
+Windows 8 and later: You need to choose another default program for the associated file types: Go to the control panel, choose Programs > Default Programs > Set Default Programs, select another viewer (e.g. the built in Photo Viewer) in the list on the left and finally click 'Set this program as default' on the right.
 
 ******************************************************************************
 ******************************   Why JPEGView ? ******************************
@@ -80,5 +82,5 @@ Because JPEGView has no built in image browser, it's optimal usage scenario is t
 1. Start JPEGView, load an image and open the context menu (right mouse click).
 Choose: Settings/Admin > Set as default viewer...
 Select the file types to be opened by JPEGView and press 'OK'.
-Windows 8: The 'default programs' dialog from the Control Panel is shown to perform the associations.
+Windows 8 and later: The 'default programs' dialog from the Control Panel is shown to perform the associations.
 
