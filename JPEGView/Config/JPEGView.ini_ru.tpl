@@ -257,6 +257,9 @@ UseEmbeddedColorProfiles=false
 ; «Fill»	– заполнение экрана без чёрных полей с обрезкой, если это необходимо.
 AutoZoomMode=FitNoZoom
 
+; Auto zoom mode for fullscreen mode. If empty, same value as 'AutoZoomMode' is used.
+AutoZoomModeFullscreen=
+
 ; Максимальный размер текстовых файлов-списков для слайдшоу (в килобайтах).
 MaxSlideShowFileListSizeKB=200
 

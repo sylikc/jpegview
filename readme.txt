@@ -22,7 +22,7 @@ Changelog
 
 [1.0.34]
 Bugs fixed:
-- Frame remains visible when starting in full screen mode and using classic windows style
+- Window frame remains visible when starting in full screen mode and using classic windows style
 - Fit to screen is kept with 'Keep parameters' when zoom is required in full screen mode
 - Removing image from read-ahead cache when it was destructively processed so that it gets reloaded next time it is accessed
 New features:
@@ -43,6 +43,8 @@ New features:
     Show/Hide the acquisition date from EXIF data in the window title
   - WallpaperPath=path
     Set path to store desktop wallpaper image
+  - AutoZoomModeFullscreen
+    Set auto zoom mode for fullscreen mode differently than auto zoom mode for windowed mode
 
 [1.0.33]
 Bugs fixed:

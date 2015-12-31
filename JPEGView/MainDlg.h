@@ -181,7 +181,7 @@ public:
 	CKeyMap* GetKeyMap() { return m_pKeyMap; }
 	CPoint GetDIBOffset() { return m_DIBOffsets; }
     double GetZoomMultiplier(CJPEGImage* pImage, const CRect& clientRect);
-    Helpers::EAutoZoomMode GetAutoZoomMode() { return m_eAutoZoomMode; }
+    Helpers::EAutoZoomMode GetAutoZoomMode() { return m_bFullScreenMode ? m_eAutoZoomModeFullscreen : m_eAutoZoomModeWindowed; }
     CPoint GetOffsets() { return m_offsets; }
     CImageProcessingParams* GetImageProcessingParams() { return m_pImageProcParams; }
     EProcessingFlags CreateDefaultProcessingFlags(bool bKeepParams = false);
@@ -240,7 +240,8 @@ private:
 	double m_dZoomMult;
 	bool m_bZoomMode;
 	bool m_bZoomModeOnLeftMouse;
-	Helpers::EAutoZoomMode m_eAutoZoomMode;
+	Helpers::EAutoZoomMode m_eAutoZoomModeWindowed;
+    Helpers::EAutoZoomMode m_eAutoZoomModeFullscreen;
 	Helpers::EAutoZoomMode m_autoZoomFitToScreen;
 	bool m_isUserFitToScreen;
 

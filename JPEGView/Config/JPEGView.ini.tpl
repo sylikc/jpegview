@@ -234,12 +234,15 @@ AutoRotateEXIF=true
 ; results in much slower loading of JPEGs! Only set to true if you really need this.
 UseEmbeddedColorProfiles=false
 
-; Auto zoom mode
+; Auto zoom mode (for window mode only if AutoZoomModeFullscreen is present)
 ; FitNoZoom : Fit images to screen, never enlarge image
 ; FillNoZoom : Fill screen with no black borders, crop if necessary but not too much, never enlarge image
 ; Fit : Fit images to screen
 ; Fill : Fill screen with no black borders, crop if necessary
 AutoZoomMode=FitNoZoom
+
+; Auto zoom mode for fullscreen mode. If empty, same value as 'AutoZoomMode' is used.
+AutoZoomModeFullscreen=
 
 ; Maximum size of slide show text files in KB
 MaxSlideShowFileListSizeKB=200

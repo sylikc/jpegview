@@ -198,7 +198,8 @@ CMainDlg::CMainDlg(bool bForceFullScreen) {
 
 	m_bShowFileName = sp.ShowFileName();
 	m_bKeepParams = sp.KeepParams();
-	m_eAutoZoomMode = sp.AutoZoomMode();
+	m_eAutoZoomModeWindowed = sp.AutoZoomMode();
+    m_eAutoZoomModeFullscreen = sp.AutoZoomModeFullscreen();
 
     m_eTransitionEffect = sp.SlideShowTransitionEffect();
     m_nTransitionTime = sp.SlideShowEffectTimeMs();
@@ -468,7 +469,7 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 		// find out the new vitual image size and the size of the bitmap to request
 		CSize newSize = Helpers::GetVirtualImageSize(m_pCurrentImage->OrigSize(),
 			m_clientRect.Size(), IsAdjustWindowToImage() ? Helpers::ZM_FitToScreenNoZoom : 
-				(m_isUserFitToScreen ? m_autoZoomFitToScreen : m_eAutoZoomMode), m_dZoom);
+               (m_isUserFitToScreen ? m_autoZoomFitToScreen : GetAutoZoomMode()), m_dZoom);
 		m_virtualImageSize = newSize;
 		CPoint unlimitedOffsets = m_offsets;
 		m_offsets = Helpers::LimitOffsets(m_offsets, m_clientRect.Size(), newSize);
@@ -824,9 +825,9 @@ LRESULT CMainDlg::OnLButtonDblClk(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lPara
         }
 		double dZoom = -1.0;
 		CSize sizeAutoZoom = Helpers::GetVirtualImageSize(m_pCurrentImage->OrigSize(),
-			m_clientRect.Size(), IsAdjustWindowToImage() ? Helpers::ZM_FitToScreenNoZoom : m_eAutoZoomMode, dZoom);
+            m_clientRect.Size(), IsAdjustWindowToImage() ? Helpers::ZM_FitToScreenNoZoom : GetAutoZoomMode(), dZoom);
 		if (sizeAutoZoom != m_virtualImageSize) {
-			ExecuteCommand(m_eAutoZoomMode * 10 + IDM_AUTO_ZOOM_FIT_NO_ZOOM);
+            ExecuteCommand(GetAutoZoomMode() * 10 + IDM_AUTO_ZOOM_FIT_NO_ZOOM);
 		} else {
 			ResetZoomTo100Percents(true);
 		}
@@ -1122,7 +1123,7 @@ LRESULT CMainDlg::OnContextMenu(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam,
 	if (m_bFullScreenMode) ::CheckMenuItem(hMenuZoom,  IDM_FULL_SCREEN_MODE, MF_CHECKED);
 	if (IsAdjustWindowToImage()) ::CheckMenuItem(hMenuZoom,  IDM_FIT_WINDOW_TO_IMAGE, MF_CHECKED);
 	HMENU hMenuAutoZoomMode = ::GetSubMenu(hMenuTrackPopup, SUBMENU_POS_AUTOZOOMMODE);
-	::CheckMenuItem(hMenuAutoZoomMode,  m_eAutoZoomMode*10 + IDM_AUTO_ZOOM_FIT_NO_ZOOM, MF_CHECKED);
+    ::CheckMenuItem(hMenuAutoZoomMode, GetAutoZoomMode() * 10 + IDM_AUTO_ZOOM_FIT_NO_ZOOM, MF_CHECKED);
 	HMENU hMenuSettings = ::GetSubMenu(hMenuTrackPopup, SUBMENU_POS_SETTINGS);
 	HMENU hMenuModDate = ::GetSubMenu(hMenuTrackPopup, SUBMENU_POS_MODDATE);
 	HMENU hMenuUserCommands = ::GetSubMenu(hMenuTrackPopup, SUBMENU_POS_USER_COMMANDS);
@@ -1728,13 +1729,21 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 		case IDM_AUTO_ZOOM_FIT_NO_ZOOM:
 		case IDM_AUTO_ZOOM_FILL_NO_ZOOM:
 		case IDM_AUTO_ZOOM_FIT:
-		case IDM_AUTO_ZOOM_FILL: 
-			m_eAutoZoomMode = (Helpers::EAutoZoomMode)((nCommand - IDM_AUTO_ZOOM_FIT_NO_ZOOM)/10);
-			m_dZoom = -1.0;
-			m_offsets = CPoint(0, 0);
-			this->Invalidate(FALSE);
-			AdjustWindowToImage(false);
-			break;
+        case IDM_AUTO_ZOOM_FILL:
+            {
+                Helpers::EAutoZoomMode eAutoZoomMode = (Helpers::EAutoZoomMode)((nCommand - IDM_AUTO_ZOOM_FIT_NO_ZOOM) / 10);
+                if (m_eAutoZoomModeFullscreen == m_eAutoZoomModeWindowed)
+                    m_eAutoZoomModeFullscreen = m_eAutoZoomModeWindowed = eAutoZoomMode;
+                else if (m_bFullScreenMode)
+                    m_eAutoZoomModeFullscreen = eAutoZoomMode;
+                else
+                    m_eAutoZoomModeWindowed = eAutoZoomMode;
+                m_dZoom = -1.0;
+                m_offsets = CPoint(0, 0);
+                this->Invalidate(FALSE);
+                AdjustWindowToImage(false);
+                break;
+            }
 		case IDM_EDIT_GLOBAL_CONFIG:
 		case IDM_EDIT_USER_CONFIG:
 			EditINIFile(nCommand == IDM_EDIT_GLOBAL_CONFIG);
@@ -2534,7 +2543,7 @@ CProcessParams CMainDlg::CreateProcessParams(bool bNoProcessingAfterLoad) {
 		nClientWidth = rect.Width();
 		nClientHeight = rect.Height();
 	}
-	Helpers::EAutoZoomMode eAutoZoomMode = m_eAutoZoomMode;
+    Helpers::EAutoZoomMode eAutoZoomMode = GetAutoZoomMode();
 	if (IsAdjustWindowToImage() && !bNoProcessingAfterLoad) {
 		CSize maxClientSize = Helpers::GetMaxClientSize(m_hWnd);
 		nClientWidth = maxClientSize.cx;
@@ -2809,11 +2818,11 @@ void CMainDlg::SaveParameters() {
 
 	EProcessingFlags eFlags = CreateDefaultProcessingFlags(m_bKeepParams);
 	CString sText = HelpersGUI::GetINIFileSaveConfirmationText(*m_pImageProcParams, eFlags,
-		m_pFileList->GetSorting(), m_pFileList->IsSortedUpcounting(), m_eAutoZoomMode, m_pNavPanelCtl->IsActive());
+        m_pFileList->GetSorting(), m_pFileList->IsSortedUpcounting(), GetAutoZoomMode(), m_pNavPanelCtl->IsActive());
 
 	if (IDYES == this->MessageBox(sText, CNLS::GetString(_T("Confirm save default parameters")), MB_YESNO | MB_ICONQUESTION)) {
 		CSettingsProvider::This().SaveSettings(*m_pImageProcParams, eFlags, m_pFileList->GetSorting(), m_pFileList->IsSortedUpcounting(),
-			m_eAutoZoomMode, m_pNavPanelCtl->IsActive());
+            GetAutoZoomMode(), m_pNavPanelCtl->IsActive());
 	}
 }
 
@@ -2987,7 +2996,7 @@ int CMainDlg::GetLoadErrorAfterOpenFile() {
 void CMainDlg::PrefetchDIB(const CRect& clientRect) {
 	if (m_pCurrentImage == NULL) return;
 
-	CSize newSize = Helpers::GetVirtualImageSize(m_pCurrentImage->OrigSize(), clientRect.Size(), m_eAutoZoomMode, m_dZoom);
+    CSize newSize = Helpers::GetVirtualImageSize(m_pCurrentImage->OrigSize(), clientRect.Size(), GetAutoZoomMode(), m_dZoom);
 	CSize clippedSize(min(clientRect.Width(), newSize.cx), min(clientRect.Height(), newSize.cy));
 	CPoint offsetsInImage = m_pCurrentImage->ConvertOffset(newSize, clippedSize, Helpers::LimitOffsets(m_offsets, clientRect.Size(), newSize));
 	m_pCurrentImage->GetDIB(newSize, clippedSize, offsetsInImage, *m_pImageProcParams, CreateDefaultProcessingFlags());
