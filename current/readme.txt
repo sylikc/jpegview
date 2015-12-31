@@ -31,6 +31,7 @@ New features:
 - Showing some meta data for camera RAW images with F2
 - Considering image orientation from camera RAW images
 - Japanese translation, thanks to Hiroyuki Matenokoji
+- Polish translation, thanks to Damian
 - New INI file settings:
   - SingleFullScreenInstance=true/false
     Allows multiple instances of JPEGView to run in full screen mode
