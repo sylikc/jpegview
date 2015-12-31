@@ -46,6 +46,7 @@ public:
 	Helpers::ENavigationMode Navigation() { return m_eNavigation; }
 	bool NavigateWithMouseWheel() { return m_bNavigateMouseWheel; }
 	Helpers::EAutoZoomMode AutoZoomMode() { return m_eAutoZoomMode; }
+    Helpers::EAutoZoomMode AutoZoomModeFullscreen() { return m_eAutoZoomModeFullscreen; }
 	int DisplayMonitor() { return m_nDisplayMonitor; }
     void SetMonitorOverride(int nMonitor) { m_nDisplayMonitor = nMonitor; }
 	bool AutoContrastCorrection() { return m_bAutoContrastCorrection; }
@@ -188,6 +189,7 @@ private:
 	Helpers::ENavigationMode m_eNavigation;
 	bool m_bNavigateMouseWheel;
 	Helpers::EAutoZoomMode m_eAutoZoomMode;
+    Helpers::EAutoZoomMode m_eAutoZoomModeFullscreen;
 	int m_nDisplayMonitor;
 	bool m_bAutoContrastCorrection;
 	double m_dAutoContrastAmount;
@@ -267,6 +269,7 @@ private:
 	CRect GetRect(LPCTSTR sKey, const CRect& defaultRect);
 	CSize GetSize(LPCTSTR sKey, const CSize& defaultSize);
 	COLORREF GetColor(LPCTSTR sKey, COLORREF defaultColor);
+    Helpers::EAutoZoomMode GetAutoZoomMode(LPCTSTR sKey);
 	void WriteString(LPCTSTR sKey, LPCTSTR sString);
 	void WriteDouble(LPCTSTR sKey, double dValue);
 	void WriteBool(LPCTSTR sKey, bool bValue);

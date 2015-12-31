@@ -223,16 +223,8 @@ void CSettingsProvider::ReadWriteableINISettings() {
 
 	m_bNavigateMouseWheel = GetBool(_T("NavigateWithMouseWheel"), false);
 
-	CString sAutoZoomMode = GetString(_T("AutoZoomMode"), _T("FitNoZoom"));
-	if (sAutoZoomMode.CompareNoCase(_T("Fit")) == 0) {
-		m_eAutoZoomMode = Helpers::ZM_FitToScreen;
-	} else if (sAutoZoomMode.CompareNoCase(_T("Fill")) == 0) {
-		m_eAutoZoomMode = Helpers::ZM_FillScreen;
-	} else if (sAutoZoomMode.CompareNoCase(_T("FillNoZoom")) == 0) {
-		m_eAutoZoomMode = Helpers::ZM_FillScreenNoZoom;
-	} else {
-		m_eAutoZoomMode = Helpers::ZM_FitToScreenNoZoom;
-	}
+    m_eAutoZoomMode = GetAutoZoomMode(_T("AutoZoomMode"));
+    m_eAutoZoomModeFullscreen = GetAutoZoomMode(_T("AutoZoomModeFullscreen"));
 
 	CString sDeleteConfirmation = GetString(_T("DeleteConfirmation"), _T("OnlyWhenNoRecycleBin"));
 	if (sDeleteConfirmation.CompareNoCase(_T("OnlyWhenNoRecycleBin")) == 0) {
@@ -630,6 +622,22 @@ COLORREF CSettingsProvider::GetColor(LPCTSTR sKey, COLORREF defaultColor) {
 	} else {
 		return defaultColor;
 	}
+}
+
+Helpers::EAutoZoomMode CSettingsProvider::GetAutoZoomMode(LPCTSTR sKey) {
+    CString sAutoZoomMode = GetString(sKey, _T("FitNoZoom"));
+    if (sAutoZoomMode.CompareNoCase(_T("Fit")) == 0) {
+        return Helpers::ZM_FitToScreen;
+    }
+    else if (sAutoZoomMode.CompareNoCase(_T("Fill")) == 0) {
+        return Helpers::ZM_FillScreen;
+    }
+    else if (sAutoZoomMode.CompareNoCase(_T("FillNoZoom")) == 0) {
+        return Helpers::ZM_FillScreenNoZoom;
+    }
+    else {
+        return Helpers::ZM_FitToScreenNoZoom;
+    }
 }
 
 void CSettingsProvider::WriteString(LPCTSTR sKey, LPCTSTR sString) {
