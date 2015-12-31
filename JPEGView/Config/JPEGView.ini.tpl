@@ -27,6 +27,7 @@
 ; 'eu'    Basque
 ; 'bel'   Belorussian
 ; 'uk'    Ukrainian
+; 'pl'    Polish
 Language=auto
 
 
@@ -358,6 +359,10 @@ LDCDarkenHighlights=0.25
 ; Space separated, use -1 to leave parameter untouched
 ; Contrast Gamma Sharpen ColorCorrection ContrastCorrection LightenShadows DarkenHighlights DeepShadows CyanRed MagentaGreen YellowBlue Saturation
 LandscapeModeParams=-1 -1 -1 -1 0.5 1.0 0.75 0.4 -1 -1 -1 -1
+
+; When setting a processed image as desktop wallpaper, the processed image must be saved somewhere.
+; This INI setting sets the path to save the file. Default is %temp%, the system TEMP directory. You must have write access to the specified directory!
+WallpaperPath=%temp%
 
 ; User commands
 ; User command must be named UserCmd# where # stands for a number. The numbers 0 to 2 are already used by the global INI file.

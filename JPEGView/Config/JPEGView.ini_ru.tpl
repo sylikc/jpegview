@@ -405,6 +405,10 @@ LDCDarkenHighlights=0.25
 ; №12 – Насыщенность (Saturation)
 LandscapeModeParams=-1 -1 -1 -1 0.5 1.0 0.75 0.4 -1 -1 -1 -1
 
+; When setting a processed image as desktop wallpaper, the processed image must be saved somewhere.
+; This INI setting sets the path to save the file. Default is %temp%, the system TEMP directory. You must have write access to the specified directory!
+WallpaperPath=%temp%
+
 ; Пользовательские команды.
 ; Пользовательская команда должна иметь имя UserCmd#, где # – номер. Номера с 0 по 2 уже используются в глобальном INI-файле.
 ; Пользовательская команда должна иметь следующий формат:

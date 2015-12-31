@@ -342,6 +342,19 @@ void CSettingsProvider::ReadWriteableINISettings() {
 	if (m_userCropAspectRatio.cx <= 0 || m_userCropAspectRatio.cy <= 0) {
 		m_userCropAspectRatio = CSize(1, 1);
 	}
+
+    m_sWallpaperPath = GetString(_T("WallpaperPath"), _T("%temp%"));
+    if (m_sWallpaperPath == _T("%temp%")) {
+        TCHAR tempPath[MAX_PATH];
+        tempPath[0] = 0;
+        ::GetTempPath(MAX_PATH, tempPath);
+        m_sWallpaperPath = tempPath;
+    } else {
+        TCHAR buffer[MAX_PATH];
+        if (::ExpandEnvironmentStrings(m_sWallpaperPath, (LPTSTR)buffer, MAX_PATH)) {
+            m_sWallpaperPath = buffer;
+        }
+    }
 }
 
 CImageProcessingParams CSettingsProvider::LandscapeModeParams(const CImageProcessingParams& templParams) {
