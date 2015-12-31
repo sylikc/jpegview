@@ -112,7 +112,7 @@ public:
 	CSize MinimalWindowSize() { return m_minimalWindowSize; }
 	double MinimalDisplayTime() { return m_minimalDisplayTime; }
 	CSize UserCropAspectRatio() { return m_userCropAspectRatio; }
-
+    LPCTSTR WallpaperPath() { return m_sWallpaperPath; }
 
 
 	std::list<CUserCommand*> & UserCommandList() { return m_userCommands; }
@@ -252,6 +252,7 @@ private:
 	CSize m_minimalWindowSize;
 	double m_minimalDisplayTime;
 	CSize m_userCropAspectRatio;
+    CString m_sWallpaperPath;
 
 	std::list<CUserCommand*> m_userCommands;
 	std::list<CUserCommand*> m_openWithCommands;

@@ -3,6 +3,7 @@
 #include "JPEGImage.h"
 #include "SaveImage.h"
 #include "MultiMonitorSupport.h"
+#include "SettingsProvider.h"
 
 namespace SetDesktopWallpaper {
 
@@ -44,10 +45,10 @@ namespace SetDesktopWallpaper {
 		SetRegistryStringValue(_T("WallpaperStyle"), wallpaperStyle);
 		SetRegistryStringValue(_T("TileWallpaper"), tileWallpaper);
 
-		TCHAR tempPath[MAX_PATH];
-		if (0 == ::GetTempPath(MAX_PATH, tempPath)) return;
+        LPCTSTR path = CSettingsProvider::This().WallpaperPath();
+        if (path[0] == 0) return;
 
-		CString fileName = CString(tempPath) + _T("JPEGViewWallpaper.bmp");
+        CString fileName = CString(path) + _T("\\JPEGViewWallpaper.bmp");
 
 		if (!CSaveImage::SaveImage(fileName, &image, false)) return;
 

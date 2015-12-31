@@ -41,6 +41,8 @@ New features:
     Color used for transparent parts of images
   - ShowEXIFDateInTitle=true/false
     Show/Hide the acquisition date from EXIF data in the window title
+  - WallpaperPath=path
+    Set path to store desktop wallpaper image
 
 [1.0.33]
 Bugs fixed:
