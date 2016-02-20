@@ -57,7 +57,7 @@ static uint8* FindFirstJPEGMarker(void* pJPEGStream, int nStreamLength) {
 
 // Inserts the specified string as a JPEG comment into the JPEG stream. Returns NULL in case of errors, a new JPEG stream otherwise
 static uint8* InsertCommentBlock(void* pJPEGStream, int& nStreamLength, LPCTSTR comment) {
-    const int MAX_COMMENT_LEN = 512;
+    const int MAX_COMMENT_LEN = 4096;
     uint8* pFirstJPGMarker = FindFirstJPEGMarker(pJPEGStream, nStreamLength);
     if (pFirstJPGMarker == NULL) {
         return NULL;
