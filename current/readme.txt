@@ -19,6 +19,10 @@ Windows XP SP2 or later is needed to run the 32 bit version.
 
 Changelog
 *********
+[1.0.35]
+Other changes:
+- Increased maximum image size to 500 MPixels for 64 bit version
+- Increased maximum JPEG comment length to 4096 characters
 
 [1.0.34]
 Bugs fixed:
