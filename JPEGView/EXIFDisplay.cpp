@@ -146,7 +146,8 @@ CRect CEXIFDisplay::PanelRect() {
 	if (m_nLineHeight == 0) {
 		CDC dc(::GetDC(m_hWnd));
 		HelpersGUI::SelectDefaultGUIFont(dc);
-		m_hTitleFont = HelpersGUI::CreateBoldFontOfSelectedFont(dc);
+        if (m_hTitleFont == 0)
+            m_hTitleFont = HelpersGUI::CreateBoldFontOfSelectedFont(dc);
 
 		if (m_hTitleFont != 0) {
 			::SelectObject(dc, m_hTitleFont);

@@ -20,6 +20,8 @@ Windows XP SP2 or later is needed to run the 32 bit version.
 Changelog
 *********
 [1.0.35]
+Bugs fixed:
+- Fixed font handle leak, preventing display of movies with more than 5000 frames when EXIF display was enabled during movie playing
 Other changes:
 - Increased maximum image size to 500 MPixels for 64 bit version
 - Increased maximum JPEG comment length to 4096 characters
