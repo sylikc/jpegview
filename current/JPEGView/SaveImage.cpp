@@ -16,92 +16,92 @@
 
 // Removes an existing comment segment (if any) and returns the new JPEG stream, NULL if no comment was found in stream
 static uint8* RemoveExistingCommentSegment(void* pJPEGStream, int& nStreamLength) {
-    uint8* pCommentSeg = (uint8*)Helpers::FindJPEGMarker(pJPEGStream, nStreamLength, 0xFE);
-    if (pCommentSeg != NULL) {
-        int nLenSegment = pCommentSeg[2] * 256 + pCommentSeg[3];
-        int nHeader = (int)(pCommentSeg - (uint8*)pJPEGStream);
-        uint8* pNewBuffer = new uint8[nStreamLength - nLenSegment];
-        memcpy(pNewBuffer, pJPEGStream, nHeader);
-        memcpy(&(pNewBuffer[nHeader]), pCommentSeg + nLenSegment, nStreamLength - nHeader - nLenSegment);
-        nStreamLength = nStreamLength - nLenSegment;
-        return pNewBuffer;
-    }
-    return NULL;
+	uint8* pCommentSeg = (uint8*)Helpers::FindJPEGMarker(pJPEGStream, nStreamLength, 0xFE);
+	if (pCommentSeg != NULL) {
+		int nLenSegment = pCommentSeg[2] * 256 + pCommentSeg[3];
+		int nHeader = (int)(pCommentSeg - (uint8*)pJPEGStream);
+		uint8* pNewBuffer = new uint8[nStreamLength - nLenSegment];
+		memcpy(pNewBuffer, pJPEGStream, nHeader);
+		memcpy(&(pNewBuffer[nHeader]), pCommentSeg + nLenSegment, nStreamLength - nHeader - nLenSegment);
+		nStreamLength = nStreamLength - nLenSegment;
+		return pNewBuffer;
+	}
+	return NULL;
 }
 
 // Finds first JPEG marker, returns NULL if none found (invalid JPEG stream?)
 static uint8* FindFirstJPEGMarker(void* pJPEGStream, int nStreamLength) {
-    uint8* pStream = (uint8*)pJPEGStream;
-    if (pStream == NULL || nStreamLength < 3 || pStream[0] != 0xFF || pStream[1] != 0xD8) {
-        return NULL; // not a JPEG
-    }
-    int nIndex = 2;
-    do {
-        if (pStream[nIndex] == 0xFF) {
-            // block header found, skip padding bytes
-            while (pStream[nIndex] == 0xFF && nIndex < nStreamLength) nIndex++;
-            break;
-        }
-        else {
-            break; // block with pixel data found, start hashing from here
-        }
-    } while (nIndex < nStreamLength);
+	uint8* pStream = (uint8*)pJPEGStream;
+	if (pStream == NULL || nStreamLength < 3 || pStream[0] != 0xFF || pStream[1] != 0xD8) {
+		return NULL; // not a JPEG
+	}
+	int nIndex = 2;
+	do {
+		if (pStream[nIndex] == 0xFF) {
+			// block header found, skip padding bytes
+			while (pStream[nIndex] == 0xFF && nIndex < nStreamLength) nIndex++;
+			break;
+		}
+		else {
+			break; // block with pixel data found, start hashing from here
+		}
+	} while (nIndex < nStreamLength);
 
-    if (pStream[nIndex] != 0) {
-        return &(pStream[nIndex - 1]); // place on marker start
-    }
-    else {
-        return NULL;
-    }
+	if (pStream[nIndex] != 0) {
+		return &(pStream[nIndex - 1]); // place on marker start
+	}
+	else {
+		return NULL;
+	}
 }
 
 // Inserts the specified string as a JPEG comment into the JPEG stream. Returns NULL in case of errors, a new JPEG stream otherwise
 // The string is written as UTF-8
 static uint8* InsertCommentBlock(void* pJPEGStream, int& nStreamLength, LPCTSTR comment) {
-    const int MAX_COMMENT_LEN = 4096;
-    uint8* pFirstJPGMarker = FindFirstJPEGMarker(pJPEGStream, nStreamLength);
-    if (pFirstJPGMarker == NULL) {
-        return NULL;
-    }
+	const int MAX_COMMENT_LEN = 4096;
+	uint8* pFirstJPGMarker = FindFirstJPEGMarker(pJPEGStream, nStreamLength);
+	if (pFirstJPGMarker == NULL) {
+		return NULL;
+	}
 
-    int numberOfCharsToConvert = min(MAX_COMMENT_LEN, (int)_tcslen(comment));
-    int utf8Length = ::WideCharToMultiByte(CP_UTF8, 0, comment, numberOfCharsToConvert, NULL, 0, NULL, NULL);
-    if (utf8Length == 0) {
-        return NULL;
-    }
+	int numberOfCharsToConvert = min(MAX_COMMENT_LEN, (int)_tcslen(comment));
+	int utf8Length = ::WideCharToMultiByte(CP_UTF8, 0, comment, numberOfCharsToConvert, NULL, 0, NULL, NULL);
+	if (utf8Length == 0) {
+		return NULL;
+	}
 
-    char* pBuffer = new char[utf8Length];
-    ::WideCharToMultiByte(CP_UTF8, 0, comment, numberOfCharsToConvert, pBuffer, utf8Length, 0, 0);
+	char* pBuffer = new char[utf8Length];
+	::WideCharToMultiByte(CP_UTF8, 0, comment, numberOfCharsToConvert, pBuffer, utf8Length, 0, 0);
 
-    uint8* pNewStream = new uint8[nStreamLength + utf8Length + 4]; // +4: two bytes marker, two bytes segment length
-    
-    if (pFirstJPGMarker[1] == 0xE0) {
-        int nApp0Len = pFirstJPGMarker[2] * 256 + pFirstJPGMarker[3];
-        pFirstJPGMarker += 2;
-        pFirstJPGMarker += nApp0Len;
-    }
+	uint8* pNewStream = new uint8[nStreamLength + utf8Length + 4]; // +4: two bytes marker, two bytes segment length
+	
+	if (pFirstJPGMarker[1] == 0xE0) {
+		int nApp0Len = pFirstJPGMarker[2] * 256 + pFirstJPGMarker[3];
+		pFirstJPGMarker += 2;
+		pFirstJPGMarker += nApp0Len;
+	}
 
-    int nSizeToMarker = (int)(pFirstJPGMarker - (uint8*)pJPEGStream);
-    memcpy(pNewStream, pJPEGStream, nSizeToMarker);
+	int nSizeToMarker = (int)(pFirstJPGMarker - (uint8*)pJPEGStream);
+	memcpy(pNewStream, pJPEGStream, nSizeToMarker);
 
-    // Comment segment marker
-    pNewStream[nSizeToMarker] = 0xFF;
-    pNewStream[nSizeToMarker + 1] = 0xFE;
+	// Comment segment marker
+	pNewStream[nSizeToMarker] = 0xFF;
+	pNewStream[nSizeToMarker + 1] = 0xFE;
 
-    // Segment length
-    int nCommentSegLen = 2 + utf8Length;
-    pNewStream[nSizeToMarker + 2] = nCommentSegLen >> 8;
-    pNewStream[nSizeToMarker + 3] = nCommentSegLen & 0xFF;
+	// Segment length
+	int nCommentSegLen = 2 + utf8Length;
+	pNewStream[nSizeToMarker + 2] = nCommentSegLen >> 8;
+	pNewStream[nSizeToMarker + 3] = nCommentSegLen & 0xFF;
 
-    // Comment and the rest of the JPEG stream
-    memcpy(&(pNewStream[nSizeToMarker + 4]), pBuffer, utf8Length);
-    memcpy(&(pNewStream[nSizeToMarker + 2 + nCommentSegLen]), &(((uint8*)pJPEGStream)[nSizeToMarker]), nStreamLength - nSizeToMarker);
+	// Comment and the rest of the JPEG stream
+	memcpy(&(pNewStream[nSizeToMarker + 4]), pBuffer, utf8Length);
+	memcpy(&(pNewStream[nSizeToMarker + 2 + nCommentSegLen]), &(((uint8*)pJPEGStream)[nSizeToMarker]), nStreamLength - nSizeToMarker);
 
-    nStreamLength += nCommentSegLen + 2;
+	nStreamLength += nCommentSegLen + 2;
 
-    delete[] pBuffer;
+	delete[] pBuffer;
 
-    return pNewStream;
+	return pNewStream;
 }
 
 // Gets the thumbnail DIB, returns size of thumbnail in sizeThumb
@@ -136,9 +136,9 @@ static int GetJFIFBlockLength(unsigned char* pJPEGStream) {
 // Returns the compressed JPEG stream that must be freed by the caller. NULL in case of error.
 static void* CompressAndSave(LPCTSTR sFileName, CJPEGImage * pImage, 
 							 void* pData, int nWidth, int nHeight, int nQuality, int& nJPEGStreamLen, 
-                             bool& tjFreeNeeded, bool bCopyEXIF, bool bDeleteThumbnail) {
+							 bool& tjFreeNeeded, bool bCopyEXIF, bool bDeleteThumbnail) {
 	nJPEGStreamLen = 0;
-    tjFreeNeeded = true;
+	tjFreeNeeded = true;
 	bool bOutOfMemory;
 	unsigned char* pTargetStream = (unsigned char*) TurboJpeg::Compress(pData, nWidth, nHeight, 
 		nJPEGStreamLen, bOutOfMemory, nQuality);
@@ -190,33 +190,33 @@ static void* CompressAndSave(LPCTSTR sFileName, CJPEGImage * pImage,
 		memcpy(pNewStream + 2 + pImage->GetEXIFDataLength() + nEXIFBlockLenCorrection, pTargetStream + 2 + nJFIFLength, nJPEGStreamLen - 2 - nJFIFLength);
 		tjFree(pTargetStream);
 		pTargetStream = pNewStream;
-        tjFreeNeeded = false;
+		tjFreeNeeded = false;
 		nJPEGStreamLen = nJPEGStreamLen - nJFIFLength + pImage->GetEXIFDataLength() + nEXIFBlockLenCorrection;
 	}
 
-    // Take over existing JPEG comment from the old image
-    LPCTSTR sComment = pImage->GetJPEGComment();
-    if (sComment != NULL && sComment[0] != 0) {
-        uint8* pNewStream = RemoveExistingCommentSegment(pTargetStream, nJPEGStreamLen);
-        if (pNewStream != NULL) {
-            if (tjFreeNeeded) tjFree(pTargetStream); else delete[] pTargetStream;
-            pTargetStream = pNewStream;
-            tjFreeNeeded = false;
-        }
-        pNewStream = InsertCommentBlock(pTargetStream, nJPEGStreamLen, sComment);
-        if (pNewStream != NULL) {
-            if (tjFreeNeeded) tjFree(pTargetStream); else delete[] pTargetStream;
-            pTargetStream = pNewStream;
-            tjFreeNeeded = false;
-        }
-    }
+	// Take over existing JPEG comment from the old image
+	LPCTSTR sComment = pImage->GetJPEGComment();
+	if (sComment != NULL && sComment[0] != 0) {
+		uint8* pNewStream = RemoveExistingCommentSegment(pTargetStream, nJPEGStreamLen);
+		if (pNewStream != NULL) {
+			if (tjFreeNeeded) tjFree(pTargetStream); else delete[] pTargetStream;
+			pTargetStream = pNewStream;
+			tjFreeNeeded = false;
+		}
+		pNewStream = InsertCommentBlock(pTargetStream, nJPEGStreamLen, sComment);
+		if (pNewStream != NULL) {
+			if (tjFreeNeeded) tjFree(pTargetStream); else delete[] pTargetStream;
+			pTargetStream = pNewStream;
+			tjFreeNeeded = false;
+		}
+	}
 
 	bool bSuccess = fwrite(pTargetStream, 1, nJPEGStreamLen, fptr) == nJPEGStreamLen;
 	fclose(fptr);
 
 	// delete partial file if no success
 	if (!bSuccess) {
-        if (tjFreeNeeded) tjFree(pTargetStream); else delete[] pTargetStream;
+		if (tjFreeNeeded) tjFree(pTargetStream); else delete[] pTargetStream;
 		_tunlink(sFileName);
 		return NULL;
 	}
@@ -239,10 +239,10 @@ static bool SaveWebP(LPCTSTR sFileName, void* pData, int nWidth, int nHeight, bo
 	bool bSuccess = false;
 	try {
 		uint8* pOutput;
-        int nQuality = CSettingsProvider::This().WEBPSaveQuality();
+		int nQuality = CSettingsProvider::This().WEBPSaveQuality();
 		size_t nSize = bUseLosslessWEBP ? 
-            Webp_Dll_EncodeBGRLossless((uint8*)pData, nWidth, nHeight, Helpers::DoPadding(nWidth*3, 4), &pOutput) :
-            Webp_Dll_EncodeBGRLossy((uint8*)pData, nWidth, nHeight, Helpers::DoPadding(nWidth*3, 4), (float)nQuality, &pOutput);
+			Webp_Dll_EncodeBGRLossless((uint8*)pData, nWidth, nHeight, Helpers::DoPadding(nWidth*3, 4), &pOutput) :
+			Webp_Dll_EncodeBGRLossy((uint8*)pData, nWidth, nHeight, Helpers::DoPadding(nWidth*3, 4), (float)nQuality, &pOutput);
 		bSuccess = fwrite(pOutput, 1, nSize, fptr) == nSize;
 		fclose(fptr);
 		Webp_Dll_FreeMemory(pOutput);
@@ -266,18 +266,18 @@ static int GetEncoderClsid(const WCHAR* format, CLSID* pClsid) {
 
    Gdiplus::GetImageEncodersSize(&num, &size);
    if(size == 0)
-      return -1;  // Failure
+	  return -1;  // Failure
 
    Gdiplus::ImageCodecInfo* pImageCodecInfo = (Gdiplus::ImageCodecInfo*)(malloc(size));
 
    Gdiplus::GetImageEncoders(num, size, pImageCodecInfo);
 
    for(UINT j = 0; j < num; ++j) {
-      if( wcscmp(pImageCodecInfo[j].MimeType, format) == 0 ) {
-         *pClsid = pImageCodecInfo[j].Clsid;
-         free(pImageCodecInfo);
-         return j;  // Success
-      }    
+	  if( wcscmp(pImageCodecInfo[j].MimeType, format) == 0 ) {
+		 *pClsid = pImageCodecInfo[j].Clsid;
+		 free(pImageCodecInfo);
+		 return j;  // Success
+	  }    
    }
 
    free(pImageCodecInfo);
@@ -333,8 +333,8 @@ static bool SaveGDIPlus(LPCTSTR sFileName, EImageFormat eFileFormat, void* pData
 //////////////////////////////////////////////////////////////////////////////////////////////
 
 bool CSaveImage::SaveImage(LPCTSTR sFileName, CJPEGImage * pImage, const CImageProcessingParams& procParams,
-	         EProcessingFlags eFlags, bool bFullSize, bool bUseLosslessWEBP, bool bCreateParameterDBEntry) {
-    pImage->EnableDimming(false);
+			 EProcessingFlags eFlags, bool bFullSize, bool bUseLosslessWEBP, bool bCreateParameterDBEntry) {
+	pImage->EnableDimming(false);
 
 	CSize imageSize;
 	void* pDIB32bpp;
@@ -363,17 +363,17 @@ bool CSaveImage::SaveImage(LPCTSTR sFileName, CJPEGImage * pImage, const CImageP
 	if (eFileFormat == IF_JPEG || eFileFormat == IF_JPEG_Embedded) {
 		// Save JPEG not over GDI+ - we want to keep the meta-data if there is meta-data
 		int nJPEGStreamLen;
-        bool tjFreeNeeded;
+		bool tjFreeNeeded;
 		void* pCompressedJPEG = CompressAndSave(sFileName, pImage, pDIB24bpp, imageSize.cx, imageSize.cy, 
 			CSettingsProvider::This().JPEGSaveQuality(), nJPEGStreamLen, tjFreeNeeded, true, !bFullSize);
 		bSuccess = pCompressedJPEG != NULL;
 		if (bSuccess) {
 			nPixelHash = Helpers::CalculateJPEGFileHash(pCompressedJPEG, nJPEGStreamLen);
-            if (tjFreeNeeded) {
-                tjFree((unsigned char*)pCompressedJPEG);
-            } else {
-			    delete[] pCompressedJPEG;
-            }
+			if (tjFreeNeeded) {
+				tjFree((unsigned char*)pCompressedJPEG);
+			} else {
+				delete[] pCompressedJPEG;
+			}
 		}
 	} else {
 		if (eFileFormat == IF_WEBP) {
