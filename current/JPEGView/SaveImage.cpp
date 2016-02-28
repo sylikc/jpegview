@@ -56,6 +56,7 @@ static uint8* FindFirstJPEGMarker(void* pJPEGStream, int nStreamLength) {
 }
 
 // Inserts the specified string as a JPEG comment into the JPEG stream. Returns NULL in case of errors, a new JPEG stream otherwise
+// The string is written as UTF-8
 static uint8* InsertCommentBlock(void* pJPEGStream, int& nStreamLength, LPCTSTR comment) {
     const int MAX_COMMENT_LEN = 4096;
     uint8* pFirstJPGMarker = FindFirstJPEGMarker(pJPEGStream, nStreamLength);
@@ -63,7 +64,16 @@ static uint8* InsertCommentBlock(void* pJPEGStream, int& nStreamLength, LPCTSTR 
         return NULL;
     }
 
-    uint8* pNewStream = new uint8[nStreamLength + MAX_COMMENT_LEN];
+    int numberOfCharsToConvert = min(MAX_COMMENT_LEN, (int)_tcslen(comment));
+    int utf8Length = ::WideCharToMultiByte(CP_UTF8, 0, comment, numberOfCharsToConvert, NULL, 0, NULL, NULL);
+    if (utf8Length == 0) {
+        return NULL;
+    }
+
+    char* pBuffer = new char[utf8Length];
+    ::WideCharToMultiByte(CP_UTF8, 0, comment, numberOfCharsToConvert, pBuffer, utf8Length, 0, 0);
+
+    uint8* pNewStream = new uint8[nStreamLength + utf8Length + 4]; // +4: two bytes marker, two bytes segment length
     
     if (pFirstJPGMarker[1] == 0xE0) {
         int nApp0Len = pFirstJPGMarker[2] * 256 + pFirstJPGMarker[3];
@@ -73,15 +83,18 @@ static uint8* InsertCommentBlock(void* pJPEGStream, int& nStreamLength, LPCTSTR 
 
     int nSizeToMarker = (int)(pFirstJPGMarker - (uint8*)pJPEGStream);
     memcpy(pNewStream, pJPEGStream, nSizeToMarker);
+
+    // Comment segment marker
     pNewStream[nSizeToMarker] = 0xFF;
     pNewStream[nSizeToMarker + 1] = 0xFE;
 
-    char* pBuffer = new char[MAX_COMMENT_LEN];
-    wcstombs(pBuffer, comment, MAX_COMMENT_LEN);
-    int nCommentSegLen = 2 + (int)strlen(pBuffer) + 1;
+    // Segment length
+    int nCommentSegLen = 2 + utf8Length;
     pNewStream[nSizeToMarker + 2] = nCommentSegLen >> 8;
     pNewStream[nSizeToMarker + 3] = nCommentSegLen & 0xFF;
-    strcpy((char*)&(pNewStream[nSizeToMarker + 4]), pBuffer);
+
+    // Comment and the rest of the JPEG stream
+    memcpy(&(pNewStream[nSizeToMarker + 4]), pBuffer, utf8Length);
     memcpy(&(pNewStream[nSizeToMarker + 2 + nCommentSegLen]), &(((uint8*)pJPEGStream)[nSizeToMarker]), nStreamLength - nSizeToMarker);
 
     nStreamLength += nCommentSegLen + 2;
