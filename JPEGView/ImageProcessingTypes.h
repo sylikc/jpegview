@@ -36,11 +36,11 @@ enum EImageFormat {
 	IF_GIF,
 	IF_TIFF,
 	IF_WEBP,
-    IF_WIC,
+	IF_WIC,
 	IF_CLIPBOARD,
 	IF_CameraRAW,
-    IF_JPEG_Embedded, // JPEG embedded in another file, e.g. camera raw
-    IF_TGA,
+	IF_JPEG_Embedded, // JPEG embedded in another file, e.g. camera raw
+	IF_TGA,
 	IF_Unknown
 };
 

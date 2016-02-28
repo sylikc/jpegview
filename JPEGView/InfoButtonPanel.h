@@ -10,7 +10,7 @@ public:
 		ID_btnEXIFInfo
 	};
 public:
-    // The panel is on the given window on top border above the image processing panel
+	// The panel is on the given window on top border above the image processing panel
 	CInfoButtonPanel(HWND hWnd, INotifiyMouseCapture* pNotifyMouseCapture, CPanel* pImageProcPanel);
 
 	CButtonCtrl* GetBtnInfo() { return GetControl<CButtonCtrl*>(ID_btnEXIFInfo); }

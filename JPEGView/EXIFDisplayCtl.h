@@ -21,7 +21,7 @@ public:
 
 	virtual void AfterNewImageLoaded();
 
-    virtual bool OnMouseMove(int nX, int nY);
+	virtual bool OnMouseMove(int nX, int nY);
 	virtual void OnPrePaintMainDlg(HDC hPaintDC);
 
 private:
@@ -32,5 +32,5 @@ private:
 
 	void FillEXIFDataDisplay();
 	static void OnShowHistogram(void* pContext, int nParameter, CButtonCtrl & sender);
-    static void OnClose(void* pContext, int nParameter, CButtonCtrl & sender);
+	static void OnClose(void* pContext, int nParameter, CButtonCtrl & sender);
 };

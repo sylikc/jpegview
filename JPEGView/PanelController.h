@@ -30,8 +30,8 @@ public:
 	virtual void SetVisible(bool bVisible) = 0;
 	virtual void SetActive(bool bActive) = 0;
 
-    // Override to cancel a model panel, does nothing for non modal panels
-    virtual void CancelModalPanel() {};
+	// Override to cancel a model panel, does nothing for non modal panels
+	virtual void CancelModalPanel() {};
 
 	virtual void AfterNewImageLoaded() {} // called after a new image is loaded
 	virtual void AfterImageRenamed() {} // called ater an image is renamed

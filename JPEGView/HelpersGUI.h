@@ -62,11 +62,11 @@ namespace HelpersGUI {
 	// Draws an error text for the given file loading error (combination of EFileLoadError codes)
 	void DrawImageLoadErrorText(CDC& dc, const CRect& clientRect, LPCTSTR sFailedFileName, int nFileLoadError);
 
-    // Convert a menu item command ID to a transformation enumeration for lossless JPEG transformation
-    CJPEGLosslessTransform::ETransformation CommandIdToLosslessTransformation(int nCommandId);
+	// Convert a menu item command ID to a transformation enumeration for lossless JPEG transformation
+	CJPEGLosslessTransform::ETransformation CommandIdToLosslessTransformation(int nCommandId);
 
-    // Convert the error result code from lossless JPEG transformation to a string
-    LPCTSTR LosslessTransformationResultToString(CJPEGLosslessTransform::EResult eResult);
+	// Convert the error result code from lossless JPEG transformation to a string
+	LPCTSTR LosslessTransformationResultToString(CJPEGLosslessTransform::EResult eResult);
 
 	// Creates the submenu containing the user commands in hMenu, returns if there are any menu items
 	bool CreateUserCommandsMenu(HMENU hMenu);

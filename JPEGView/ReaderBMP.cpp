@@ -64,11 +64,11 @@ CJPEGImage* CReaderBMP::ReadBmpImage(LPCTSTR strFileName, bool& bOutOfMemory) {
 		fclose(fptr);
 		return NULL;
 	}
-    /* Not too big files */
-    if (infoheader.width > MAX_IMAGE_DIMENSION || infoheader.width <= 0 || abs(infoheader.height) > MAX_IMAGE_DIMENSION) {
-        fclose(fptr);
+	/* Not too big files */
+	if (infoheader.width > MAX_IMAGE_DIMENSION || infoheader.width <= 0 || abs(infoheader.height) > MAX_IMAGE_DIMENSION) {
+		fclose(fptr);
 		return NULL;
-    }
+	}
 	if ((double)infoheader.width * abs(infoheader.height) > MAX_IMAGE_PIXELS) {
 		fclose(fptr);
 		bOutOfMemory = true;

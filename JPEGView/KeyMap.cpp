@@ -39,12 +39,12 @@ static SKey KeyTable[NUM_KEYS] = {
 	{ _T("Div"), VK_DIVIDE },
 	{ _T("Comma"), VK_OEM_COMMA },
 	{ _T("Period"), VK_OEM_PERIOD },
-    { _T("MouseL"), VK_LBUTTON },
-    { _T("MouseR"), VK_RBUTTON },
-    { _T("MouseM"), VK_MBUTTON },
-    { _T("MouseX1"), VK_XBUTTON1 },
-    { _T("MouseX2"), VK_XBUTTON2 },
-    { _T("MouseDblClk"), VK_LBUTTONDBLCLK }
+	{ _T("MouseL"), VK_LBUTTON },
+	{ _T("MouseR"), VK_RBUTTON },
+	{ _T("MouseM"), VK_MBUTTON },
+	{ _T("MouseX1"), VK_XBUTTON1 },
+	{ _T("MouseX2"), VK_XBUTTON2 },
+	{ _T("MouseDblClk"), VK_LBUTTONDBLCLK }
 };
 
 static LPTSTR _SkipWhiteSpace(LPTSTR sText) {

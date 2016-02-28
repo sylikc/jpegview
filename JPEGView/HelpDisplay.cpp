@@ -110,8 +110,8 @@ void CHelpDisplay::Show(const CRect & screenRect) {
 		int nKeyLen = (int)_tcslen(iter->Key);
 		m_dc.SetTextColor(iter->Color);
 		m_dc.TextOut(nStartX, nStartY, iter->Key, nKeyLen);
-        CSize textLenKey;
-        m_dc.GetTextExtent(iter->Key, nKeyLen, &textLenKey);
+		CSize textLenKey;
+		m_dc.GetTextExtent(iter->Key, nKeyLen, &textLenKey);
 		if (iter->Info != NULL) {
 			m_dc.SetTextColor(iter->ColorInfo);
 			m_dc.TextOut(max(nStartX + m_nTab1, nStartX + textLenKey.cx + 2), nStartY, iter->Info, (int)_tcslen(iter->Info));

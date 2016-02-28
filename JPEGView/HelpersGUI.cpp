@@ -54,7 +54,7 @@ static HFONT CreateFontFromINIDescription(HDC dc, LPCTSTR sIniFileDescription)
 
 	int nHeight = - (int)(0.5f + fFontSize * ::GetDeviceCaps(dc, LOGPIXELSY) / 72);
 	return ::CreateFont(nHeight, 0, 0, 0, isBold ? FW_BOLD : FW_NORMAL, FALSE, FALSE, FALSE, DEFAULT_CHARSET, OUT_OUTLINE_PRECIS,
-            CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, VARIABLE_PITCH, sFontName);
+			CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, VARIABLE_PITCH, sFontName);
 }
 
 static bool CreateCommandsMenu(HMENU hMenu, std::list<CUserCommand*> & commandList, int firstCommandId) {

@@ -157,7 +157,7 @@ bool CJPEGProvider::ClearRequest(CJPEGImage* pImage, bool releaseLockedFile) {
 	std::list<CImageRequest*>::iterator iter;
 	for (iter = m_requestList.begin( ); iter != m_requestList.end( ); iter++ ) {
 		if ((*iter)->Image == pImage) {
-            if (releaseLockedFile) m_pWorkThreads[0]->ReleaseFile((*iter)->FileName);
+			if (releaseLockedFile) m_pWorkThreads[0]->ReleaseFile((*iter)->FileName);
 			// images that are not ready cannot be removed yet
 			if ((*iter)->Ready) {
 				DeleteElementAt(iter);
@@ -209,8 +209,8 @@ void CJPEGProvider::StartNewRequestBundle(CFileList* pFileList, EReadAheadDirect
 		return;
 	}
 	for (int i = 0; i < nNumRequests; i++) {
-        bool bSwitchImage = true;
-        int nFrameIndex = (pLastReadyRequest != NULL) ? Helpers::GetFrameIndex(pLastReadyRequest->Image, eDirection == FORWARD, true, bSwitchImage) : 0;
+		bool bSwitchImage = true;
+		int nFrameIndex = (pLastReadyRequest != NULL) ? Helpers::GetFrameIndex(pLastReadyRequest->Image, eDirection == FORWARD, true, bSwitchImage) : 0;
 		LPCTSTR sFileName = bSwitchImage ? pFileList->PeekNextPrev(i + 1, eDirection == FORWARD, eDirection == TOGGLE) : pFileList->Current();
 		if (sFileName != NULL && FindRequest(sFileName, nFrameIndex) == NULL) {
 			if (GetProcessingFlag(PFLAG_NoProcessingAfterLoad, processParams.ProcFlags)) {
@@ -239,7 +239,7 @@ CJPEGProvider::CImageRequest* CJPEGProvider::StartNewRequest(LPCTSTR sFileName, 
 void CJPEGProvider::GetLoadedImageFromWorkThread(CImageRequest* pRequest) {
 	if (pRequest->HandlingThread != NULL) {
 		::OutputDebugString(_T("Finished request: ")); ::OutputDebugString(pRequest->FileName); ::OutputDebugString(_T("\n"));
-        CImageData imageData = pRequest->HandlingThread->GetLoadedImage(pRequest->Handle);
+		CImageData imageData = pRequest->HandlingThread->GetLoadedImage(pRequest->Handle);
 		pRequest->Image = imageData.Image;
 		pRequest->OutOfMemory = imageData.IsRequestFailedOutOfMemory;
 		pRequest->Ready = true;

@@ -293,7 +293,7 @@ void CNavigationPanelCtl::HideNavPanelTemporary(bool bForce) {
 		m_pMainDlg->InvalidateRect(PanelRect(), FALSE);
 		m_bFadeOut = true;
 	}
-    if (bForce) SetMouseInNavPanel(false);
+	if (bForce) SetMouseInNavPanel(false);
 }
 
 void CNavigationPanelCtl::ShowNavPanelTemporary() {

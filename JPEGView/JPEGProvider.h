@@ -59,7 +59,7 @@ private:
 	// stores a request for loading and processing a JPEG image
 	struct CImageRequest {
 		CString FileName;
-        int FrameIndex;
+		int FrameIndex;
 		CJPEGImage* Image;
 		bool Ready;
 		int Handle;
@@ -73,7 +73,7 @@ private:
 
 		CImageRequest(LPCTSTR fileName, int nFrameIndex) {
 			FileName = fileName;
-            FrameIndex = nFrameIndex;
+			FrameIndex = nFrameIndex;
 			Image = NULL;
 			Ready = false;
 			Handle = -1;

@@ -55,13 +55,13 @@ static void ReadStringTag(CString & strOut, uint8* ptr, uint8* pTIFFHeader, bool
 			int nSize = ReadUInt(ptr + 4, bLittleEndian);
 			LPCSTR pString = (nSize <= 4) ? (LPCSTR)(ptr + 8) : (LPCSTR)(pTIFFHeader + ReadUInt(ptr + 8, bLittleEndian));
 			int nMaxChars = min(nSize, (int)strlen(pString));
-            if (bTryReadAsUTF8) {
-                CString strUTF8 = Helpers::TryConvertFromUTF8((uint8*)pString, nMaxChars);
-                if (!strUTF8.IsEmpty()) {
-                    strOut = strUTF8;
-                    return;
-                }
-            }
+			if (bTryReadAsUTF8) {
+				CString strUTF8 = Helpers::TryConvertFromUTF8((uint8*)pString, nMaxChars);
+				if (!strUTF8.IsEmpty()) {
+					strOut = strUTF8;
+					return;
+				}
+			}
 			strOut = CString(pString, nMaxChars);
 		} else {
 			strOut.Empty();

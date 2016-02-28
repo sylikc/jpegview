@@ -67,7 +67,7 @@ bool CTransformPanelCtl::OnMouseLButton(EMouseEvent eMouseEvent, int nX, int nY)
 	if (eMouseEvent == MouseEvent_BtnDown && 
 		!m_pMainDlg->GetZoomNavigatorCtl()->IsPointInZoomNavigatorThumbnail(CPoint(nX, nY)) &&
 		!m_pMainDlg->GetWndButtonPanelCtl()->IsPointInWndButtonPanel(CPoint(nX, nY)) &&
-        !m_pMainDlg->GetInfoButtonPanelCtl()->IsPointInInfoButtonPanel(CPoint(nX, nY))) {
+		!m_pMainDlg->GetInfoButtonPanelCtl()->IsPointInInfoButtonPanel(CPoint(nX, nY))) {
 		StartTransforming(nX, nY);
 		return true;
 	}

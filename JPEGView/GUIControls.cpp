@@ -279,7 +279,7 @@ LRESULT APIENTRY CTextCtrl::EditSubclassProc(HWND hwnd, UINT uMsg, WPARAM wParam
 	}
 
 	return ::CallWindowProc(pThis->m_OrigEditProc, hwnd, uMsg, 
-        wParam, lParam); 
+		wParam, lParam); 
 } 
 
 

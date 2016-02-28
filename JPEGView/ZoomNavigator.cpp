@@ -129,7 +129,7 @@ void CZoomNavigator::PaintPanRectangle(CDC& dc, const CPoint& centerPt) {
 	int nOldMode = dc.SetROP2(R2_XORPEN);
 	dc.SetBkMode(OPAQUE);
 	dc.SetBkColor(0);
-    CPoint center = centerPt;
+	CPoint center = centerPt;
 	if (centerPt.x == -1 && centerPt.y == -1) {
 		center = m_lastPanRectPoint;
 	}

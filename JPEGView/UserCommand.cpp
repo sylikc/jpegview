@@ -111,9 +111,9 @@ static CString ReplacePlaceholders(CString sMsg, LPCTSTR sFileName, const CRect&
 		SmartNameReplace(sNewMsg, _T("%mypictures%"), buff);
 	}
 
-    sNewMsg.Replace(_T("%exepath%"), CSettingsProvider::This().GetEXEPath());
+	sNewMsg.Replace(_T("%exepath%"), CSettingsProvider::This().GetEXEPath());
 
-    if (sNewMsg.Find(_T("%exedrive%")) >= 0) {
+	if (sNewMsg.Find(_T("%exedrive%")) >= 0) {
 		LPCTSTR exePath = CSettingsProvider::This().GetEXEPath();
 		LPCTSTR driveLetter = _tcschr(exePath, _T(':'));
 		if (driveLetter != NULL) {
@@ -123,7 +123,7 @@ static CString ReplacePlaceholders(CString sMsg, LPCTSTR sFileName, const CRect&
 			letter[2] = 0;
 			sNewMsg.Replace(_T("%exedrive%"), (LPCTSTR)(&letter));
 		}
-    }
+	}
 
 	if (bExpandEnvironmentVariables) {
 		const int MAX_COMMAND_LINE_LEN = 1024;
@@ -265,7 +265,7 @@ bool CUserCommand::CanExecute(HWND hWnd, LPCTSTR sFileName) const
 			return false;
 		}
 	}
-    return true;
+	return true;
 }
 
 bool CUserCommand::Execute(HWND hWnd, LPCTSTR sFileName) const {

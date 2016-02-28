@@ -12,7 +12,7 @@ public:
 	// IDs of the controls on this panel
 	enum {
 		ID_btnShowHideHistogram,
-        ID_btnClose
+		ID_btnClose
 	};
 public:
 	CEXIFDisplay(HWND hWnd, INotifiyMouseCapture* pNotifyMouseCapture);
@@ -77,6 +77,6 @@ private:
 	void PaintHistogram(CDC & dc, int nXStart, int nYBaseLine);
 
 	static void PaintShowHistogramBtn(void* pContext, const CRect& rect, CDC& dc);
-    static void PaintCloseBtn(void* pContext, const CRect& rect, CDC& dc);
+	static void PaintCloseBtn(void* pContext, const CRect& rect, CDC& dc);
 	static LPCTSTR ShowHistogramTooltip(void* pContext);
 };

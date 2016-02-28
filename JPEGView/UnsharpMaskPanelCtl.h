@@ -20,7 +20,7 @@ public:
 	virtual void SetVisible(bool bVisible);
 	virtual void SetActive(bool bActive);
 
-    virtual void CancelModalPanel() { TerminateUnsharpMaskPanel(); };
+	virtual void CancelModalPanel() { TerminateUnsharpMaskPanel(); };
 
 	virtual bool OnKeyDown(unsigned int nVirtualKey, bool bShift, bool bAlt, bool bCtrl);
 
