@@ -83,8 +83,8 @@ public:
 	void First();
 	// Move to last file in current folder (according to sort order)
 	void Last();
-    // Move away from current image, either forward or backward (if on last image)
-    CFileList* AwayFromCurrent();
+	// Move away from current image, either forward or backward (if on last image)
+	CFileList* AwayFromCurrent();
 	// Filename (with path) of the current item in the list, NULL if none
 	LPCTSTR Current() const;
 	// File title of the current item in the list, NULL if none
@@ -135,8 +135,8 @@ public:
 	// Deletes the file (to recycle bin)
 	bool DeleteFile(LPCTSTR fileNameWithPath) const;
 
-    // Returns if the current file exists and can be opened for reading
-    bool CanOpenCurrentFileForReading() const;
+	// Returns if the current file exists and can be opened for reading
+	bool CanOpenCurrentFileForReading() const;
 
 	// Returns the raw file list of the current folder
 	std::list<CFileDesc> & GetFileList() { return m_fileList; }
@@ -165,7 +165,7 @@ private:
 	CString m_sMarkedFileCurrent;
 	int m_nMarkedIndexShow;
 
-    CDirectoryWatcher & m_directoryWatcher;
+	CDirectoryWatcher & m_directoryWatcher;
 
 	void MoveIterToLast();
 	void NextInFolder();

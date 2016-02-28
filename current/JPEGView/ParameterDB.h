@@ -33,8 +33,8 @@ public:
 	// Gets if zoom and offset values are stored with this entry
 	bool HasZoomOffsetStored() const;
 
-    // Gets if this entry has stored the zoom rectangle relative to screen size (true) or relative to window size (false)
-    bool IsStoredRelativeToScreenSize() const { return (flags & 32) != 0; }
+	// Gets if this entry has stored the zoom rectangle relative to screen size (true) or relative to window size (false)
+	bool IsStoredRelativeToScreenSize() const { return (flags & 32) != 0; }
 
 private:
 	__int64 hash;

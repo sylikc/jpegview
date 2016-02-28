@@ -35,7 +35,7 @@ CDirectoryWatcher::CDirectoryWatcher(HWND hTargetWindow) {
 }
 
 CDirectoryWatcher::~CDirectoryWatcher(void) {
-    Abort();
+	Abort();
 	::DeleteCriticalSection(&m_lock);
 	::CloseHandle(m_terminateEvent);
 	::CloseHandle(m_newDirectoryEvent);
@@ -67,25 +67,25 @@ void CDirectoryWatcher::Abort() {
 
 void CDirectoryWatcher::SetCurrentFile(LPCTSTR fileName)
 {
-    ::EnterCriticalSection(&m_lock);
-    m_sCurrentFile = fileName;
+	::EnterCriticalSection(&m_lock);
+	m_sCurrentFile = fileName;
 	m_bModificationTimeValid = !m_sCurrentFile.IsEmpty() && GetLastModificationTime(m_sCurrentFile, m_modificationTimeCurrentFile);
-    ::LeaveCriticalSection(&m_lock);
+	::LeaveCriticalSection(&m_lock);
 }
 
 void CDirectoryWatcher::SetCurrentDirectory(LPCTSTR directoryName)
 {
-    TCHAR fullName[MAX_PATH];
-    memset(fullName, 0, sizeof(TCHAR) * MAX_PATH);
-    GetFullPathName(directoryName, MAX_PATH, (LPTSTR)fullName, NULL);
+	TCHAR fullName[MAX_PATH];
+	memset(fullName, 0, sizeof(TCHAR) * MAX_PATH);
+	GetFullPathName(directoryName, MAX_PATH, (LPTSTR)fullName, NULL);
 
-    ::EnterCriticalSection(&m_lock);
+	::EnterCriticalSection(&m_lock);
 
-    m_sCurrentDirectory = fullName;
+	m_sCurrentDirectory = fullName;
 
-    ::LeaveCriticalSection(&m_lock);
+	::LeaveCriticalSection(&m_lock);
 
-    ::SetEvent(m_newDirectoryEvent);
+	::SetEvent(m_newDirectoryEvent);
 }
 
 
@@ -96,7 +96,7 @@ void CDirectoryWatcher::SetCurrentDirectory(LPCTSTR directoryName)
 void CDirectoryWatcher::ThreadFunc(void* arg) {
 
 	CDirectoryWatcher* thisPtr = (CDirectoryWatcher*) arg;
-    bool bTerminate = false;
+	bool bTerminate = false;
 	bool bSetupNewDirectory = true;
 	HANDLE waitHandles[4];
 	memset(waitHandles, 0, sizeof(HANDLE) * 4);
@@ -129,7 +129,7 @@ void CDirectoryWatcher::ThreadFunc(void* arg) {
 				break;
 			case WAIT_OBJECT_0 + 1:
 				// m_newDirectoryEvent is set
-                ::ResetEvent(thisPtr->m_newDirectoryEvent);
+				::ResetEvent(thisPtr->m_newDirectoryEvent);
 				bSetupNewDirectory = true;
 				break;
 			case WAIT_OBJECT_0 + 2:
@@ -139,28 +139,28 @@ void CDirectoryWatcher::ThreadFunc(void* arg) {
 				::WaitForSingleObject(thisPtr->m_terminateEvent, 500); // don't flood the window with change notifications
 				break;
 			case WAIT_OBJECT_0 + 3:
-                {
+				{
 				// file written in directory, check if the displayed file has changed and send message to registered window if yes
 				bSetupNewDirectory = ::FindNextChangeNotification(waitHandles[3]) == FALSE;
-                
-                // wait a short time, otherwise the file may can not be read yet
-                ::WaitForSingleObject(thisPtr->m_terminateEvent, 250);
+				
+				// wait a short time, otherwise the file may can not be read yet
+				::WaitForSingleObject(thisPtr->m_terminateEvent, 250);
 
 				bool sendMessage = false;
 
-			    ::EnterCriticalSection(&thisPtr->m_lock);
+				::EnterCriticalSection(&thisPtr->m_lock);
 				FILETIME fileTime;
 				if (thisPtr->m_bModificationTimeValid) {
-                    bool canReadModificationTime = true;
-                    if (!GetLastModificationTime(thisPtr->m_sCurrentFile, fileTime)) {
-                        ::LeaveCriticalSection(&thisPtr->m_lock);
-                        ::WaitForSingleObject(thisPtr->m_terminateEvent, 250);
-                        ::EnterCriticalSection(&thisPtr->m_lock);
-                        if (!GetLastModificationTime(thisPtr->m_sCurrentFile, fileTime)) {
-                            canReadModificationTime = false;
-                        }
-                    }
-                    sendMessage = canReadModificationTime && ::memcmp(&fileTime, &thisPtr->m_modificationTimeCurrentFile, sizeof(FILETIME)) != 0;
+					bool canReadModificationTime = true;
+					if (!GetLastModificationTime(thisPtr->m_sCurrentFile, fileTime)) {
+						::LeaveCriticalSection(&thisPtr->m_lock);
+						::WaitForSingleObject(thisPtr->m_terminateEvent, 250);
+						::EnterCriticalSection(&thisPtr->m_lock);
+						if (!GetLastModificationTime(thisPtr->m_sCurrentFile, fileTime)) {
+							canReadModificationTime = false;
+						}
+					}
+					sendMessage = canReadModificationTime && ::memcmp(&fileTime, &thisPtr->m_modificationTimeCurrentFile, sizeof(FILETIME)) != 0;
 				}
 				::LeaveCriticalSection(&thisPtr->m_lock);
 
@@ -168,10 +168,10 @@ void CDirectoryWatcher::ThreadFunc(void* arg) {
 					::PostMessage(thisPtr->m_hTargetWindow, WM_DISPLAYED_FILE_CHANGED_ON_DISK, 0, 0);
 				}
 				break;
-                }
-            default:
-                // unexpected, terminate
-                bTerminate = true;
+				}
+			default:
+				// unexpected, terminate
+				bTerminate = true;
 				break;
 		}
 

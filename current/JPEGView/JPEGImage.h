@@ -28,14 +28,14 @@ public:
 	// The nJPEGHash hash value gives a hash over the compressed JPEG pixels that uniquely identifies the
 	// JPEG image. It can be zero in which case a pixel based hash value is internally created.
 	// The image format is a hint about the original image format this image was created from.
-    // The bIsAnimation, nFrameIndex, nNumberOfFrames and nFrameTimeMs are used for multiframe images, e.g. animated GIFs.
-    // Frame index is zero based and the frame time is given in milliseconds.
+	// The bIsAnimation, nFrameIndex, nNumberOfFrames and nFrameTimeMs are used for multiframe images, e.g. animated GIFs.
+	// Frame index is zero based and the frame time is given in milliseconds.
 	// The pLDC object is used internally for thumbnail image creation to avoid duplication. From external,
 	// its value must be NULL.
-    // If RAW metadata is specified, ownership of this memory is transferred to this class.
+	// If RAW metadata is specified, ownership of this memory is transferred to this class.
 	CJPEGImage(int nWidth, int nHeight, void* pIJLPixels, void* pEXIFData, int nChannels, 
 		__int64 nJPEGHash, EImageFormat eImageFormat, bool bIsAnimation, int nFrameIndex, int nNumberOfFrames, int nFrameTimeMs,
-        CLocalDensityCorr* pLDC = NULL, bool bIsThumbnailImage = false, CRawMetadata* pRawMetadata = NULL);
+		CLocalDensityCorr* pLDC = NULL, bool bIsThumbnailImage = false, CRawMetadata* pRawMetadata = NULL);
 	~CJPEGImage(void);
 
 	// Converts the target offset from 'center of image' based format to pixel coordinate format 
@@ -153,16 +153,16 @@ public:
 	// Gets the rotation applied to the pixels
 	const CRotationParams& GetRotationParams() {return m_rotationParams; }
 
-    // Gets or sets the JPEG chromo sampling. See turbojpeg.h for the TJSAMP enumeration.
-    TJSAMP GetJPEGChromoSampling() { return m_eJPEGChromoSampling; }
-    void SetJPEGChromoSampling(TJSAMP eSampling) { m_eJPEGChromoSampling = eSampling; }
+	// Gets or sets the JPEG chromo sampling. See turbojpeg.h for the TJSAMP enumeration.
+	TJSAMP GetJPEGChromoSampling() { return m_eJPEGChromoSampling; }
+	void SetJPEGChromoSampling(TJSAMP eSampling) { m_eJPEGChromoSampling = eSampling; }
 
-    // Gets if lossless JPEG transformations can be applied to this image.
-    // Checks if this is a JPEG image and if the dimension of this image is dividable by the JPEG block size used
-    bool CanUseLosslessJPEGTransformations();
+	// Gets if lossless JPEG transformations can be applied to this image.
+	// Checks if this is a JPEG image and if the dimension of this image is dividable by the JPEG block size used
+	bool CanUseLosslessJPEGTransformations();
 
-    // Trims the given rectangle to MCU block size (allowing lossless JPEG transformations)
-    void TrimRectToMCUBlockSize(CRect& rect);
+	// Trims the given rectangle to MCU block size (allowing lossless JPEG transformations)
+	void TrimRectToMCUBlockSize(CRect& rect);
 
 	// Declare the generated DIB as invalid - forcing it to be regenerated on next access
 	void SetDIBInvalid() { m_ClippingSize = CSize(0, 0); }
@@ -284,17 +284,17 @@ public:
 		return m_eImageFormat == IF_JPEG || m_eImageFormat == IF_WindowsBMP || m_eImageFormat == IF_PNG || m_eImageFormat == IF_TIFF || m_eImageFormat == IF_GIF;
 	}
 
-    // Gets if this image is part of an animation (GIF)
-    bool IsAnimation() const { return m_bIsAnimation; }
+	// Gets if this image is part of an animation (GIF)
+	bool IsAnimation() const { return m_bIsAnimation; }
 
-    // Gets the frame index if this is a multiframe image, 0 otherwise
-    int FrameIndex() const { return m_nFrameIndex; }
+	// Gets the frame index if this is a multiframe image, 0 otherwise
+	int FrameIndex() const { return m_nFrameIndex; }
 
-    // Gets the number of frames for multiframe images, 1 otherwise
-    int NumberOfFrames() const { return m_nNumberOfFrames; }
+	// Gets the number of frames for multiframe images, 1 otherwise
+	int NumberOfFrames() const { return m_nNumberOfFrames; }
 
-    // Gets the frame time in milliseconds for animations
-    int FrameTimeMs() const { return m_nFrameTimeMs; }
+	// Gets the frame time in milliseconds for animations
+	int FrameTimeMs() const { return m_nFrameTimeMs; }
 
 	// Gets if this image was created from the clipboard
 	bool IsClipboardImage() const { return m_eImageFormat == IF_CLIPBOARD; }
@@ -316,8 +316,8 @@ public:
 	void SetJPEGComment(LPCTSTR sComment) { m_sJPEGComment = CString(sComment); }
 	LPCTSTR GetJPEGComment() { return m_sJPEGComment; }
 
-    // Gets the metadata for RAW camera images, NULL if none
-    CRawMetadata* GetRawMetadata() { return m_pRawMetadata; }
+	// Gets the metadata for RAW camera images, NULL if none
+	CRawMetadata* GetRawMetadata() { return m_pRawMetadata; }
 
 	// Debug: Returns if this could be a night shot (heuristic, between 0 and 1)
 	float IsNightShot() const;
@@ -338,7 +338,7 @@ private:
 	// The data is not modified in all other cases
 	void* m_pIJLPixels;
 	void* m_pEXIFData;
-    CRawMetadata* m_pRawMetadata;
+	CRawMetadata* m_pRawMetadata;
 	int m_nEXIFSize;
 	CEXIFReader* m_pEXIFReader;
 	CString m_sJPEGComment;
@@ -347,13 +347,13 @@ private:
 	int m_nIJLChannels;
 	__int64 m_nPixelHash;
 	EImageFormat m_eImageFormat;
-    TJSAMP m_eJPEGChromoSampling;
+	TJSAMP m_eJPEGChromoSampling;
 
-    // multiframe data
-    bool m_bIsAnimation;
-    int m_nFrameIndex;
-    int m_nNumberOfFrames;
-    int m_nFrameTimeMs;
+	// multiframe data
+	bool m_bIsAnimation;
+	int m_nFrameIndex;
+	int m_nNumberOfFrames;
+	int m_nFrameTimeMs;
 
 	// cached thumbnail image, created on first request
 	CJPEGImage* m_pThumbnail;

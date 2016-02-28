@@ -40,25 +40,25 @@ CCropCtl::CCropCtl(CMainDlg* pMainDlg) {
 
 CCropCtl::CropMode CCropCtl::GetCropMode()
 {
-    return (m_dCropRectAspectRatio > 0) ? CM_FixedAspectRatio : (m_dCropRectAspectRatio < 0) ? CM_FixedSize : CM_Free;
+	return (m_dCropRectAspectRatio > 0) ? CM_FixedAspectRatio : (m_dCropRectAspectRatio < 0) ? CM_FixedSize : CM_Free;
 }
 
 void CCropCtl::OnPaint(CPaintDC& dc) {
 	if (m_bCropping) {
-        CPoint mousePos = m_pMainDlg->GetMousePos();
-        double dZoom = m_pMainDlg->GetZoom();
-        if (m_dLastZoom != dZoom)
-        {
-            m_dLastZoom = dZoom;
-            if (GetCropMode() == CM_FixedSize && CCropSizeDlg::UseScreenPixels()) {
-                CSize cropSize = CCropSizeDlg::GetCropSize();
-                double dZoom = m_pMainDlg->GetZoom();
-			    if (dZoom < 0.0) {
-				    dZoom = (double)m_pMainDlg->VirtualImageSize().cx/m_pMainDlg->GetCurrentImage()->OrigWidth();
-			    }
-			    m_cropEnd = CPoint(m_cropStart.x + (int)(cropSize.cx/dZoom + 0.5) - 1, m_cropStart.y + (int)(cropSize.cy/dZoom + 0.5) - 1);
-            }
-        }
+		CPoint mousePos = m_pMainDlg->GetMousePos();
+		double dZoom = m_pMainDlg->GetZoom();
+		if (m_dLastZoom != dZoom)
+		{
+			m_dLastZoom = dZoom;
+			if (GetCropMode() == CM_FixedSize && CCropSizeDlg::UseScreenPixels()) {
+				CSize cropSize = CCropSizeDlg::GetCropSize();
+				double dZoom = m_pMainDlg->GetZoom();
+				if (dZoom < 0.0) {
+					dZoom = (double)m_pMainDlg->VirtualImageSize().cx/m_pMainDlg->GetCurrentImage()->OrigWidth();
+				}
+				m_cropEnd = CPoint(m_cropStart.x + (int)(cropSize.cx/dZoom + 0.5) - 1, m_cropStart.y + (int)(cropSize.cy/dZoom + 0.5) - 1);
+			}
+		}
 		if (m_eHitHandle != HH_None) {
 			if (m_bDoTracking) {
 				TrackCroppingRect(mousePos.x, mousePos.y, m_eHitHandle);
@@ -112,7 +112,7 @@ void CCropCtl::StartCropping(int nX, int nY) {
 				SetMouseCursor(nX, nY);
 				m_bDoTracking = true;
 				m_bTrackingMode = true;
-                m_dLastZoom = m_pMainDlg->GetZoom();
+				m_dLastZoom = m_pMainDlg->GetZoom();
 				InvalidateSceenCropRect();
 			} else {
 				AbortCropping();
@@ -145,7 +145,7 @@ bool CCropCtl::DoCropping(int nX, int nY) {
 			::SetTimer(m_pMainDlg->GetHWND(), AUTOSCROLL_TIMER_EVENT_ID, AUTOSCROLL_TIMEOUT, NULL);
 		}
 	}
-    return m_bTrackingMode;
+	return m_bTrackingMode;
 }
 
 void CCropCtl::EndCropping() {
@@ -220,29 +220,29 @@ int CCropCtl::ShowCropContextMenu() {
 		itemInfo.cch = userCropString.GetLength();
 		::SetMenuItemInfo(hMenuCropMode, IDM_CROPMODE_USER, FALSE, &itemInfo);
 
-        switch (GetCropMode())
-        {
-            case CM_FixedAspectRatio:
-		        if (abs(m_dCropRectAspectRatio - 1.25) < 0.001) {
-			        ::CheckMenuItem(hMenuCropMode,  IDM_CROPMODE_5_4, MF_CHECKED);
-		        } else if (abs(m_dCropRectAspectRatio - 1.3333) < 0.001) {
-			        ::CheckMenuItem(hMenuCropMode,  IDM_CROPMODE_4_3, MF_CHECKED);
-		        } else if (abs(m_dCropRectAspectRatio - 1.5) < 0.001) {
-			        ::CheckMenuItem(hMenuCropMode,  IDM_CROPMODE_3_2, MF_CHECKED);
-		        } else if (abs(m_dCropRectAspectRatio - 1.7777) < 0.001) {
-			        ::CheckMenuItem(hMenuCropMode,  IDM_CROPMODE_16_9, MF_CHECKED);
-		        } else if (abs(m_dCropRectAspectRatio - 1.6) < 0.001) {
-			        ::CheckMenuItem(hMenuCropMode,  IDM_CROPMODE_16_10, MF_CHECKED);
+		switch (GetCropMode())
+		{
+			case CM_FixedAspectRatio:
+				if (abs(m_dCropRectAspectRatio - 1.25) < 0.001) {
+					::CheckMenuItem(hMenuCropMode,  IDM_CROPMODE_5_4, MF_CHECKED);
+				} else if (abs(m_dCropRectAspectRatio - 1.3333) < 0.001) {
+					::CheckMenuItem(hMenuCropMode,  IDM_CROPMODE_4_3, MF_CHECKED);
+				} else if (abs(m_dCropRectAspectRatio - 1.5) < 0.001) {
+					::CheckMenuItem(hMenuCropMode,  IDM_CROPMODE_3_2, MF_CHECKED);
+				} else if (abs(m_dCropRectAspectRatio - 1.7777) < 0.001) {
+					::CheckMenuItem(hMenuCropMode,  IDM_CROPMODE_16_9, MF_CHECKED);
+				} else if (abs(m_dCropRectAspectRatio - 1.6) < 0.001) {
+					::CheckMenuItem(hMenuCropMode,  IDM_CROPMODE_16_10, MF_CHECKED);
 				} else if (abs(m_dCropRectAspectRatio - userCrop.cx / (double)userCrop.cy) < 0.001) {
 					::CheckMenuItem(hMenuCropMode, IDM_CROPMODE_USER, MF_CHECKED);
 				}
-                break;
-            case CM_FixedSize:
-			    ::CheckMenuItem(hMenuCropMode,  IDM_CROPMODE_FIXED_SIZE, MF_CHECKED);
-                break;
-            case CM_Free:
-			    ::CheckMenuItem(hMenuCropMode,  IDM_CROPMODE_FREE, MF_CHECKED);
-                break;
+				break;
+			case CM_FixedSize:
+				::CheckMenuItem(hMenuCropMode,  IDM_CROPMODE_FIXED_SIZE, MF_CHECKED);
+				break;
+			case CM_Free:
+				::CheckMenuItem(hMenuCropMode,  IDM_CROPMODE_FREE, MF_CHECKED);
+				break;
 		}
 		nMenuCmd = m_pMainDlg->TrackPopupMenu(posMouse, hMenuTrackPopup);
 
@@ -328,9 +328,9 @@ void CCropCtl::UpdateCroppingRect(int nX, int nY, HDC hPaintDC, bool bShow) {
 	float fX = (float)nX, fY = (float)nY;
 	m_pMainDlg->ScreenToImage(fX, fY);
 
-    CPoint newCropStart = m_cropStart;
+	CPoint newCropStart = m_cropStart;
 	CPoint newCropEnd = CPoint((int)fX, (int) fY);
-    CropMode cropMode = GetCropMode();
+	CropMode cropMode = GetCropMode();
 	if (cropMode == CM_FixedAspectRatio) {
 		newCropEnd = PreserveAspectRatio(m_cropStart, newCropEnd, false, true);
 	} else if (cropMode == CM_FixedSize) {
@@ -355,7 +355,7 @@ void CCropCtl::UpdateCroppingRect(int nX, int nY, HDC hPaintDC, bool bShow) {
 	}
 	if (m_cropEnd != newCropEnd || m_cropStart != newCropStart) {
 		if (bShow) InvalidateSceenCropRect();
-        m_cropStart = newCropStart;
+		m_cropStart = newCropStart;
 		m_cropEnd = newCropEnd;
 		if (bShow) InvalidateSceenCropRect();
 	}
@@ -466,8 +466,8 @@ void CCropCtl::CropLossless() {
 	if (cropRect.IsRectEmpty()) {
 		return;
 	}
-    CJPEGImage* pCurrentImage = m_pMainDlg->GetCurrentImage();
-    pCurrentImage->TrimRectToMCUBlockSize(cropRect);
+	CJPEGImage* pCurrentImage = m_pMainDlg->GetCurrentImage();
+	pCurrentImage->TrimRectToMCUBlockSize(cropRect);
 
 	CString sCurrentFile = m_pMainDlg->CurrentFileName(false);
 
@@ -482,20 +482,20 @@ void CCropCtl::CropLossless() {
 	fileDlg.m_ofn.lpstrTitle = sTitle;
 
 	if (IDOK == fileDlg.DoModal(m_pMainDlg->GetHWND())) {
-        LPCTSTR sInputFileName = m_pMainDlg->CurrentFileName(false);
-        LPCTSTR sCropFileName = fileDlg.m_szFileName;
-        CJPEGLosslessTransform::EResult eResult = CJPEGLosslessTransform::PerformCrop(sInputFileName, sCropFileName, cropRect);
-        if (eResult != CJPEGLosslessTransform::Success) {
-            ::MessageBox(m_pMainDlg->GetHWND(), CString(CNLS::GetString(_T("Performing the lossless transformation failed!"))) + 
-                + _T("\n") + CNLS::GetString(_T("Reason:")) + _T(" ") + HelpersGUI::LosslessTransformationResultToString(eResult), 
-                CNLS::GetString(_T("Lossless JPEG transformations")), MB_OK | MB_ICONWARNING);
-        } else {
-            if (_tcscmp(sInputFileName, sCropFileName) == 0) {
-                m_pMainDlg->ExecuteCommand(IDM_RELOAD);
-            } else {
-                m_pMainDlg->GetFileList()->Reload();
-            }
-        }
+		LPCTSTR sInputFileName = m_pMainDlg->CurrentFileName(false);
+		LPCTSTR sCropFileName = fileDlg.m_szFileName;
+		CJPEGLosslessTransform::EResult eResult = CJPEGLosslessTransform::PerformCrop(sInputFileName, sCropFileName, cropRect);
+		if (eResult != CJPEGLosslessTransform::Success) {
+			::MessageBox(m_pMainDlg->GetHWND(), CString(CNLS::GetString(_T("Performing the lossless transformation failed!"))) + 
+				+ _T("\n") + CNLS::GetString(_T("Reason:")) + _T(" ") + HelpersGUI::LosslessTransformationResultToString(eResult), 
+				CNLS::GetString(_T("Lossless JPEG transformations")), MB_OK | MB_ICONWARNING);
+		} else {
+			if (_tcscmp(sInputFileName, sCropFileName) == 0) {
+				m_pMainDlg->ExecuteCommand(IDM_RELOAD);
+			} else {
+				m_pMainDlg->GetFileList()->Reload();
+			}
+		}
 
 	}
 }

@@ -30,7 +30,7 @@ CUnsharpMaskPanel::CUnsharpMaskPanel(HWND hWnd, INotifiyMouseCapture* pNotifyMou
 	AddSlider(ID_slAmount, CNLS::GetString(_T("Amount")), &(pParams->Amount), NULL, 0.0, 10.0, 0.0, true, false, false, 200);
 	AddSlider(ID_slThreshold, CNLS::GetString(_T("Threshold")), &(pParams->Threshold), NULL, 0, 20, 4.0, true, false, false, 200);
 	AddButton(ID_btnCancel, CNLS::GetString(_T("Cancel")));
-    AddButton(ID_btnApply, CNLS::GetString(_T("Apply")));
+	AddButton(ID_btnApply, CNLS::GetString(_T("Apply")));
 }
 
 CRect CUnsharpMaskPanel::PanelRect() {

@@ -8,16 +8,16 @@
 
 static void CopyOriginalFileNameToClipboard(LPCWSTR filename) {
 	int fileNameLength = (int)wcslen(filename);
-    DWORD fileNameLengthBytes = sizeof(wchar_t) * (fileNameLength + 1);
-    DROPFILES df = {sizeof(DROPFILES), {0, 0}, 0, TRUE};
-    HGLOBAL hMem = ::GlobalAlloc(GMEM_ZEROINIT|GMEM_MOVEABLE|GMEM_DDESHARE, sizeof(DROPFILES) + fileNameLengthBytes + sizeof(wchar_t)); // for double NULL char
-    int offset = sizeof(DROPFILES) / sizeof(wchar_t);
+	DWORD fileNameLengthBytes = sizeof(wchar_t) * (fileNameLength + 1);
+	DROPFILES df = {sizeof(DROPFILES), {0, 0}, 0, TRUE};
+	HGLOBAL hMem = ::GlobalAlloc(GMEM_ZEROINIT|GMEM_MOVEABLE|GMEM_DDESHARE, sizeof(DROPFILES) + fileNameLengthBytes + sizeof(wchar_t)); // for double NULL char
+	int offset = sizeof(DROPFILES) / sizeof(wchar_t);
 	WCHAR *pGlobal = (WCHAR *) ::GlobalLock(hMem);
-    ::CopyMemory(pGlobal, &df, sizeof(DROPFILES));
-    ::CopyMemory(pGlobal + offset, filename, fileNameLengthBytes); // that's pGlobal + 20 bytes (the size of DROPFILES);
+	::CopyMemory(pGlobal, &df, sizeof(DROPFILES));
+	::CopyMemory(pGlobal + offset, filename, fileNameLengthBytes); // that's pGlobal + 20 bytes (the size of DROPFILES);
 	pGlobal[offset + fileNameLength + 1] = 0; // add additional NULL character
-    ::GlobalUnlock(hMem);
-    ::SetClipboardData(CF_HDROP, hMem);
+	::GlobalUnlock(hMem);
+	::SetClipboardData(CF_HDROP, hMem);
 }
 
 void CClipboard::CopyImageToClipboard(HWND hWnd, CJPEGImage * pImage, LPCTSTR fileName) {
@@ -55,7 +55,7 @@ void CClipboard::CopyFullImageToClipboard(HWND hWnd, CJPEGImage * pImage, const 
 CJPEGImage* CClipboard::PasteImageFromClipboard(HWND hWnd, const CImageProcessingParams& procParams, 
 												EProcessingFlags eFlags) {
 	if (!::OpenClipboard(hWnd)) {
-        return NULL;
+		return NULL;
 	}
 
 	CJPEGImage* pImage = NULL;
@@ -99,7 +99,7 @@ CJPEGImage* CClipboard::PasteImageFromClipboard(HWND hWnd, const CImageProcessin
 
 void CClipboard::DoCopy(HWND hWnd, int nWidth, int nHeight, const void* pSourceImageDIB32, LPCTSTR fileName) {
 	if (!::OpenClipboard(hWnd)) {
-        return;
+		return;
 	}
 	::EmptyClipboard();
 

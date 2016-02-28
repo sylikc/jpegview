@@ -17,7 +17,7 @@ namespace Helpers {
 
 	// Sorting order of image files
 	enum ESorting {
-        FS_Undefined = -1,
+		FS_Undefined = -1,
 		FS_LastModTime,
 		FS_CreationTime,
 		FS_FileName,
@@ -27,7 +27,7 @@ namespace Helpers {
 
 	// Navigation mode over directories
 	enum ENavigationMode {
-        NM_Undefined = -1,
+		NM_Undefined = -1,
 		NM_LoopDirectory,
 		NM_LoopSubDirectories,
 		NM_LoopSameDirectoryLevel
@@ -41,23 +41,23 @@ namespace Helpers {
 		ZM_FillScreen
 	};
 
-    // Transition effects for full screen slideshow
-    enum ETransitionEffect {
-        TE_None,
-        TE_Blend,
-        TE_SlideRL,
-        TE_SlideLR,
-        TE_SlideTB,
-        TE_SlideBT,
-        TE_RollRL,
-        TE_RollLR,
-        TE_RollTB,
-        TE_RollBT,
-        TE_ScrollRL,
-        TE_ScrollLR,
-        TE_ScrollTB,
-        TE_ScrollBT,
-    };
+	// Transition effects for full screen slideshow
+	enum ETransitionEffect {
+		TE_None,
+		TE_Blend,
+		TE_SlideRL,
+		TE_SlideLR,
+		TE_SlideTB,
+		TE_SlideBT,
+		TE_RollRL,
+		TE_RollLR,
+		TE_RollTB,
+		TE_RollBT,
+		TE_ScrollRL,
+		TE_ScrollLR,
+		TE_ScrollTB,
+		TE_ScrollBT,
+	};
 
 	// Confirmation required for file deletion
 	enum EDeleteConfirmation {
@@ -136,8 +136,8 @@ namespace Helpers {
 	// The window size equals the client area size plus this border size
 	CSize GetTotalBorderSize();
 
-    // Converts the transition effect from string (as in INI or command line parameter) to enum
-    ETransitionEffect ConvertTransitionEffectFromString(LPCTSTR str);
+	// Converts the transition effect from string (as in INI or command line parameter) to enum
+	ETransitionEffect ConvertTransitionEffectFromString(LPCTSTR str);
 
 	// Tests if the CPU supports SSE or MMX(2)
 	CPUType ProbeCPU(void);
@@ -189,8 +189,8 @@ namespace Helpers {
 	// e.g. commenting the JPEG or changing some EXIF information without changing the hash.
 	__int64 CalculateJPEGFileHash(void* pJPEGStream, int nStreamLength);
 
-    // try to convert a string from UTF-8. Returns empty string if no valid UTF-8 encoded string.
-    CString TryConvertFromUTF8(uint8* pComment, int nLengthInBytes);
+	// try to convert a string from UTF-8. Returns empty string if no valid UTF-8 encoded string.
+	CString TryConvertFromUTF8(uint8* pComment, int nLengthInBytes);
 
 	// Gets the content of the JPEG comment tag, empty string if no comment
 	CString GetJPEGComment(void* pJPEGStream, int nStreamLength);
@@ -198,8 +198,8 @@ namespace Helpers {
 	// Clears the JPEG comment (by filling with NULL characters)
 	void ClearJPEGComment(void* pJPEGStream, int nStreamLength);
 
-    // Gets the image format given a file name (uses the file extension)
-    EImageFormat GetImageFormat(LPCTSTR sFileName);
+	// Gets the image format given a file name (uses the file extension)
+	EImageFormat GetImageFormat(LPCTSTR sFileName);
 
 	// Returns the short form of the path (including the short form of the file name)
 	CString GetShortFilePath(LPCTSTR sPath);
@@ -207,23 +207,23 @@ namespace Helpers {
 	// Returns the short form of the path but the file name remains untouched
 	CString ReplacePathByShortForm(LPCTSTR sPath);
 
-    // search string in string (as strstr()) ignoring case
-    LPTSTR stristr(LPCTSTR szStringToBeSearched, LPCTSTR szSubstringToSearchFor);
-    
-    // file size for file with path
-    __int64 GetFileSize(LPCTSTR sPath);
+	// search string in string (as strstr()) ignoring case
+	LPTSTR stristr(LPCTSTR szStringToBeSearched, LPCTSTR szSubstringToSearchFor);
+	
+	// file size for file with path
+	__int64 GetFileSize(LPCTSTR sPath);
 
-    // Gets the frame index of the next frame, depending on the index of the last image (relevant if the image is a multiframe image)
-    int GetFrameIndex(CJPEGImage* pImage, bool bNext, bool bPlayAnimation, bool & switchImage);
+	// Gets the frame index of the next frame, depending on the index of the last image (relevant if the image is a multiframe image)
+	int GetFrameIndex(CJPEGImage* pImage, bool bNext, bool bPlayAnimation, bool & switchImage);
 
-    // Gets an index string of the form [a/b] for multiframe images, empty string for single frame images
-    CString GetMultiframeIndex(CJPEGImage* pImage);
+	// Gets an index string of the form [a/b] for multiframe images, empty string for single frame images
+	CString GetMultiframeIndex(CJPEGImage* pImage);
 
-    // replaces the file info format string by the actual values from the image and file list
-    CString GetFileInfoString(LPCTSTR sFormat, CJPEGImage* pImage, CFileList* pFilelist, double dZoom);
+	// replaces the file info format string by the actual values from the image and file list
+	CString GetFileInfoString(LPCTSTR sFormat, CJPEGImage* pImage, CFileList* pFilelist, double dZoom);
 
 	// Returns the windows version in the format Major * 100 + Minor, e.g. 602 for Windows 8
-    int GetWindowsVersion();
+	int GetWindowsVersion();
 
 	// Conversion class that replaces the | by null character in a string.
 	// Caution: Uses a static buffer and can therefore only one string can be replaced concurrently

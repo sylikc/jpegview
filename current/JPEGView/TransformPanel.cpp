@@ -35,7 +35,7 @@ CTransformPanel::CTransformPanel(HWND hWnd, INotifiyMouseCapture* pNotifyMouseCa
 	AddUserPaintButton(ID_btnKeepAR, CNLS::GetString(_T("Keep aspect ratio on crop")), &PaintKeepARBtn);
 	AddButton(ID_btnCancel, CNLS::GetString(_T("Cancel")));
 	AddButton(ID_btnReset, CNLS::GetString(_T("Reset")));
-    AddButton(ID_btnApply, CNLS::GetString(_T("Apply")));
+	AddButton(ID_btnApply, CNLS::GetString(_T("Apply")));
 
 	int minWidth = 4 * m_nButtonSize + 3 * (int)(m_fDPIScale*TRANSFORM_PANEL_GAPBUTTONX1) + 
 		(int)(m_fDPIScale*TRANSFORM_PANEL_GAPBUTTONGROUPS) + 2 * (int)(m_fDPIScale*TRANSFORM_PANEL_GAPBUTTONX2) +

@@ -33,7 +33,7 @@ CUICtrl* CPanel::GetControl(int nID) {
 }
 
 CSliderDouble* CPanel::AddSlider(int nID, LPCTSTR sName, double* pdValue, bool* pbEnable, 
-						         double dMin, double dMax, double dDefaultValue, bool bAllowPreviewAndReset, bool bLogarithmic, bool bInvert, int nWidth) {
+								 double dMin, double dMax, double dDefaultValue, bool bAllowPreviewAndReset, bool bLogarithmic, bool bInvert, int nWidth) {
 	CSliderDouble* pSlider = new CSliderDouble(this, sName, nWidth, pdValue, pbEnable, dMin, dMax, dDefaultValue, 
 		bAllowPreviewAndReset, bLogarithmic, bInvert);
 	m_controls[nID] = pSlider;

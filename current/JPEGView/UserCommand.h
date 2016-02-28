@@ -41,7 +41,7 @@ public:
 	// Gets the executable of the command, not replacing any placeholders
 	CString GetExecutable() const;
 
-    // Checks if the command can execute by asking the user for confirmation if the command requires this
+	// Checks if the command can execute by asking the user for confirmation if the command requires this
 	bool CanExecute(HWND hWnd, LPCTSTR sFileName) const;
 
 	// Executes the command, the application main window and the current filename are passed

@@ -97,7 +97,7 @@ CRect CMultiMonitorSupport::GetWorkingRect(HWND hWnd) {
 }
 
 CRect CMultiMonitorSupport::GetDefaultWindowRect() {
-    CSettingsProvider& settings = CSettingsProvider::This();
+	CSettingsProvider& settings = CSettingsProvider::This();
 	CRect windowRect = !defaultWindowRect.IsRectEmpty() ? defaultWindowRect : settings.StickyWindowSize() ? settings.StickyWindowRect() : settings.DefaultWindowRect();
 	CRect rectAllScreens = CMultiMonitorSupport::GetVirtualDesktop();
 	if (windowRect.IsRectEmpty() || !rectAllScreens.IntersectRect(&rectAllScreens, &windowRect)) {
@@ -113,7 +113,7 @@ CRect CMultiMonitorSupport::GetDefaultWindowRect() {
 }
 
 void CMultiMonitorSupport::SetDefaultWindowRect(CRect rect) {
-    defaultWindowRect = rect;
+	defaultWindowRect = rect;
 }
 
 CRect CMultiMonitorSupport::GetDefaultClientRectInWindowMode(bool bAutoFitWndToImage) {

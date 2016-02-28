@@ -45,7 +45,7 @@ CEXIFDisplay::CEXIFDisplay(HWND hWnd, INotifiyMouseCapture* pNotifyMouseCapture)
 	m_pHistogram = NULL;
 
 	AddUserPaintButton(ID_btnShowHideHistogram, &ShowHistogramTooltip, &PaintShowHistogramBtn, NULL, this, this);
-    AddUserPaintButton(ID_btnClose, CNLS::GetString(_T("Close")), &PaintCloseBtn, NULL, this, this);
+	AddUserPaintButton(ID_btnClose, CNLS::GetString(_T("Close")), &PaintCloseBtn, NULL, this, this);
 }
 
 CEXIFDisplay::~CEXIFDisplay() {
@@ -128,14 +128,14 @@ void CEXIFDisplay::AddLine(LPCTSTR sDescription, const Rational &number) {
 	if (number.Denumerator == 1) {
 		AddLine(sDescription, number.Numerator);
 	} else if (number.Numerator > 9) {
-        TCHAR buff[32];
-        if (number.Numerator * 3 < number.Denumerator) {
-		    _stprintf_s(buff, 32, _T("1/%d"), number.Denumerator/number.Numerator);
-        } else {
-            _stprintf_s(buff, 32, _T("%.2f"), double(number.Numerator)/number.Denumerator);
-        }
+		TCHAR buff[32];
+		if (number.Numerator * 3 < number.Denumerator) {
+			_stprintf_s(buff, 32, _T("1/%d"), number.Denumerator/number.Numerator);
+		} else {
+			_stprintf_s(buff, 32, _T("%.2f"), double(number.Numerator)/number.Denumerator);
+		}
 		AddLine(sDescription, buff);
-    } else {
+	} else {
 		TCHAR buff[32];
 		_stprintf_s(buff, 32, _T("%d/%d"), number.Numerator, number.Denumerator);
 		AddLine(sDescription, buff);
@@ -146,8 +146,8 @@ CRect CEXIFDisplay::PanelRect() {
 	if (m_nLineHeight == 0) {
 		CDC dc(::GetDC(m_hWnd));
 		HelpersGUI::SelectDefaultGUIFont(dc);
-        if (m_hTitleFont == 0)
-            m_hTitleFont = HelpersGUI::CreateBoldFontOfSelectedFont(dc);
+		if (m_hTitleFont == 0)
+			m_hTitleFont = HelpersGUI::CreateBoldFontOfSelectedFont(dc);
 
 		if (m_hTitleFont != 0) {
 			::SelectObject(dc, m_hTitleFont);
@@ -322,8 +322,8 @@ void CEXIFDisplay::RepositionAll() {
 		int nButtonSize = (int)(m_fDPIScale * BUTTON_SIZE);
 		pButton->SetPosition(CRect(CPoint(panelRect.left + m_nNoHistogramSize.cx - m_nGap - nButtonSize, panelRect.top + m_nNoHistogramSize.cy - m_nGap - nButtonSize), CSize(nButtonSize, nButtonSize)));
 	}
-    CUICtrl* pButtonClose = GetControl(ID_btnClose);
-    if (pButtonClose != NULL) {
+	CUICtrl* pButtonClose = GetControl(ID_btnClose);
+	if (pButtonClose != NULL) {
 		int nButtonSize = (int)(m_fDPIScale * BUTTON_SIZE * 0.9f);
 		pButtonClose->SetPosition(CRect(CPoint(panelRect.right - nButtonSize, panelRect.top), CSize(nButtonSize, nButtonSize)));
 	}

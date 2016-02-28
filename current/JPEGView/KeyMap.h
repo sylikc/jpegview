@@ -8,7 +8,7 @@
 class CKeyMap
 {
 public:
-	// returns true if the system is a multi monitor system
+	// Reads the keymap file with the specified file name
 	CKeyMap(LPCTSTR sKeyMapFile);
 
 	// Gets a command Id for a keycode and modifier keys. Returns -1 if no command available for this key.

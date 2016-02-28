@@ -162,7 +162,7 @@ void CSettingsProvider::ReadWriteableINISettings() {
 	m_bShowFullScreen = m_bAutoFullScreen ? true : GetBool(_T("ShowFullScreen"), true);
 	m_bShowFileName = GetBool(_T("ShowFileName"), false);
 	m_bShowFileInfo = GetBool(_T("ShowFileInfo"), false);
-    m_bShowEXIFDateInTitle = GetBool(_T("ShowEXIFDateInTitle"), true);
+	m_bShowEXIFDateInTitle = GetBool(_T("ShowEXIFDateInTitle"), true);
 	m_bShowHistogram = GetBool(_T("ShowHistogram"), false);
 	m_bShowJPEGComments = GetBool(_T("ShowJPEGComments"), true);
 	m_bShowNavPanel = GetBool(_T("ShowNavPanel"), true);
@@ -223,8 +223,8 @@ void CSettingsProvider::ReadWriteableINISettings() {
 
 	m_bNavigateMouseWheel = GetBool(_T("NavigateWithMouseWheel"), false);
 
-    m_eAutoZoomMode = GetAutoZoomMode(_T("AutoZoomMode"));
-    m_eAutoZoomModeFullscreen = GetAutoZoomMode(_T("AutoZoomModeFullscreen"));
+	m_eAutoZoomMode = GetAutoZoomMode(_T("AutoZoomMode"));
+	m_eAutoZoomModeFullscreen = GetAutoZoomMode(_T("AutoZoomModeFullscreen"));
 
 	CString sDeleteConfirmation = GetString(_T("DeleteConfirmation"), _T("OnlyWhenNoRecycleBin"));
 	if (sDeleteConfirmation.CompareNoCase(_T("OnlyWhenNoRecycleBin")) == 0) {
@@ -236,24 +236,24 @@ void CSettingsProvider::ReadWriteableINISettings() {
 	}
 
 	m_nMaxSlideShowFileListSize = GetInt(_T("MaxSlideShowFileListSizeKB"), 200, 100, 10000);
-    m_eSlideShowTransitionEffect = Helpers::ConvertTransitionEffectFromString(GetString(_T("SlideShowTransitionEffect"), _T("")));
-    m_nSlideShowEffectTimeMs = GetInt(_T("SlideShowEffectTime"), 200, 100, 5000);
+	m_eSlideShowTransitionEffect = Helpers::ConvertTransitionEffectFromString(GetString(_T("SlideShowTransitionEffect"), _T("")));
+	m_nSlideShowEffectTimeMs = GetInt(_T("SlideShowEffectTime"), 200, 100, 5000);
 	m_bForceGDIPlus = GetBool(_T("ForceGDIPlus"), false);
-    m_bSingleInstance = GetBool(_T("SingleInstance"), false);
+	m_bSingleInstance = GetBool(_T("SingleInstance"), false);
 	m_bSingleFullScreenInstance = GetBool(_T("SingleFullScreenInstance"), true);
 	m_nJPEGSaveQuality = GetInt(_T("JPEGSaveQuality"), 85, 0, 100);
 	m_nWEBPSaveQuality = GetInt(_T("WEBPSaveQuality"), 85, 0, 100);
 	m_sDefaultSaveFormat = GetString(_T("DefaultSaveFormat"), _T("jpg"));
-    m_sFilesProcessedByWIC = GetString(_T("FilesProcessedByWIC"), _T("*.wdp;*.mdp;*.hdp"));
+	m_sFilesProcessedByWIC = GetString(_T("FilesProcessedByWIC"), _T("*.wdp;*.mdp;*.hdp"));
 	m_sFileEndingsRAW = GetString(_T("FileEndingsRAW"), _T("*.pef;*.dng;*.crw;*.nef;*.cr2;*.mrw;*.rw2;*.orf;*.x3f;*.arw;*.kdc;*.nrw;*.dcr;*.sr2;*.raf"));
 	m_bCreateParamDBEntryOnSave = GetBool(_T("CreateParamDBEntryOnSave"), true);
 	m_bWrapAroundFolder = GetBool(_T("WrapAroundFolder"), true);
 	m_bSaveWithoutPrompt = GetBool(_T("OverrideOriginalFileWithoutSaveDialog"), false);
-    m_bTrimWithoutPromptLosslessJPEG = GetBool(_T("TrimWithoutPromptLosslessJPEG"), false);
+	m_bTrimWithoutPromptLosslessJPEG = GetBool(_T("TrimWithoutPromptLosslessJPEG"), false);
 	m_bAllowFileDeletion = GetBool(_T("AllowFileDeletion"), true);
 	m_bExchangeXButtons = GetBool(_T("ExchangeXButtons"), true);
 	m_bAutoRotateEXIF = GetBool(_T("AutoRotateEXIF"), true);
-    m_bUseEmbeddedColorProfiles = GetBool(_T("UseEmbeddedColorProfiles"), false);
+	m_bUseEmbeddedColorProfiles = GetBool(_T("UseEmbeddedColorProfiles"), false);
 	m_nDisplayMonitor = GetInt(_T("DisplayMonitor"), -1, -1, 16);
 	m_bAutoContrastCorrection = GetBool(_T("AutoContrastCorrection"), false);
 	m_dAutoContrastAmount = GetDouble(_T("AutoContrastCorrectionAmount"), 0.5, 0.0, 1.0);
@@ -265,11 +265,11 @@ void CSettingsProvider::ReadWriteableINISettings() {
 	m_sLandscapeModeParams = GetString(_T("LandscapeModeParams"), _T("-1 -1 -1 -1 0.5 1.0 0.75 0.4 -1 -1 -1"));
 	m_sCopyRenamePattern = GetString(_T("CopyRenamePattern"), _T(""));
 	m_defaultWindowRect = GetRect(_T("DefaultWindowRect"), CRect(0, 0, 0, 0));
-    m_stickyWindowRect = GetRect(_T("StickyWindowRect"), CRect(0, 0, 0, 0));
+	m_stickyWindowRect = GetRect(_T("StickyWindowRect"), CRect(0, 0, 0, 0));
 	m_bDefaultMaximized = false;
 	m_bDefaultWndToImage = false;
-    m_bStickyWindowSize = false;
-    m_bExplicitWindowRect = false;
+	m_bStickyWindowSize = false;
+	m_bExplicitWindowRect = false;
 	if (m_defaultWindowRect.IsRectEmpty()) {
 		CString sAuto = GetString(_T("DefaultWindowRect"), _T(""));
 		if (sAuto.CompareNoCase(_T("max")) == 0) {
@@ -278,19 +278,19 @@ void CSettingsProvider::ReadWriteableINISettings() {
 			m_bDefaultWndToImage = true;
 		} else if (sAuto.CompareNoCase(_T("sticky")) == 0) {
 			m_bStickyWindowSize = true;
-            m_bExplicitWindowRect = !m_stickyWindowRect.IsRectEmpty();
-        }
+			m_bExplicitWindowRect = !m_stickyWindowRect.IsRectEmpty();
+		}
 	} else {
-        m_bExplicitWindowRect = true;
-    }
+		m_bExplicitWindowRect = true;
+	}
 
 	m_colorBackground = GetColor(_T("BackgroundColor"), 0);
 	m_colorGUI = GetColor(_T("GUIColor"), RGB(243, 242, 231));
 	m_colorHighlight = GetColor(_T("HighlightColor"), RGB(255, 205, 0));
 	m_colorSelected = GetColor(_T("SelectionColor"), RGB(255, 205, 0));
 	m_colorSlider = GetColor(_T("SliderColor"), RGB(255, 0, 80));
-    m_colorFileName = GetColor(_T("FileNameColor"), m_colorGUI);
-    m_colorTransparency = GetColor(_T("TransparencyColor"), m_colorBackground);
+	m_colorFileName = GetColor(_T("FileNameColor"), m_colorGUI);
+	m_colorTransparency = GetColor(_T("TransparencyColor"), m_colorBackground);
 
 	m_defaultGUIFont = GetString(_T("DefaultGUIFont"), _T("Default"));
 	m_fileNameFont = GetString(_T("FileNameFont"), _T("Default"));
@@ -309,9 +309,9 @@ void CSettingsProvider::ReadWriteableINISettings() {
 	m_bRTShowGridLines = GetBool(_T("RTShowGridLines"), true);
 	m_bRTAutoCrop = GetBool(_T("RTAutoCrop"), true);
 	m_bRTPreserveAspectRatio = GetBool(_T("RTPreserveAspectRatio"), true);
-    m_sFileNameFormat = GetString(_T("FileNameFormat"), _T("%index% %filepath%"));
-    m_sFileNameFormat = ReplacePlaceholdersFileNameFormat(m_sFileNameFormat);
-    m_bReloadWhenDisplayedImageChanged = GetBool(_T("ReloadWhenDisplayedImageChanged"), true);
+	m_sFileNameFormat = GetString(_T("FileNameFormat"), _T("%index% %filepath%"));
+	m_sFileNameFormat = ReplacePlaceholdersFileNameFormat(m_sFileNameFormat);
+	m_bReloadWhenDisplayedImageChanged = GetBool(_T("ReloadWhenDisplayedImageChanged"), true);
 	m_bAllowEditGlobalSettings = GetBool(_T("AllowEditGlobalSettings"), false);
 	m_dPrintMargin = GetDouble(_T("PrintMargin"), 1.0, 0.0, 100.0);
 	m_dDefaultPrintWidth = GetDouble(_T("PrintWidth"), -15.0, -1000, 1000);
@@ -335,18 +335,18 @@ void CSettingsProvider::ReadWriteableINISettings() {
 		m_userCropAspectRatio = CSize(1, 1);
 	}
 
-    m_sWallpaperPath = GetString(_T("WallpaperPath"), _T("%temp%"));
-    if (m_sWallpaperPath == _T("%temp%")) {
-        TCHAR tempPath[MAX_PATH];
-        tempPath[0] = 0;
-        ::GetTempPath(MAX_PATH, tempPath);
-        m_sWallpaperPath = tempPath;
-    } else {
-        TCHAR buffer[MAX_PATH];
-        if (::ExpandEnvironmentStrings(m_sWallpaperPath, (LPTSTR)buffer, MAX_PATH)) {
-            m_sWallpaperPath = buffer;
-        }
-    }
+	m_sWallpaperPath = GetString(_T("WallpaperPath"), _T("%temp%"));
+	if (m_sWallpaperPath == _T("%temp%")) {
+		TCHAR tempPath[MAX_PATH];
+		tempPath[0] = 0;
+		::GetTempPath(MAX_PATH, tempPath);
+		m_sWallpaperPath = tempPath;
+	} else {
+		TCHAR buffer[MAX_PATH];
+		if (::ExpandEnvironmentStrings(m_sWallpaperPath, (LPTSTR)buffer, MAX_PATH)) {
+			m_sWallpaperPath = buffer;
+		}
+	}
 }
 
 CImageProcessingParams CSettingsProvider::LandscapeModeParams(const CImageProcessingParams& templParams) {
@@ -431,17 +431,17 @@ void CSettingsProvider::SaveCopyRenamePattern(const CString& sPattern) {
 }
 
 void CSettingsProvider::SaveStickyWindowRect(CRect rect) {
-    if (rect != m_stickyWindowRect && !rect.IsRectEmpty()) {
-        const int BUFF_SIZE = 64;
-        TCHAR buff[BUFF_SIZE];
-        _sntprintf(buff, BUFF_SIZE, _T("%d %d %d %d"), rect.left, rect.top, rect.right, rect.bottom);
+	if (rect != m_stickyWindowRect && !rect.IsRectEmpty()) {
+		const int BUFF_SIZE = 64;
+		TCHAR buff[BUFF_SIZE];
+		_sntprintf(buff, BUFF_SIZE, _T("%d %d %d %d"), rect.left, rect.top, rect.right, rect.bottom);
 
-        MakeSureUserINIExists();
+		MakeSureUserINIExists();
 
-        WriteString(_T("StickyWindowRect"), buff);
+		WriteString(_T("StickyWindowRect"), buff);
 
-        m_bUserINIExists = true;
-    }
+		m_bUserINIExists = true;
+	}
 }
 
 int CSettingsProvider::DeleteOpenWithCommand(CUserCommand* pCommand) {
@@ -499,15 +499,15 @@ void CSettingsProvider::ChangeOpenWithCommand(CUserCommand* pCommand, const CStr
 }
 
 CString CSettingsProvider::ReplacePlaceholdersFileNameFormat(const CString& sFileNameFormat) {
-    // needed because a file name may contains the original placeholders from INI file
-    CString sNewString = sFileNameFormat;
-    sNewString.Replace(_T("%filename%"), _T("<f>"));
-    sNewString.Replace(_T("%filepath%"), _T("<p>"));
-    sNewString.Replace(_T("%index%"), _T("<i>"));
-    sNewString.Replace(_T("%zoom%"), _T("<z>"));
-    sNewString.Replace(_T("%size%"), _T("<s>"));
-    sNewString.Replace(_T("%filesize%"), _T("<l>"));
-    return sNewString;
+	// needed because a file name may contains the original placeholders from INI file
+	CString sNewString = sFileNameFormat;
+	sNewString.Replace(_T("%filename%"), _T("<f>"));
+	sNewString.Replace(_T("%filepath%"), _T("<p>"));
+	sNewString.Replace(_T("%index%"), _T("<i>"));
+	sNewString.Replace(_T("%zoom%"), _T("<z>"));
+	sNewString.Replace(_T("%size%"), _T("<s>"));
+	sNewString.Replace(_T("%filesize%"), _T("<l>"));
+	return sNewString;
 }
 
 void CSettingsProvider::MakeSureUserINIExists() {
@@ -625,19 +625,19 @@ COLORREF CSettingsProvider::GetColor(LPCTSTR sKey, COLORREF defaultColor) {
 }
 
 Helpers::EAutoZoomMode CSettingsProvider::GetAutoZoomMode(LPCTSTR sKey) {
-    CString sAutoZoomMode = GetString(sKey, _T("FitNoZoom"));
-    if (sAutoZoomMode.CompareNoCase(_T("Fit")) == 0) {
-        return Helpers::ZM_FitToScreen;
-    }
-    else if (sAutoZoomMode.CompareNoCase(_T("Fill")) == 0) {
-        return Helpers::ZM_FillScreen;
-    }
-    else if (sAutoZoomMode.CompareNoCase(_T("FillNoZoom")) == 0) {
-        return Helpers::ZM_FillScreenNoZoom;
-    }
-    else {
-        return Helpers::ZM_FitToScreenNoZoom;
-    }
+	CString sAutoZoomMode = GetString(sKey, _T("FitNoZoom"));
+	if (sAutoZoomMode.CompareNoCase(_T("Fit")) == 0) {
+		return Helpers::ZM_FitToScreen;
+	}
+	else if (sAutoZoomMode.CompareNoCase(_T("Fill")) == 0) {
+		return Helpers::ZM_FillScreen;
+	}
+	else if (sAutoZoomMode.CompareNoCase(_T("FillNoZoom")) == 0) {
+		return Helpers::ZM_FillScreenNoZoom;
+	}
+	else {
+		return Helpers::ZM_FitToScreenNoZoom;
+	}
 }
 
 void CSettingsProvider::WriteString(LPCTSTR sKey, LPCTSTR sString) {

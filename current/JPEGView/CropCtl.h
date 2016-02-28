@@ -18,11 +18,11 @@ public:
 		HH_Bottom
 	};
 
-    enum CropMode {
-        CM_Free,
-        CM_FixedAspectRatio,
-        CM_FixedSize
-    };
+	enum CropMode {
+		CM_Free,
+		CM_FixedAspectRatio,
+		CM_FixedSize
+	};
 public:
 	CCropCtl(CMainDlg* pMainDlg);
 
@@ -36,7 +36,7 @@ public:
 	// Cropping rectangle in image coordinates (in original size image)
 	CRect GetImageCropRect(bool losslessCrop);
 
-    CropMode GetCropMode();
+	CropMode GetCropMode();
 
 	void OnPaint(CPaintDC& dc); // paints cropping rectangle when in cropping
 	bool OnTimer(int nTimerId);
@@ -72,7 +72,7 @@ private:
 	CPoint m_cropMouse;
 	CPoint m_startTrackMousePos;
 	double m_dCropRectAspectRatio;
-    double m_dLastZoom;
+	double m_dLastZoom;
 	int m_nHandleSize;
 	Handle m_eHitHandle;
 

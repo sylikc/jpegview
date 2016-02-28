@@ -42,7 +42,7 @@ static EImageFormat GetImageFormat(LPCTSTR sFileName) {
 		header[8] == 'W' && header[9] == 'E' && header[10] == 'B' && header[11] == 'P') {
 		return IF_WEBP;
 	} else {
-        return Helpers::GetImageFormat(sFileName);
+		return Helpers::GetImageFormat(sFileName);
 	}
 }
 
@@ -66,51 +66,51 @@ static EImageFormat GetBitmapFormat(Gdiplus::Bitmap * pBitmap) {
 }
 
 static CJPEGImage* ConvertGDIPlusBitmapToJPEGImage(Gdiplus::Bitmap* pBitmap, int nFrameIndex, void* pEXIFData, 
-    __int64 nJPEGHash, bool &isOutOfMemory, bool &isAnimatedGIF) {
+	__int64 nJPEGHash, bool &isOutOfMemory, bool &isAnimatedGIF) {
 
 	isOutOfMemory = false;
-    isAnimatedGIF = false;
-    Gdiplus::Status lastStatus = pBitmap->GetLastStatus();
-    if (lastStatus != Gdiplus::Ok) {
-        isOutOfMemory = lastStatus == Gdiplus::OutOfMemory;
+	isAnimatedGIF = false;
+	Gdiplus::Status lastStatus = pBitmap->GetLastStatus();
+	if (lastStatus != Gdiplus::Ok) {
+		isOutOfMemory = lastStatus == Gdiplus::OutOfMemory;
 		return NULL;
 	}
 
-    if (pBitmap->GetWidth() > MAX_IMAGE_DIMENSION || pBitmap->GetHeight() > MAX_IMAGE_DIMENSION)
-    {
-        return NULL;
-    }
+	if (pBitmap->GetWidth() > MAX_IMAGE_DIMENSION || pBitmap->GetHeight() > MAX_IMAGE_DIMENSION)
+	{
+		return NULL;
+	}
 	if ((double)pBitmap->GetWidth() * pBitmap->GetHeight() > MAX_IMAGE_PIXELS)
 	{
 		isOutOfMemory = true;
 		return NULL;
 	}
 
-    EImageFormat eImageFormat = GetBitmapFormat(pBitmap);
+	EImageFormat eImageFormat = GetBitmapFormat(pBitmap);
 
-    // Handle multiframe images.
-    // Note that only the first frame dimension is looked at, it is unclear if GDI+ anyway supports image formats with more dimensions
-    UINT nDimensions = pBitmap->GetFrameDimensionsCount();
-    GUID* pDimensionIDs = new GUID[nDimensions];
-    pBitmap->GetFrameDimensionsList(pDimensionIDs, nDimensions);
-    int nFrameCount = (nDimensions == 0) ? 1 : pBitmap->GetFrameCount(&pDimensionIDs[0]);
-    nFrameIndex = max(0, min(nFrameCount - 1, nFrameIndex));
-    int nFrameTimeMs = 100;
-    if (nFrameCount > 1) {
-        isAnimatedGIF = eImageFormat == IF_GIF;
-        int nTagFrameDelaySize = pBitmap->GetPropertyItemSize(PropertyTagFrameDelay);
-        if (nTagFrameDelaySize > 0) {
-            PropertyItem* pPropertyItem = (PropertyItem*)new char[nTagFrameDelaySize];
-            if (pBitmap->GetPropertyItem(PropertyTagFrameDelay, nTagFrameDelaySize, pPropertyItem) == Gdiplus::Ok) {
-                nFrameTimeMs = ((long*)pPropertyItem->value)[nFrameIndex] * 10;
-                if (nFrameTimeMs <= 0) nFrameTimeMs = 100;
-            }
-            delete[] pPropertyItem;
-        }
-        GUID pageGuid = (eImageFormat == IF_TIFF) ? FrameDimensionPage : FrameDimensionTime;
-        pBitmap->SelectActiveFrame(&pageGuid, nFrameIndex);
-    }
-    delete[] pDimensionIDs;
+	// Handle multiframe images.
+	// Note that only the first frame dimension is looked at, it is unclear if GDI+ anyway supports image formats with more dimensions
+	UINT nDimensions = pBitmap->GetFrameDimensionsCount();
+	GUID* pDimensionIDs = new GUID[nDimensions];
+	pBitmap->GetFrameDimensionsList(pDimensionIDs, nDimensions);
+	int nFrameCount = (nDimensions == 0) ? 1 : pBitmap->GetFrameCount(&pDimensionIDs[0]);
+	nFrameIndex = max(0, min(nFrameCount - 1, nFrameIndex));
+	int nFrameTimeMs = 100;
+	if (nFrameCount > 1) {
+		isAnimatedGIF = eImageFormat == IF_GIF;
+		int nTagFrameDelaySize = pBitmap->GetPropertyItemSize(PropertyTagFrameDelay);
+		if (nTagFrameDelaySize > 0) {
+			PropertyItem* pPropertyItem = (PropertyItem*)new char[nTagFrameDelaySize];
+			if (pBitmap->GetPropertyItem(PropertyTagFrameDelay, nTagFrameDelaySize, pPropertyItem) == Gdiplus::Ok) {
+				nFrameTimeMs = ((long*)pPropertyItem->value)[nFrameIndex] * 10;
+				if (nFrameTimeMs <= 0) nFrameTimeMs = 100;
+			}
+			delete[] pPropertyItem;
+		}
+		GUID pageGuid = (eImageFormat == IF_TIFF) ? FrameDimensionPage : FrameDimensionTime;
+		pBitmap->SelectActiveFrame(&pageGuid, nFrameIndex);
+	}
+	delete[] pDimensionIDs;
 
 	// If there is an alpha channel in the original file we must blit the image onto a background color offscreen
 	// bitmap first to archieve proper rendering.
@@ -129,7 +129,7 @@ static CJPEGImage* ConvertGDIPlusBitmapToJPEGImage(Gdiplus::Bitmap* pBitmap, int
 		pBmGraphics->DrawImage(pBitmap, 0, 0, pBmTarget->GetWidth(), pBmTarget->GetHeight());
 		pBitmapToUse = pBmTarget;
 		if (pBmGraphics->GetLastStatus() == Gdiplus::OutOfMemory) {
-            isOutOfMemory = true;
+			isOutOfMemory = true;
 			delete pBmGraphics; delete pBmTarget;
 			return NULL;
 		}
@@ -144,7 +144,7 @@ static CJPEGImage* ConvertGDIPlusBitmapToJPEGImage(Gdiplus::Bitmap* pBitmap, int
 		void* pDIB = CBasicProcessing::ConvertGdiplus32bppRGB(bmRect.Width, bmRect.Height, bmData.Stride, bmData.Scan0);
 		if (pDIB != NULL) {
 			pJPEGImage = new CJPEGImage(bmRect.Width, bmRect.Height, pDIB, pEXIFData, 4, nJPEGHash, eImageFormat,
-                eImageFormat == IF_GIF && nFrameCount > 1, nFrameIndex, nFrameCount, nFrameTimeMs);
+				eImageFormat == IF_GIF && nFrameCount > 1, nFrameIndex, nFrameCount, nFrameTimeMs);
 		}
 		pBitmapToUse->UnlockBits(&bmData);
 	}
@@ -154,7 +154,7 @@ static CJPEGImage* ConvertGDIPlusBitmapToJPEGImage(Gdiplus::Bitmap* pBitmap, int
 		delete pBmTarget;
 	}
 
-    pBitmap->GetLastStatus(); // reset status
+	pBitmap->GetLastStatus(); // reset status
 
 	return pJPEGImage;
 }
@@ -164,11 +164,11 @@ static CJPEGImage* ConvertGDIPlusBitmapToJPEGImage(Gdiplus::Bitmap* pBitmap, int
 /////////////////////////////////////////////////////////////////////////////////////////////
 
 CImageLoadThread::CImageLoadThread(void) : CWorkThread(true) {
-    m_pLastBitmap = NULL;
+	m_pLastBitmap = NULL;
 }
 
 CImageLoadThread::~CImageLoadThread(void) {
-    DeleteCachedGDIBitmap();
+	DeleteCachedGDIBitmap();
 }
 
 int CImageLoadThread::AsyncLoad(LPCTSTR strFileName, int nFrameIndex, const CProcessParams & processParams, HWND targetWnd, HANDLE eventFinished) {
@@ -183,13 +183,13 @@ CImageData CImageLoadThread::GetLoadedImage(int nHandle) {
 	// do not delete anything here, only mark as deleted
 	::EnterCriticalSection(&m_csList);
 	CJPEGImage* imageFound = NULL;
-    bool bFailedMemory = false;
+	bool bFailedMemory = false;
 	std::list<CRequestBase*>::iterator iter;
 	for (iter = m_requestList.begin( ); iter != m_requestList.end( ); iter++ ) {
 		CRequest* pRequest = (CRequest*)(*iter);
 		if (pRequest->Processed && pRequest->Deleted == false && pRequest->RequestHandle == nHandle) {
 			imageFound = pRequest->Image;
-            bFailedMemory = pRequest->OutOfMemory;
+			bFailedMemory = pRequest->OutOfMemory;
 			pRequest->Deleted = true;
 			break;
 		}
@@ -199,8 +199,8 @@ CImageData CImageLoadThread::GetLoadedImage(int nHandle) {
 }
 
 void CImageLoadThread::ReleaseFile(LPCTSTR strFileName) {
-    CReleaseFileRequest* pRequest = new CReleaseFileRequest(strFileName);
-    ProcessAndWait(pRequest);
+	CReleaseFileRequest* pRequest = new CReleaseFileRequest(strFileName);
+	ProcessAndWait(pRequest);
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////
@@ -208,42 +208,42 @@ void CImageLoadThread::ReleaseFile(LPCTSTR strFileName) {
 /////////////////////////////////////////////////////////////////////////////////////////////
 
 void CImageLoadThread::ProcessRequest(CRequestBase& request) {
-    if (request.Type == CReleaseFileRequest::ReleaseFileRequest) {
-        CReleaseFileRequest& rq = (CReleaseFileRequest&)request;
-        if (rq.FileName == m_sLastFileName) {
-            DeleteCachedGDIBitmap();
-        }
-        return;
-    }
+	if (request.Type == CReleaseFileRequest::ReleaseFileRequest) {
+		CReleaseFileRequest& rq = (CReleaseFileRequest&)request;
+		if (rq.FileName == m_sLastFileName) {
+			DeleteCachedGDIBitmap();
+		}
+		return;
+	}
 
 	CRequest& rq = (CRequest&)request;
 	double dStartTime = Helpers::GetExactTickCount(); 
 	// Get image format and read the image
 	switch (GetImageFormat(rq.FileName)) {
 		case IF_JPEG :
-            DeleteCachedGDIBitmap();
+			DeleteCachedGDIBitmap();
 			ProcessReadJPEGRequest(&rq);
 			break;
 		case IF_WindowsBMP :
-            DeleteCachedGDIBitmap();
+			DeleteCachedGDIBitmap();
 			ProcessReadBMPRequest(&rq);
 			break;
-        case IF_TGA :
-            DeleteCachedGDIBitmap();
+		case IF_TGA :
+			DeleteCachedGDIBitmap();
 			ProcessReadTGARequest(&rq);
 			break;
 		case IF_WEBP:
-            DeleteCachedGDIBitmap();
+			DeleteCachedGDIBitmap();
 			ProcessReadWEBPRequest(&rq);
 			break;
 		case IF_CameraRAW:
-            DeleteCachedGDIBitmap();
+			DeleteCachedGDIBitmap();
 			ProcessReadRAWRequest(&rq);
 			break;
-        case IF_WIC:
-            DeleteCachedGDIBitmap();
-            ProcessReadWICRequest(&rq);
-            break;
+		case IF_WIC:
+			DeleteCachedGDIBitmap();
+			ProcessReadWICRequest(&rq);
+			break;
 		default:
 			// try with GDI+
 			ProcessReadGDIPlusRequest(&rq);
@@ -261,9 +261,9 @@ void CImageLoadThread::ProcessRequest(CRequestBase& request) {
 }
 
 void CImageLoadThread::AfterFinishProcess(CRequestBase& request) {
-    if (request.Type == CReleaseFileRequest::ReleaseFileRequest) {
-        return;
-    }
+	if (request.Type == CReleaseFileRequest::ReleaseFileRequest) {
+		return;
+	}
 
 	CRequest& rq = (CRequest&)request;
 	if (rq.TargetWnd != NULL) {
@@ -286,11 +286,11 @@ static void LimitOffsets(CPoint& offsets, CSize clippingSize, const CSize & imag
 }
 
 void CImageLoadThread::DeleteCachedGDIBitmap() {
-    if (m_pLastBitmap != NULL) {
-        delete m_pLastBitmap;
-    }
-    m_pLastBitmap = NULL;
-    m_sLastFileName.Empty();
+	if (m_pLastBitmap != NULL) {
+		delete m_pLastBitmap;
+	}
+	m_pLastBitmap = NULL;
+	m_sLastFileName.Empty();
 }
 
 void CImageLoadThread::ProcessReadJPEGRequest(CRequest * request) {
@@ -323,7 +323,7 @@ void CImageLoadThread::ProcessReadJPEGRequest(CRequest * request) {
 				IStream* pStream = NULL;
 				if (::CreateStreamOnHGlobal(hFileBuffer, FALSE, &pStream) == S_OK) {
 					Gdiplus::Bitmap* pBitmap = Gdiplus::Bitmap::FromStream(pStream, CSettingsProvider::This().UseEmbeddedColorProfiles());
-                    bool isOutOfMemory, isAnimatedGIF;
+					bool isOutOfMemory, isAnimatedGIF;
 					request->Image = ConvertGDIPlusBitmapToJPEGImage(pBitmap, 0, Helpers::FindEXIFBlock(pBuffer, nFileSize),
 						Helpers::CalculateJPEGFileHash(pBuffer, nFileSize), isOutOfMemory, isAnimatedGIF);
 					request->OutOfMemory = request->Image == NULL && isOutOfMemory;
@@ -337,11 +337,11 @@ void CImageLoadThread::ProcessReadJPEGRequest(CRequest * request) {
 				}
 			} else {
 				int nWidth, nHeight, nBPP;
-                TJSAMP eChromoSubSampling;
+				TJSAMP eChromoSubSampling;
 				bool bOutOfMemory;
 				// int nTicks = ::GetTickCount();
 
-                void* pPixelData = TurboJpeg::ReadImage(nWidth, nHeight, nBPP, eChromoSubSampling, bOutOfMemory, pBuffer, nFileSize);
+				void* pPixelData = TurboJpeg::ReadImage(nWidth, nHeight, nBPP, eChromoSubSampling, bOutOfMemory, pBuffer, nFileSize);
 				
 				/*
 				TCHAR buffer[20];
@@ -355,7 +355,7 @@ void CImageLoadThread::ProcessReadJPEGRequest(CRequest * request) {
 						Helpers::FindEXIFBlock(pBuffer, nFileSize), nBPP, 
 						Helpers::CalculateJPEGFileHash(pBuffer, nFileSize), IF_JPEG, false, 0, 1, 0);
 					request->Image->SetJPEGComment(Helpers::GetJPEGComment(pBuffer, nFileSize));
-                    request->Image->SetJPEGChromoSampling(eChromoSubSampling);
+					request->Image->SetJPEGChromoSampling(eChromoSubSampling);
 				} else if (bOutOfMemory) {
 					request->OutOfMemory = true;
 				} else {
@@ -386,7 +386,7 @@ void CImageLoadThread::ProcessReadBMPRequest(CRequest * request) {
 }
 
 void CImageLoadThread::ProcessReadTGARequest(CRequest * request) {
-    bool bOutOfMemory;
+	bool bOutOfMemory;
 	request->Image = CReaderTGA::ReadTgaImage(request->FileName, CSettingsProvider::This().ColorBackground(), bOutOfMemory);
 	if (bOutOfMemory) {
 		request->OutOfMemory = true;
@@ -421,23 +421,23 @@ void CImageLoadThread::ProcessReadWEBPRequest(CRequest * request) {
 		if (::ReadFile(hFile, pBuffer, nFileSize, (LPDWORD) &nNumBytesRead, NULL) && nNumBytesRead == nFileSize) {
 			int nWidth, nHeight;
 			if (Webp_Dll_GetInfo((uint8*)pBuffer, nFileSize, &nWidth, &nHeight)) {
-                if (nWidth <= MAX_IMAGE_DIMENSION && nHeight <= MAX_IMAGE_DIMENSION) {
-				    if ((double)nWidth * nHeight <= MAX_IMAGE_PIXELS) {
-					    int nStride = Helpers::DoPadding(nWidth*3, 4);
-					    uint8* pPixelData = new(std::nothrow) unsigned char[nStride * nHeight];
-					    if (pPixelData != NULL) {
-						    if (Webp_Dll_DecodeBGRInto((uint8*)pBuffer, nFileSize, pPixelData, nStride * nHeight, nStride)) {
-							    request->Image = new CJPEGImage(nWidth, nHeight, pPixelData, NULL, 3, 0, IF_WEBP, false, 0, 1, 0);
-						    } else {
-							    delete[] pPixelData;
-						    }
-					    } else {
-						    request->OutOfMemory = true;
-					    }
-				    } else {
-					    request->OutOfMemory = true;
-				    }
-                }
+				if (nWidth <= MAX_IMAGE_DIMENSION && nHeight <= MAX_IMAGE_DIMENSION) {
+					if ((double)nWidth * nHeight <= MAX_IMAGE_PIXELS) {
+						int nStride = Helpers::DoPadding(nWidth*3, 4);
+						uint8* pPixelData = new(std::nothrow) unsigned char[nStride * nHeight];
+						if (pPixelData != NULL) {
+							if (Webp_Dll_DecodeBGRInto((uint8*)pBuffer, nFileSize, pPixelData, nStride * nHeight, nStride)) {
+								request->Image = new CJPEGImage(nWidth, nHeight, pPixelData, NULL, 3, 0, IF_WEBP, false, 0, 1, 0);
+							} else {
+								delete[] pPixelData;
+							}
+						} else {
+							request->OutOfMemory = true;
+						}
+					} else {
+						request->OutOfMemory = true;
+					}
+				}
 			}
 		}
 	} catch (...) {
@@ -472,35 +472,35 @@ void CImageLoadThread::ProcessReadGDIPlusRequest(CRequest * request) {
 	sFileName = (const wchar_t*)buff;
 #endif
 
-    Gdiplus::Bitmap* pBitmap = NULL;
-    if (sFileName == m_sLastFileName) {
-        pBitmap = m_pLastBitmap;
-    } else {
-        DeleteCachedGDIBitmap();
-        m_pLastBitmap = pBitmap = new Gdiplus::Bitmap(sFileName, CSettingsProvider::This().UseEmbeddedColorProfiles());
-        m_sLastFileName = sFileName;
-    }
-    bool isOutOfMemory, isAnimatedGIF;
+	Gdiplus::Bitmap* pBitmap = NULL;
+	if (sFileName == m_sLastFileName) {
+		pBitmap = m_pLastBitmap;
+	} else {
+		DeleteCachedGDIBitmap();
+		m_pLastBitmap = pBitmap = new Gdiplus::Bitmap(sFileName, CSettingsProvider::This().UseEmbeddedColorProfiles());
+		m_sLastFileName = sFileName;
+	}
+	bool isOutOfMemory, isAnimatedGIF;
 	request->Image = ConvertGDIPlusBitmapToJPEGImage(pBitmap, request->FrameIndex, NULL, 0, isOutOfMemory, isAnimatedGIF);
 	request->OutOfMemory = request->Image == NULL && isOutOfMemory;
-    if (!isAnimatedGIF) {
-        DeleteCachedGDIBitmap();
-    }
+	if (!isAnimatedGIF) {
+		DeleteCachedGDIBitmap();
+	}
 }
 
 static unsigned char* alloc(int sizeInBytes) {
-    return new(std::nothrow) unsigned char[sizeInBytes];
+	return new(std::nothrow) unsigned char[sizeInBytes];
 }
 
 static void dealloc(unsigned char* buffer) {
-    delete[] buffer;
+	delete[] buffer;
 }
 
 typedef unsigned char* Allocator(int sizeInBytes);
 typedef void Deallocator(unsigned char* buffer);
 
 __declspec(dllimport) unsigned char* __stdcall LoadImageWithWIC(LPCWSTR fileName, Allocator* allocator, Deallocator* deallocator,
-    unsigned int* width, unsigned int* height);
+	unsigned int* width, unsigned int* height);
 
 void CImageLoadThread::ProcessReadWICRequest(CRequest* request) {
 	const wchar_t* sFileName;
@@ -513,15 +513,15 @@ void CImageLoadThread::ProcessReadWICRequest(CRequest* request) {
 	sFileName = (const wchar_t*)buff;
 #endif
 
-    try {
-        uint32 nWidth, nHeight;
-        unsigned char* pDIB = LoadImageWithWIC(sFileName, &alloc, &dealloc, &nWidth, &nHeight);
-        if (pDIB != NULL) {
-            request->Image = new CJPEGImage(nWidth, nHeight, pDIB, NULL, 4, 0, IF_WIC, false, 0, 1, 0);
-        }
-    } catch (...) {
-        // fatal error in WIC
-    }
+	try {
+		uint32 nWidth, nHeight;
+		unsigned char* pDIB = LoadImageWithWIC(sFileName, &alloc, &dealloc, &nWidth, &nHeight);
+		if (pDIB != NULL) {
+			request->Image = new CJPEGImage(nWidth, nHeight, pDIB, NULL, 4, 0, IF_WIC, false, 0, 1, 0);
+		}
+	} catch (...) {
+		// fatal error in WIC
+	}
 }
 
 bool CImageLoadThread::ProcessImageAfterLoad(CRequest * request) {

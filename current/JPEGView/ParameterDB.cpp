@@ -144,7 +144,7 @@ void CParameterDBEntry::InitFromProcessParams(const CImageProcessingParams & pro
 
 void CParameterDBEntry::WriteToProcessParams(CImageProcessingParams & processParams, 
 						EProcessingFlags & eFlags, CRotationParams & rotationParams) const {
- 	processParams.Contrast = Convert(contrast, -0.5f, 0.5f, false);
+	processParams.Contrast = Convert(contrast, -0.5f, 0.5f, false);
 	processParams.Gamma = Convert(brightness, 0.5f, 2.0f, false);
 	processParams.Saturation = ConvertSigned(saturation, 1.0f) + 1;
 	processParams.Sharpen = Convert(sharpen, 0.0f, 0.5f, false);
@@ -186,9 +186,9 @@ void CParameterDBEntry::InitGeometricParams(CSize sourceSize, double fZoom, CPoi
 		return;
 	}
 
-    if (bStoreRelativeToScreenSize) {
-        flags |= 32;
-    }
+	if (bStoreRelativeToScreenSize) {
+		flags |= 32;
+	}
 
 	// Target values are in (-32767, 0) if scaled image is smaller than screen and in (0, 32767) if scaled image
 	// is larger than screen.

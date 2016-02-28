@@ -32,8 +32,8 @@ static void RotateInplace(const CSize& imageSize, double& dX, double& dY, double
 ///////////////////////////////////////////////////////////////////////////////////
 
 CJPEGImage::CJPEGImage(int nWidth, int nHeight, void* pIJLPixels, void* pEXIFData, int nChannels, __int64 nJPEGHash, 
-                       EImageFormat eImageFormat, bool bIsAnimation, int nFrameIndex, int nNumberOfFrames, int nFrameTimeMs,
-                       CLocalDensityCorr* pLDC, bool bIsThumbnailImage, CRawMetadata* pRawMetadata) : m_rotationParams(0) {
+					   EImageFormat eImageFormat, bool bIsAnimation, int nFrameIndex, int nNumberOfFrames, int nFrameTimeMs,
+					   CLocalDensityCorr* pLDC, bool bIsThumbnailImage, CRawMetadata* pRawMetadata) : m_rotationParams(0) {
 	if (nChannels == 3 || nChannels == 4) {
 		m_pIJLPixels = pIJLPixels;
 		m_nIJLChannels = nChannels;
@@ -59,15 +59,15 @@ CJPEGImage::CJPEGImage(int nWidth, int nHeight, void* pIJLPixels, void* pEXIFDat
 		m_pEXIFReader = NULL;
 	}
 
-    m_pRawMetadata = pRawMetadata;
+	m_pRawMetadata = pRawMetadata;
 
 	m_nPixelHash = nJPEGHash;
 	m_eImageFormat = eImageFormat;
-    m_bIsAnimation = bIsAnimation;
-    m_nFrameIndex = nFrameIndex;
-    m_nNumberOfFrames = nNumberOfFrames;
-    m_nFrameTimeMs = nFrameTimeMs;
-    m_eJPEGChromoSampling = TJSAMP_420;
+	m_bIsAnimation = bIsAnimation;
+	m_nFrameIndex = nFrameIndex;
+	m_nNumberOfFrames = nNumberOfFrames;
+	m_nFrameTimeMs = nFrameTimeMs;
+	m_eJPEGChromoSampling = TJSAMP_420;
 
 	m_nOrigWidth = m_nInitOrigWidth = nWidth;
 	m_nOrigHeight = m_nInitOrigHeight = nHeight;
@@ -157,29 +157,29 @@ CJPEGImage::~CJPEGImage(void) {
 	m_pHistogramThumbnail = NULL;
 	delete m_pCachedProcessedHistogram;
 	m_pCachedProcessedHistogram = NULL;
-    delete m_pRawMetadata;
-    m_pRawMetadata = NULL;
+	delete m_pRawMetadata;
+	m_pRawMetadata = NULL;
 }
 
 bool CJPEGImage::CanUseLosslessJPEGTransformations() {
 	return m_eImageFormat == IF_JPEG && (m_nOrigWidth % tjMCUWidth[m_eJPEGChromoSampling]) == 0 &&
-        (m_nOrigHeight % tjMCUHeight[m_eJPEGChromoSampling]) == 0;
+		(m_nOrigHeight % tjMCUHeight[m_eJPEGChromoSampling]) == 0;
 }
 
 void CJPEGImage::TrimRectToMCUBlockSize(CRect& rect) {
-    int nBlockWidth = tjMCUWidth[m_eJPEGChromoSampling];
-    rect.left = rect.left & ~(nBlockWidth - 1);
+	int nBlockWidth = tjMCUWidth[m_eJPEGChromoSampling];
+	rect.left = rect.left & ~(nBlockWidth - 1);
 	rect.right = (rect.right + (nBlockWidth - 1)) & ~(nBlockWidth - 1);
-    if (rect.right > m_nOrigWidth) {
-        rect.right -= nBlockWidth; 
-    }
+	if (rect.right > m_nOrigWidth) {
+		rect.right -= nBlockWidth; 
+	}
 
-    int nBlockHeight = tjMCUHeight[m_eJPEGChromoSampling];
-    rect.top = rect.top & ~(nBlockHeight - 1);
+	int nBlockHeight = tjMCUHeight[m_eJPEGChromoSampling];
+	rect.top = rect.top & ~(nBlockHeight - 1);
 	rect.bottom = (rect.bottom + (nBlockHeight - 1)) & ~(nBlockHeight - 1);
-    if (rect.bottom > m_nOrigHeight) {
-        rect.bottom -= nBlockHeight; 
-    }
+	if (rect.bottom > m_nOrigHeight) {
+		rect.bottom -= nBlockHeight; 
+	}
 }
 
 void* CJPEGImage::GetThumbnailDIB(CSize size, const CImageProcessingParams & imageProcParams, EProcessingFlags eProcFlags) {
@@ -213,7 +213,7 @@ void* CJPEGImage::GetThumbnailDIBTrapezoid(CSize size, const CImageProcessingPar
 void* CJPEGImage::GetDIBUnsharpMasked(CSize clippingSize, CPoint targetOffset,
 									  const CImageProcessingParams & imageProcParams, EProcessingFlags eProcFlags, 
 									  const CUnsharpMaskParams & unsharpMaskParams) {
-    assert(!m_bIsThumbnailImage);
+	assert(!m_bIsThumbnailImage);
 	bool bUseUnsharpMask = unsharpMaskParams.Amount > 0 && unsharpMaskParams.Radius > 0;
 	bool bParametersChanged;
 	return GetDIBInternal(CSize(m_nOrigWidth, m_nOrigHeight), clippingSize, targetOffset, imageProcParams, 
@@ -884,7 +884,7 @@ void* CJPEGImage::GetDIBInternal(CSize fullTargetSize, CSize clippingSize, CPoin
 		eProcFlags = SetProcessingFlag(eProcFlags, PFLAG_LDC, false); // not supported during rotation or trapezoid processing with low quality
 	}
 
- 	// Check if resampling due to bHighQualityResampling parameter change is needed
+	// Check if resampling due to bHighQualityResampling parameter change is needed
 	bool bMustResampleQuality = GetProcessingFlag(eProcFlags, PFLAG_HighQualityResampling) != GetProcessingFlag(m_eProcFlags, PFLAG_HighQualityResampling);
 	bool bTargetSizeChanged = fullTargetSize != m_FullTargetSize;
 	bool bMustResampleRotation = fabs(dRotation - m_dRotationLQ) > 1e-6;
@@ -1374,16 +1374,16 @@ int CJPEGImage::GetRotationFromEXIF(int nOrigRotation) {
 		}
 	}
 
-    if (m_pRawMetadata != NULL && CSettingsProvider::This().AutoRotateEXIF()) {
-        // Only rotate by 90 or 270 deg if not already rotated by camera
-        if (m_pRawMetadata->GetWidth() >= m_pRawMetadata->GetHeight()) {
-            int orientation = m_pRawMetadata->GetOrientation();
-            if ((orientation & 4) != 0) {
-                m_bRotationByEXIF = true;
-                return ((orientation & 1) != 0) ? 270 : 90;
-            }
-        }
-    }
+	if (m_pRawMetadata != NULL && CSettingsProvider::This().AutoRotateEXIF()) {
+		// Only rotate by 90 or 270 deg if not already rotated by camera
+		if (m_pRawMetadata->GetWidth() >= m_pRawMetadata->GetHeight()) {
+			int orientation = m_pRawMetadata->GetOrientation();
+			if ((orientation & 4) != 0) {
+				m_bRotationByEXIF = true;
+				return ((orientation & 1) != 0) ? 270 : 90;
+			}
+		}
+	}
 	return nOrigRotation;
 }
 

@@ -9,7 +9,7 @@ class CXMMImage
 public:
 	CXMMImage(int nWidth, int nHeight);
 	CXMMImage(int nWidth, int nHeight, bool bPadHeight);
-	// convert from part of 24 or 32 bpp DIB, from first to (and including) last column and row
+	// convert from section of 24 or 32 bpp DIB, from first to (and including) last column and row
 	CXMMImage(int nWidth, int nHeight, int nFirstX, int nLastX, int nFirstY, int nLastY, const void* pDIB, int nChannels);
 	~CXMMImage(void);
 
@@ -23,7 +23,7 @@ public:
 	int GetPaddedWidth() const { return m_nPaddedWidth; }
 	int GetPaddedHeight() const { return m_nPaddedHeight; }
 
-	// Generate a BGRA (32 bit) DIB, caller gets ownership of returned object
+	// Generate a BGRA (32 bit) DIB and return it, caller gets ownership of returned object
 	void* ConvertToDIBRGBA() const;
 
 private:
