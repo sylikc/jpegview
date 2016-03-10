@@ -3727,13 +3727,9 @@ int dcraw_main (LPCTSTR filename, CJPEGImage** Image, bool& bOutOfMemory)
 	oprof = 0;
 	meta_data = 0;
 
-#ifndef _UNICODE
-	CHAR *fn = (CHAR *)filename;
-#else
 	int lenFileName = (int)wcslen(filename) * 2;
 	CHAR *fn = new CHAR[lenFileName];
 	WideCharToMultiByte(CP_ACP, 0, filename, (int)wcslen(filename), fn, lenFileName, NULL, NULL);
-#endif
 
 	ifname = fn;
 	if (!(ifp = _tfopen(filename, _T("rb")))) {
@@ -3758,9 +3754,7 @@ cleanup:
 	if (oprof) free (oprof);
 	if (image) free (image);
 
-#ifdef _UNICODE
 	delete fn;
-#endif
 
 	return status;
 }

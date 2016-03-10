@@ -1,6 +1,6 @@
 #pragma once
 
-// Class to hold a user command defined in the INI file
+// Class to represent a user command defined in the INI file
 class CUserCommand
 {
 public:
@@ -33,9 +33,9 @@ public:
 	// Possible usage: E.g. after deleting a file
 	bool MoveToNextAfterCommand() const { return m_bMoveToNextAfterCommand; }
 
-	// Gets the key (as text, e.g. TAB) text (displayed in the list when F1 is pressed)
+	// Gets the key (as text, e.g. TAB) text (displayed in the help text shown when F1 is pressed)
 	const CString & HelpKey() const  { return m_sHelpKey; }
-	// Gets the explanation text (displayed in the list when F1 is pressed)
+	// Gets the explanation text (displayed in the help text shown when F1 is pressed)
 	const CString & HelpText() const { return m_sHelpText; }
 
 	// Gets the executable of the command, not replacing any placeholders

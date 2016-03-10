@@ -55,15 +55,6 @@ void CNLS::ReadStringTable(LPCTSTR sFileName) {
 	memset(pLineBuff, 0, FILE_BUFF_SIZE * sizeof(TCHAR));
 	size_t nReadBytes = fread(pLineBuff, 1, FILE_BUFF_SIZE*sizeof(TCHAR), fptr);
 
-#ifndef _UNICODE
-	// Convert from Unicode to MBCS if needed
-	size_t notUsed;
-	char* pNewBuffer = new char[FILE_BUFF_SIZE];
-	wcstombs_s(&notUsed, pNewBuffer, FILE_BUFF_SIZE, (wchar_t*) pLineBuff, FILE_BUFF_SIZE);
-	delete[] pLineBuff;
-	pLineBuff = pNewBuffer;
-#endif
-
 	TCHAR* pRunning = pLineBuff;
 	while (*pRunning != 0) {
 		if (pRunning[0] == _T('/') && pRunning[1] == _T('/')) {

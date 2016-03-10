@@ -1,13 +1,9 @@
 #pragma once
 
-class CProcessingThread;
-
 // Basic image processing methods processing the image pixel data
 class CBasicProcessing
 {
 public:
-
-	friend class CProcessingThread;
 
 	// Note for all methods: The caller gets ownership of the returned image and is responsible to delete 
 	// this pointer when no longer used.
@@ -243,29 +239,4 @@ public:
 
 private:
 	CBasicProcessing(void);
-
-	static void* ApplyLDC32bpp_Core(CSize fullTargetSize, CPoint fullTargetOffset, CSize dibSize,
-										CSize ldcMapSize, const void* pDIBPixels, const int32* pSatLUTs, const uint8* pLUT, const uint8* pLDCMap,
-										float fBlackPt, float fWhitePt, float fBlackPtSteepness, uint32* pTarget);
-
-
-	static void* SampleDown_HQ_SSE_MMX_Core(CSize fullTargetSize, CPoint fullTargetOffset, CSize clippedTargetSize,
-										CSize sourceSize, const void* pIJLPixels, int nChannels, double dSharpen, 
-										EFilterType eFilter, bool bSSE, uint8* pTarget);
-
-	static void* SampleUp_HQ_SSE_MMX_Core(CSize fullTargetSize, CPoint fullTargetOffset, CSize clippedTargetSize,
-										CSize sourceSize, const void* pIJLPixels, int nChannels, bool bSSE, 
-										uint8* pTarget);
-
-	static int16* GaussFilter16bpp1Channel_Core(CSize fullSize, CPoint offset, CSize rect, int nTargetWidth, double dRadius, 
-												const int16* pSourcePixels, int16* pTargetPixels);
-
-	static void* UnsharpMask_Core(CSize fullSize, CPoint offset, CSize rect, double dAmount, const int16* pThresholdLUT,
-								  const int16* pGrayImage, const int16* pSmoothedGrayImage, const void* pSourcePixels, void* pTargetPixels, int nChannels);
-
-	static void* RotateHQ_Core(CPoint targetOffset, CSize targetSize, double dRotation, CSize sourceSize, 
-							   const void* pSourcePixels, void* pTargetPixels, int nChannels, COLORREF backColor);
-
-	static void* TrapezoidHQ_Core(CPoint targetOffset, CSize targetSize, const CTrapezoid& trapezoid, CSize sourceSize, 
-						   const void* pSourcePixels, void* pTargetPixels, int nChannels, COLORREF backColor);
 };

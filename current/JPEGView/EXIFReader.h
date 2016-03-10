@@ -1,23 +1,27 @@
 #pragma once
 
+// Signed rational number: numerator/denominator
 class SignedRational {
 public:
-	SignedRational(int num, int denum) { Numerator = num; Denumerator = denum; }
+	SignedRational(int num, int denom) { Numerator = num; Denominator = denom; }
 	int Numerator;
-	int Denumerator;
+	int Denominator;
 };
 
+// Unsigned rational number: numerator/denominator
 class Rational {
 public:
-	Rational(unsigned int num, unsigned int denum) { Numerator = num; Denumerator = denum; }
+	Rational(unsigned int num, unsigned int denom) { Numerator = num; Denominator = denom; }
 	unsigned int Numerator;
-	unsigned int Denumerator;
+	unsigned int Denominator;
 };
 
 // Reads and parses the EXIF data of JPEG images
 class CEXIFReader {
 public:
 	// The pApp1Block must point to the APP1 block of the EXIF data, including the APP1 block marker
+	// The class does not take ownership of the memory (no copy made), thus the APP1 block must not be deleted
+	// while the EXIF reader class is deleted.
 	CEXIFReader(void* pApp1Block);
 	~CEXIFReader(void);
 
@@ -25,7 +29,7 @@ public:
 	static bool ParseDateString(SYSTEMTIME & date, const CString& str);
 
 public:
-	// Camera model
+	// Camera model, image comment and description. The returned pointers are valid while the EXIF reader is not deleted.
 	LPCTSTR GetCameraModel() { return m_sModel; }
 	LPCTSTR GetUserComment() { return m_sUserComment; }
 	LPCTSTR GetImageDescription() { return m_sImageDescription; }
@@ -35,7 +39,7 @@ public:
 	bool GetAcquisitionTimePresent() { return m_acqDate.wYear > 1600; }
 	// Exposure time
 	const Rational& GetExposureTime() { return m_exposureTime; }
-	bool GetExposureTimePresent() { return m_exposureTime.Denumerator != 0; }
+	bool GetExposureTimePresent() { return m_exposureTime.Denominator != 0; }
 	// Exposure bias
 	double GetExposureBias() { return m_dExposureBias; }
 	bool GetExposureBiasPresent() { return m_dExposureBias != UNKNOWN_DOUBLE_VALUE; }
@@ -51,7 +55,7 @@ public:
 	// ISO speed value
 	int GetISOSpeed() { return m_nISOSpeed; }
 	bool GetISOSpeedPresent() { return m_nISOSpeed > 0; }
-	// Image orientation as detected by sensor
+	// Image orientation as detected by sensor, coding according EXIF standard (thus no angle in degrees)
 	int GetImageOrientation() { return m_nImageOrientation; }
 	bool ImageOrientationPresent() { return m_nImageOrientation > 0; }
 	// Thumbnail image information
@@ -60,13 +64,17 @@ public:
 	int GetThumbnailWidth() { return m_nThumbWidth; }
 	int GetThumbnailHeight() { return m_nThumbHeight; }
 
-	// Sets the image orientation to given value (if tag was present in input stream)
+	// Sets the image orientation to given value (if tag was present in input stream).
+	// Writes to the APP1 block passed in constructor.
 	void WriteImageOrientation(int nOrientation);
 	
 	// Updates an existing JPEG compressed thumbnail image by given JPEG stream (SOI stripped)
+	// Writes to the APP1 block passed in constructor. Make sure that enough memory is allocated for this APP1
+	// block to hold the additional thumbnail data.
 	void UpdateJPEGThumbnail(unsigned char* pJPEGStream, int nStreamLen, int nEXIFBlockLenCorrection, CSize sizeThumb);
 
 	// Delete the thumbnail image
+	// Writes to the APP1 block passed in constructor.
 	void DeleteThumbnail();
 public:
 	// unknown double value

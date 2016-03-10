@@ -4,6 +4,8 @@
 
 using namespace stdext;
 
+// Supports translation of texts from English to a target language using text files
+// with (key, value) pairs and English text as key and translated text as value.
 class CNLS
 {
 public:

@@ -44,26 +44,6 @@ CXMMImage::CXMMImage(int nWidth, int nHeight, int nFirstX, int nLastX, int nFirs
 					d += m_nPaddedWidth;
 					pDst[d] = ((((uint16) pSrc[s+2]) << 8) + pSrc[s+2]) >> 2;
 				}
-				/*
-				int nSW = nSectionWidth >> 2;
-				uint32* pDst32 = (uint32*) pDst;
-				uint32* pSrc32 = (uint32*) pSrc;
-				uint32 nInc = m_nPaddedWidth >> 1;
-				for (int i = 0; i < nSW; i++) {
-					int d = i*2;
-					uint32 s1 = pSrc32[i*3];
-					uint32 s2 = pSrc32[i*3+1];
-					uint32 s3 = pSrc32[i*3+2];
-					pDst32[d]   = (((((uint16) (s1 & 0xFF)) << 8) + (s1 & 0xFF)) >> 2) + ((((((uint16) (s1 >> 24)) << 8) + (s1 >> 24)) >> 2) << 16);
-					pDst32[d+1] = (((((uint16) ((s2 >> 16) & 0xFF)) << 8) + ((s2 >> 16) & 0xFF)) >> 2) + ((((((uint16) ((s3 >> 8) & 0xFF)) << 8) + ((s3 >> 8) & 0xFF)) >> 2) << 16);
-					d += nInc;
-					pDst32[d] = (((((uint16) ((s1 >> 8) & 0xFF)) << 8) + ((s1 >> 8) & 0xFF)) >> 2) + ((((((uint16) (s2 & 0xFF)) << 8) + (s2 & 0xFF)) >> 2) << 16);
-					pDst32[d+1] = (((((uint16) ((s2 >> 24) & 0xFF)) << 8) + ((s2 >> 24) & 0xFF)) >> 2) + ((((((uint16) ((s3 >> 16) & 0xFF)) << 8) + ((s3 >> 16) & 0xFF)) >> 2) << 16);
-					d += nInc;
-					pDst32[d] = (((((uint16) ((s1 >> 16) & 0xFF)) << 8) + ((s1 >> 16) & 0xFF)) >> 2) + ((((((uint16) ((s2 >> 8) & 0xFF)) << 8) + ((s2 >> 8) & 0xFF)) >> 2) << 16);
-					pDst32[d+1] = (((((uint16) (s3 & 0xFF)) << 8) + (s3 & 0xFF)) >> 2) + ((((((uint16) ((s3 >> 24) & 0xFF)) << 8) + ((s3 >> 24) & 0xFF)) >> 2) << 16);
-				}
-				*/
 			}
 			pDst += 3*m_nPaddedWidth;
 			pSrc += nSrcLineWidthPadded;
@@ -96,7 +76,7 @@ void* CXMMImage::ConvertToDIBRGBA() const {
 			pDst[d+1] = (uint8)(pSrc[s] >> 6);
 			s += m_nPaddedWidth;
 			pDst[d+2] = (uint8)(pSrc[s] >> 6);
-			pDst[d+3] = 0;
+			pDst[d+3] = 0xFF;
 		}
 		pSrc += 3*m_nPaddedWidth;
 		pDst += m_nWidth*4;
@@ -121,8 +101,9 @@ void CXMMImage::Init(int nWidth, int nHeight, bool bPadHeight) {
 	m_nHeight = nHeight;
 	int nMemSize = GetMemSize();
 
+	// Allocate memory aligned on page boundaries
 	m_pMemory = ::VirtualAlloc(
-						NULL,		// let the call determine the start address
+						NULL,	  // let the call determine the start address
 						nMemSize, // the size
 						MEM_RESERVE | MEM_COMMIT,	// I want that memory, now
 						PAGE_READWRITE);			// need both read and write

@@ -104,7 +104,7 @@ static uint8* InsertCommentBlock(void* pJPEGStream, int& nStreamLength, LPCTSTR 
 	return pNewStream;
 }
 
-// Gets the thumbnail DIB, returns size of thumbnail in sizeThumb
+// Gets the thumbnail as a 24 bpp BGR DIB, returns size of thumbnail in sizeThumb
 static void* GetThumbnailDIB(CJPEGImage * pImage, CSize& sizeThumb) {
 	EProcessingFlags eFlags = pImage->GetLastProcessFlags();
 	eFlags = (EProcessingFlags)(eFlags | PFLAG_HighQualityResampling);
@@ -161,7 +161,7 @@ static void* CompressAndSave(LPCTSTR sFileName, CJPEGImage * pImage,
 		memcpy(pNewStream + 2, pImage->GetEXIFData(), pImage->GetEXIFDataLength()); // copy EXIF block
 		
 		// Set image orientation back to normal orientation, we save the pixels as displayed
-		CEXIFReader exifReader( pNewStream + 2);
+		CEXIFReader exifReader(pNewStream + 2);
 		exifReader.WriteImageOrientation(1); // 1 means default orientation (unrotated)
 		if (bDeleteThumbnail) {
 			exifReader.DeleteThumbnail();
@@ -313,14 +313,7 @@ static bool SaveGDIPlus(LPCTSTR sFileName, EImageFormat eFileFormat, void* pData
 	}
 
 	const wchar_t* sFileNameUnicode;
-#ifdef _UNICODE
 	sFileNameUnicode = (const wchar_t*)sFileName;
-#else
-	wchar_t buff[MAX_PATH];
-	size_t nDummy;
-	mbstowcs_s(&nDummy, buff, MAX_PATH, (const char*)sFileName, strlen(sFileName));
-	sFileNameUnicode = (const wchar_t*)buff;
-#endif
 
 	bool bOk = pBitmap->Save(sFileNameUnicode, &encoderClsid, NULL) == Gdiplus::Ok;
 
@@ -384,7 +377,7 @@ bool CSaveImage::SaveImage(LPCTSTR sFileName, CJPEGImage * pImage, const CImageP
 		if (bSuccess) {
 			CJPEGImage tempImage(imageSize.cx, imageSize.cy, pDIB32bpp, NULL, 4, 0, IF_Unknown, false, 0, 1, 0);
 			nPixelHash = tempImage.GetUncompressedPixelHash();
-			tempImage.DetachIJLPixels();
+			tempImage.DetachOriginalPixels();
 		}
 	}
 

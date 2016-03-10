@@ -1,10 +1,48 @@
 #include "StdAfx.h"
 #include "ProcessingThreadPool.h"
 #include "SettingsProvider.h"
-#include "BasicProcessing.h"
 
 CProcessingThreadPool* CProcessingThreadPool::sm_instance;
 
+///////////////////////////////////////////////////////////////////////////////////
+// Supporting classes
+///////////////////////////////////////////////////////////////////////////////////
+
+// A request wrapping another request and adding information about the image strip to process.
+class CWrappedRequest : public CRequestBase {
+public:
+	// nOffset, nSize defines the strip to process: 'nSize' rows, starting at row 'nOffset'
+	CWrappedRequest(CProcessingRequest * pRequest, int nOffset, int nSize, HANDLE hEventFinished) : CRequestBase(hEventFinished) {
+		InnerRequest = pRequest;
+		Offset = nOffset;
+		SizeY = nSize;
+	}
+
+	CProcessingRequest* InnerRequest;
+	int Offset;
+	int SizeY;
+};
+
+
+// Worker thread in thread pool, executing image processing operations on image strips
+class CProcessingThread : public CWorkThread {
+public:
+	CProcessingThread(void) : CWorkThread(false) {}
+	~CProcessingThread(void) {}
+
+	// Start a processing request on this thread asynchronously, returns immediately
+	void StartProcesss(CWrappedRequest* pRequest);
+
+	// Processes a request synchronously on the calling thread
+	static void DoProcess(CProcessingRequest* pRequest, int nOffsetY, int nSizeY);
+private:
+
+	virtual void ProcessRequest(CRequestBase& request);
+};
+
+///////////////////////////////////////////////////////////////////////////////////
+// CProcessingThreadPool
+///////////////////////////////////////////////////////////////////////////////////
 
 CProcessingThreadPool& CProcessingThreadPool::This() {
 	if (sm_instance == NULL) {
@@ -44,7 +82,7 @@ bool CProcessingThreadPool::Process(CProcessingRequest* pRequest) {
 			CProcessingThread::DoProcess(pRequest, 0, nTargetCY);
 		} else {
 			// Important: All slices must have a height dividable by 8, except the last one
-			int nNumThreadsUsed = m_nNumThreads + 1;
+			int nNumThreadsUsed = m_nNumThreads + 1; // we also use the calling thread, thus +1
 			int nSliceCY;
 			while ((nSliceCY = ~7 & (nTargetCY / nNumThreadsUsed)) < 8) {
 				nNumThreadsUsed--;
@@ -83,8 +121,8 @@ void CProcessingThread::StartProcesss(CWrappedRequest* pRequest) {
 }
 
 void CProcessingThread::DoProcess(CProcessingRequest* pRequest, int nOffsetY, int nSizeY) {
-	// Processing is done in strips to reduce memory consumption and increase cache hit rate. The following constant gives the number of
-	// pixels to process per strip
+	// Processing is done in strips to reduce memory consumption and increase cache hit rate.
+	// The following constant gives the number of pixels to process per strip.
 	const uint32 MAX_SRC_PIXELS_PER_STRIP = 1024 * 100;
 	uint32 nNumberOfPixelsInSource = (uint32)((pRequest->SourceSize.cx * (double)pRequest->ClippedTargetSize.cx / pRequest->FullTargetSize.cx) *
 		(pRequest->SourceSize.cy * (double)nSizeY / pRequest->FullTargetSize.cy));
@@ -97,80 +135,8 @@ void CProcessingThread::DoProcess(CProcessingRequest* pRequest, int nOffsetY, in
 	int nSizeProcessed = 0;
 	int nCurrentSizeY = nStripHeight;
 	while (nSizeProcessed < nSizeY) {
-		void* pTarget = NULL;
 		int nCurrentOffsetY = nOffsetY + nSizeProcessed;
-		switch (pRequest->Request) {
-			case CProcessingRequest::Upsampling: {
-				CRequestUpDownSampling* pReq = (CRequestUpDownSampling*)pRequest;
-				pTarget = CBasicProcessing::SampleUp_HQ_SSE_MMX_Core(pReq->FullTargetSize, 
-					CPoint(pReq->FullTargetOffset.x, pReq->FullTargetOffset.y + nCurrentOffsetY), 
-					CSize(pReq->ClippedTargetSize.cx, nCurrentSizeY),
-					pReq->SourceSize, pReq->SourcePixels, 
-					pReq->Channels, pReq->SSE, 
-					(uint8*)(pReq->TargetPixels) + pReq->ClippedTargetSize.cx * 4 * nCurrentOffsetY);
-				break;
-			} 
-			case CProcessingRequest::Downsampling: {
-				CRequestUpDownSampling* pReq = (CRequestUpDownSampling*)pRequest;
-				pTarget = CBasicProcessing::SampleDown_HQ_SSE_MMX_Core(pReq->FullTargetSize, 
-					CPoint(pReq->FullTargetOffset.x, pReq->FullTargetOffset.y + nCurrentOffsetY), 
-					CSize(pReq->ClippedTargetSize.cx, nCurrentSizeY),
-					pReq->SourceSize, pReq->SourcePixels, 
-					pReq->Channels, pReq->Sharpen, 
-					pReq->Filter, pReq->SSE, 
-					(uint8*)(pReq->TargetPixels) + pReq->ClippedTargetSize.cx * 4 * nCurrentOffsetY);
-				break;
-			} 
-			case CProcessingRequest::LDCAndLUT: {
-				CRequestLDC* pReq = (CRequestLDC*)pRequest;
-				pTarget = CBasicProcessing::ApplyLDC32bpp_Core(pReq->FullTargetSize,
-					CPoint(pReq->FullTargetOffset.x, pReq->FullTargetOffset.y + nCurrentOffsetY),
-					CSize(pReq->ClippedTargetSize.cx, nCurrentSizeY),
-					pReq->LDCMapSize, 
-					(const uint32*)(pReq->SourcePixels) + pReq->ClippedTargetSize.cx * nCurrentOffsetY, 
-					pReq->SatLUTs, pReq->LUT, pReq->LDCMap,
-					pReq->BlackPt, pReq->WhitePt, pReq->BlackPtSteepness,
-					(uint32*)(pReq->TargetPixels) + pReq->ClippedTargetSize.cx * nCurrentOffsetY);
-				break;
-			}
-			case CProcessingRequest::Gauss: {
-				CRequestGauss* pReq = (CRequestGauss*)pRequest;
-				pTarget = CBasicProcessing::GaussFilter16bpp1Channel_Core(pReq->SourceSize,
-					CPoint(pReq->FullTargetOffset.x, pReq->FullTargetOffset.y + nCurrentOffsetY),
-					CSize(pReq->FullTargetSize.cx, nCurrentSizeY),
-					pReq->FullTargetSize.cy,
-					pReq->Radius,
-					(int16*)(pReq->SourcePixels),
-					(int16*)(pReq->TargetPixels) + nCurrentOffsetY);
-				break;
-			}
-			case CProcessingRequest::UnsharpMask: {
-				CRequestUnsharpMask* pReq = (CRequestUnsharpMask*)pRequest;
-				pTarget = CBasicProcessing::UnsharpMask_Core(pReq->SourceSize,
-					CPoint(pReq->FullTargetOffset.x, pReq->FullTargetOffset.y + nCurrentOffsetY),
-					CSize(pReq->FullTargetSize.cx, nCurrentSizeY),
-					pReq->Amount,
-					pReq->ThresholdLUT, pReq->GrayImage, pReq->SmoothedGrayImage,
-					pReq->SourcePixels, pReq->TargetPixels,
-					pReq->Channels);
-				break;
-			}
-			case CProcessingRequest::RotateImage: {
-				CRequestRotate* pReq = (CRequestRotate*)pRequest;
-				pTarget = CBasicProcessing::RotateHQ_Core(CPoint(pReq->FullTargetOffset.x, pReq->FullTargetOffset.y + nCurrentOffsetY),
-					CSize(pReq->FullTargetSize.cx, nCurrentSizeY), pReq->Rotation, pReq->SourceSize, pReq->SourcePixels, 
-					(uint8*)pReq->TargetPixels + pReq->FullTargetSize.cx * 4 * nCurrentOffsetY, pReq->Channels, pReq->BackColor);
-				break;
-			}
-			case CProcessingRequest::TrapezoidTransform: {
-				CRequestTrapezoid* pReq = (CRequestTrapezoid*)pRequest;
-				pTarget = CBasicProcessing::TrapezoidHQ_Core(CPoint(pReq->FullTargetOffset.x, pReq->FullTargetOffset.y + nCurrentOffsetY),
-					CSize(pReq->FullTargetSize.cx, nCurrentSizeY), pReq->Trapezoid, pReq->SourceSize, pReq->SourcePixels, 
-					(uint8*)pReq->TargetPixels + pReq->FullTargetSize.cx * 4 * nCurrentOffsetY, pReq->Channels, pReq->BackColor);
-				break;
-			}
-		}
-		if (pTarget == NULL) {
+		if (!pRequest->ProcessStrip(nCurrentOffsetY, nCurrentSizeY)) {
 			pRequest->Success = false;
 			break;
 		}

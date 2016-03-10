@@ -125,19 +125,19 @@ void CEXIFDisplay::AddLine(LPCTSTR sDescription, const FILETIME &time) {
 }
 
 void CEXIFDisplay::AddLine(LPCTSTR sDescription, const Rational &number) {
-	if (number.Denumerator == 1) {
+	if (number.Denominator == 1) {
 		AddLine(sDescription, number.Numerator);
 	} else if (number.Numerator > 9) {
 		TCHAR buff[32];
-		if (number.Numerator * 3 < number.Denumerator) {
-			_stprintf_s(buff, 32, _T("1/%d"), number.Denumerator/number.Numerator);
+		if (number.Numerator * 3 < number.Denominator) {
+			_stprintf_s(buff, 32, _T("1/%d"), number.Denominator / number.Numerator);
 		} else {
-			_stprintf_s(buff, 32, _T("%.2f"), double(number.Numerator)/number.Denumerator);
+			_stprintf_s(buff, 32, _T("%.2f"), double(number.Numerator) / number.Denominator);
 		}
 		AddLine(sDescription, buff);
 	} else {
 		TCHAR buff[32];
-		_stprintf_s(buff, 32, _T("%d/%d"), number.Numerator, number.Denumerator);
+		_stprintf_s(buff, 32, _T("%d/%d"), number.Numerator, number.Denominator);
 		AddLine(sDescription, buff);
 	}
 }

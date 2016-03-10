@@ -1,5 +1,7 @@
 #pragma once
 
+// Sizes are in bytes
+
 #ifdef _WIN64
 const unsigned int MAX_JPEG_FILE_SIZE = 1024 * 1024 * 300;
 #else

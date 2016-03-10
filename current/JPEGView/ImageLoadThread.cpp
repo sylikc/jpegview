@@ -180,8 +180,7 @@ int CImageLoadThread::AsyncLoad(LPCTSTR strFileName, int nFrameIndex, const CPro
 }
 
 CImageData CImageLoadThread::GetLoadedImage(int nHandle) {
-	// do not delete anything here, only mark as deleted
-	::EnterCriticalSection(&m_csList);
+	Helpers::CAutoCriticalSection criticalSection(m_csList);
 	CJPEGImage* imageFound = NULL;
 	bool bFailedMemory = false;
 	std::list<CRequestBase*>::iterator iter;
@@ -190,11 +189,11 @@ CImageData CImageLoadThread::GetLoadedImage(int nHandle) {
 		if (pRequest->Processed && pRequest->Deleted == false && pRequest->RequestHandle == nHandle) {
 			imageFound = pRequest->Image;
 			bFailedMemory = pRequest->OutOfMemory;
+			// only mark as deleted
 			pRequest->Deleted = true;
 			break;
 		}
 	}
-	::LeaveCriticalSection(&m_csList);
 	return CImageData(imageFound, bFailedMemory);
 }
 
@@ -207,6 +206,7 @@ void CImageLoadThread::ReleaseFile(LPCTSTR strFileName) {
 // Protected
 /////////////////////////////////////////////////////////////////////////////////////////////
 
+// Called on the processing thread
 void CImageLoadThread::ProcessRequest(CRequestBase& request) {
 	if (request.Type == CReleaseFileRequest::ReleaseFileRequest) {
 		CReleaseFileRequest& rq = (CReleaseFileRequest&)request;
@@ -260,6 +260,7 @@ void CImageLoadThread::ProcessRequest(CRequestBase& request) {
 	}
 }
 
+// Called on the processing thread
 void CImageLoadThread::AfterFinishProcess(CRequestBase& request) {
 	if (request.Type == CReleaseFileRequest::ReleaseFileRequest) {
 		return;
@@ -268,7 +269,7 @@ void CImageLoadThread::AfterFinishProcess(CRequestBase& request) {
 	CRequest& rq = (CRequest&)request;
 	if (rq.TargetWnd != NULL) {
 		// post message to window that request has been processed
-		::PostMessage(rq.TargetWnd, WM_JPEG_LOAD_COMPLETED, 0, rq.RequestHandle);
+		::PostMessage(rq.TargetWnd, WM_IMAGE_LOAD_COMPLETED, 0, rq.RequestHandle);
 	}
 }
 
@@ -302,7 +303,7 @@ void CImageLoadThread::ProcessReadJPEGRequest(CRequest * request) {
 	HGLOBAL hFileBuffer = NULL;
 	void* pBuffer = NULL;
 	try {
-		// Don't read too huge files...
+		// Don't read too huge files
 		unsigned int nFileSize = ::GetFileSize(hFile, NULL);
 		if (nFileSize > MAX_JPEG_FILE_SIZE) {
 			request->OutOfMemory = true;
@@ -404,7 +405,7 @@ void CImageLoadThread::ProcessReadWEBPRequest(CRequest * request) {
 
 	char* pBuffer = NULL;
 	try {
-		// Don't read too huge files...
+		// Don't read too huge files
 		unsigned int nFileSize = ::GetFileSize(hFile, NULL);
 		if (nFileSize > MAX_WEBP_FILE_SIZE) {
 			request->OutOfMemory = true;
@@ -463,14 +464,7 @@ void CImageLoadThread::ProcessReadRAWRequest(CRequest * request) {
 
 void CImageLoadThread::ProcessReadGDIPlusRequest(CRequest * request) {
 	const wchar_t* sFileName;
-#ifdef _UNICODE
 	sFileName = (const wchar_t*)request->FileName;
-#else
-	wchar_t buff[MAX_PATH];
-	size_t nDummy;
-	mbstowcs_s(&nDummy, buff, MAX_PATH, (const char*)request->FileName, request->FileName.GetLength());
-	sFileName = (const wchar_t*)buff;
-#endif
 
 	Gdiplus::Bitmap* pBitmap = NULL;
 	if (sFileName == m_sLastFileName) {
@@ -504,14 +498,7 @@ __declspec(dllimport) unsigned char* __stdcall LoadImageWithWIC(LPCWSTR fileName
 
 void CImageLoadThread::ProcessReadWICRequest(CRequest* request) {
 	const wchar_t* sFileName;
-#ifdef _UNICODE
 	sFileName = (const wchar_t*)request->FileName;
-#else
-	wchar_t buff[MAX_PATH];
-	size_t nDummy;
-	mbstowcs_s(&nDummy, buff, MAX_PATH, (const char*)request->FileName, request->FileName.GetLength());
-	sFileName = (const wchar_t*)buff;
-#endif
 
 	try {
 		uint32 nWidth, nHeight;
@@ -533,7 +520,7 @@ bool CImageLoadThread::ProcessImageAfterLoad(CRequest * request) {
 		return false;
 	}
 
-	// Do nothing if processing after load turned off
+	// Do nothing (except rotation) if processing after load turned off
 	if (GetProcessingFlag(request->ProcessParams.ProcFlags, PFLAG_NoProcessingAfterLoad)) {
 		return true;
 	}
@@ -559,7 +546,7 @@ bool CImageLoadThread::ProcessImageAfterLoad(CRequest * request) {
 
 	LimitOffsets(request->ProcessParams.Offsets, CSize(request->ProcessParams.TargetWidth, request->ProcessParams.TargetHeight), newSize);
 
-	// this will process the image
+	// this will process the image and cache the processed DIB in the CJPEGImage instance
 	CPoint offsetInImage = request->Image->ConvertOffset(newSize, clippedSize, request->ProcessParams.Offsets);
 	return NULL != request->Image->GetDIB(newSize, clippedSize, offsetInImage,
 		request->ProcessParams.ImageProcParams, request->ProcessParams.ProcFlags);

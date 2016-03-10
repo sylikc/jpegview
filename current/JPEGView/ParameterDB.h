@@ -77,8 +77,8 @@ struct ParameterDBHeader {
 
 #pragma pack(pop)
 
-// Parameter database class, holding image processing parameters for images identified by a 64 bit
-// pixel hash value
+// Parameter database class, holding image processing parameters for images. The image is identified by a 64 bit
+// pixel hash value, making the DB entry independent from the storage location of the image and its file name.
 class CParameterDB {
 public:
 	// Singleton instance
@@ -102,7 +102,7 @@ public:
 	// Gets the name of the parameter DB (with path)
 	CString GetParamDBName();
 
-	// Merges the given parameter DB with the current paramter DB
+	// Merges the given parameter DB with the current parameter DB
 	bool MergeParamDB(LPCTSTR sParamDBName);
 
 	// Backup and restore parameter DB to file - file is selected on file open - file save dialog

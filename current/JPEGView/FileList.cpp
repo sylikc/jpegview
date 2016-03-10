@@ -909,12 +909,7 @@ bool CFileList::TryReadingSlideShowList(const CString & sSlideShowFile) {
 			}
 			bValid = nNumChars < 512 && !bIsNull;
 			if (bValid) {
-#ifdef _UNICODE
 				memcpy(lineBuff, wideFileBuff, (pRunning - wideFileBuff)*sizeof(TCHAR));
-#else
-				size_t nDummy;
-				wcstombs_s(&nDummy, lineBuff, LINE_BUFF_SIZE, wideFileBuff, pRunning - wideFileBuff);
-#endif
 			}
 			wideFileBuff = pRunning+1;
 			nTotalChars++;
@@ -929,12 +924,8 @@ bool CFileList::TryReadingSlideShowList(const CString & sSlideShowFile) {
 			}
 			bValid = nNumChars < LINE_BUFF_SIZE && !bIsNull;
 			if (bValid) {
-#ifdef _UNICODE
 				size_t nDummy;
 				mbstowcs_s(&nDummy, lineBuff, LINE_BUFF_SIZE, fileBuff, pRunning - fileBuff);
-#else
-				memcpy(lineBuff, fileBuff, pRunning - fileBuff);
-#endif
 			}
 			fileBuff = pRunning+1;
 			nTotalChars++;

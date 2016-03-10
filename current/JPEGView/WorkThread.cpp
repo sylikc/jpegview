@@ -49,13 +49,6 @@ void CWorkThread::ProcessAsync(CRequestBase* pRequest) {
 	::SetEvent(m_wakeUp);
 }
 
-bool CWorkThread::RequestQueueEmpty() {
-	::EnterCriticalSection(&m_csList);
-	int nSize = (int)m_requestList.size();
-	::LeaveCriticalSection(&m_csList);
-	return nSize == 0;
-}
-
 void CWorkThread::Terminate() { 
 	m_bTerminate = true;
 	if (m_hThread != NULL) {
@@ -93,17 +86,17 @@ void CWorkThread::ThreadFunc(void* arg) {
 	do {
 		::EnterCriticalSection(&thisPtr->m_csList);
 
-		// Delete the requests marked as deleted from request queue
-		DeleteMarkedRequests(thisPtr);
+		// Delete the requests marked for deletion from request queue
+		DeleteAllRequestsMarkedForDeletion(thisPtr);
 
 		// search a request that is not yet processed
 		CRequestBase* requestHandled = NULL;
-		int nNumRequests = 0;
+		int nNumUnprocessedRequests = 0;
 		std::list<CRequestBase*>::iterator iter;
 		for (iter = thisPtr->m_requestList.begin( ); iter != thisPtr->m_requestList.end( ); iter++ ) {
 			if ((*iter)->Processed == false) {
 				requestHandled = *iter;
-				nNumRequests++;
+				nNumUnprocessedRequests++;
 			}
 		}
 
@@ -128,11 +121,11 @@ void CWorkThread::ThreadFunc(void* arg) {
 			if (!thisPtr->m_bTerminate) {
 				thisPtr->AfterFinishProcess(*requestHandled);
 			}
-			nNumRequests--;
+			nNumUnprocessedRequests--;
 		}
 
 		// if there are no more requests, sleep until woke up
-		if (nNumRequests == 0 && !thisPtr->m_bTerminate) {
+		if (nNumUnprocessedRequests == 0 && !thisPtr->m_bTerminate) {
 			::WaitForSingleObject(thisPtr->m_wakeUp, INFINITE);
 			::ResetEvent(thisPtr->m_wakeUp);
 		}
@@ -143,7 +136,7 @@ void CWorkThread::ThreadFunc(void* arg) {
 	_endthread();
 }
 
-void CWorkThread::DeleteMarkedRequests(CWorkThread* thisPtr) {
+void CWorkThread::DeleteAllRequestsMarkedForDeletion(CWorkThread* thisPtr) {
 	bool bDeleted = false;
 	std::list<CRequestBase*>::iterator iter;
 	for (iter = thisPtr->m_requestList.begin( ); iter != thisPtr->m_requestList.end( ); iter++ ) {
@@ -155,6 +148,6 @@ void CWorkThread::DeleteMarkedRequests(CWorkThread* thisPtr) {
 		}
 	}
 	if (bDeleted) {
-		DeleteMarkedRequests(thisPtr);
+		DeleteAllRequestsMarkedForDeletion(thisPtr);
 	}
 }

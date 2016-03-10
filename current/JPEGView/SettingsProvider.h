@@ -6,8 +6,8 @@
 #include "ProcessParams.h"
 
 // INI settings
-// All settings are first searched in a file name JPEGView.ini located in User/AppData/JPEGView
-// If not found there, the setting is searched in JPEGView.ini located in the binary path of the application
+// All settings are first searched in a file name JPEGView.ini located in User/AppData/Roaming/JPEGView
+// If not found there, the setting is searched in JPEGView.ini located in the EXE path of the application
 class CSettingsProvider
 {
 public:

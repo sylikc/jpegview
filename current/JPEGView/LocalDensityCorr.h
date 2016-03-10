@@ -3,14 +3,14 @@
 class CJPEGImage;
 class CHistogram;
 
-// Local density correction for an image
+// Local density correction for an image, lighting shadows and darkening highlights
 class CLocalDensityCorr
 {
 public:
-	// Note: Partially constructed LDC object allow to get the histogram and the pixel hash but not much more
+	// Note: Partially constructed LDC object allows getting the histogram and the pixel hash but not much more
 	CLocalDensityCorr(const CJPEGImage & image, bool bFullConstruct);
 	~CLocalDensityCorr(void);
-	// if only constructed partially does the rest for creating a fully functional LDC object
+	// if only constructed partially this does the rest for creating a fully functional LDC object
 	void VerifyFullyConstructed();
 
 	// Gets the histogram.
@@ -18,7 +18,8 @@ public:
 	const CHistogram* GetHistogram() { return m_pHistogramm; }
 
 	// Gets the LDC map. The entries in the map are one byte, 127 means no correction, 
-	// 0 means darken max, 255 means brighten max
+	// 0 means darken max, 255 means brighten max.
+	// The size of this map is given by GetLDCMapSize().
 	const uint8* GetLDCMap();
 
 	// Returns the pixel hash value. Note that for compressed images, using the pixel hash is
@@ -45,7 +46,8 @@ public:
 	// Gets the size of the point sampled image
 	CSize GetPSISize() const { return CSize(m_nPSIWidth, m_nPSIHeight); }
 
-	// Gets the point sampled image as 32 bpp DIB block
+	// Gets the point sampled image as 32 bpp DIB. The caller gets ownership of the returned DIB
+	// and must delete it when no longer used.
 	void* GetPSImageAsDIB();
 
 private:

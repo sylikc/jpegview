@@ -7,19 +7,20 @@ typedef std::map<int, CUICtrl*>::iterator ControlsIterator;
 
 typedef std::map<int, CUICtrl*>::const_iterator ControlsConstIterator;
 
-// Interface to get notifications on mouse capturing and releasing by controls
+// Interface to get notifications about mouse capturing and releasing by controls
 class INotifiyMouseCapture
 {
 public:
 	virtual void MouseCapturedOrReleased(bool bCaptured, CUICtrl* pCtrl) = 0;
 };
 
-// Manages and lay-outs UI controls (of base class CUICtrl) on a panel
+// Manages and lay-outs UI controls (of base class CUICtrl) on a panel, i.e. a rectangular area.
 class CPanel {
 public:
-	// The UI controls are created on the given window
+	// The UI controls are created on the specified window
 	// if bFramed is true, the panel is painted with a frame around its border
-	// if bClickThrough is true, mouse clicks are not eaten by the panel (click through panel)
+	// if bClickThrough is false, mouse clicks that are not consumed the a UI control are consumed by the panel (if clicked on panel),
+	// if bClickThrough is true they are not consumed by the panel (click through panel)
 	CPanel(HWND hWnd, INotifiyMouseCapture* pNotifyMouseCapture, bool bFramed = false, bool bClickThrough = false);
 	virtual ~CPanel(void);
 
@@ -30,7 +31,7 @@ public:
 	CUICtrl* GetControl(int nID);
 	template<class T> T GetControl(int nID) { return dynamic_cast<T>(GetControl(nID)); }
 
-	// Gets the controls
+	// Gets the controls map (ID, Control)
 	const std::map<int, CUICtrl*> & GetControls() { return m_controls; }
 
 	// Mouse events must be passed to the panel using the two methods below.
@@ -51,7 +52,7 @@ public:
 	// Request recalculation of the layout
 	virtual void RequestRepositioning() = 0;
 
-	// Gets the manager for all tooltips
+	// Gets the manager for tooltips
 	CTooltipMgr& GetTooltipMgr() { return m_tooltipMgr; }
 
 protected:
@@ -61,17 +62,19 @@ protected:
 
 	// Adds a text control to the slider area. The text can be editable or static. The handler
 	// procedure gets called for editable texts when the text has been changed. It must be null when
-	// bEditable is false.
+	// bEditable is false. pContext is passed to the textChangedHandler when called.
 	CTextCtrl* AddText(int nID, LPCTSTR sTextInit, bool bEditable, TextChangedHandler* textChangedHandler = NULL, void* pContext = NULL);
 
-	// Adds a button to the slider area. The given handler procedure is called when the button is pressed.
+	// Adds a button to the slider area. The given handler procedure is called when the button is pressed and pContext and the parameter is passed to it.
 	CButtonCtrl* AddButton(int nID, LPCTSTR sButtonText, ButtonPressedHandler* buttonPressedHandler = NULL, void* pContext = NULL, int nParameter = 0);
 
-	// Adds a user painted button
+	// Adds a user painted button.
+	// The given handler procedure is called when the button is pressed and pContext and the parameter is passed to it.
+	// The paint handler is called for painting, passing the pPaintContext to it.
 	CButtonCtrl* AddUserPaintButton(int nID, LPCTSTR sTooltip, PaintHandler* paintHandler, ButtonPressedHandler* buttonPressedHandler = NULL, void* pPaintContext = NULL, void* pContext = NULL, int nParameter = 0);
 	CButtonCtrl* AddUserPaintButton(int nID, TooltipHandler* ttHandler, PaintHandler* paintHandler, ButtonPressedHandler* buttonPressedHandler = NULL, void* pPaintContext = NULL, void* pContext = NULL, int nParameter = 0);
 
-	// recalculates the layout
+	// recalculates the layout of the panel, i.e. positions all UI controls
 	virtual void RepositionAll() = 0;
 
 	// Paints a frame around the panel

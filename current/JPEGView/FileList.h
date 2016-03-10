@@ -4,7 +4,7 @@
 
 class CDirectoryWatcher;
 
-// Entry in the file list, allowing to sort by name, creation date and modification date
+// Entry in the file list, allowing sorting by different sort criteria
 class CFileDesc 
 {
 public:
@@ -21,6 +21,7 @@ public:
 
 	// Full name of file
 	const CString& GetName() const { return m_sName; }
+
 	// Only use after a rename of a file, respectively changing its modification date
 	void SetName(LPCTSTR sNewName);
 	void SetModificationDate(const FILETIME& lastModDate);
@@ -56,7 +57,7 @@ class CFileList
 public:
 	// sInitialFile is the initial file to show with path. It can either be an image file, a directory
 	// (must end with backslash in this case) or a text file containing file names to display.
-	// Supported text files are ANSI, Unicode or UTF-8.
+	// Supported text file encodings are ANSI, Unicode or UTF-8.
 	// nLevel is increased when recursively create lists for sub-folders
 	CFileList(const CString & sInitialFile, CDirectoryWatcher & directoryWatcher, 
 		Helpers::ESorting eInitialSorting, bool isSortedUpcounting, bool bWrapAroundFolder, int nLevel = 0, bool forceSorting = false);

@@ -2,6 +2,7 @@
 
 #include "TransformPanel.h"
 
+// Panel for free rotation of an image
 class CRotationPanel : public CTransformPanel {
 public:
 	// IDs of the controls on this panel

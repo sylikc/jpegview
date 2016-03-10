@@ -1,12 +1,11 @@
-// CropSizeDlg.h : interface of the CCropSizeDlg class
-//
+// Set cropping rectangle size
 /////////////////////////////////////////////////////////////////////////////
 
 #pragma once
 
 #include "resource.h"
 
-// About dialog
+// Cropping rectangle dialog
 class CCropSizeDlg : public CDialogImpl<CCropSizeDlg>
 {
 public:

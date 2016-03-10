@@ -18,7 +18,7 @@ public:
 	CEXIFDisplay(HWND hWnd, INotifiyMouseCapture* pNotifyMouseCapture);
 	~CEXIFDisplay();
 
-	// Methods to create the information lines
+	// Methods to create the image and EXIF data information lines
 	void ClearTexts();
 	void AddPrefix(LPCTSTR sPrefix);
 	void AddTitle(LPCTSTR sTitle);
@@ -38,6 +38,7 @@ public:
 	void SetShowHistogram(bool bShow) { m_bShowHistogram = bShow; RepositionAll(); }
 	bool GetShowHistogram() { return m_bShowHistogram; }
 
+	// Note: The histogram is now owned by the panel
 	void SetHistogram(const CHistogram* pHistogram) { m_pHistogram = pHistogram; }
 
 protected:

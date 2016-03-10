@@ -7,18 +7,19 @@
 float CHistogramCorr::sm_ContrastCorrectionStrength = 0.5f;
 float CHistogramCorr::sm_BrightnessCorrStrength = 0.2f;
 
-///////////////////////////////////////////////////////////////////////////////////
-// CHistogram class
-///////////////////////////////////////////////////////////////////////////////////
 
 // Calculates sum of pixel values using the histogram
-static int CalculateSum(const int* pHistogram) {
-	uint32 nSum = 0;
+static __int64 CalculateSum(const int* pHistogram) {
+	__int64 nSum = 0;
 	for (int i = 0; i < 256; i++) {
-		nSum += pHistogram[i]*i;
+		nSum += pHistogram[i] * i;
 	}
 	return nSum;
 }
+
+///////////////////////////////////////////////////////////////////////////////////
+// CHistogram class
+///////////////////////////////////////////////////////////////////////////////////
 
 CHistogram::CHistogram(const CJPEGImage & image, bool bUseOrigPixels) {
 	const int NUM_VALUES = 50000;
@@ -36,8 +37,8 @@ CHistogram::CHistogram(const CJPEGImage & image, bool bUseOrigPixels) {
 	if (bUseOrigPixels || image.DIBPixels() == NULL) {
 		nWidth = image.OrigWidth();
 		nHeight = image.OrigHeight();
-		nChannels = image.IJLChannels();
-		pSourcePixels = (const uint8*)image.IJLPixels();
+		nChannels = image.OriginalChannels();
+		pSourcePixels = (const uint8*)image.OriginalPixels();
 	} else {
 		nWidth = image.DIBWidth();
 		nHeight = image.DIBHeight();
@@ -105,9 +106,9 @@ CHistogram::CHistogram(const int* pChannelB, const int* pChannelG, const int* pC
 	for (int i = 0; i < 256; i++) {
 		m_nTotalValues += pChannelGrey[i];
 	}
-	m_nBMean = CalculateSum(pChannelB)/m_nTotalValues;
-	m_nGMean = CalculateSum(pChannelG)/m_nTotalValues;
-	m_nRMean = CalculateSum(pChannelR)/m_nTotalValues;
+	m_nBMean = (int) (CalculateSum(pChannelB) / m_nTotalValues);
+	m_nGMean = (int) (CalculateSum(pChannelG) / m_nTotalValues);
+	m_nRMean = (int) (CalculateSum(pChannelR) / m_nTotalValues);
 	memcpy(m_ChannelB, pChannelB, sizeof(int)*256);
 	memcpy(m_ChannelG, pChannelG, sizeof(int)*256);
 	memcpy(m_ChannelR, pChannelR, sizeof(int)*256);

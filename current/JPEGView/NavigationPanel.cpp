@@ -381,7 +381,6 @@ void CNavigationPanel::PaintLandscapeModeBtn(void* pContext, const CRect& rect, 
 
 	int nRad = (int)(r.Width()*0.25f + 0.5f);
 	dc.Ellipse(r.right - nRad - 1, r.top - nRad + 1, r.right + nRad - 1, r.top + nRad + 1);
-	//dc.Arc(p2.x - nRad, p2.y - nRad, p2.x + nRad, p2.y + nRad, p3.x, p3.y, p1.x, p1.y);
 }
 
 void CNavigationPanel::PaintInfoBtn(void* pContext, const CRect& rect, CDC& dc) {

@@ -164,17 +164,17 @@ namespace Helpers {
 	// Returns 0 if equal patterns, 1 if pattern 1 is more specific and -1 if pattern 2 is more specific
 	int FindMoreSpecificPattern(LPCTSTR sPattern1, LPCTSTR sPattern2);
 
-	// Pad the given value to the next multiple of padvalue
+	// Pad the given value to the next multiple of padvalue. padvalue must be a power of 2.
 	inline int DoPadding(int value, int padvalue) {
 		return (value + padvalue - 1) & ~(padvalue - 1);
 	}
 
-	// Difference of next padded value and value
+	// Difference of next padded value and value. padvalue must be a power of 2.
 	inline int PaddedBytes(int value, int padvalue) {
 		return (padvalue - ((value & (padvalue - 1)))) & (padvalue - 1);
 	}
 
-	// calculate CRC table
+	// calculate CRC table for a CRC check
 	void CalcCRCTable(unsigned int crc_table[256]);
 
 	// Finds a JPEG marker (beginning with 0xFF) in a JPEG stream. 
@@ -226,12 +226,12 @@ namespace Helpers {
 	int GetWindowsVersion();
 
 	// Conversion class that replaces the | by null character in a string.
-	// Caution: Uses a static buffer and can therefore only one string can be replaced concurrently
+	// Caution: Uses a static buffer and therefore only one string can be replaced concurrently
 	const int MAX_SIZE_REPLACE_PIPE = 512;
 
 	class CReplacePipe {
 	public:
-		CReplacePipe(LPCTSTR sText);;
+		CReplacePipe(LPCTSTR sText);
 
 		operator LPCTSTR() const {
 			return sm_buffer;

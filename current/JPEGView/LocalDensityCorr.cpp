@@ -84,8 +84,8 @@ CLocalDensityCorr::CLocalDensityCorr(const CJPEGImage & image, bool bFullConstru
 
 	int nWidth = image.OrigWidth();
 	int nHeight = image.OrigHeight();
-	int nChannels = image.IJLChannels();
-	const uint8* pSourcePixels = (const uint8*)image.IJLPixels();
+	int nChannels = image.OriginalChannels();
+	const uint8* pSourcePixels = (const uint8*)image.OriginalPixels();
 
 	double dFactor = (double)nWidth/nHeight;
 	m_nPSIWidth  = Helpers::DoPadding((int)(dFactor*sqrt(NUM_VALUES/dFactor)), 4);
@@ -279,12 +279,6 @@ void CLocalDensityCorr::CreateLDCMap() {
 
 			*pLDCImage++ = (uint8) ldcResponseLUT[nValueGrey];
 			pSubSampImage32 = (pSubSampImage32 - m_nLDCWidth * 4 + 2); // go back to red channel and next 4 pixels
-
-			/*
-			uint32* pDIBPixel = (uint32*) image.DIBPixels() + j + i * image.DIBWidth();
-			//*pDIBPixel = nValueB + nValueG*256 + nValueR*256*256;
-			*pDIBPixel = pLDCImage[-1] + pLDCImage[-1]*256 + pLDCImage[-1]*256*256;
-			*/
 		}
 	}
 

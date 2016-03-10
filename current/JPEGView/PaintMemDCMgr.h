@@ -3,7 +3,7 @@
 // forward declarations
 class CPanel;
 
-#define MAX_REGIONS_CPaintMemDCMgr 5
+#define MAX_REGIONS_CPaintMemDCMgr 16
 
 // Helps painting a panel into a memory DC and then blitting it to the screen.
 // This eliminates flickering.

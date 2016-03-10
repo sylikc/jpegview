@@ -29,7 +29,7 @@ namespace SetDesktopWallpaper {
 			SPIF_UPDATEINIFILE | SPIF_SENDWININICHANGE);
 	}
 
-	void SetProcessedImage(CJPEGImage& image)
+	void SetProcessedImageAsWallpaper(CJPEGImage& image)
 	{
 		bool bitmapMatchesDesktop = false;
 		int windowsVersion = Helpers::GetWindowsVersion();

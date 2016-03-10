@@ -31,20 +31,20 @@ static void RotateInplace(const CSize& imageSize, double& dX, double& dY, double
 // Public interface
 ///////////////////////////////////////////////////////////////////////////////////
 
-CJPEGImage::CJPEGImage(int nWidth, int nHeight, void* pIJLPixels, void* pEXIFData, int nChannels, __int64 nJPEGHash, 
+CJPEGImage::CJPEGImage(int nWidth, int nHeight, void* pPixels, void* pEXIFData, int nChannels, __int64 nJPEGHash,
 					   EImageFormat eImageFormat, bool bIsAnimation, int nFrameIndex, int nNumberOfFrames, int nFrameTimeMs,
 					   CLocalDensityCorr* pLDC, bool bIsThumbnailImage, CRawMetadata* pRawMetadata) : m_rotationParams(0) {
 	if (nChannels == 3 || nChannels == 4) {
-		m_pIJLPixels = pIJLPixels;
-		m_nIJLChannels = nChannels;
+		m_pOrigPixels = pPixels;
+		m_nOriginalChannels = nChannels;
 	} else if (nChannels == 1) {
-		m_pIJLPixels = CBasicProcessing::Convert1To4Channels(nWidth, nHeight, pIJLPixels);
-		delete[] pIJLPixels;
-		m_nIJLChannels = 4;
+		m_pOrigPixels = CBasicProcessing::Convert1To4Channels(nWidth, nHeight, pPixels);
+		delete[] pPixels;
+		m_nOriginalChannels = 4;
 	} else {
 		assert(false);
-		m_pIJLPixels = NULL;
-		m_nIJLChannels = 0;
+		m_pOrigPixels = NULL;
+		m_nOriginalChannels = 0;
 	}
 
 	if (pEXIFData != NULL) {
@@ -126,8 +126,8 @@ CJPEGImage::CJPEGImage(int nWidth, int nHeight, void* pIJLPixels, void* pEXIFDat
 }
 
 CJPEGImage::~CJPEGImage(void) {
-	delete[] m_pIJLPixels;
-	m_pIJLPixels = NULL;
+	delete[] m_pOrigPixels;
+	m_pOrigPixels = NULL;
 	delete[] m_pDIBPixels;
 	m_pDIBPixels = NULL;
 	delete[] m_pDIBPixelsLUTProcessed;
@@ -271,13 +271,13 @@ bool CJPEGImage::ApplyUnsharpMaskToOriginalPixels(const CUnsharpMaskParams & uns
 	double dStartTime = Helpers::GetExactTickCount();
 
 	bool bSuccess = false;
-	int16* pGray = CBasicProcessing::Create1Channel16bppGrayscaleImage(m_nOrigWidth, m_nOrigHeight, m_pIJLPixels, m_nIJLChannels);
+	int16* pGray = CBasicProcessing::Create1Channel16bppGrayscaleImage(m_nOrigWidth, m_nOrigHeight, m_pOrigPixels, m_nOriginalChannels);
 	if (pGray != NULL) {
 		int16* pSmoothed = CBasicProcessing::GaussFilter16bpp1Channel(CSize(m_nOrigWidth, m_nOrigHeight), CPoint(0, 0), 
 			CSize(m_nOrigWidth, m_nOrigHeight), unsharpMaskParams.Radius, pGray);
 		if (pSmoothed != NULL) {
 			bSuccess = NULL != CBasicProcessing::UnsharpMask(CSize(m_nOrigWidth, m_nOrigHeight), CPoint(0,0), CSize(m_nOrigWidth, m_nOrigHeight), 
-				unsharpMaskParams.Amount, unsharpMaskParams.Threshold, pGray, pSmoothed, m_pIJLPixels, m_pIJLPixels, m_nIJLChannels);
+				unsharpMaskParams.Amount, unsharpMaskParams.Threshold, pGray, pSmoothed, m_pOrigPixels, m_pOrigPixels, m_nOriginalChannels);
 		}
 		delete[] pSmoothed;
 	}
@@ -297,14 +297,14 @@ bool CJPEGImage::RotateOriginalPixels(double dRotation, bool bAutoCrop, bool bKe
 	CPoint offset;
 	CSize newSize = GetSizeAfterFreeRotation(CSize(m_nOrigWidth, m_nOrigHeight), dRotation, bAutoCrop, bKeepAspectRatio, offset);
 	void* pRotatedPixels = CBasicProcessing::RotateHQ(offset, newSize, dRotation,
-		CSize(m_nOrigWidth, m_nOrigHeight), m_pIJLPixels, m_nIJLChannels, CSettingsProvider::This().ColorBackground());
+		CSize(m_nOrigWidth, m_nOrigHeight), m_pOrigPixels, m_nOriginalChannels, CSettingsProvider::This().ColorBackground());
 	if (pRotatedPixels == NULL) return false;
-	delete[] m_pIJLPixels;
+	delete[] m_pOrigPixels;
 
 	m_nOrigWidth = newSize.cx;
 	m_nOrigHeight = newSize.cy;
-	m_nIJLChannels = 4;
-	m_pIJLPixels = pRotatedPixels;
+	m_nOriginalChannels = 4;
+	m_pOrigPixels = pRotatedPixels;
 	MarkAsDestructivelyProcessed();
 
 	m_rotationParams.FreeRotation = fmod(360 * dRotation / (2 * 3.141592653), 360);
@@ -341,14 +341,14 @@ bool CJPEGImage::TrapezoidOriginalPixels(const CTrapezoid& trapezoid, bool bAuto
 
 	CSize newSize(nXEnd - nXStart + 1, nYEnd - nYStart + 1);
 	void* pTransformedPixels = CBasicProcessing::TrapezoidHQ(CPoint(nXStart, nYStart), newSize, trapezoid, 
-		CSize(m_nOrigWidth, m_nOrigHeight), m_pIJLPixels, m_nIJLChannels, CSettingsProvider::This().ColorBackground());
+		CSize(m_nOrigWidth, m_nOrigHeight), m_pOrigPixels, m_nOriginalChannels, CSettingsProvider::This().ColorBackground());
 	if (pTransformedPixels == NULL) return false;
-	delete[] m_pIJLPixels;
+	delete[] m_pOrigPixels;
 
 	m_nOrigWidth = newSize.cx;
 	m_nOrigHeight = newSize.cy;
-	m_nIJLChannels = 4;
-	m_pIJLPixels = pTransformedPixels;
+	m_nOriginalChannels = 4;
+	m_pOrigPixels = pTransformedPixels;
 	MarkAsDestructivelyProcessed();
 	m_bIsProcessedNoParamDB = true;
 
@@ -372,10 +372,10 @@ bool CJPEGImage::ResizeOriginalPixels(EResizeFilter filter, CSize newSize) {
 
 	InvalidateAllCachedPixelData();
 
-	void* pResizedPixels = m_pIJLPixels;
+	void* pResizedPixels = m_pOrigPixels;
 	int currentWidth = m_nOrigWidth;
 	int currentHeight = m_nOrigHeight;
-	int channels = m_nIJLChannels;
+	int channels = m_nOriginalChannels;
 	double totalFactor = (double)currentWidth / newWidth;
 	int steps = (totalFactor > 5) ? (int)ceil(log(totalFactor) / log(5.0)) : 1;
 	double factor = (steps > 1) ? pow(totalFactor, 1.0 / steps) : 1.0;
@@ -385,7 +385,7 @@ bool CJPEGImage::ResizeOriginalPixels(EResizeFilter filter, CSize newSize) {
 		if (i != steps - 1 && filter != Resize_PointFilter) {
 			currentWidth = (int)(currentWidth / factor);
 			currentHeight = (int)(currentHeight / factor);
-			usedFilter = (filter == Resize_SharpenMedian) ? Resize_SharpenLow : Resize_NoAliasing;
+			usedFilter = (filter == Resize_SharpenMedium) ? Resize_SharpenLow : Resize_NoAliasing;
 		} else {
 			currentWidth = newWidth;
 			currentHeight = newHeight;
@@ -393,14 +393,16 @@ bool CJPEGImage::ResizeOriginalPixels(EResizeFilter filter, CSize newSize) {
 		}
 		void* pOldPixels = pResizedPixels;
 		pResizedPixels = InternalResize(pResizedPixels, channels, usedFilter, CSize(currentWidth, currentHeight), CSize(oldWidth, oldHeight));
+		if (pResizedPixels == NULL)
+			return false;
 		delete[] pOldPixels;
 		channels = 4;
 	}
 
 	m_nOrigWidth = newWidth;
 	m_nOrigHeight = newHeight;
-	m_nIJLChannels = 4;
-	m_pIJLPixels = pResizedPixels;
+	m_nOriginalChannels = 4;
+	m_pOrigPixels = pResizedPixels;
 	MarkAsDestructivelyProcessed();
 	m_bIsProcessedNoParamDB = true;
 
@@ -546,28 +548,28 @@ void* CJPEGImage::Resample(CSize fullTargetSize, CSize clippingSize, CPoint targ
 		if (cpu == Helpers::CPU_SSE || cpu == Helpers::CPU_MMX) {
 			if (eResizeType == UpSample) {
 				return CBasicProcessing::SampleUp_HQ_SSE_MMX(fullTargetSize, targetOffset, clippingSize, 
-					CSize(m_nOrigWidth, m_nOrigHeight), m_pIJLPixels, m_nIJLChannels, cpu == Helpers::CPU_SSE);
+					CSize(m_nOrigWidth, m_nOrigHeight), m_pOrigPixels, m_nOriginalChannels, cpu == Helpers::CPU_SSE);
 			} else {
 				return CBasicProcessing::SampleDown_HQ_SSE_MMX(fullTargetSize, targetOffset, clippingSize,
-					CSize(m_nOrigWidth, m_nOrigHeight), m_pIJLPixels, m_nIJLChannels, dSharpen, filter, cpu == Helpers::CPU_SSE);
+					CSize(m_nOrigWidth, m_nOrigHeight), m_pOrigPixels, m_nOriginalChannels, dSharpen, filter, cpu == Helpers::CPU_SSE);
 			}
 		} else {
 			if (eResizeType == UpSample) {
 				return CBasicProcessing::SampleUp_HQ(fullTargetSize, targetOffset, clippingSize, 
-					CSize(m_nOrigWidth, m_nOrigHeight), m_pIJLPixels, m_nIJLChannels);
+					CSize(m_nOrigWidth, m_nOrigHeight), m_pOrigPixels, m_nOriginalChannels);
 			} else {
 				return CBasicProcessing::SampleDown_HQ(fullTargetSize, targetOffset, clippingSize, 
-					CSize(m_nOrigWidth, m_nOrigHeight), m_pIJLPixels, m_nIJLChannels, dSharpen, filter);
+					CSize(m_nOrigWidth, m_nOrigHeight), m_pOrigPixels, m_nOriginalChannels, dSharpen, filter);
 			}
 		}
 	} else {
 		bool bHasRotation = fabs(dRotation) > 1e-3;
 		if (bHasRotation) {
 			return CBasicProcessing::PointSampleWithRotation(fullTargetSize, targetOffset, clippingSize, 
-				CSize(m_nOrigWidth, m_nOrigHeight), dRotation, m_pIJLPixels, m_nIJLChannels, CSettingsProvider::This().ColorBackground());
+				CSize(m_nOrigWidth, m_nOrigHeight), dRotation, m_pOrigPixels, m_nOriginalChannels, CSettingsProvider::This().ColorBackground());
 		} else {
 			return CBasicProcessing::PointSample(fullTargetSize, targetOffset, clippingSize, 
-				CSize(m_nOrigWidth, m_nOrigHeight), m_pIJLPixels, m_nIJLChannels);
+				CSize(m_nOrigWidth, m_nOrigHeight), m_pOrigPixels, m_nOriginalChannels);
 		}
 	}
 }
@@ -581,7 +583,7 @@ void* CJPEGImage::InternalResize(void* pixels, int channels, EResizeFilter filte
 	}
 
 	EFilterType downSamplingFilter = (filter == Resize_NoAliasing) ? Filter_Downsampling_No_Aliasing : Filter_Downsampling_Best_Quality;
-	double dSharpen = (filter == Resize_SharpenLow) ? 0.15 : (filter == Resize_SharpenMedian) ? 0.3 : 0.0;
+	double dSharpen = (filter == Resize_SharpenLow) ? 0.15 : (filter == Resize_SharpenMedium) ? 0.3 : 0.0;
 
 	if (cpu == Helpers::CPU_SSE || cpu == Helpers::CPU_MMX) {
 		if (eResizeType == UpSample) {
@@ -631,10 +633,10 @@ bool CJPEGImage::Rotate(int nRotation) {
 	}
 
 	InvalidateAllCachedPixelData();
-	void* pNewIJL = CBasicProcessing::Rotate32bpp(m_nOrigWidth, m_nOrigHeight, m_pIJLPixels, nRotation);
-	if (pNewIJL == NULL) return false;
-	delete[] m_pIJLPixels;
-	m_pIJLPixels = pNewIJL;
+	void* pNewOriginalPixels = CBasicProcessing::Rotate32bpp(m_nOrigWidth, m_nOrigHeight, m_pOrigPixels, nRotation);
+	if (pNewOriginalPixels == NULL) return false;
+	delete[] m_pOrigPixels;
+	m_pOrigPixels = pNewOriginalPixels;
 	if (nRotation != 180) {
 		// swap width and height
 		int nTemp = m_nOrigWidth;
@@ -656,11 +658,11 @@ bool CJPEGImage::Mirror(bool bHorizontally) {
 	}
 
 	InvalidateAllCachedPixelData();
-	void* pNewIJL = bHorizontally ? CBasicProcessing::MirrorH32bpp(m_nOrigWidth, m_nOrigHeight, m_pIJLPixels) :
-		CBasicProcessing::MirrorV32bpp(m_nOrigWidth, m_nOrigHeight, m_pIJLPixels);
-	if (pNewIJL == NULL) return false;
-	delete[] m_pIJLPixels;
-	m_pIJLPixels = pNewIJL;
+	void* pNewOriginalPixels = bHorizontally ? CBasicProcessing::MirrorH32bpp(m_nOrigWidth, m_nOrigHeight, m_pOrigPixels) :
+		CBasicProcessing::MirrorV32bpp(m_nOrigWidth, m_nOrigHeight, m_pOrigPixels);
+	if (pNewOriginalPixels == NULL) return false;
+	delete[] m_pOrigPixels;
+	m_pOrigPixels = pNewOriginalPixels;
 	MarkAsDestructivelyProcessed();
 	m_bIsProcessedNoParamDB = true;
 
@@ -675,12 +677,12 @@ bool CJPEGImage::Crop(CRect cropRect) {
 	}
 
 	InvalidateAllCachedPixelData();
-	void* pNewIJL = CBasicProcessing::Crop32bpp(m_nOrigWidth, m_nOrigHeight, m_pIJLPixels, cropRect);
-	if (pNewIJL == NULL) {
+	void* pNewOriginalPixels = CBasicProcessing::Crop32bpp(m_nOrigWidth, m_nOrigHeight, m_pOrigPixels, cropRect);
+	if (pNewOriginalPixels == NULL) {
 		return false;
 	}
-	delete[] m_pIJLPixels;
-	m_pIJLPixels = pNewIJL;
+	delete[] m_pOrigPixels;
+	m_pOrigPixels = pNewOriginalPixels;
 	m_nOrigWidth = cropRect.Width();
 	m_nOrigHeight = cropRect.Height();
 	m_bCropped = true;
@@ -690,11 +692,11 @@ bool CJPEGImage::Crop(CRect cropRect) {
 	return true;
 }
 
-void CJPEGImage::SetDimRects(const CDimRect* dimRects, int nSize) {
+void CJPEGImage::SetDimRects(const CDimRect* dimRects, int numberOfRects) {
 	bool bIdentical = false;
 	if (m_pDIBPixelsLUTProcessed) {
 		bool bCanReuseDIB = false;
-		if (nSize >= m_nNumDimRects) {
+		if (numberOfRects >= m_nNumDimRects) {
 			bCanReuseDIB = true;
 			for (int i = 0; i < m_nNumDimRects; i++) {
 				if (dimRects[i].Rect != m_pDimRects[i].Rect || dimRects[i].Factor != m_pDimRects[i].Factor) {
@@ -704,9 +706,9 @@ void CJPEGImage::SetDimRects(const CDimRect* dimRects, int nSize) {
 			}
 		}
 		if (bCanReuseDIB) {
-			bIdentical = nSize == m_nNumDimRects;
+			bIdentical = numberOfRects == m_nNumDimRects;
 			// only dim the new rectangles
-			for (int i = m_nNumDimRects; i < nSize; i++) {
+			for (int i = m_nNumDimRects; i < numberOfRects; i++) {
 				CBasicProcessing::DimRectangle32bpp(DIBWidth(), DIBHeight(), m_pDIBPixelsLUTProcessed,
 					dimRects[i].Rect, dimRects[i].Factor);
 			}
@@ -720,10 +722,10 @@ void CJPEGImage::SetDimRects(const CDimRect* dimRects, int nSize) {
 	if (!bIdentical) {
 		delete[] m_pDimRects;
 		m_pDimRects = NULL;
-		m_nNumDimRects = nSize;
-		if (nSize > 0) {
-			m_pDimRects = new CDimRect[nSize];
-			memcpy(m_pDimRects, dimRects, nSize*sizeof(CDimRect));
+		m_nNumDimRects = numberOfRects;
+		if (numberOfRects > 0) {
+			m_pDimRects = new CDimRect[numberOfRects];
+			memcpy(m_pDimRects, dimRects, numberOfRects*sizeof(CDimRect));
 		}
 	}
 }
@@ -961,7 +963,7 @@ void* CJPEGImage::GetDIBInternal(CSize fullTargetSize, CSize clippingSize, CPoin
 				m_pDIBPixels = Resample(fullTargetSize, clippingSize, targetOffset, eProcFlags, imageProcParams.Sharpen, dRotation, eResizeType);
 			} else {
 				m_pDIBPixels = CBasicProcessing::PointSampleTrapezoid(fullTargetSize, *pTrapezoid, targetOffset, clippingSize, 
-					CSize(m_nOrigWidth, m_nOrigHeight), m_pIJLPixels, m_nIJLChannels, CSettingsProvider::This().ColorBackground());
+					CSize(m_nOrigWidth, m_nOrigHeight), m_pOrigPixels, m_nOriginalChannels, CSettingsProvider::This().ColorBackground());
 			}
 		}
 
@@ -1204,14 +1206,14 @@ void* CJPEGImage::ApplyCorrectionLUTandLDC(const CImageProcessingParams & imageP
 }
 
 bool CJPEGImage::ConvertSrcTo4Channels() {
-	if (m_nIJLChannels == 3) {
-		void* pNewIJL = CBasicProcessing::Convert3To4Channels(m_nOrigWidth, m_nOrigHeight, m_pIJLPixels);
-		if (pNewIJL != NULL) {
-			delete[] m_pIJLPixels;
-			m_pIJLPixels = pNewIJL;
-			m_nIJLChannels = 4;
+	if (m_nOriginalChannels == 3) {
+		void* pNewOriginalPixels = CBasicProcessing::Convert3To4Channels(m_nOrigWidth, m_nOrigHeight, m_pOrigPixels);
+		if (pNewOriginalPixels != NULL) {
+			delete[] m_pOrigPixels;
+			m_pOrigPixels = pNewOriginalPixels;
+			m_nOriginalChannels = 4;
 		}
-		return pNewIJL != NULL;
+		return pNewOriginalPixels != NULL;
 	}
 	return true;
 }
@@ -1422,12 +1424,12 @@ CJPEGImage* CJPEGImage::CreateThumbnailImage() {
 		// take a copy of the original pixels
 		nWidth = m_nOrigWidth;
 		nHeight = m_nOrigHeight;
-		if (m_nIJLChannels == 3) {
-			pPixels = CBasicProcessing::Convert3To4Channels(m_nOrigWidth, m_nOrigHeight, m_pIJLPixels);
+		if (m_nOriginalChannels == 3) {
+			pPixels = CBasicProcessing::Convert3To4Channels(m_nOrigWidth, m_nOrigHeight, m_pOrigPixels);
 		} else {
 			int nSizeBytes = m_nOrigWidth*m_nOrigHeight*4;
 			pPixels = new uint8[nSizeBytes];
-			memcpy(pPixels, m_pIJLPixels, nSizeBytes);
+			memcpy(pPixels, m_pOrigPixels, nSizeBytes);
 		}
 	} else {
 		// take the small image from the LDC

@@ -1,5 +1,4 @@
-// ManageOpenWithDlg.h : interface of the CManageOpenWithDlg class
-//
+// Manage 'Open with' commands dialog
 /////////////////////////////////////////////////////////////////////////////
 
 #pragma once

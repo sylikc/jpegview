@@ -146,7 +146,7 @@ bool CTextCtrl::EnterEditMode() {
 	return true;
 }
 
-void CTextCtrl::TerminateEditMode(bool bAcceptNewName) {
+void CTextCtrl::TerminateEditMode(bool bAcceptNewText) {
 	if (m_pEdit) {
 		TCHAR newName[MAX_PATH];
 		m_pEdit->GetWindowText(newName, MAX_PATH);
@@ -156,7 +156,7 @@ void CTextCtrl::TerminateEditMode(bool bAcceptNewName) {
 		delete m_pEdit;
 		::SetFocus(m_pPanel->GetHWND());
 		m_pEdit = NULL;
-		if (bAcceptNewName) {
+		if (bAcceptNewText) {
 			if (_tcscmp(newName, m_sText) != 0) {
 				bool bSetNewName = true;
 				if (m_textChangedHandler != NULL) {
@@ -430,8 +430,8 @@ void CButtonCtrl::Draw(CDC & dc, CRect position, bool bBlack) {
 // CSliderDouble
 /////////////////////////////////////////////////////////////////////////////////////////////
 
-CSliderDouble::CSliderDouble(CPanel* pMgr, LPCTSTR sName, int nSliderLen, double* pdValue, bool* pbEnable,
-		double dMin, double dMax, double dDefaultValue, bool bAllowPreviewAndReset, bool bLogarithmic, bool bInvert) : CUICtrl(pMgr) {
+CSliderDouble::CSliderDouble(CPanel* pPanel, LPCTSTR sName, int nSliderLen, double* pdValue, bool* pbEnable,
+	double dMin, double dMax, double dDefaultValue, bool bAllowPreviewAndReset, bool bLogarithmic, bool bInvert) : CUICtrl(pPanel) {
 	m_sName = sName;
 	m_nSliderLen = nSliderLen;
 	m_pValue = pdValue;

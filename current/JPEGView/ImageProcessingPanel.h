@@ -31,7 +31,7 @@ public:
 		ID_txtAcqDate
 	};
 public:
-	// The sliders are placed on the given window (at bottom)
+	// The sliders are placed on the given window (at the bottom)
 	CImageProcessingPanel(HWND hWnd, INotifiyMouseCapture* pNotifyMouseCapture, CImageProcessingParams* pParams, bool* pEnableLDC, bool* pEnableContrastCorr);
 
 	CButtonCtrl* GetBtnUnsharpMask() { return GetControl<CButtonCtrl*>(ID_btnUnsharpMask); }

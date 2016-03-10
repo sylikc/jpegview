@@ -470,9 +470,6 @@
     <ClInclude Include="ResizeDlg.h">
       <Filter>Header Files\Dialogs</Filter>
     </ClInclude>
-    <ClInclude Include="JPEGView.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="DesktopWallpaper.h">
       <Filter>Header Files</Filter>
     </ClInclude>
