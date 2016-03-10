@@ -17,15 +17,15 @@ typedef unsigned int uint32;
 enum EFilterType {
 	Filter_Downsampling_Best_Quality,  // prefer this filter for sampling down
 	Filter_Downsampling_No_Aliasing, // this is a Lanczos type filter
-	Filter_Downsampling_Narrow,
+	Filter_Downsampling_Narrow, // as Filter_Downsampling_Best_Quality but narrow support
 	Filter_Upsampling_Bicubic
 };
 
 enum EResizeFilter {
 	Resize_PointFilter,  // Point sampling
 	Resize_NoAliasing,   // Lanczos filter
-	Resize_SharpenLow,
-	Resize_SharpenMedian
+	Resize_SharpenLow,   // 3 tap downsampling filter with some sharpening
+	Resize_SharpenMedium // 3 tap downsampling filter with medium sharpening
 };
 
 // Image formats (can be other than JPEG...)
@@ -45,6 +45,12 @@ enum EImageFormat {
 };
 
 // Horizontal trapezoid
+/*
+ (x1s, y1)----------(x1e, y1)
+    \                 /
+     \               /
+    (x2s, y2)-----(x2e, y2)
+*/
 class CTrapezoid {
 public:
 	int x1s;
@@ -58,6 +64,7 @@ public:
 		x1s = x1e = x2s = x2e = y1 = y2 = 0;
 	}
 
+	// Horizontal trapezoid with vertices (x1s, y1), (x1e, y1), (x2s, y2), (x2e, y2)
 	CTrapezoid(int x1s, int x1e, int y1, int x2s, int x2e, int y2) {
 		this->x1s = min(x1s, x1e);
 		this->x1e = max(x1s, x1e);

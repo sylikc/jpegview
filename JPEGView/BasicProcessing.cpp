@@ -21,6 +21,202 @@
 static TCHAR s_TimingInfo[256];
 
 /////////////////////////////////////////////////////////////////////////////////////////////
+// Processing images stripwise on thread pool
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+static void* SampleDown_HQ_SSE_MMX_Core(CSize fullTargetSize, CPoint fullTargetOffset, CSize clippedTargetSize,
+	CSize sourceSize, const void* pIJLPixels, int nChannels, double dSharpen,
+	EFilterType eFilter, bool bSSE, uint8* pTarget);
+
+static void* SampleUp_HQ_SSE_MMX_Core(CSize fullTargetSize, CPoint fullTargetOffset, CSize clippedTargetSize,
+	CSize sourceSize, const void* pIJLPixels, int nChannels, bool bSSE,
+	uint8* pTarget);
+
+static void* ApplyLDC32bpp_Core(CSize fullTargetSize, CPoint fullTargetOffset, CSize dibSize,
+	CSize ldcMapSize, const void* pDIBPixels, const int32* pSatLUTs, const uint8* pLUT, const uint8* pLDCMap,
+	float fBlackPt, float fWhitePt, float fBlackPtSteepness, uint32* pTarget);
+
+static int16* GaussFilter16bpp1Channel_Core(CSize fullSize, CPoint offset, CSize rect, int nTargetWidth, double dRadius,
+	const int16* pSourcePixels, int16* pTargetPixels);
+
+static void* UnsharpMask_Core(CSize fullSize, CPoint offset, CSize rect, double dAmount, const int16* pThresholdLUT,
+	const int16* pGrayImage, const int16* pSmoothedGrayImage, const void* pSourcePixels, void* pTargetPixels, int nChannels);
+
+static void* RotateHQ_Core(CPoint targetOffset, CSize targetSize, double dRotation, CSize sourceSize,
+	const void* pSourcePixels, void* pTargetPixels, int nChannels, COLORREF backColor);
+
+static void* TrapezoidHQ_Core(CPoint targetOffset, CSize targetSize, const CTrapezoid& trapezoid, CSize sourceSize,
+	const void* pSourcePixels, void* pTargetPixels, int nChannels, COLORREF backColor);
+
+//---------------------------------------------------------------------------------------------
+
+// Request for upsampling or downsampling
+class CRequestUpDownSampling : public CProcessingRequest {
+public:
+	CRequestUpDownSampling(const void* pSourcePixels, CSize sourceSize, void* pTargetPixels,
+		CSize fullTargetSize, CPoint fullTargetOffset, CSize clippedTargetSize,
+		int nChannels, double dSharpen, EFilterType eFilter, bool bSSE)
+		: CProcessingRequest(pSourcePixels, sourceSize, pTargetPixels, fullTargetSize, fullTargetOffset, clippedTargetSize) {
+		Channels = nChannels;
+		Sharpen = dSharpen;
+		Filter = eFilter;
+		SSE = bSSE;
+	}
+
+	virtual bool ProcessStrip(int offsetY, int sizeY) {
+		if (Filter == Filter_Upsampling_Bicubic)
+			return NULL != SampleUp_HQ_SSE_MMX_Core(FullTargetSize,
+				CPoint(FullTargetOffset.x, FullTargetOffset.y + offsetY),
+				CSize(ClippedTargetSize.cx, sizeY),
+				SourceSize, SourcePixels,
+				Channels, SSE,
+				(uint8*)TargetPixels + ClippedTargetSize.cx * 4 * offsetY);
+		else
+			return NULL != SampleDown_HQ_SSE_MMX_Core(FullTargetSize,
+			CPoint(FullTargetOffset.x, FullTargetOffset.y + offsetY),
+			CSize(ClippedTargetSize.cx, sizeY),
+			SourceSize, SourcePixels,
+			Channels, Sharpen,
+			Filter, SSE,
+			(uint8*)TargetPixels + ClippedTargetSize.cx * 4 * offsetY);
+	}
+
+	int Channels;
+	double Sharpen;
+	EFilterType Filter;
+	bool SSE;
+};
+
+class CRequestLDC : public CProcessingRequest {
+public:
+	CRequestLDC(const void* pSourcePixels, CSize sourceSize, void* pTargetPixels,
+		CSize fullTargetSize, CPoint fullTargetOffset,
+		CSize ldcMapSize, const int32* pSatLUTs, const uint8* pLUT, const uint8* pLDCMap,
+		float fBlackPt, float fWhitePt, float fBlackPtSteepness)
+		: CProcessingRequest(pSourcePixels, sourceSize, pTargetPixels, fullTargetSize, fullTargetOffset, sourceSize) {
+		LDCMapSize = ldcMapSize;
+		SatLUTs = pSatLUTs;
+		LUT = pLUT;
+		LDCMap = pLDCMap;
+		BlackPt = fBlackPt;
+		WhitePt = fWhitePt;
+		BlackPtSteepness = fBlackPtSteepness;
+	}
+
+	virtual bool ProcessStrip(int offsetY, int sizeY) {
+		return NULL != ApplyLDC32bpp_Core(FullTargetSize,
+			CPoint(FullTargetOffset.x, FullTargetOffset.y + offsetY),
+			CSize(ClippedTargetSize.cx, sizeY),
+			LDCMapSize,
+			(const uint32*)SourcePixels + ClippedTargetSize.cx * offsetY,
+			SatLUTs, LUT, LDCMap,
+			BlackPt, WhitePt, BlackPtSteepness,
+			(uint32*)TargetPixels + ClippedTargetSize.cx * offsetY);
+	}
+
+	CSize LDCMapSize;
+	const int32* SatLUTs;
+	const uint8* LUT;
+	const uint8* LDCMap;
+	float BlackPt;
+	float WhitePt;
+	float BlackPtSteepness;
+};
+
+class CRequestGauss : public CProcessingRequest {
+public:
+	CRequestGauss(const int16* pSourcePixels, CSize fullSize, CPoint offset, CSize rect, double dRadius, int16* pTargetPixels)
+		: CProcessingRequest(pSourcePixels, fullSize, pTargetPixels, rect, offset, rect) {
+		Radius = dRadius;
+	}
+
+	virtual bool ProcessStrip(int offsetY, int sizeY) {
+		return NULL != GaussFilter16bpp1Channel_Core(SourceSize,
+			CPoint(FullTargetOffset.x, FullTargetOffset.y + offsetY),
+			CSize(FullTargetSize.cx, sizeY),
+			FullTargetSize.cy,
+			Radius,
+			(int16*)SourcePixels,
+			(int16*)TargetPixels + offsetY);
+	}
+
+	double Radius;
+};
+
+class CRequestUnsharpMask : public CProcessingRequest {
+public:
+	CRequestUnsharpMask(const void* pSourcePixels, CSize fullSize, CPoint offset, CSize rect, double dAmount, double dThreshold,
+		const int16* pThresholdLUT, const int16* pGrayImage, const int16* pSmoothedGrayImage, void* pTargetPixels, int nChannels)
+		: CProcessingRequest(pSourcePixels, fullSize, pTargetPixels, rect, offset, rect) {
+		Amount = dAmount;
+		Threshold = dThreshold;
+		ThresholdLUT = pThresholdLUT;
+		GrayImage = pGrayImage;
+		SmoothedGrayImage = pSmoothedGrayImage;
+		Channels = nChannels;
+	}
+
+	virtual bool ProcessStrip(int offsetY, int sizeY) {
+		return NULL != UnsharpMask_Core(SourceSize,
+			CPoint(FullTargetOffset.x, FullTargetOffset.y + offsetY),
+			CSize(FullTargetSize.cx, sizeY),
+			Amount,
+			ThresholdLUT, GrayImage, SmoothedGrayImage,
+			SourcePixels, TargetPixels,
+			Channels);
+	}
+
+	double Amount;
+	double Threshold;
+	const int16* ThresholdLUT;
+	const int16* GrayImage;
+	const int16* SmoothedGrayImage;
+	int Channels;
+};
+
+class CRequestRotate : public CProcessingRequest {
+public:
+	CRequestRotate(const void* pSourcePixels, CPoint targetOffset, CSize targetSize, double dRotation,
+		CSize sourceSize, void* pTargetPixels, int nChannels, COLORREF backColor)
+		: CProcessingRequest(pSourcePixels, sourceSize, pTargetPixels, targetSize, targetOffset, targetSize) {
+		Rotation = dRotation;
+		Channels = nChannels;
+		BackColor = backColor;
+	}
+
+	virtual bool ProcessStrip(int offsetY, int sizeY) {
+		return NULL != RotateHQ_Core(CPoint(FullTargetOffset.x, FullTargetOffset.y + offsetY),
+			CSize(FullTargetSize.cx, sizeY), Rotation, SourceSize, SourcePixels,
+			(uint8*)TargetPixels + FullTargetSize.cx * 4 * offsetY, Channels, BackColor);
+	}
+
+	double Rotation;
+	int Channels;
+	COLORREF BackColor;
+};
+
+class CRequestTrapezoid : public CProcessingRequest {
+public:
+	CRequestTrapezoid(const void* pSourcePixels, CPoint targetOffset, CSize targetSize, const CTrapezoid& trapezoid,
+		CSize sourceSize, void* pTargetPixels, int nChannels, COLORREF backColor)
+		: CProcessingRequest(pSourcePixels, sourceSize, pTargetPixels, targetSize, targetOffset, targetSize) {
+		Trapezoid = trapezoid;
+		Channels = nChannels;
+		BackColor = backColor;
+	}
+
+	virtual bool ProcessStrip(int offsetY, int sizeY) {
+		return NULL != TrapezoidHQ_Core(CPoint(FullTargetOffset.x, FullTargetOffset.y + offsetY),
+			CSize(FullTargetSize.cx, sizeY), Trapezoid, SourceSize, SourcePixels,
+			(uint8*)TargetPixels + FullTargetSize.cx * 4 * offsetY, Channels, BackColor);
+	}
+
+	CTrapezoid Trapezoid;
+	int Channels;
+	COLORREF BackColor;
+};
+
+/////////////////////////////////////////////////////////////////////////////////////////////
 // LUT creation for saturation, contrast and brightness and application of LUT
 /////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -200,7 +396,7 @@ static int32* CreateMulLUT(float fBlackPt, float fWhitePt, float fBlackPtSteepne
 	return pNewLUT;
 }
 
-void* CBasicProcessing::ApplyLDC32bpp_Core(CSize fullTargetSize, CPoint fullTargetOffset, CSize dibSize,
+void* ApplyLDC32bpp_Core(CSize fullTargetSize, CPoint fullTargetOffset, CSize dibSize,
 									  CSize ldcMapSize, const void* pDIBPixels, const int32* pSatLUTs, const uint8* pLUT, const uint8* pLDCMap,
 									  float fBlackPt, float fWhitePt, float fBlackPtSteepness, uint32* pTarget) {
 
@@ -1013,7 +1209,7 @@ static void InterpolateBicubicBorder(const uint8* pSource, uint8* pDest, int16* 
 	if (nChannels == 3) *pDest = 0xFF;
 }
 
-void* CBasicProcessing::RotateHQ_Core(CPoint targetOffset, CSize targetSize, double dRotation, CSize sourceSize, 
+void* RotateHQ_Core(CPoint targetOffset, CSize targetSize, double dRotation, CSize sourceSize, 
 									  const void* pSourcePixels, void* pTargetPixels, int nChannels, COLORREF backColor){
 
 	double dFirstX = -(sourceSize.cx - 1) * 0.5;
@@ -1169,7 +1365,7 @@ static void InterpolateBicubicY(const uint8* pSourcePixels, int nChannelsSource,
 	}
 }
 
-void* CBasicProcessing::TrapezoidHQ_Core(CPoint targetOffset, CSize targetSize, const CTrapezoid& trapezoid, CSize sourceSize, 
+void* TrapezoidHQ_Core(CPoint targetOffset, CSize targetSize, const CTrapezoid& trapezoid, CSize sourceSize, 
 										 const void* pSourcePixels, void* pTargetPixels, int nChannels, COLORREF backColor) {
 
 	float fTx1 = (float)trapezoid.x1s;
@@ -1352,7 +1548,7 @@ static void ApplyFilter1C16bpp(int nSourceWidth, int nTargetWidth,
 // Gauss filter (C++ implementation)
 /////////////////////////////////////////////////////////////////////////////////////////////
 
-int16* CBasicProcessing::GaussFilter16bpp1Channel_Core(CSize fullSize, CPoint offset, CSize rect, int nTargetWidth, double dRadius, 
+int16* GaussFilter16bpp1Channel_Core(CSize fullSize, CPoint offset, CSize rect, int nTargetWidth, double dRadius, 
 													  const int16* pSourcePixels, int16* pTargetPixels) {
 	CGaussFilter filterX(fullSize.cx, dRadius);
 	ApplyFilter1C16bpp(fullSize.cx, nTargetWidth, offset.x, offset.y, rect.cx, rect.cy, filterX.GetFilterKernels(), pSourcePixels, pTargetPixels);
@@ -2096,7 +2292,7 @@ FilterKernelLoop:
 // High quality downsampling (SSE/MMX implementation)
 /////////////////////////////////////////////////////////////////////////////////////////////
 
-void* CBasicProcessing::SampleDown_HQ_SSE_MMX_Core(CSize fullTargetSize, CPoint fullTargetOffset, CSize clippedTargetSize,
+void* SampleDown_HQ_SSE_MMX_Core(CSize fullTargetSize, CPoint fullTargetOffset, CSize clippedTargetSize,
 	CSize sourceSize, const void* pPixels, int nChannels, double dSharpen,
 	EFilterType eFilter, bool bSSE, uint8* pTarget) {
 	CAutoXMMFilter filterY(sourceSize.cy, fullTargetSize.cy, dSharpen, eFilter);
@@ -2159,7 +2355,7 @@ void* CBasicProcessing::SampleDown_HQ_SSE_MMX_Core(CSize fullTargetSize, CPoint 
 	return pTargetDIB;
 }
 
-void* CBasicProcessing::SampleUp_HQ_SSE_MMX_Core(CSize fullTargetSize, CPoint fullTargetOffset, CSize clippedTargetSize,
+void* SampleUp_HQ_SSE_MMX_Core(CSize fullTargetSize, CPoint fullTargetOffset, CSize clippedTargetSize,
 	CSize sourceSize, const void* pPixels, int nChannels, bool bSSE, uint8* pTarget) {
 	int nTargetWidth = clippedTargetSize.cx;
 	int nTargetHeight = clippedTargetSize.cy;
@@ -2218,7 +2414,7 @@ void* CBasicProcessing::SampleDown_HQ_SSE_MMX(CSize fullTargetSize, CPoint fullT
 	uint8* pTarget = new(std::nothrow) uint8[clippedTargetSize.cx * 4 * Helpers::DoPadding(clippedTargetSize.cy, 8)];
 	if (pTarget == NULL) return NULL;
 	CProcessingThreadPool& threadPool = CProcessingThreadPool::This();
-	CRequestUpDownSampling request(CProcessingRequest::Downsampling, pPixels, sourceSize,
+	CRequestUpDownSampling request(pPixels, sourceSize,
 		pTarget, fullTargetSize, fullTargetOffset, clippedTargetSize,
 		nChannels, dSharpen, eFilter, bSSE);
 	bool bSuccess = threadPool.Process(&request);
@@ -2234,7 +2430,7 @@ void* CBasicProcessing::SampleUp_HQ_SSE_MMX(CSize fullTargetSize, CPoint fullTar
 	uint8* pTarget = new(std::nothrow) uint8[clippedTargetSize.cx * 4 * Helpers::DoPadding(clippedTargetSize.cy, 8)];
 	if (pTarget == NULL) return NULL;
 	CProcessingThreadPool& threadPool = CProcessingThreadPool::This();
-	CRequestUpDownSampling request(CProcessingRequest::Upsampling, pPixels, sourceSize,
+	CRequestUpDownSampling request(pPixels, sourceSize,
 		pTarget, fullTargetSize, fullTargetOffset, clippedTargetSize,
 		nChannels, 0.0, Filter_Upsampling_Bicubic, bSSE);
 	bool bSuccess = threadPool.Process(&request);
@@ -2280,7 +2476,7 @@ static int16* CalculateThresholdLUT(int nNumEntriesPerSide, double dThreshold8bi
 	return pLUT;
 }
 
-void* CBasicProcessing::UnsharpMask_Core(CSize fullSize, CPoint offset, CSize rect, double dAmount, const int16* pThresholdLUT,
+void* UnsharpMask_Core(CSize fullSize, CPoint offset, CSize rect, double dAmount, const int16* pThresholdLUT,
 										 const int16* pGrayImage, const int16* pSmoothedGrayImage, const void* pSourcePixels, void* pTargetPixels, int nChannels) {
 	int nDIBLineLen = Helpers::DoPadding(fullSize.cx * nChannels, 4);
 	int nAmount = (int)(dAmount * (1 << 12) + 0.5);

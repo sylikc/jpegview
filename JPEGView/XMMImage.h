@@ -2,13 +2,19 @@
 
 #include "ImageProcessingTypes.h"
 
-// Represents an image with line interleaving and padding to 16 bytes (8 pixels) usable for
-// XMM processing. Each pixel has 16 bits per channel, channel order is B, G, R
+// Represents an image with line interleaving and padding rows to 16 bytes (8 pixels) optimal for
+// 128 bit SIMD processing. Each pixel has 16 bits per channel, channel order is B, G, R, x stands for padding:
+// BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBxxx
+// GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGxxx
+// RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRxxx
+// BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBxxx
+// GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGxxx
+// RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRxxx
 class CXMMImage
 {
 public:
 	CXMMImage(int nWidth, int nHeight);
-	CXMMImage(int nWidth, int nHeight, bool bPadHeight);
+	CXMMImage(int nWidth, int nHeight, bool bPadHeight); // width is always padded, height only when bPadHeight is true
 	// convert from section of 24 or 32 bpp DIB, from first to (and including) last column and row
 	CXMMImage(int nWidth, int nHeight, int nFirstX, int nLastX, int nFirstY, int nLastY, const void* pDIB, int nChannels);
 	~CXMMImage(void);

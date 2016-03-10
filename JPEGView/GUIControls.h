@@ -35,8 +35,8 @@ typedef bool DecisionMethod(void* pContext);
 // Tooltip class, draws the tooltip centered below the anchor rectangle (given by bounding box of pBoundCtrl)
 class CTooltip {
 public:
-	CTooltip(HWND hWnd, const CUICtrl* pBoundCtrl, LPCTSTR sTooltip);
-	CTooltip(HWND hWnd, const CUICtrl* pBoundCtrl, TooltipHandler ttHandler, void* pContext = NULL);
+	CTooltip(HWND hWnd, const CUICtrl* pBoundCtrl, LPCTSTR sTooltip); // static tooltip
+	CTooltip(HWND hWnd, const CUICtrl* pBoundCtrl, TooltipHandler ttHandler, void* pContext = NULL); // dynamic tooltip
 
 	const CUICtrl* GetBoundCtrl() const { return m_pBoundCtrl; }
 	const CString& GetTooltip() const;
@@ -56,7 +56,7 @@ private:
 };
 //-------------------------------------------------------------------------------------------------
 
-// Tooltip manager
+// Tooltip manager for the tooltips of a CPanel
 class CTooltipMgr {
 public:
 	CTooltipMgr(HWND hWnd);
@@ -86,9 +86,12 @@ private:
 // Base class for UI controls
 class CUICtrl {
 public:
+	// pPanel: parent panel
 	CUICtrl(CPanel* pPanel);
 	
+	// Layout rectangle in main window client coordinates
 	CRect GetPosition() const { return m_position; }
+	// The control cannot be resized smaller than this size
 	virtual CSize GetMinSize() = 0;
 	bool IsShown() const { return m_bShow; }
 	void SetShow(bool bShow) { SetShow(bShow, true); }
@@ -101,9 +104,14 @@ public:
 	virtual bool OnMouseMove(int nX, int nY) = 0;
 	virtual void OnPaint(CDC & dc, const CPoint& offset);
 	
+	// Layout rectangle in main window client coordinates
 	void SetPosition(CRect position) { m_position = position; }
 protected:
+	// Top-left position will be different to GetPosition() when drawn to offscreen bitmap
 	virtual void PreDraw(CDC & dc, CRect position);
+	// Called to paint the control. The control is painted totally 5 times, 4 times with bBlack=true
+	// and offsets (+/-1, +/-1) to draw the control 'shadow' (or outline) and once with bBlack=false
+	// to actually draw the control
 	virtual void Draw(CDC & dc, CRect position, bool bBlack) = 0;
 	
 	CPanel* m_pPanel;
@@ -115,7 +123,7 @@ protected:
 
 //-------------------------------------------------------------------------------------------------
 
-// Represents some extra gap between UI elements
+// Represents some extra gap between UI elements. This GUI control neither consumes mouse events nor draws anything.
 class CGapCtrl : public CUICtrl {
 public:
 	CGapCtrl(CPanel* pPanel, int nGap) : CUICtrl(pPanel) { m_nGap = nGap; m_bShow = false; }
@@ -137,9 +145,11 @@ private:
 // Control for showing static or editable text
 class CTextCtrl : public CUICtrl {
 public:
+	// The handler is called when the text has changed, passing pContext to the handler
 	CTextCtrl(CPanel* pPanel, LPCTSTR sTextInit, bool bEditable, TextChangedHandler* textChangedHandler = NULL, void* pContext = NULL);
 	~CTextCtrl();
 
+	// Replaces the TextChangedHandler
 	void SetTextChangedHandler(TextChangedHandler* textChangedHandler, void* pContext) { m_textChangedHandler = textChangedHandler; m_pContext = pContext; }
 
 	// sets the text of the text control
@@ -154,7 +164,7 @@ public:
 	int GetTextRectangleHeight(HWND hWnd, int nWidth);
 	// gets if the text is editable
 	bool IsEditable() const { return m_bEditable; }
-	// gets if the text is right aligned to the screen
+	// gets if the text is right aligned in the layout rectangle. If false the text is left aligned.
 	bool IsRightAligned() const { return m_bRightAligned; }
 	// gets if the text is bold
 	bool IsBold() const { return m_bBold; }
@@ -171,7 +181,7 @@ public:
 	// enters the edit mode if the text is editable and visible, returns if entered in edit mode
 	bool EnterEditMode();
 	// terminates the edit mode and accept the text change if the flag is true. If false, the text change is undone.
-	void TerminateEditMode(bool bAcceptNewName);
+	void TerminateEditMode(bool bAcceptNewText);
 
 public:
 	virtual CSize GetMinSize() { return m_textSize; }
@@ -185,9 +195,9 @@ private:
 	void CreateBoldFont(CDC & dc);
 	CSize GetTextRectangle(HWND hWnd, LPCTSTR sText);
 
-	// Subclass procedure 
+	// Subclass procedure for EDIT control
 	static LRESULT APIENTRY EditSubclassProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-	WNDPROC m_OrigEditProc; // saves original windows procedure
+	WNDPROC m_OrigEditProc; // saves original window procedure
 
 	CString m_sText;
 	CSize m_textSize;
@@ -207,9 +217,13 @@ private:
 // Control for showing a button
 class CButtonCtrl : public CUICtrl {
 public:
+	// Text button: The handler is called when the button has been pressed, passing pContext and nParameter to the handler
 	CButtonCtrl(CPanel* pPanel, LPCTSTR sButtonText, ButtonPressedHandler* buttonPressedHandler = NULL, void* pContext = NULL, int nParameter = 0);
+	// User painted button: The buttonPressedHandler is called when the button has been pressed, passing pContext and nParameter to the handler.
+	// Painting is done with the paintHandler, passing pPaintContext to the handler.
 	CButtonCtrl(CPanel* pPanel, PaintHandler* paintHandler, ButtonPressedHandler* buttonPressedHandler = NULL, void* pPaintContext = NULL, void* pContext = NULL, int nParameter = 0);
 
+	// Replaces the ButtonPressedHandler
 	void SetButtonPressedHandler(ButtonPressedHandler* buttonPressedHandler, void* pContext, int nParameter = 0, bool bActive = false) { 
 		m_buttonPressedHandler = buttonPressedHandler; 
 		m_pContext = pContext; 
@@ -219,7 +233,7 @@ public:
 	// gets the width of the button text in pixels
 	int GetTextLabelWidth() const { return m_textSize.cx; }
 
-	// Sets if the button is active (highlighted)
+	// Sets if the button is active (in 'pressed' state)
 	void SetActive(bool bActive);
 
 	// extends the active area of the button over the normal position
@@ -255,12 +269,15 @@ private:
 
 //-------------------------------------------------------------------------------------------------
 
-// Transparent slider control allowing to select a value in a range
+// Slider control allowing to select a value in a numeric range [a, b]
 class CSliderDouble : public CUICtrl {
 public:
-	CSliderDouble(CPanel* pMgr, LPCTSTR sName, int nSliderLen, double* pdValue, bool* pbEnable,
+	// The selected/changed value is pdValue, pdEnable represents a check box allowing to enable the slider
+	// pdEnable can be NULL, making this check-box invisible (the slider is then always enabled)
+	CSliderDouble(CPanel* pPanel, LPCTSTR sName, int nSliderLen, double* pdValue, bool* pbEnable,
 		double dMin, double dMax, double dDefaultValue, bool bAllowPreviewAndReset, bool bLogarithmic, bool bInvert);
 
+	// Gets pointer to controlled double value
 	double* GetValuePtr() { return m_pValue; }
 	int GetNameLabelWidth() const { return m_nNameWidth; }
 

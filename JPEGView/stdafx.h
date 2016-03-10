@@ -1,7 +1,6 @@
 // stdafx.h : include file for standard system include files,
-//  or project specific include files that are used frequently, but
-//      are changed infrequently
-//
+// or project specific include files that are used frequently, but
+// are changed infrequently
 
 #pragma once
 
@@ -50,6 +49,10 @@ extern CAppModule _Module;
 #define PTR_INTEGRAL_TYPE unsigned long long
 #else
 #define PTR_INTEGRAL_TYPE unsigned int
+#endif
+
+#ifndef _UNICODE
+#error _UNICODE symbol must be defined
 #endif
 
 #if defined _M_IX86

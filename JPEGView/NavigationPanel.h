@@ -4,7 +4,7 @@
 
 class CKeyMap;
 
-// Navigation panel containing buttons and sliders
+// Navigation panel containing buttons for quick access to most important commands (e.g. next, previous).
 class CNavigationPanel : public CPanel {
 public:
 	// IDs of the controls on this panel

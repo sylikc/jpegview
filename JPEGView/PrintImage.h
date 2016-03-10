@@ -5,7 +5,8 @@
 class CJPEGImage;
 class CPrintParameters;
 
-// Allows printing an image. Keep only one instance of this class to retain the user data during different print jobs.
+// Allows printing an image. Keep the instance of this class between multiple print jobs to retain
+// the user-entered data between the print jobs.
 class CPrintImage
 {
 public:
@@ -17,7 +18,8 @@ public:
 		m_pPrintParameters = NULL;
 	}
 
-	// Shows the print dialog and prints the image if the user confirms to print
+	// Shows the print dialog and prints the specified image if the user confirms to print.
+	// Returns if the image was successfully printed.
 	bool Print(HWND hWnd, CJPEGImage * pImage, const CImageProcessingParams& procParams,
 		EProcessingFlags eFlags, LPCTSTR fileName);
 

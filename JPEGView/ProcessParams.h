@@ -7,9 +7,9 @@ enum EProcessingFlags {
 	PFLAG_None = 0,
 	PFLAG_AutoContrast = 1,
 	PFLAG_AutoContrastSection = 2,
-	PFLAG_LDC = 4,
+	PFLAG_LDC = 4, // Local density correction
 	PFLAG_HighQualityResampling = 8,
-	PFLAG_KeepParams = 16,
+	PFLAG_KeepParams = 16, // Keep parameters between images
 	PFLAG_LandscapeMode = 32,
 	PFLAG_NoProcessingAfterLoad = 64
 };
@@ -57,18 +57,18 @@ public:
 		YellowBlue = -1;
 	}
 
-	double Contrast;
-	double Gamma;
-	double Saturation;
-	double Sharpen;
-	double ColorCorrectionFactor;
-	double ContrastCorrectionFactor;
-	double LightenShadows;
-	double DarkenHighlights;
-	double LightenShadowSteepness;
-	double CyanRed;
-	double MagentaGreen;
-	double YellowBlue;
+	double Contrast; // in [-0.5..0.5], 0 means no contrast enhancement
+	double Gamma; // in [0.5..2], 1 means no gamma (brightness) correction
+	double Saturation; // in [0..2], 1 means saturation unchanged
+	double Sharpen; // in [0..0.5], 0 means no sharpening
+	double ColorCorrectionFactor; // in [-0.5..0.5], 0 means no color correction
+	double ContrastCorrectionFactor; // in [0..1], 0 means no contrast correction
+	double LightenShadows; // in [0..1], 0 means no correction
+	double DarkenHighlights; // in [0..1], 0 means no correction
+	double LightenShadowSteepness; // in [0..1], 0 means no correction
+	double CyanRed; // in [-1..1], 0 means no color correction
+	double MagentaGreen; // in [-1..1], 0 means no color correction
+	double YellowBlue; // in [-1..1], 0 means no color correction
 };
 
 // Parameters used in unsharp masking
@@ -90,9 +90,9 @@ public:
 		Threshold = other.Threshold;
 	}
 
-	double Radius;
-	double Amount;
-	double Threshold;
+	double Radius; // in pixels
+	double Amount; // in [0..10]
+	double Threshold; // in [0..20]
 };
 
 // Processing flags for free rotation
@@ -145,7 +145,7 @@ public:
 // Parameters used to process an image, including geometry
 class CProcessParams {
 public:
-	// TargetWidth,TargetHeight is the dimension of the target output screen, the image is fit into this rectangle
+	// TargetWidth,TargetHeight is the dimension of the target output window, the image is fit into this rectangle
 	// nRotation must be 0, 90, 270 degrees
 	// dZoom is the zoom factor compared to intial image size (1.0 means no zoom)
 	// offsets are relative to center of image and refer to original image size (not zoomed)

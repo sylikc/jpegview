@@ -546,11 +546,7 @@ int CSettingsProvider::GetInt(LPCTSTR sKey, int nDefault, int nMin, int nMax) {
 	if (s.IsEmpty()) {
 		return nDefault;
 	}
-#ifdef _UNICODE
 	int nValue = (int)_wtof((LPCTSTR)s);
-#else
-	int nValue = atoi((LPCTSTR)s);
-#endif
 	return min(nMax, max(nMin, nValue));
 }
 
@@ -559,11 +555,7 @@ double CSettingsProvider::GetDouble(LPCTSTR sKey, double dDefault, double dMin, 
 	if (s.IsEmpty()) {
 		return dDefault;
 	}
-#ifdef _UNICODE
 	double dValue = _wtof((LPCTSTR)s);
-#else
-	double dValue = atof((LPCTSTR)s);
-#endif
 	return min(dMax, max(dMin, dValue));
 }
 

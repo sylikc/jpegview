@@ -15,7 +15,7 @@ namespace EXIFHelpers {
 	// Sets the modification date of the given file to the EXIF date of the given image
 	bool SetModificationDateToEXIF(LPCTSTR sFileName, CJPEGImage* pImage);
 
-	// Sets the modification date of the given file to the EXIF date, using GDI+
+	// Sets the modification date of the given file to the EXIF date, using GDI+ to read the EXIF date
 	bool SetModificationDateToEXIF(LPCTSTR sFileName);
 
 	// Sets the modification date of all JPEG files in the given directory to the EXIF date.

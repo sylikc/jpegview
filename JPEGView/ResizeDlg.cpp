@@ -82,7 +82,7 @@ LRESULT CResizeDlg::OnResizeAndClose(WORD /*wNotifyCode*/, WORD wID, HWND /*hWnd
 		m_eFilter = Resize_SharpenLow;
 		break;
 	case 3:
-		m_eFilter = Resize_SharpenMedian;
+		m_eFilter = Resize_SharpenMedium;
 		break;
 	default:
 		m_eFilter = Resize_NoAliasing;

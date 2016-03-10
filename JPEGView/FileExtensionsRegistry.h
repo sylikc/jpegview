@@ -12,7 +12,7 @@ enum RegResult {
 
 // Class to support registring file extensions in the Windows registry to be opened by JPEGView
 // This class only works for Windows <= Windows 7. For windows 8, the only way to register file extensions
-// is to call the default programs dialog from Windows.
+// is to call the 'default programs' dialog from Windows.
 class CFileExtensionsRegistry
 {
 public:

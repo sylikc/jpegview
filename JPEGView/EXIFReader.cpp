@@ -158,18 +158,18 @@ static void WriteLongTag(uint8* ptr, uint32 nValue, bool bLittleEndian) {
 
 static int ReadRationalTag(Rational & rational, uint8* ptr, uint8* pTIFFHeader, bool bLittleEndian) {
 	rational.Numerator = 0;
-	rational.Denumerator = 0;
+	rational.Denominator = 0;
 	if (ptr != NULL) {
 		uint16 nType = ReadUShort(ptr + 2, bLittleEndian);
 		if (nType == 5 || nType == 10) {
 			int nOffset = ReadUInt(ptr + 8, bLittleEndian);
 			rational.Numerator = ReadUInt(pTIFFHeader + nOffset, bLittleEndian);
-			rational.Denumerator = ReadUInt(pTIFFHeader + nOffset + 4, bLittleEndian);
-			if (rational.Numerator != 0 && rational.Denumerator != 0) {
+			rational.Denominator = ReadUInt(pTIFFHeader + nOffset + 4, bLittleEndian);
+			if (rational.Numerator != 0 && rational.Denominator != 0) {
 				// Calculate the ggT
 				uint32 nModulo;
 				uint32 nA = (nType == 10) ? abs((int)rational.Numerator) : rational.Numerator;
-				uint32 nB = (nType == 10) ? abs((int)rational.Denumerator) : rational.Denumerator;
+				uint32 nB = (nType == 10) ? abs((int)rational.Denominator) : rational.Denominator;
 				do {
 				  nModulo = nA % nB;
 				  nA = nB;
@@ -178,10 +178,10 @@ static int ReadRationalTag(Rational & rational, uint8* ptr, uint8* pTIFFHeader, 
 				// normalize
 				if (nType == 10) {
 					rational.Numerator = (int)rational.Numerator/(int)nA;
-					rational.Denumerator = (int)rational.Denumerator/(int)nA;
+					rational.Denominator = (int)rational.Denominator / (int)nA;
 				} else {
 					rational.Numerator /= nA;
-					rational.Denumerator /= nA;
+					rational.Denominator /= nA;
 				}
 			}
 		}
@@ -197,12 +197,12 @@ static bool ReadSignedRationalTag(SignedRational & rational, uint8* ptr, uint8* 
 static double ReadDoubleTag(uint8* ptr, uint8* pTIFFHeader, bool bLittleEndian) {
 	Rational rational(0, 0);
 	int nType = ReadRationalTag(rational, ptr, pTIFFHeader, bLittleEndian);
-	if (rational.Denumerator != 0) {
+	if (rational.Denominator != 0) {
 		if (nType == 5) {
-			return (double)rational.Numerator/rational.Denumerator;
+			return (double)rational.Numerator / rational.Denominator;
 		} else {
 			int nNum = rational.Numerator;
-			int nDenum = rational.Denumerator;
+			int nDenum = rational.Denominator;
 			return (double)nNum/nDenum;
 		}
 	}

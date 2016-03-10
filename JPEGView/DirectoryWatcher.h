@@ -1,17 +1,19 @@
 #pragma once
 
 // Watcher thread for a directory. Sends the two messages WM_DISPLAYED_FILE_CHANGED_ON_DISK and WM_ACTIVE_DIRECTORY_FILELIST_CHANGED
-// to the given window.
+// to the specified window.
 class CDirectoryWatcher {
 public:
-	// The messages are sent to the given window.
+	// The messages are sent to the specified target window.
 	CDirectoryWatcher(HWND hTargetWindow);
 	virtual ~CDirectoryWatcher(void);
 
 	void SetCurrentFile(LPCTSTR fileName);
 	void SetCurrentDirectory(LPCTSTR directoryName);
 
+	// Kindly terminates the thread by setting the m_terminateEvent
 	void Terminate();
+	// First tries to terminate the thread by setting m_terminateEvent, when no reaction -> kills the thread
 	void Abort();
 
 private:

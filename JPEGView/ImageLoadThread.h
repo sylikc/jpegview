@@ -7,7 +7,7 @@
 
 class CJPEGImage;
 
-// returned image data by CImageLoadThread.GetLoadedImage
+// returned image data by CImageLoadThread.GetLoadedImage() method
 class CImageData
 {
 public:
@@ -29,19 +29,20 @@ public:
 	CImageLoadThread(void);
 	~CImageLoadThread(void);
 
-	// Request asynchronous load of JPEG, the message WM_JPEG_LOAD_COMPLETED is
-	// posted to the given window's message queue when finished and the given event is signaled (if not NULL).
+	// Asynchronous loading  of an image. The message WM_IMAGE_LOAD_COMPLETED is
+	// posted to the given window's message queue when loading is finished and the given event is signaled (if not NULL).
 	// Returns identifier to query for resulting image. The query can be done as soon as the message is
 	// received or the event has been signaled.
 	// The file to load is given by its filename (with path) and the frame index (for multiframe images). The
-	// frame index is zero when the image only has one frame.
+	// frame index needs to be zero when the image only has one frame.
 	int AsyncLoad(LPCTSTR strFileName, int nFrameIndex, const CProcessParams & processParams, HWND targetWnd, HANDLE eventFinished);
 
-	// Get loaded image, image is null if not (yet) available - use handle returned by AsyncLoad()
-	// Marks the request for deletion - only call once with given handle
+	// Get loaded image, CImageData::Image is null if not (yet) available - use handle returned by AsyncLoad().
+	// Call after having received the WM_IMAGE_LOAD_COMPLETED message to retrieve the loaded image.
+	// Marks the request for deletion - only call once with the same handle
 	CImageData GetLoadedImage(int nHandle);
 
-	// Releases the cached image file if an image of the given name is cached
+	// Releases the cached image file if an image of the specified name is cached
 	void ReleaseFile(LPCTSTR strFileName);
 
 	// Gets the request handle value used for the last request
@@ -49,7 +50,7 @@ public:
 
 private:
 
-	// Request in request list
+	// Request for loading an image
 	class CRequest : public CRequestBase {
 	public:
 		CRequest(LPCTSTR strFileName, int nFrameIndex, HWND wndTarget, const CProcessParams& processParams, HANDLE eventFinished) 
@@ -84,9 +85,9 @@ private:
 		CString FileName;
 	};
 
-	static volatile LONG m_curHandle;
+	static volatile LONG m_curHandle; // Request handle returned by AsyncLoad()
 
-	Gdiplus::Bitmap* m_pLastBitmap;
+	Gdiplus::Bitmap* m_pLastBitmap; // Last read GDI+ bitmap, cached to speed up GIF animations
 	CString m_sLastFileName;
 
 	virtual void ProcessRequest(CRequestBase& request);

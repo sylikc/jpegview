@@ -4,6 +4,7 @@
 
 class CUnsharpMaskParams;
 
+// Panel for unsharp masking an image
 class CUnsharpMaskPanel : public CPanel {
 public:
 	// IDs of the controls on this panel

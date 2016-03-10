@@ -10,19 +10,20 @@ public:
 	CHistogram(const CJPEGImage & image, bool bUseOrigPixels);
 	// Create histogram of 32 bpp DIB
 	CHistogram(const void* pPixels, const CSize& size);
-	// Creating histogram with already known channel histograms
+	// Creating histogram with already known channel histograms. The histogram channels are copied and must
+	// contain 256 entries each.
 	CHistogram(const int* pChannelB, const int* pChannelG, const int* pChannelR, const int* pChannelGrey);
 
 	// Gets the number of pixels used to build the histogram
 	int GetTotalValues() const { return m_nTotalValues; }
 
-	// Access to the histogram channels (256 values each)
+	// Access to the histogram channels (returned LUTs have 256 values)
 	const int* GetChannelR() const { return &(m_ChannelR[0]); }
 	const int* GetChannelG() const { return &(m_ChannelG[0]); }
 	const int* GetChannelB() const { return &(m_ChannelB[0]); }
 	const int* GetChannelGrey() const { return &(m_ChannelGrey[0]); }
 
-	// Are the original, unprocessed pixels used for this histogram
+	// Returns if the original, unprocessed pixels are used for this histogram
 	bool UsingOrigPixels() const { return m_bUseOrigPixels; }
 
 	// Mean values of the channels
@@ -58,12 +59,14 @@ public:
 
 	// Calculate a three channel correction LUT for color and contrast correction given a histogram
 	// In fColorCastCorrection the order is C/R, M/G, Y/B
+	// The returned LUT contains 3 * 256 entries, BBBB...GGGG...RRRR... format
 	static uint8* CalculateCorrectionLUT(const CHistogram & histogram, float fColorCorrectionFactor,
 		float fBrightnessCorrectionFactor, const float fColorCastCorrection[3],
 		const float fColorCorrectionStrength[6], float fContrastCorrectionFactor);
 
 	// Combine the given two LUTs into a three channel LUT. Result(value) = 3CLUT(1CLUT(value))
 	// If both LUTs are NULL, an identity LUT is returned.
+	// The returned LUT contains 3 * 256 entries, BBBB...GGGG...RRRR... format
 	static uint8* CombineLUTs(const uint8* pSingleChannelLUT, const uint8* pThreeChannelLUT);
 
 private:

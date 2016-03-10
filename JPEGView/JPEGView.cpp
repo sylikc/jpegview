@@ -1,5 +1,4 @@
-// JPEGView.cpp : main source file for JPEGView.exe
-//
+// JPEGView.cpp : main entry point for JPEGView.exe
 
 #include "stdafx.h"
 #include <locale.h>

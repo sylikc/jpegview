@@ -2,7 +2,7 @@
 
 #include "Panel.h"
 
-// Window button panel - panel with buttons shown top, right
+// Window button panel - panel with (minimize, restore, close) buttons shown top, right
 class CWndButtonPanel : public CPanel {
 public:
 	// IDs of the controls on this panel

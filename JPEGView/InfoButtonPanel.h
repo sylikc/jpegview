@@ -2,7 +2,7 @@
 
 #include "Panel.h"
 
-// Info button panel - panel with buttons shown top, left
+// Info button panel - panel with one info button shown top, left
 class CInfoButtonPanel : public CPanel {
 public:
 	// IDs of the controls on this panel
@@ -10,7 +10,7 @@ public:
 		ID_btnEXIFInfo
 	};
 public:
-	// The panel is on the given window on top border above the image processing panel
+	// The panel is on the given window at top, left corner
 	CInfoButtonPanel(HWND hWnd, INotifiyMouseCapture* pNotifyMouseCapture, CPanel* pImageProcPanel);
 
 	CButtonCtrl* GetBtnInfo() { return GetControl<CButtonCtrl*>(ID_btnEXIFInfo); }
