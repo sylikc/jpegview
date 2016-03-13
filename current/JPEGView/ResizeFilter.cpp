@@ -183,18 +183,20 @@ static void GetBicubicFilter(uint16 nFrac, int16* pFilterOut) {
 // Public
 //////////////////////////////////////////////////////////////////////////////////////
 
-CResizeFilter::CResizeFilter(int nSourceSize, int nTargetSize, double dSharpen, EFilterType eFilter, bool bXMM) {
+CResizeFilter::CResizeFilter(int nSourceSize, int nTargetSize, double dSharpen, EFilterType eFilter, FilterSIMDType filterSIMDType) {
 	m_nSourceSize = nSourceSize;
 	m_nTargetSize = nTargetSize;
 	m_dSharpen = min(0.5, max(0.0, dSharpen));
 	m_eFilter = eFilter;
-	m_bCalculated = false;
-	m_bXMMCalculated = false;
+	m_filterSIMDType = filterSIMDType;
 	m_nRefCnt = 0;
 	memset(&m_kernels, 0, sizeof(m_kernels));
 	memset(&m_kernelsXMM, 0, sizeof(m_kernelsXMM));
+	memset(&m_kernelsAVX, 0, sizeof(m_kernelsAVX));
 
-	if (bXMM) {
+	if (filterSIMDType == FilterSIMDType_AVX) {
+		CalculateAVXFilterKernels();
+	} else if (filterSIMDType == FilterSIMDType_SSE) {
 		CalculateXMMFilterKernels();
 	} else {
 		CalculateFilterKernels();
@@ -202,19 +204,17 @@ CResizeFilter::CResizeFilter(int nSourceSize, int nTargetSize, double dSharpen, 
 }
 
 CResizeFilter::~CResizeFilter(void) {
-	if (m_bCalculated) {
-		delete[] m_kernels.Indices;
-		delete[] m_kernels.Kernels;
-	}
-	if (m_bXMMCalculated) {
-		delete[] m_kernelsXMM.Indices;
-		delete[] m_kernelsXMM.UnalignedMemory;
-	}
+	delete[] m_kernels.Indices;
+	delete[] m_kernels.Kernels;
+	delete[] m_kernelsXMM.Indices;
+	delete[] m_kernelsXMM.UnalignedMemory;
+	delete[] m_kernelsAVX.Indices;
+	delete[] m_kernelsAVX.UnalignedMemory;
 }
 
-bool CResizeFilter::ParametersMatch(int nSourceSize, int nTargetSize, double dSharpen, EFilterType eFilter, bool bXMM) {
+bool CResizeFilter::ParametersMatch(int nSourceSize, int nTargetSize, double dSharpen, EFilterType eFilter, FilterSIMDType filterSIMDType) {
 	if (nSourceSize == m_nSourceSize && nTargetSize == m_nTargetSize && abs(dSharpen - m_dSharpen) < 1e-6 &&
-		eFilter == m_eFilter && ((bXMM && m_bXMMCalculated) || !bXMM)) {
+		eFilter == m_eFilter && m_filterSIMDType == filterSIMDType) {
 			return true;
 	} else {
 		return false;
@@ -238,7 +238,6 @@ void CResizeFilter::GetBicubicFilterKernels(int nNumKernels, int16* pKernels) {
 void CResizeFilter::CalculateFilterKernels() {
 	CalculateFilterParams(m_eFilter);
 
-	m_bCalculated = true;
 	if ((m_nTargetSize > m_nSourceSize && m_eFilter != Filter_Upsampling_Bicubic) || 
 		m_nTargetSize == 0 || m_nSourceSize > 65535 || m_nTargetSize > 65535) {
 		return;
@@ -319,7 +318,6 @@ void CResizeFilter::CalculateFilterKernels() {
 }
 
 void CResizeFilter::CalculateXMMFilterKernels() {
-	m_bXMMCalculated = true;
 	CalculateFilterKernels();
 	if (m_nTargetSize == 0) {
 		return;
@@ -359,6 +357,51 @@ void CResizeFilter::CalculateXMMFilterKernels() {
 	for (int i = 0; i < m_nTargetSize; i++) {
 		int nIndex = (int)(m_kernels.Indices[i] - m_kernels.Kernels);
 		m_kernelsXMM.Indices[i] = pKernelStartAddress[nIndex];
+	}
+
+	delete[] pKernelStartAddress;
+}
+
+void CResizeFilter::CalculateAVXFilterKernels() {
+	CalculateFilterKernels();
+	if (m_nTargetSize == 0) {
+		return;
+	}
+
+	// Get size of kernel array - this is not trivial as the kernels have different sizes and
+	// are packed
+	int nTotalKernelElements = 0;
+	for (int i = 0; i < m_kernels.NumKernels; i++) {
+		nTotalKernelElements += m_kernels.Kernels[i].FilterLen;
+	}
+	uint32 nSizeOfKernels = m_kernels.NumKernels * 32 + sizeof(AVXKernelElement)* nTotalKernelElements;
+
+	m_kernelsAVX.NumKernels = m_kernels.NumKernels;
+	m_kernelsAVX.Indices = new AVXFilterKernel*[m_nTargetSize];
+	m_kernelsAVX.UnalignedMemory = new uint8[nSizeOfKernels + 31];
+	m_kernelsAVX.Kernels = (AVXFilterKernel*)(((PTR_INTEGRAL_TYPE)m_kernelsAVX.UnalignedMemory + 31) & ~31);
+	memset(m_kernelsAVX.Kernels, 0, nSizeOfKernels);
+
+	// create an array of the start address of the filter kernels
+	AVXFilterKernel** pKernelStartAddress = new AVXFilterKernel*[m_kernelsAVX.NumKernels];
+	// create the AVX kernels, pack the kernels
+	AVXFilterKernel* pCurKernelAVX = m_kernelsAVX.Kernels;
+	for (int i = 0; i < m_kernelsAVX.NumKernels; i++) {
+		int nCurFilterLen = m_kernels.Kernels[i].FilterLen;
+		pKernelStartAddress[i] = pCurKernelAVX;
+		pCurKernelAVX->FilterLen = nCurFilterLen;
+		pCurKernelAVX->FilterOffset = m_kernels.Kernels[i].FilterOffset;
+		for (int j = 0; j < nCurFilterLen; j++) {
+			for (int k = 0; k < 16; k++) {
+				pCurKernelAVX->Kernel[j].valueRepeated[k] = m_kernels.Kernels[i].Kernel[j];
+			}
+		}
+		pCurKernelAVX = (AVXFilterKernel*)((PTR_INTEGRAL_TYPE)pCurKernelAVX + 32 + sizeof(AVXKernelElement)*nCurFilterLen);
+	}
+
+	for (int i = 0; i < m_nTargetSize; i++) {
+		int nIndex = (int)(m_kernels.Indices[i] - m_kernels.Kernels);
+		m_kernelsAVX.Indices[i] = pKernelStartAddress[nIndex];
 	}
 
 	delete[] pKernelStartAddress;
@@ -457,13 +500,13 @@ CResizeFilterCache::~CResizeFilterCache() {
 	}
 }
 
-const CResizeFilter& CResizeFilterCache::GetFilter(int nSourceSize, int nTargetSize, double dSharpen, EFilterType eFilter, bool bXMM) {
+const CResizeFilter& CResizeFilterCache::GetFilter(int nSourceSize, int nTargetSize, double dSharpen, EFilterType eFilter, FilterSIMDType filterSIMDType) {
 	CResizeFilter* pMatchingFilter = NULL;
 
 	Helpers::CAutoCriticalSection autoCriticalSection(m_csList);
 	std::list<CResizeFilter*>::iterator iter;
 	for (iter = m_filterList.begin( ); iter != m_filterList.end( ); iter++ ) {
-		if ((*iter)->ParametersMatch(nSourceSize, nTargetSize, dSharpen, eFilter, bXMM)) {
+		if ((*iter)->ParametersMatch(nSourceSize, nTargetSize, dSharpen, eFilter, filterSIMDType)) {
 			pMatchingFilter = *iter;
 			break;
 		}
@@ -478,7 +521,7 @@ const CResizeFilter& CResizeFilterCache::GetFilter(int nSourceSize, int nTargetS
 	}
 
 	// no matching filter found, create a new one
-	CResizeFilter* pNewFilter = new CResizeFilter(nSourceSize, nTargetSize, dSharpen, eFilter, bXMM);
+	CResizeFilter* pNewFilter = new CResizeFilter(nSourceSize, nTargetSize, dSharpen, eFilter, filterSIMDType);
 	pNewFilter->m_nRefCnt++;
 	m_filterList.push_front(pNewFilter);
 

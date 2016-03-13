@@ -179,7 +179,10 @@ void CSettingsProvider::ReadWriteableINISettings() {
 		m_eCPUAlgorithm = Helpers::CPU_MMX;
 	} else if (sCPU.CompareNoCase(_T("SSE")) == 0) {
 		m_eCPUAlgorithm = Helpers::CPU_SSE;
-	} else {
+	} else if (sCPU.CompareNoCase(_T("AVX2")) == 0) {
+		m_eCPUAlgorithm = Helpers::CPU_AVX2;
+	}
+	else {
 		m_eCPUAlgorithm = Helpers::ProbeCPU();
 	}
 	m_nNumCores = GetInt(_T("CPUCoresUsed"), 0, 0, 4);

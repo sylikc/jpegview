@@ -81,10 +81,10 @@ bool CProcessingThreadPool::Process(CProcessingRequest* pRequest) {
 		if (nTargetCX * nTargetCY < 100000 || nTargetCY <= 12) {
 			CProcessingThread::DoProcess(pRequest, 0, nTargetCY);
 		} else {
-			// Important: All slices must have a height dividable by 8, except the last one
+			// Important: All slices must have a height dividable by 'StripPadding', except the last one
 			int nNumThreadsUsed = m_nNumThreads + 1; // we also use the calling thread, thus +1
 			int nSliceCY;
-			while ((nSliceCY = ~7 & (nTargetCY / nNumThreadsUsed)) < 8) {
+			while ((nSliceCY = ~(pRequest->StripPadding - 1) & (nTargetCY / nNumThreadsUsed)) < pRequest->StripPadding) {
 				nNumThreadsUsed--;
 			}
 			int nLastCY = nTargetCY - (nNumThreadsUsed - 1)*nSliceCY;
@@ -128,9 +128,11 @@ void CProcessingThread::DoProcess(CProcessingRequest* pRequest, int nOffsetY, in
 		(pRequest->SourceSize.cy * (double)nSizeY / pRequest->FullTargetSize.cy));
 	uint32 nStrips = 1 + nNumberOfPixelsInSource / MAX_SRC_PIXELS_PER_STRIP;
 	uint32 nStripHeight = nSizeY / nStrips;
+	uint32 minimalStripHeight = min(16, pRequest->StripPadding);
+
 	if (nStrips > 1) {
-		nStripHeight = nStripHeight & ~7; // must be dividable by 8, except last strip
-		nStripHeight = min(nSizeY, max(nStripHeight, 16));
+		nStripHeight = nStripHeight & ~(pRequest->StripPadding - 1); // must be dividable by 'StripPadding', except last strip
+		nStripHeight = min(nSizeY, max(nStripHeight, minimalStripHeight));
 	}
 	int nSizeProcessed = 0;
 	int nCurrentSizeY = nStripHeight;

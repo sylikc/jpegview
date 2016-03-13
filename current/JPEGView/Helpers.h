@@ -7,12 +7,14 @@ class CFileList;
 
 namespace Helpers {
 
-	// Capabilities of CPU
+	// Capabilities of CPU, higher capabilities include the others
 	enum CPUType {
 		CPU_Unknown,
 		CPU_Generic,
 		CPU_MMX,
-		CPU_SSE
+		CPU_SSE,
+		CPU_AVX2
+		// add higher capabilities at the end!
 	};
 
 	// Sorting order of image files
@@ -139,7 +141,7 @@ namespace Helpers {
 	// Converts the transition effect from string (as in INI or command line parameter) to enum
 	ETransitionEffect ConvertTransitionEffectFromString(LPCTSTR str);
 
-	// Tests if the CPU supports SSE or MMX(2)
+	// Tests if the CPU supports AVX2, SSE, MMX(2)
 	CPUType ProbeCPU(void);
 
 	// Get number of cores per physical processor, not counting hyperthreading

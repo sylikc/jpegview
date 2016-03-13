@@ -15,6 +15,7 @@ public:
 		FullTargetSize = fullTargetSize;
 		FullTargetOffset = fullTargetOffset;
 		ClippedTargetSize = clippedTargetSize;
+		StripPadding = 8;
 		Success = true;
 	}
 
@@ -29,6 +30,7 @@ public:
 	CSize FullTargetSize;
 	CPoint FullTargetOffset;
 	CSize ClippedTargetSize;
+	int StripPadding; // Height of strip is padded to multiple of this
 
 	// Processing thread can signal failure by setting this flag to false. Must not be set to true by processing threads!
 	bool Success;

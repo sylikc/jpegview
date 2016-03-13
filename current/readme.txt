@@ -22,6 +22,8 @@ Changelog
 [1.0.35]
 Bugs fixed:
 - Fixed font handle leak, preventing display of movies with more than 5000 frames when EXIF display was enabled during movie playing
+New features:
+- Support for AVX2 (256 bit SIMD) on processors providing this instruction set. 64 bit version only!
 Other changes:
 - Increased maximum image size to 500 MPixels for 64 bit version
 - Increased maximum JPEG comment length to 4096 characters
