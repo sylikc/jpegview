@@ -16,7 +16,7 @@
 using namespace Gdiplus;
 
 // static intializers
-volatile LONG CImageLoadThread::m_curHandle = 0;
+volatile int CImageLoadThread::m_curHandle = 0;
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 // static helpers
