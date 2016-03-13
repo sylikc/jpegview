@@ -2,19 +2,19 @@
 #include "XMMImage.h"
 #include "Helpers.h"
 
-CXMMImage::CXMMImage(int nWidth, int nHeight) {
-	Init(nWidth, nHeight, false);
+CXMMImage::CXMMImage(int nWidth, int nHeight, int padding) {
+	Init(nWidth, nHeight, false, padding);
 }
 
-CXMMImage::CXMMImage(int nWidth, int nHeight, bool bPadHeight) {
-	Init(nWidth, nHeight, bPadHeight);
+CXMMImage::CXMMImage(int nWidth, int nHeight, bool bPadHeight, int padding) {
+	Init(nWidth, nHeight, bPadHeight, padding);
 }
 
 CXMMImage::CXMMImage(int nWidth, int nHeight, int nFirstX, int nLastX, int nFirstY, int nLastY, 
-					 const void* pDIB, int nChannels) {
+	const void* pDIB, int nChannels, int padding) {
 	int nSectionWidth = nLastX - nFirstX + 1;
 	int nSectionHeight = nLastY - nFirstY + 1;
-	Init(nSectionWidth, nSectionHeight, false);
+	Init(nSectionWidth, nSectionHeight, false, padding);
 
 	if (m_pMemory != NULL) {
 		int nSrcLineWidthPadded = Helpers::DoPadding(nWidth * nChannels, 4);
@@ -89,11 +89,11 @@ void* CXMMImage::ConvertToDIBRGBA() const {
 // Private
 /////////////////////////////////////////////////////////////////////////////////////////
 
-void CXMMImage::Init(int nWidth, int nHeight, bool bPadHeight) {
-	// pad scanlines to 16 byte boundary
-	m_nPaddedWidth = Helpers::DoPadding(nWidth, 8);
+void CXMMImage::Init(int nWidth, int nHeight, bool bPadHeight, int padding) {
+	// pad scanlines
+	m_nPaddedWidth = Helpers::DoPadding(nWidth, padding);
 	if (bPadHeight) {
-		m_nPaddedHeight = Helpers::DoPadding(nHeight, 8);
+		m_nPaddedHeight = Helpers::DoPadding(nHeight, padding);
 	} else {
 		m_nPaddedHeight = nHeight;
 	}

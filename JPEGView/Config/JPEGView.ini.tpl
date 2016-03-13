@@ -172,7 +172,7 @@ ScaleFactorNavPanel=1.0
 ; Set to true to keep the zoom, pan, contrast, gamma, sharpen and rotation setting between the images 
 KeepParameters=false
 
-; CPUType can be AutoDetect, Generic, MMX or SSE
+; CPUType can be AutoDetect, Generic, MMX, SSE or AVX2
 ; Generic should work on all CPUs, MMX needs at least MMX II (starting from PIII)
 ; Use AutoDetect to detect the best possible algorithm to use
 CPUType=AutoDetect

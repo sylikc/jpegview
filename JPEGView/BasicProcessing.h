@@ -5,6 +5,14 @@ class CBasicProcessing
 {
 public:
 
+	// SIMD architecture register width
+	enum SIMDArchitecture
+	{
+		MMX, // 64 bit
+		SSE, // 128 bit
+		AVX2 // 256 bit
+	};
+
 	// Note for all methods: The caller gets ownership of the returned image and is responsible to delete 
 	// this pointer when no longer used.
 	
@@ -168,11 +176,11 @@ public:
 	static void* SampleDown_HQ(CSize fullTargetSize, CPoint fullTargetOffset, CSize clippedTargetSize,
 		CSize sourceSize, const void* pPixels, int nChannels, double dSharpen, EFilterType eFilter);
 
-	// Same as above, SSE/MMX implementation.
+	// Same as above, SIMD (AVX2/SSE/MMX) implementation.
 	// Notice that the A channel is not processed and set to fixed value 0xFF.
 	// Notice that the returned image is always 32 bpp!
-	static void* SampleDown_HQ_SSE_MMX(CSize fullTargetSize, CPoint fullTargetOffset, CSize clippedTargetSize,
-		CSize sourceSize, const void* pPixels, int nChannels, double dSharpen, EFilterType eFilter, bool bSSE);
+	static void* SampleDown_HQ_SIMD(CSize fullTargetSize, CPoint fullTargetOffset, CSize clippedTargetSize,
+		CSize sourceSize, const void* pPixels, int nChannels, double dSharpen, EFilterType eFilter, SIMDArchitecture simd);
 
 	// High quality upsampling of 32 or 24 bpp BGR(A) image using bicubic interpolation.
 	// Notice that the A channel is not processed and set to fixed value 0xFF.
@@ -181,11 +189,11 @@ public:
 	static void* SampleUp_HQ(CSize fullTargetSize, CPoint fullTargetOffset, CSize clippedTargetSize,
 		CSize sourceSize, const void* pPixels, int nChannels);
 
-	// Same as above, SSE/MMX implementation
+	// Same as above, SIMD (AVX2/SSE/MMX) implementation.
 	// Notice that the A channel is not processed and set to fixed value 0xFF.
 	// Notice that the returned image is always 32 bpp!
-	static void* SampleUp_HQ_SSE_MMX(CSize fullTargetSize, CPoint fullTargetOffset, CSize clippedTargetSize,
-		CSize sourceSize, const void* pPixels, int nChannels, bool bSSE);
+	static void* SampleUp_HQ_SIMD(CSize fullTargetSize, CPoint fullTargetOffset, CSize clippedTargetSize,
+		CSize sourceSize, const void* pPixels, int nChannels, SIMDArchitecture simd);
 
 	// Rotate 32 or 24 bpp BGR(A) image around image center using bicubic interpolation.
 	// Notice that the A channel is processed for 32 bpp images.

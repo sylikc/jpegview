@@ -3,6 +3,12 @@
 // Maximal length of filter kernels. The kernels may be shorter but never longer.
 #define MAX_FILTER_LEN 16
 
+enum FilterSIMDType {
+	FilterSIMDType_None, // filter is not for SIMD processing
+	FilterSIMDType_SSE, // filter is for SSE (and MMX) 128 bit SIMD
+	FilterSIMDType_AVX // filter is for AVX 256 bit SIMD
+};
+
 struct FilterKernel {
 	int16 Kernel[MAX_FILTER_LEN]; // elements are fixed point numbers, typically with 2.14 format
 	int FilterLen; // actual filter length
@@ -37,6 +43,27 @@ struct XMMFilterKernelBlock {
 	uint8* UnalignedMemory; // do not use directly
 };
 
+// Filter kernel and filter kernel block for AVX (SIMD).
+// For AVX, we need 16 repetitions of each kernel element (256 bit in total, AVX register size)
+struct AVXKernelElement {
+	int16 valueRepeated[16];
+};
+
+struct AVXFilterKernel {
+	int FilterLen;
+	int FilterOffset;
+	int pad[6]; // padd to 32 bytes before kernel starts
+	AVXKernelElement Kernel[1]; // this is a placehoder for a kernel of FilterLen elements
+};
+
+struct AVXFilterKernelBlock {
+	AVXFilterKernel * Kernels;
+	AVXFilterKernel** Indices; // Length equals target size
+	int NumKernels; // this is NUM_KERNELS_RESIZE + border handling kernels as needed
+	uint8* UnalignedMemory; // do not use directly
+};
+
+
 // Class for resize filters. These filters are one dimensional FIR filters. Because these filters are separable,
 // resizing a 2D image can be done by applying a CResizeFilter to all x-rows, then another CResizeFilter to the
 // y-columns of the resulting image.
@@ -54,7 +81,7 @@ public:
 
 	// Creates a filter for resizing from nSourceSize to nTargetSize 
 	// dSharpen must be in [0..0.5] - it is ignored for upsampling kernels.
-	CResizeFilter(int nSourceSize, int nTargetSize, double dSharpen, EFilterType eFilter, bool bXMM);
+	CResizeFilter(int nSourceSize, int nTargetSize, double dSharpen, EFilterType eFilter, FilterSIMDType filterSIMDType);
 	~CResizeFilter();
 
 	// Gets a block of kernels for resizing from the source size to the target size.
@@ -63,8 +90,12 @@ public:
 	const FilterKernelBlock& GetFilterKernels() const { return m_kernels; }
 
 	// As above, returns the structure suitable for XMM processing with aligned memory.
-	// CResizeFilter must have been created with XMM support (bXMM == true)
-	const XMMFilterKernelBlock& GetXMMFilterKernels() const { assert(m_bXMMCalculated); return m_kernelsXMM; }
+	// CResizeFilter must have been created with XMM support (FilterSIMDType_SSE)
+	const XMMFilterKernelBlock& GetXMMFilterKernels() const { assert(m_filterSIMDType == FilterSIMDType_SSE); return m_kernelsXMM; }
+
+	// As above, returns the structure suitable for AVX2 processing with aligned memory.
+	// CResizeFilter must have been created with AVX2 support (FilterSIMDType_AVX)
+	const AVXFilterKernelBlock& GetAVXFilterKernels() const { assert(m_filterSIMDType == FilterSIMDType_AVX); return m_kernelsAVX; }
 
 	// Get bicubic filter kernels for fractional positions. These kernels have length 4 and must be applied with offset -1 to current integer position.
 	// E.g. when requesting 33 kernels, the kernel for fractional position 0.5 is starting at pKernels[4 * 16]
@@ -82,15 +113,16 @@ private:
 	int16 m_Filter[MAX_FILTER_LEN];
 	FilterKernelBlock m_kernels;
 	XMMFilterKernelBlock m_kernelsXMM;
-	bool m_bCalculated;
-	bool m_bXMMCalculated;
+	AVXFilterKernelBlock m_kernelsAVX;
+	FilterSIMDType m_filterSIMDType;
 	int m_nRefCnt;
 
 	void CalculateFilterKernels();
 	void CalculateXMMFilterKernels();
+	void CalculateAVXFilterKernels();
 
 	// Checks if this filter matches the given parameters
-	bool ParametersMatch(int nSourceSize, int nTargetSize, double dSharpen, EFilterType eFilter, bool bXMM);
+	bool ParametersMatch(int nSourceSize, int nTargetSize, double dSharpen, EFilterType eFilter, FilterSIMDType filterSIMDType);
 
 	void CalculateFilterParams(EFilterType eFilter);
 	int16* GetFilter(uint16 nFrac, EFilterType eFilter);
@@ -104,7 +136,7 @@ public:
 	static CResizeFilterCache& This();
 
 	// Gets filter
-	const CResizeFilter& GetFilter(int nSourceSize, int nTargetSize, double dSharpen, EFilterType eFilter, bool bXMM);
+	const CResizeFilter& GetFilter(int nSourceSize, int nTargetSize, double dSharpen, EFilterType eFilter, FilterSIMDType filterSIMDType);
 	// Release filter
 	void ReleaseFilter(const CResizeFilter& filter);
 
@@ -123,7 +155,7 @@ private:
 class CAutoFilter {
 public:
 	CAutoFilter(int nSourceSize, int nTargetSize, double dSharpen, EFilterType eFilter) 
-		: m_filter(CResizeFilterCache::This().GetFilter(nSourceSize, nTargetSize, dSharpen, eFilter, false)) {}
+		: m_filter(CResizeFilterCache::This().GetFilter(nSourceSize, nTargetSize, dSharpen, eFilter, FilterSIMDType_None)) {}
 	
 	const FilterKernelBlock& Kernels() { return m_filter.GetFilterKernels(); }
 	
@@ -136,11 +168,24 @@ private:
 class CAutoXMMFilter {
 public:
 	CAutoXMMFilter(int nSourceSize, int nTargetSize, double dSharpen, EFilterType eFilter) 
-		: m_filter(CResizeFilterCache::This().GetFilter(nSourceSize, nTargetSize, dSharpen, eFilter, true)) {}
+		: m_filter(CResizeFilterCache::This().GetFilter(nSourceSize, nTargetSize, dSharpen, eFilter, FilterSIMDType_SSE)) {}
 	
 	const XMMFilterKernelBlock& Kernels() { return m_filter.GetXMMFilterKernels(); }
 	
 	~CAutoXMMFilter() { CResizeFilterCache::This().ReleaseFilter(m_filter); }
+private:
+	const CResizeFilter& m_filter;
+};
+
+// Helper class for accessing filters from filter cache, automatically releasing the filter when object goes out of scope
+class CAutoAVXFilter {
+public:
+	CAutoAVXFilter(int nSourceSize, int nTargetSize, double dSharpen, EFilterType eFilter)
+		: m_filter(CResizeFilterCache::This().GetFilter(nSourceSize, nTargetSize, dSharpen, eFilter, FilterSIMDType_AVX)) {}
+
+	const AVXFilterKernelBlock& Kernels() { return m_filter.GetAVXFilterKernels(); }
+
+	~CAutoAVXFilter() { CResizeFilterCache::This().ReleaseFilter(m_filter); }
 private:
 	const CResizeFilter& m_filter;
 };

@@ -1,5 +1,6 @@
 #include "StdAfx.h"
 #include "Helpers.h"
+#include "immintrin.h"
 #include "NLS.h"
 #include "MultiMonitorSupport.h"
 #include "JPEGImage.h"
@@ -175,6 +176,21 @@ void GetZoomParameters(float & fZoom, CPoint & offsets, CSize imageSize, CSize w
 	offsets = CPoint(nOffsetX, nOffsetY);
 }
 
+#ifdef _WIN64
+static CPUType ProbeSSEorAVX2() {
+	// first check if operating system supports AVX(2)
+	unsigned long long xcr0 = _xgetbv(0);
+	if ((xcr0 & 6) != 6)
+		return CPU_SSE; // nope, only use SSE
+
+	// check if AVX2 instructions are supported
+	const int AVX2BITMASK = 1 << 5;
+	int abcd[4];
+	__cpuidex(abcd, 7, 0);
+	return (abcd[1] & AVX2BITMASK) ? CPU_AVX2 : CPU_SSE;
+}
+#endif
+
 CPUType ProbeCPU(void) {
 	static CPUType cpuType = CPU_Unknown;
 	if (cpuType != CPU_Unknown) {
@@ -182,7 +198,7 @@ CPUType ProbeCPU(void) {
 	}
 
 #ifdef _WIN64
-	return CPU_SSE; // 64 bit always supports SSE
+	return ProbeSSEorAVX2(); // 64 bit always supports at least SSE
 #else
 	// Structured exception handling is mantatory, try/catch(...) does not catch such severe stuff.
 	cpuType = CPU_Generic;
@@ -225,7 +241,7 @@ GiveUp:
 
 // returns if the CPU supports some form of hardware multiprocessing, e.g. hyperthreading or multicore
 static bool CPUSupportsHWMultiprocessing(void) {   
-	if (ProbeCPU() == CPU_SSE) {
+	if (ProbeCPU() >= CPU_SSE) {
 		int output[4];
 		__cpuid(output, 1);
 		return (output[3] & 0x10000000);

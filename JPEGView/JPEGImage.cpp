@@ -27,6 +27,33 @@ static void RotateInplace(const CSize& imageSize, double& dX, double& dY, double
 	dY = dYr;
 }
 
+static bool SupportsSIMD(Helpers::CPUType cpuType) {
+	switch (cpuType)
+	{
+	case Helpers::CPU_MMX:
+	case Helpers::CPU_SSE:
+	case Helpers::CPU_AVX2:
+		return true;
+	default:
+		return false;
+	}
+}
+
+static CBasicProcessing::SIMDArchitecture ToSIMDArchitecture(Helpers::CPUType cpuType) {
+	switch (cpuType)
+	{
+	case Helpers::CPU_MMX:
+		return CBasicProcessing::MMX;
+	case Helpers::CPU_SSE:
+		return CBasicProcessing::SSE;
+	case Helpers::CPU_AVX2:
+		return CBasicProcessing::AVX2;
+	default:
+		assert(false);
+		return (CBasicProcessing::SIMDArchitecture)(-1);
+	}
+}
+
 ///////////////////////////////////////////////////////////////////////////////////
 // Public interface
 ///////////////////////////////////////////////////////////////////////////////////
@@ -545,13 +572,13 @@ void* CJPEGImage::Resample(CSize fullTargetSize, CSize clippingSize, CPoint targ
 
 	if (GetProcessingFlag(eProcFlags, PFLAG_HighQualityResampling) && 
 		!(eResizeType == NoResize && (filter == Filter_Downsampling_Best_Quality || filter == Filter_Downsampling_No_Aliasing))) {
-		if (cpu == Helpers::CPU_SSE || cpu == Helpers::CPU_MMX) {
+		if (SupportsSIMD(cpu)) {
 			if (eResizeType == UpSample) {
-				return CBasicProcessing::SampleUp_HQ_SSE_MMX(fullTargetSize, targetOffset, clippingSize, 
-					CSize(m_nOrigWidth, m_nOrigHeight), m_pOrigPixels, m_nOriginalChannels, cpu == Helpers::CPU_SSE);
+				return CBasicProcessing::SampleUp_HQ_SIMD(fullTargetSize, targetOffset, clippingSize, 
+					CSize(m_nOrigWidth, m_nOrigHeight), m_pOrigPixels, m_nOriginalChannels, ToSIMDArchitecture(cpu));
 			} else {
-				return CBasicProcessing::SampleDown_HQ_SSE_MMX(fullTargetSize, targetOffset, clippingSize,
-					CSize(m_nOrigWidth, m_nOrigHeight), m_pOrigPixels, m_nOriginalChannels, dSharpen, filter, cpu == Helpers::CPU_SSE);
+				return CBasicProcessing::SampleDown_HQ_SIMD(fullTargetSize, targetOffset, clippingSize,
+					CSize(m_nOrigWidth, m_nOrigHeight), m_pOrigPixels, m_nOriginalChannels, dSharpen, filter, ToSIMDArchitecture(cpu));
 			}
 		} else {
 			if (eResizeType == UpSample) {
@@ -585,13 +612,13 @@ void* CJPEGImage::InternalResize(void* pixels, int channels, EResizeFilter filte
 	EFilterType downSamplingFilter = (filter == Resize_NoAliasing) ? Filter_Downsampling_No_Aliasing : Filter_Downsampling_Best_Quality;
 	double dSharpen = (filter == Resize_SharpenLow) ? 0.15 : (filter == Resize_SharpenMedium) ? 0.3 : 0.0;
 
-	if (cpu == Helpers::CPU_SSE || cpu == Helpers::CPU_MMX) {
+	if (SupportsSIMD(cpu)) {
 		if (eResizeType == UpSample) {
-			return CBasicProcessing::SampleUp_HQ_SSE_MMX(targetSize, CPoint(0, 0), targetSize,
-				sourceSize, pixels, channels, cpu == Helpers::CPU_SSE);
+			return CBasicProcessing::SampleUp_HQ_SIMD(targetSize, CPoint(0, 0), targetSize,
+				sourceSize, pixels, channels, ToSIMDArchitecture(cpu));
 		} else {
-			return CBasicProcessing::SampleDown_HQ_SSE_MMX(targetSize, CPoint(0, 0), targetSize,
-				sourceSize, pixels, channels, dSharpen, downSamplingFilter, cpu == Helpers::CPU_SSE);
+			return CBasicProcessing::SampleDown_HQ_SIMD(targetSize, CPoint(0, 0), targetSize,
+				sourceSize, pixels, channels, dSharpen, downSamplingFilter, ToSIMDArchitecture(cpu));
 		}
 	} else {
 		if (eResizeType == UpSample) {

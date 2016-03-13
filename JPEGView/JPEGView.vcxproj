@@ -285,6 +285,10 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="ApplyFilterAVX.cpp">
+      <EnableEnhancedInstructionSet Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">AdvancedVectorExtensions</EnableEnhancedInstructionSet>
+      <EnableEnhancedInstructionSet Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AdvancedVectorExtensions</EnableEnhancedInstructionSet>
+    </ClCompile>
     <ClCompile Include="BasicProcessing.cpp" />
     <ClCompile Include="Clipboard.cpp" />
     <ClCompile Include="dcraw_mod.cpp" />
@@ -364,6 +368,7 @@
     <ClCompile Include="MainDlg.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ApplyFilterAVX.h" />
     <ClInclude Include="BasicProcessing.h" />
     <ClInclude Include="Clipboard.h" />
     <ClInclude Include="dcraw_mod.h" />
