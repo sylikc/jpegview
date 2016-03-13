@@ -31,7 +31,7 @@ public:
 	~CProcessingThread(void) {}
 
 	// Start a processing request on this thread asynchronously, returns immediately
-	void StartProcesss(CWrappedRequest* pRequest);
+	void StartProcess(CWrappedRequest* pRequest);
 
 	// Processes a request synchronously on the calling thread
 	static void DoProcess(CProcessingRequest* pRequest, int nOffsetY, int nSizeY);
@@ -95,7 +95,7 @@ bool CProcessingThreadPool::Process(CProcessingRequest* pRequest) {
 			for (int i = 0; i < nNumThreadsUsed-1; i++) {
 				pAllWrappedRequests[i] = new CWrappedRequest(pRequest, nCurrCY, nSliceCY, eventFinished);
 				pAllWrappedRequests[i]->EventFinishedCounter = &nRequestThreadCounter;
-				m_threads[i]->StartProcesss(pAllWrappedRequests[i]);
+				m_threads[i]->StartProcess(pAllWrappedRequests[i]);
 				nCurrCY += nSliceCY;
 			}
 			CProcessingThread::DoProcess(pRequest, nCurrCY, nLastCY);
@@ -116,7 +116,7 @@ CProcessingThreadPool::CProcessingThreadPool(void) {
 }
 
 
-void CProcessingThread::StartProcesss(CWrappedRequest* pRequest) {
+void CProcessingThread::StartProcess(CWrappedRequest* pRequest) {
 	ProcessAsync(pRequest);
 }
 
