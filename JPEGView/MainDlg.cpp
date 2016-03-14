@@ -2822,7 +2822,7 @@ void CMainDlg::SaveParameters() {
 
 	if (IDYES == this->MessageBox(sText, CNLS::GetString(_T("Confirm save default parameters")), MB_YESNO | MB_ICONQUESTION)) {
 		CSettingsProvider::This().SaveSettings(*m_pImageProcParams, eFlags, m_pFileList->GetSorting(), m_pFileList->IsSortedUpcounting(),
-			GetAutoZoomMode(), m_pNavPanelCtl->IsActive());
+			m_eAutoZoomModeWindowed, m_eAutoZoomModeFullscreen, m_pNavPanelCtl->IsActive());
 	}
 }
 
