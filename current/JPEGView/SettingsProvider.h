@@ -122,7 +122,8 @@ public:
 	// This will only save a subset of settings to the inifile located in AppData\JPEGView\JPEGView.ini.
 	// Note that this INI file has precedence over the ini file at the program directory
 	void SaveSettings(const CImageProcessingParams& procParams, EProcessingFlags eProcFlags, 
-		Helpers::ESorting eFileSorting, bool isSortedUpcounting, Helpers::EAutoZoomMode eAutoZoomMode, bool bShowNavPanel);
+		Helpers::ESorting eFileSorting, bool isSortedUpcounting, Helpers::EAutoZoomMode eAutoZoomMode, 
+		Helpers::EAutoZoomMode eAutoZoomModeFullScreen, bool bShowNavPanel);
 
 	// Saves the pattern used in the copy/rename dialog to rename files
 	void SaveCopyRenamePattern(const CString& sPattern);
@@ -269,7 +270,8 @@ private:
 	CRect GetRect(LPCTSTR sKey, const CRect& defaultRect);
 	CSize GetSize(LPCTSTR sKey, const CSize& defaultSize);
 	COLORREF GetColor(LPCTSTR sKey, COLORREF defaultColor);
-	Helpers::EAutoZoomMode GetAutoZoomMode(LPCTSTR sKey);
+	Helpers::EAutoZoomMode GetAutoZoomMode(LPCTSTR sKey, Helpers::EAutoZoomMode defaultZoomMode);
+	LPCTSTR GetAutoZoomModeString(Helpers::EAutoZoomMode autoZoomMode);
 	void WriteString(LPCTSTR sKey, LPCTSTR sString);
 	void WriteDouble(LPCTSTR sKey, double dValue);
 	void WriteBool(LPCTSTR sKey, bool bValue);
