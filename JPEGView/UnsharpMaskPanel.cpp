@@ -52,7 +52,7 @@ CRect CUnsharpMaskPanel::PanelRect() {
 		m_nHeight += (int)(m_fDPIScale*(2*PANEL_BORDER + PANEL_GAPTITLE + 3*USM_PANEL_GAPSLIDER + USM_PANEL_GAPBUTTONY));
 	}
 	CRect sliderRect = m_pImageProcPanel->PanelRect();
-	m_clientRect = CRect(CPoint((sliderRect.right + sliderRect.left) / 2 - m_nWidth / 2, sliderRect.bottom - m_nHeight - 30),
+	m_clientRect = CRect(CPoint((sliderRect.right + sliderRect.left) / 2 - m_nWidth / 2, sliderRect.bottom - m_nHeight - (int)(m_fDPIScale * 30)),
 		CSize(m_nWidth, m_nHeight));
 	return m_clientRect;
 }

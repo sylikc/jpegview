@@ -236,7 +236,7 @@ CSize CTextCtrl::GetTextRectangle(HWND hWnd, LPCTSTR sText) {
 		CSize textlen;
 		dc.GetTextExtent(sText, (int)_tcslen(sText), &textlen);
 		dc.SelectStockFont(DEFAULT_GUI_FONT);
-		return textlen;
+		return CSize(textlen.cx + 1, textlen.cy);
 	} else {
 		return GetTextRect(hWnd, sText);
 	}
