@@ -28,6 +28,8 @@ New features:
 Other changes:
 - Increased maximum image size to 500 MPixels for 64 bit version
 - Increased maximum JPEG comment length to 4096 characters
+- Readme.html uses css
+- Updated Spanish translation, thanks to Enrique
 
 [1.0.34]
 Bugs fixed:
