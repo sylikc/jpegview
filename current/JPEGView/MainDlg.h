@@ -185,7 +185,7 @@ public:
 	CImageProcessingParams* GetImageProcessingParams() { return m_pImageProcParams; }
 	EProcessingFlags CreateDefaultProcessingFlags(bool bKeepParams = false);
 	void DisplayErrors(CJPEGImage* pCurrentImage, const CRect& clientRect, CDC& dc);
-	void DisplayFileName(const CRect& imageProcessingArea, CDC& dc);
+	void DisplayFileName(const CRect& imageProcessingArea, CDC& dc, double realizedZoom);
 	void BlendBlackRect(CDC & targetDC, CPanel& panel, float fBlendFactor);
 
 	void UpdateWindowTitle();
@@ -207,6 +207,7 @@ public:
 	int TrackPopupMenu(CPoint pos, HMENU hMenu);
 	void AdjustWindowToImage(bool bAfterStartup);
 	bool IsAdjustWindowToImage();
+	bool IsImageExactlyFittingWindow();
 	Helpers::ETransitionEffect GetTransitionEffect() { return m_eTransitionEffect; }
 	int GetTransitionTime() { return m_nTransitionTime; }
 	bool IsInSlideShowWithTransition() { return m_bMovieMode && UseSlideShowTransitionEffect(); }

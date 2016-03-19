@@ -434,6 +434,7 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 	}
 
 	CPaintDC dc(m_hWnd);
+	double realizedZoom = 1.0;
 
 	this->GetClientRect(&m_clientRect);
 	CRect imageProcessingArea = m_pImageProcPanelCtl->PanelRect();
@@ -471,6 +472,7 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 			m_clientRect.Size(), IsAdjustWindowToImage() ? Helpers::ZM_FitToScreenNoZoom : 
 			   (m_isUserFitToScreen ? m_autoZoomFitToScreen : GetAutoZoomMode()), m_dZoom);
 		m_virtualImageSize = newSize;
+		realizedZoom = (double)newSize.cx / m_pCurrentImage->OrigSize().cx;
 		CPoint unlimitedOffsets = m_offsets;
 		m_offsets = Helpers::LimitOffsets(m_offsets, m_clientRect.Size(), newSize);
 		m_DIBOffsets = m_bZoomMode ? (unlimitedOffsets - m_offsets) : CPoint(0, 0);
@@ -526,7 +528,7 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 		m_pTiltCorrectionPanelCtl->IsVisible() ? &trapezoid : NULL);
 
 	// Display file name if enabled
-	DisplayFileName(imageProcessingArea, dc);
+	DisplayFileName(imageProcessingArea, dc, realizedZoom);
 
 	// Display errors and warnings
 	DisplayErrors(m_pCurrentImage, m_clientRect, dc);
@@ -576,6 +578,7 @@ void CMainDlg::PaintToDC(CDC& dc) {
 		backColor = RGB(0, 0, 1); // these f**ing nVidia drivers have a bug when blending pure black
 	CBrush backBrush;
 	backBrush.CreateSolidBrush(backColor);
+	double realizedZoom = 1.0;
 
 	CJPEGImage* pCurrentImage = GetCurrentImage();
 	if (pCurrentImage == NULL) {
@@ -588,6 +591,7 @@ void CMainDlg::PaintToDC(CDC& dc) {
 		double dZoom = GetZoom();
 		CSize newSize = Helpers::GetVirtualImageSize(pCurrentImage->OrigSize(), m_clientRect.Size(), GetAutoZoomMode(), dZoom);
 		CPoint offsets = Helpers::LimitOffsets(GetOffsets(), m_clientRect.Size(), newSize);
+		realizedZoom = (double)newSize.cx / m_pCurrentImage->OrigSize().cx;
 
 		// Clip to client rectangle and request the DIB
 		CSize clippedSize(min(m_clientRect.Width(), newSize.cx), min(m_clientRect.Height(), newSize.cy));
@@ -609,7 +613,7 @@ void CMainDlg::PaintToDC(CDC& dc) {
 			m_pEXIFDisplayCtl->OnPaintPanel(dc, CPoint(0, 0));
 		}
 
-		DisplayFileName(imageProcessingArea, dc);
+		DisplayFileName(imageProcessingArea, dc, realizedZoom);
 		DisplayErrors(pCurrentImage, m_clientRect, dc);
 	}
 }
@@ -650,14 +654,14 @@ void CMainDlg::DisplayErrors(CJPEGImage* pCurrentImage, const CRect& clientRect,
 	}
 }
 
-void CMainDlg::DisplayFileName(const CRect& imageProcessingArea, CDC& dc) {
+void CMainDlg::DisplayFileName(const CRect& imageProcessingArea, CDC& dc, double realizedZoom) {
 	dc.SetBkMode(TRANSPARENT);
 	dc.SetTextColor(CSettingsProvider::This().ColorFileName());
 	dc.SetBkColor(RGB(0, 0, 0));
 
 	if (m_bShowFileName) {
 		HelpersGUI::SelectDefaultFileNameFont(dc);
-		CString sFileName = Helpers::GetFileInfoString(CSettingsProvider::This().FileNameFormat(), m_pCurrentImage, m_pFileList, m_dZoom);
+		CString sFileName = Helpers::GetFileInfoString(CSettingsProvider::This().FileNameFormat(), m_pCurrentImage, m_pFileList, realizedZoom);
 		HelpersGUI::DrawTextBordered(dc, sFileName, CRect(HelpersGUI::ScaleToScreen(2) + imageProcessingArea.left, 0, imageProcessingArea.right, HelpersGUI::ScaleToScreen(30)), DT_LEFT); 
 	}
 }
@@ -1121,7 +1125,7 @@ LRESULT CMainDlg::OnContextMenu(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam,
 	HMENU hMenuZoom = ::GetSubMenu(hMenuTrackPopup, SUBMENU_POS_ZOOM);
 	if (m_bSpanVirtualDesktop) ::CheckMenuItem(hMenuZoom,  IDM_SPAN_SCREENS, MF_CHECKED);
 	if (m_bFullScreenMode) ::CheckMenuItem(hMenuZoom,  IDM_FULL_SCREEN_MODE, MF_CHECKED);
-	if (IsAdjustWindowToImage()) ::CheckMenuItem(hMenuZoom,  IDM_FIT_WINDOW_TO_IMAGE, MF_CHECKED);
+	if (IsAdjustWindowToImage() && IsImageExactlyFittingWindow()) ::CheckMenuItem(hMenuZoom, IDM_FIT_WINDOW_TO_IMAGE, MF_CHECKED);
 	HMENU hMenuAutoZoomMode = ::GetSubMenu(hMenuTrackPopup, SUBMENU_POS_AUTOZOOMMODE);
 	::CheckMenuItem(hMenuAutoZoomMode, GetAutoZoomMode() * 10 + IDM_AUTO_ZOOM_FIT_NO_ZOOM, MF_CHECKED);
 	HMENU hMenuSettings = ::GetSubMenu(hMenuTrackPopup, SUBMENU_POS_SETTINGS);
@@ -1700,7 +1704,9 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 			this->SetWindowPos(NULL, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_NOCOPYBITS | SWP_FRAMECHANGED);
 			break;
 		case IDM_FIT_WINDOW_TO_IMAGE:
-			m_bAutoFitWndToImage = !m_bAutoFitWndToImage;
+			// Note: If auto fit is on but the window size does not match the image size (due to manual window resizing), restore window to image
+			if (!(m_bAutoFitWndToImage && !IsImageExactlyFittingWindow()))
+				m_bAutoFitWndToImage = !m_bAutoFitWndToImage;
 			AdjustWindowToImage(false);
 			break;
 		case IDM_ZOOM_400:
@@ -2777,6 +2783,10 @@ void CMainDlg::AfterNewImageLoaded(bool bSynchronize, bool bAfterStartup) {
 
 bool CMainDlg::IsAdjustWindowToImage() {
 	return !m_bFullScreenMode && !::IsZoomed(m_hWnd) && m_bAutoFitWndToImage;
+}
+
+bool CMainDlg::IsImageExactlyFittingWindow() {
+	return (m_pCurrentImage != NULL) && m_pCurrentImage->DIBWidth() == m_clientRect.Width() && m_pCurrentImage->DIBHeight() == m_clientRect.Height();
 }
 
 void CMainDlg::AdjustWindowToImage(bool bAfterStartup) {
