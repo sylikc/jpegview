@@ -11,7 +11,7 @@ const TCHAR PARAM_DB_NAME[] = _T("ParamDB.db");
 const uint32 MAGIC_HEADER_1 = 0xe8d2862a;
 const uint32 MAGIC_HEADER_2 = 0xb651e752;
 const uint32 DB_FILE_VERSION = 2;
-const uint32 MAX_DB_FILE_SIZE = sizeof(CParameterDBEntry)*1024*100; // 3.2 MB, enough room for 100000 entries
+const uint32 MAX_DB_FILE_SIZE = sizeof(CParameterDBEntry)*1024*200; // 6 MB, enough room for 200000 entries
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 // Error handling helpers

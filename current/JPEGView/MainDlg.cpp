@@ -1150,6 +1150,7 @@ LRESULT CMainDlg::OnContextMenu(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam,
 	}
 
 	if (CParameterDB::This().IsEmpty()) ::EnableMenuItem(hMenuSettings, IDM_BACKUP_PARAMDB, MF_BYCOMMAND | MF_GRAYED);
+	if (CSettingsProvider::This().StoreToEXEPath()) ::EnableMenuItem(hMenuSettings, IDM_UPDATE_USER_CONFIG, MF_BYCOMMAND | MF_GRAYED);
 	if (m_bFullScreenMode) ::EnableMenuItem(hMenuZoom, IDM_FIT_WINDOW_TO_IMAGE, MF_BYCOMMAND | MF_GRAYED);
 	if (!m_bFullScreenMode) ::EnableMenuItem(hMenuZoom, IDM_SPAN_SCREENS, MF_BYCOMMAND | MF_GRAYED);
 
@@ -1753,6 +1754,12 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 		case IDM_EDIT_GLOBAL_CONFIG:
 		case IDM_EDIT_USER_CONFIG:
 			EditINIFile(nCommand == IDM_EDIT_GLOBAL_CONFIG);
+			break;
+		case IDM_UPDATE_USER_CONFIG:
+			if (::MessageBox(m_hWnd, CString(CNLS::GetString(_T("Update user settings with new settings from settings template file?"))) + _T('\n') +
+				CNLS::GetString(_T("All existing user settings will be preserved.")), _T("JPEGView"), MB_YESNOCANCEL | MB_ICONQUESTION) == IDYES) {
+				CSettingsProvider::This().UpdateUserSettings();
+			}
 			break;
 		case IDM_MANAGE_OPEN_WITH_MENU:
 			{
@@ -2939,11 +2946,10 @@ CRect CMainDlg::GetZoomTextRect(CRect imageProcessingArea) {
 void CMainDlg::EditINIFile(bool bGlobalINI) {
 	LPCTSTR sINIFileName = bGlobalINI ? CSettingsProvider::This().GetGlobalINIFileName() : CSettingsProvider::This().GetUserINIFileName();
 	if (!bGlobalINI) {
-		if (::GetFileAttributes(sINIFileName) == INVALID_FILE_ATTRIBUTES) {
+		if (!CSettingsProvider::This().ExistsUserINI()) {
 			// No user INI file, ask if global INI shall be copied
 			if (IDYES == ::MessageBox(m_hWnd, CNLS::GetString(_T("No user INI file exits yet. Create user INI file from INI file template?")), _T("JPEGView"), MB_YESNO | MB_ICONQUESTION)) {
-				::CreateDirectory(Helpers::JPEGViewAppDataPath(), NULL);
-				::CopyFile(CString(CSettingsProvider::This().GetGlobalINIFileName()) + ".tpl", sINIFileName, TRUE);
+				CSettingsProvider::This().CopyUserINIFromTemplate();
 			} else {
 				return;
 			}
