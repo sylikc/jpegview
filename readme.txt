@@ -26,6 +26,8 @@ Bugs fixed:
 - Showing zoom factor correctly when added to Ctrl-F2 display during slide shows
 New features:
 - Support for AVX2 (256 bit SIMD) on processors providing this instruction set (Haswell and later). 64 bit version only!
+- New admin menu item: Update user setting
+  Updates the user settings with new settings from INI template file, while preserving all existing user settings.
 Other changes:
 - Increased maximum image size to 500 MPixels for 64 bit version
 - Increased maximum JPEG comment length to 4096 characters

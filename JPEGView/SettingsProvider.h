@@ -115,6 +115,10 @@ public:
 	CSize UserCropAspectRatio() { return m_userCropAspectRatio; }
 	LPCTSTR WallpaperPath() { return m_sWallpaperPath; }
 
+	// Returns if a user INI file exists
+	bool ExistsUserINI();
+	// Copies the user INI file (in AppData/roamin) from the INI file template JPEGView.ini.tpl
+	void CopyUserINIFromTemplate();
 
 	std::list<CUserCommand*> & UserCommandList() { return m_userCommands; }
 	std::list<CUserCommand*> & OpenWithCommandList() { return m_openWithCommands; }
@@ -130,6 +134,9 @@ public:
 
 	// Saves the sticky window size to the INI file
 	void SaveStickyWindowRect(CRect rect);
+	
+	// Update user settings with settings from INI file template
+	void UpdateUserSettings();
 
 	// Deletes the open with command, returns index of the deleted command, -1 if invalid
 	int DeleteOpenWithCommand(CUserCommand* pCommand);
@@ -260,6 +267,7 @@ private:
 	std::list<CUserCommand*> m_userCommands;
 	std::list<CUserCommand*> m_openWithCommands;
 
+	CString GetINITemplateName();
 	void MakeSureUserINIExists();
 	CString ReplacePlaceholdersFileNameFormat(const CString& sFileNameFormat);
 	void ReadWriteableINISettings();

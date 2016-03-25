@@ -1,5 +1,6 @@
 #include "StdAfx.h"
 #include "SettingsProvider.h"
+#include "NLS.h"
 #include <float.h>
 #include <shlobj.h>
 #include <algorithm>
@@ -458,6 +459,65 @@ void CSettingsProvider::SaveStickyWindowRect(CRect rect) {
 	}
 }
 
+bool CSettingsProvider::ExistsUserINI() {
+	LPCTSTR sINIFileName = GetUserINIFileName();
+	return ::GetFileAttributes(sINIFileName) != INVALID_FILE_ATTRIBUTES;
+}
+
+void CSettingsProvider::CopyUserINIFromTemplate() {
+	if (m_bStoreToEXEPath) {
+		return; // no user INI file
+	}
+
+	LPCTSTR sINIFileName = GetUserINIFileName();
+	::CreateDirectory(Helpers::JPEGViewAppDataPath(), NULL);
+	::CopyFile(GetINITemplateName(), sINIFileName, TRUE);
+}
+
+void CSettingsProvider::UpdateUserSettings() {
+	if (m_bStoreToEXEPath) {
+		return; // no user INI file
+	}
+
+	CString sINIFileName = CString(GetUserINIFileName());
+	::DeleteFile(sINIFileName + _T(".old"));
+	if (!ExistsUserINI()) {
+		CopyUserINIFromTemplate();
+		return;
+	}
+
+	const int BUFFER_LEN = 16000;
+	TCHAR* buffer = new TCHAR[BUFFER_LEN];
+	if (::GetPrivateProfileString(SECTION_NAME, NULL, _T(""), buffer, BUFFER_LEN, sINIFileName) == BUFFER_LEN - 2) {
+		// buffer was too small, maybe INI file corrupt, do not touch
+		delete[] buffer;
+		return;
+	}
+
+	CString newINIFileName = sINIFileName + _T(".new");
+	if (!::CopyFile(GetINITemplateName(), newINIFileName, FALSE)){
+		delete[] buffer;
+		return;
+	}
+
+	TCHAR* currentKey = buffer;
+	while (*currentKey != 0) {
+		CString value = GetString(currentKey, _T(""));
+		if (!::WritePrivateProfileString(SECTION_NAME, currentKey, value, newINIFileName)) {
+			delete[] buffer;
+			return;
+		}
+		// go to next key
+		while (*currentKey != 0) currentKey++;
+		currentKey++;
+	}
+
+	delete[] buffer;
+	if (::MoveFile(sINIFileName, sINIFileName + _T(".old"))) {
+		::MoveFile(newINIFileName, sINIFileName);
+	}
+}
+
 int CSettingsProvider::DeleteOpenWithCommand(CUserCommand* pCommand) {
 	MakeSureUserINIExists();
 
@@ -532,8 +592,16 @@ void CSettingsProvider::MakeSureUserINIExists() {
 	// Create JPEGView appdata directory and copy INI file if it does not exist
 	::CreateDirectory(Helpers::JPEGViewAppDataPath(), NULL);
 	if (::GetFileAttributes(m_sIniNameUser) == INVALID_FILE_ATTRIBUTES) {
-		::CopyFile(CString(m_sIniNameGlobal) + ".tpl", m_sIniNameUser, TRUE);
+		::CopyFile(GetINITemplateName(), m_sIniNameUser, TRUE);
 	}
+}
+
+CString CSettingsProvider::GetINITemplateName() {
+	CString localizedTemplate = CNLS::GetLocalizedFileName(m_sIniNameGlobal, _T(""), _T("tpl"), Language());
+	if (::GetFileAttributes(localizedTemplate) != INVALID_FILE_ATTRIBUTES) {
+		return localizedTemplate;
+	}
+	return CString(m_sIniNameGlobal) + _T(".tpl");
 }
 
 CString CSettingsProvider::GetString(LPCTSTR sKey, LPCTSTR sDefault) {
