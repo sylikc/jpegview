@@ -409,3 +409,6 @@ Left	Слева
 Right	Справа
 Top	Сверху
 Bottom	Снизу
+Update user settings...	Обновить пользовательские параметры...
+Update user settings with new settings from settings template file?	Обновить пользовательские параметры, взяв установки из файла с шаблонами?
+All existing user settings will be preserved.	Все имеющиеся пользовательские параметры будут сохранены.

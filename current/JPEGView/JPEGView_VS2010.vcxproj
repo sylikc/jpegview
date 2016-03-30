@@ -160,6 +160,7 @@
     <ClCompile Include="FileExtensionsDlg.cpp" />
     <ClCompile Include="FileExtensionsRegistry.cpp" />
     <ClCompile Include="FileList.cpp" />
+    <ClCompile Include="HelpDlg.cpp" />
     <ClCompile Include="Helpers.cpp" />
     <ClCompile Include="HelpersGUI.cpp" />
     <ClCompile Include="HistogramCorr.cpp" />
@@ -237,6 +238,7 @@
     <ClInclude Include="FileExtensionsDlg.h" />
     <ClInclude Include="FileExtensionsRegistry.h" />
     <ClInclude Include="FileList.h" />
+    <ClInclude Include="HelpDlg.h" />
     <ClInclude Include="Helpers.h" />
     <ClInclude Include="HelpersGUI.h" />
     <ClInclude Include="HistogramCorr.h" />

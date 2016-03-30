@@ -77,7 +77,7 @@ void CNavigationPanelCtl::AdjustMaximalWidth(int nMaxWidth) {
 bool CNavigationPanelCtl::IsVisible() {
 	bool bMouseInNavPanel = m_bMouseInNavPanel && !m_pMainDlg->GetImageProcPanelCtl()->IsVisible();
 	return m_bEnabled && !(m_fCurrentBlendingFactorNavPanel <= 0.0f && !bMouseInNavPanel) &&
-		!m_pMainDlg->IsInMovieMode() && !m_pMainDlg->IsDoCropping() && !m_pMainDlg->IsShowHelp() && (m_pMainDlg->IsMouseOn() || bMouseInNavPanel);
+		!m_pMainDlg->IsInMovieMode() && !m_pMainDlg->IsDoCropping() && (m_pMainDlg->IsMouseOn() || bMouseInNavPanel);
 }
 
 void CNavigationPanelCtl::SetActive(bool bActive) {
@@ -216,7 +216,7 @@ void CNavigationPanelCtl::StartNavPanelAnimation(bool bFadeOut, bool bFast) {
 void CNavigationPanelCtl::DoNavPanelAnimation() {
 	CJPEGImage* pCurrentImage = CurrentImage();
 	bool bDoAnimation = true;
-	if (!m_bInNavPanelAnimation || pCurrentImage == NULL || m_pMainDlg->IsShowHelp()) {
+	if (!m_bInNavPanelAnimation || pCurrentImage == NULL) {
 		bDoAnimation = false;
 	} else {
 		if (!IsVisible()) {

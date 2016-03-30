@@ -32,6 +32,7 @@ extern CAppModule _Module;
 #include <atlctrls.h>
 #include <atldlgs.h>
 #include <atlmisc.h>
+#include <atlscrl.h>
 
 // STL stuff
 #include  <list>

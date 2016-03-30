@@ -8,7 +8,7 @@ class CImageProcessingParams;
 // This is not a CPanelController because the help display is not a CPanel (not painted to offscreen bitmap)
 class CHelpDisplayCtl {
 public:
-	CHelpDisplayCtl(CMainDlg* pMainDlg, CPaintDC& dc, const CImageProcessingParams* pImageProcParams);
+	CHelpDisplayCtl(CMainDlg* pMainDlg, CDC& dc, const CImageProcessingParams* pImageProcParams);
 	virtual ~CHelpDisplayCtl();
 
 	CRect PanelRect() { return m_panelRect; }

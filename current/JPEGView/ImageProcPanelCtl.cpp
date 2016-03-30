@@ -222,7 +222,7 @@ bool CImageProcPanelCtl::RenameCurrentFile(LPCTSTR sNewFileTitle) {
 	m_pMainDlg->GetJPEGProvider()->FileHasRenamed(sCurFileName, sNewFileName);
 
 	// Needs to update filename
-	if (m_pMainDlg->GetEXIFDisplayCtl()->IsActive() || m_pMainDlg->IsShowFileName() || m_pMainDlg->IsShowHelp()) {
+	if (m_pMainDlg->GetEXIFDisplayCtl()->IsActive() || m_pMainDlg->IsShowFileName()) {
 		InvalidateMainDlg();
 	}
 	m_pMainDlg->UpdateWindowTitle();

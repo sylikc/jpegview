@@ -35,6 +35,8 @@
 #define IDC_FE_CANCEL 1003
 #define IDC_FE_OK 1004
 
+#define IDD_HELP 7000
+
 #define IDD_ABOUT 2000
 #define IDC_CLOSE 1001
 #define IDC_JPEGVIEW 1002

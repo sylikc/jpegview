@@ -252,6 +252,9 @@
     <ClCompile Include="ApplyFilterAVX.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="HelpDlg.cpp">
+      <Filter>Source Files\Dialogs</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BasicProcessing.h">
@@ -490,6 +493,9 @@
     </ClInclude>
     <ClInclude Include="ApplyFilterAVX.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="HelpDlg.h">
+      <Filter>Header Files\Dialogs</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
