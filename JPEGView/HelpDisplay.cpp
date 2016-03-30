@@ -5,12 +5,11 @@
 
 static const int MAX_BUFF = 6000;
 
-static const COLORREF colorTitle = RGB(0, 0, 255);
 static const COLORREF colorLines = RGB(0, 0, 0);
 static const COLORREF colorInfo = RGB(0, 128, 0);
 static const COLORREF colorInfoLight = RGB(160, 0, 0);
 
-CHelpDisplay::CHelpDisplay(CPaintDC & dc) : m_dc(dc) {
+CHelpDisplay::CHelpDisplay(CDC & dc) : m_dc(dc) {
 	m_fScaling = HelpersGUI::ScreenScaling;
 	CSize size;
 	HelpersGUI::SelectDefaultGUIFont(dc);
@@ -24,10 +23,6 @@ CHelpDisplay::CHelpDisplay(CPaintDC & dc) : m_dc(dc) {
 
 CHelpDisplay::~CHelpDisplay() {
 	delete [] m_pTextBuffStart;
-}
-
-void CHelpDisplay::AddTitle(LPCTSTR sTitle) {
-	AddTextLine(colorTitle, colorInfo, sTitle, NULL, NULL);
 }
 
 void CHelpDisplay::AddLine(LPCTSTR sLine) {
@@ -81,32 +76,31 @@ CSize CHelpDisplay::GetSize() {
 		}
 	}
 	m_nSizeX += 10;
-	m_nSizeY += 10;
+	m_nSizeY += 7;
 	return CSize(m_nSizeX, m_nSizeY);
 }
 
-void CHelpDisplay::Show(const CRect & screenRect) {
+void CHelpDisplay::Show() {
 	// Measure
 	if (m_nSizeX == 0) {
 		GetSize();
 	}
 
 	// Paint
-	HelpersGUI::SelectDefaultSystemFont(m_dc);
-	CBrush brushBk1; brushBk1.CreateSolidBrush(::GetSysColor(COLOR_3DFACE) - 0x00060606);
-	CRect fullRect(CPoint(screenRect.Width()/2 - m_nSizeX/2, screenRect.Height()/2 - m_nSizeY/2),
-		CSize(m_nSizeX, m_nSizeY));
-	m_dc.FillRect(&fullRect, ::GetSysColorBrush(COLOR_3DFACE));
-	m_dc.FrameRect(&fullRect, ::GetSysColorBrush(COLOR_3DSHADOW));
+	HelpersGUI::SelectDefaultGUIFont(m_dc);
+	CBrush brushBk1; brushBk1.CreateSolidBrush(::GetSysColor(COLOR_3DFACE) - 0x000A0A0A);
+	CBrush brushBk2; brushBk2.CreateSolidBrush(::GetSysColor(COLOR_3DFACE));
+
+	CRect fullRect(CPoint(0, 0), CSize(m_nSizeX, m_nSizeY));
 	m_dc.SetBkMode(TRANSPARENT);
 	int nStartX = fullRect.left + 5;
-	int nStartY = fullRect.top + 2;
+	int nStartY = fullRect.top;
 	int nI = 0;
 	std::list<TextLine>::iterator iter;
 	for (iter = m_lines.begin( ); iter != m_lines.end( ); iter++ ) {
-		if ((nI++ & 1) == 0 && nI > 2) {
-			m_dc.FillRect(CRect(fullRect.left + 1, nStartY, fullRect.right - 1, nStartY + m_nIncY), brushBk1);
-		}
+		m_dc.FillRect(CRect(fullRect.left, nStartY, fullRect.right, nStartY + m_nIncY),
+			((nI++ & 1) == 0) ? brushBk1 : brushBk2);
+
 		int nKeyLen = (int)_tcslen(iter->Key);
 		m_dc.SetTextColor(iter->Color);
 		m_dc.TextOut(nStartX, nStartY, iter->Key, nKeyLen);
@@ -121,11 +115,8 @@ void CHelpDisplay::Show(const CRect & screenRect) {
 			m_dc.TextOut(nStartX + m_nTab2, nStartY, iter->Help, (int)_tcslen(iter->Help));
 		}
 		nStartY += m_nIncY;
-		if (nI == 1) {
-			HelpersGUI::SelectDefaultGUIFont(m_dc);
-			nStartY += 3;
-		}
 	}
+	m_dc.FillRect(CRect(fullRect.left, nStartY, fullRect.right, nStartY + m_nIncY), brushBk1);
 }
 
 LPCTSTR CHelpDisplay::CopyStr(LPCTSTR str) {

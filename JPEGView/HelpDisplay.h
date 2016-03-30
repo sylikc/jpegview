@@ -5,18 +5,17 @@ class CHelpDisplay
 {
 public:
 	// The paint DC is used to draw the help screen
-	CHelpDisplay(CPaintDC & dc);
+	CHelpDisplay(CDC & dc);
 	~CHelpDisplay();
 
 	// Methods to create the help text lines
-	void AddTitle(LPCTSTR sTitle);
 	void AddLine(LPCTSTR sLine);
 	bool AddLine(LPCTSTR sKey, LPCTSTR sHelp);
 	bool AddLineInfo(LPCTSTR sKey, LPCTSTR sInfo, LPCTSTR sHelp);
 	bool AddLineInfo(LPCTSTR sKey, bool bInfo, LPCTSTR sHelp);
 
 	// Call Show() to render the help screen on the given screen rectangle (it is centered there)
-	void Show(const CRect & screenRect);
+	void Show();
 
 	// Gets the size of the help screen
 	CSize GetSize();
@@ -44,7 +43,7 @@ private:
 
 	float m_fScaling;
 	int m_nTab1, m_nTab2;
-	CPaintDC & m_dc;
+	CDC & m_dc;
 	std::list<TextLine> m_lines;
 	int m_nSizeX;
 	int m_nSizeY;

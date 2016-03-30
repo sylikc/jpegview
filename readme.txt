@@ -23,7 +23,7 @@ Changelog
 Bugs fixed:
 - Fixed font handle leak, preventing display of movies with more than 5000 frames when EXIF display was enabled during movie playing
 - Reading/saving auto zoom mode correctly from/to INI file
-- Showing zoom factor correctly when added to Ctrl-F2 display during slide shows
+- Showing zoom factor correctly during slide shows (when shown in Ctrl-F2 display)
 New features:
 - Support for AVX2 (256 bit SIMD) on processors providing this instruction set (Haswell and later). 64 bit version only!
 - New admin menu item: Update user setting
@@ -33,6 +33,7 @@ Other changes:
 - Increased maximum JPEG comment length to 4096 characters
 - Changed Ctrl-F11 behavior when 'Fit window to image' is on but window does not fit image: Makes window fitting
 - Readme.html uses css
+- Help display (F1) now uses own window
 - Updated Spanish translation, thanks to Enrique
 
 [1.0.34]

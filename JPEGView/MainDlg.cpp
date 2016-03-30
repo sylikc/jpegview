@@ -8,6 +8,7 @@
 #include <limits.h>
 
 #include "MainDlg.h"
+#include "HelpDlg.h"
 #include "FileList.h"
 #include "JPEGProvider.h"
 #include "JPEGImage.h"
@@ -45,7 +46,6 @@
 #include "UnsharpMaskPanelCtl.h"
 #include "EXIFDisplayCtl.h"
 #include "NavigationPanelCtl.h"
-#include "HelpDisplayCtl.h"
 #include "NavigationPanel.h"
 #include "KeyMap.h"
 #include "JPEGLosslessTransform.h"
@@ -228,6 +228,7 @@ CMainDlg::CMainDlg(bool bForceFullScreen) {
 	m_bInTrackPopupMenu = false;
 	m_bResizeForNewImage = false;
 	m_dZoom = -1.0;
+	m_dRealizedZoom = -1.0;
 	m_dZoomMult = -1.0;
 	m_bDragging = false;
 	m_bDoDragging = false;
@@ -235,7 +236,6 @@ CMainDlg::CMainDlg(bool bForceFullScreen) {
 	m_DIBOffsets = CPoint(0, 0);
 	m_nCapturedX = m_nCapturedY = 0;
 	m_nMouseX = m_nMouseY = 0;
-	m_bShowHelp = false;
 	m_bAutoFitWndToImage = sp.DefaultWndToImage();
 	m_bFullScreenMode = bForceFullScreen || (sp.ShowFullScreen() && !sp.AutoFullScreen());
 	m_bLockPaint = true;
@@ -273,6 +273,7 @@ CMainDlg::CMainDlg(bool bForceFullScreen) {
 	m_pCropCtl = new CCropCtl(this);
 	m_pKeyMap = new CKeyMap(CString(CSettingsProvider::This().GetEXEPath()) + _T("KeyMap.txt"));
 	m_pPrintImage = new CPrintImage(CSettingsProvider::This().PrintMargin(), CSettingsProvider::This().DefaultPrintWidth());
+	m_pHelpDlg = NULL;
 }
 
 CMainDlg::~CMainDlg() {
@@ -434,7 +435,7 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 	}
 
 	CPaintDC dc(m_hWnd);
-	double realizedZoom = 1.0;
+	m_dRealizedZoom = 1.0;
 
 	this->GetClientRect(&m_clientRect);
 	CRect imageProcessingArea = m_pImageProcPanelCtl->PanelRect();
@@ -442,13 +443,7 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 	CBrush backBrush;
 	backBrush.CreateSolidBrush(CSettingsProvider::This().ColorBackground());
 
-	// Exclude the help display from clipping area to reduce flickering
-	CHelpDisplayCtl* pHelpDisplayCtl = NULL;
 	std::list<CRect> excludedClippingRects;
-	if (m_bShowHelp) {
-		pHelpDisplayCtl = new CHelpDisplayCtl(this, dc, m_pImageProcParams);
-		excludedClippingRects.push_back(pHelpDisplayCtl->PanelRect());
-	}
 
 	// Panels are handled over memory DCs to eliminate flickering
 	CPaintMemDCMgr memDCMgr(dc);
@@ -472,7 +467,7 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 			m_clientRect.Size(), IsAdjustWindowToImage() ? Helpers::ZM_FitToScreenNoZoom : 
 			   (m_isUserFitToScreen ? m_autoZoomFitToScreen : GetAutoZoomMode()), m_dZoom);
 		m_virtualImageSize = newSize;
-		realizedZoom = (double)newSize.cx / m_pCurrentImage->OrigSize().cx;
+		m_dRealizedZoom = (double)newSize.cx / m_pCurrentImage->OrigSize().cx;
 		CPoint unlimitedOffsets = m_offsets;
 		m_offsets = Helpers::LimitOffsets(m_offsets, m_clientRect.Size(), newSize);
 		m_DIBOffsets = m_bZoomMode ? (unlimitedOffsets - m_offsets) : CPoint(0, 0);
@@ -528,7 +523,7 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 		m_pTiltCorrectionPanelCtl->IsVisible() ? &trapezoid : NULL);
 
 	// Display file name if enabled
-	DisplayFileName(imageProcessingArea, dc, realizedZoom);
+	DisplayFileName(imageProcessingArea, dc, m_dRealizedZoom);
 
 	// Display errors and warnings
 	DisplayErrors(m_pCurrentImage, m_clientRect, dc);
@@ -556,16 +551,9 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 		HelpersGUI::DrawTextBordered(dc, buff, GetZoomTextRect(imageProcessingArea), DT_RIGHT);
 	}
 
-	// Display the help screen
-	if (pHelpDisplayCtl != NULL) {
-		pHelpDisplayCtl->Show();
-	}
-
 	// let crop controller and panels paint its stuff
 	m_pCropCtl->OnPaint(dc);
 	m_pPanelMgr->OnPostPaint(dc);
-
-	delete pHelpDisplayCtl;
 
 	SetCursorForMoveSection();
 
@@ -578,7 +566,7 @@ void CMainDlg::PaintToDC(CDC& dc) {
 		backColor = RGB(0, 0, 1); // these f**ing nVidia drivers have a bug when blending pure black
 	CBrush backBrush;
 	backBrush.CreateSolidBrush(backColor);
-	double realizedZoom = 1.0;
+	m_dRealizedZoom = 1.0;
 
 	CJPEGImage* pCurrentImage = GetCurrentImage();
 	if (pCurrentImage == NULL) {
@@ -588,10 +576,10 @@ void CMainDlg::PaintToDC(CDC& dc) {
 		pCurrentImage->VerifyRotation(CRotationParams(pCurrentImage->GetRotationParams(), GetRotation()));
 
 		// find out the new virtual image size and the size of the bitmap to request
-		double dZoom = GetZoom();
+		double dZoom = m_dZoom;
 		CSize newSize = Helpers::GetVirtualImageSize(pCurrentImage->OrigSize(), m_clientRect.Size(), GetAutoZoomMode(), dZoom);
 		CPoint offsets = Helpers::LimitOffsets(GetOffsets(), m_clientRect.Size(), newSize);
-		realizedZoom = (double)newSize.cx / m_pCurrentImage->OrigSize().cx;
+		m_dRealizedZoom = (double)newSize.cx / m_pCurrentImage->OrigSize().cx;
 
 		// Clip to client rectangle and request the DIB
 		CSize clippedSize(min(m_clientRect.Width(), newSize.cx), min(m_clientRect.Height(), newSize.cy));
@@ -613,7 +601,7 @@ void CMainDlg::PaintToDC(CDC& dc) {
 			m_pEXIFDisplayCtl->OnPaintPanel(dc, CPoint(0, 0));
 		}
 
-		DisplayFileName(imageProcessingArea, dc, realizedZoom);
+		DisplayFileName(imageProcessingArea, dc, m_dRealizedZoom);
 		DisplayErrors(pCurrentImage, m_clientRect, dc);
 	}
 }
@@ -671,7 +659,6 @@ LRESULT CMainDlg::OnSize(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BO
 	this->GetClientRect(&m_clientRect);
 	this->Invalidate(FALSE);
 	if (m_clientRect.Width() < HelpersGUI::ScaleToScreen(800)) {
-		m_bShowHelp = false;
 		if (m_pImageProcPanelCtl != NULL) m_pImageProcPanelCtl->SetVisible(false);
 	}
 	if (m_pNavPanelCtl != NULL) {
@@ -783,6 +770,7 @@ LRESULT CMainDlg::OnLButtonUp(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, B
 		m_pPanelMgr->OnMouseLButton(MouseEvent_BtnUp, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
 	}
 	::ReleaseCapture();
+	InvalidateHelpDlg();
 	return 0;
 }
 
@@ -915,10 +903,8 @@ LRESULT CMainDlg::OnKeyDown(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOO
 		return 1; // a panel has handled the key
 	}
 	bool bHandled = false;
-	if (wParam == VK_ESCAPE && m_bShowHelp) {
+	if (wParam == VK_ESCAPE && CloseHelpDlg()) {
 		bHandled = true;
-		m_bShowHelp = false;
-		this->Invalidate(FALSE);
 	} else if (wParam == VK_ESCAPE && m_pCropCtl->IsCropping()) {
 		bHandled = true;
 		m_pCropCtl->AbortCropping();
@@ -1265,15 +1251,35 @@ bool CMainDlg::IsCurrentImageFitToScreen(void* pContext) {
 // Private
 ///////////////////////////////////////////////////////////////////////////////////
 
+void CMainDlg::InvalidateHelpDlg() {
+	if (m_pHelpDlg != NULL && !m_pHelpDlg->IsDestroyed()) {
+		m_pHelpDlg->Invalidate();
+	}
+}
+
+bool CMainDlg::CloseHelpDlg() {
+	if (m_pHelpDlg != NULL && !m_pHelpDlg->IsDestroyed()) {
+		m_pHelpDlg->DestroyDialog();
+		delete m_pHelpDlg;
+		m_pHelpDlg = NULL;
+		return true;
+	}
+	return false;
+}
+
 void CMainDlg::ExecuteCommand(int nCommand) {
 	CSettingsProvider& sp = CSettingsProvider::This();
+	InvalidateHelpDlg();
 	switch (nCommand) {
 		case IDM_HELP:
-			m_bShowHelp = !m_bShowHelp;
-			if (m_clientRect.Width() < HelpersGUI::ScaleToScreen(800) || m_pCropCtl->IsCropping()) {
-				m_bShowHelp = false;
+			if (m_pHelpDlg == NULL || m_pHelpDlg->IsDestroyed()) {
+				delete m_pHelpDlg;
+				m_pHelpDlg = new CHelpDlg(this);
+				m_pHelpDlg->Create(m_hWnd);
+				m_pHelpDlg->ShowWindow(SW_SHOWNORMAL);
 			}
-			this->Invalidate(FALSE);
+			else CloseHelpDlg();
+			MouseOn();
 			break;
 		case IDM_TOGGLE:
 			if (m_pFileList->FileMarkedForToggle()) {
@@ -1392,9 +1398,6 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 				(nCommand == IDM_LOOP_FOLDER) ? Helpers::NM_LoopDirectory :
 				(nCommand == IDM_LOOP_RECURSIVELY) ? Helpers::NM_LoopSubDirectories : 
 				Helpers::NM_LoopSameDirectoryLevel);
-			if (m_bShowHelp) {
-				this->Invalidate(FALSE);
-			}
 			break;
 		case IDM_SORT_MOD_DATE:
 		case IDM_SORT_CREATION_DATE:
@@ -1406,7 +1409,7 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 				(nCommand == IDM_SORT_MOD_DATE) ? Helpers::FS_LastModTime : 
 				(nCommand == IDM_SORT_RANDOM) ? Helpers::FS_Random : 
 				(nCommand == IDM_SORT_SIZE) ? Helpers::FS_FileSize : Helpers::FS_FileName, m_pFileList->IsSortedUpcounting());
-			if (m_bShowHelp || m_pEXIFDisplayCtl->IsActive() || m_bShowFileName) {
+			if (m_pEXIFDisplayCtl->IsActive() || m_bShowFileName) {
 				this->Invalidate(FALSE);
 			}
 			break;
@@ -1632,9 +1635,6 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 				m_offsetKept = m_bUserPan ? m_offsets : CPoint(0, 0);
 			}
 			m_pImageProcPanelCtl->ShowHideSaveDBButtons();
-			if (m_bShowHelp) {
-				this->Invalidate(FALSE);
-			}
 			break;
 		case IDM_SAVE_PARAMETERS:
 			SaveParameters();
@@ -2463,6 +2463,7 @@ void CMainDlg::PerformZoom(double dValue, bool bExponent, bool bZoomToMouse, boo
 	StartLowQTimer(ZOOM_TIMEOUT);
 	if (fabs(dOldZoom - m_dZoom) > 0.0001 || m_bZoomMode) {
 		this->Invalidate(FALSE);
+		InvalidateHelpDlg();
 		if (bAdjustWindowToImage) {
 			AdjustWindowToImage(false);
 		}
@@ -2737,6 +2738,7 @@ void CMainDlg::ExchangeProcessingParams() {
 
 void CMainDlg::AfterNewImageLoaded(bool bSynchronize, bool bAfterStartup) {
 	UpdateWindowTitle();
+	InvalidateHelpDlg();
 	m_pDirectoryWatcher->SetCurrentFile(CurrentFileName(false));
 	if (!m_bIsAnimationPlaying) m_pNavPanelCtl->HideNavPanelTemporary();
 	m_pPanelMgr->AfterNewImageLoaded();
@@ -2978,7 +2980,6 @@ void CMainDlg::UpdateWindowTitle() {
 }
 
 bool CMainDlg::PrepareForModalPanel() {
-	m_bShowHelp = false;
 	m_pImageProcPanelCtl->SetVisible(false);
 	bool bOldShowNavPanel = m_pNavPanelCtl->IsActive();
 	m_pNavPanelCtl->SetActive(false);

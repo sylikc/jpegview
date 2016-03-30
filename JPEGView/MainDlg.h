@@ -29,6 +29,7 @@ class CKeyMap;
 class CDirectoryWatcher;
 class CUserCommand;
 class CPrintImage;
+class CHelpDlg;
 
 enum EMouseEvent;
 
@@ -136,7 +137,6 @@ public:
 	// Called by the different controller classes
 	HWND GetHWND() { return m_hWnd; }
 	bool IsShowFileName() { return m_bShowFileName; }
-	bool IsShowHelp() { return m_bShowHelp; }
 	bool IsInMovieMode() { return m_bMovieMode; }
 	bool IsInZoomMode() { return m_bZoomModeOnLeftMouse; }
 	bool IsPlayingAnimation() { return m_bIsAnimationPlaying; }
@@ -235,7 +235,7 @@ private:
 	bool m_bUserZoom;
 	bool m_bUserPan; // user has zoomed and panned away from default values
 	bool m_bResizeForNewImage;
-	double m_dZoom;
+	double m_dZoom, m_dRealizedZoom;
 	double m_dStartZoom; // zoom when start zoomin in zoom mode
 	double m_dZoomAtResizeStart; // zoom factor when user started resizing JPEGView main window
 	double m_dZoomMult;
@@ -279,7 +279,6 @@ private:
 	int m_nCapturedX, m_nCapturedY;
 	int m_nMouseX, m_nMouseY;
 	bool m_bShowFileName;
-	bool m_bShowHelp;
 	bool m_bFullScreenMode;
 	bool m_bAutoFitWndToImage;
 	bool m_bLockPaint;
@@ -314,6 +313,7 @@ private:
 	CPanelMgr* m_pPanelMgr;
 	CKeyMap* m_pKeyMap;
 	CPrintImage* m_pPrintImage;
+	CHelpDlg* m_pHelpDlg;
 	Helpers::ETransitionEffect m_eTransitionEffect;
 	int m_nTransitionTime;
 	DWORD m_nLastSlideShowImageTickCount;
@@ -360,6 +360,8 @@ private:
 	void PaintToDC(CDC& dc);
 	void AnimateTransition();
 	void CleanupAndTerminate();
+	void InvalidateHelpDlg();
+	bool CloseHelpDlg();
 	// this is for animated GIFs
 	void StartAnimation();
 	void AdjustAnimationFrameTime();

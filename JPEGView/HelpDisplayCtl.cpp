@@ -13,7 +13,7 @@
 #include "SettingsProvider.h"
 #include "KeyMap.h"
 
-CHelpDisplayCtl::CHelpDisplayCtl(CMainDlg* pMainDlg, CPaintDC& dc, const CImageProcessingParams* pImageProcParams) {
+CHelpDisplayCtl::CHelpDisplayCtl(CMainDlg* pMainDlg, CDC& dc, const CImageProcessingParams* pImageProcParams) {
 	m_pMainDlg = pMainDlg;
 	m_pImageProcParams = pImageProcParams;
 	m_pHelpDisplay = new CHelpDisplay(dc);
@@ -28,12 +28,11 @@ CHelpDisplayCtl::~CHelpDisplayCtl() {
 }
 
 void CHelpDisplayCtl::Show() {
-	m_pHelpDisplay->Show(CRect(CPoint(0, 0), CSize(m_helpDisplayRect.Width(), m_helpDisplayRect.Height())));
+	m_pHelpDisplay->Show();
 }
 
 void CHelpDisplayCtl::GenerateHelpDisplay() {
 	CJPEGImage* pCurrentImage = m_pMainDlg->GetCurrentImage();
-	m_pHelpDisplay->AddTitle(CNLS::GetString(_T("JPEGView Help")));
 	LPCTSTR sTitle = m_pMainDlg->CurrentFileName(true);
 	if (sTitle != NULL && pCurrentImage != NULL) {
 		double fMPix = double(pCurrentImage->OrigWidth() * pCurrentImage->OrigHeight())/(1000000);
@@ -96,7 +95,7 @@ void CHelpDisplayCtl::GenerateHelpDisplay() {
 	m_pHelpDisplay->AddLine(_KeyDesc(IDM_ROTATE_270, IDM_ROTATE_90), CNLS::GetString(_T("Rotate image and fit to screen")));
 	m_pHelpDisplay->AddLine(_KeyDesc(IDM_FIT_TO_SCREEN), CNLS::GetString(_T("Fit image to screen")));
 	m_pHelpDisplay->AddLine(_KeyDesc(IDM_TOGGLE_FIT_TO_SCREEN_100_PERCENTS), CNLS::GetString(_T("Zoom 1:1 (100 %)")));
-	TCHAR buff5[16]; _stprintf_s(buff5, 16, _T("%.0f %%"), m_pMainDlg->GetZoom()*100);
+	TCHAR buff5[16]; buff5[0] = 0; if (m_pMainDlg->GetZoom() > 0) _stprintf_s(buff5, 16, _T("%.0f %%"), m_pMainDlg->GetZoom() * 100);
 	_stprintf_s(buffMI, 256, CNLS::GetString(_T("Zoom in (%s)/Zoom out (%s)")), _KeyDesc(IDM_ZOOM_INC), _KeyDesc(IDM_ZOOM_DEC));
 	m_pHelpDisplay->AddLineInfo(_KeyDesc(IDM_ZOOM_INC, IDM_ZOOM_DEC), buff5, buffMI);
 	m_pHelpDisplay->AddLine(CNLS::GetString(_T("Mouse wheel")), CNLS::GetString(_T("Zoom in/out image")));
