@@ -3,6 +3,7 @@
 #include "NLS.h"
 #include "MainDlg.h"
 #include "HelpDisplayCtl.h"
+#include "MultiMonitorSupport.h"
 
 ///////////////////////////////////////////////////////////////////////////////////
 // Class implementation
@@ -31,7 +32,7 @@ LRESULT CHelpDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam
 	CHelpDisplayCtl helpDisplayCtl(m_pOwner, dc, m_pOwner->GetImageProcessingParams());
 	CRect panelRect = helpDisplayCtl.PanelRect();
 	SetScrollSize(panelRect.Width() - 1, panelRect.Height() - 1);
-	CRect monitorRect = m_pOwner->MonitorRect();
+	CRect monitorRect = CMultiMonitorSupport::GetWorkingRect(m_hWnd);
 	int scrollbarWidth = (panelRect.Height() > monitorRect.Height()) ? ::GetSystemMetrics(SM_CXVSCROLL) : 0;
 	panelRect.InflateRect(inflateX, inflateY, inflateX + scrollbarWidth, inflateY);
 	MoveWindow(CRect(0, 0, min(monitorRect.Width(), panelRect.Width()), min(monitorRect.Height(), panelRect.Height())));
