@@ -405,4 +405,4 @@ Bottom	Unten
 Fill paper with crop	Papier füllen (mit Abschneiden)
 Update user settings...	Benutzereinstellungen aktualisieren...
 Update user settings with new settings from settings template file?	Benutzereinstellungen mit neuen Einstellungen aus der Vorlagendatei aktualisieren?
-All existing user settings will be preserved.	Alle existierenden Benutzereinstellungen werden unverändert erhalten.
+All existing user settings will be preserved.	Alle existierenden Benutzereinstellungen bleiben unverändert erhalten.
