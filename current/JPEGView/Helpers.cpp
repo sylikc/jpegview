@@ -178,16 +178,28 @@ void GetZoomParameters(float & fZoom, CPoint & offsets, CSize imageSize, CSize w
 
 #ifdef _WIN64
 static CPUType ProbeSSEorAVX2() {
-	// first check if operating system supports AVX(2)
-	unsigned long long xcr0 = _xgetbv(0);
-	if ((xcr0 & 6) != 6)
-		return CPU_SSE; // nope, only use SSE
+	__try {
+		// check if CPU supports AVX and the xgetbv instruction
+		int abcd[4];
+		__cpuid(abcd, 1);
+		if ((abcd[2] & 0x18000000) != 0x18000000) // AVX and OSXSAVE bits
+			return CPU_SSE;
+		if ((abcd[2] & 0x04000000) == 0) // XSAVE bit, support for xgetbv
+			return CPU_SSE;
 
-	// check if AVX2 instructions are supported
-	const int AVX2BITMASK = 1 << 5;
-	int abcd[4];
-	__cpuidex(abcd, 7, 0);
-	return (abcd[1] & AVX2BITMASK) ? CPU_AVX2 : CPU_SSE;
+		// check if operating system supports AVX(2)
+		unsigned long long xcr0 = _xgetbv(0);
+		if ((xcr0 & 6) != 6)
+			return CPU_SSE; // nope, only use SSE
+
+		// check if AVX2 instructions are supported
+		const int AVX2BITMASK = 1 << 5;
+		__cpuidex(abcd, 7, 0);
+		return (abcd[1] & AVX2BITMASK) ? CPU_AVX2 : CPU_SSE;
+	}
+	__except (EXCEPTION_EXECUTE_HANDLER) {
+		return CPU_SSE;
+	}
 }
 #endif
 
