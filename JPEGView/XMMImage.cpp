@@ -28,21 +28,22 @@ CXMMImage::CXMMImage(int nWidth, int nHeight, int nFirstX, int nLastX, int nFirs
 					uint32 nBlue = sourcePixel & 0xFF;
 					uint32 nGreen = (sourcePixel >> 8) & 0xFF;
 					uint32 nRed = (sourcePixel >> 16) & 0xFF;
-					pDst[d] = ((((uint16) nBlue) << 8) + nBlue) >> 2;
+					// The commented out code actually is worse than the simple shift for precision of the fixed point arithmetic
+					pDst[d] = ((uint16)nBlue << 6); // ((((uint16)nBlue) << 8) + nBlue) >> 2;
 					d += m_nPaddedWidth;
-					pDst[d] = ((((uint16) nGreen) << 8) + nGreen) >> 2;
+					pDst[d] = ((uint16)nGreen << 6); //((((uint16) nGreen) << 8) + nGreen) >> 2;
 					d += m_nPaddedWidth;
-					pDst[d] = ((((uint16) nRed) << 8) + nRed) >> 2;
+					pDst[d] = ((uint16)nRed << 6); //((((uint16) nRed) << 8) + nRed) >> 2;
 				}
 			} else {
 				for (int i = 0; i < nSectionWidth; i++) {
 					int s = i*3;
 					int d = i;
-					pDst[d] = ((((uint16) pSrc[s]) << 8) + pSrc[s]) >> 2;
+					pDst[d] = ((uint16)pSrc[s] << 6);//((((uint16) pSrc[s]) << 8) + pSrc[s]) >> 2;
 					d += m_nPaddedWidth;
-					pDst[d] = ((((uint16) pSrc[s+1]) << 8) + pSrc[s+1]) >> 2;
+					pDst[d] = ((uint16)pSrc[s+1] << 6);//((((uint16) pSrc[s+1]) << 8) + pSrc[s+1]) >> 2;
 					d += m_nPaddedWidth;
-					pDst[d] = ((((uint16) pSrc[s+2]) << 8) + pSrc[s+2]) >> 2;
+					pDst[d] = ((uint16)pSrc[s+2] << 6);//((((uint16) pSrc[s+2]) << 8) + pSrc[s+2]) >> 2;
 				}
 			}
 			pDst += 3*m_nPaddedWidth;

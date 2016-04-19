@@ -15,7 +15,7 @@ Remove from	Kendu hemendik
 Rename:	Berrizendatu:
 No file or folder name was provided as command line parameter!	Ez da agiriri edo agiritegi izenik eman komando lerro parametro bezala!
 To use JPEGView, associate JPG, JPEG and BMP files with JPEGView.	JPEGIkusgailua erabiltzeko, elkartu JPG, JPEG eta BMP agiriak JPEGIkusgailuarekin.
-Press ESC to exit...	Sakatu ESC irtetezeko...
+Press ESC to exit...	Sakatu ESC irtetzeko...
 The file '%s' could not be read!	'%s' agiria ezin da irakurri!
 The file '%s' does not contain a list of file names!	'%s' agirak ez du agiri izenen zerradarik!
 The directory '%s' does not contain any image files!	'%s' zuzenbideak ez du irudi agiririk!
@@ -23,21 +23,21 @@ Press any key to search the subdirectories for image files.	Sakatu edozein tekla
 JPEGView Help	JPEGIkusgailu Laguntza
 Current image	Oraingo irudia
 Close help text display / Close JPEGView	Itxi laguntza idazki erakuspena / Itxi JPEGIkusgailua
-Show/hide this help text	Erakutsi/Ezkutatu laguntza idazk hau
+Show/hide this help text	Erakutsi/Ezkutatu laguntza idazki hau
 Show/hide picture information (EXIF data)	Erakutsi/Ezkutatu irudiaren argibideak (EXIF datuak)
 Show/hide file name	Erakutsi/Ezkutatu agiriaren izena
 Enable/disable high quality resampling	Gaitu/Ezgaitu ontasun handiko birlaginketa
-Enable/disable keeping of geometry related (zoom/pan/rotation)	Gaitu/Ezgaitu geometriari heustea (Zooma/Pan/Itzulkapena)
+Enable/disable keeping of geometry related (zoom/pan/rotation)	Gaitu/Ezgaitu geometriari heustea (Zooma/Pan/Itzulikapena)
 and image processing (brightness/contrast/sharpen) parameters between images	eta irudi prozesatzea (dizdira/zuribeltztasuna/garbitasuna)
 Enable/disable automatic contrast correction (histogram equalization)	Gaitu/Ezgaitu berezgaitasunezko zuribeltztasun zuzenketa (histograma ekualizazioa)
 Apply auto contrast correction using only visible section of image	Ezarri berezgaitasunezko zuribeltztasun zuzenketa irudiaren atal ikusgarria bakarrik erabiliz
 Enable/disable automatic density correction (local brightness correction)	Gaitu/Ezgaitu berezgaitasunezko dentsitate zuzenketa (tokiko dizdira zuzenketa)
 Increase/decrease lightening of shadows (LDC must be on)	Gehitu/Gutxitu itzalen argipena (LDC eraginda egon behar da)
-Increase/decrease darkening of highlights (LDC must be on)	Gehitu/Gutxitu itzalen ilunpena (LDC eraginda egon behar da)
+Increase/decrease darkening of highlights (LDC must be on)	Gehitu/Gutxitu nabarmenen ilunpena (LDC eraginda egon behar da)
 Loop through files in current folder	Bigiztatu agirien artean oraingo agiritegian
 Loop through files in current directory and all subfolders	Bigiztatu agirien artean oraingo zuzenbidean eta azpizuzenbide guztietan
 Loop through files in current directory and all sibling folders (folders on same level)	Bigiztatu agirien artean oraingo zuzenbidean eta agiritegi kidetu guztietan (maila bereko agiritegiak)
-Maximize/restore to/from virtual desktop (only for multi-monitor systems)	Handitu/Leheneratu mahaigain birtuale-ra/-tik (monitore-anitzeko sistematan bakarrik)
+Maximize/restore to/from virtual desktop (only for multi-monitor systems)	Handitu/Leheneratu mahaigain birtualera/-tik (monitore-anitzeko sistematan bakarrik)
 Copy screen to clipboard/ Copy processed full size image to clipboard	Kopiatu ikusleihoa gakora/ Kopiatu prozesatutako irudia neurri osoan gakora
 Open new image or slideshow file	Ireki irudi berri bat edo aurkezpen agiria
 Save processed image to JPEG file (original size)	Gorde prozesatutako irudia JPEG agiri batean (jatorrizko neurria)
@@ -144,12 +144,12 @@ Auto zoom mode	Berez zoom modua
 Fit to screen (no zoom)	Finkatu ikusleihora (zoom gabe)
 Fill with crop (no zoom)	Bete mozkinekin (zoom gabe)
 Exit	Irten
-Cyan-Red	Zian-Gorria
+Cyan-Red	Ziana-Gorria
 Magenta-Green	Magenta-Orlegia
-Yellow-Blue	Ori-Urdina
-C - R	Z - G	
-M - G	M - O
-Y - B	Or - U
+Yellow-Blue	Oria-Urdina
+C - R	Zu - Go
+M - G	Mo - Og
+Y - B	Or - Ur
 Batch rename/copy of files	Agirien multzokako berrizendatzea/kopiatzea
 Image files in folder	Irudi agiriak agiritegian
 Placeholders:	Ordezte-ezarpenak:
@@ -201,10 +201,10 @@ no	ez
 Show navigation panel	Erakutsi nabigazio panela
 Show/hide navigation panel	Erakutsi/Ezkutatu nabigazio panela
 About JPEGView...	JPEGIkusgailuari buruz...
-About JPEGView (64 bit version)...	JPEGView-ri buruz (64 bit bertsioa)...
+About JPEGView (64 bit version)...	JPEGView-ri buruz (64 biteko bertsioa)...
 SIMD mode used:	Erabilitako SIMD modua:
 Number of CPU cores used:	Erabilitako CPU nukleo zenbatekoa:
-Licensed under the GNU general public license (GPL), see readme file for details:	GNU Baimen Publiko Orokorrarenpean (GPL) baimenduta, ikusi 'irakurri' agiria xehetasun gehiagorako:
+Licensed under the GNU general public license (GPL), see readme file for details:	GNU Baimen Publiko Orokorraz (GPL) baimenduta, ikusi 'irakurri' agiria xehetasun gehiagorako:
 Project home page:	Egitasmoaren webgunea:
 Show first image in folder	Erakutsi agiritegiko lehenengo irudia
 Show previous image	Erakutsi aurreko irudia
@@ -224,8 +224,8 @@ Save processed image to JPEG file (screen size)	Gorde prozesatutako irudia JPEG 
 Settings/Admin	Ezarpenak/Administrazioa
 Edit global settings...	Editatu ezarpen orokorrak...
 Edit user settings...	Editatu erabiltzaile ezarpenak...
-Backup parameter DB...	Babeskopiatu DB paremetroak...
-Restore parameter DB...	Leheneratu DB paremetroak...
+Backup parameter DB...	Babeskopiatu DB parametroak...
+Restore parameter DB...	Leheneratu DB parametroak...
 No user INI file exits yet. Create user INI file from INI file template?	Oraindik ez dago erabiltzaile INI agiririk. Sortu erabiltzaile INI agiria INI agiri eredutik?
 Copying parameter DB to file '%s' failed. Reason: %s	Hutsegitea DB paremetroak '%s' agirira kopiatzerakoan. Zergaitia: %s
 Select parameter DB to restore	Hautatu leheneratzeko DB parametroak
@@ -262,7 +262,7 @@ Save cropped image	Gorde moztutako irudia
 Rotate image by user-defined angle	Itzulikatu irudia erabiltzaileak-zehaztutako angeluan
 Rotate Image	Itzulikatu irudia
 Show grid lines	Erakutsi saretxo lerroak
-Auto crop rotated image (avoids black border)	Berez moztu itzulkatutako irudia (hertz beltzak saihesten ditu)
+Auto crop rotated image (avoids black border)	Berez moztu itzulikatutako irudia (hertz beltzak saihesten ditu)
 Align image to horizontal or vertical line	Lerrokatu irudia etzaneko edo zutikako lerro batera
 Use the mouse to draw a line that shall be horizontal or vertical.	Erabili sagua etzana edo zutia izango den lerro bat marrazteko.
 Rotate the image by dragging with the mouse.	Itzulikatu irudia saguarekin arrastatuz.
@@ -288,7 +288,7 @@ Keep aspect ratio on crop	Heutsi ikuspegi mailari mozterakoan
 Lossless JPEG transformations	Galeragabeko JPEG eraldaketak
 Performing the lossless transformation failed!	Hutsegitea galeragabeko eraldaketa egiterakoan!
 Image width and height must be dividable by the JPEG block size (8 or 16) for lossless transformations!	Irudiaren zabalera eta garaiera JPEG bloke neurriagaitik (8 edo 16) zatikagarria izan behar da galeragabeko eraldaketetarako!
-Reading the JPEG file from disk failed	Hutsegitea JPEG agiria diskatik irekurtzerakoan
+Reading the JPEG file from disk failed	Hutsegitea JPEG agiria diskatik irakurtzerakoan
 Writing the resulting JPEG file to disk failed	Hutsegitea emaitz JPEG agiria diskara idazterakoan
 Performing the transformation failed	Hutsegitea eraldaketa egiterakoan
 Lossless JPEG transformations	Galeragabeko JPEG eraldaketak 
@@ -338,7 +338,7 @@ Unregistering not possible	Deserregistratzea ezinezkoa da
 %s images (processed by Window Imaging Component - WIC)	%s irudi (Window Imaging Component - WIC-rekin prozesatuta)	
 %s camera raw images (embedded JPEGs only)	%s kamera raw irudiak (barneratutako JPEG-ak  bakarrik)
 The following image extensions are protected by the operating system.	Hurrengo irudi hedapenak sistema eragileak babesturik daude.
-JPEGView can try to remove the restrictions automatically.	JPEGIkusgailua saiatu daiteke murrizpenak berezgaitasunez kentzen.
+JPEGView can try to remove the restrictions automatically.	JPEGIkusgailua murrizpenak berezgaitasunez kentzen saiatu daiteke.
 However this will fail if the current user has no administration privileges.	Horrela ere honek huts egingo du oraingo erabiltzaileak ez baditu administratzaile pribilegioak.
 Insufficient rights to remove the restrictions. Continue?	Ez duzu nahikoa eskubide murrizpenak kentzeko. Jarraitu?
 No image loaded!	Ez da irudirik gertatu! 
@@ -384,6 +384,9 @@ Sharpen low	Itzal apala
 Sharpen medium	Itzal ertaina
 The new size is too large - width or height is larger than 65535 or total number of pixels is too large!	Neurri berria handiegia da - zabalera edo garaiera 65535 baino handiagoa da edo pixel zenbatekoa guztira handiegia da!
 JPEGView is a lean, fast and highly configurable viewer/editor for JPEG, BMP, PNG, WEBP, TGA, GIF and TIFF images with a minimal GUI.	JPEGView ikusgailu/editatzaile gihartsu, azkar eta oso itxuragarri bat da JPEG, BMP, PNG, WEBP, TGA, GIF eta TIFF irudientzat gutxienezko EIG batekin.
+Set as desktop wallpaper	Ezarri mahaigaineko hormapaper bezala
+Use original image	Erabili jatorrizko irudia
+Use processed image as displayed	Erabili prozesatutako irudia erakusten den bezala
 Reset	Berrezarri
 Print image...	Irarkitu irudia...
 Print Image	Irarkitu Irudia
@@ -391,18 +394,22 @@ Print	Irarkitu
 Select Printer...	Hautatu Irarkailua...
 Printer:	Irarkailua:
 Paper:	Papera:
-Source:	Iturburua:
+Source:	Iturburua
 Orientation:	Norabidea:
 Portrait	Argazkia
 Landscape	Landargazkia
 Size:	Neurria:
 Fit to paper	Finkatu paperera
 cm	me
-Scaling mode:	Neurriratze modua:
-Printer driver	Irarkailuaren gidatzailea
+Scaling mode:	Neurriketa modua
+Printer driver	Irarketa gidagailua
 Alignment:	Lerrokapena:
 Margins:	Bazterrak:
-Left	Ezker
-Right	Eskuin
-Top	Goren
-Bottom	Beheren
+Left	Ezkerra
+Right	Eskuina
+Top	Goia
+Bottom	Behea
+Fill paper with crop	Bete papera mozketarekin
+Update user settings...	Eguneratu erabiltzaile ezarpenak
+Update user settings with new settings from settings template file?	Eguneratu erabiltzaile ezarpenak ezarpen berriekin ezarpen eredu agiritik?
+All existing user settings will be preserved.	Dauden erabiltzaile ezarpen guztiak gordeko dira.

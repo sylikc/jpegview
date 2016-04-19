@@ -10,6 +10,7 @@
 	int16* name = (int16*)((((PTR_INTEGRAL_TYPE)&(_tempVal##name) + 31) & ~31)); \
 	name[0] = name[1] = name[2] = name[3] = name[4] = name[5] = name[6] = name[7] = name[8] = name[9] = name[10] = name[11] = name[12] = name[13] = name[14] = name[15] = initializer;
 
+#ifdef _WIN64
 
 CXMMImage* ApplyFilter_AVX(int nSourceHeight, int nTargetHeight, int nWidth,
 	int nStartY_FP, int nStartX, int nIncrementY_FP,
@@ -31,7 +32,7 @@ CXMMImage* ApplyFilter_AVX(int nSourceHeight, int nTargetHeight, int nWidth,
 	const uint8* pSourceStart = (const uint8*)pSourceImg->AlignedPtr() + nStartXAligned * sizeof(short);
 	AVXFilterKernel** pKernelIndexStart = filter.Indices;
 
-	DECLARE_ALIGNED_QQWORD(ONE_XMM, 16383); // 1.0 in fixed point notation
+	DECLARE_ALIGNED_QQWORD(ONE_XMM, 16383 - 42); // 1.0 in fixed point notation, minus rounding correction
 
 	__m256i ymm0 = *((__m256i*)ONE_XMM);
 	__m256i ymm1 = _mm256_setzero_si256();
@@ -89,7 +90,7 @@ CXMMImage* ApplyFilter_AVX(int nSourceHeight, int nTargetHeight, int nWidth,
 				pFilter++;
 			}
 
-			// limit to range 0 (in ymm1), 16383 (in ymm0)
+			// limit to range 0 (in ymm1), 16383-42 (in ymm0)
 			ymm4 = _mm256_min_epi16(ymm4, ymm0);
 			ymm5 = _mm256_min_epi16(ymm5, ymm0);
 			ymm6 = _mm256_min_epi16(ymm6, ymm0);
@@ -113,3 +114,5 @@ CXMMImage* ApplyFilter_AVX(int nSourceHeight, int nTargetHeight, int nWidth,
 
 	return tempImage;
 }
+
+#endif
