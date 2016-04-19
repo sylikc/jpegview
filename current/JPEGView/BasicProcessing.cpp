@@ -1502,6 +1502,7 @@ static uint8* ApplyFilter(int nSourceWidth, int nTargetWidth, int nHeight,
 	int nPaddedSourceWidth = Helpers::DoPadding(nSourceWidth * nSourceBytesPerPixel, 4);
 	const uint8* pSourcePixelLine = NULL;
 	uint8* pTargetPixelLine = NULL;
+	const int FP_05 = 255; // rounding correction because in filter 1.0 is 16383 but we shift by 14 what is a division by 16384
 	for (int j = 0; j < nHeight; j++) {
 		pSourcePixelLine = ((uint8*) pSource) + nPaddedSourceWidth * (j + nStartY);
 		pTargetPixelLine = pTarget + 4*j;
@@ -1520,9 +1521,9 @@ static uint8* ApplyFilter(int nSourceWidth, int nTargetWidth, int nHeight,
 				nPixelValue3 += pKernel->Kernel[n] * pSourcePixel[2];
 				pSourcePixel += nSourceBytesPerPixel;
 			}
-			nPixelValue1 = nPixelValue1 >> 14;
-			nPixelValue2 = nPixelValue2 >> 14;
-			nPixelValue3 = nPixelValue3 >> 14;
+			nPixelValue1 = (nPixelValue1 + FP_05) >> 14;
+			nPixelValue2 = (nPixelValue2 + FP_05) >> 14;
+			nPixelValue3 = (nPixelValue3 + FP_05) >> 14;
 
 			*pTargetPixel++ = (uint8)max(0, min(255, nPixelValue1));
 			*pTargetPixel++ = (uint8)max(0, min(255, nPixelValue2));
@@ -1732,21 +1733,23 @@ inline static const int16* RotateLine(const int16* pSource, int16* pTarget, int 
 }
 
 inline static const int16* RotateLineToDIB_1(const int16* pSource, uint8* pTarget, int nIncTargetLine, int simdPixelsPerRegister) {
+	const int FP_05 = 42; // 0.5 (actually a bit more) in fixed point, improves rounding
 	for (int i = 0; i < simdPixelsPerRegister - 1; i++)
 	{
-		*((uint32*)pTarget) = ALPHA_OPAQUE | (*pSource >> 6); pSource++;  pTarget += nIncTargetLine;
+		*((uint32*)pTarget) = ALPHA_OPAQUE | ((*pSource + FP_05) >> 6); pSource++;  pTarget += nIncTargetLine;
 	}
-	*((uint32*)pTarget) = ALPHA_OPAQUE | (*pSource >> 6); pSource++;
+	*((uint32*)pTarget) = ALPHA_OPAQUE | ((*pSource + FP_05) >> 6); pSource++;
 
 	return pSource;
 }
 
 inline static const int16* RotateLineToDIB(const int16* pSource, uint8* pTarget, int nIncTargetLine, int simdPixelsPerRegister) {
+	const int FP_05 = 42;
 	for (int i = 0; i < simdPixelsPerRegister - 1; i++)
 	{
-		*pTarget = *pSource++ >> 6; pTarget += nIncTargetLine;
+		*pTarget = (*pSource++ + FP_05) >> 6; pTarget += nIncTargetLine;
 	}
-	*pTarget = *pSource++ >> 6;
+	*pTarget = (*pSource++ + FP_05) >> 6;
 
 	return pSource;
 }
@@ -1915,7 +1918,7 @@ static CXMMImage* ApplyFilter_SSE(int nSourceHeight, int nTargetHeight, int nWid
 	const uint8* pSourceStart = (const uint8*)pSourceImg->AlignedPtr() + nStartXAligned * sizeof(short);
 	XMMFilterKernel** pKernelIndexStart = filter.Indices;
 
-	DECLARE_ALIGNED_DQWORD(ONE_XMM, 16383); // 1.0 in fixed point notation
+	DECLARE_ALIGNED_DQWORD(ONE_XMM, 16383 - 42); // 1.0 in fixed point notation, minus rounding correction
 
 	__m128i xmm0 = *((__m128i*)ONE_XMM);
 	__m128i xmm1 = _mm_setzero_si128();
@@ -1973,7 +1976,7 @@ static CXMMImage* ApplyFilter_SSE(int nSourceHeight, int nTargetHeight, int nWid
 				pFilter++;
 			}
 
-			// limit to range 0 (in xmm1), 16383 (in xmm0)
+			// limit to range 0 (in xmm1), 16383-42 (in xmm0)
 			xmm4 = _mm_min_epi16(xmm4, xmm0);
 			xmm5 = _mm_min_epi16(xmm5, xmm0);
 			xmm6 = _mm_min_epi16(xmm6, xmm0);
@@ -2038,7 +2041,7 @@ static CXMMImage* ApplyFilter_SSE(int nSourceHeight, int nTargetHeight, int nWid
 	void* pKernelIndexStart = &(filter.Indices[0]);
 	int   nFilterLen;
 	void* pFilterStart;
-	DECLARE_ALIGNED_DQWORD(pFPONE, 16383);
+	DECLARE_ALIGNED_DQWORD(pFPONE, 16383 - 42);
 
 	_asm {
 		mov ebx, pFPONE
@@ -2106,7 +2109,7 @@ FilterKernelLoop:
 		sub    ebx, 1
 		jnz    FilterKernelLoop
 
-		// min-max to 0, 16383
+		// min-max to 0, 16383-42
 		pminsw xmm4, xmm0
 		pminsw xmm5, xmm0
 		pminsw xmm6, xmm0
@@ -2194,7 +2197,7 @@ static CXMMImage* ApplyFilter_MMX(int nSourceHeight, int nTargetHeight, int nWid
 	int   nFilterLen;
 	void* pFilterStart;
 	int nSaveESI;
-	DECLARE_ALIGNED_DQWORD(pFPONE, 16383);
+	DECLARE_ALIGNED_DQWORD(pFPONE, 16383 - 42);
 
 	_asm {
 		mov ebx, pFPONE
@@ -2266,7 +2269,7 @@ FilterKernelLoop:
 		sub    ebx, 1
 		jnz    FilterKernelLoop
 
-		// min-max to 0, 16383
+		// min-max to 0, 16383-42
 		pminsw mm4, mm0
 		pminsw mm5, mm0
 		pminsw mm6, mm0
