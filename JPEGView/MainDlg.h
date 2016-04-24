@@ -232,6 +232,7 @@ private:
 	
 	// Current parameter set
 	int m_nRotation; // this can only be 0, 90, 180 or 270
+	int m_nUserRotation; // Rotation delta from user, can only be 0, 90, 180 or 270
 	bool m_bUserZoom;
 	bool m_bUserPan; // user has zoomed and panned away from default values
 	bool m_bResizeForNewImage;
@@ -261,7 +262,6 @@ private:
 	// set of parameters used when m_bKeepParams is true
 	CImageProcessingParams* m_pImageProcParamsKept;
 	EProcessingFlags m_eProcessingFlagsKept;
-	int m_nRotationKept;
 	double m_dZoomKept;
 	CPoint m_offsetKept;
 	bool m_bCurrentImageInParamDB;

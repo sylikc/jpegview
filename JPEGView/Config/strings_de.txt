@@ -40,7 +40,7 @@ Loop through files in current directory and all sibling folders (folders on same
 Maximize/restore to/from virtual desktop (only for multi-monitor systems)	Anzeige auf alle Bildschirme ausdehnen / Ursprungsgrösse wiederherstellen
 Copy screen to clipboard/ Copy processed full size image to clipboard	Bildschirmbild in Zwischenablage kopieren/ Bearbeitetes Bild in Originalgrösse kopieren
 Open new image or slideshow file	Neues Bild, Ordner oder Bildliste für Diaschau öffnen
-Save processed image to JPEG file (original size)	Bearbeitetes Bild als JPEG Datei speichern (Originalgrösse)
+Save processed image to JPEG file (original size)	Bearbeitetes Bild als JPEG-Datei speichern (Originalgrösse)
 Save (%s)/ delete (%s) image processing parameters in/from parameter DB	Speichern (%s) der Bildparameter in die Parameter DB, bzw. Löschen (%s) der Parameter
 Sort images by creation date, resp. modification date, resp. file name	Bilder nach Erstellungsdatum, Änderungsdatum oder Dateinamen sortieren
 Goto previous image	Voriges Bild anzeigen
@@ -60,7 +60,7 @@ Rotate image and fit to screen	Bild rotieren und an Bildschirm anpassen
 Fit image to screen	Bildgrösse an Bildschirm anpassen
 Zoom 1:1 (100 %)	Zoom 1:1 (100 %)
 Zoom in (%s)/Zoom out (%s)	Bild vergrössern (%s)/verkleinern (%s)
-Zoom in/out image	Bild vergössern/verkleinern (Zoom)
+Zoom in/out image	Bild vergrössern/verkleinern (Zoom)
 Pan image	Bildausschnitt verschieben (Pan)
 Crop image	Bildausschnitt freistellen (Crop)
 Next image	Nächstes Bild anzeigen
@@ -81,14 +81,14 @@ Renaming file failed!	Datei umbenennen fehlgeschlagen!
 Reason: 	Ursache: 
 on	ein
 off	aus
-Do you really want to save the following parameters as default to the INI file	Sollen diese Parameter wirklich als Standardparameter in der INI Datei gespeichert werden
+Do you really want to save the following parameters as default to the INI file	Sollen diese Parameter wirklich als Standardparameter in der INI-Datei gespeichert werden
 Auto contrast and color correction: 	Automatische Kontrast- und Farbkorrektur: 
 Local density correction: 	Lokale Helligkeitskorrektur: 
 Order files by: 	Dateien sortieren nach: 
 Creation date/time	Erstellungsdatum
 Last modification date/time	Änderungsdatum
 File name	Dateiname
-These values will override the values from the INI file located in the program folder of JPEGView!	Diese Werte überschreiben die Werte aus der INI Datei im Programmordner von JPEGView!
+These values will override the values from the INI file located in the program folder of JPEGView!	Diese Werte überschreiben die Werte aus der INI-Datei im Programmordner von JPEGView!
 Confirm save default parameters	Standardparameter wirklich speichern?
 Images	Bilddateien
 All Files	Alle Dateien
@@ -199,7 +199,7 @@ Modification date:	Änderungsdatum:
 yes	ja
 no	nein
 Show navigation panel	Navigationsleiste anzeigen
-Show/hide navigation panel	Naviationsleiste anzeigen/nicht anzeigen
+Show/hide navigation panel	Navigationsleiste anzeigen/nicht anzeigen
 About JPEGView...	Über JPEGView...
 About JPEGView (64 bit version)...	Über JPEGView (64 bit Version)...
 SIMD mode used:	Verwendeter SIMD Modus:
@@ -220,7 +220,7 @@ Enable/disable full screen mode	Vollbildmodus einschalten/ausschalten
 Full screen mode	Vollbildmodus
 Window mode	Fenstermodus
 Save as (in screen size/resolution)	Speichern unter (in Bildschirmgrösse und Auflösung)
-Save processed image to JPEG file (screen size)	Bearbeitetes Bild als JPEG Datei speichern (Bildschirmgrösse)
+Save processed image to JPEG file (screen size)	Bearbeitetes Bild als JPEG-Datei speichern (Bildschirmgrösse)
 Settings/Admin	Einstellungen/Administration
 Edit global settings...	Globale Einstellungen editieren...
 Edit user settings...	Benutzereinstellungen editieren...
@@ -229,8 +229,8 @@ Restore parameter DB...	Parameter DB wiederherstellen...
 No user INI file exits yet. Create user INI file from INI file template?	Es existiert noch keine INI-Datei für den Benutzer. INI-Datei aus Vorlage erstellen?
 Copying parameter DB to file '%s' failed. Reason: %s	Kopieren der Parameter DB in die Datei %s fehlgeschlagen! Grund: %s
 Select parameter DB to restore	Parameter DB für Wiederherstellung auswählen
-Conflicting entries in Param DB	Konflikt beim Importieren in Param DB
-The imported param DB contains entries already present in active param DB.	Die importierte Param DB enthält Einträge, welche bereits in der aktuellen DB enthalten sind.
+Conflicting entries in Param DB	Konflikt beim Importieren in Parameter DB
+The imported param DB contains entries already present in active param DB.	Die importierte Parameter DB enthält Einträge, welche bereits in der aktuellen DB enthalten sind.
 Shall existing entries be preserved (Yes) or be overriden by the imported entries (No)?	Sollen existierende Einträge erhalten werden (Ja) oder sollen sie von den importierten Einträgen überschrieben werden (Nein)?
 Select file to display in 'File Open' dialog	Bilddatei auswählen im "Datei öffnen" Dialog
 Crop Mode	Freistellen Modus
@@ -247,8 +247,8 @@ to current date	auf aktuelles Datum
 to EXIF date	auf EXIF Datum
 Mark image for toggling. Use %s to toggle between marked and current image	Bild markieren für Umschalten. %s schaltet auf markiertes Bild um
 Saturation	Sättigung
-Unsharp mask...	Unscharfmaske...
-Apply Unsharp Mask	Unscharfmaske anwenden
+Unsharp mask...	Unscharf maskieren...
+Apply Unsharp Mask	Unscharf maskieren anwenden
 Radius	Radius
 Amount	Stärke
 Threshold	Schwellwert
@@ -324,10 +324,10 @@ JPEGView is registered as default viewer for the selected file formats.	JPEGView
 Registration applies to the current user only.	Die Registrierung gilt nur für den aktuellen Benutzer!
 Extension	Erweiterung
 File type	Dateityp
-The following file extensions cannot be unregistered because they have been registered in the 'local machine' registry area.	Die folgenden Dateierweiterungen können nicht deregistriert werden, da sie im 'local machine' Registryzweig registriert wurden.
-Registering or unregistering file extensions in this registry area requires administration privileges and cannot be done in JPEGView.	Registrieren/deregistrieren von Dateierweiterungen in diesem Registryzweig erfordert Administratorrechte und kann nicht in JPEGView gemacht werden.
-Press 'OK' to continue with registration or 'Cancel' to not modify any registrations.	Drücken Sie 'OK' um fortzufahren oder 'Abbrechen' um keine Registierungen zu ändern.
-Unregistering not possible	Deregistrierung nicht möglich
+The following file extensions cannot be unregistered because they have been registered in the 'local machine' registry area.	Die folgenden Dateierweiterungen können nicht de-registriert werden, da sie im 'local machine' Registryzweig registriert wurden.
+Registering or unregistering file extensions in this registry area requires administration privileges and cannot be done in JPEGView.	Registrieren/de-registrieren von Dateierweiterungen in diesem Registryzweig erfordert Administratorrechte und kann nicht in JPEGView gemacht werden.
+Press 'OK' to continue with registration or 'Cancel' to not modify any registrations.	Drücken Sie 'OK' um fortzufahren oder 'Abbrechen' um keine Registrierungen zu ändern.
+Unregistering not possible	De-registrierung nicht möglich
 %s images	%s Bilder
 %s images (processed by Window Imaging Component - WIC)	%s Bilder (geöffnet mit Windows Imaging Component - WIC)
 %s camera raw images (embedded JPEGs only)	%s Kamera-Rohbilder (nur eingebettete JPEG Bilder)
@@ -337,7 +337,7 @@ No image loaded!	Kein Bild geladen!
 Right mouse button: Context menu	Rechte Maustaste: Kontextmenü
 Windows 8 blocks JPEGView from changing the default program for these file endings.	Windows 8 verunmöglicht, dass JPEGView das Standardprogramm für diese Dateierweiterungen ändert.
 Use the 'Default Programs' configuration dialog from the operating system instead.	Benutzen Sie stattdessen den 'Standardprogramme' Konfigurationsdialog des Betriebssystems.
-Alternatively, right click an image file of the given type in Windows Explorer and select 'Open with... > Choose default program'	Alternativ können Sie eine Bilddatei des entsprechenden Typs im Windows Explorer rechtsklicken und 'Öffnen mit... > Standardprogram festlegen' anwählen.
+Alternatively, right click an image file of the given type in Windows Explorer and select 'Open with... > Choose default program'	Alternativ können Sie eine Bilddatei des entsprechenden Typs im Windows Explorer rechts-klicken und 'Öffnen mit... > Standardprogramm festlegen' anwählen.
 User commands	Benutzerkommandos
 Open image with	Bilddatei öffnen mit
 Manage 'Open image with' menu...	Menü 'Bilddatei öffnen mit' verwalten...

@@ -189,7 +189,6 @@ CMainDlg::CMainDlg(bool bForceFullScreen) {
 
 	m_pImageProcParamsKept = new CImageProcessingParams();
 	m_eProcessingFlagsKept = PFLAG_HighQualityResampling;
-	m_nRotationKept = 0;
 	m_dZoomKept = -1;
 	m_offsetKept = CPoint(0, 0);
 	m_bCurrentImageInParamDB = false;
@@ -218,6 +217,7 @@ CMainDlg::CMainDlg(bool bForceFullScreen) {
 
 	m_eProcFlagsBeforeMovie = PFLAG_None;
 	m_nRotation = 0;
+	m_nUserRotation = 0;
 	m_dZoomAtResizeStart = 1.0;
 	m_bZoomMode = false;
 	m_bZoomModeOnLeftMouse = false;
@@ -1494,6 +1494,7 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 					m_pImageProcParams->LightenShadows = m_pCurrentImage->GetInitialProcessParams().LightenShadows;
 					InitFromProcessingFlags(procFlags, m_bHQResampling, m_bAutoContrast, m_bAutoContrastSection, m_bLDC, m_bLandscapeMode);
 					m_nRotation = m_pCurrentImage->GetInitialRotation();
+					m_nUserRotation = 0;
 					m_dZoom = -1;
 					m_pCurrentImage->SetIsInParamDB(false);
 					m_pImageProcPanelCtl->ShowHideSaveDBButtons();
@@ -1509,6 +1510,7 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 			if (m_pCurrentImage != NULL) {
 				uint32 nRotationDelta = (nCommand == IDM_ROTATE_90) ? 90 : 270;
 				m_nRotation = (m_nRotation + nRotationDelta) % 360;
+				m_nUserRotation = (m_nUserRotation + nRotationDelta) % 360;
 				m_pCurrentImage->Rotate(nRotationDelta);
 				if (!IsAdjustWindowToImage()) m_dZoom = -1;
 				m_bUserZoom = false;
@@ -1630,7 +1632,6 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 			if (m_bKeepParams) {
 				*m_pImageProcParamsKept = *m_pImageProcParams;
 				m_eProcessingFlagsKept = CreateProcessingFlags(m_bHQResampling, m_bAutoContrast, false, m_bLDC, m_bKeepParams, m_bLandscapeMode);
-				m_nRotationKept = m_nRotation;
 				m_dZoomKept = (m_bUserZoom || IsAdjustWindowToImage()) ? m_dZoom : -1;
 				m_offsetKept = m_bUserPan ? m_offsets : CPoint(0, 0);
 			}
@@ -2572,14 +2573,14 @@ CProcessParams CMainDlg::CreateProcessParams(bool bNoProcessingAfterLoad) {
 			m_pImageProcParamsKept->LightenShadows = dOldLightenShadows;
 		}
 		m_eProcessingFlagsKept = CreateProcessingFlags(m_bHQResampling, m_bAutoContrast, false, m_bLDC, m_bKeepParams, m_bLandscapeMode);
-		m_nRotationKept = m_nRotation;
 		m_dZoomKept = (m_bUserZoom || IsAdjustWindowToImage()) ? m_dZoom : -1;
 		m_offsetKept = m_bUserPan ? m_offsets : CPoint(0, 0);
 		if (m_isUserFitToScreen && !IsAdjustWindowToImage()) { eAutoZoomMode = m_autoZoomFitToScreen; }
 
 		return CProcessParams(nClientWidth, nClientHeight,
 			CMultiMonitorSupport::GetMonitorRect(m_hWnd).Size(),
-			CRotationParams(m_nRotationKept), 
+			CRotationParams(0),
+			m_nUserRotation,
 			m_dZoomKept,
 			eAutoZoomMode,
 			m_offsetKept,
@@ -2590,7 +2591,7 @@ CProcessParams CMainDlg::CreateProcessParams(bool bNoProcessingAfterLoad) {
 		CSettingsProvider& sp = CSettingsProvider::This();
 		return CProcessParams(nClientWidth, nClientHeight, 
 			CMultiMonitorSupport::GetMonitorRect(m_hWnd).Size(),
-			CRotationParams(0), -1, eAutoZoomMode, CPoint(0, 0),
+			CRotationParams(0), 0, -1, eAutoZoomMode, CPoint(0, 0),
 			_SetLandscapeModeParams(m_bLandscapeMode, GetDefaultProcessingParams()),
 			SetProcessingFlag(_SetLandscapeModeFlags(GetDefaultProcessingFlags(m_bLandscapeMode)), PFLAG_NoProcessingAfterLoad, bNoProcessingAfterLoad));
 	}
@@ -2599,6 +2600,7 @@ CProcessParams CMainDlg::CreateProcessParams(bool bNoProcessingAfterLoad) {
 void CMainDlg::ResetParamsToDefault() {
 	CSettingsProvider& sp = CSettingsProvider::This();
 	m_nRotation = 0;
+	m_nUserRotation = 0;
 	m_dZoom = m_dZoomMult = -1.0;
 	m_offsets = CPoint(0, 0);
 	m_bUserZoom = false;
@@ -2777,11 +2779,7 @@ void CMainDlg::AfterNewImageLoaded(bool bSynchronize, bool bAfterStartup) {
 				m_pImageProcParams->LightenShadows = m_pImageProcParamsKept->LightenShadows;
 			}
 			if (m_bKeepParams) {
-				if (m_pCurrentImage->IsRotationByEXIF()) {
-					m_nRotation = m_pCurrentImage->GetInitialRotation();
-				} else {
-					m_nRotation = m_nRotationKept;
-				}
+				m_nRotation = m_pCurrentImage->GetInitialRotation() + m_nUserRotation;
 			}
 		}
 		if (!bAfterStartup && !m_bIsAnimationPlaying) {

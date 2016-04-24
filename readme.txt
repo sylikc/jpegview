@@ -19,6 +19,12 @@ Windows XP SP2 or later is needed to run the 32 bit version.
 
 Changelog
 *********
+[1.0.36]
+Bugs fixed:
+- Fixed problem with EXIF rotation combined with 'Keep parameters' (F4).
+Other changes:
+- Improved precision of fixed point up and downsampling filters
+
 [1.0.35.1]
 Bugs fixed:
 - 64 bit version did not work on CPUs not supporting AVX
