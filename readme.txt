@@ -21,11 +21,12 @@ Changelog
 *********
 [1.0.36]
 Bugs fixed:
-- Fixed problem with EXIF rotation combined with 'Keep parameters' (F4).
+- Fixed problem with EXIF rotation combined with 'Keep parameters' mode (F4).
 Other changes:
+- "Set current parameters as default values": Saving more parameters to INI file
 - New INI file setting:
   SkipFileOpenDialogOnStartup
-    Set to true to skip this dialog when starting JPEGView
+    Set to true to skip the 'Open' dialog when starting JPEGView
 - Improved precision of fixed point arithmetics in up- and downsampling filters
 
 [1.0.35.1]

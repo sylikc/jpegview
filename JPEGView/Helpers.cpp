@@ -664,6 +664,42 @@ ETransitionEffect ConvertTransitionEffectFromString(LPCTSTR str) {
 	return TE_None;
 }
 
+LPCTSTR ConvertTransitionEffectToString(ETransitionEffect effect) {
+	switch (effect)
+	{
+	case Helpers::TE_None:
+		return _T("None");
+	case Helpers::TE_Blend:
+		return _T("Blend");
+	case Helpers::TE_SlideRL:
+		return _T("SlideRL");
+	case Helpers::TE_SlideLR:
+		return _T("SlideLR");
+	case Helpers::TE_SlideTB:
+		return _T("SlideTB");
+	case Helpers::TE_SlideBT:
+		return _T("SlideBT");
+	case Helpers::TE_RollRL:
+		return _T("RollRL");
+	case Helpers::TE_RollLR:
+		return _T("RollLR");
+	case Helpers::TE_RollTB:
+		return _T("RollTB");
+	case Helpers::TE_RollBT:
+		return _T("RollBT");
+	case Helpers::TE_ScrollRL:
+		return _T("ScrollRL");
+	case Helpers::TE_ScrollLR:
+		return _T("ScrollLR");
+	case Helpers::TE_ScrollTB:
+		return _T("ScrollTB");
+	case Helpers::TE_ScrollBT:
+		return _T("ScrollBT");
+	default:
+		return _T("None");
+	}
+}
+
 static bool IsInFileEndingList(LPCTSTR sFileEndings, LPCTSTR sEnding) {
 	const int BUFFER_SIZE = 256;
 	TCHAR buffer[BUFFER_SIZE];

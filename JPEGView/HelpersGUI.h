@@ -54,10 +54,11 @@ namespace HelpersGUI {
 	CPoint DrawDIB32bppWithBlackBorders(CDC& dc, BITMAPINFO& bmInfo, void* pDIBData, HBRUSH backBrush, const CRect& targetArea, CSize dibSize, CPoint offset);
 
 	// Gets the text for confirmation of saving of settings to INI file
-	CString GetINIFileSaveConfirmationText(const CImageProcessingParams& procParams, 
-									 EProcessingFlags eProcFlags, Helpers::ESorting eFileSorting, bool isSortedUpcounting,
-									 Helpers::EAutoZoomMode eAutoZoomMode,
-									 bool bShowNavPanel);
+	CString GetINIFileSaveConfirmationText(const CImageProcessingParams& procParams,
+		EProcessingFlags eProcFlags, Helpers::ENavigationMode eNavigationMode, Helpers::ESorting eFileSorting, bool isSortedUpcounting,
+		Helpers::EAutoZoomMode eAutoZoomMode,
+		bool bShowNavPanel, bool bShowFileName, bool bShowFileInfo,
+		Helpers::ETransitionEffect eSlideShowTransitionEffect);
 
 	// Draws an error text for the given file loading error (combination of EFileLoadError codes)
 	void DrawImageLoadErrorText(CDC& dc, const CRect& clientRect, LPCTSTR sFailedFileName, int nFileLoadError);

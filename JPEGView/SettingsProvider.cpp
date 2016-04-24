@@ -82,9 +82,6 @@ CSettingsProvider::CSettingsProvider(void) {
 
 	m_bAutoFullScreen = GetString(_T("ShowFullScreen"), _T("")).CompareNoCase(_T("auto")) == 0;
 	m_bShowFullScreen = m_bAutoFullScreen ? true : GetBool(_T("ShowFullScreen"), true);
-	m_bHQRS = GetBool(_T("HighQualityResampling"), true);
-	m_bShowFileName = GetBool(_T("ShowFileName"), false);
-	m_bShowFileInfo = GetBool(_T("ShowFileInfo"), false);
 	m_bShowEXIFDateInTitle = GetBool(_T("ShowEXIFDateInTitle"), true);
 	m_bShowHistogram = GetBool(_T("ShowHistogram"), false);
 	m_bShowJPEGComments = GetBool(_T("ShowJPEGComments"), true);
@@ -92,7 +89,6 @@ CSettingsProvider::CSettingsProvider(void) {
 	m_bShowZoomNavigator = GetBool(_T("ShowZoomNavigator"), true);
 	m_fBlendFactorNavPanel = (float)GetDouble(_T("BlendFactorNavPanel"), 0.5, 0.0, 1.0);
 	m_fScaleFactorNavPanel = (float)GetDouble(_T("ScaleFactorNavPanel"), 1.0, 0.8, 2.5);
-	m_bKeepParams = GetBool(_T("KeepParameters"), false);
 
 	CString sCPU = GetString(_T("CPUType"), _T("AutoDetect"));
 	if (sCPU.CompareNoCase(_T("Generic")) == 0) {
@@ -127,17 +123,6 @@ CSettingsProvider::CSettingsProvider(void) {
 		m_eDownsamplingFilter = Filter_Downsampling_Best_Quality;
 	}
 
-	CString sNavigation = GetString(_T("FolderNavigation"), _T("LoopFolder"));
-	if (sNavigation.CompareNoCase(_T("LoopSameFolderLevel")) == 0) {
-		m_eNavigation = Helpers::NM_LoopSameDirectoryLevel;
-	}
-	else if (sNavigation.CompareNoCase(_T("LoopSubFolders")) == 0) {
-		m_eNavigation = Helpers::NM_LoopSubDirectories;
-	}
-	else {
-		m_eNavigation = Helpers::NM_LoopDirectory;
-	}
-
 	m_bNavigateMouseWheel = GetBool(_T("NavigateWithMouseWheel"), false);
 
 	CString sDeleteConfirmation = GetString(_T("DeleteConfirmation"), _T("OnlyWhenNoRecycleBin"));
@@ -152,7 +137,6 @@ CSettingsProvider::CSettingsProvider(void) {
 	}
 
 	m_nMaxSlideShowFileListSize = GetInt(_T("MaxSlideShowFileListSizeKB"), 200, 100, 10000);
-	m_eSlideShowTransitionEffect = Helpers::ConvertTransitionEffectFromString(GetString(_T("SlideShowTransitionEffect"), _T("")));
 	m_nSlideShowEffectTimeMs = GetInt(_T("SlideShowEffectTime"), 200, 100, 5000);
 	m_bForceGDIPlus = GetBool(_T("ForceGDIPlus"), false);
 	m_bSingleInstance = GetBool(_T("SingleInstance"), false);
@@ -373,6 +357,16 @@ void CSettingsProvider::ReadWriteableINISettings() {
 	m_dBrightenShadows = GetDouble(_T("LDCBrightenShadows"), 0.5, 0.0, 1.0);
 	m_dDarkenHighlights = GetDouble(_T("LDCDarkenHighlights"), 0.25, 0.0, 1.0);
 	m_dBrightenShadowsSteepness = GetDouble(_T("LDCBrightenShadowsSteepness"), 0.5, 0.0, 1.0);
+	CString sNavigation = GetString(_T("FolderNavigation"), _T("LoopFolder"));
+	if (sNavigation.CompareNoCase(_T("LoopSameFolderLevel")) == 0) {
+		m_eNavigation = Helpers::NM_LoopSameDirectoryLevel;
+	}
+	else if (sNavigation.CompareNoCase(_T("LoopSubFolders")) == 0) {
+		m_eNavigation = Helpers::NM_LoopSubDirectories;
+	}
+	else {
+		m_eNavigation = Helpers::NM_LoopDirectory;
+	}
 	CString sSorting = GetString(_T("FileDisplayOrder"), _T("LastModDate"));
 	if (sSorting.CompareNoCase(_T("CreationDate")) == 0) {
 		m_eSorting = Helpers::FS_CreationTime;
@@ -393,12 +387,20 @@ void CSettingsProvider::ReadWriteableINISettings() {
 	m_eAutoZoomMode = GetAutoZoomMode(_T("AutoZoomMode"), Helpers::ZM_FitToScreenNoZoom);
 	m_eAutoZoomModeFullscreen = GetAutoZoomMode(_T("AutoZoomModeFullscreen"), m_eAutoZoomMode);
 	m_bShowNavPanel = GetBool(_T("ShowNavPanel"), true);
+
+	m_bHQRS = GetBool(_T("HighQualityResampling"), true);
+	m_bShowFileName = GetBool(_T("ShowFileName"), false);
+	m_bShowFileInfo = GetBool(_T("ShowFileInfo"), false);
+	m_bKeepParams = GetBool(_T("KeepParameters"), false);
+	m_eSlideShowTransitionEffect = Helpers::ConvertTransitionEffectFromString(GetString(_T("SlideShowTransitionEffect"), _T("")));
 }
 
 void CSettingsProvider::SaveSettings(const CImageProcessingParams& procParams, 
-									 EProcessingFlags eProcFlags, Helpers::ESorting eFileSorting, bool isSortedUpcounting,
+									 EProcessingFlags eProcFlags,
+									 Helpers::ENavigationMode eNavigationMode, Helpers::ESorting eFileSorting, bool isSortedUpcounting,
 									 Helpers::EAutoZoomMode eAutoZoomMode, Helpers::EAutoZoomMode eAutoZoomModeFullScreen,
-									 bool bShowNavPanel) {
+									 bool bShowNavPanel, bool bShowFileName, bool bShowFileInfo,
+									 Helpers::ETransitionEffect eSlideShowTransitionEffect) {
 	MakeSureUserINIExists();
 
 	WriteDouble(_T("Contrast"), procParams.Contrast);
@@ -415,6 +417,16 @@ void CSettingsProvider::SaveSettings(const CImageProcessingParams& procParams,
 		WriteDouble(_T("LDCDarkenHighlights"), procParams.DarkenHighlights);
 		WriteDouble(_T("LDCBrightenShadowsSteepness"), procParams.LightenShadowSteepness);
 	}
+
+	LPCTSTR sNavigation = _T("LoopFolder");
+	if (eNavigationMode == Helpers::NM_LoopSameDirectoryLevel) {
+		sNavigation = _T("LoopSameFolderLevel");
+	}
+	else if (eNavigationMode == Helpers::NM_LoopSubDirectories) {
+		sNavigation = _T("LoopSubFolders");
+	}
+	WriteString(_T("FolderNavigation"), sNavigation);
+
 	LPCTSTR sSorting = _T("FileName");
 	if (eFileSorting == Helpers::FS_CreationTime) {
 		sSorting = _T("CreationDate");
@@ -433,6 +445,13 @@ void CSettingsProvider::SaveSettings(const CImageProcessingParams& procParams,
 	WriteString(_T("AutoZoomModeFullscreen"), GetAutoZoomModeString(eAutoZoomModeFullScreen));
 
 	WriteBool(_T("ShowNavPanel"), bShowNavPanel);
+
+	WriteBool(_T("HighQualityResampling"), GetProcessingFlag(eProcFlags, PFLAG_HighQualityResampling));
+	WriteBool(_T("KeepParameters"), GetProcessingFlag(eProcFlags, PFLAG_KeepParams));
+	WriteBool(_T("ShowFileName"), bShowFileName);
+	WriteBool(_T("ShowFileInfo"), bShowFileInfo);
+
+	WriteString(_T("SlideShowTransitionEffect"), Helpers::ConvertTransitionEffectToString(eSlideShowTransitionEffect));
 
 	m_bUserINIExists = true;
 	ReadWriteableINISettings();
@@ -741,4 +760,10 @@ void CSettingsProvider::WriteDouble(LPCTSTR sKey, double dValue) {
 
 void CSettingsProvider::WriteBool(LPCTSTR sKey, bool bValue) {
 	WriteString(sKey, bValue ? _T("true") : _T("false"));
+}
+
+void CSettingsProvider::WriteInt(LPCTSTR sKey, int nValue) {
+	TCHAR buff[32];
+	_stprintf_s(buff, 32, _T("%d"), nValue);
+	WriteString(sKey, buff);
 }
