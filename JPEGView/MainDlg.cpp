@@ -429,8 +429,12 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 	if (s_bFirst) {
 		s_bFirst = false;
 		if (m_sStartupFile.IsEmpty()) {
-			OpenFile(true, true);
-			Invalidate(TRUE);
+			if (CSettingsProvider::This().SkipFileOpenDialogOnStartup())
+				m_isBeforeFileSelected = false;
+			else {
+				OpenFileWithDialog(true, true);
+				Invalidate(TRUE);
+			}
 		}
 	}
 
@@ -1295,7 +1299,7 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 			this->ShowWindow(SW_MINIMIZE);
 			break;
 		case IDM_OPEN:
-			OpenFile(false, false);
+			OpenFileWithDialog(false, false);
 			break;
 		case IDM_SAVE:
 		case IDM_SAVE_SCREEN:
@@ -1967,7 +1971,7 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 	}
 }
 
-bool CMainDlg::OpenFile(bool bFullScreen, bool bAfterStartup) {
+bool CMainDlg::OpenFileWithDialog(bool bFullScreen, bool bAfterStartup) {
 	StopMovieMode();
 	StopAnimation();
 	MouseOn();

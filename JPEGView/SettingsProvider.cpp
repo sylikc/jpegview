@@ -266,6 +266,8 @@ CSettingsProvider::CSettingsProvider(void) {
 		}
 	}
 
+	m_bSkipFileOpenDialogOnStartup = GetBool(_T("SkipFileOpenDialogOnStartup"), false);
+
 	m_sLanguage = GetString(_T("Language"), _T("auto")); 
 
 	m_sACCExclude = GetString(_T("ACCExclude"), _T("")); 
