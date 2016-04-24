@@ -23,7 +23,10 @@ Changelog
 Bugs fixed:
 - Fixed problem with EXIF rotation combined with 'Keep parameters' (F4).
 Other changes:
-- Improved precision of fixed point up and downsampling filters
+- New INI file setting:
+  SkipFileOpenDialogOnStartup
+    Set to true to skip this dialog when starting JPEGView
+- Improved precision of fixed point arithmetics in up- and downsampling filters
 
 [1.0.35.1]
 Bugs fixed:

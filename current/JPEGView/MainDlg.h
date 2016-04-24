@@ -321,7 +321,7 @@ private:
 	bool m_isBeforeFileSelected;
 	double m_dLastImageDisplayTime;
 
-	bool OpenFile(bool bFullScreen, bool bAfterStartup);
+	bool OpenFileWithDialog(bool bFullScreen, bool bAfterStartup);
 	void OpenFile(LPCTSTR sFileName, bool bAfterStartup);
 	bool SaveImage(bool bFullSize);
 	bool SaveImageNoPrompt(LPCTSTR sFileName, bool bFullSize);

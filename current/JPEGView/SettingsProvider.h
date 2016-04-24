@@ -114,6 +114,7 @@ public:
 	double MinimalDisplayTime() { return m_minimalDisplayTime; }
 	CSize UserCropAspectRatio() { return m_userCropAspectRatio; }
 	LPCTSTR WallpaperPath() { return m_sWallpaperPath; }
+	bool SkipFileOpenDialogOnStartup() { return m_bSkipFileOpenDialogOnStartup; }
 
 	// Returns if a user INI file exists
 	bool ExistsUserINI();
@@ -263,6 +264,7 @@ private:
 	double m_minimalDisplayTime;
 	CSize m_userCropAspectRatio;
 	CString m_sWallpaperPath;
+	bool m_bSkipFileOpenDialogOnStartup;
 
 	std::list<CUserCommand*> m_userCommands;
 	std::list<CUserCommand*> m_openWithCommands;
