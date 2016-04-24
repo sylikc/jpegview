@@ -2839,11 +2839,12 @@ void CMainDlg::SaveParameters() {
 
 	EProcessingFlags eFlags = CreateDefaultProcessingFlags(m_bKeepParams);
 	CString sText = HelpersGUI::GetINIFileSaveConfirmationText(*m_pImageProcParams, eFlags,
-		m_pFileList->GetSorting(), m_pFileList->IsSortedUpcounting(), GetAutoZoomMode(), m_pNavPanelCtl->IsActive());
+		m_pFileList->GetNavigationMode(), m_pFileList->GetSorting(), m_pFileList->IsSortedUpcounting(), GetAutoZoomMode(), m_pNavPanelCtl->IsActive(),
+		m_bShowFileName, m_pEXIFDisplayCtl->IsActive(), m_eTransitionEffect);
 
 	if (IDYES == this->MessageBox(sText, CNLS::GetString(_T("Confirm save default parameters")), MB_YESNO | MB_ICONQUESTION)) {
-		CSettingsProvider::This().SaveSettings(*m_pImageProcParams, eFlags, m_pFileList->GetSorting(), m_pFileList->IsSortedUpcounting(),
-			m_eAutoZoomModeWindowed, m_eAutoZoomModeFullscreen, m_pNavPanelCtl->IsActive());
+		CSettingsProvider::This().SaveSettings(*m_pImageProcParams, eFlags, m_pFileList->GetNavigationMode(), m_pFileList->GetSorting(), m_pFileList->IsSortedUpcounting(),
+			m_eAutoZoomModeWindowed, m_eAutoZoomModeFullscreen, m_pNavPanelCtl->IsActive(), m_bShowFileName, m_pEXIFDisplayCtl->IsActive(), m_eTransitionEffect);
 	}
 }
 

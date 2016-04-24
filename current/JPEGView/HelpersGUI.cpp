@@ -263,9 +263,10 @@ namespace HelpersGUI {
 	}
 
 	CString GetINIFileSaveConfirmationText(const CImageProcessingParams& procParams, 
-										 EProcessingFlags eProcFlags, Helpers::ESorting eFileSorting, bool isSortedUpcounting,
-										 Helpers::EAutoZoomMode eAutoZoomMode,
-										 bool bShowNavPanel) {
+		EProcessingFlags eProcFlags, Helpers::ENavigationMode eNavigationMode, Helpers::ESorting eFileSorting, bool isSortedUpcounting,
+		Helpers::EAutoZoomMode eAutoZoomMode,
+		bool bShowNavPanel, bool bShowFileName, bool bShowFileInfo,
+		Helpers::ETransitionEffect eSlideShowTransitionEffect) {
 
 		const int BUFF_SIZE = 256;
 		TCHAR buff[BUFF_SIZE];
@@ -295,6 +296,19 @@ namespace HelpersGUI {
 		}
 		AddFlagText(sText, CNLS::GetString(_T("Auto contrast and color correction: ")), GetProcessingFlag(eProcFlags, PFLAG_AutoContrast));
 		AddFlagText(sText, CNLS::GetString(_T("Local density correction: ")), GetProcessingFlag(eProcFlags, PFLAG_LDC));
+		AddFlagText(sText, CNLS::GetString(_T("High quality resampling: ")), GetProcessingFlag(eProcFlags, PFLAG_HighQualityResampling));
+		AddFlagText(sText, CString(CNLS::GetString(_T("Keep parameters"))) + _T(": "), GetProcessingFlag(eProcFlags, PFLAG_KeepParams));
+		sText += CNLS::GetString(_T("Navigation")); sText += _T(": ");
+		if (eNavigationMode == Helpers::NM_LoopSameDirectoryLevel) {
+			sText += CNLS::GetString(_T("Loop siblings"));
+		}
+		else if (eNavigationMode == Helpers::NM_LoopSubDirectories) {
+			sText += CNLS::GetString(_T("Loop recursively"));
+		}
+		else if (eNavigationMode == Helpers::NM_LoopDirectory) {
+			sText += CNLS::GetString(_T("Loop folder"));
+		}
+		sText += _T("\n");
 		sText += CNLS::GetString(_T("Order files by: "));
 		if (eFileSorting == Helpers::FS_CreationTime) {
 			sText += CNLS::GetString(_T("Creation date/time"));
@@ -325,6 +339,58 @@ namespace HelpersGUI {
 		sText += _T("\n");
 		sText += CNLS::GetString(_T("Show navigation panel")); sText += _T(": ");
 		sText += bShowNavPanel ? CNLS::GetString(_T("yes")) : CNLS::GetString(_T("no"));
+		sText += _T("\n");
+		AddFlagText(sText, CString(CNLS::GetString(_T("Show filename"))) + _T(": "), bShowFileName);
+		AddFlagText(sText, CString(CNLS::GetString(_T("Show picture info (EXIF)"))) + _T(": "), bShowFileInfo);
+		
+		sText += CNLS::GetString(_T("Slideshow")); sText += _T(" > ");
+		sText += CNLS::GetString(_T("Transition Effect")); sText += _T(": ");
+		switch (eSlideShowTransitionEffect)
+		{
+			case Helpers::TE_None:
+				sText += CNLS::GetString(_T("None"));
+				break;
+			case Helpers::TE_Blend:
+				sText += CNLS::GetString(_T("Blend"));
+				break;
+			case Helpers::TE_SlideRL:
+				sText += CNLS::GetString(_T("Slide from right"));
+				break;
+			case Helpers::TE_SlideLR:
+				sText += CNLS::GetString(_T("Slide from left"));
+				break;
+			case Helpers::TE_SlideTB:
+				sText += CNLS::GetString(_T("Slide from top"));
+				break;
+			case Helpers::TE_SlideBT:
+				sText += CNLS::GetString(_T("Slide from bottom"));
+				break;
+			case Helpers::TE_RollRL:
+				sText += CNLS::GetString(_T("Roll from right"));
+				break;
+			case Helpers::TE_RollLR:
+				sText += CNLS::GetString(_T("Roll from left"));
+				break;
+			case Helpers::TE_RollTB:
+				sText += CNLS::GetString(_T("Roll from top"));
+				break;
+			case Helpers::TE_RollBT:
+				sText += CNLS::GetString(_T("Roll from bottom"));
+				break;
+			case Helpers::TE_ScrollRL:
+				sText += CNLS::GetString(_T("Scroll from right"));
+				break;
+			case Helpers::TE_ScrollLR:
+				sText += CNLS::GetString(_T("Scroll from left"));
+				break;
+			case Helpers::TE_ScrollTB:
+				sText += CNLS::GetString(_T("Scroll from top"));
+				break;
+			case Helpers::TE_ScrollBT:
+				sText += CNLS::GetString(_T("Scroll from bottom"));
+				break;
+		}
+
 		sText += _T("\n\n");
 		sText += CNLS::GetString(_T("These values will override the values from the INI file located in the program folder of JPEGView!"));
 

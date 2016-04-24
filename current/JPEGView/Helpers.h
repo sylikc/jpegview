@@ -141,6 +141,9 @@ namespace Helpers {
 	// Converts the transition effect from string (as in INI or command line parameter) to enum
 	ETransitionEffect ConvertTransitionEffectFromString(LPCTSTR str);
 
+	// Inverse of ConvertTransitionEffectFromString
+	LPCTSTR ConvertTransitionEffectToString(ETransitionEffect effect);
+
 	// Tests if the CPU supports AVX2, SSE, MMX(2)
 	CPUType ProbeCPU(void);
 

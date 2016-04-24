@@ -126,9 +126,12 @@ public:
 
 	// This will only save a subset of settings to the inifile located in AppData\JPEGView\JPEGView.ini.
 	// Note that this INI file has precedence over the ini file at the program directory
-	void SaveSettings(const CImageProcessingParams& procParams, EProcessingFlags eProcFlags, 
-		Helpers::ESorting eFileSorting, bool isSortedUpcounting, Helpers::EAutoZoomMode eAutoZoomMode, 
-		Helpers::EAutoZoomMode eAutoZoomModeFullScreen, bool bShowNavPanel);
+	void SaveSettings(const CImageProcessingParams& procParams,
+		EProcessingFlags eProcFlags,
+		Helpers::ENavigationMode eNavigationMode, Helpers::ESorting eFileSorting, bool isSortedUpcounting,
+		Helpers::EAutoZoomMode eAutoZoomMode, Helpers::EAutoZoomMode eAutoZoomModeFullScreen,
+		bool bShowNavPanel, bool bShowFileName, bool bShowFileInfo,
+		Helpers::ETransitionEffect eSlideShowTransitionEffect);
 
 	// Saves the pattern used in the copy/rename dialog to rename files
 	void SaveCopyRenamePattern(const CString& sPattern);
@@ -285,6 +288,7 @@ private:
 	void WriteString(LPCTSTR sKey, LPCTSTR sString);
 	void WriteDouble(LPCTSTR sKey, double dValue);
 	void WriteBool(LPCTSTR sKey, bool bValue);
+	void WriteInt(LPCTSTR sKey, int nValue);
 
 	CSettingsProvider(void);
 };
