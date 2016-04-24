@@ -146,16 +146,18 @@ public:
 class CProcessParams {
 public:
 	// TargetWidth,TargetHeight is the dimension of the target output window, the image is fit into this rectangle
-	// nRotation must be 0, 90, 270 degrees
+	// nRotation must be 0, 90, 270 degrees, nUserRotation will be added to it
 	// dZoom is the zoom factor compared to intial image size (1.0 means no zoom)
 	// offsets are relative to center of image and refer to original image size (not zoomed)
 	CProcessParams(int nTargetWidth, int nTargetHeight,
 		CSize monitorSize,
 		const CRotationParams& rotationParams,
+		int nUserRotation,
 		double dZoom,
 		Helpers::EAutoZoomMode eAutoZoomMode, CPoint offsets,
 		const CImageProcessingParams& imageProcParams,
 		EProcessingFlags eProcFlags) : ImageProcParams(imageProcParams), RotationParams(rotationParams) {
+		UserRotation = nUserRotation;
 		TargetWidth = nTargetWidth;
 		TargetHeight = nTargetHeight;
 		MonitorSize = monitorSize;
@@ -169,6 +171,7 @@ public:
 	int TargetHeight;
 	CSize MonitorSize;
 	CRotationParams RotationParams;
+	int UserRotation;
 	double Zoom;
 	CPoint Offsets;
 	CImageProcessingParams ImageProcParams;
