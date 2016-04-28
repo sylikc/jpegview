@@ -170,6 +170,7 @@ private:
 
 	void MoveIterToLast();
 	void NextInFolder();
+	CFileList* GotoFirstShown();
 	std::list<CFileDesc>::iterator FindFile(const CString& sName);
 	CFileList* FindFileRecursively (const CString& sDirectory, const CString& sFindAfter, 
 		bool bSearchThisFolder, int nLevel, int nRecursion);

@@ -22,6 +22,8 @@ Changelog
 [1.0.36]
 Bugs fixed:
 - Fixed problem with EXIF rotation combined with 'Keep parameters' mode (F4).
+- Fixed bug causing wrong image display when minimal display time was set in windowed mode.
+- Fixed bug with navigation mode 'Sub Subfolders' and 'Show siblings' and WrapAroundFolder=true.
 Other changes:
 - "Set current parameters as default values": Saving more parameters to INI file
 - New INI file setting:

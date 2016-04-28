@@ -1,46 +1,51 @@
-// Файл с назначениями клавиш для программы JPEGView.		Перевод (151231): Дмитрий Ерохин (erodim@mail.ru)
+// Файл с назначениями клавиш для программы JPEGView.
 // Не повредите этот файл, иначе не будут работать никакие клавиши!
 // На одну команду можно назначать несколько клавиш, но нельзя назначать несколько команд на одну клавишу!
-// Чтобы использовать этот файл вместо исходного (англоязычного), его нужно переименовать в KeyMap.txt
-// Не забудьте перед этим сверить/синхронизировать ранее изменявшиеся вами настройки в исходном (англоязычном) файле KeyMap.txt
+// Переименуйте этот файл в KeyMap.txt, чтобы использовать его вместо исходного (англоязычного).
+// Перед этим не забудьте сверить/синхронизировать ранее изменявшиеся вами настройки в исходном (англоязычном) файле KeyMap.txt.
+//Language=Russian
+//TranslatorName=Dmitry Yerokhin
+//Contact=erodim@mail.ru
+//TranslatorURL=none
+//LastUpdated=Apr 25, 2016
 
 // Этот раздел содержит определения команд JPEGView - НЕ ИЗМЕНЯЙТЕ ЕГО!
 #define IDM_DONOTHING		1			// ничего не делать (можно использовать для отключения стандартной команды по нажатию кнопки мыши)
 #define IDM_MINIMIZE		1010			// свернуть окно
 #define IDM_OPEN		1100			// открыть файл
-#define IDM_SAVE		1500			// сохранить в файле с исходным размером, не позволять перезапись без запроса
+#define IDM_SAVE		1500			// сохранить в файле с исходным размером с запросом перезаписи
 #define IDM_SAVE_SCREEN		1501			// сохранить в файле с экранным размером
-#define IDM_SAVE_ALLOW_NO_PROMPT 1502			// сохранить в файле с исходным размером, позволить перезапись без запроса, если разрешено в INI-файле
+#define IDM_SAVE_ALLOW_NO_PROMPT 1502			// сохранить в файле с исходным размером без запроса перезаписи, если это разрешено в INI-файле
 #define IDM_RELOAD		1600			// перезагрузить изображение
 #define IDM_PRINT		1700			// распечатать изображение
 #define IDM_COPY		2000			// скопировать изображение в буфер обмена с экранным размером
-#define IDM_COPY_FULL		2500			// скопировать изображение в буфер обмена с исходным размером
+#define IDM_COPY_FULL		2500			// скопировать изображение в буфер обмена с полным размером
 #define IDM_PASTE		2550			// вставить изображение из буфера обмена
 #define IDM_BATCH_COPY		2600			// открыть окно пакетного копирования
-#define IDM_RENAME		2610			// переименовать текущий файл – работает, только если возможен вывод панели обработки изображений (т.е. панель не запрещена в INI-файле и размер окна достаточно велик)
-#define IDM_MOVE_TO_RECYCLE_BIN	2620			// удалить текущий файл с диска – без подтверждения (переместить в Корзину)
-#define IDM_MOVE_TO_RECYCLE_BIN_CONFIRM 2621		// удалить текущий файл с диска – с запросом подтверждения (переместить в Корзину)
-#define IDM_MOVE_TO_RECYCLE_BIN_CONFIRM_PERMANENT_DELETE 2622 // удалить текущий файл с диска – с запросом, когда для данного диска не используется Корзина
-#define IDM_TOUCH_IMAGE		2700			// установить время изменения по текущему времени
-#define IDM_TOUCH_IMAGE_EXIF 	2710			// установить время изменения по времени в EXIF
-#define IDM_TOUCH_IMAGE_EXIF_FOLDER 2720		// установить время изменения по времени в EXIF для всех изображений в папке
+#define IDM_RENAME		2610			// переименовать текущий файл (только если возможен показ панели редактирования, т.е. она не запрещена в INI-файле и окно достаточно велико)
+#define IDM_MOVE_TO_RECYCLE_BIN	2620			// удалить текущий файл в Корзину без подтверждения
+#define IDM_MOVE_TO_RECYCLE_BIN_CONFIRM 2621		// удалить текущий файл в Корзину с подтверждением
+#define IDM_MOVE_TO_RECYCLE_BIN_CONFIRM_PERMANENT_DELETE 2622 // удалить текущий файл с подтверждением, если для диска не используется Корзина
+#define IDM_TOUCH_IMAGE		2700			// установить время изменения файла по текущему времени
+#define IDM_TOUCH_IMAGE_EXIF 	2710			// установить время изменения файла по EXIF
+#define IDM_TOUCH_IMAGE_EXIF_FOLDER 2720		// установить время изменения по EXIF для всех изображений в папке
 #define IDM_SET_WALLPAPER_ORIG  2770			// сделать исходное изображение рисунком рабочего стола Windows
 #define IDM_SET_WALLPAPER_DISPLAY 2774			// сделать изображение на экране рисунком рабочего стола Windows
-#define IDM_SHOW_FILEINFO   	2800			// включить/выключить показ информации о файле и EXIF-данных в верхнем левом углу
-#define IDM_SHOW_FILENAME	3000			// включить/выключить показ имени файла вверху экрана
-#define IDM_SHOW_NAVPANEL   	3100			// включить/выключить показ панели навигации
+#define IDM_SHOW_FILEINFO   	2800			// вкл./выкл. показ информации о файле и EXIF в верхнем левом углу
+#define IDM_SHOW_FILENAME	3000			// вкл./выкл. показ имени файла вверху экрана
+#define IDM_SHOW_NAVPANEL   	3100			// вкл./выкл. показ панели навигации
 #define IDM_NEXT		4000			// перейти к следующему изображению
 #define IDM_PREV		5000			// перейти к предыдущему изображению
 #define IDM_FIRST		5100			// перейти к первому изображению
 #define IDM_LAST		5200			// перейти к последнему изображению
-#define IDM_LOOP_FOLDER		6000			// установить режим цикличного просмотра в папке
-#define IDM_LOOP_RECURSIVELY 	6010			// установить режим цикличного просмотра в папке и её подпапках
-#define IDM_LOOP_SIBLINGS	6020			// установить режим цикличного просмотра в папках на одном уровне вложенности
-#define IDM_SORT_MOD_DATE	7000			// сортировать по датам изменения
-#define IDM_SORT_CREATION_DATE 	7010			// сортировать по датам создания
+#define IDM_LOOP_FOLDER		6000			// режим цикличного просмотра в папке
+#define IDM_LOOP_RECURSIVELY 	6010			// режим цикличного просмотра в папке и её подпапках
+#define IDM_LOOP_SIBLINGS	6020			// режим цикличного просмотра в папках на одном уровне вложенности
+#define IDM_SORT_MOD_DATE	7000			// сортировать по дате изменения
+#define IDM_SORT_CREATION_DATE 	7010			// сортировать по дате создания
 #define IDM_SORT_NAME		7020			// сортировать по именам
 #define IDM_SORT_RANDOM		7030			// сортировать в случайном порядке
-#define IDM_SORT_SIZE		7040			// сортировать по размерам файлов в байтах
+#define IDM_SORT_SIZE		7040			// сортировать по размеру файлов в байтах
 #define IDM_SORT_UPCOUNTING	7100			// сортировать по возрастанию
 #define IDM_SORT_DOWNCOUNTING	7110			// сортировать по убыванию
 #define IDM_ROTATE_90		8000			// повернуть изображение на 90° вправо
@@ -50,25 +55,25 @@
 #define IDM_PERSPECTIVE         9150			// показать окно коррекции перспективы
 #define IDM_MIRROR_H        	9200			// зеркально перевернуть изображение по горизонтали
 #define IDM_MIRROR_V        	9300			// зеркально перевернуть изображение по вертикали
-#define IDM_ROTATE_90_LOSSLESS  9400			// повернуть JPEG на 90° вправо (без потерь)
-#define IDM_ROTATE_90_LOSSLESS_CONFIRM 9401		// повернуть JPEG на 90° вправо (без потерь) с запросом подтверждения
-#define IDM_ROTATE_270_LOSSLESS 9410			// повернуть JPEG на 90° влево (без потерь)
-#define IDM_ROTATE_270_LOSSLESS_CONFIRM 9411		// повернуть JPEG на 90° влево (без потерь) с запросом подтверждения
-#define IDM_ROTATE_180_LOSSLESS 9420			// повернуть JPEG на 180° (без потерь)
-#define IDM_MIRROR_H_LOSSLESS   9430			// зеркально перевернуть JPEG по горизонтали (без потерь)
-#define IDM_MIRROR_V_LOSSLESS   9440			// зеркально перевернуть JPEG по вертикали (без потерь)
-#define IDM_AUTO_CORRECTION	10000			// включить/выключить автокоррекцию цвета и контрастности
+#define IDM_ROTATE_90_LOSSLESS  9400			// повернуть JPEG без потерь на 90° вправо
+#define IDM_ROTATE_90_LOSSLESS_CONFIRM 9401		// повернуть JPEG без потерь на 90° вправо с подтверждением
+#define IDM_ROTATE_270_LOSSLESS 9410			// повернуть JPEG без потерь на 90° влево
+#define IDM_ROTATE_270_LOSSLESS_CONFIRM 9411		// повернуть JPEG без потерь на 90° влево с подтверждением
+#define IDM_ROTATE_180_LOSSLESS 9420			// повернуть JPEG без потерь на 180°
+#define IDM_MIRROR_H_LOSSLESS   9430			// зеркально перевернуть JPEG без потерь по горизонтали
+#define IDM_MIRROR_V_LOSSLESS   9440			// зеркально перевернуть JPEG без потерь по вертикали
+#define IDM_AUTO_CORRECTION	10000			// вкл./выкл. автокоррекцию цвета и контрастности
 #define IDM_AUTO_CORRECTION_SECTION 10100		// автокоррекция контрастности только для видимой области
-#define IDM_LDC			10500			// включить/выключить локальную коррекцию плотностей (высветлить тени, притемнить света)
-#define IDM_LANDSCAPE_MODE	10700			// включить/выключить режим улучшения изображения
-#define IDM_KEEP_PARAMETERS	11000			// включить/выключить запоминание параметров между изображениями
+#define IDM_LDC			10500			// вкл./выкл. локальную коррекцию плотностей (высветлить тени, притемнить света)
+#define IDM_LANDSCAPE_MODE	10700			// вкл./выкл. режим улучшения пейзажей
+#define IDM_KEEP_PARAMETERS	11000			// вкл./выкл. запоминание параметров между изображениями
 #define IDM_SAVE_PARAM_DB   	11500			// сохранить в базе параметров
 #define IDM_CLEAR_PARAM_DB  	11510			// удалить из базы параметров
 #define IDM_FIT_TO_SCREEN	12000			// вписать изображение в экран
 #define IDM_FILL_WITH_CROP	12001			// вписать изображение в экран до заполнения с обрезкой
-#define IDM_FIT_WINDOW_TO_IMAGE	12005			// включить/выключить автоматическую подгонку окна по изображению (для избежания чёрных полей)
+#define IDM_FIT_WINDOW_TO_IMAGE	12005			// вкл./выкл. автоподгонку окна по изображению (избегая чёрные поля)
 #define IDM_SPAN_SCREENS	12010			// распределить по всем экранам
-#define IDM_FULL_SCREEN_MODE 	12011			// включить/выключить полноэкранный режим
+#define IDM_FULL_SCREEN_MODE 	12011			// вкл./выкл. полноэкранный режим
 #define IDM_ZOOM_400        	12020			// масштабировать до 400%
 #define IDM_ZOOM_200		12030			// масштабировать до 200%
 #define IDM_ZOOM_100		12040			// масштабировать до 100%
@@ -85,7 +90,7 @@
 #define IDM_BACKUP_PARAMDB	12620			// сделать резервную копию базы параметров
 #define IDM_RESTORE_PARAMDB	12630			// восстановить базу параметров из резервной копии
 #define IDM_ABOUT		12900			// показать окно "О программе"
-#define IDM_EXIT		13000			// выйти из JPEGView
+#define IDM_EXIT		13000			// закрыть JPEGView
 #define IDM_TOGGLE		14100			// переключение между отмеченным и текущим изображениями
 #define IDM_MARK_FOR_TOGGLE	14101			// отметить текущее изображение для переключения
 #define IDM_COLOR_CORRECTION_INC 14200			// усилить цветовую коррекцию
@@ -100,106 +105,107 @@
 #define IDM_LDC_SHADOWS_DEC	14601			// ослабить высветление теней
 #define IDM_LDC_HIGHLIGHTS_INC	14700			// усилить притемнение светов
 #define IDM_LDC_HIGHLIGHTS_DEC	14701			// ослабить притемнение светов
-#define IDM_TOGGLE_RESAMPLING_QUALITY 14800		// переключение качества ресэмплирования (точечное сэмплирование <-> фильтрация)
+#define IDM_TOGGLE_RESAMPLING_QUALITY 14800		// переключение качества сглаживания (точечное сглаживание <-> фильтрация)
 #define IDM_TOGGLE_MONITOR	14900			// переместить на другой монитор
 #define IDM_TOGGLE_FIT_TO_SCREEN_100_PERCENTS 15000	// переключение между вписыванием в экран и настоящим размером (100%)
 #define IDM_EXCHANGE_PROC_PARAMS 15100			// переключение между двумя наборами параметров обработки изображений
-#define IDM_PAN_UP		15200			// переместить вверх
-#define IDM_PAN_DOWN		15201			// переместить вниз
-#define IDM_PAN_RIGHT		15202			// переместить вправо
-#define IDM_PAN_LEFT		15203			// переместить влево
+#define IDM_PAN_UP		15200			// переместить картинку выше
+#define IDM_PAN_DOWN		15201			// переместить картинку ниже
+#define IDM_PAN_RIGHT		15202			// переместить картинку вправо
+#define IDM_PAN_LEFT		15203			// переместить картинку влево
 #define IDM_SHARPEN_INC		15300			// усилить резкость
 #define IDM_SHARPEN_DEC		15301			// ослабить резкость
 #define IDM_CONTEXT_MENU	16000			// показать контекстное меню
 
-// Следующий ниже раздел содержит назначения клавиш. Некоторые клавиши предопределены и не могут быть переназначены:
-// F1 – справка, Alt+F4 – выход, 0..9 – слайдшоу
+// Раздел ниже содержит назначения клавиш.
+// Некоторые клавиши предопределены и не могут быть переназначены:
+// F1 – справка, Alt+F4 – выход, 0 .. 9 – слайдшоу.
 // Распознаваемые клавиши (названия): 
 // Alt, Ctrl, Shift, Esc, Return, Space, End, Home, Back, Tab, PgDn, PgUp
 // Left, Right, Up, Down, Insert, Del, Plus, Minus, Mul, Div, Comma, Period
 // A .. Z  F1 .. F12
 
-// Команды можно привязывать и к кнопкам мыши. Однако учитывайте, что при этом вы измените
-// стандартное действие (например, панорамирование картинки левой кнопкой мыши)! Кнопки мыши
-// можно сочетать с клавишами Alt, Ctrl и Shift, но не с другими клавишами или кнопками мыши.
+// Команды можно привязывать и к кнопкам мыши. Однако учитывайте, что при этом вы измените их
+// стандартное действие (например панорамирование картинки левой кнопкой мыши).
+// Кнопки мыши можно сочетать с Alt, Ctrl и Shift, но не с другими клавишами или кнопками мыши.
 // Распознаваемые кнопки мыши:
 // MouseL, MouseR, MouseM, MouseX1, MouseX2, MouseDblClk
-// (левая, правая, средняя, дополнительные кнопки, двойной щелчок левой кнопкой)
+// (левая, правая, средняя [ролик], дополнительные кнопки 1 и 2, двойной щелчок левой кнопкой)
+// Во избежание коллизий учитывайте, что MouseL имеет более высокий приоритет, чем MouseDblClk.
 
-// Раскомментируйте (удалите // в начале) следующую строку, если хотите немедленно прекращать работу JPEGView клавишей Esc при воспроизведении анимации или слайдшоу
-// Esc                    IDM_EXIT
-MouseDblClk             IDM_EXIT
-PgDn                    IDM_NEXT
-Right                   IDM_NEXT
-Space                   IDM_NEXT
-Left                    IDM_PREV
-PgUp                    IDM_PREV
-Back                    IDM_PREV
-Ctrl+Left               IDM_TOGGLE
-Ctrl+Right              IDM_TOGGLE
-Home                    IDM_FIRST
-End                     IDM_LAST
-Del                     IDM_MOVE_TO_RECYCLE_BIN_CONFIRM
-Plus                    IDM_ZOOM_INC
-Ctrl+Shift+Plus         IDM_CONTRAST_CORRECTION_INC
-Ctrl+Alt+Plus           IDM_COLOR_CORRECTION_INC
-Ctrl+Plus               IDM_CONTRAST_INC
-Shift+Plus              IDM_GAMMA_INC
-Alt+Plus                IDM_SHARPEN_INC
-Minus                   IDM_ZOOM_DEC
-Ctrl+Shift+Minus        IDM_CONTRAST_CORRECTION_DEC
-Ctrl+Alt+Minus          IDM_COLOR_CORRECTION_DEC
-Ctrl+Minus              IDM_CONTRAST_DEC
-Shift+Minus             IDM_GAMMA_DEC
-Alt+Minus               IDM_SHARPEN_DEC
-F2                      IDM_SHOW_FILEINFO
-Ctrl+F2                 IDM_SHOW_FILENAME
-F3                      IDM_TOGGLE_RESAMPLING_QUALITY
-F4                      IDM_KEEP_PARAMETERS
-F5                      IDM_AUTO_CORRECTION
-Shift+F5                IDM_AUTO_CORRECTION_SECTION
-F6                      IDM_LDC
-Shift+Ctrl+F6           IDM_LDC_HIGHLIGHTS_INC
-Ctrl+F6                 IDM_LDC_SHADOWS_INC
-Alt+Shift+F6            IDM_LDC_HIGHLIGHTS_DEC
-Alt+F6                  IDM_LDC_SHADOWS_DEC
-F7                      IDM_LOOP_FOLDER
-F8                      IDM_LOOP_RECURSIVELY
-F9                      IDM_LOOP_SIBLINGS
-F11                     IDM_FULL_SCREEN_MODE
-Ctrl+F11                IDM_FIT_WINDOW_TO_IMAGE
-F12                     IDM_SPAN_SCREENS
-Ctrl+F12                IDM_TOGGLE_MONITOR
-Div                     IDM_TOGGLE_FIT_TO_SCREEN_100_PERCENTS
-Return                  IDM_FIT_TO_SCREEN
-Ctrl+Return             IDM_FILL_WITH_CROP
-//Down                    IDM_ROTATE_90
-//Up                      IDM_ROTATE_270
-Shift+Up                IDM_PAN_UP
-Shift+Down              IDM_PAN_DOWN
-Shift+Left              IDM_PAN_LEFT
-Shift+Right             IDM_PAN_RIGHT
-Ctrl+Down               IDM_ZOOM_DEC
-Ctrl+Up                 IDM_ZOOM_INC
-Ctrl+A                  IDM_EXCHANGE_PROC_PARAMS
-Ctrl+C                  IDM_COPY
-C                       IDM_SORT_CREATION_DATE
-Ctrl+N                  IDM_SHOW_NAVPANEL
-N                       IDM_SORT_NAME
-Ctrl+M                  IDM_MARK_FOR_TOGGLE
-Ctrl+Shift+M            IDM_TOUCH_IMAGE
-M                       IDM_SORT_MOD_DATE
-Z                       IDM_SORT_RANDOM
-Ctrl+S                  IDM_SAVE_ALLOW_NO_PROMPT
-Ctrl+Shift+S            IDM_SAVE_SCREEN
-S                       IDM_SAVE_PARAM_DB
-D                       IDM_CLEAR_PARAM_DB
-Ctrl+Shift+E            IDM_TOUCH_IMAGE_EXIF
-Ctrl+O                  IDM_OPEN
-Ctrl+P                  IDM_PRINT
-Ctrl+R                  IDM_RELOAD
-Ctrl+X                  IDM_COPY_FULL
-Ctrl+V                  IDM_PASTE
-Ctrl+L                  IDM_LANDSCAPE_MODE
-R                       IDM_ROTATE_90_LOSSLESS_CONFIRM
-T                       IDM_ROTATE_270_LOSSLESS_CONFIRM
+// Раскомментируйте (удалите // в начале) следующую строку, чтобы немедленно прекращать работу JPEGView по Esc при анимации или слайдшоу
+//Esc			IDM_EXIT
+PgDn			IDM_NEXT
+Right			IDM_NEXT
+Space			IDM_NEXT
+Left			IDM_PREV
+PgUp			IDM_PREV
+Back			IDM_PREV
+Ctrl+Left		IDM_TOGGLE
+Ctrl+Right		IDM_TOGGLE
+Home			IDM_FIRST
+End			IDM_LAST
+Del			IDM_MOVE_TO_RECYCLE_BIN_CONFIRM
+Plus			IDM_ZOOM_INC
+Ctrl+Shift+Plus		IDM_CONTRAST_CORRECTION_INC
+Ctrl+Alt+Plus		IDM_COLOR_CORRECTION_INC
+Ctrl+Plus		IDM_CONTRAST_INC
+Shift+Plus		IDM_GAMMA_INC
+Alt+Plus		IDM_SHARPEN_INC
+Minus			IDM_ZOOM_DEC
+Ctrl+Shift+Minus	IDM_CONTRAST_CORRECTION_DEC
+Ctrl+Alt+Minus		IDM_COLOR_CORRECTION_DEC
+Ctrl+Minus		IDM_CONTRAST_DEC
+Shift+Minus		IDM_GAMMA_DEC
+Alt+Minus		IDM_SHARPEN_DEC
+F2			IDM_SHOW_FILEINFO
+Ctrl+F2			IDM_SHOW_FILENAME
+F3			IDM_TOGGLE_RESAMPLING_QUALITY
+F4			IDM_KEEP_PARAMETERS
+F5			IDM_AUTO_CORRECTION
+Shift+F5		IDM_AUTO_CORRECTION_SECTION
+F6			IDM_LDC
+Shift+Ctrl+F6		IDM_LDC_HIGHLIGHTS_INC
+Ctrl+F6			IDM_LDC_SHADOWS_INC
+Alt+Shift+F6		IDM_LDC_HIGHLIGHTS_DEC
+Alt+F6			IDM_LDC_SHADOWS_DEC
+F7			IDM_LOOP_FOLDER
+F8			IDM_LOOP_RECURSIVELY
+F9			IDM_LOOP_SIBLINGS
+F11			IDM_FULL_SCREEN_MODE
+Ctrl+F11		IDM_FIT_WINDOW_TO_IMAGE
+F12			IDM_SPAN_SCREENS
+Ctrl+F12		IDM_TOGGLE_MONITOR
+Div			IDM_TOGGLE_FIT_TO_SCREEN_100_PERCENTS
+Return			IDM_FIT_TO_SCREEN
+Ctrl+Return		IDM_FILL_WITH_CROP
+Alt+Down		IDM_ROTATE_90
+Alt+Up			IDM_ROTATE_270
+Shift+Up		IDM_PAN_UP
+Shift+Down		IDM_PAN_DOWN
+Shift+Left		IDM_PAN_LEFT
+Shift+Right		IDM_PAN_RIGHT
+Ctrl+Down		IDM_ZOOM_DEC
+Ctrl+Up			IDM_ZOOM_INC
+Ctrl+A			IDM_EXCHANGE_PROC_PARAMS
+Ctrl+C			IDM_COPY
+C			IDM_SORT_CREATION_DATE
+Ctrl+N			IDM_SHOW_NAVPANEL
+N			IDM_SORT_NAME
+Ctrl+M			IDM_MARK_FOR_TOGGLE
+Ctrl+Shift+M		IDM_TOUCH_IMAGE
+M			IDM_SORT_MOD_DATE
+Z			IDM_SORT_RANDOM
+Ctrl+S			IDM_SAVE_ALLOW_NO_PROMPT
+Ctrl+Shift+S		IDM_SAVE_SCREEN
+S			IDM_SAVE_PARAM_DB
+D			IDM_CLEAR_PARAM_DB
+Ctrl+Shift+E		IDM_TOUCH_IMAGE_EXIF
+Ctrl+O			IDM_OPEN
+Ctrl+P			IDM_PRINT
+Ctrl+R			IDM_RELOAD
+Ctrl+X			IDM_COPY_FULL
+Ctrl+V			IDM_PASTE
+Ctrl+L			IDM_LANDSCAPE_MODE
+R			IDM_ROTATE_90_LOSSLESS_CONFIRM
+T			IDM_ROTATE_270_LOSSLESS_CONFIRM
