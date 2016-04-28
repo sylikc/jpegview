@@ -347,7 +347,7 @@ private:
 	void InitParametersForNewImage();
 	void ExchangeProcessingParams();
 	void SaveParameters();
-	void AfterNewImageLoaded(bool bSynchronize, bool bAfterStartup);
+	void AfterNewImageLoaded(bool bSynchronize, bool bAfterStartup, bool noAdjustWindow);
 	CRect ScreenToDIB(const CSize& sizeDIB, const CRect& rect);
 	void ToggleMonitor();
 	CRect GetZoomTextRect(CRect imageProcessingArea);

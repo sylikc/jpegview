@@ -379,7 +379,7 @@ CFileList* CFileList::Next() {
 				pNextList = this;
 				while (pNextList->m_prev != NULL) pNextList = pNextList->m_prev;
 				if (pNextList != this) {
-					return this; // stop here, do not wrap around
+					return m_bWrapAroundFolder ? GotoFirstShown() : this; // stop here, do not wrap around
 				}
 			}
 			if (pNextList != this) {
@@ -770,6 +770,23 @@ void CFileList::NextInFolder() {
 			m_iter = m_fileList.begin();
 		}
 	}
+}
+
+CFileList* CFileList::GotoFirstShown() {
+	if (sm_eMode == Helpers::NM_LoopDirectory)
+		return this;
+
+	LPCTSTR thisFile, prevFile;
+	LPCTSTR firstFile = Current();
+	CFileList* pThis = this;
+	do {
+		thisFile = pThis->Current();
+		CFileList* pPrev = pThis->Prev();
+		pThis = pPrev;
+		prevFile = pThis->Current();
+	} while (thisFile != NULL && prevFile != NULL && firstFile != NULL && _tcscmp(thisFile, prevFile) != 0 && _tcscmp(prevFile, firstFile) != 0);
+
+	return pThis;
 }
 
 CFileList* CFileList::TryCreateFileList(const CString& directory, int nNewLevel) {

@@ -382,7 +382,7 @@ LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam
 	}
 	m_nLastLoadError = GetLoadErrorAfterOpenFile();
 	CheckIfApplyAutoFitWndToImage(true);
-	AfterNewImageLoaded(true, true); // synchronize to per image parameters
+	AfterNewImageLoaded(true, true, false); // synchronize to per image parameters
 
 	if (!m_bFullScreenMode) {
 		// Window mode, set correct window size
@@ -2000,7 +2000,7 @@ void CMainDlg::OpenFile(LPCTSTR sFileName, bool bAfterStartup) {
 		m_pFileList->Current(), 0, CreateProcessParams(!m_bFullScreenMode && (bAfterStartup || IsAdjustWindowToImage())), m_bOutOfMemoryLastImage);
 	m_nLastLoadError = GetLoadErrorAfterOpenFile();
 	if (bAfterStartup) CheckIfApplyAutoFitWndToImage(false);
-	AfterNewImageLoaded(true, false);
+	AfterNewImageLoaded(true, false, false);
 	if (m_pCurrentImage != NULL && m_pCurrentImage->IsAnimation()) {
 		StartAnimation();
 	}
@@ -2346,7 +2346,9 @@ void CMainDlg::GotoImage(EImagePosition ePos, int nFlags) {
 			m_pFileList->Current(), nFrameIndex, procParams, m_bOutOfMemoryLastImage);
 		m_nLastLoadError = (m_pCurrentImage == NULL) ? ((m_pFileList->Current() == NULL) ? HelpersGUI::FileLoad_NoFilesInDirectory : HelpersGUI::FileLoad_LoadError) : HelpersGUI::FileLoad_Ok;
 	}
-	AfterNewImageLoaded((nFlags & KEEP_PARAMETERS) == 0, false);
+	double minimalDisplayTime = CSettingsProvider::This().MinimalDisplayTime();
+	bool bSynchronize = (nFlags & KEEP_PARAMETERS) == 0;
+	AfterNewImageLoaded(bSynchronize, false, minimalDisplayTime > 0);
 
 	// if it is an animation (currently only animated GIF) start movie automatically
 	if (m_pCurrentImage != NULL && m_pCurrentImage->IsAnimation()) {
@@ -2361,10 +2363,14 @@ void CMainDlg::GotoImage(EImagePosition ePos, int nFlags) {
 	double currentTime = Helpers::GetExactTickCount();
 	if (ePos == POS_Next || ePos == POS_Previous) {
 		double imageTime = currentTime - m_dLastImageDisplayTime;
-		double minimalTime = CSettingsProvider::This().MinimalDisplayTime();
-		if (minimalTime > 0 && (imageTime < minimalTime)) ::Sleep((int)(minimalTime - imageTime));
+		if (minimalDisplayTime > 0 && (imageTime < minimalDisplayTime)) ::Sleep((int)(minimalDisplayTime - imageTime));
 	}
 	m_dLastImageDisplayTime = Helpers::GetExactTickCount();
+
+	// Do that now when using a minimal display time, as it has been skipped in AfterNewImageLoaded() to avoid wrong display during the ::Sleep()
+	if (minimalDisplayTime > 0 && bSynchronize && !m_bIsAnimationPlaying) {
+		AdjustWindowToImage(false);
+	}
 
 	if (((nFlags & NO_UPDATE_WINDOW) == 0) && !(ePos == POS_NextSlideShow && UseSlideShowTransitionEffect())) {
 		this->Invalidate(FALSE);
@@ -2650,7 +2656,7 @@ void CMainDlg::StartMovieMode(double dFPS) {
 	}
 	m_bMovieMode = true;
 	StartSlideShowTimer(Helpers::RoundToInt(1000.0/dFPS));
-	AfterNewImageLoaded(false, false);
+	AfterNewImageLoaded(false, false, false);
 	Invalidate(FALSE);
 }
 
@@ -2679,7 +2685,7 @@ void CMainDlg::StopMovieMode() {
 		m_bMovieMode = false;
 		m_bProcFlagsTouched = false;
 		StopSlideShowTimer();
-		AfterNewImageLoaded(false, false);
+		AfterNewImageLoaded(false, false, false);
 		this->Invalidate(FALSE);
 	}
 }
@@ -2742,7 +2748,7 @@ void CMainDlg::ExchangeProcessingParams() {
 	this->Invalidate(FALSE);
 }
 
-void CMainDlg::AfterNewImageLoaded(bool bSynchronize, bool bAfterStartup) {
+void CMainDlg::AfterNewImageLoaded(bool bSynchronize, bool bAfterStartup, bool noAdjustWindow) {
 	UpdateWindowTitle();
 	InvalidateHelpDlg();
 	m_pDirectoryWatcher->SetCurrentFile(CurrentFileName(false));
@@ -2786,7 +2792,7 @@ void CMainDlg::AfterNewImageLoaded(bool bSynchronize, bool bAfterStartup) {
 				m_nRotation = m_pCurrentImage->GetInitialRotation() + m_nUserRotation;
 			}
 		}
-		if (!bAfterStartup && !m_bIsAnimationPlaying) {
+		if (!bAfterStartup && !m_bIsAnimationPlaying && !noAdjustWindow) {
 			AdjustWindowToImage(false);
 		}
 	}
