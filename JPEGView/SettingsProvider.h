@@ -58,6 +58,7 @@ public:
 	double DarkenHighlights() { return m_dDarkenHighlights; }
 	double BrightenShadowsSteepness() { return m_dBrightenShadowsSteepness; }
 	CImageProcessingParams LandscapeModeParams(const CImageProcessingParams& templParams);
+	bool LandscapeMode() { return m_bLandscapeMode; }
 	int MaxSlideShowFileListSize() { return m_nMaxSlideShowFileListSize; }
 	Helpers::ETransitionEffect SlideShowTransitionEffect() { return m_eSlideShowTransitionEffect; }
 	int SlideShowEffectTimeMs() { return m_nSlideShowEffectTimeMs; }
@@ -161,12 +162,15 @@ public:
 	LPCTSTR GetGlobalINIFileName() { return m_sIniNameGlobal; }
 	// Get the file name with path of the user INI file (in AppData path)
 	LPCTSTR GetUserINIFileName() { return m_sIniNameUser; }
+	// Get the file name (without path) of the user INI file
+	LPCTSTR GetINIFileTitle() { return m_sIniFileTitle; }
 
 private:
 	static CSettingsProvider* sm_instance;
 	CString m_sEXEPath;
 	CString m_sIniNameGlobal;
 	CString m_sIniNameUser;
+	CString m_sIniFileTitle;
 	bool m_bUserINIExists;
 	bool m_bStoreToEXEPath;
 	int m_nNextOpenWithIndex;
@@ -212,6 +216,7 @@ private:
 	double m_dDarkenHighlights;
 	double m_dBrightenShadowsSteepness;
 	CString m_sLandscapeModeParams;
+	bool m_bLandscapeMode;
 	int m_nMaxSlideShowFileListSize;
 	Helpers::ETransitionEffect m_eSlideShowTransitionEffect;
 	int m_nSlideShowEffectTimeMs;

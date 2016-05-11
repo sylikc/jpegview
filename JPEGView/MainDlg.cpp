@@ -179,7 +179,7 @@ CMainDlg::CMainDlg(bool bForceFullScreen) {
 	// Read the string table for the requested language if one is present
 	CNLS::ReadStringTable(CNLS::GetStringTableFileName(sp.Language()));
 
-	m_bLandscapeMode = false;
+	m_bLandscapeMode = sp.LandscapeMode();
 	m_pImageProcParams = new CImageProcessingParams(GetDefaultProcessingParams());
 	InitFromProcessingFlags(GetDefaultProcessingFlags(m_bLandscapeMode), m_bHQResampling, m_bAutoContrast, m_bAutoContrastSection, m_bLDC, m_bLandscapeMode);
 

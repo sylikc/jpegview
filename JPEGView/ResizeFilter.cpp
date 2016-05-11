@@ -5,8 +5,8 @@
 #include <stdlib.h>
 
 // We cannot enlarge to a factor above the number of kernels without artefacts
-#define NUM_KERNELS_RESIZE 32
-#define NUM_KERNELS_RESIZE_LOG2 5
+#define NUM_KERNELS_RESIZE 128
+#define NUM_KERNELS_RESIZE_LOG2 7
 
 
 //////////////////////////////////////////////////////////////////////////////////////

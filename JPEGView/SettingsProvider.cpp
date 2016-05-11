@@ -5,12 +5,26 @@
 #include <shlobj.h>
 #include <algorithm>
 
-static const TCHAR* INI_FILE_NAME = _T("JPEGView.ini");
+static const TCHAR* DEFAULT_INI_FILE_NAME = _T("JPEGView.ini");
 static const TCHAR* SECTION_NAME = _T("JPEGView");
 
 static float COLOR_CORR_DEFAULT_FACTORS[6] = {0.2f, 0.1f, 0.3f, 0.3f, 0.3f, 0.15f};
 
 CSettingsProvider* CSettingsProvider::sm_instance;
+
+static CString ParseCommandLineForIniName(LPCTSTR sCommandLine) {
+	if (sCommandLine == NULL) {
+		return CString();
+	}
+	LPCTSTR iniFile = Helpers::stristr(sCommandLine, _T("/ini"));
+	if (iniFile == NULL) {
+		return CString();
+	}
+	iniFile = iniFile + _tcslen(_T("/ini")) + 1;
+	LPCTSTR posSpace = _tcschr(iniFile, _T(' '));
+	CString iniFileName = (posSpace == NULL) ? CString(iniFile) : CString(iniFile, (int)(posSpace - iniFile));
+	return iniFileName;
+}
 
 CSettingsProvider& CSettingsProvider::This() {
 	if (sm_instance == NULL) {
@@ -43,14 +57,26 @@ CSettingsProvider::CSettingsProvider(void) {
 		nIdx++;
 	}
 
-	// Global INI file (at EXE location)
 	if (nIdx > 0 && nLastIdx > 0) {
 		m_sEXEPath = CString(pStart, nLastIdx+1);
-		m_sIniNameGlobal = m_sEXEPath + INI_FILE_NAME;
 	} else {
 		m_sEXEPath = _T(".\\");
-		m_sIniNameGlobal = m_sEXEPath + INI_FILE_NAME; // use current dir as startup path
 	}
+
+	// Check if a custom INI file name is specified on the command line
+	m_sIniFileTitle = DEFAULT_INI_FILE_NAME;
+	CString customIniFileName = ParseCommandLineForIniName(pEnd);
+	if (!customIniFileName.IsEmpty() && customIniFileName.FindOneOf(_T("/\\")) == -1)
+	{
+		if (customIniFileName.GetLength() < 4 || customIniFileName.Right(4) != _T(".ini"))
+			customIniFileName = customIniFileName + _T(".ini");
+		m_sIniFileTitle = customIniFileName;
+	}
+
+	// Global INI file (at EXE location)
+	m_sIniNameGlobal = m_sEXEPath + m_sIniFileTitle; // use current dir as startup path
+	if (!customIniFileName.IsEmpty() && ::GetFileAttributes(m_sIniNameGlobal) == INVALID_FILE_ATTRIBUTES)
+		m_sIniNameGlobal = m_sEXEPath + DEFAULT_INI_FILE_NAME;
 
 	// Read if the user INI file shall be used
 	m_bUserINIExists = false;
@@ -59,7 +85,7 @@ CSettingsProvider::CSettingsProvider(void) {
 
 	if (!m_bStoreToEXEPath) {
 		// User INI file
-		m_sIniNameUser = CString(Helpers::JPEGViewAppDataPath()) + INI_FILE_NAME;
+		m_sIniNameUser = CString(Helpers::JPEGViewAppDataPath()) + m_sIniFileTitle;
 		m_bUserINIExists = (::GetFileAttributes(m_sIniNameUser) != INVALID_FILE_ATTRIBUTES);
 	} else {
 		Helpers::SetJPEGViewAppDataPath(m_sEXEPath);
@@ -158,6 +184,7 @@ CSettingsProvider::CSettingsProvider(void) {
 	m_dAutoContrastAmount = GetDouble(_T("AutoContrastCorrectionAmount"), 0.5, 0.0, 1.0);
 	m_dAutoBrightnessAmount = GetDouble(_T("AutoBrightnessCorrectionAmount"), 0.2, 0.0, 1.0);
 	m_sLandscapeModeParams = GetString(_T("LandscapeModeParams"), _T("-1 -1 -1 -1 0.5 1.0 0.75 0.4 -1 -1 -1"));
+	m_bLandscapeMode = GetBool(_T("LandscapeMode"), false);
 	m_sCopyRenamePattern = GetString(_T("CopyRenamePattern"), _T(""));
 	m_defaultWindowRect = GetRect(_T("DefaultWindowRect"), CRect(0, 0, 0, 0));
 	m_stickyWindowRect = GetRect(_T("StickyWindowRect"), CRect(0, 0, 0, 0));
@@ -618,11 +645,12 @@ void CSettingsProvider::MakeSureUserINIExists() {
 }
 
 CString CSettingsProvider::GetINITemplateName() {
-	CString localizedTemplate = CNLS::GetLocalizedFileName(m_sIniNameGlobal, _T(""), _T("tpl"), Language());
+	CString defaultGlobalIniName = m_sEXEPath + DEFAULT_INI_FILE_NAME;
+	CString localizedTemplate = CNLS::GetLocalizedFileName(defaultGlobalIniName, _T(""), _T("tpl"), Language());
 	if (::GetFileAttributes(localizedTemplate) != INVALID_FILE_ATTRIBUTES) {
 		return localizedTemplate;
 	}
-	return CString(m_sIniNameGlobal) + _T(".tpl");
+	return defaultGlobalIniName + _T(".tpl");
 }
 
 CString CSettingsProvider::GetString(LPCTSTR sKey, LPCTSTR sDefault) {

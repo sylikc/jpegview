@@ -1086,6 +1086,16 @@
                     Example: <code>jpegview.exe c:\pictures /slideshow 2 /order z /fullscreen</code><br />
                     Shows a slideshow of the files in the folder "c:\pictures" using random ordering and an interval of 2 seconds, forcing full screen mode for the slide show.
                 </li>
+                <li>
+                    <code>/ini [ini file title]</code><br />
+                    Uses the INI file as specified. The file extension can be omitted, ".ini" is added when it is missing.
+                    The file name must neither contain an absolute nor a relative path, nor space characters.<br />
+                    When the specified INI file contains the key StoreToEXEPath=true, it must be located in the EXE path and it must exist.
+                    Otherwise, the INI file will be created in the user INI path (%appdata%/roaming/JPEGView/) when it does not exist and when it is used
+                    the first time.<br />
+                    Example: <code>jpegview.exe /ini AlternativeConfig</code><br />
+                    Uses an INI file named "AlternativeConfig.ini" in %appdata%/roaming/JPEGView/
+                </li>
             </ul>
 
             <h2><a name="KeyMap"></a>Keymap - Changing Keyboard and Mouse Shortcuts</h2>
