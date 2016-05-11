@@ -23,13 +23,18 @@ Changelog
 Bugs fixed:
 - Fixed problem with EXIF rotation combined with 'Keep parameters' mode (F4).
 - Fixed bug causing wrong image display when minimal display time was set in windowed mode.
-- Fixed bug with navigation mode 'Sub Subfolders' and 'Show siblings' and WrapAroundFolder=true.
+- Fixed bug with navigation mode 'Show Subfolders' and 'Show siblings' and WrapAroundFolder=true.
 Other changes:
 - "Set current parameters as default values": Saving more parameters to INI file
 - New INI file setting:
   SkipFileOpenDialogOnStartup
     Set to true to skip the 'Open' dialog when starting JPEGView
+  LandscapeMode
+    Set to true to turn on landscape enhancement mode by default
+- New command line paramters: /ini [INI file title]
+    Allows using alternative INI files
 - Improved precision of fixed point arithmetics in up- and downsampling filters
+  Using more filter kernels for upsampling, thus allowing larger upsampling factors (> 30)
 
 [1.0.35.1]
 Bugs fixed:
