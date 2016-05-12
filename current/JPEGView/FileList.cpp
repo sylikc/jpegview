@@ -199,7 +199,8 @@ CFileList::CFileList(const CString & sInitialFile, CDirectoryWatcher & directory
 	int nPos = sInitialFile.ReverseFind(_T('\\'));
 	m_sDirectory = (nPos > 0) ? sInitialFile.Left(nPos) : _T(""); // the backslash is stripped away!
 	nPos = sInitialFile.ReverseFind(_T('.'));
-	bool bIsDirectory = (::GetFileAttributes(sInitialFile) & FILE_ATTRIBUTE_DIRECTORY) != 0;
+	DWORD attributes = ::GetFileAttributes(sInitialFile);
+	bool bIsDirectory = (attributes != INVALID_FILE_ATTRIBUTES) && (attributes & FILE_ATTRIBUTE_DIRECTORY) != 0;
 	CString sExtensionInitialFile = (nPos > 0) ? sInitialFile.Right(sInitialFile.GetLength()-nPos-1) : _T("");
 	sExtensionInitialFile.MakeLower();
 	bool bImageFile = !bIsDirectory && IsImageFile(sExtensionInitialFile);

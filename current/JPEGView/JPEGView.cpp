@@ -58,6 +58,10 @@ static CString ParseCommandLineForStartupFile(LPCTSTR sCommandLine) {
 			}
 		}
 	}
+
+	if (sStartupFile.Find(_T('\\')) == -1)
+		return _T(".\\") + sStartupFile;
+
 	return sStartupFile;
 }
 
