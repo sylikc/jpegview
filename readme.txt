@@ -8,6 +8,9 @@ To compile JPEGView you need:
 - Windows Template Library (WTL), Version 8.1 (http://sourceforge.net/projects/wtl/) installed to
   $(VCInstallDir)WTL\
 
+Notice that there are known issues in Visual Studio 2015 with libjpeg-turbo lib. You may fix yourself by
+recompiling that lib from the libjpeg-turbo sources (not included in JPEGView).
+
 The include directories of WTL must be added to the include directories for VC++:
 In Visual Studio: Properties of JPEGView project > VC++-Directories-Include Directories and Library Directories 
                   Include Directories: $(VCInstallDir)WTL\Include;$(IncludePath)
@@ -24,6 +27,7 @@ Bugs fixed:
 - Fixed problem with EXIF rotation combined with 'Keep parameters' mode (F4).
 - Fixed bug causing wrong image display when minimal display time was set in windowed mode.
 - Fixed bug with navigation mode 'Show Subfolders' and 'Show siblings' and WrapAroundFolder=true.
+- Could not load file on command line in current folder without leading .\
 Other changes:
 - "Set current parameters as default values": Saving more parameters to INI file
 - New INI file setting:
