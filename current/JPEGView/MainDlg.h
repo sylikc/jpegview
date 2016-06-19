@@ -271,6 +271,7 @@ private:
 	bool m_bDragging;
 	bool m_bDoDragging;
 	bool m_bMovieMode;
+	double m_dMovieFPS;
 	bool m_bProcFlagsTouched;
 	EProcessingFlags m_eProcFlagsBeforeMovie;
 	bool m_bInTrackPopupMenu;
