@@ -212,6 +212,7 @@ CMainDlg::CMainDlg(bool bForceFullScreen) {
 	m_bOutOfMemoryLastImage = false;
 	m_nLastLoadError = HelpersGUI::FileLoad_Ok;
 
+	m_dMovieFPS = 1.0;
 	m_nAutoStartSlideShow = false;
 	m_eForcedSorting = Helpers::FS_Undefined;
 
@@ -1427,6 +1428,9 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 		case IDM_STOP_MOVIE:
 			StopMovieMode();
 			break;
+		case IDM_SLIDESHOW_RESUME:
+			StartMovieMode(m_dMovieFPS);
+			break;
 		case IDM_SLIDESHOW_1:
 		case IDM_SLIDESHOW_2:
 		case IDM_SLIDESHOW_3:
@@ -2636,6 +2640,8 @@ void CMainDlg::StopSlideShowTimer(void) {
 void CMainDlg::StartMovieMode(double dFPS) {
 	// if more than this number of frames are requested per seconds, it is considered to be a movie
 	const double cdFPSMovie = 4.9;
+
+	m_dMovieFPS = dFPS;
 
 	// Save processing flags at the time movie mode starts
 	if (!m_bMovieMode) {

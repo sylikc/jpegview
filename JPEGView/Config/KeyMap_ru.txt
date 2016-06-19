@@ -48,6 +48,7 @@
 #define IDM_SORT_SIZE		7040			// сортировать по размеру файлов в байтах
 #define IDM_SORT_UPCOUNTING	7100			// сортировать по возрастанию
 #define IDM_SORT_DOWNCOUNTING	7110			// сортировать по убыванию
+#define IDM_SLIDESHOW_RESUME    7399			// resume slide show (after stop)
 #define IDM_ROTATE_90		8000			// повернуть изображение на 90° вправо
 #define IDM_ROTATE_270		9000			// повернуть изображение на 90° влево
 #define IDM_ROTATE          	9100			// показать окно поворота на произвольный угол
@@ -204,6 +205,7 @@ Ctrl+Shift+E		IDM_TOUCH_IMAGE_EXIF
 Ctrl+O			IDM_OPEN
 Ctrl+P			IDM_PRINT
 Ctrl+R			IDM_RELOAD
+Alt+R                   IDM_SLIDESHOW_RESUME
 Ctrl+X			IDM_COPY_FULL
 Ctrl+V			IDM_PASTE
 Ctrl+L			IDM_LANDSCAPE_MODE

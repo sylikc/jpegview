@@ -41,6 +41,7 @@
 #define IDM_SORT_SIZE		7040			// sorting order file size in bytes
 #define IDM_SORT_UPCOUNTING	7100			// sort upcounting
 #define IDM_SORT_DOWNCOUNTING	7110			// sort downcounting
+#define IDM_SLIDESHOW_RESUME    7399			// resume slide show (after stop)
 #define IDM_ROTATE_90		8000			// rotate image 90 deg
 #define IDM_ROTATE_270		9000			// rotate image 270 deg
 #define IDM_ROTATE          	9100			// show free rotation dialog
@@ -193,6 +194,7 @@ Ctrl+Shift+E            IDM_TOUCH_IMAGE_EXIF
 Ctrl+O                  IDM_OPEN
 Ctrl+P                  IDM_PRINT
 Ctrl+R                  IDM_RELOAD
+Alt+R                   IDM_SLIDESHOW_RESUME
 Ctrl+X                  IDM_COPY_FULL
 Ctrl+V                  IDM_PASTE
 Ctrl+L                  IDM_LANDSCAPE_MODE

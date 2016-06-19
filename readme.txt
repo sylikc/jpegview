@@ -30,6 +30,7 @@ Bugs fixed:
 - Could not load file on command line in current folder without leading .\
 Other changes:
 - "Set current parameters as default values": Saving more parameters to INI file
+- Alt+R to resume stopped slide show.
 - New INI file setting:
   SkipFileOpenDialogOnStartup
     Set to true to skip the 'Open' dialog when starting JPEGView
