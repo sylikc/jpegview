@@ -31,9 +31,11 @@ bool CPrintImage::Print(HWND hWnd, CJPEGImage * pImage, const CImageProcessingPa
 	if (m_pPrinterSelectionDlg == NULL) {
 		m_pPrinterSelectionDlg = new CPrintDialogEx(PD_ALLPAGES | PD_USEDEVMODECOPIES | PD_NOPAGENUMS | PD_NOSELECTION | PD_NOCURRENTPAGE, hWnd);
 		HCURSOR hOldCursor = ::SetCursor(::LoadCursor(NULL, IDC_WAIT));
-		m_pPrinterSelectionDlg->GetDefaults();
+		HRESULT res = m_pPrinterSelectionDlg->GetDefaults();
 		::SetCursor(hOldCursor);
 		m_pPrinterSelectionDlg->m_pdex.Flags &= ~PD_RETURNDEFAULT;
+		if (res != S_OK)
+			return false;
 	}
 
 	CPrintDlg printDlg(m_pPrintParameters, m_pPrinterSelectionDlg, m_pPrinterSelectionDlg->GetDevMode(), m_pPrinterSelectionDlg->GetDeviceName(),

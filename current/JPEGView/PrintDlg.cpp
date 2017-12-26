@@ -559,6 +559,8 @@ void CPrintDlg::SetNumber(CEdit& editControl, double number) {
 void CPrintDlg::SetupDataForCurrentPrinter() {
 	m_lblPrinter.SetWindowText(m_printerName);
 
+	if (m_pDeviceMode == NULL) return;
+
 	RecreatePrinterDC();
 
 	m_lockPrinterDC = true;
@@ -626,7 +628,7 @@ void CPrintDlg::SetupDataForCurrentPrinter() {
 }
 
 LPCTSTR* CPrintDlg::GetPaperNames(int& numberOfPapers, WORD*& paperTypes, POINT*& paperSizes) {
-	if (m_pDeviceMode == NULL) return NULL;
+	if (m_pDeviceMode == NULL || m_printerName == NULL || m_portName == NULL) return NULL;
 	numberOfPapers = ::DeviceCapabilities(m_printerName, m_portName, DC_PAPERNAMES, NULL, m_pDeviceMode);
 	if (numberOfPapers <= 0) return NULL;
 
@@ -668,7 +670,7 @@ LPCTSTR* CPrintDlg::GetPaperNames(int& numberOfPapers, WORD*& paperTypes, POINT*
 }
 
 LPCTSTR* CPrintDlg::GetTrayNames(int& numberOfTrays, WORD*& paperTrays)  {
-	if (m_pDeviceMode == NULL) return NULL;
+	if (m_pDeviceMode == NULL || m_printerName == NULL || m_portName == NULL) return NULL;
 	numberOfTrays = ::DeviceCapabilities(m_printerName, m_portName, DC_BINNAMES, NULL, m_pDeviceMode);
 	if (numberOfTrays <= 0) return NULL;
 
@@ -714,6 +716,9 @@ POINT CPrintDlg::GetUsedPaperSize() {
 	int index;
 	POINT paperSize;
 	paperSize.x = paperSize.y = 0;
+	if (m_pDeviceMode == NULL)
+		return paperSize;
+
 	if ((m_pDeviceMode->dmFields & DM_PAPERLENGTH) && (m_pDeviceMode->dmFields & DM_PAPERWIDTH)) {
 		paperSize.x = m_pDeviceMode->dmPaperWidth;
 		paperSize.y = m_pDeviceMode->dmPaperLength;
