@@ -82,5 +82,13 @@ Because JPEGView has no built in image browser, it's optimal usage scenario is t
 1. Start JPEGView, load an image and open the context menu (right mouse click).
 Choose: Settings/Admin > Set as default viewer...
 Select the file types to be opened by JPEGView and press 'OK'.
-Windows 8 and later: The 'default programs' dialog from the Control Panel is shown to perform the associations.
+
+2. Starting with Windows 8, Microsoft made it harder and harder to change the default application for the standard image types.
+Therefore, the steps described above are not sufficient and some addional manual work is required.
+Windows 8 and 8.1: The 'default programs' dialog from the Control Panel is shown automatically to confirm the associations.
+Windows 10: Windows 10 only shows a message box where to set the 'standard apps'. To actually do so:
+ - Open the Windows 10 start menu and type 'standard apps'. Click the found settings page.
+ - On the right panel, scroll to the end and select 'Set defaults by app'
+ - In the dialog that is appearing, choose 'JPEGView' in the list on the left panel
+ - Now you can assign all (or a subset) of the image file types to JPEGView
 

@@ -113,7 +113,7 @@ FONT 8, "MS Shell Dlg", 0, 0, 0x1
 BEGIN
     DEFPUSHBUTTON   "",IDC_CLOSE,133,120,104,15
     LTEXT           "",IDC_JPEGVIEW,64,7,163,9,NOT WS_GROUP
-    LTEXT           "Copyright 2006-2016 David Kleiner",IDC_COPYRIGHT,64,22,163,9,NOT WS_GROUP
+    LTEXT           "Copyright 2006-2017 David Kleiner",IDC_COPYRIGHT,64,22,163,9,NOT WS_GROUP
     ICON            IDR_MAINFRAME,IDC_ICONJPEGVIEW,18,14,22,20,SS_CENTERIMAGE
     CONTROL         "",IDC_LICENSE,"RichEdit20W",WS_TABSTOP | 0x804,64,68,168,42
     LTEXT           "",IDC_SIMDMODE,64,36,163,10,NOT WS_GROUP
@@ -235,6 +235,10 @@ END
 GUIDELINES DESIGNINFO
 BEGIN
     IDD_MAINDLG, DIALOG
+    BEGIN
+    END
+
+    IDD_ABOUT, DIALOG
     BEGIN
     END
 
@@ -461,7 +465,7 @@ BEGIN
             MENUITEM "3 : 2",                       IDM_CROPMODE_3_2
             MENUITEM "16 : 9",                      IDM_CROPMODE_16_9
             MENUITEM "16 : 10",                     IDM_CROPMODE_16_10
-			MENUITEM "__",							IDM_CROPMODE_USER
+            MENUITEM "__",                          IDM_CROPMODE_USER
         END
         MENUITEM SEPARATOR
         MENUITEM "Zoom to Selection",           IDM_ZOOM_SEL
@@ -503,7 +507,7 @@ BEGIN
             VALUE "FileDescription", "JPEGView"
             VALUE "FileVersion", "1.0.36"
             VALUE "InternalName", "JPEGView"
-            VALUE "LegalCopyright", "Copyright 2006-2016 David Kleiner"
+            VALUE "LegalCopyright", "Copyright 2006-2017 David Kleiner"
             VALUE "OriginalFilename", "JPEGView.exe"
             VALUE "ProductName", "JPEGView Application"
             VALUE "ProductVersion", "1.0.36"

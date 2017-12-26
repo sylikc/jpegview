@@ -31,11 +31,13 @@ Bugs fixed:
 Other changes:
 - "Set current parameters as default values": Saving more parameters to INI file
 - Alt+R to resume stopped slide show.
-- New INI file setting:
+- New INI file settings:
   SkipFileOpenDialogOnStartup
     Set to true to skip the 'Open' dialog when starting JPEGView
   LandscapeMode
     Set to true to turn on landscape enhancement mode by default
+  IniEditor
+    Sets the application to use for editing INI files
 - New command line paramters: /ini [INI file title]
     Allows using alternative INI files
 - Improved precision of fixed point arithmetics in up- and downsampling filters

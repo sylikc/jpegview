@@ -457,6 +457,12 @@ LandscapeModeParams=-1 -1 -1 -1 0.5 1.0 0.75 0.4 -1 -1 -1 -1
 ; Убедитесь, что у вас есть права на запись в указанную папку!
 WallpaperPath=%temp%
 
+; Editor for INI files
+; notepad : Use notepad.exe
+; system : Use application registered for INI files
+; other : Full path to application for editing INI files
+IniEditor=notepad
+
 ; Пользовательские команды.
 ; Команда должна иметь имя UserCmd#, где # – номер команды.
 ; Номера с 0 по 2 уже используются в глобальном INI-файле.

@@ -2973,7 +2973,19 @@ void CMainDlg::EditINIFile(bool bGlobalINI) {
 		}
 	}
 
-	::ShellExecute(m_hWnd, _T("open"), _T("notepad.exe"), sINIFileName, NULL, SW_SHOW);
+	Helpers::EIniEditor iniEditor = CSettingsProvider::This().IniEditor();
+	LPCTSTR command, argument;
+	if (iniEditor == Helpers::INI_Notepad) {
+		command = _T("notepad.exe");
+		argument = sINIFileName;
+	} else if (iniEditor == Helpers::INI_System) {
+		command = sINIFileName;
+		argument = NULL;
+	} else {
+		command = CSettingsProvider::This().CustomIniEditor();
+		argument = sINIFileName;
+	}
+	::ShellExecute(m_hWnd, _T("open"), command, argument, NULL, SW_SHOW);
 }
 
 void CMainDlg::UpdateWindowTitle() {
