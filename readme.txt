@@ -28,6 +28,7 @@ Bugs fixed:
 - Fixed bug causing wrong image display when minimal display time was set in windowed mode.
 - Fixed bug with navigation mode 'Show Subfolders' and 'Show siblings' and WrapAroundFolder=true.
 - Could not load file on command line in current folder without leading .\
+- Made printing more robust when no default printer defined
 Other changes:
 - "Set current parameters as default values": Saving more parameters to INI file
 - Alt+R to resume stopped slide show.
