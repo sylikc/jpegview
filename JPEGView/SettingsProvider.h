@@ -116,6 +116,8 @@ public:
 	CSize UserCropAspectRatio() { return m_userCropAspectRatio; }
 	LPCTSTR WallpaperPath() { return m_sWallpaperPath; }
 	bool SkipFileOpenDialogOnStartup() { return m_bSkipFileOpenDialogOnStartup; }
+	Helpers::EIniEditor IniEditor() { return m_eIniEditor; }
+	LPCTSTR CustomIniEditor() { return m_sIniEditor; }
 
 	// Returns if a user INI file exists
 	bool ExistsUserINI();
@@ -273,6 +275,8 @@ private:
 	CSize m_userCropAspectRatio;
 	CString m_sWallpaperPath;
 	bool m_bSkipFileOpenDialogOnStartup;
+	Helpers::EIniEditor  m_eIniEditor;
+	CString m_sIniEditor;
 
 	std::list<CUserCommand*> m_userCommands;
 	std::list<CUserCommand*> m_openWithCommands;

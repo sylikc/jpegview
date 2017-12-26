@@ -373,6 +373,12 @@ LandscapeMode=false
 ; This INI setting sets the path to save the file. Default is %temp%, the system TEMP directory. You must have write access to the specified directory!
 WallpaperPath=%temp%
 
+; Editor for INI files
+; notepad : Use notepad.exe
+; system : Use application registered for INI files
+; other : Full path to application for editing INI files
+IniEditor=notepad
+
 ; User commands
 ; User command must be named UserCmd# where # stands for a number. The numbers 0 to 2 are already used by the global INI file.
 ; User command must have the following form:

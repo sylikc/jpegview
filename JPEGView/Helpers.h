@@ -74,6 +74,13 @@ namespace Helpers {
 		MU_English
 	};
 
+	// Editor for INI files
+	enum EIniEditor {
+		INI_Notepad,
+		INI_System,
+		INI_Custom
+	};
+
 	// Maximum and minimum allowed zoom factors for images
 	const double ZoomMax = 16.0;
 	const double ZoomMin = 0.1;

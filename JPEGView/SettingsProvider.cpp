@@ -242,6 +242,17 @@ CSettingsProvider::CSettingsProvider(void) {
 	m_dPrintMargin = GetDouble(_T("PrintMargin"), 1.0, 0.0, 100.0);
 	m_dDefaultPrintWidth = GetDouble(_T("PrintWidth"), -15.0, -1000, 1000);
 
+	m_sIniEditor = GetString(_T("IniEditor"), _T("notepad"));
+	if (m_sIniEditor.CompareNoCase(_T("notepad")) == 0) {
+		m_eIniEditor = Helpers::INI_Notepad;
+	}
+	else if (m_sIniEditor.CompareNoCase(_T("system")) == 0) {
+		m_eIniEditor = Helpers::INI_System;
+	}
+	else {
+		m_eIniEditor = Helpers::INI_Custom;
+	}
+
 	CString sUnit = GetString(_T("Units"), _T("auto"));
 	if (sUnit.CompareNoCase(_T("auto")) == 0) {
 		TCHAR buffer[2];
