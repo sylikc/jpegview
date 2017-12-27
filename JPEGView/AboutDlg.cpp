@@ -45,7 +45,7 @@ LRESULT CAboutDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lPara
 	CenterWindow(GetParent());
 
 	HICON hIconSmall = (HICON)::LoadImage(_Module.GetResourceInstance(), MAKEINTRESOURCE(IDR_MAINFRAME), 
-		IMAGE_ICON, ::GetSystemMetrics(SM_CXSMICON), ::GetSystemMetrics(SM_CYSMICON), LR_DEFAULTCOLOR);
+		IMAGE_ICON, ::GetSystemMetrics(SM_CXSMICON), ::GetSystemMetrics(SM_CYSMICON), LR_DEFAULTCOLOR | LR_SHARED);
 	SetIcon(hIconSmall, FALSE);
 
 #ifdef _DEBUG
@@ -68,6 +68,7 @@ LRESULT CAboutDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lPara
 	m_lblNumCores.Attach(GetDlgItem(IDC_NUMCORES));
 	m_richEdit.Attach(GetDlgItem(IDC_LICENSE));
 	m_btnClose.Attach(GetDlgItem(IDC_CLOSE));
+	m_lblIcon.Attach(GetDlgItem(IDC_ICONJPEGVIEW));
 
 	m_lblVersion.SetWindowText(CString(_T("JPEGView ")) + JPEGVIEW_VERSION);
 
@@ -84,6 +85,10 @@ LRESULT CAboutDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lPara
 		CNLS::GetString(_T("Project home page:")) + 
 		_T(" \nhttp://jpegview.sourceforge.net\n"));
 	m_richEdit.SetEventMask(ENM_LINK);
+
+	HICON hIconLarge = (HICON)::LoadImage(_Module.GetResourceInstance(), MAKEINTRESOURCE(IDR_MAINFRAME),
+		IMAGE_ICON, 64, 64, LR_DEFAULTCOLOR | LR_SHARED);
+	m_lblIcon.SetIcon(hIconLarge);
 
 	return TRUE;
 }
