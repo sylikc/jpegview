@@ -32,5 +32,6 @@ private:
 	CStatic m_lblSIMD;
 	CStatic m_lblNumCores;
 	CRichEditCtrl m_richEdit;
+	CStatic m_lblIcon;
 	CButton m_btnClose;
 };

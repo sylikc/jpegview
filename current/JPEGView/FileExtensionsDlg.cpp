@@ -47,7 +47,7 @@ LRESULT CFileExtensionsDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARA
 	CenterWindow(GetParent());
 
 	HICON hIconSmall = (HICON)::LoadImage(_Module.GetResourceInstance(), MAKEINTRESOURCE(IDR_MAINFRAME), 
-		IMAGE_ICON, ::GetSystemMetrics(SM_CXSMICON), ::GetSystemMetrics(SM_CYSMICON), LR_DEFAULTCOLOR);
+		IMAGE_ICON, ::GetSystemMetrics(SM_CXSMICON), ::GetSystemMetrics(SM_CYSMICON), LR_DEFAULTCOLOR | LR_SHARED);
 	SetIcon(hIconSmall, FALSE);
 
 	this->SetWindowText(CNLS::GetString(_T("Set JPEGView as default image viewer")));
