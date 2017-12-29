@@ -463,6 +463,11 @@ WallpaperPath=%temp%
 ; other : Full path to application for editing INI files
 IniEditor=notepad
 
+; URL for the map provider to display GPS coordinates on a map
+; OpenStreetmap: www.openstreetmap.org/?mlat={lat}&mlon={lng}&zoom=15
+; Google maps: https://www.google.com/maps/search/?api=1&query={lat},{lng}
+GPSMapProvider=https://opentopomap.org/#marker=15/{lat}/{lng}
+
 ; Пользовательские команды.
 ; Команда должна иметь имя UserCmd#, где # – номер команды.
 ; Номера с 0 по 2 уже используются в глобальном INI-файле.

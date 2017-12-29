@@ -38,6 +38,7 @@ public:
 	// The mouse event is consumed by a UI control if the return value is true.
 	virtual bool OnMouseLButton(EMouseEvent eMouseEvent, int nX, int nY);
 	virtual bool OnMouseMove(int nX, int nY);
+	virtual bool MouseCursorCaptured();
 
 	// Must be called when painting the panel (hWnd given in constructor)
 	virtual void OnPaint(CDC & dc, const CPoint& offset);
@@ -60,12 +61,15 @@ protected:
 	CSliderDouble* AddSlider(int nID, LPCTSTR sName, double* pdValue, bool* pbEnable, 
 				double dMin, double dMax, double dDefaultValue, bool bAllowPreviewAndReset, bool bLogarithmic, bool bInvert, int nWidth);
 
-	// Adds a text control to the slider area. The text can be editable or static. The handler
+	// Adds a text control to the panel. The text can be editable or static. The handler
 	// procedure gets called for editable texts when the text has been changed. It must be null when
 	// bEditable is false. pContext is passed to the textChangedHandler when called.
 	CTextCtrl* AddText(int nID, LPCTSTR sTextInit, bool bEditable, TextChangedHandler* textChangedHandler = NULL, void* pContext = NULL);
 
-	// Adds a button to the slider area. The given handler procedure is called when the button is pressed and pContext and the parameter is passed to it.
+	// Adds an URL control to the panel.
+	CURLCtrl* AddURL(int nID, LPCTSTR sText, LPCTSTR sURL, bool outlineText, void* pContext = NULL);
+
+	// Adds a button to the panel. The given handler procedure is called when the button is pressed and pContext and the parameter is passed to it.
 	CButtonCtrl* AddButton(int nID, LPCTSTR sButtonText, ButtonPressedHandler* buttonPressedHandler = NULL, void* pContext = NULL, int nParameter = 0);
 
 	// Adds a user painted button.

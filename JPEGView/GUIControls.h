@@ -103,7 +103,8 @@ public:
 	virtual bool OnMouseLButton(EMouseEvent eMouseEvent, int nX, int nY) = 0;
 	virtual bool OnMouseMove(int nX, int nY) = 0;
 	virtual void OnPaint(CDC & dc, const CPoint& offset);
-	
+	virtual bool MouseCursorCaptured() { return false; }
+
 	// Layout rectangle in main window client coordinates
 	void SetPosition(CRect position) { m_position = position; }
 protected:
@@ -191,6 +192,7 @@ public:
 protected:
 	virtual void Draw(CDC & dc, CRect position, bool bBlack);
 
+	bool m_highlightOnMouseOver;
 private:
 	void CreateBoldFont(CDC & dc);
 	CSize GetTextRectangle(HWND hWnd, LPCTSTR sText);
@@ -210,6 +212,26 @@ private:
 	TextChangedHandler* m_textChangedHandler;
 	void* m_pContext;
 	HFONT m_hBoldFont;
+};
+
+//-------------------------------------------------------------------------------------------------
+
+// Control for showing static text representing a clickable link to an URL
+class CURLCtrl : public CTextCtrl {
+public:
+	CURLCtrl(CPanel* pPanel, LPCTSTR sText, LPCTSTR sURL, bool outlineText, void* pContext = NULL);
+	void SetURL(LPCTSTR sURL);
+public:
+	virtual bool OnMouseLButton(EMouseEvent eMouseEvent, int nX, int nY);
+	virtual bool OnMouseMove(int nX, int nY);
+	virtual bool MouseCursorCaptured();
+	virtual void Draw(CDC & dc, CRect position, bool bBlack);
+private:
+	CString m_sURL;
+	bool m_handCursorSet;
+	bool m_outlineText;
+
+	void NavigateToURL();
 };
 
 //-------------------------------------------------------------------------------------------------

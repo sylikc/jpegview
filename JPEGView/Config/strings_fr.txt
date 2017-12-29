@@ -400,3 +400,5 @@ Right Droite
 Top	Haut
 Bottom	Bas
 Fill paper with crop	Remplir la page et rogner l'image
+Location:	Localitè:
+Altitude (m):	Altitude (m):

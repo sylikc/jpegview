@@ -402,3 +402,5 @@ Right	Derecho
 Top	Arriba
 Bottom	Abajo
 Fill paper with crop	Llenar Papel con margen
+Location:	Localidad:
+Altitude (m):	Altitud (m):

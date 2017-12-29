@@ -46,6 +46,12 @@ CTextCtrl* CPanel::AddText(int nID, LPCTSTR sTextInit, bool bEditable, TextChang
 	return pTextCtrl;
 }
 
+CURLCtrl* CPanel::AddURL(int nID, LPCTSTR sText, LPCTSTR sURL, bool outlineText, void* pContext) {
+	CURLCtrl* pUrlCtrl = new CURLCtrl(this, sText, sURL, outlineText, pContext);
+	m_controls[nID] = pUrlCtrl;
+	return pUrlCtrl;
+}
+
 CButtonCtrl* CPanel::AddButton(int nID, LPCTSTR sButtonText, ButtonPressedHandler* buttonPressedHandler, void* pContext, int nParameter) {
 	CButtonCtrl* pButtonCtrl = new CButtonCtrl(this, sButtonText, buttonPressedHandler, pContext, nParameter);
 	m_controls[nID] = pButtonCtrl;
@@ -108,6 +114,20 @@ bool CPanel::OnMouseMove(int nX, int nY) {
 		}
 	}
 	return bHandled || m_pCtrlCaptureMouse != NULL;
+}
+
+bool CPanel::MouseCursorCaptured() {
+	CUICtrl* ctrlCapturedMouse = m_pCtrlCaptureMouse;
+	ControlsIterator iter;
+	for (iter = m_controls.begin(); iter != m_controls.end(); iter++) {
+		CUICtrl* pCtrl = iter->second;
+		if (pCtrl->IsShown() && (ctrlCapturedMouse == NULL || pCtrl == ctrlCapturedMouse)) {
+			if (pCtrl->MouseCursorCaptured()) {
+				return true;
+			}
+		}
+	}
+	return false;
 }
 
 void CPanel::OnPaint(CDC & dc, const CPoint& offset) {

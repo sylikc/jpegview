@@ -96,6 +96,23 @@ bool CPanelMgr::OnMouseMove(int nX, int nY) {
 	return false;
 }
 
+bool CPanelMgr::MouseCursorCaptured() {
+	if (m_pCapturedPanelController != NULL && m_pCapturedPanelController->IsActive()) {
+		if (m_pCapturedPanelController->MouseCursorCaptured()) {
+			return true;
+		}
+	}
+	std::list<CPanelController*>::iterator iter;
+	for (iter = m_panelControllers.begin(); iter != m_panelControllers.end(); iter++) {
+		if ((*iter)->IsActive() && *iter != m_pCapturedPanelController) { // must be routed to invisible but active panels, may get visible by mouse movements
+			if ((*iter)->MouseCursorCaptured()) {
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
 bool CPanelMgr::OnKeyDown(unsigned int nVirtualKey, bool bShift, bool bAlt, bool bCtrl) {
 	std::list<CPanelController*>::iterator iter;
 	for (iter = m_panelControllers.begin( ); iter != m_panelControllers.end( ); iter++ ) {

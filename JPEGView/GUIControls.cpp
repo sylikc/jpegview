@@ -92,6 +92,7 @@ CTextCtrl::CTextCtrl(CPanel* pPanel, LPCTSTR sTextInit, bool bEditable,
 	 m_nMaxTextWidth = HelpersGUI::ScaleToScreen(200);
 	 m_pEdit = NULL;
 	 m_hBoldFont = NULL;
+	 m_highlightOnMouseOver = false;
 	 SetText((sTextInit == NULL) ? _T("") : sTextInit);
 }
 
@@ -187,7 +188,7 @@ bool CTextCtrl::OnMouseLButton(EMouseEvent eMouseEvent, int nX, int nY) {
 }
 
 bool CTextCtrl::OnMouseMove(int nX, int nY) {
-	if (m_bEditable && m_pEdit == NULL) {
+	if (m_highlightOnMouseOver || (m_bEditable && m_pEdit == NULL)) {
 		CPoint mousePos(nX, nY);
 		if (m_position.PtInRect(mousePos)) {
 			if (!m_bHighlight) {
@@ -282,6 +283,62 @@ LRESULT APIENTRY CTextCtrl::EditSubclassProc(HWND hwnd, UINT uMsg, WPARAM wParam
 		wParam, lParam); 
 } 
 
+/////////////////////////////////////////////////////////////////////////////////////////////
+// CURLCtrl
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+CURLCtrl::CURLCtrl(CPanel* pPanel, LPCTSTR sText, LPCTSTR sURL, bool outlineText, void* pContext) : CTextCtrl(pPanel, sText, false, NULL, pContext)
+{
+	m_sURL = sURL;
+	m_outlineText = outlineText;
+	m_highlightOnMouseOver = true;
+	m_handCursorSet = false;
+}
+
+void CURLCtrl::SetURL(LPCTSTR sURL) {
+	m_sURL = sURL;
+}
+
+bool CURLCtrl::OnMouseLButton(EMouseEvent eMouseEvent, int nX, int nY) {
+	CPoint mousePos(nX, nY);
+	if (m_position.PtInRect(mousePos)) {
+		if (eMouseEvent == MouseEvent_BtnDown) {
+			NavigateToURL();
+		}
+		return true;
+	}
+	return false;
+}
+
+bool CURLCtrl::OnMouseMove(int nX, int nY) {
+	bool result = CTextCtrl::OnMouseMove(nX, nY);
+	CPoint mousePos(nX, nY);
+	if (m_position.PtInRect(mousePos)) {
+		if (!m_handCursorSet) {
+			::SetCursor(::LoadCursor(NULL, MAKEINTRESOURCE(IDC_HAND)));
+			m_handCursorSet = true;
+		}
+	}
+	else if (m_handCursorSet) {
+		m_handCursorSet = false;
+	}
+	return result;
+}
+
+bool CURLCtrl::MouseCursorCaptured() {
+	return m_handCursorSet;
+}
+
+void CURLCtrl::Draw(CDC & dc, CRect position, bool bBlack) {
+	if (m_outlineText || !bBlack) {
+		CTextCtrl::Draw(dc, position, bBlack);
+	}
+}
+
+void CURLCtrl::NavigateToURL() {
+	if (!m_sURL.IsEmpty())
+		::ShellExecute(m_pPanel->GetHWND(), _T("open"), m_sURL, NULL, NULL, SW_SHOW);
+}
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 // CButtonCtrl

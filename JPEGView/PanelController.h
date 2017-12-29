@@ -40,6 +40,7 @@ public:
 	// If returning true, the panel is consuming the event
 	virtual bool OnMouseLButton(EMouseEvent eMouseEvent, int nX, int nY);
 	virtual bool OnMouseMove(int nX, int nY);
+	virtual bool MouseCursorCaptured();
 	virtual bool OnKeyDown(unsigned int nVirtualKey, bool bShift, bool bAlt, bool bCtrl) { return false; }
 	virtual bool OnTimer(int nTimerId) { return false; }
 	virtual void OnPaintPanel(CDC & dc, const CPoint& offset); // dc will be a memory DC
