@@ -16,6 +16,22 @@ public:
 	unsigned int Denominator;
 };
 
+class GPSCoordinate {
+public:
+	GPSCoordinate(LPCTSTR reference, double degrees, double minutes, double seconds) {
+		m_sReference = CString(reference);
+		Degrees = degrees;
+		Minutes = minutes;
+		Seconds = seconds;
+	}
+	LPCTSTR GetReference() { return m_sReference; }
+	double Degrees;
+	double Minutes;
+	double Seconds;
+private:
+	CString m_sReference;
+};
+
 // Reads and parses the EXIF data of JPEG images
 class CEXIFReader {
 public:
@@ -63,6 +79,12 @@ public:
 	int GetJPEGThumbStreamLen() { return m_nJPEGThumbStreamLen; }
 	int GetThumbnailWidth() { return m_nThumbWidth; }
 	int GetThumbnailHeight() { return m_nThumbHeight; }
+	// GPS information
+	bool IsGPSInformationPresent() { return m_pLatitude != NULL && m_pLongitude != NULL; }
+	bool IsGPSAltitudePresent() { return m_dAltitude != UNKNOWN_DOUBLE_VALUE; }
+	GPSCoordinate* GetGPSLatitude() { return m_pLatitude; }
+	GPSCoordinate* GetGPSLongitude() { return m_pLongitude; }
+	double GetGPSAltitude() { return m_dAltitude; }
 
 	// Sets the image orientation to given value (if tag was present in input stream).
 	// Writes to the APP1 block passed in constructor.
@@ -97,6 +119,9 @@ private:
 	int m_nThumbWidth;
 	int m_nThumbHeight;
 	int m_nJPEGThumbStreamLen;
+	GPSCoordinate* m_pLatitude;
+	GPSCoordinate* m_pLongitude;
+	double m_dAltitude;
 
 	bool m_bLittleEndian;
 	uint8* m_pApp1;
@@ -104,4 +129,7 @@ private:
 	uint8* m_pLastIFD0;
 	uint8* m_pIFD1;
 	uint8* m_pLastIFD1;
+
+	void ReadGPSData(uint8* pTIFFHeader, uint8* pTagGPSIFD, int nApp1Size, bool bLittleEndian);
+	GPSCoordinate* ReadGPSCoordinate(uint8* pTIFFHeader, uint8* pTagLatOrLong, LPCTSTR reference, bool bLittleEndian);
 };

@@ -35,6 +35,7 @@ public:
 	// Returning bool means that a panel has consumed the event
 	bool OnMouseLButton(EMouseEvent eMouseEvent, int nX, int nY);
 	bool OnMouseMove(int nX, int nY);
+	bool MouseCursorCaptured();
 	bool OnKeyDown(unsigned int nVirtualKey, bool bShift, bool bAlt, bool bCtrl);
 	bool OnTimer(int nTimerId);
 	void PaintPanels(CDC & dc, const CPoint& offset);

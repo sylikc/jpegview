@@ -291,6 +291,7 @@ CSettingsProvider::CSettingsProvider(void) {
 	m_bSkipFileOpenDialogOnStartup = GetBool(_T("SkipFileOpenDialogOnStartup"), false);
 
 	m_sLanguage = GetString(_T("Language"), _T("auto")); 
+	m_sGPSMapProvider = GetString(_T("GPSMapProvider"), _T("https://opentopomap.org/#marker=15/{lat}/{lng}"));
 
 	m_sACCExclude = GetString(_T("ACCExclude"), _T("")); 
 	m_sACCExclude.Replace(_T("%mydocuments%"), sMyDocumentsFolder);

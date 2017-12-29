@@ -22,6 +22,10 @@ bool CPanelController::OnMouseMove(int nX, int nY) {
 	return m_pPanel->OnMouseMove(nX, nY);
 }
 
+bool CPanelController::MouseCursorCaptured() {
+	return m_pPanel->MouseCursorCaptured();
+}
+
 void CPanelController::OnPaintPanel(CDC & dc, const CPoint& offset)  { 
 	m_pPanel->OnPaint(dc, offset); 
 }

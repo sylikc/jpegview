@@ -16,6 +16,38 @@ static int GetFileNameHeight(HDC dc) {
 	return size.cy;
 }
 
+static CString CreateGPSString(GPSCoordinate* latitude, GPSCoordinate* longitude) {
+	const int BUFF_SIZE = 96;
+	TCHAR buff[BUFF_SIZE];
+	_stprintf_s(buff, BUFF_SIZE, _T("%.0f° %.0f' %.0f'' %s / %.0f° %.0f' %.0f'' %s"),
+		latitude->Degrees, latitude->Minutes, latitude->Seconds, latitude->GetReference(),
+		longitude->Degrees, longitude->Minutes, longitude->Seconds, longitude->GetReference());
+	return CString(buff);
+}
+
+static CString CreateGPSURL(GPSCoordinate* latitude, GPSCoordinate* longitude) {
+	double lng = longitude->Degrees + longitude->Minutes / 60 + longitude->Seconds / (60 * 60);
+	if (_tcsicmp(longitude->GetReference(), _T("W")) == 0)
+		lng = -lng;
+
+	double lat = latitude->Degrees + latitude->Minutes / 60 + latitude->Seconds / (60 * 60);
+	if (_tcsicmp(latitude->GetReference(), _T("S")) == 0)
+		lat = -lat;
+
+	CString mapProvider = CSettingsProvider::This().GPSMapProvider();
+
+	const int BUFF_SIZE = 32;
+	TCHAR buffLat[BUFF_SIZE];
+	TCHAR buffLng[BUFF_SIZE];
+	_stprintf_s(buffLat, BUFF_SIZE, _T("%.5f"), lat);
+	_stprintf_s(buffLng, BUFF_SIZE, _T("%.5f"), lng);
+
+	mapProvider.Replace(_T("{lat}"), buffLat);
+	mapProvider.Replace(_T("{lng}"), buffLng);
+
+	return mapProvider;
+}
+
 CEXIFDisplayCtl::CEXIFDisplayCtl(CMainDlg* pMainDlg, CPanel* pImageProcPanel) : CPanelController(pMainDlg, false) {
 	m_bVisible = CSettingsProvider::This().ShowFileInfo();
 	m_nFileNameHeight = 0;
@@ -98,6 +130,14 @@ void CEXIFDisplayCtl::FillEXIFDataDisplay() {
 				const FILETIME* pFileTime = pFileList->CurrentModificationTime();
 				if (pFileTime != NULL) {
 					m_pEXIFDisplay->AddLine(CNLS::GetString(_T("Modification date:")), *pFileTime);
+				}
+			}
+			if (pEXIFReader->IsGPSInformationPresent()) {
+				CString sGPSLocation = CreateGPSString(pEXIFReader->GetGPSLatitude(), pEXIFReader->GetGPSLongitude());
+				m_pEXIFDisplay->SetGPSLocation(sGPSLocation, CreateGPSURL(pEXIFReader->GetGPSLatitude(), pEXIFReader->GetGPSLongitude()));
+				m_pEXIFDisplay->AddLine(CNLS::GetString(_T("Location:")), sGPSLocation, true);
+				if (pEXIFReader->IsGPSAltitudePresent()) {
+					m_pEXIFDisplay->AddLine(CNLS::GetString(_T("Altitude (m):")), pEXIFReader->GetGPSAltitude(), 0);
 				}
 			}
 			if (pEXIFReader->GetCameraModelPresent()) {

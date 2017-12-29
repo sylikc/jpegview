@@ -402,3 +402,5 @@ Left	Sinistro
 Right	Destro
 Top	Superiore
 Bottom	Inferiore
+Location:	Località:
+Altitude (m):	Altitudine (m):

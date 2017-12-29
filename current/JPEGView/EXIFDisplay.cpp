@@ -46,6 +46,8 @@ CEXIFDisplay::CEXIFDisplay(HWND hWnd, INotifiyMouseCapture* pNotifyMouseCapture)
 
 	AddUserPaintButton(ID_btnShowHideHistogram, &ShowHistogramTooltip, &PaintShowHistogramBtn, NULL, this, this);
 	AddUserPaintButton(ID_btnClose, CNLS::GetString(_T("Close")), &PaintCloseBtn, NULL, this, this);
+	CURLCtrl* pLinkLocation = AddURL(ID_urlLocation, _T(""), _T(""), false);
+	pLinkLocation->SetShow(false, false);
 }
 
 CEXIFDisplay::~CEXIFDisplay() {
@@ -71,6 +73,10 @@ void CEXIFDisplay::ClearTexts() {
 		delete[] iter->Value;
 	}
 	m_lines.clear();
+
+	CUICtrl* pLinkLocation = GetControl(CEXIFDisplay::ID_urlLocation);
+	pLinkLocation->SetShow(false, false);
+
 	RequestRepositioning();
 }
 
@@ -92,8 +98,15 @@ void CEXIFDisplay::SetComment(LPCTSTR sComment) {
 	m_sComment = (s.GetLength() == 0) ? NULL : CopyStrAlloc(s);
 }
 
-void CEXIFDisplay::AddLine(LPCTSTR sDescription, LPCTSTR sValue) {
-	m_lines.push_back(TextLine(CopyStrAlloc(sDescription), CopyStrAlloc(sValue)));
+void CEXIFDisplay::SetGPSLocation(LPCTSTR sLocation, LPCTSTR sURL) {
+	CURLCtrl* pLinkLocation = GetControl<CURLCtrl*>(CEXIFDisplay::ID_urlLocation);
+	pLinkLocation->SetText(sLocation);
+	pLinkLocation->SetURL(sURL);
+	pLinkLocation->SetShow(true, false);
+}
+
+void CEXIFDisplay::AddLine(LPCTSTR sDescription, LPCTSTR sValue, bool valueIsURL) {
+	m_lines.push_back(TextLine(CopyStrAlloc(sDescription), CopyStrAlloc(sValue), valueIsURL));
 }
 
 void CEXIFDisplay::AddLine(LPCTSTR sDescription, double dValue, int nDigits) {
@@ -235,6 +248,10 @@ void CEXIFDisplay::RequestRepositioning() {
 }
 
 void CEXIFDisplay::OnPaint(CDC & dc, const CPoint& offset) {
+	CURLCtrl* pLinkLocation = GetControl<CURLCtrl*>(CEXIFDisplay::ID_urlLocation);
+	bool isLinkLocationShown = pLinkLocation->IsShown();
+	pLinkLocation->SetShow(false, false);
+
 	CPanel::OnPaint(dc, offset);
 
 	int nX = m_pos.x + offset.x;
@@ -276,7 +293,15 @@ void CEXIFDisplay::OnPaint(CDC & dc, const CPoint& offset) {
 			::TextOut(dc, nX + m_nGap, nRunningY, iter->Desc, (int)_tcslen(iter->Desc));
 		}
 		if (iter->Value != NULL) {
-			::TextOut(dc, nX + m_nGap + m_nTab1, nRunningY, iter->Value, (int)_tcslen(iter->Value));
+			if (iter->ValueIsURL) {
+				pLinkLocation->SetShow(isLinkLocationShown, false);
+				pLinkLocation->SetPosition(CRect(CPoint(nX + m_nGap + m_nTab1 - offset.x, nRunningY - offset.y), pLinkLocation->GetMinSize()));
+				if (isLinkLocationShown) pLinkLocation->OnPaint(dc, offset);
+				::SetTextColor(dc, RGB(243, 242, 231));
+				HelpersGUI::SelectDefaultGUIFont(dc);
+			} else {
+				::TextOut(dc, nX + m_nGap + m_nTab1, nRunningY, iter->Value, (int)_tcslen(iter->Value));
+			}
 		}
 		nRunningY += m_nLineHeight;
 	}

@@ -22,6 +22,11 @@ Windows XP SP2 or later is needed to run the 32 bit version.
 
 Changelog
 *********
+[1.0.37]
+New features:
+- Support for display of GPS coordinates/altitude of JPEG images
+  Location can be shown on map in browser, use new INI setting 'GPSMapProvider' to configure
+
 [1.0.36]
 Bugs fixed:
 - Fixed problem with EXIF rotation combined with 'Keep parameters' mode (F4).

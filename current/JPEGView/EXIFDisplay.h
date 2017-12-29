@@ -12,7 +12,8 @@ public:
 	// IDs of the controls on this panel
 	enum {
 		ID_btnShowHideHistogram,
-		ID_btnClose
+		ID_btnClose,
+		ID_urlLocation
 	};
 public:
 	CEXIFDisplay(HWND hWnd, INotifiyMouseCapture* pNotifyMouseCapture);
@@ -23,7 +24,8 @@ public:
 	void AddPrefix(LPCTSTR sPrefix);
 	void AddTitle(LPCTSTR sTitle);
 	void SetComment(LPCTSTR sComment);
-	void AddLine(LPCTSTR sDescription, LPCTSTR sValue);
+	void SetGPSLocation(LPCTSTR sLocation, LPCTSTR sURL);
+	void AddLine(LPCTSTR sDescription, LPCTSTR sValue, bool valueIsURL = false);
 	void AddLine(LPCTSTR sDescription, double dValue, int nDigits);
 	void AddLine(LPCTSTR sDescription, int nValue);
 	void AddLine(LPCTSTR sDescription, const SYSTEMTIME &time); // time is in local time
@@ -47,13 +49,15 @@ protected:
 private:
 
 	struct TextLine {
-		TextLine(LPCTSTR desc, LPCTSTR value) {
+		TextLine(LPCTSTR desc, LPCTSTR value, bool valueIsURL = false) {
 			Desc = desc;
 			Value = value;
+			ValueIsURL = valueIsURL;
 		}
 
 		LPCTSTR Desc;
 		LPCTSTR Value;
+		bool ValueIsURL;
 	};
 
 	bool m_bShowHistogram;

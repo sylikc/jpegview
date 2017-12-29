@@ -118,6 +118,7 @@ public:
 	bool SkipFileOpenDialogOnStartup() { return m_bSkipFileOpenDialogOnStartup; }
 	Helpers::EIniEditor IniEditor() { return m_eIniEditor; }
 	LPCTSTR CustomIniEditor() { return m_sIniEditor; }
+	LPCTSTR GPSMapProvider() { return m_sGPSMapProvider; }
 
 	// Returns if a user INI file exists
 	bool ExistsUserINI();
@@ -277,6 +278,7 @@ private:
 	bool m_bSkipFileOpenDialogOnStartup;
 	Helpers::EIniEditor  m_eIniEditor;
 	CString m_sIniEditor;
+	CString m_sGPSMapProvider;
 
 	std::list<CUserCommand*> m_userCommands;
 	std::list<CUserCommand*> m_openWithCommands;

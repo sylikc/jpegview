@@ -379,6 +379,11 @@ WallpaperPath=%temp%
 ; other : Full path to application for editing INI files
 IniEditor=notepad
 
+; URL for the map provider to display GPS coordinates on a map
+; OpenStreetmap: www.openstreetmap.org/?mlat={lat}&mlon={lng}&zoom=15
+; Google maps: https://www.google.com/maps/search/?api=1&query={lat},{lng}
+GPSMapProvider=https://opentopomap.org/#marker=15/{lat}/{lng}
+
 ; User commands
 ; User command must be named UserCmd# where # stands for a number. The numbers 0 to 2 are already used by the global INI file.
 ; User command must have the following form:
