@@ -106,7 +106,7 @@
             <h1>JPEGView: краткая документация</h1>
         </div>
         <div id="revision">
-            Редакция: 18 марта 2016 г. (перевод на русский язык: <nobr>26 марта 2016 г.</nobr>)
+            Редакция: 26 декабря 2017 г. (перевод на русский язык: <nobr>28 декабря 2017 г.</nobr>)
         </div>
     </header>
 
@@ -1114,6 +1114,16 @@
                     Показать слайдшоу из файлов в папке "c:\pictures" в случайной последовательности с интервалом&nbsp;2&nbsp;секунды
                     и принудительным переходом в полноэкранный режим.
                 </li>
+                <li>
+                    <code>/ini [<i>имя ini-файла</i>]</code><br />
+                    Использовать указанный INI-файл. Расширение файла можно не указывать, в этом случае добавляется ".ini".
+                    В имени файла не должно быть ни абсолютного, ни относительного пути, а также пробелов.<br />
+                    Если указанный INI-файл содержит ключ StoreToEXEPath=true, то этот файл должен находиться в пути исполняемого файла и должен существовать.
+                    В противном случае INI-файл будет создан в пользовательском INI-пути (%appdata%/roaming/JPEGView/) при первом использовании, если он не существует.<br />
+                    Пример: <code>jpegview.exe /ini AlternativeConfig</code><br />
+                    Будет использоваться INI-файл "AlternativeConfig.ini" в %appdata%/roaming/JPEGView/
+                </li>
+
             </ul>
 
             <h2><a name="KeyMap"></a>Файл KeyMap.txt – изменение действий клавиш и кнопок мыши</h2>
@@ -1217,15 +1227,14 @@
             изображение. Наконец, выберите <i>Сделать рисунком рабочего стола</i> > <i>Обработанное изображение (как на экране)</i>.
 
             <h2><a name="Copyright"></a>Лицензия и авторские права</h2>
-            Copyright &copy; 2006-2016 David Kleiner<br /><br />
+            Copyright &copy; 2006-2017 David Kleiner<br /><br />
             JPEGView – бесплатная программа; её можно распространять и/или модифицировать в соответствии с условиями
             GNU General Public License, опубликованной Free Software Foundation, версия&nbsp;2.
             Полный текст&nbsp;GPL доступен <a href="http://opensource.org/licenses/gpl-2.0.php">здесь</a>.<br/>
             Хостинг для JPEGView предоставлен <a href="http://www.sourceforge.net">SourceForge</a>. Загрузить новую версию и
             исходный код, а также отправить отчёт об ошибке можно тут:<br/>
             <a href="https://sourceforge.net/projects/jpegview/">https://sourceforge.net/projects/jpegview/</a><br />
-            Кроме того, можно связываться с автором по электронной почте:<br/>
-            <a href="mailto:jpegview@gmail.com">jpegview@gmail.com</a>
+            </a>
             <br /><br />
             JPEGView содержит следующие бинарные библиотеки:<br/>
             – Turbo JPEG &copy; 2009-2011 D.&nbsp;R.&nbsp;Commander. Все права защищены.<br/>

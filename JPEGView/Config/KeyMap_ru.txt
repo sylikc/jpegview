@@ -7,7 +7,7 @@
 //TranslatorName=Dmitry Yerokhin
 //Contact=erodim@mail.ru
 //TranslatorURL=none
-//LastUpdated=Apr 25, 2016
+//LastUpdated=Dec 28, 2017
 
 // Этот раздел содержит определения команд JPEGView - НЕ ИЗМЕНЯЙТЕ ЕГО!
 #define IDM_DONOTHING		1			// ничего не делать (можно использовать для отключения стандартной команды по нажатию кнопки мыши)
@@ -48,7 +48,7 @@
 #define IDM_SORT_SIZE		7040			// сортировать по размеру файлов в байтах
 #define IDM_SORT_UPCOUNTING	7100			// сортировать по возрастанию
 #define IDM_SORT_DOWNCOUNTING	7110			// сортировать по убыванию
-#define IDM_SLIDESHOW_RESUME    7399			// resume slide show (after stop)
+#define IDM_SLIDESHOW_RESUME    7399			// возобновить слайдшоу (после остановки)
 #define IDM_ROTATE_90		8000			// повернуть изображение на 90° вправо
 #define IDM_ROTATE_270		9000			// повернуть изображение на 90° влево
 #define IDM_ROTATE          	9100			// показать окно поворота на произвольный угол
@@ -109,6 +109,7 @@
 #define IDM_TOGGLE_RESAMPLING_QUALITY 14800		// переключение качества сглаживания (точечное сглаживание <-> фильтрация)
 #define IDM_TOGGLE_MONITOR	14900			// переместить на другой монитор
 #define IDM_TOGGLE_FIT_TO_SCREEN_100_PERCENTS 15000	// переключение между вписыванием в экран и настоящим размером (100%)
+#define IDM_TOGGLE_FILL_WITH_CROP_100_PERCENTS 15001	// toggle between fill with crop and 100 % zoom
 #define IDM_EXCHANGE_PROC_PARAMS 15100			// переключение между двумя наборами параметров обработки изображений
 #define IDM_PAN_UP		15200			// переместить картинку выше
 #define IDM_PAN_DOWN		15201			// переместить картинку ниже
