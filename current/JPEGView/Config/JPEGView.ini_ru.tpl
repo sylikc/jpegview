@@ -1,6 +1,6 @@
 [JPEGView]
-; Пользовательский файл конфигурации для программы JPEGView версии 1.0.35
-; Перевод (160425): Дмитрий Ерохин (erodim@mail.ru)
+; Пользовательский файл конфигурации для программы JPEGView версии 1.0.37
+; Перевод (180107): Дмитрий Ерохин (erodim@mail.ru)
 
 ; Этот пользовательский INI-файл создан из шаблона JPEGView.ini.tpl.
 ; Параметры в этом файле имеют более высокий приоритет, чем аналогичные
@@ -326,6 +326,9 @@ SingleInstance=false
 ; Если SingleInstance=true, то значение игнорируется.
 SingleFullScreenInstance=true
 
+; Если "true", то при запуске JPEGView не показывается окно открытия файла для выбора имени файла как параметра.
+SkipFileOpenDialogOnStartup=false
+
 ; Принудительно использовать GDI+ для чтения JPEG.
 ; Используйте только в случае проблем с чтением JPEG посредством стандартной
 ; библиотеки Turbo JPEG. Имейте в виду, что GDI+ медленнее, чем Turbo JPEG.
@@ -451,21 +454,24 @@ LDCDarkenHighlights=0.25
 ; №12 – насыщенность (Saturation)
 LandscapeModeParams=-1 -1 -1 -1 0.5 1.0 0.75 0.4 -1 -1 -1 -1
 
+; Если "true", то включать режим улучшения пейзажей автоматически.
+LandscapeMode=false
+
 ; Чтобы обработанное изображение сделать рисунком рабочего стола Windows, его
 ; нужно где-нибудь сохранить. Этот параметр задаёт путь сохранения такого файла.
 ; Значение по умолчанию – %temp%, т.е. системная папка TEMP.
 ; Убедитесь, что у вас есть права на запись в указанную папку!
 WallpaperPath=%temp%
 
-; Editor for INI files
-; notepad : Use notepad.exe
-; system : Use application registered for INI files
-; other : Full path to application for editing INI files
+; Редактор для INI-файлов
+; notepad : использовать notepad.exe (Блокнот)
+; system  : использовать приложение, зарегистрированное для INI-файлов
+; другое  : полный путь к приложению для редактирования INI-файлов
 IniEditor=notepad
 
-; URL for the map provider to display GPS coordinates on a map
-; OpenStreetmap: www.openstreetmap.org/?mlat={lat}&mlon={lng}&zoom=15
-; Google maps: https://www.google.com/maps/search/?api=1&query={lat},{lng}
+; URL-адрес поставщика геоданных для отображения GPS-координат на карте
+; OpenStreetMap: www.openstreetmap.org/?mlat={lat}&mlon={lng}&zoom=15
+; Google Карты: https://www.google.com/maps/search/?api=1&query={lat},{lng}
 GPSMapProvider=https://opentopomap.org/#marker=15/{lat}/{lng}
 
 ; Пользовательские команды.

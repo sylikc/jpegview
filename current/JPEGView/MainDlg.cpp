@@ -1659,8 +1659,9 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 			ResetZoomToFitScreen(true, true, true);
 			break;
 		case IDM_TOGGLE_FIT_TO_SCREEN_100_PERCENTS:
+		case IDM_TOGGLE_FILL_WITH_CROP_100_PERCENTS:
 			if (fabs(m_dZoom - 1) < 0.01) {
-				ResetZoomToFitScreen(false, true, true);
+				ResetZoomToFitScreen(nCommand == IDM_TOGGLE_FILL_WITH_CROP_100_PERCENTS, true, true);
 			} else {
 				ResetZoomTo100Percents(m_bMouseOn);
 			}
