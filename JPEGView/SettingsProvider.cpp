@@ -150,6 +150,7 @@ CSettingsProvider::CSettingsProvider(void) {
 	}
 
 	m_bNavigateMouseWheel = GetBool(_T("NavigateWithMouseWheel"), false);
+	m_dMouseWheelZoomSpeed = GetDouble(_T("MouseWheelZoomSpeed"), 1.0, 0.1, 10);
 
 	CString sDeleteConfirmation = GetString(_T("DeleteConfirmation"), _T("OnlyWhenNoRecycleBin"));
 	if (sDeleteConfirmation.CompareNoCase(_T("OnlyWhenNoRecycleBin")) == 0) {

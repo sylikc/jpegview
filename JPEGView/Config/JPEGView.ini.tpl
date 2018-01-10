@@ -216,6 +216,9 @@ FolderNavigation=LoopFolder
 ; If false, zoom is done with the mousewheel (no Ctrl required)
 NavigateWithMouseWheel=false
 
+; Zoom speed with mouse wheel, 1.0 means default speed, smaller values slower zoom, larger faster zoom
+MouseWheelZoomSpeed=1.0
+
 ; Minimal display time of an image when using the PgDn/PgUp keys (in milliseconds [0..1000 ms])
 MinimalDisplayTime = 0.0
 

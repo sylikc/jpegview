@@ -45,6 +45,7 @@ public:
 	bool IsSortedUpcounting() { return m_bIsSortedUpcounting; }
 	Helpers::ENavigationMode Navigation() { return m_eNavigation; }
 	bool NavigateWithMouseWheel() { return m_bNavigateMouseWheel; }
+	double MouseWheelZoomSpeed() { return m_dMouseWheelZoomSpeed; }
 	Helpers::EAutoZoomMode AutoZoomMode() { return m_eAutoZoomMode; }
 	Helpers::EAutoZoomMode AutoZoomModeFullscreen() { return m_eAutoZoomModeFullscreen; }
 	int DisplayMonitor() { return m_nDisplayMonitor; }
@@ -207,6 +208,7 @@ private:
 	bool m_bIsSortedUpcounting;
 	Helpers::ENavigationMode m_eNavigation;
 	bool m_bNavigateMouseWheel;
+	double m_dMouseWheelZoomSpeed;
 	Helpers::EAutoZoomMode m_eAutoZoomMode;
 	Helpers::EAutoZoomMode m_eAutoZoomModeFullscreen;
 	int m_nDisplayMonitor;
