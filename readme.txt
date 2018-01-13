@@ -26,6 +26,9 @@ Changelog
 New features:
 - Support for display of GPS coordinates/altitude of JPEG images
   Location can be shown on map in browser, use new INI setting 'GPSMapProvider' to configure
+Other changes:
+- New INI file setting: MouseWheelZoomSpeed
+- New command in keymap.txt: IDM_TOGGLE_FILL_WITH_CROP_100_PERCENTS
 
 [1.0.36]
 Bugs fixed:
