@@ -7,7 +7,7 @@
 //TranslatorName=Dmitry Yerokhin
 //Contact=erodim@mail.ru
 //TranslatorURL=none
-//LastUpdated=Dec 28, 2017
+//LastUpdated=Jan 11, 2018
 
 // Этот раздел содержит определения команд JPEGView - НЕ ИЗМЕНЯЙТЕ ЕГО!
 #define IDM_DONOTHING		1			// ничего не делать (можно использовать для отключения стандартной команды по нажатию кнопки мыши)
@@ -109,7 +109,7 @@
 #define IDM_TOGGLE_RESAMPLING_QUALITY 14800		// переключение качества сглаживания (точечное сглаживание <-> фильтрация)
 #define IDM_TOGGLE_MONITOR	14900			// переместить на другой монитор
 #define IDM_TOGGLE_FIT_TO_SCREEN_100_PERCENTS 15000	// переключение между вписыванием в экран и настоящим размером (100%)
-#define IDM_TOGGLE_FILL_WITH_CROP_100_PERCENTS 15001	// toggle between fill with crop and 100 % zoom
+#define IDM_TOGGLE_FILL_WITH_CROP_100_PERCENTS 15001	// переключение между заполнением экрана с обрезкой и настоящим размером (100%)
 #define IDM_EXCHANGE_PROC_PARAMS 15100			// переключение между двумя наборами параметров обработки изображений
 #define IDM_PAN_UP		15200			// переместить картинку выше
 #define IDM_PAN_DOWN		15201			// переместить картинку ниже
