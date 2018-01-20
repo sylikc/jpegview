@@ -7,6 +7,10 @@
 #include "MainDlg.h"
 #include "SettingsProvider.h"
 
+#ifdef DEBUG
+#include <dbghelp.h>
+#endif
+
 // _CrtDumpMemoryLeaks
 
 CAppModule _Module;
@@ -126,9 +130,62 @@ static int ParseCommandLineForTransitionTime(LPCTSTR sCommandLine) {
 	return max(100, min(5000, _ttoi(sTransitionTime + _tcslen(_T("/transitiontime")))));
 }
 
+#ifdef DEBUG
+static CRITICAL_SECTION s_lock;
+
+static BOOL GenerateDump(EXCEPTION_POINTERS* pExceptionPointers)
+{
+	WCHAR* szAppName = L"JPEGView";
+	DWORD dwBufferSize = MAX_PATH;
+	HANDLE hDumpFile;
+	SYSTEMTIME stLocalTime;
+	MINIDUMP_EXCEPTION_INFORMATION ExpParam;
+
+	GetLocalTime(&stLocalTime);
+
+	CString fileName;
+	fileName.Format(_T("%s\\%s-%04d%02d%02d-%02d%02d%02d-%ld-%ld.dmp"),
+		Helpers::JPEGViewAppDataPath(), szAppName,
+		stLocalTime.wYear, stLocalTime.wMonth, stLocalTime.wDay,
+		stLocalTime.wHour, stLocalTime.wMinute, stLocalTime.wSecond,
+		GetCurrentProcessId(), GetCurrentThreadId());
+
+	hDumpFile = ::CreateFile(fileName, GENERIC_READ | GENERIC_WRITE,
+		FILE_SHARE_WRITE | FILE_SHARE_READ, 0, CREATE_ALWAYS, 0, 0);
+
+	ExpParam.ThreadId = GetCurrentThreadId();
+	ExpParam.ExceptionPointers = pExceptionPointers;
+	ExpParam.ClientPointers = TRUE;
+
+	return ::MiniDumpWriteDump(GetCurrentProcess(), GetCurrentProcessId(),
+		hDumpFile, MiniDumpWithDataSegs, &ExpParam, NULL, NULL);
+}
+
+static LONG WINAPI CrashHandler(EXCEPTION_POINTERS * pExceptionInfo)
+{
+	::EnterCriticalSection(&s_lock);
+	if (GenerateDump(pExceptionInfo))
+	{
+		::MessageBox(NULL, CString(_T("Unhandled exception\nMinidump file written to:\n")) + Helpers::JPEGViewAppDataPath(), _T("Unhandled exception"), MB_OK);
+	}
+	else
+	{
+		::MessageBox(NULL, _T("Unhandled exception\nError writing minidump file"), _T("Error writing minidump"), MB_OK);
+	}
+	::LeaveCriticalSection(&s_lock);
+	return EXCEPTION_EXECUTE_HANDLER;
+}
+#endif
+
 int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR lpstrCmdLine, int /*nCmdShow*/)
 {
 	HRESULT hRes = ::CoInitialize(NULL);
+
+#ifdef DEBUG
+	::InitializeCriticalSection(&s_lock);
+
+	::SetUnhandledExceptionFilter(CrashHandler);
+#endif
 
 	// use the locale from the operating system, however for numeric input/output always use 'C' locale
 	// with the OS locale the INI file can not be read correctly (due to the different decimal point characters)
@@ -207,3 +264,4 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR lp
 
 	return nRet;
 }
+
