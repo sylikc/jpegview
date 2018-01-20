@@ -29,6 +29,7 @@ New features:
 Other changes:
 - New INI file setting: MouseWheelZoomSpeed
 - New command in keymap.txt: IDM_TOGGLE_FILL_WITH_CROP_100_PERCENTS
+- %exepath% placeholder can be used in IniEditor setting
 
 [1.0.36]
 Bugs fixed:

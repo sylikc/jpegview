@@ -2978,7 +2978,8 @@ void CMainDlg::EditINIFile(bool bGlobalINI) {
 	}
 
 	Helpers::EIniEditor iniEditor = CSettingsProvider::This().IniEditor();
-	LPCTSTR command, argument;
+	CString command;
+	LPCTSTR argument;
 	if (iniEditor == Helpers::INI_Notepad) {
 		command = _T("notepad.exe");
 		argument = sINIFileName;
@@ -2987,6 +2988,7 @@ void CMainDlg::EditINIFile(bool bGlobalINI) {
 		argument = NULL;
 	} else {
 		command = CSettingsProvider::This().CustomIniEditor();
+		command.Replace(_T("%exepath%"), CSettingsProvider::This().GetEXEPath());	
 		argument = sINIFileName;
 	}
 	::ShellExecute(m_hWnd, _T("open"), command, argument, NULL, SW_SHOW);
