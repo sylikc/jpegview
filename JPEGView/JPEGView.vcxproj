@@ -299,6 +299,7 @@
     <ClCompile Include="FileExtensionsDlg.cpp" />
     <ClCompile Include="FileExtensionsRegistry.cpp" />
     <ClCompile Include="FileList.cpp" />
+    <ClCompile Include="HashCompareLPCTSTR.cpp" />
     <ClCompile Include="HelpDlg.cpp" />
     <ClCompile Include="Helpers.cpp" />
     <ClCompile Include="HelpersGUI.cpp" />
@@ -380,6 +381,7 @@
     <ClInclude Include="FileExtensionsDlg.h" />
     <ClInclude Include="FileExtensionsRegistry.h" />
     <ClInclude Include="FileList.h" />
+    <ClInclude Include="HashCompareLPCTSTR.h" />
     <ClInclude Include="HelpDlg.h" />
     <ClInclude Include="Helpers.h" />
     <ClInclude Include="HelpersGUI.h" />

@@ -4,6 +4,11 @@
 #include "FileList.h"
 #include "UserCommand.h"
 #include "ProcessParams.h"
+#include "HashCompareLPCTSTR.h"
+#include <hash_map>
+
+
+typedef stdext::hash_map<LPCTSTR, LPCTSTR, CHashCompareLPCTSTR> IniHashMap;
 
 // INI settings
 // All settings are first searched in a file name JPEGView.ini located in User/AppData/Roaming/JPEGView
@@ -285,10 +290,21 @@ private:
 	std::list<CUserCommand*> m_userCommands;
 	std::list<CUserCommand*> m_openWithCommands;
 
+	TCHAR* m_pIniGlobalSectionBuffer;
+	TCHAR* m_pIniUserSectionBuffer;
+	IniHashMap* m_pGlobalKeys;
+	IniHashMap* m_pUserKeys;
+
 	CString GetINITemplateName();
 	void MakeSureUserINIExists();
 	CString ReplacePlaceholdersFileNameFormat(const CString& sFileNameFormat);
 	void ReadWriteableINISettings();
+
+	LPCTSTR ReadUserIniString(LPCTSTR key);
+	LPCTSTR ReadGlobalIniString(LPCTSTR key);
+	LPCTSTR ReadIniString(LPCTSTR key, LPCTSTR fileName, IniHashMap*& keyMap, TCHAR*& pBuffer);
+	void ReadIniFile(LPCTSTR fileName, IniHashMap* keyMap, TCHAR*& pBuffer);
+
 	CString GetString(LPCTSTR sKey, LPCTSTR sDefault);
 	int GetInt(LPCTSTR sKey, int nDefault, int nMin, int nMax);
 	double GetDouble(LPCTSTR sKey, double dDefault, double dMin, double dMax);

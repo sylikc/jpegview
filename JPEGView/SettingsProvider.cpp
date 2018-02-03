@@ -80,6 +80,10 @@ CSettingsProvider::CSettingsProvider(void) {
 
 	// Read if the user INI file shall be used
 	m_bUserINIExists = false;
+	m_pIniGlobalSectionBuffer = NULL;
+	m_pIniUserSectionBuffer = NULL;
+	m_pGlobalKeys = NULL;
+	m_pUserKeys = NULL;
 	m_sIniNameUser = m_sIniNameGlobal;
 	m_bStoreToEXEPath = GetBool(_T("StoreToEXEPath"), false);
 
@@ -666,23 +670,74 @@ CString CSettingsProvider::GetINITemplateName() {
 	return defaultGlobalIniName + _T(".tpl");
 }
 
+LPCTSTR CSettingsProvider::ReadUserIniString(LPCTSTR key) {
+	return ReadIniString(key, m_sIniNameUser, m_pUserKeys, m_pIniUserSectionBuffer);
+}
+
+LPCTSTR CSettingsProvider::ReadGlobalIniString(LPCTSTR key) {
+	return ReadIniString(key, m_sIniNameGlobal, m_pGlobalKeys, m_pIniGlobalSectionBuffer);
+}
+
+LPCTSTR CSettingsProvider::ReadIniString(LPCTSTR key, LPCTSTR fileName, IniHashMap*& keyMap, TCHAR*& pBuffer) {
+	if (keyMap == NULL) {
+		keyMap = new IniHashMap();
+		ReadIniFile(m_sIniNameUser, keyMap, pBuffer);
+	}
+	hash_map<LPCTSTR, LPCTSTR, CHashCompareLPCTSTR>::const_iterator iter;
+	iter = keyMap->find(key);
+	if (iter == keyMap->end()) {
+		return NULL; // not found
+	}
+	else {
+		return iter->second;
+	}
+}
+
+void CSettingsProvider::ReadIniFile(LPCTSTR fileName, IniHashMap* keyMap, TCHAR*& pBuffer) {
+	int bufferSize = 1024 * 2;
+
+	pBuffer = NULL;
+	int actualSize;
+	do {
+		delete[] pBuffer;
+		bufferSize = bufferSize * 2;
+		pBuffer = new TCHAR[bufferSize];
+		actualSize = ::GetPrivateProfileSection(SECTION_NAME, pBuffer, bufferSize, fileName);
+	} while (actualSize == bufferSize - 2);
+
+	int index = 0;
+	LPTSTR current = pBuffer;
+	while (*current != 0) {
+		while (*current != 0 && _istspace(*current)) current++;
+		LPCTSTR key = current;
+		while (*current != 0 && !_istspace(*current) && *current != _T('=')) current++;
+		LPCTSTR value = current;
+		if (*current != 0) {
+			*current++ = 0;
+			while (*current != 0 && _istspace(*current)) current++;
+			value = current;
+		}
+		if (*key != 0) {
+			(*keyMap)[key] = value;
+		}
+		current += _tcslen(value) + 1;
+	}
+}
+
 CString CSettingsProvider::GetString(LPCTSTR sKey, LPCTSTR sDefault) {
-	const int BUFF_LEN = 1024;
-	TCHAR buff[BUFF_LEN];
-	buff[BUFF_LEN-1] = 0;
 	if (m_bUserINIExists) {
 		// try first user path
-		::GetPrivateProfileString(SECTION_NAME, sKey, _T(""), buff, BUFF_LEN - 1, m_sIniNameUser);
-		if (buff[0] != 0) {
-			return CString(buff);
+		LPCTSTR value = ReadUserIniString(sKey);
+		if (value != NULL) {
+			return CString(value);
 		}
 	}
 	// finally global path if not found in user path
-	::GetPrivateProfileString(SECTION_NAME, sKey, _T(""), buff, BUFF_LEN - 1, m_sIniNameGlobal);
-	if (buff[0] == 0) {
+	LPCTSTR value = ReadGlobalIniString(sKey);
+	if (value == NULL) {
 		return CString(sDefault);
 	}
-	return CString(buff);
+	return CString(value);
 }
 
 int CSettingsProvider::GetInt(LPCTSTR sKey, int nDefault, int nMin, int nMax) {

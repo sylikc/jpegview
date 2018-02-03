@@ -1,5 +1,6 @@
 #pragma once
 
+#include "HashCompareLPCTSTR.h"
 #include <hash_map>
 
 using namespace stdext;
@@ -26,18 +27,6 @@ private:
 	CNLS(void);
 	~CNLS(void);
 
-public:
-	class CStringHashCompare {
-		public:
-			static const size_t bucket_size = 4;
-			static const size_t min_buckets = 8;
-			CStringHashCompare() {}
-			size_t operator( )( const LPCTSTR& Key ) const;
-			bool operator( )( const LPCTSTR& _Key1, const LPCTSTR& _Key2 ) const;
-	};
-
-private:
-
-	static stdext::hash_map<LPCTSTR, LPCTSTR, CStringHashCompare> sm_texts;
+	static stdext::hash_map<LPCTSTR, LPCTSTR, CHashCompareLPCTSTR> sm_texts;
 	static bool sm_bTableRead;
 };

@@ -2,24 +2,9 @@
 #include "NLS.h"
 #include "SettingsProvider.h"
 
-stdext::hash_map<LPCTSTR, LPCTSTR, CNLS::CStringHashCompare> CNLS::sm_texts;
+stdext::hash_map<LPCTSTR, LPCTSTR, CHashCompareLPCTSTR> CNLS::sm_texts;
 bool CNLS::sm_bTableRead = false;
 
-// the hash function (string hash)
-size_t CNLS::CStringHashCompare::operator( )( const LPCTSTR& Key ) const {
-	size_t nHash = 0;
-	int nCnt = 0;
-	while (Key[nCnt] != 0 && nCnt++ < 16) {
-		nHash += Key[nCnt];
-		nHash = (nHash << 8) + nHash ;
-	}
-	return nHash;
-}
-
-// compare function
-bool CNLS::CStringHashCompare::operator( )( const LPCTSTR& _Key1, const LPCTSTR& _Key2 ) const {
-	return _tcscmp(_Key1, _Key2) < 0;
-}
 
 CString CNLS::GetLocalizedFileName(LPCTSTR sPath, LPCTSTR sPrefixName, LPCTSTR sExtension, LPCTSTR sLanguageCode) {
 	CString sNLSFile;
@@ -102,7 +87,7 @@ LPCTSTR CNLS::GetString(LPCTSTR sString) {
 	if (!sm_bTableRead) {
 		return sString; // no translation available, use English
 	}
-	hash_map<LPCTSTR, LPCTSTR, CStringHashCompare>::const_iterator iter;
+	hash_map<LPCTSTR, LPCTSTR, CHashCompareLPCTSTR>::const_iterator iter;
 	iter = sm_texts.find(sString);
 	if (iter == sm_texts.end()) {
 		return sString; // not found

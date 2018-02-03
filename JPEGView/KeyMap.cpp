@@ -108,8 +108,8 @@ static int _ParseKeys(LPTSTR sKeys) {
 	return nKeyCode;
 }
 
-static int _FindCommandId(stdext::hash_map<LPCTSTR, int, CNLS::CStringHashCompare> & symbolMap, LPCTSTR sSymbolName) {
-	stdext::hash_map<LPCTSTR, int, CNLS::CStringHashCompare>::const_iterator iter;
+static int _FindCommandId(stdext::hash_map<LPCTSTR, int, CHashCompareLPCTSTR> & symbolMap, LPCTSTR sSymbolName) {
+	stdext::hash_map<LPCTSTR, int, CHashCompareLPCTSTR>::const_iterator iter;
 	iter = symbolMap.find(sSymbolName);
 	if (iter == symbolMap.end()) {
 		return -1;
@@ -161,7 +161,7 @@ CKeyMap::CKeyMap(LPCTSTR sKeyMapFile) {
 	TCHAR* pSymbolTableEnd = &(symbolTable[SYMBOL_TABLE_LEN - 1]);
 	TCHAR* pSymbolTable = &(symbolTable[0]);
 
-	stdext::hash_map<LPCTSTR, int, CNLS::CStringHashCompare> m_symbolMap;
+	stdext::hash_map<LPCTSTR, int, CHashCompareLPCTSTR> m_symbolMap;
 
 	while (_fgetts(lineBuff, BUFF_LEN, fptr) != NULL) {
 		LPTSTR sLine = _SkipWhiteSpace(lineBuff);
