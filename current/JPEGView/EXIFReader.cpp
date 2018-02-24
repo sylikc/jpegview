@@ -371,7 +371,11 @@ CEXIFReader::CEXIFReader(void* pApp1Block)
 	m_dFNumber = ReadDoubleTag(pTagFNumber, pTIFFHeader, bLittleEndian);
 
 	uint8* pTagISOSpeed = FindTag(pEXIFIFD, pLastEXIF, 0x8827, bLittleEndian);
-	m_nISOSpeed = ReadShortTag(pTagISOSpeed, bLittleEndian);
+
+	uint8* pTagISOSpeed2 = FindTag(pEXIFIFD, pLastEXIF, 0x8833, bLittleEndian);
+
+	m_nISOSpeed = (pTagISOSpeed != NULL) ? ReadShortTag(pTagISOSpeed, bLittleEndian) :
+		ReadLongTag(pTagISOSpeed2, bLittleEndian);
 
 	uint8* pTagUserComment = FindTag(pEXIFIFD, pLastEXIF, 0x9286, bLittleEndian);
 	ReadUserCommentTag(m_sUserComment, pTagUserComment, pTIFFHeader, bLittleEndian);
