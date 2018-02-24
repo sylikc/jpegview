@@ -31,6 +31,7 @@ Other changes:
 - New command in keymap.txt: IDM_TOGGLE_FILL_WITH_CROP_100_PERCENTS
 - %exepath% placeholder can be used in IniEditor setting
 - Reading whole INI file with a single API call
+- Reading ISO EXIF tag 0x8833 that stores high ISO values
 
 [1.0.36]
 Bugs fixed:
