@@ -183,7 +183,7 @@ void CCropCtl::AbortCropping() {
 	InvalidateSceenCropRect();
 	m_cropEnd = CPoint(INT_MIN, INT_MIN);
 	if (!m_pMainDlg->IsPlayingAnimation()) {
-		::SetCursor(::LoadCursor(NULL, MAKEINTRESOURCE(IDC_ARROW)));
+		::SetCursor(::LoadCursor(NULL, IDC_ARROW));
 		m_pMainDlg->GetNavPanelCtl()->HideNavPanelTemporary();
 	}
 	m_pMainDlg->GetZoomNavigatorCtl()->InvalidateZoomNavigatorRect();

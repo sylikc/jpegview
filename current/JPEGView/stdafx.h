@@ -20,8 +20,9 @@
 #include <atlbase.h>
 #pragma warning(push)
 #pragma warning(disable:4996)
+#pragma warning(disable:4838)
+#pragma warning(disable:4302)
 #include <atlapp.h>
-#pragma warning(pop)
 #include <assert.h>
 
 extern CAppModule _Module;
@@ -34,8 +35,12 @@ extern CAppModule _Module;
 #include <atlmisc.h>
 #include <atlscrl.h>
 
+#pragma warning(pop)
+
 // STL stuff
 #include  <list>
+
+#define _SILENCE_STDEXT_HASH_DEPRECATION_WARNINGS
 
 // own stuff
 #include "ImageProcessingTypes.h"

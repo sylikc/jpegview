@@ -144,7 +144,7 @@ const double xyz_rgb[3][3] = {			/* XYZ from RGB */
   { 0.412453, 0.357580, 0.180423 },
   { 0.212671, 0.715160, 0.072169 },
   { 0.019334, 0.119193, 0.950227 } };
-const float d65_white[3] = { 0.950456, 1, 1.088754 };
+const float d65_white[3] = { 0.950456f, 1.0f, 1.088754f };
 //void (*write_thumb)(FILE *), (*write_fun)(FILE *);
 void (*write_thumb)(CJPEGImage** Image, bool& bOutOfMemory), (*write_fun)(CJPEGImage** Image, bool& bOutOfMemory);
 void (*load_raw)(), (*thumb_load_raw)();
@@ -567,7 +567,7 @@ int CLASS minolta_z2()
   int i;
   char tail[424];
 
-  fseek (ifp, -sizeof tail, SEEK_END);
+  fseek (ifp, (long)-sizeof tail, SEEK_END);
   fread (tail, 1, sizeof tail, ifp);
   for (i=0; i < sizeof tail; i++)
 	if (tail[i]) return 1;
@@ -1256,9 +1256,9 @@ void CLASS parse_gps (int base)
 void CLASS romm_coeff (float romm_cam[3][3])
 {
   static const float rgb_romm[3][3] =	/* ROMM == Kodak ProPhoto */
-  { {  2.034193, -0.727420, -0.306766 },
-	{ -0.228811,  1.231729, -0.002922 },
-	{ -0.008565, -0.153273,  1.161839 } };
+  { {  2.034193f, -0.727420f, -0.306766f },
+	{ -0.228811f,  1.231729f, -0.002922f },
+	{ -0.008565f, -0.153273f,  1.161839f } };
   int i, j, k;
 
   for (i=0; i < 3; i++)
@@ -2445,6 +2445,7 @@ void CLASS adobe_coeff (char *make, char *model)
 
 void CLASS simple_coeff (int index)
 {
+#pragma warning(disable:4838)
   static const float table[][12] = {
   /* index 0 -- all Foveon cameras */
   { 1.4032,-0.2231,-0.1016,-0.5263,1.4816,0.017,-0.0112,0.0183,0.9113 },
@@ -2457,6 +2458,7 @@ void CLASS simple_coeff (int index)
 	 1.405365, -0.524955, -0.289090,  0.408680,
 	-1.204965,  1.082304,  2.941367, -1.818705 }
   };
+#pragma warning(default:4838)
   int i, c;
 
   for (raw_color = i=0; i < 3; i++)

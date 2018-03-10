@@ -100,7 +100,7 @@ static HRESULT CopyWICBitmapToBuffer(IWICBitmapSource *piBitmapSource, byte* tar
 
 	if (SUCCEEDED(hr)) {
 		UINT stride = width * 4;
-		WICRect rc = { 0, 0, width, height };
+		WICRect rc = { 0, 0, (int)width, (int)height };
 		IFS(piFormatConverter->CopyPixels(&rc, stride, stride * height, targetBuffer));
 	}
 

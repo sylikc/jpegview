@@ -296,7 +296,7 @@ bool CUserCommand::Execute(HWND hWnd, LPCTSTR sFileName, const CRect& selectionR
 	if (m_bUseShellExecute) {
 		CString sEXE, sParameters, sStartupPath;
 		_ParseCommandline(sCommandLine, !hasSpaces, sEXE, sParameters, sStartupPath);
-		int nRetVal = (int)::ShellExecute(hWnd, _T("open"), sEXE, sParameters, sStartupPath, SW_SHOW);
+		__int64 nRetVal = (__int64)::ShellExecute(hWnd, _T("open"), sEXE, sParameters, sStartupPath, SW_SHOW);
 		bSuccess = nRetVal > 32;
 	} else {
 		STARTUPINFO startupInfo;

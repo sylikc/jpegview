@@ -315,7 +315,7 @@ bool CURLCtrl::OnMouseMove(int nX, int nY) {
 	CPoint mousePos(nX, nY);
 	if (m_position.PtInRect(mousePos)) {
 		if (!m_handCursorSet) {
-			::SetCursor(::LoadCursor(NULL, MAKEINTRESOURCE(IDC_HAND)));
+			::SetCursor(::LoadCursor(NULL, IDC_HAND));
 			m_handCursorSet = true;
 		}
 	}
