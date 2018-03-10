@@ -4,12 +4,10 @@ JPEGView source code readme
 To compile JPEGView you need:
 
 - Visual Studio 2010 (JPEGView 32 bit version supported) or
-  Visual Studio 2013 professional (JPEGView 32 and 64 bit versions supported)
+  Visual Studio 2013 professional (JPEGView 32 and 64 bit versions supported) or
+  Visual Studio 2017 professional (JPEGView 32 and 64 bit versions supported) 
 - Windows Template Library (WTL), Version 8.1 (http://sourceforge.net/projects/wtl/) installed to
   $(VCInstallDir)WTL\
-
-Notice that there are known issues in Visual Studio 2015 with libjpeg-turbo lib. You may fix yourself by
-recompiling that lib from the libjpeg-turbo sources (not included in JPEGView).
 
 The include directories of WTL must be added to the include directories for VC++:
 In Visual Studio: Properties of JPEGView project > VC++-Directories-Include Directories and Library Directories 

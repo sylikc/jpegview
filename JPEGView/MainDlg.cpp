@@ -881,7 +881,7 @@ LRESULT CMainDlg::OnMouseMove(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, B
 	}
 	if (!m_bPanMouseCursorSet && !bMouseCursorSet) {
 		if (!m_pPanelMgr->MouseCursorCaptured()) {
-			::SetCursor(::LoadCursor(NULL, MAKEINTRESOURCE(IDC_ARROW)));
+			::SetCursor(::LoadCursor(NULL, IDC_ARROW));
 		}
 	}
 
@@ -1539,7 +1539,7 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 				MouseOn();
 				CResizeDlg dlgResize(m_pCurrentImage->OrigSize());
 				if (dlgResize.DoModal(m_hWnd) == IDOK) {
-					HCURSOR hOldCursor = ::SetCursor(::LoadCursor(NULL, MAKEINTRESOURCE(IDC_WAIT)));
+					HCURSOR hOldCursor = ::SetCursor(::LoadCursor(NULL, IDC_WAIT));
 					m_pCurrentImage->ResizeOriginalPixels(dlgResize.GetFilter(), dlgResize.GetNewSize());
 					::SetCursor(hOldCursor);
 					m_pImageProcPanelCtl->ShowHideSaveDBButtons();
@@ -2074,7 +2074,7 @@ bool CMainDlg::SaveImageNoPrompt(LPCTSTR sFileName, bool bFullSize) {
 
 	MouseOn();
 
-	HCURSOR hOldCursor = ::SetCursor(::LoadCursor(NULL, MAKEINTRESOURCE(IDC_WAIT)));	
+	HCURSOR hOldCursor = ::SetCursor(::LoadCursor(NULL, IDC_WAIT));	
 
 	if (CSaveImage::SaveImage(sFileName, m_pCurrentImage, *m_pImageProcParams, 
 		CreateDefaultProcessingFlags(), bFullSize, m_bUseLosslessWEBP)) {
@@ -2919,10 +2919,10 @@ LPCTSTR CMainDlg::CurrentFileName(bool bFileTitle) {
 void CMainDlg::SetCursorForMoveSection() {
 	if (!m_pCropCtl->IsCropping()) {
 		if (m_pZoomNavigatorCtl->IsPointInZoomNavigatorThumbnail(CPoint(m_nMouseX, m_nMouseY)) || m_bDragging) {
-			::SetCursor(::LoadCursor(NULL, MAKEINTRESOURCE(IDC_SIZEALL)));
+			::SetCursor(::LoadCursor(NULL, IDC_SIZEALL));
 			m_bPanMouseCursorSet = true;
 		} else if (m_bPanMouseCursorSet) {
-			::SetCursor(::LoadCursor(NULL, MAKEINTRESOURCE(IDC_ARROW)));
+			::SetCursor(::LoadCursor(NULL, IDC_ARROW));
 			m_bPanMouseCursorSet = false;
 		}
 	}

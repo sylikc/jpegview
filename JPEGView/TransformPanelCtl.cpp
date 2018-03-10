@@ -157,7 +157,7 @@ void CTransformPanelCtl::OnReset(void* pContext, int nParameter, CButtonCtrl & s
 
 void CTransformPanelCtl::OnApply(void* pContext, int nParameter, CButtonCtrl & sender) {
 	CTransformPanelCtl* pThis = (CTransformPanelCtl*)pContext;
-	HCURSOR hOldCursor = ::SetCursor(::LoadCursor(NULL, MAKEINTRESOURCE(IDC_WAIT)));
+	HCURSOR hOldCursor = ::SetCursor(::LoadCursor(NULL, IDC_WAIT));
 	pThis->Apply();
 	::SetCursor(hOldCursor);
 	pThis->TerminatePanel();

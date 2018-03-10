@@ -280,7 +280,7 @@ LRESULT CPrintDlg::OnMouseMove(UINT /*uMsg*/, WPARAM wParam, LPARAM lParam, BOOL
 	if (mouseCursorSet) {
 		m_usingNonStandardCursor = true;
 	} else if (m_usingNonStandardCursor) {
-		::SetCursor(::LoadCursor(NULL, MAKEINTRESOURCE(IDC_ARROW)));
+		::SetCursor(::LoadCursor(NULL, IDC_ARROW));
 		m_usingNonStandardCursor = false;
 	}
 	PerformDragging(mouseX, mouseY);

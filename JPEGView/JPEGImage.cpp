@@ -1297,7 +1297,9 @@ CSize CJPEGImage::SizeAfterRotation(const CRotationParams& rotationParams) {
 }
 
 CSize CJPEGImage::GetSizeAfterFreeRotation(const CSize& sourceSize, double dRotation, bool bAutoCrop, bool bKeepAspectRatio, CPoint & offset) {
+#pragma warning(disable:4838)
 	double dCoords[] = { 0, 0, sourceSize.cx - 1, 0, sourceSize.cx - 1, sourceSize.cy - 1, 0, sourceSize.cy - 1 };
+#pragma warning(default:4838)
 	double dXMin = HUGE_VAL, dXMax = -HUGE_VAL;
 	double dYMin = HUGE_VAL, dYMax = -HUGE_VAL;
 	for (int i = 0; i < 4; i++) {
