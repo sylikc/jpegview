@@ -5,7 +5,8 @@ To compile JPEGView you need:
 
 - Visual Studio 2010 (JPEGView 32 bit version supported) or
   Visual Studio 2013 professional (JPEGView 32 and 64 bit versions supported) or
-  Visual Studio 2017 professional (JPEGView 32 and 64 bit versions supported) 
+  Visual Studio 2017 professional (JPEGView 32 and 64 bit versions supported) or 
+  Visual Studio 2019 professional or community editions (JPEGView 32 and 64 bit versions supported)
 - Windows Template Library (WTL), Version 8.1 (http://sourceforge.net/projects/wtl/) installed to
   $(VCInstallDir)WTL\
 
@@ -20,6 +21,13 @@ Windows XP SP2 or later is needed to run the 32 bit version.
 
 Changelog
 *********
+[1.0.37.1]
+Other changes:
+- First release from sylikc's GitHub
+- Using Visual Studio 2019 Community Edition to compile
+- Updated to Turbo JPEG version 2.1.0 (4/23/2021)
+- Updated to Google's WebP library version 1.2.0 HEAD at commit 05b72d4 (4/28/2021)
+
 [1.0.37]
 New features:
 - Support for display of GPS coordinates/altitude of JPEG images
