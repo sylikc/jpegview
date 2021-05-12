@@ -21,6 +21,11 @@ Windows XP SP2 or later is needed to run the 32 bit version.
 
 Changelog
 *********
+[]
+Other changes:
+- Updated Greek translation, thanks to George (SF @geonetor)
+
+
 [1.0.37.1]
 Other changes:
 - First release from sylikc's GitHub
