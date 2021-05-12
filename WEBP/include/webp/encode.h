@@ -16,11 +16,11 @@
 
 #include "./types.h"
 
-#if defined(__cplusplus) || defined(c_plusplus)
+#ifdef __cplusplus
 extern "C" {
 #endif
 
-#define WEBP_ENCODER_ABI_VERSION 0x0201    // MAJOR(8b) + MINOR(8b)
+#define WEBP_ENCODER_ABI_VERSION 0x020f    // MAJOR(8b) + MINOR(8b)
 
 // Note: forward declaring enumerations is not allowed in (strict) C and C++,
 // the types are left here for reference.
@@ -35,45 +35,49 @@ typedef struct WebPMemoryWriter WebPMemoryWriter;
 
 // Return the encoder's version number, packed in hexadecimal using 8bits for
 // each of major/minor/revision. E.g: v2.5.7 is 0x020507.
-WEBP_EXTERN(int) WebPGetEncoderVersion(void);
+WEBP_EXTERN int WebPGetEncoderVersion(void);
 
 //------------------------------------------------------------------------------
 // One-stop-shop call! No questions asked:
 
 // Returns the size of the compressed data (pointed to by *output), or 0 if
 // an error occurred. The compressed data must be released by the caller
-// using the call 'free(*output)'.
+// using the call 'WebPFree(*output)'.
 // These functions compress using the lossy format, and the quality_factor
 // can go from 0 (smaller output, lower quality) to 100 (best quality,
 // larger output).
-WEBP_EXTERN(size_t) WebPEncodeRGB(const uint8_t* rgb,
+WEBP_EXTERN size_t WebPEncodeRGB(const uint8_t* rgb,
+                                 int width, int height, int stride,
+                                 float quality_factor, uint8_t** output);
+WEBP_EXTERN size_t WebPEncodeBGR(const uint8_t* bgr,
+                                 int width, int height, int stride,
+                                 float quality_factor, uint8_t** output);
+WEBP_EXTERN size_t WebPEncodeRGBA(const uint8_t* rgba,
                                   int width, int height, int stride,
                                   float quality_factor, uint8_t** output);
-WEBP_EXTERN(size_t) WebPEncodeBGR(const uint8_t* bgr,
+WEBP_EXTERN size_t WebPEncodeBGRA(const uint8_t* bgra,
                                   int width, int height, int stride,
                                   float quality_factor, uint8_t** output);
-WEBP_EXTERN(size_t) WebPEncodeRGBA(const uint8_t* rgba,
-                                   int width, int height, int stride,
-                                   float quality_factor, uint8_t** output);
-WEBP_EXTERN(size_t) WebPEncodeBGRA(const uint8_t* bgra,
-                                   int width, int height, int stride,
-                                   float quality_factor, uint8_t** output);
 
 // These functions are the equivalent of the above, but compressing in a
 // lossless manner. Files are usually larger than lossy format, but will
 // not suffer any compression loss.
-WEBP_EXTERN(size_t) WebPEncodeLosslessRGB(const uint8_t* rgb,
+// Note these functions, like the lossy versions, use the library's default
+// settings. For lossless this means 'exact' is disabled. RGB values in
+// transparent areas will be modified to improve compression. To avoid this,
+// use WebPEncode() and set WebPConfig::exact to 1.
+WEBP_EXTERN size_t WebPEncodeLosslessRGB(const uint8_t* rgb,
+                                         int width, int height, int stride,
+                                         uint8_t** output);
+WEBP_EXTERN size_t WebPEncodeLosslessBGR(const uint8_t* bgr,
+                                         int width, int height, int stride,
+                                         uint8_t** output);
+WEBP_EXTERN size_t WebPEncodeLosslessRGBA(const uint8_t* rgba,
                                           int width, int height, int stride,
                                           uint8_t** output);
-WEBP_EXTERN(size_t) WebPEncodeLosslessBGR(const uint8_t* bgr,
+WEBP_EXTERN size_t WebPEncodeLosslessBGRA(const uint8_t* bgra,
                                           int width, int height, int stride,
                                           uint8_t** output);
-WEBP_EXTERN(size_t) WebPEncodeLosslessRGBA(const uint8_t* rgba,
-                                           int width, int height, int stride,
-                                           uint8_t** output);
-WEBP_EXTERN(size_t) WebPEncodeLosslessBGRA(const uint8_t* bgra,
-                                           int width, int height, int stride,
-                                           uint8_t** output);
 
 //------------------------------------------------------------------------------
 // Coding parameters
@@ -90,12 +94,15 @@ typedef enum WebPImageHint {
 // Compression parameters.
 struct WebPConfig {
   int lossless;           // Lossless encoding (0=lossy(default), 1=lossless).
-  float quality;          // between 0 (smallest file) and 100 (biggest)
+  float quality;          // between 0 and 100. For lossy, 0 gives the smallest
+                          // size and 100 the largest. For lossless, this
+                          // parameter is the amount of effort put into the
+                          // compression: 0 is the fastest but gives larger
+                          // files compared to the slowest, but best, 100.
   int method;             // quality/speed trade-off (0=fast, 6=slower-better)
 
   WebPImageHint image_hint;  // Hint for image type (lossless only for now).
 
-  // Parameters related to lossy compression only:
   int target_size;        // if non-zero, set the desired target size in bytes.
                           // Takes precedence over the 'compression' parameter.
   float target_PSNR;      // if non-zero, specifies the minimal distortion to
@@ -117,7 +124,8 @@ struct WebPConfig {
 
   int show_compressed;    // if true, export the compressed picture back.
                           // In-loop filtering is not applied.
-  int preprocessing;      // preprocessing filter (0=none, 1=segment-smooth)
+  int preprocessing;      // preprocessing filter:
+                          // 0=none, 1=segment-smooth, 2=pseudo-random dithering
   int partitions;         // log2(number of token partitions) in [0..3]. Default
                           // is set to 0 for easier progressive decoding.
   int partition_limit;    // quality degradation allowed to fit the 512k limit
@@ -130,7 +138,18 @@ struct WebPConfig {
   int thread_level;       // If non-zero, try and use multi-threaded encoding.
   int low_memory;         // If set, reduce memory usage (but increase CPU use).
 
-  uint32_t pad[5];        // padding for later use
+  int near_lossless;      // Near lossless encoding [0 = max loss .. 100 = off
+                          // (default)].
+  int exact;              // if non-zero, preserve the exact RGB values under
+                          // transparent area. Otherwise, discard this invisible
+                          // RGB information for better compression. The default
+                          // value is 0.
+
+  int use_delta_palette;  // reserved for future lossless feature
+  int use_sharp_yuv;      // if needed, use sharp (and slow) RGB->YUV conversion
+
+  int qmin;               // minimum permissible quality factor
+  int qmax;               // maximum permissible quality factor
 };
 
 // Enumerate some predefined settings for WebPConfig, depending on the type
@@ -145,7 +164,7 @@ typedef enum WebPPreset {
 } WebPPreset;
 
 // Internal, version-checked, entry point
-WEBP_EXTERN(int) WebPConfigInitInternal(WebPConfig*, WebPPreset, float, int);
+WEBP_EXTERN int WebPConfigInitInternal(WebPConfig*, WebPPreset, float, int);
 
 // Should always be called, to initialize a fresh WebPConfig structure before
 // modification. Returns false in case of version mismatch. WebPConfigInit()
@@ -166,13 +185,21 @@ static WEBP_INLINE int WebPConfigPreset(WebPConfig* config,
                                 WEBP_ENCODER_ABI_VERSION);
 }
 
+// Activate the lossless compression mode with the desired efficiency level
+// between 0 (fastest, lowest compression) and 9 (slower, best compression).
+// A good default level is '6', providing a fair tradeoff between compression
+// speed and final compressed size.
+// This function will overwrite several fields from config: 'method', 'quality'
+// and 'lossless'. Returns false in case of parameter error.
+WEBP_EXTERN int WebPConfigLosslessPreset(WebPConfig* config, int level);
+
 // Returns true if 'config' is non-NULL and all configuration parameters are
 // within their valid ranges.
-WEBP_EXTERN(int) WebPValidateConfig(const WebPConfig* config);
+WEBP_EXTERN int WebPValidateConfig(const WebPConfig* config);
 
 //------------------------------------------------------------------------------
 // Input / Output
-// Structure for storing auxiliary statistics (mostly for lossy encoding).
+// Structure for storing auxiliary statistics.
 
 struct WebPAuxStats {
   int coded_size;         // final size
@@ -198,8 +225,10 @@ struct WebPAuxStats {
   int cache_bits;              // number of bits for color cache lookup
   int palette_size;            // number of color in palette, if used
   int lossless_size;           // final lossless size
+  int lossless_hdr_size;       // lossless header (transform, huffman etc) size
+  int lossless_data_size;      // lossless image data size
 
-  uint32_t pad[4];        // padding for later use
+  uint32_t pad[2];        // padding for later use
 };
 
 // Signature for output function. Should return true if writing was successful.
@@ -218,13 +247,16 @@ struct WebPMemoryWriter {
 };
 
 // The following must be called first before any use.
-WEBP_EXTERN(void) WebPMemoryWriterInit(WebPMemoryWriter* writer);
+WEBP_EXTERN void WebPMemoryWriterInit(WebPMemoryWriter* writer);
 
+// The following must be called to deallocate writer->mem memory. The 'writer'
+// object itself is not deallocated.
+WEBP_EXTERN void WebPMemoryWriterClear(WebPMemoryWriter* writer);
 // The custom writer to be used with WebPMemoryWriter as custom_ptr. Upon
 // completion, writer.mem and writer.size will hold the coded data.
-// writer.mem must be freed using the call 'free(writer.mem)'.
-WEBP_EXTERN(int) WebPMemoryWrite(const uint8_t* data, size_t data_size,
-                                 const WebPPicture* picture);
+// writer.mem must be freed by calling WebPMemoryWriterClear.
+WEBP_EXTERN int WebPMemoryWrite(const uint8_t* data, size_t data_size,
+                                const WebPPicture* picture);
 
 // Progress hook, called from time to time to report progress. It can return
 // false to request an abort of the encoding process, or true otherwise if
@@ -234,16 +266,9 @@ typedef int (*WebPProgressHook)(int percent, const WebPPicture* picture);
 // Color spaces.
 typedef enum WebPEncCSP {
   // chroma sampling
-  WEBP_YUV420 = 0,   // 4:2:0
-  WEBP_YUV422 = 1,   // 4:2:2
-  WEBP_YUV444 = 2,   // 4:4:4
-  WEBP_YUV400 = 3,   // grayscale
-  WEBP_CSP_UV_MASK = 3,   // bit-mask to get the UV sampling factors
-  // alpha channel variants
-  WEBP_YUV420A = 4,
-  WEBP_YUV422A = 5,
-  WEBP_YUV444A = 6,
-  WEBP_YUV400A = 7,   // grayscale + alpha
+  WEBP_YUV420  = 0,        // 4:2:0
+  WEBP_YUV420A = 4,        // alpha channel variant
+  WEBP_CSP_UV_MASK = 3,    // bit-mask to get the UV sampling factors
   WEBP_CSP_ALPHA_BIT = 4   // bit that is set if alpha is present
 } WebPEncCSP;
 
@@ -267,6 +292,11 @@ typedef enum WebPEncodingError {
 #define WEBP_MAX_DIMENSION 16383
 
 // Main exchange structure (input samples, output bytes, statistics)
+//
+// Once WebPPictureInit() has been called, it's ok to make all the INPUT fields
+// (use_argb, y/u/v, argb, ...) point to user-owned data, even if
+// WebPPictureAlloc() has been called. Depending on the value use_argb,
+// it's guaranteed that either *argb or *y/*u/*v content will be kept untouched.
 struct WebPPicture {
   //   INPUT
   //////////////
@@ -279,7 +309,7 @@ struct WebPPicture {
   // YUV input (mostly used for input to lossy compression)
   WebPEncCSP colorspace;     // colorspace: should be YUV420 for now (=Y'CbCr).
   int width, height;         // dimensions (less or equal to WEBP_MAX_DIMENSION)
-  uint8_t *y, *u, *v;        // pointers to luma/chroma planes.
+  uint8_t* y, *u, *v;        // pointers to luma/chroma planes.
   int y_stride, uv_stride;   // luma/chroma strides.
   uint8_t* a;                // pointer to the alpha plane
   int a_stride;              // stride of the alpha plane
@@ -322,21 +352,19 @@ struct WebPPicture {
 
   uint32_t pad3[3];       // padding for later use
 
-  // Unused for now: original samples (for non-YUV420 modes)
-  uint8_t *u0, *v0;
-  int uv0_stride;
-
-  uint32_t pad4[7];       // padding for later use
+  // Unused for now
+  uint8_t* pad4, *pad5;
+  uint32_t pad6[8];       // padding for later use
 
   // PRIVATE FIELDS
   ////////////////////
   void* memory_;          // row chunk of memory for yuva planes
   void* memory_argb_;     // and for argb too.
-  void* pad5[2];          // padding for later use
+  void* pad7[2];          // padding for later use
 };
 
 // Internal, version-checked, entry point
-WEBP_EXTERN(int) WebPPictureInitInternal(WebPPicture*, int);
+WEBP_EXTERN int WebPPictureInitInternal(WebPPicture*, int);
 
 // Should always be called, to initialize the structure. Returns false in case
 // of version mismatch. WebPPictureInit() must have succeeded before using the
@@ -353,26 +381,41 @@ static WEBP_INLINE int WebPPictureInit(WebPPicture* picture) {
 // Allocate y/u/v buffers as per colorspace/width/height specification.
 // Note! This function will free the previous buffer if needed.
 // Returns false in case of memory error.
-WEBP_EXTERN(int) WebPPictureAlloc(WebPPicture* picture);
+WEBP_EXTERN int WebPPictureAlloc(WebPPicture* picture);
 
 // Release the memory allocated by WebPPictureAlloc() or WebPPictureImport*().
 // Note that this function does _not_ free the memory used by the 'picture'
 // object itself.
 // Besides memory (which is reclaimed) all other fields of 'picture' are
 // preserved.
-WEBP_EXTERN(void) WebPPictureFree(WebPPicture* picture);
+WEBP_EXTERN void WebPPictureFree(WebPPicture* picture);
 
 // Copy the pixels of *src into *dst, using WebPPictureAlloc. Upon return, *dst
 // will fully own the copied pixels (this is not a view). The 'dst' picture need
 // not be initialized as its content is overwritten.
 // Returns false in case of memory allocation error.
-WEBP_EXTERN(int) WebPPictureCopy(const WebPPicture* src, WebPPicture* dst);
+WEBP_EXTERN int WebPPictureCopy(const WebPPicture* src, WebPPicture* dst);
 
-// Compute PSNR, SSIM or LSIM distortion metric between two pictures.
-// Result is in dB, stores in result[] in the Y/U/V/Alpha/All order.
-// Returns false in case of error (src and ref don't have same dimension, ...)
+// Compute the single distortion for packed planes of samples.
+// 'src' will be compared to 'ref', and the raw distortion stored into
+// '*distortion'. The refined metric (log(MSE), log(1 - ssim),...' will be
+// stored in '*result'.
+// 'x_step' is the horizontal stride (in bytes) between samples.
+// 'src/ref_stride' is the byte distance between rows.
+// Returns false in case of error (bad parameter, memory allocation error, ...).
+WEBP_EXTERN int WebPPlaneDistortion(const uint8_t* src, size_t src_stride,
+                                    const uint8_t* ref, size_t ref_stride,
+                                    int width, int height,
+                                    size_t x_step,
+                                    int type,   // 0 = PSNR, 1 = SSIM, 2 = LSIM
+                                    float* distortion, float* result);
+
+// Compute PSNR, SSIM or LSIM distortion metric between two pictures. Results
+// are in dB, stored in result[] in the B/G/R/A/All order. The distortion is
+// always performed using ARGB samples. Hence if the input is YUV(A), the
+// picture will be internally converted to ARGB (just for the measurement).
 // Warning: this function is rather CPU-intensive.
-WEBP_EXTERN(int) WebPPictureDistortion(
+WEBP_EXTERN int WebPPictureDistortion(
     const WebPPicture* src, const WebPPicture* ref,
     int metric_type,           // 0 = PSNR, 1 = SSIM, 2 = LSIM
     float result[5]);
@@ -385,8 +428,8 @@ WEBP_EXTERN(int) WebPPictureDistortion(
 // must be fully be comprised inside the 'src' source picture. If the source
 // picture uses the YUV420 colorspace, the top and left coordinates will be
 // snapped to even values.
-WEBP_EXTERN(int) WebPPictureCrop(WebPPicture* picture,
-                                 int left, int top, int width, int height);
+WEBP_EXTERN int WebPPictureCrop(WebPPicture* picture,
+                                int left, int top, int width, int height);
 
 // Extracts a view from 'src' picture into 'dst'. The rectangle for the view
 // is defined by the top-left corner pixel coordinates (left, top) as well
@@ -399,67 +442,91 @@ WEBP_EXTERN(int) WebPPictureCrop(WebPPicture* picture,
 // with WebPPictureInit() if it is different from 'src', since its content will
 // be overwritten.
 // Returns false in case of memory allocation error or invalid parameters.
-WEBP_EXTERN(int) WebPPictureView(const WebPPicture* src,
-                                 int left, int top, int width, int height,
-                                 WebPPicture* dst);
+WEBP_EXTERN int WebPPictureView(const WebPPicture* src,
+                                int left, int top, int width, int height,
+                                WebPPicture* dst);
 
 // Returns true if the 'picture' is actually a view and therefore does
 // not own the memory for pixels.
-WEBP_EXTERN(int) WebPPictureIsView(const WebPPicture* picture);
+WEBP_EXTERN int WebPPictureIsView(const WebPPicture* picture);
 
 // Rescale a picture to new dimension width x height.
-// Now gamma correction is applied.
+// If either 'width' or 'height' (but not both) is 0 the corresponding
+// dimension will be calculated preserving the aspect ratio.
+// No gamma correction is applied.
 // Returns false in case of error (invalid parameter or insufficient memory).
-WEBP_EXTERN(int) WebPPictureRescale(WebPPicture* pic, int width, int height);
+WEBP_EXTERN int WebPPictureRescale(WebPPicture* pic, int width, int height);
 
 // Colorspace conversion function to import RGB samples.
 // Previous buffer will be free'd, if any.
 // *rgb buffer should have a size of at least height * rgb_stride.
 // Returns false in case of memory error.
-WEBP_EXTERN(int) WebPPictureImportRGB(
+WEBP_EXTERN int WebPPictureImportRGB(
     WebPPicture* picture, const uint8_t* rgb, int rgb_stride);
 // Same, but for RGBA buffer.
-WEBP_EXTERN(int) WebPPictureImportRGBA(
+WEBP_EXTERN int WebPPictureImportRGBA(
     WebPPicture* picture, const uint8_t* rgba, int rgba_stride);
 // Same, but for RGBA buffer. Imports the RGB direct from the 32-bit format
 // input buffer ignoring the alpha channel. Avoids needing to copy the data
 // to a temporary 24-bit RGB buffer to import the RGB only.
-WEBP_EXTERN(int) WebPPictureImportRGBX(
+WEBP_EXTERN int WebPPictureImportRGBX(
     WebPPicture* picture, const uint8_t* rgbx, int rgbx_stride);
 
 // Variants of the above, but taking BGR(A|X) input.
-WEBP_EXTERN(int) WebPPictureImportBGR(
+WEBP_EXTERN int WebPPictureImportBGR(
     WebPPicture* picture, const uint8_t* bgr, int bgr_stride);
-WEBP_EXTERN(int) WebPPictureImportBGRA(
+WEBP_EXTERN int WebPPictureImportBGRA(
     WebPPicture* picture, const uint8_t* bgra, int bgra_stride);
-WEBP_EXTERN(int) WebPPictureImportBGRX(
+WEBP_EXTERN int WebPPictureImportBGRX(
     WebPPicture* picture, const uint8_t* bgrx, int bgrx_stride);
 
-// Converts picture->argb data to the YUVA format specified by 'colorspace'.
+// Converts picture->argb data to the YUV420A format. The 'colorspace'
+// parameter is deprecated and should be equal to WEBP_YUV420.
 // Upon return, picture->use_argb is set to false. The presence of real
 // non-opaque transparent values is detected, and 'colorspace' will be
 // adjusted accordingly. Note that this method is lossy.
 // Returns false in case of error.
-WEBP_EXTERN(int) WebPPictureARGBToYUVA(WebPPicture* picture,
-                                       WebPEncCSP colorspace);
+WEBP_EXTERN int WebPPictureARGBToYUVA(WebPPicture* picture,
+                                      WebPEncCSP /*colorspace = WEBP_YUV420*/);
+
+// Same as WebPPictureARGBToYUVA(), but the conversion is done using
+// pseudo-random dithering with a strength 'dithering' between
+// 0.0 (no dithering) and 1.0 (maximum dithering). This is useful
+// for photographic picture.
+WEBP_EXTERN int WebPPictureARGBToYUVADithered(
+    WebPPicture* picture, WebPEncCSP colorspace, float dithering);
+
+// Performs 'sharp' RGBA->YUVA420 downsampling and colorspace conversion.
+// Downsampling is handled with extra care in case of color clipping. This
+// method is roughly 2x slower than WebPPictureARGBToYUVA() but produces better
+// and sharper YUV representation.
+// Returns false in case of error.
+WEBP_EXTERN int WebPPictureSharpARGBToYUVA(WebPPicture* picture);
+// kept for backward compatibility:
+WEBP_EXTERN int WebPPictureSmartARGBToYUVA(WebPPicture* picture);
 
 // Converts picture->yuv to picture->argb and sets picture->use_argb to true.
-// The input format must be YUV_420 or YUV_420A.
-// Note that the use of this method is discouraged if one has access to the
-// raw ARGB samples, since using YUV420 is comparatively lossy. Also, the
-// conversion from YUV420 to ARGB incurs a small loss too.
+// The input format must be YUV_420 or YUV_420A. The conversion from YUV420 to
+// ARGB incurs a small loss too.
+// Note that the use of this colorspace is discouraged if one has access to the
+// raw ARGB samples, since using YUV420 is comparatively lossy.
 // Returns false in case of error.
-WEBP_EXTERN(int) WebPPictureYUVAToARGB(WebPPicture* picture);
+WEBP_EXTERN int WebPPictureYUVAToARGB(WebPPicture* picture);
 
-// Helper function: given a width x height plane of YUV(A) samples
-// (with stride 'stride'), clean-up the YUV samples under fully transparent
-// area, to help compressibility (no guarantee, though).
-WEBP_EXTERN(void) WebPCleanupTransparentArea(WebPPicture* picture);
+// Helper function: given a width x height plane of RGBA or YUV(A) samples
+// clean-up or smoothen the YUV or RGB samples under fully transparent area,
+// to help compressibility (no guarantee, though).
+WEBP_EXTERN void WebPCleanupTransparentArea(WebPPicture* picture);
 
 // Scan the picture 'picture' for the presence of non fully opaque alpha values.
 // Returns true in such case. Otherwise returns false (indicating that the
 // alpha plane can be ignored altogether e.g.).
-WEBP_EXTERN(int) WebPPictureHasTransparency(const WebPPicture* picture);
+WEBP_EXTERN int WebPPictureHasTransparency(const WebPPicture* picture);
+
+// Remove the transparency information (if present) by blending the color with
+// the background color 'background_rgb' (specified as 24bit RGB triplet).
+// After this call, all alpha values are reset to 0xff.
+WEBP_EXTERN void WebPBlendAlpha(WebPPicture* pic, uint32_t background_rgb);
 
 //------------------------------------------------------------------------------
 // Main call
@@ -474,12 +541,12 @@ WEBP_EXTERN(int) WebPPictureHasTransparency(const WebPPicture* picture);
 // the former for lossy encoding, and the latter for lossless encoding
 // (when config.lossless is true). Automatic conversion from one format to
 // another is provided but they both incur some loss.
-WEBP_EXTERN(int) WebPEncode(const WebPConfig* config, WebPPicture* picture);
+WEBP_EXTERN int WebPEncode(const WebPConfig* config, WebPPicture* picture);
 
 //------------------------------------------------------------------------------
 
-#if defined(__cplusplus) || defined(c_plusplus)
+#ifdef __cplusplus
 }    // extern "C"
 #endif
 
-#endif  /* WEBP_WEBP_ENCODE_H_ */
+#endif  // WEBP_WEBP_ENCODE_H_
