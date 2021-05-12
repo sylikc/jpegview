@@ -1,0 +1,27 @@
+.vs/
+**/obj
+**/Debug
+
+
+# Compiled Object files
+*.slo
+*.lo
+*.o
+*.obj
+
+# Debug files
+*.dSYM/
+*.su
+*.idb
+*.pdb
+
+*.pch
+
+*.tlog
+
+*.dll
+*.ilk
+*.exp
+*.exe
+
+*.user
