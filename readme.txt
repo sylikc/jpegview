@@ -24,6 +24,7 @@ Changelog
 []
 Other changes:
 - Updated Greek translation, thanks to George (SF @geonetor)
+- Rename Russian INI template to match localized INI naming convention
 
 
 [1.0.37.1]
