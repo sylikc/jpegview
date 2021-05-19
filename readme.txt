@@ -25,6 +25,7 @@ Changelog
 Other changes:
 - Updated Greek translation, thanks to George (SF @geonetor)
 - Rename Russian INI template to match localized INI naming convention
+- Added LICENSE.txt to explicitly specify the GPLv2 copyright
 
 
 [1.0.37.1]
