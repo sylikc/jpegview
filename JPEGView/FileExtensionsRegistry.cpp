@@ -208,10 +208,12 @@ static void RegisterInMRU(LPCTSTR sRegMRUPath) {
 		}
 	}
 	// append another entry to the MRU list with JPEGView.exe
-	CString nextMRUEntry; // could not just cast CString(int), kept getting 
+	CString nextMRUEntry = CString(wchar_t(mruList.GetAt(mruList.GetLength() - 1) + 1));
+	// another solution
 	// https://stackoverflow.com/questions/12602526/how-can-i-convert-an-int-to-a-cstring
+	// could not just cast CString(int), kept getting
 	// error C2440: '<function-style-cast>': cannot convert from 'int' to 'ATL::CString'
-	nextMRUEntry.Format(_T("%d"), mruList.GetAt(mruList.GetLength() - 1) + 1);
+	// CString nextMRUEntry; nextMRUEntry.Format(_T("%d"), mruList.GetAt(mruList.GetLength() - 1) + 1);
 	if (nextMRUEntry.GetAt(0) <= _T('z') && SetRegistryStringValue(key, _T("MRUList"), mruList + nextMRUEntry)) {
 		SetRegistryStringValue(key, nextMRUEntry, _T("JPEGView.exe"));
 	}
