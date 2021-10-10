@@ -54,6 +54,7 @@
 #define IDM_ROTATE          	9100			// показать окно поворота на произвольный угол
 #define IDM_CHANGESIZE		9120			// показать окно изменения размера изображения
 #define IDM_PERSPECTIVE         9150			// показать окно коррекции перспективы
+#define IDM_UNSHARP				9160			// показать окно нерезкой маски
 #define IDM_MIRROR_H        	9200			// зеркально перевернуть изображение по горизонтали
 #define IDM_MIRROR_V        	9300			// зеркально перевернуть изображение по вертикали
 #define IDM_ROTATE_90_LOSSLESS  9400			// повернуть JPEG без потерь на 90° вправо
@@ -210,5 +211,6 @@ Alt+R                   IDM_SLIDESHOW_RESUME
 Ctrl+X			IDM_COPY_FULL
 Ctrl+V			IDM_PASTE
 Ctrl+L			IDM_LANDSCAPE_MODE
+Ctrl+U			IDM_UNSHARP
 R			IDM_ROTATE_90_LOSSLESS_CONFIRM
 T			IDM_ROTATE_270_LOSSLESS_CONFIRM

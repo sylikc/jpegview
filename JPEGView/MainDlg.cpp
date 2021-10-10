@@ -1530,6 +1530,10 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 				this->Invalidate(FALSE);
 			}
 			break;
+		case IDM_UNSHARP:
+			m_pCropCtl->AbortCropping();
+			GetUnsharpMaskPanelCtl()->SetVisible(true);
+			break;
 		case IDM_ROTATE:
 			m_pCropCtl->AbortCropping();
 			GetRotationPanelCtl()->SetVisible(true);

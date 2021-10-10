@@ -209,6 +209,7 @@
 #define IDM_ROTATE          9100
 #define IDM_CHANGESIZE      9120
 #define IDM_PERSPECTIVE     9150
+#define IDM_UNSHARP			9160
 #define IDM_MIRROR_H        9200
 #define IDM_MIRROR_V        9300
 #define IDM_ROTATE_90_LOSSLESS 9400
