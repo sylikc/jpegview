@@ -117,6 +117,8 @@
 #define IDM_PAN_LEFT		15203			// переместить картинку влево
 #define IDM_SHARPEN_INC		15300			// усилить резкость
 #define IDM_SHARPEN_DEC		15301			// ослабить резкость
+#define IDM_SATURATION_INC		15400			// усилить насыщенность
+#define IDM_SATURATION_DEC		15401			// ослабить насыщенность
 #define IDM_CONTEXT_MENU	16000			// показать контекстное меню
 
 // Раздел ниже содержит назначения клавиш.
@@ -152,14 +154,16 @@ Plus			IDM_ZOOM_INC
 Ctrl+Shift+Plus		IDM_CONTRAST_CORRECTION_INC
 Ctrl+Alt+Plus		IDM_COLOR_CORRECTION_INC
 Ctrl+Plus		IDM_CONTRAST_INC
-Shift+Plus		IDM_GAMMA_INC
-Alt+Plus		IDM_SHARPEN_INC
-Minus			IDM_ZOOM_DEC
-Ctrl+Shift+Minus	IDM_CONTRAST_CORRECTION_DEC
-Ctrl+Alt+Minus		IDM_COLOR_CORRECTION_DEC
-Ctrl+Minus		IDM_CONTRAST_DEC
-Shift+Minus		IDM_GAMMA_DEC
-Alt+Minus		IDM_SHARPEN_DEC
+Shift+Plus              IDM_GAMMA_INC
+Alt+Plus				IDM_SATURATION_INC
+Ctrl+Alt+Plus          	IDM_SHARPEN_INC
+Minus                   IDM_ZOOM_DEC
+Ctrl+Shift+Minus        IDM_CONTRAST_CORRECTION_DEC
+Ctrl+Alt+Minus          IDM_COLOR_CORRECTION_DEC
+Ctrl+Minus              IDM_CONTRAST_DEC
+Shift+Minus             IDM_GAMMA_DEC
+Alt+Minus				IDM_SATURATION_DEC
+Ctrl+Alt+Minus          IDM_SHARPEN_DEC
 F2			IDM_SHOW_FILEINFO
 Ctrl+F2			IDM_SHOW_FILENAME
 F3			IDM_TOGGLE_RESAMPLING_QUALITY

@@ -334,6 +334,7 @@ private:
 	void AdjustLDC(int nMode, double dInc);
 	void AdjustGamma(double dFactor);
 	void AdjustContrast(double dInc);
+	void AdjustSaturation(double dInc);
 	void AdjustSharpen(double dInc);
 	void PerformZoom(double dValue, bool bExponent, bool bZoomToMouse, bool bAdjustWindowToImage);
 	void ZoomToSelection();

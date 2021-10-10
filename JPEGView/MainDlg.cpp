@@ -62,6 +62,7 @@ static const int MIN_WND_HEIGHT = 240;
 
 static const double GAMMA_FACTOR = 1.02; // multiplicator for gamma value
 static const double CONTRAST_INC = 0.03; // increment for contrast value
+static const double SATURATION_INC = 0.03; // increment for saturation value
 static const double SHARPEN_INC = 0.05; // increment for sharpen value
 static const double LDC_INC = 0.1; // increment for LDC (lighten shadows and darken highlights)
 static const int NUM_THREADS = 1; // number of readahead threads to use
@@ -1928,6 +1929,10 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 		case IDM_GAMMA_DEC:
 			AdjustGamma((nCommand == IDM_GAMMA_INC)? 1.0/GAMMA_FACTOR : GAMMA_FACTOR);
 			break;
+		case IDM_SATURATION_INC:
+		case IDM_SATURATION_DEC:
+			AdjustSaturation((nCommand == IDM_SATURATION_INC)? SATURATION_INC : -SATURATION_INC);
+			break;
 		case IDM_LDC_SHADOWS_INC:	
 		case IDM_LDC_SHADOWS_DEC:
 		case IDM_LDC_HIGHLIGHTS_INC:
@@ -2410,6 +2415,12 @@ void CMainDlg::AdjustLDC(int nMode, double dInc) {
 void CMainDlg::AdjustGamma(double dFactor) {
 	m_pImageProcParams->Gamma *= dFactor;
 	m_pImageProcParams->Gamma = min(2.0, max(0.5, m_pImageProcParams->Gamma));
+	this->Invalidate(FALSE);
+}
+
+void CMainDlg::AdjustSaturation(double dInc) {
+	m_pImageProcParams->Saturation += dInc;
+	m_pImageProcParams->Saturation = min(0.0, max(2.0, m_pImageProcParams->Saturation));
 	this->Invalidate(FALSE);
 }
 
