@@ -61,8 +61,8 @@ static const int MIN_WND_WIDTH = 320;
 static const int MIN_WND_HEIGHT = 240;
 
 static const double GAMMA_FACTOR = 1.02; // multiplicator for gamma value
-static const double CONTRAST_INC = 0.03; // increment for contrast value
-static const double SATURATION_INC = 0.03; // increment for saturation value
+static const double CONTRAST_INC = 0.02; // increment for contrast value
+static const double SATURATION_INC = 0.02; // increment for saturation value
 static const double SHARPEN_INC = 0.05; // increment for sharpen value
 static const double LDC_INC = 0.1; // increment for LDC (lighten shadows and darken highlights)
 static const int NUM_THREADS = 1; // number of readahead threads to use
@@ -2420,7 +2420,7 @@ void CMainDlg::AdjustGamma(double dFactor) {
 
 void CMainDlg::AdjustSaturation(double dInc) {
 	m_pImageProcParams->Saturation += dInc;
-	m_pImageProcParams->Saturation = min(0.0, max(2.0, m_pImageProcParams->Saturation));
+	m_pImageProcParams->Saturation = min(2.0, max(0.0, m_pImageProcParams->Saturation));
 	this->Invalidate(FALSE);
 }
 
