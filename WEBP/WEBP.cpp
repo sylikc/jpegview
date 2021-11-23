@@ -15,6 +15,11 @@ __declspec(dllexport) uint8_t* Webp_Dll_DecodeBGRInto(const uint8_t* data, uint3
 	return WebPDecodeBGRInto(data, data_size, output_buffer, output_buffer_size, output_stride);
 }
 
+__declspec(dllexport) uint8_t* Webp_Dll_DecodeBGRAInto(const uint8_t* data, uint32_t data_size, uint8_t* output_buffer, int output_buffer_size, int output_stride)
+{
+	return WebPDecodeBGRAInto(data, data_size, output_buffer, output_buffer_size, output_stride);
+}
+
 __declspec(dllexport) size_t Webp_Dll_EncodeBGRLossy(const uint8_t* bgr, int width, int height, int stride, float quality_factor, uint8_t** output)
 {
 	return WebPEncodeBGR(bgr, width, height, stride, quality_factor, output);
