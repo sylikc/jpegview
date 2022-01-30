@@ -18,6 +18,34 @@ using namespace Gdiplus;
 // static intializers
 volatile int CImageLoadThread::m_curHandle = 0;
 
+static inline uint32 WebpAlphaBlendBackground(uint32 pixel, uint32 backgroundColor)
+{
+	uint32 alpha = pixel & 0xFF000000;
+
+	if (alpha == 0) {
+		return backgroundColor;
+	} else if (alpha == 0xFF000000)
+	{
+		return pixel;
+	} else {
+
+		uint8 r = GetRValue(pixel);
+		uint8 g = GetGValue(pixel);
+		uint8 b = GetBValue(pixel);
+		uint8 bg_r = GetRValue(backgroundColor);
+		uint8 bg_g = GetGValue(backgroundColor);
+		uint8 bg_b = GetBValue(backgroundColor);
+		uint8 a = alpha >> 24;
+		uint8 one_minus_a = 255 - a;
+
+		return
+			0xFF000000 + 
+			(  (uint8)(((r * a + bg_r * one_minus_a) / 255.0) + 0.5)      ) + 
+			(  (uint8)(((g * a + bg_g * one_minus_a) / 255.0) + 0.5) <<  8) + 
+			(  (uint8)(((b * a + bg_b * one_minus_a) / 255.0) + 0.5) << 16);
+	}
+}
+
 /////////////////////////////////////////////////////////////////////////////////////////////
 // static helpers
 /////////////////////////////////////////////////////////////////////////////////////////////
@@ -396,6 +424,7 @@ void CImageLoadThread::ProcessReadTGARequest(CRequest * request) {
 
 __declspec(dllimport) int Webp_Dll_GetInfo(const uint8* data, size_t data_size, int* width, int* height);
 __declspec(dllimport) uint8* Webp_Dll_DecodeBGRInto(const uint8* data, uint32 data_size, uint8* output_buffer, int output_buffer_size, int output_stride);
+__declspec(dllimport) uint8* Webp_Dll_DecodeBGRAInto(const uint8* data, uint32 data_size, uint8* output_buffer, int output_buffer_size, int output_stride);
 
 void CImageLoadThread::ProcessReadWEBPRequest(CRequest * request) {
 	HANDLE hFile = ::CreateFile(request->FileName, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, 0, NULL);
@@ -424,11 +453,16 @@ void CImageLoadThread::ProcessReadWEBPRequest(CRequest * request) {
 			if (Webp_Dll_GetInfo((uint8*)pBuffer, nFileSize, &nWidth, &nHeight)) {
 				if (nWidth <= MAX_IMAGE_DIMENSION && nHeight <= MAX_IMAGE_DIMENSION) {
 					if ((double)nWidth * nHeight <= MAX_IMAGE_PIXELS) {
-						int nStride = Helpers::DoPadding(nWidth*3, 4);
+						int nStride = nWidth*4;
 						uint8* pPixelData = new(std::nothrow) unsigned char[nStride * nHeight];
 						if (pPixelData != NULL) {
-							if (Webp_Dll_DecodeBGRInto((uint8*)pBuffer, nFileSize, pPixelData, nStride * nHeight, nStride)) {
-								request->Image = new CJPEGImage(nWidth, nHeight, pPixelData, NULL, 3, 0, IF_WEBP, false, 0, 1, 0);
+							if (Webp_Dll_DecodeBGRAInto((uint8*)pBuffer, nFileSize, pPixelData, nStride * nHeight, nStride)) {
+								// Multiply alpha value into each AABBGGRR pixel
+								uint32* pImage32 = (uint32*)pPixelData;
+								for (int i = 0; i < nWidth*nHeight; i++)
+									*pImage32++ = WebpAlphaBlendBackground(*pImage32, CSettingsProvider::This().ColorTransparency());
+
+								request->Image = new CJPEGImage(nWidth, nHeight, pPixelData, NULL, 4, 0, IF_WEBP, false, 0, 1, 0);
 							} else {
 								delete[] pPixelData;
 							}
