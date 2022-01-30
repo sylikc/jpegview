@@ -21,9 +21,18 @@ Windows XP SP2 or later is needed to run the 32 bit version.
 
 Changelog
 *********
-[]
+[1.0.38]
+Bugs fixed:
+- INI: Removed quotes around ColorCorrection setting.
+  Values enclosed in quotes are ignored and hardcoded defaults are used.
+  PR #12, thanks oughtsz (GH https://github.com/oughtsz)
+New features:
+- Adds transparency support for WEBP format.
+  Honors "TransparencyColor" INI setting.
+  PR #27, thanks KrokusPokus (GH https://github.com/KrokusPokus)
 Other changes:
-- Updated Greek translation, thanks to George (SF @geonetor)
+- Updated Greek translation, thanks George (SF @geonetor)
+- Updated Chinese Simplified translation, thanks dukeng (GH https://github.com/dunkeng)
 - Rename Russian INI template to match localized INI naming convention
 - Added LICENSE.txt to explicitly specify the GPLv2 copyright
 
