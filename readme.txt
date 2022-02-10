@@ -21,7 +21,14 @@ Windows XP SP2 or later is needed to run the 32 bit version.
 
 Changelog
 *********
-[]
+[1.0.39]
+New features:
+- Add new command "Open containing folder in Explorer"
+  Default shortcut key: "W"
+  This pops up and selects the file in Windows Explorer.
+Other changes:
+- Updated to Turbo JPEG version 2.1.2 (11/18/2021)
+- Updated to Google's WebP library version 1.2.2 HEAD at commit ec178f2 (2/2/2022)
 
 [1.0.38]
 Bugs fixed:
@@ -37,7 +44,6 @@ Other changes:
 - Updated Chinese Simplified translation, thanks dukeng (GH https://github.com/dunkeng)
 - Rename Russian INI template to match localized INI naming convention
 - Added LICENSE.txt to explicitly specify the GPLv2 copyright
-
 
 [1.0.37.1]
 Other changes:
