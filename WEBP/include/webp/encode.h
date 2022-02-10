@@ -441,7 +441,7 @@ WEBP_EXTERN int WebPPictureCrop(WebPPicture* picture,
 // the original dimension will be lost). Picture 'dst' need not be initialized
 // with WebPPictureInit() if it is different from 'src', since its content will
 // be overwritten.
-// Returns false in case of memory allocation error or invalid parameters.
+// Returns false in case of invalid parameters.
 WEBP_EXTERN int WebPPictureView(const WebPPicture* src,
                                 int left, int top, int width, int height,
                                 WebPPicture* dst);
