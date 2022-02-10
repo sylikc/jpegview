@@ -17,7 +17,7 @@ Features
 ## What's new
 
 * See what has changed in the [latest releases](https://github.com/sylikc/jpegview/releases)
-* Or Check the [readme.txt](https://github.com/sylikc/jpegview/blob/master/readme.txt) to review new features in detail.  Last SourceForge release was 1.0.37
+* Or Check the [readme.txt](https://github.com/sylikc/jpegview/blob/master/readme.txt) to review new features in detail.  (Last SourceForge release was 1.0.37)
 
 ## Official Releases
 
