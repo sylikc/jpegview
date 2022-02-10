@@ -13,6 +13,7 @@
 #define IDM_DONOTHING		1			// ничего не делать (можно использовать для отключения стандартной команды по нажатию кнопки мыши)
 #define IDM_MINIMIZE		1010			// свернуть окно
 #define IDM_OPEN		1100			// открыть файл
+#define IDM_EXPLORE		1101			// открыть и выбрать файл в проводнике
 #define IDM_SAVE		1500			// сохранить в файле с исходным размером с запросом перезаписи
 #define IDM_SAVE_SCREEN		1501			// сохранить в файле с экранным размером
 #define IDM_SAVE_ALLOW_NO_PROMPT 1502			// сохранить в файле с исходным размером без запроса перезаписи, если это разрешено в INI-файле
@@ -212,3 +213,4 @@ Ctrl+V			IDM_PASTE
 Ctrl+L			IDM_LANDSCAPE_MODE
 R			IDM_ROTATE_90_LOSSLESS_CONFIRM
 T			IDM_ROTATE_270_LOSSLESS_CONFIRM
+W			IDM_EXPLORE
