@@ -6,6 +6,7 @@
 #define IDM_DONOTHING		1			// do nothing (can be used to disable a standard command for a mouse button)
 #define IDM_MINIMIZE		1010			// minimize window
 #define IDM_OPEN		1100			// open file
+#define IDM_EXPLORE		1101			// open and select file in Explorer
 #define IDM_SAVE		1500			// save to file in original size, don't allow override without prompt
 #define IDM_SAVE_SCREEN		1501			// save to file in screen size
 #define IDM_SAVE_ALLOW_NO_PROMPT 1502			// save to file in original size, allow override without prompt when enabled in INI
@@ -201,3 +202,4 @@ Ctrl+V                  IDM_PASTE
 Ctrl+L                  IDM_LANDSCAPE_MODE
 R                       IDM_ROTATE_90_LOSSLESS_CONFIRM
 T                       IDM_ROTATE_270_LOSSLESS_CONFIRM
+W                       IDM_EXPLORE

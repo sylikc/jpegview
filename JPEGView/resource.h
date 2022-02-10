@@ -3,7 +3,7 @@
 // Used by JPEGView.RC
 //
 
-#define JPEGVIEW_VERSION "1, 0, 38, 0\0"
+#define JPEGVIEW_VERSION "1, 0, 39, 0\0"
 
 
 #define IDD_ABOUTBOX				100
@@ -133,6 +133,7 @@
 #define IDM_STOP_MOVIE		1000
 #define IDM_MINIMIZE		1010
 #define IDM_OPEN			1100
+#define IDM_EXPLORE			1101
 #define IDM_SAVE			1500
 #define IDM_SAVE_SCREEN		1501
 #define IDM_SAVE_ALLOW_NO_PROMPT	1502

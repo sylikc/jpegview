@@ -322,6 +322,7 @@ private:
 	bool m_isBeforeFileSelected;
 	double m_dLastImageDisplayTime;
 
+	void ExploreFile();
 	bool OpenFileWithDialog(bool bFullScreen, bool bAfterStartup);
 	void OpenFile(LPCTSTR sFileName, bool bAfterStartup);
 	bool SaveImage(bool bFullSize);
