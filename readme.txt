@@ -21,6 +21,10 @@ Windows XP SP2 or later is needed to run the 32 bit version.
 
 Changelog
 *********
+[1.0.39.1]
+Bugs fixed:
+- Fixed bug introduced in 1.0.39 which caused other menu items in the popup to disappear
+
 [1.0.39]
 New features:
 - Add new command "Open containing folder in Explorer"
