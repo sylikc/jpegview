@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+
+	<!--
+      ====================================================================================
+      Defines & Variables
+	-->
+
+	
+	<?define JPEGView_TargetDir=$(var.JPEGView.TargetDir)?><?define WEBP_TargetDir=$(var.WEBP.TargetDir)?><?define WICLoader_TargetDir=$(var.WICLoader.TargetDir)?>
+	
+	
+	
+	
+	<Product Id="*" Name="JPEGView" Language="1033" Version="1.0.39.0" Manufacturer="Kevin M (sylikc)" UpgradeCode="5edec529-d234-41fb-a84e-deedc0cac0f4">
+		<Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
+
+		<MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
+		<MediaTemplate EmbedCab="yes" /><!-- if you don't set EmbedCab, it outputs a MSI + CAB file-->
+
+		<Feature Id="ProductFeature" Title="JPEGView.Setup" Level="1">
+			<ComponentGroupRef Id="ProductComponents" />
+		</Feature>
+	</Product>
+
+	<Fragment>
+		<Directory Id="TARGETDIR" Name="SourceDir">
+			<Directory Id="ProgramFilesFolder">
+				<Directory Id="INSTALLFOLDER" Name="JPEGView" />
+			</Directory>
+		</Directory>
+	</Fragment>
+
+	<Fragment>
+		<ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER">
+			<!-- TODO: Remove the comments around this Component element and the ComponentRef below in order to add resources to this installer. -->
+			<!-- <Component Id="ProductComponent"> -->
+				<!-- TODO: Insert files, registry keys, and other resources here. -->
+			
+			<!-- </Component> -->
+			<Component Id="JPEGView.exe" Guid="30be6f3f-71ea-4829-82bd-2b3ddb846079">
+			  <File Id="JPEGView.exe" Name="JPEGView.exe" Source="$(var.JPEGView_TargetDir)JPEGView.exe" />
+			</Component>
+			<Component Id="webp.dll" Guid="43e917db-b269-40bf-81ab-b2d1453b225f">
+			  <File Id="webp.dll" Name="webp.dll" Source="$(var.WEBP_TargetDir)webp.dll" />
+			</Component>
+			<Component Id="WICLoader.dll" Guid="742ca948-b7d3-4ca4-9aab-2592616416ed">
+			  <File Id="WICLoader.dll" Name="WICLoader.dll" Source="$(var.WICLoader_TargetDir)WICLoader.dll" />
+			</Component>
+		</ComponentGroup>
+	</Fragment>
+
+</Wix>
