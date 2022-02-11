@@ -48,6 +48,7 @@
 #define IDM_ROTATE          	9100			// show free rotation dialog
 #define IDM_CHANGESIZE		9120			// show dialog to change size of image
 #define IDM_PERSPECTIVE         9150			// show perpective correction dialog
+#define IDM_UNSHARP				9160			// show unsharp mask dialog
 #define IDM_MIRROR_H        	9200			// mirror image horizontally
 #define IDM_MIRROR_V        	9300			// mirror image vertically
 #define IDM_ROTATE_90_LOSSLESS  9400			// Lossless JPEG transformation: rotate image 90 deg
@@ -200,6 +201,7 @@ Alt+R                   IDM_SLIDESHOW_RESUME
 Ctrl+X                  IDM_COPY_FULL
 Ctrl+V                  IDM_PASTE
 Ctrl+L                  IDM_LANDSCAPE_MODE
+Ctrl+U					IDM_UNSHARP
 R                       IDM_ROTATE_90_LOSSLESS_CONFIRM
 T                       IDM_ROTATE_270_LOSSLESS_CONFIRM
 W                       IDM_EXPLORE
