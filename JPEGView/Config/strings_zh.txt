@@ -1,4 +1,4 @@
-﻿// This file must be encoded with UTF-8 (e.g. with Windows Notepad)
+// This file must be encoded with UTF-8 (e.g. with Windows Notepad)
 // Filename is 'strings_%languagecode%.txt' where %languagecode% is the ISO 639 language code e.g. 'zh' for Chinese
 // Format is: English string<tab>Translated string<newline>
 //Translation Info
