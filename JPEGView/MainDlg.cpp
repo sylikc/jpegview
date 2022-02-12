@@ -993,7 +993,12 @@ LRESULT CMainDlg::OnDisplayedFileChangedOnDisk(UINT /*uMsg*/, WPARAM /*wParam*/,
 }
 
 LRESULT CMainDlg::OnActiveDirectoryFilelistChanged(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/) {
-	if (CSettingsProvider::This().ReloadWhenDisplayedImageChanged() && m_pFileList != NULL && m_pFileList->CurrentFileExists()) {
+	if (CSettingsProvider::This().ReloadWhenDisplayedImageChanged() && m_pFileList != NULL && !m_pFileList->CurrentFileExists()) {
+		ExecuteCommand(IDM_NEXT);
+		m_pFileList->DeleteHistory(true);
+		m_pFileList->Reload(NULL, false);
+		Invalidate(FALSE);
+	}	else if (CSettingsProvider::This().ReloadWhenDisplayedImageChanged() && m_pFileList != NULL) {
 		m_pFileList->Reload(NULL, false);
 		Invalidate(FALSE);
 	}

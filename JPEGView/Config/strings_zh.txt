@@ -1,4 +1,4 @@
-﻿// This file must be encoded with UTF-8 (e.g. with Windows Notepad)
+// This file must be encoded with UTF-8 (e.g. with Windows Notepad)
 // Filename is 'strings_%languagecode%.txt' where %languagecode% is the ISO 639 language code e.g. 'zh' for Chinese
 // Format is: English string<tab>Translated string<newline>
 //Translation Info
@@ -415,3 +415,4 @@ Update user settings with new settings from settings template file?	使用设置
 All existing user settings will be preserved.	将保留所有现有用户设置。
 Location:	地点:
 Altitude (m):	高度 (m):
+Open containing folder in Explorer	打开所在文件夹
