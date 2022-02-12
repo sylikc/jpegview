@@ -415,3 +415,4 @@ Update user settings with new settings from settings template file?	使用设置
 All existing user settings will be preserved.	将保留所有现有用户设置。
 Location:	地点:
 Altitude (m):	高度 (m):
+Open containing folder in Explorer	打开所在文件夹
