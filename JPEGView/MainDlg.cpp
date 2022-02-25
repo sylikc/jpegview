@@ -1165,6 +1165,7 @@ LRESULT CMainDlg::OnContextMenu(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam,
 	if (m_pCurrentImage == NULL) {
 		::EnableMenuItem(hMenuTrackPopup, IDM_SAVE, MF_BYCOMMAND | MF_GRAYED);
 		::EnableMenuItem(hMenuTrackPopup, IDM_RELOAD, MF_BYCOMMAND | MF_GRAYED);
+		//::EnableMenuItem(hMenuTrackPopup, IDM_EXPLORE, MF_BYCOMMAND | MF_GRAYED);  // can still show path to an image which could not be loaded.  If file doesn't exist, nothing happens anyways
 		::EnableMenuItem(hMenuTrackPopup, IDM_PRINT, MF_BYCOMMAND | MF_GRAYED);
 		::EnableMenuItem(hMenuTrackPopup, IDM_COPY, MF_BYCOMMAND | MF_GRAYED);
 		::EnableMenuItem(hMenuTrackPopup, IDM_COPY_FULL, MF_BYCOMMAND | MF_GRAYED);
@@ -1304,6 +1305,9 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 			break;
 		case IDM_OPEN:
 			OpenFileWithDialog(false, false);
+			break;
+		case IDM_EXPLORE:
+			ExploreFile();
 			break;
 		case IDM_SAVE:
 		case IDM_SAVE_SCREEN:
@@ -1976,6 +1980,15 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 	}
 	if (nCommand >= IDM_FIRST_OPENWITH_CMD && nCommand <= IDM_LAST_OPENWITH_CMD) {
 		ExecuteUserCommand(HelpersGUI::FindOpenWithCommand(nCommand - IDM_FIRST_OPENWITH_CMD));
+	}
+}
+
+void CMainDlg::ExploreFile() {
+	ITEMIDLIST* pidl = ILCreateFromPath(CurrentFileName(false));
+	if (pidl) {
+		// https://docs.microsoft.com/en-us/windows/win32/api/shlobj_core/nf-shlobj_core-shopenfolderandselectitems
+		SHOpenFolderAndSelectItems(pidl, 0, 0, 0);
+		ILFree(pidl);
 	}
 }
 
