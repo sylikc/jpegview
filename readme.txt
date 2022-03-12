@@ -14,6 +14,11 @@ The include directories of WTL must be added to the include directories for VC++
 In Visual Studio: Properties of JPEGView project > VC++-Directories-Include Directories and Library Directories 
                   Include Directories: $(VCInstallDir)WTL\Include;$(IncludePath)
 
+To compile the MSI installer, you need:
+- WiX Toolset v3.11 or later (https://wixtoolset.org/releases/)
+- WiX Toolset Visual Studio Extension for your version of Visual Studio
+
+
 Please note: 
 Windows XP SP2 or later is needed to run the 32 bit version.
 64 bit Windows 7 or later is needed to run the 64 bit version.
@@ -21,11 +26,18 @@ Windows XP SP2 or later is needed to run the 32 bit version.
 
 Changelog
 *********
-[1.0.39.1]
+[] Not Yet Released.
+Other changes:
+- Created new MSI installer for JPEGView using WiX.  It's rudimentary, but functional.
+- Submitted MSI installer to official Microsoft WinGet repositories.  Use "winget install jpegview" on Windows 10 1709+, or Windows 11 to use.
+- Added known dates for all past releases into readme.txt
+- Updated README.md with official releases info.
+
+[1.0.39.1] 2022-02-11
 Bugs fixed:
 - Fixed bug introduced in 1.0.39 which caused other menu items in the popup to disappear
 
-[1.0.39]
+[1.0.39] 2022-02-10
 New features:
 - Add new command "Open containing folder in Explorer"
   Default shortcut key: "W"
@@ -34,7 +46,7 @@ Other changes:
 - Updated to Turbo JPEG version 2.1.2 (11/18/2021)
 - Updated to Google's WebP library version 1.2.2 HEAD at commit ec178f2 (2/2/2022)
 
-[1.0.38]
+[1.0.38] 2022-01-30
 Bugs fixed:
 - INI: Removed quotes around ColorCorrection setting.
   Values enclosed in quotes are ignored and hardcoded defaults are used.
@@ -49,14 +61,14 @@ Other changes:
 - Rename Russian INI template to match localized INI naming convention
 - Added LICENSE.txt to explicitly specify the GPLv2 copyright
 
-[1.0.37.1]
+[1.0.37.1] 2021-05-11
 Other changes:
 - First release from sylikc's GitHub
 - Using Visual Studio 2019 Community Edition to compile
 - Updated to Turbo JPEG version 2.1.0 (4/23/2021)
 - Updated to Google's WebP library version 1.2.0 HEAD at commit 05b72d4 (4/28/2021)
 
-[1.0.37]
+[1.0.37] 2018-02-24
 New features:
 - Support for display of GPS coordinates/altitude of JPEG images
   Location can be shown on map in browser, use new INI setting 'GPSMapProvider' to configure
@@ -67,7 +79,7 @@ Other changes:
 - Reading whole INI file with a single API call
 - Reading ISO EXIF tag 0x8833 that stores high ISO values
 
-[1.0.36]
+[1.0.36] 2017-12-28
 Bugs fixed:
 - Fixed problem with EXIF rotation combined with 'Keep parameters' mode (F4).
 - Fixed bug causing wrong image display when minimal display time was set in windowed mode.
@@ -89,11 +101,11 @@ Other changes:
 - Improved precision of fixed point arithmetics in up- and downsampling filters
   Using more filter kernels for upsampling, thus allowing larger upsampling factors (> 30)
 
-[1.0.35.1]
+[1.0.35.1] 2016-04-04
 Bugs fixed:
 - 64 bit version did not work on CPUs not supporting AVX
 
-[1.0.35]
+[1.0.35] 2016-04-01
 Bugs fixed:
 - Fixed font handle leak, preventing display of movies with more than 5000 frames when EXIF display was enabled during movie playing
 - Reading/saving auto zoom mode correctly from/to INI file
@@ -110,7 +122,7 @@ Other changes:
 - Help display (F1) now uses own window
 - Updated Spanish translation, thanks to Enrique
 
-[1.0.34]
+[1.0.34] 2016-01-03
 Bugs fixed:
 - Window frame remains visible when starting in full screen mode and using classic windows style
 - Fit to screen is kept with 'Keep parameters' when zoom is required in full screen mode
@@ -136,7 +148,7 @@ New features:
   - AutoZoomModeFullscreen
     Set auto zoom mode for fullscreen mode differently than auto zoom mode for windowed mode
 
-[1.0.33]
+[1.0.33] 2015-01-07
 Bugs fixed:
 - Error when deletion of file fails (e.g. because it is on a read-only storage)
 New features:
@@ -153,7 +165,7 @@ Other changes:
 - Hiding parameter DB buttons when image is processed destructively as these operations cannot be stored in the
   parameter DB.
 
-[1.0.32.2]
+[1.0.32.2] 2014-12-04
 Bugs fixed:
 - More tolerance on corrupt EXIF data offsets - image is now displayed in this case (without EXIF of course)
 - Showing mouse cursor before asking for confirmations if mouse cursor was off before
@@ -170,7 +182,7 @@ Other changes:
   If you need this menu item, set AllowEditGlobalSettings=true in the INI file to force showing it.
 - Batch rename dialog: Supporting %h and %min placeholders for hour and minute of modification date
 
-[1.0.32.1]
+[1.0.32.1] 2014-03-28
 Bugs fixed:
 - Prefetching image of correct size in windowed mode - prefetching was actually not working in this situation
   and thus performance was poor in 1.0.32 in windowed mode.
@@ -186,7 +198,7 @@ Other changes:
   This is the case for drives that have no recylce bin, like memory sticks or network drives.
 - Updated Portuguese translation
 
-[1.0.32.0]
+[1.0.32.0] 2014-03-21
 Bugs fixed:
 - Window size in windowed mode was some pixels too small due to invalid reporting of window border size by OS
 - Fixed wrong line break in file titles in info panel for long file names
@@ -207,7 +219,7 @@ Other changes:
 - Ctrl-X also copies the file name to the clipboard (as Ctrl-C)
 - Using Visual Studio 2013 to compile the 64 bit version
 
-[1.0.31.1]
+[1.0.31.1] 2014-02-26
 Bugs fixed:
 - Fixed crash when deleting files in 'Show folders and subfolders' navigation mode
 - Filenames with \t in path are now displayed correctly when using customized file name display format
@@ -218,7 +230,7 @@ New features:
 Other changes:
 - Moved menu item to store current parameters as default in INI file to 'Setting/Configuration' submenu
 
-[1.0.31]
+[1.0.31] 2013-12-13
 Bugs fixed:
 - Read ahead no longer turned off when failed to read one image
 - Fixed loading error of JPEGs with EXIF data and IDF1 section missing
@@ -255,7 +267,7 @@ New features:
   Default remains to exit JPEGView
 - Some minor changes in navigation panel appearance
   
-[1.0.30]
+[1.0.30] 2013-11-02
 Bugs fixed:
 - Fixed crash (leading to potential exploit) when image width or height is larger than 32767
 - Improved zoom behavior for zoom < 10 %
@@ -279,7 +291,7 @@ New features:
 - When canceling the 'Open file' dialog after startup, JPEGView is not terminated but an empty window is shown with some hints what to do.
   Can be used e.g. to paste images from clipboard.
 
-[1.0.29]
+[1.0.29] 2013-04-21
 Bugs fixed:
 - EXIF (F2) and file name info (Ctrl+F2) no longer flicker when active during slide show with transition effect
 - No logical sorting of file names is done if HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer\NoStrCmpLogical
@@ -300,7 +312,7 @@ Other changes:
   To use lossless compression with the WEBP format, select the "WEBP lossless" file format in the "File Save" dialog.
   Be warned that lossless WEBP compression is very, very slow (decompression is fast however).
 
-[1.0.28]
+[1.0.28] 2013-03-15
 Bugs fixed:
 - Fixed bug in the window resizing code when 'DefaultWindowRect=max' and toggling between 100 % zoom and fit to window (space key)
 - Fixed bug causing that zoom was not saved to parameter DB when auto fitting window to image was on
@@ -316,7 +328,7 @@ New features:
 - Russian translation of readme.html
 - Improved Chinese translation
 
-[1.0.27]
+[1.0.27] 2013-01-20
 Replaced Intel JPEG library by Turbo JPEG (tjpeg, http://sourceforge.net/projects/libjpeg-turbo/)
 This replacement has many reasons:
 - The Intel library license was not an open source type license
@@ -361,7 +373,7 @@ Other changes:
 - Because the tjpeg static library cannot be linked with VS2005, JPEGView is now compiled with VS2010. If you are using Windows XP 
   before SP2, install SP2 or keep using version 1.0.26.
 
-[1.0.26]
+[1.0.26] 2012-01-23
 Bugs fixed:
 - Lossless rotate and crop now works in folders containing Unicode characters in the path.
   Note that the file title must not contain Unicode characters due to the fact that jpegtrans.exe does not support this.
@@ -385,8 +397,7 @@ Other changes:
 - Russian version of keymap and INI file (KeyMap_ru.txt, JPEGView_ru.ini) containig explanations in Russian. Be aware that
   these files must be renamed to KeyMap.txt and JPEGView.ini and copied over the original (English) versions when JPEGView shall use them.
 
-
-[1.0.25.1]
+[1.0.25.1] 2011-11-13
 - Rollback to VS2005 to compile the project because of problems with Windows 7 and Windows XP before SP2.
   The Windows 7 issues can be solved by using the latest versions of Windows SDK, WTL and ATL but the XP issue can't.
   JPEGView will remain on VS2005 at least for some versions.
@@ -395,7 +406,7 @@ Other changes:
   so WebP will not work in XP SP1 or earlier.
 - libwebp_a.dll made delay loaded - therefore JPEGView runs without this DLL when you do not need webp.
 
-[1.0.25]
+[1.0.25] 2011-11-13
 Bugs fixed:
 - Previous image now works correctly when WrapAroundFolder is set to false
 New features:
@@ -415,7 +426,7 @@ Other changes:
 Bugs fixed:
 - Crash fixed when zooming down images of some sizes to 10 %
 
-[1.0.24]
+[1.0.24] 2011-10-11
 Bugs fixed:
 - Navigation panel not truncated when window is small, instead the buttons are smaller.
   Tooltip texts are also no longer truncated in small windows.
@@ -436,7 +447,7 @@ Changed behaviour:
 - If the first image shown is smaller than the screen, JPEGView now starts in 'window fit to image' mode.
   To restore the old behavior (always use fullscreen), set ShowFullScreen=true in INI file
 
-[1.0.23]
+[1.0.23] 2011-03-07
 Bugs fixed:
 - Improved memory handling for very large images. Read ahead turned off for very large images.
   Also improved memory footprint for processing large images by stripwise processing.
@@ -456,13 +467,13 @@ New features:
 - New INI file setting: WrapAroundFolder.  Can be set to false to disable cyclic navigation
   within a folder (going from last to first image)
 
-[1.0.22.1]
+[1.0.22.1] 2011-02-16
 Bugs fixed:
 - Fixed crash on startup when ShowFullScreen=true in INI file
 New features:
 - Swedish translation (thanks to Åke)
 
-[1.0.22]
+[1.0.22] 2011-01-14
 Bugs fixed:
 - Copying EXIF data when saving image in screen size (Ctrl-Shift-S)
 - Fixed crash when window is minimized while slideshow is playing
@@ -481,7 +492,7 @@ New features:
 - Russian translation (thanks to Dmitry)
 - Updated Spanish translation (thanks to Daniel)
 
-[1.0.21]
+[1.0.21] 2010-07-16
 Bugs fixed:
 - After saving, navigation panel was not painted correctly sometimes
 New features:
@@ -501,9 +512,7 @@ New features:
   If set to true, Ctrl-S overrides the original file on disk, applying the current processings without showing a dialog or prompting the user to confirm.
   Use with care, the original file will be replaced by the processed file!
 
-
-[1.0.20]
-
+[1.0.20] 2010-06-01
 Bugs fixed:
 - Flag 'ReloadCurrent' used in user commands does no longer keep geometric parameters after reloading (zoom, pan, rotate)
 New features:
@@ -511,8 +520,7 @@ New features:
 - Korean translation
 - New INI file setting: DefaultSaveFormat to set the default format when saving images
 
-[1.0.19]
-
+[1.0.19] 2010-03-10
 Bugs fixed:
 - Corrected Italian translation
 - Hiding of mouse cursor when starting up in window mode and switching to fullscreen mode
@@ -532,9 +540,7 @@ New features:
 - Smooth blending in and out of the navigation panel if mouse not moved for some time
 - Thumbnail view behavior changed somewhat - pan by click supported
 
-
-[1.0.18]
-
+[1.0.18] 2008-11-15
 Bugs fixed:
 - Resize now possible to sizes smaller than 800 x 600
 - Renaming files with %x placeholder now works correctly
@@ -545,8 +551,7 @@ New features:
 - Italian translation updated
 - Toggle to window mode and back now first uses low quality sampling and improves quality on idle
 
-[1.0.17]
-
+[1.0.17] 2008-06-02
 Bugs removed:
 - Image processing panel no longer truncated on 1024x768 screens, sliders are smaller in this case
 New features:
@@ -557,14 +562,11 @@ New features:
 - New INI file setting (BackgroundColor) that allows setting the background color
 - New INI file setting (NavigateWithMouseWheel) that allows using the mouse wheel for navigation (Ctrl-Wheel for zoom)
 
-
-[1.0.16.1] (repack - binary files equal to 1.0.16)
-
+[1.0.16.1] (repack - binary files equal to 1.0.16) 2008-02-12
 New features:
 - Italian translation (thanks to Max)
 
-[1.0.16]
-
+[1.0.16] 2008-02-12
 Bugs removed:
 - PNGs with transparency (alpha channel) are now rendered correctly. Other formats supporting alpha channel
   are rendered correctly when GDI+ can render them correctly - I have not tested this.
@@ -587,8 +589,7 @@ New features:
 - New INI file setting (Language=xx) to force user interface language (default is to use operating system language if supported by JPEGView)
 - New INI file setting (StoreToEXEPath=true/false) forcing to write to config data and parameter DB to EXE path (used when installed on USB stick)
 
-[1.0.15]
-
+[1.0.15] 2007-12-27
 Bugs removed:
 - If using ClearType fonts, the button text on the image processing area is now rendered correctly
 - EXIF information is now also found if not placed directly after SOI in JPEG image (e.g. after an APP0 block)
@@ -609,8 +610,7 @@ Other changes:
 - Using Crop without Ctrl pressed when image cannot be dragged
 - New INI file entry: CreateParamDBEntryOnSave to disable/enable creation of a parameter DB entry for images saved in JPEGView
 
-[1.0.14]
-
+[1.0.14] 2007-11-09
 Bugs removed:
 - If a JPEG cannot be read with the IJL library, GDI+ is tried as a second chance
 - Copy/rename dialog: Replacement text can now be longer than text input field (auto scroll enabled)
@@ -631,8 +631,7 @@ Other changes:
 - Due to an internal code simplification, all parameter DB entries for BMP images created with older versions 
   are lost with 1.0.14. Note that other formats (e.g. JPG) are not affected.
 
-[1.0.13]
-
+[1.0.13] 2007-06-04
 Bugs removed:
 - Sorting by name now works correctly for names of the form X1 X1_y X2 X3
 - When saving default values to INI file using the context menu, these default values are now immediately in effect for the next images
@@ -647,6 +646,5 @@ Other changes:
   Note that while keeping parameters is on, storing to parameter DB is disabled.
 - ICO removed from supported format list - GDI+ claims to be able to read it but can't
 
-[1.0.12]
-
+[1.0.12] 2007-05-08
 First release to public
