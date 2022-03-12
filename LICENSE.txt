@@ -1,8 +1,8 @@
 JPEGView <https://github.com/sylikc/jpegview/> 
 Lean and fast image viewer with minimal GUI
 
+Copyright (C) 2020-2022 Kevin M (sylikc) <https://github.com/sylikc>
 Copyright (C) 2006-2018 David Kleiner (dkleiner) <https://sourceforge.net/u/dkleiner/profile/>
-Copyright (C) 2020-2021 Kevin M (sylikc) <https://github.com/sylikc>
 
 This program is free software; you can redistribute it and/or modify 
 it under the terms of the GNU General Public License as published by 
