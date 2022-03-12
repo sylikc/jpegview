@@ -22,4 +22,8 @@
 	<String Id="FeatureMainProgramDescription">The main version including all dependencies.</String>
 	<String Id="FeatureMainProgramTitle">Main program</String>
 
+	<String Id="DescREG">JPEGView Associated File</String>
+	<String Id="ExplorerMenuEditREG">Edit with JPEGView</String>
+	<String Id="ExplorerMenuOpenREG">Open with JPEGView</String>
+
 </WixLocalization>
