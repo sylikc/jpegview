@@ -6,9 +6,9 @@
 //TranslatorName=Hiroyuki Matenokoji, maboroshin
 //Contact=none
 //TranslatorURL=https://pc.genkaku.in/
-//LastUpdated=Nov 14, 2019
+//LastUpdated=Mar 14, 2022
 // 1st Japanese translation : by Hiroyuki Matenokoji. (2015)
-// 2nd translator: Japanese by maboroshin (2019, Adjustment, and translate little new part)
+// 2nd translator: Japanese by maboroshin (2019-2022, Adjustment, and translate little new part)
 Contrast	コントラスト
 Brightness	明るさ
 Sharpen	シャープ
@@ -21,13 +21,13 @@ Parameter DB:	パラメーターファイル:
 Save to	保存
 Remove from	削除
 Rename:	名前の変更
-No file or folder name was provided as command line parameter!	コマンド中にファイル名またはフォルダ名の指定がありません
+No file or folder name was provided as command line parameter!	コマンド中にファイル名かフォルダ名の指定がありません
 To use JPEGView, associate JPG, JPEG and BMP files with JPEGView.	JPEGView を使うには、JPG、JPEG、BMPファイルを JPEGViewに 関連付けしてください
 Press ESC to exit...	F1: ヘルプ, ESC で終了...
-The file '%s' could not be read!	 次のファイルを読み込めません。 %s
-The file '%s' does not contain a list of file names!	次のファイルにファイル名の一覧が含まれていません。 %s
-The directory '%s' does not contain any image files!	次のフォルダに画像ファイルはありません。 %s
-Press any key to search the subdirectories for image files.	サブフォルダ内の画像を探索するには何かキーを押してください。
+The file '%s' could not be read!	 このファイルを読み込めません。 %s
+The file '%s' does not contain a list of file names!	このファイル内にファイル名の一覧はありません。 %s
+The directory '%s' does not contain any image files!	このフォルダに画像ファイルはありません。 %s
+Press any key to search the subdirectories for image files.	サブフォルダ内の画像を探索するには何かキーを押します。
 JPEGView Help	JPEGView ヘルプ
 Current image	表示中の画像
 Close help text display / Close JPEGView	ヘルプを閉じる / JPEGView の終了
@@ -45,14 +45,14 @@ Increase/decrease darkening of highlights (LDC must be on)	ハイライトを暗
 Loop through files in current folder	フォルダ内を巡回
 Loop through files in current directory and all subfolders	すべての下位フォルダも巡回
 Loop through files in current directory and all sibling folders (folders on same level)	同列のフォルダも巡回
-Maximize/restore to/from virtual desktop (only for multi-monitor systems)	マルチディスプレイ環境で最大化/復元
+Maximize/restore to/from virtual desktop (only for multi-monitor systems)	最大化/復元 (マルチモニター環境のみ)
 Copy screen to clipboard/ Copy processed full size image to clipboard	画面をクリップボードにコピー/加工したフルサイズ画像をクリップボードにコピー
 Open new image or slideshow file	画像またはスライドショーを開く
 Save processed image to JPEG file (original size)	加工した画像をJPEGファイルに保存
 Save (%s)/ delete (%s) image processing parameters in/from parameter DB	画像加工のパラメーターを保存(%s)/削除(%s) 
 Sort images by creation date, resp. modification date, resp. file name	作成日時/更新日時/ファイル名で画像を並び替え
-Goto previous image	前の画像に戻る
-Goto next image	次の画像に進む
+Goto previous image	前の画像
+Goto next image	次の画像
 PgUp or Left	PgUp または 左矢印
 PgDn or Right	PgDown または 右矢印
 Goto first/last image of current folder (using sort order as defined)	フォルダ内の最初/最後の画像 (表示順に従う)
@@ -64,8 +64,8 @@ Increase/decrease auto contrast correction amount	コントラストの調整量
 Enable/disable landscape picture enhancement mode	横長画像の拡張モードを有効化/無効化
 Slide show with timeout of n seconds (ESC to stop)	スライドショー切り替えの秒間隔 (ESCキーで停止)
 Set timeout to n/10 sec, respectively n/100 sec (Ctrl+Shift)	秒間隔を 1/10秒で設定、Ctrl+Shift で 1/100秒
-Rotate image and fit to screen	画像を回転しウィンドウを画像にフィット
-Fit image to screen	画像をモニターにフィット
+Rotate image and fit to screen	画像の回転と画面にフィット
+Fit image to screen	画像を画面にフィット
 Zoom 1:1 (100 %)	実寸表示 1:1 (100%)
 Zoom in (%s)/Zoom out (%s)	拡大(%s)/縮小(%s)
 Zoom in/out image	拡大/縮小
@@ -123,7 +123,7 @@ Paste from clipboard	クリップボードから貼り付け
 Batch rename/copy...	一括で改名/コピー...
 Show picture info (EXIF)	画像情報(EXIF)を表示
 Show filename	ファイル名を表示
-Navigation	ナビゲーション
+Navigation	巡回方法
 Loop folder	フォルダ内を巡回
 Loop recursively	下位フォルダも巡回
 Loop siblings	同列のフォルダも巡回
@@ -145,12 +145,12 @@ Set current parameters as default values...	現在のパラメーターを規定
 Save parameters to DB	パラメーターを保存する
 Clear parameters from DB	パラメーターを初期化
 Zoom	拡大
-Fit to screen	モニターにフィット
-Fill with crop	ウィンドウに合わせて拡大
-Span all screens	マルチスクリーン横断
+Fit to screen	画面にフィット
+Fill with crop	黒枠を切り抜いてフィット
+Span all screens	マルチモニター横断
 Auto zoom mode	自動拡大の方法
-Fit to screen (no zoom)	モニターにフィット (拡大なし)
-Fill with crop (no zoom)	ウィンドウに合わせて拡大 (拡大なし)
+Fit to screen (no zoom)	画面にフィット (拡大なし)
+Fill with crop (no zoom)	黒枠を切り抜いてフィット (拡大なし)
 Exit	終了
 Cyan-Red	シアン/赤
 Magenta-Green	マゼンタ/緑
@@ -159,7 +159,7 @@ C - R	C - V
 M - G	M - V
 Y - B	A - A
 Batch rename/copy of files	ファイルを一括で改名/コピー
-Image files in folder	次のフォルダ内の画像ファイル: 
+Image files in folder	このフォルダ内の画像ファイル: 
 Placeholders:	引数の使用:
 Number (consecutively numbered)	通し番号
 Number with N digits	N桁の番号
@@ -206,8 +206,8 @@ ISO Speed:	ISO感度:
 Modification date:	更新日時:
 yes	あり
 no	なし
-Show navigation panel	ナビゲーションパネルを表示
-Show/hide navigation panel	ナビゲーションパネルを表示/非表示
+Show navigation panel	操作パネルを表示
+Show/hide navigation panel	操作パネルを表示/非表示
 About JPEGView...	JPEGView について...
 About JPEGView (64 bit version)...	JPEGView (64bit版) について...
 SIMD mode used:	使用したSIMDの種類:
@@ -223,7 +223,7 @@ Rotate image 90 deg counter-clockwise	左回り90度回転
 Landscape picture enhancement mode	横長画像の拡張モード
 Display image (EXIF) information	画像情報(EXIF)を表示	
 Actual size of image	実際の画像サイズ
-Toggle between screens (only for multi-monitor systems)	マルチディスプレイで別画面に表示
+Toggle between screens (only for multi-monitor systems)	マルチモニターで別画面に表示
 Enable/disable full screen mode	全画面表示を有効化/無効化
 Full screen mode	全画面表示
 Window mode	ウィンドウ表示
@@ -366,13 +366,13 @@ Applications	アプリケーション
 Select application	アプリケーションを選択
 Save	保存
 Edit	編集
-Upcounting	増やす
-Downcounting	減らす
+Upcounting	順増
+Downcounting	順減
 File size	ファイルサイズ
 Do you really want to delete the current image file on disk?	この画像ファイルを削除しますか？
 Delete image file	画像ファイルを削除
 Change size...	サイズ変更...
-Resize Image	リサイズ
+Resize Image	画像サイズの変更
 OK	OK
 New size:	サイズの指定:
 New width:	幅の指定:
