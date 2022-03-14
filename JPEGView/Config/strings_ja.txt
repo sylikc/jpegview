@@ -61,7 +61,7 @@ Increase/decrease contrast	コントラストの増減
 Increase/decrease sharpness	シャープの増減
 Increase/decrease auto color cast correction amount	色の調整量の増減
 Increase/decrease auto contrast correction amount	コントラストの調整量の増減
-Enable/disable landscape picture enhancement mode	横長画像の拡張モードを有効化/無効化
+Enable/disable landscape picture enhancement mode	風景画像の改善モードを有効化/無効化
 Slide show with timeout of n seconds (ESC to stop)	スライドショー切り替えの秒間隔 (ESCキーで停止)
 Set timeout to n/10 sec, respectively n/100 sec (Ctrl+Shift)	秒間隔を 1/10秒で設定、Ctrl+Shift で 1/100秒
 Rotate image and fit to screen	画像の回転と画面にフィット
@@ -220,7 +220,7 @@ Show next image	次の画像を表示
 Show last image in folder	フォルダ内の最後の画像を表示
 Rotate image 90 deg clockwise	右回り90度回転
 Rotate image 90 deg counter-clockwise	左回り90度回転
-Landscape picture enhancement mode	横長画像の拡張モード
+Landscape picture enhancement mode	風景画像の改善モード
 Display image (EXIF) information	画像情報(EXIF)を表示	
 Actual size of image	実際の画像サイズ
 Toggle between screens (only for multi-monitor systems)	マルチモニターで別画面に表示
