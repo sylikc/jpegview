@@ -123,7 +123,7 @@ Paste from clipboard	クリップボードから貼り付け
 Batch rename/copy...	一括で改名/コピー...
 Show picture info (EXIF)	画像情報(EXIF)を表示
 Show filename	ファイル名を表示
-Navigation	巡回方法
+Navigation	巡回先
 Loop folder	フォルダ内を巡回
 Loop recursively	下位フォルダも巡回
 Loop siblings	同列のフォルダも巡回
@@ -208,8 +208,8 @@ yes	あり
 no	なし
 Show navigation panel	操作パネルを表示
 Show/hide navigation panel	操作パネルを表示/非表示
-About JPEGView...	JPEGView について...
-About JPEGView (64 bit version)...	JPEGView (64bit版) について...
+About JPEGView...	JPEGViewについて...
+About JPEGView (64 bit version)...	JPEGView (64bit版)について...
 SIMD mode used:	使用したSIMDの種類:
 Number of CPU cores used:	CPUコア数:
 Licensed under the GNU general public license (GPL), see readme file for details:	GNU general public license (GPL) に準拠、詳細は readme をお読みください:
@@ -250,7 +250,7 @@ Height	高さ
 Pixels	ピクセル
 Screen Pixels	モニターのピクセル数
 Image Pixels	画像のピクセル数
-Set modification date	更新日を設定
+Set modification date	更新日時を設定
 to current date	現在の日時
 to EXIF date	EXIFの日時
 Mark image for toggling. Use %s to toggle between marked and current image	切り替え画像に指定。 %s で現在の画像と切り替え
