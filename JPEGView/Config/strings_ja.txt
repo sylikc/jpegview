@@ -21,13 +21,13 @@ Parameter DB:	パラメーターファイル:
 Save to	保存
 Remove from	削除
 Rename:	名前の変更
-No file or folder name was provided as command line parameter!	コマンドにファイル名またはフォルダー名の指定がありません
+No file or folder name was provided as command line parameter!	コマンド中にファイル名またはフォルダ名の指定がありません
 To use JPEGView, associate JPG, JPEG and BMP files with JPEGView.	JPEGView を使うには、JPG、JPEG、BMPファイルを JPEGViewに 関連付けしてください
 Press ESC to exit...	F1: ヘルプ, ESC で終了...
-The file '%s' could not be read!	 ファイルを読み込めません。 %s
-The file '%s' does not contain a list of file names!	ファイルにファイル名の一覧が含まれていません。 %s
-The directory '%s' does not contain any image files!	フォルダー画像ファイルがありません。 %s
-Press any key to search the subdirectories for image files.	サブフォルダーの画像を検索するには何かキーを押してください。
+The file '%s' could not be read!	 次のファイルを読み込めません。 %s
+The file '%s' does not contain a list of file names!	次のファイルにファイル名の一覧が含まれていません。 %s
+The directory '%s' does not contain any image files!	次のフォルダに画像ファイルはありません。 %s
+Press any key to search the subdirectories for image files.	サブフォルダ内の画像を探索するには何かキーを押してください。
 JPEGView Help	JPEGView ヘルプ
 Current image	表示中の画像
 Close help text display / Close JPEGView	ヘルプを閉じる / JPEGView の終了
@@ -42,9 +42,9 @@ Apply auto contrast correction using only visible section of image	可視部分�
 Enable/disable automatic density correction (local brightness correction)	濃度の自動調整 (明るさ調整) を有効化/無効化
 Increase/decrease lightening of shadows (LDC must be on)	影を明るく/暗く (LDC がオンの場合)
 Increase/decrease darkening of highlights (LDC must be on)	ハイライトを暗く/明るく (LDC がオンの場合)
-Loop through files in current folder	フォルダー内を巡回
-Loop through files in current directory and all subfolders	すべての下位フォルダーも巡回
-Loop through files in current directory and all sibling folders (folders on same level)	同列のフォルダーも巡回
+Loop through files in current folder	フォルダ内を巡回
+Loop through files in current directory and all subfolders	すべての下位フォルダも巡回
+Loop through files in current directory and all sibling folders (folders on same level)	同列のフォルダも巡回
 Maximize/restore to/from virtual desktop (only for multi-monitor systems)	マルチディスプレイ環境で最大化/復元
 Copy screen to clipboard/ Copy processed full size image to clipboard	画面をクリップボードにコピー/加工したフルサイズ画像をクリップボードにコピー
 Open new image or slideshow file	画像またはスライドショーを開く
@@ -55,7 +55,7 @@ Goto previous image	前の画像に戻る
 Goto next image	次の画像に進む
 PgUp or Left	PgUp または 左矢印
 PgDn or Right	PgDown または 右矢印
-Goto first/last image of current folder (using sort order as defined)	フォルダー内の最初/最後の画像 (表示順に従う)
+Goto first/last image of current folder (using sort order as defined)	フォルダ内の最初/最後の画像 (表示順に従う)
 Increase/decrease brightness	明るさの増減
 Increase/decrease contrast	コントラストの増減
 Increase/decrease sharpness	シャープの増減
@@ -96,7 +96,7 @@ Order files by:	ファイルの順序:
 Creation date/time	作成日時
 Last modification date/time	最終更新日時
 File name	ファイル名
-These values will override the values from the INI file located in the program folder of JPEGView!	このパラメーターはJPEGViewフォルダー内のINIファイルの設定よりも優先されます
+These values will override the values from the INI file located in the program folder of JPEGView!	このパラメーターはJPEGViewフォルダ内のINIファイルの設定よりも優先されます
 Confirm save default parameters	パラメーターを既定として保存の確認
 Images	画像
 All Files	すべてのファイル
@@ -124,13 +124,13 @@ Batch rename/copy...	一括で改名/コピー...
 Show picture info (EXIF)	画像情報(EXIF)を表示
 Show filename	ファイル名を表示
 Navigation	ナビゲーション
-Loop folder	フォルダー内を巡回
-Loop recursively	下位フォルダーも巡回
-Loop siblings	同列のフォルダーも巡回
+Loop folder	フォルダ内を巡回
+Loop recursively	下位フォルダも巡回
+Loop siblings	同列のフォルダも巡回
 Display order	表示順
 Modification date	更新日時
 Creation date	作成日時
-Play folder as slideshow/movie	スライドショー/動画でフォルダーを表示
+Play folder as slideshow/movie	スライドショー/動画でフォルダを表示
 Slideshow	スライドショー
 Movie	動画
 Waiting time	待ち時間
@@ -143,12 +143,12 @@ Local density correction	濃度の調整
 Keep parameters	パラメーターを保持
 Set current parameters as default values...	現在のパラメーターを規定にする...
 Save parameters to DB	パラメーターを保存する
-Clear parameters from DB	パラメーターを初期化する
+Clear parameters from DB	パラメーターを初期化
 Zoom	拡大
 Fit to screen	モニターにフィット
 Fill with crop	ウィンドウに合わせて拡大
 Span all screens	マルチスクリーン横断
-Auto zoom mode	自動拡大モード
+Auto zoom mode	自動拡大の方法
 Fit to screen (no zoom)	モニターにフィット (拡大なし)
 Fill with crop (no zoom)	ウィンドウに合わせて拡大 (拡大なし)
 Exit	終了
@@ -159,7 +159,7 @@ C - R	C - V
 M - G	M - V
 Y - B	A - A
 Batch rename/copy of files	ファイルを一括で改名/コピー
-Image files in folder	次のフォルダー内の画像ファイル: 
+Image files in folder	次のフォルダ内の画像ファイル: 
 Placeholders:	引数の使用:
 Number (consecutively numbered)	通し番号
 Number with N digits	N桁の番号
@@ -167,7 +167,7 @@ Extracted number from original file name	元のファイル名中の数値 (最�
 Original file name (with extension)	元のファイル名(拡張子含む)
 Original file name (without extension)	元のファイル名(拡張子除く)
 Original file extension	元のファイルの拡張子
-'My Pictures' folder	「ピクチャ」フォルダー
+'My Pictures' folder	「ピクチャ」フォルダ
 Day / Month / Year (as numbers)	日 / 月 / 年 (数字)
 Year short form (2 digits)	年数2桁
 Month / Short form (text)	数字+月 / 月の数字のみ (システムの言語による)
@@ -188,7 +188,7 @@ copied	コピー
 renamed	改名
 Continue rename/copy?	改名/コピーを続けますか？
 Error during rename/copy	改名/コピーのエラー
-%d file(s) renamed, %d file(s) copied, %d folder(s) created	%d個を改名 %d個をコピー %d個のフォルダーを作成
+%d file(s) renamed, %d file(s) copied, %d folder(s) created	%d個を改名 %d個をコピー %d個のフォルダを作成
 Crop Selection	選択範囲を切り取り
 Copy Selection to Clipboard	選択範囲をクリップボードにコピー
 Zoom to Selection	選択範囲を拡大
@@ -210,23 +210,23 @@ Show navigation panel	ナビゲーションパネルを表示
 Show/hide navigation panel	ナビゲーションパネルを表示/非表示
 About JPEGView...	JPEGView について...
 About JPEGView (64 bit version)...	JPEGView (64bit版) について...
-SIMD mode used:	SIMDモード:
+SIMD mode used:	使用したSIMDの種類:
 Number of CPU cores used:	CPUコア数:
 Licensed under the GNU general public license (GPL), see readme file for details:	GNU general public license (GPL) に準拠、詳細は readme をお読みください:
 Project home page:	プロジェクトのホームページ:
-Show first image in folder	フォルダー内の最初の画像を表示
+Show first image in folder	フォルダ内の最初の画像を表示
 Show previous image	前の画像を表示
 Show next image	次の画像を表示
-Show last image in folder	フォルダー内の最後の画像を表示
+Show last image in folder	フォルダ内の最後の画像を表示
 Rotate image 90 deg clockwise	右回り90度回転
 Rotate image 90 deg counter-clockwise	左回り90度回転
 Landscape picture enhancement mode	横長画像の拡張モード
 Display image (EXIF) information	画像情報(EXIF)を表示	
 Actual size of image	実際の画像サイズ
 Toggle between screens (only for multi-monitor systems)	マルチディスプレイで別画面に表示
-Enable/disable full screen mode	全画面モードを有効化/無効化
-Full screen mode	全画面モード
-Window mode	ウィンドウモード
+Enable/disable full screen mode	全画面表示を有効化/無効化
+Full screen mode	全画面表示
+Window mode	ウィンドウ表示
 Save as (in screen size/resolution)	名前を付けて保存 (画面サイズ/解像度)
 Save processed image to JPEG file (screen size)	加工した画像をJPEGに保存 (画面サイズ)
 Settings/Admin	設定/管理者
@@ -234,14 +234,14 @@ Edit global settings...	共通設定の変更...
 Edit user settings...	個人設定の変更...
 Backup parameter DB...	パラメーターのバックアップ...
 Restore parameter DB...	バックアップしたパラメーターの復元...
-No user INI file exits yet. Create user INI file from INI file template?	個人INIがありません。テンプレートから新規のINIファイルを作成しますか？
+No user INI file exits yet. Create user INI file from INI file template?	個人用のINIがありません。テンプレートから新規のINIファイルを作成しますか？
 Copying parameter DB to file '%s' failed. Reason: %s	ファイル %s へのパラメーターのコピーが失敗しました。原因: %s
 Select parameter DB to restore	復元するパラメーターファイルを選択
 Conflicting entries in Param DB	パラメーターの設定に競合があります
 The imported param DB contains entries already present in active param DB.	インポートしたパラメーターが現在有効なパラメーターと競合します。
 Shall existing entries be preserved (Yes) or be overriden by the imported entries (No)?	現在のパラメーターを維持(Yes)、インポートを有効化(No)
 Select file to display in 'File Open' dialog	画像ファイルを「開く」で選択
-Crop Mode	切り取りモード
+Crop Mode	切り取り比
 Free	自由選択
 Fixed size...	固定サイズ...
 Set Fixed Crop Size	切り取りサイズの固定
@@ -254,7 +254,7 @@ Set modification date	更新日を設定
 to current date	現在の日時
 to EXIF date	EXIFの日時
 Mark image for toggling. Use %s to toggle between marked and current image	切り替え画像に指定。 %s で現在の画像と切り替え
-Saturation	再度
+Saturation	彩度
 Unsharp mask...	ぼかしマスク...
 Apply Unsharp Mask	ぼかしマスクを適用
 Radius	半径
@@ -275,8 +275,8 @@ Align image to horizontal or vertical line	縦/横の線に揃える
 Use the mouse to draw a line that shall be horizontal or vertical.	マウスで縦か横の線を描きます。
 Rotate the image by dragging with the mouse.	マウスのドラッグで回転します。
 The operation failed because not enough memory is available!	メモリー不足で操作に失敗
-to EXIF date (all files in folder)	EXIFの日時 (フォルダー内すべて)
-Number of JPEG files in folder: %d	フォルダー内のJPEGファイル数: %d
+to EXIF date (all files in folder)	EXIFの日時 (フォルダ内すべて)
+Number of JPEG files in folder: %d	フォルダ内のJPEGファイル数: %d
 EXIF date successfully set on %d images, failed on %d images	EXIFの日時に設定 成功:%d, 失敗:%d
 Reason: Not enough memory available	原因: メモリー不足
 Transform image	画像の変形
@@ -415,4 +415,5 @@ Update user settings...	個人設定の更新...
 Update user settings with new settings from settings template file?	設定用テンプレートファイルの新しい設定で個人設定を更新しますか？
 All existing user settings will be preserved.	すべての個人設定は保存されます。
 Location:	位置情報:
-Altitude (m):	標高 (メートル)
+Altitude (m): 標高 (メートル):
+Open containing folder in Explorer	エクスプローラーで含むフォルダを開く
