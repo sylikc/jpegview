@@ -15,7 +15,7 @@ Sharpen	シャープ
 Lighten Shadows	シャドーを明るく
 Darken Highlights	ハイライトを暗く
 Deep Shadows	最も暗い部分
-Color Correction	色の調整
+Color Correction	色補正
 Contrast Correction	コントラストの調整
 Parameter DB:	パラメーターファイル:
 Save to	保存
@@ -37,9 +37,9 @@ Show/hide file name	ファイル名を表示/非表示
 Enable/disable high quality resampling	高品質表示を有効化/無効化
 Enable/disable keeping of geometry related (zoom/pan/rotation)	拡大・縮小・回転でGPS座標情報を保持する/しない
 and image processing (brightness/contrast/sharpen) parameters between images	明るさ、コントラスト、シャープのパラメーターを保持
-Enable/disable automatic contrast correction (histogram equalization)	コントラストの自動調整 (ヒストグラム均等化) を有効化/無効化
-Apply auto contrast correction using only visible section of image	可視部分のコントラストを自動調整
-Enable/disable automatic density correction (local brightness correction)	濃度の自動調整 (明るさ調整) を有効化/無効化
+Enable/disable automatic contrast correction (histogram equalization)	コントラストの自動補正 (ヒストグラム均等化) を有効化/無効化
+Apply auto contrast correction using only visible section of image	可視部分のコントラストを自動補正
+Enable/disable automatic density correction (local brightness correction)	色濃度の自動補正 (明るさ調整) を有効化/無効化
 Increase/decrease lightening of shadows (LDC must be on)	影を明るく/暗く (LDC がオンの場合)
 Increase/decrease darkening of highlights (LDC must be on)	ハイライトを暗く/明るく (LDC がオンの場合)
 Loop through files in current folder	フォルダ内を巡回
@@ -59,8 +59,8 @@ Goto first/last image of current folder (using sort order as defined)	フォル�
 Increase/decrease brightness	明るさの増減
 Increase/decrease contrast	コントラストの増減
 Increase/decrease sharpness	シャープの増減
-Increase/decrease auto color cast correction amount	色の調整量の増減
-Increase/decrease auto contrast correction amount	コントラストの調整量の増減
+Increase/decrease auto color cast correction amount	色の自動補正量の増減
+Increase/decrease auto contrast correction amount	コントラストの自動補正量の増減
 Enable/disable landscape picture enhancement mode	風景画像の改善モードを有効化/無効化
 Slide show with timeout of n seconds (ESC to stop)	スライドショー切り替えの秒間隔 (ESCキーで停止)
 Set timeout to n/10 sec, respectively n/100 sec (Ctrl+Shift)	秒間隔を 1/10秒で設定、Ctrl+Shift で 1/100秒
@@ -91,13 +91,13 @@ on	オン
 off	オフ
 Do you really want to save the following parameters as default to the INI file	以下のパラメーターを規定としてINIファイルに保存しますか？
 Auto contrast and color correction:	自動でコントラストと色を補正:
-Local density correction:	濃度調整:
+Local density correction:	色濃度の補正:
 Order files by:	ファイルの順序:
 Creation date/time	作成日時
 Last modification date/time	最終更新日時
 File name	ファイル名
 These values will override the values from the INI file located in the program folder of JPEGView!	このパラメーターはJPEGViewフォルダ内のINIファイルの設定よりも優先されます
-Confirm save default parameters	パラメーターを既定として保存の確認
+Confirm save default parameters	既定のパラメーターの保存を確認
 Images	画像
 All Files	すべてのファイル
 Parameter DB file '%s' could not be opened!	パラメーターファイルが開けません。 %s
@@ -106,7 +106,7 @@ Cannot write to parameter DB file '%s'!	パラメーターファイルに書き�
 Cannot read from parameter DB file '%s'!	パラメーターファイルを読み込めません。 %s
 Cannot read parameter DB file '%s' because it is too large!	パラメーターファイルが大きすぎます。 %s
 The parameter DB file '%s' has been created by a newer version of JPEGView!	パラメーターファイル %s が新しいバージョンの JPEGView で作成されています。
-The old parameter DB file '%s' could not be renamed during conversion to new format!	古い形式のパラメーターファイル %s を新しいフォーマットに変換できません。
+The old parameter DB file '%s' could not be renamed during conversion to new format!	古い形式のパラメーターファイル %s を新しい形式に変換できません。
 Parameter DB error	パラメーターファイルのエラー
 Error saving file	ファイル保存エラー
 Error writing file to disk!	ファイル書き込みエラー
@@ -138,12 +138,12 @@ Stop slide show/movie	スライドショー/動画を停止
 Rotate +90	+90度回転
 Rotate -90	-90度回転
 Rotate 180	180度回転
-Auto correction	自動調整
-Local density correction	濃度の調整
+Auto correction	自動補正
+Local density correction	色濃度の補正
 Keep parameters	パラメーターを保持
-Set current parameters as default values...	現在のパラメーターを規定にする...
-Save parameters to DB	パラメーターを保存する
-Clear parameters from DB	パラメーターを初期化
+Set current parameters as default values...	現在のパラメーターを規定に設定...
+Save parameters to DB	パラメーターデータを記憶
+Clear parameters from DB	パラメーターデータの記憶を消去
 Zoom	拡大
 Fit to screen	画面にフィット
 Fill with crop	黒枠を切り抜いてフィット
