@@ -414,3 +414,4 @@ Update user settings with new settings from settings template file?	Обнови
 All existing user settings will be preserved.	Все имеющиеся пользовательские настройки будут сохранены.
 Location:	Место:
 Altitude (m):	Высота на уровнем моря (м):
+Open containing folder in Explorer	Показать в папке
