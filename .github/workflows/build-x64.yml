@@ -1,0 +1,54 @@
+name: Build Test x64
+# later it'll test and maybe lint
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+
+    env:
+      # version of WTL to test with
+      wtl-url: https://sourceforge.net/projects/wtl/files/WTL%2010/WTL%2010.0.10320%20Release/WTL10_10320_Release.zip/download
+      # place it'll be extracted to, make this unique on new version changes, as it's used in cache
+      wtl-folder: WTL10_10320_Release
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: setup-msbuild
+      # https://github.com/marketplace/actions/setup-msbuild
+      uses: microsoft/setup-msbuild@v1.1
+      with:
+        # Fixed on Visual Studio 2019 -- https://docs.microsoft.com/en-us/visualstudio/releases/2019/history
+        vs-version: '[,17.0)'
+        msbuild-architecture: x64
+
+    # https://gist.github.com/hibearpanda/d5b5b58bd319132ffd7af606ffa333fc
+    #  https://github.com/felixrieseberg/electron-wix-msi/issues/1#issuecomment-674598795
+    #  https://docs.github.com/en/free-pro-team@latest/actions/reference/workflow-commands-for-github-actions#adding-a-system-path
+    #  https://stackoverflow.com/a/64831469
+    #  https://github.community/t/set-path-for-wix-toolset-in-windows-runner/154708
+    - name: Set path for candle and light
+      env:
+        WIX_PATH: ${{ env.wix }}
+      run: echo "$env:WIX_PATH\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+
+    - name: Cache WTL
+      # https://docs.github.com/en/actions/using-workflows/caching-dependencies-to-speed-up-workflows
+      uses: actions/cache@v2
+      env:
+        cache-name: cache-wtl
+      with:
+        # path where we would extract the ExifTool source files
+        path: ${{ env.wtl-folder }}
+        key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ env.wtl-folder }}
+
+    # https://github.community/t/download-remote-file-in-github-actions/175417
+    # https://support.moonpoint.com/os/windows/PowerShell/wget-curl.php
+    - name: Download WTL
+      run: IF EXIST "${{ env.wtl-folder }}" (echo Cache found, not downloading) ELSE (Invoke-WebRequest -OutFile wtl.zip "${{ env.wtl-url }}")
+
+    - name: Build Solution
+      run: msbuild.exe JPEGView.sln
