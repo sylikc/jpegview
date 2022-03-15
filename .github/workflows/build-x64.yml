@@ -69,14 +69,14 @@ jobs:
 
 
     - name: Build Solution
+      # didn't work for some reason
+      #msbuild.exe /property:AdditionalIncludePaths="${{ env.wtl-folder }}\Include" /property:Platform=x64 JPEGView.sln
+      #msbuild.exe /property:IncludePath="${{ env.wtl-folder }}\Include" /property:Platform=x64 JPEGView.sln
+      # https://stackoverflow.com/questions/60516987/msbuild-2019-ignores-include-environment-variable
       run: |
-        # didn't work for some reason
-        #msbuild.exe /property:AdditionalIncludePaths="${{ env.wtl-folder }}\Include" /property:Platform=x64 JPEGView.sln
-        #msbuild.exe /property:IncludePath="${{ env.wtl-folder }}\Include" /property:Platform=x64 JPEGView.sln
-
-
-        # https://stackoverflow.com/questions/60516987/msbuild-2019-ignores-include-environment-variable
         SET IncludePath="${{ env.wtl-folder }}\Include"
+        SET
+        echo %IncludePath%
         msbuild.exe /property:Platform=x64 JPEGView.sln
 
       shell: cmd
