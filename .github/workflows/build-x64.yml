@@ -39,6 +39,7 @@ jobs:
         # https://github.community/t/set-path-for-wix-toolset-in-windows-runner/154708/3
         $env:Path += ";C:\Program Files (x86)\WiX Toolset v3.11\bin"
         echo "$PATH"
+        # check that they're found
         where.exe candle.exe
         where.exe light.exe
 
@@ -54,7 +55,7 @@ jobs:
 
     # https://github.community/t/download-remote-file-in-github-actions/175417
     # https://support.moonpoint.com/os/windows/PowerShell/wget-curl.php
-    - name: Download WTL
+    - name: Download WTL if Needed
       run: |
         if ( Test-Path -Path "${{ env.wtl-folder }}" ) {
           echo "Cache found, not downloading"
@@ -67,15 +68,14 @@ jobs:
           7z x wtl.zip -o"${{ env.wtl-folder }}"
         }
 
-
     - name: Build Solution
       # didn't work for some reason
       #msbuild.exe /property:AdditionalIncludePaths="${{ env.wtl-folder }}\Include" /property:Platform=x64 JPEGView.sln
       #msbuild.exe /property:IncludePath="${{ env.wtl-folder }}\Include" /property:Platform=x64 JPEGView.sln
       # https://stackoverflow.com/questions/60516987/msbuild-2019-ignores-include-environment-variable
       run: |
+        REM must be unquoted!
         SET IncludePath=%CD%\${{ env.wtl-folder }}\Include
-        SET
         echo %IncludePath%
         msbuild.exe /property:Platform=x64 JPEGView.sln
 
