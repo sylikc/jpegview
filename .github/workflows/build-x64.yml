@@ -63,13 +63,16 @@ jobs:
           # https://stackoverflow.com/questions/69552662/how-to-download-a-file-from-sourceforge-using-powershell
           # if you don't use UserAgent, the whole file doesn't come out ...
           Invoke-WebRequest -UserAgent "Wget" -OutFile wtl.zip "${{ env.wtl-url }}"
-          Get-ChildItem
+          #Get-ChildItem
           7z x wtl.zip -o"${{ env.wtl-folder }}"
-
-          Get-ChildItem "${{ env.wtl-folder }}"
-          Get-ChildItem "${{ env.wtl-folder }}\Include"
         }
 
 
     - name: Build Solution
-      run: msbuild.exe /property:AdditionalIncludePaths="${{ env.wtl-folder }}\Include" /property:Platform=x64 JPEGView.sln
+      run: |
+        # didn't work for some reason
+        #msbuild.exe /property:AdditionalIncludePaths="${{ env.wtl-folder }}\Include" /property:Platform=x64 JPEGView.sln
+
+        # https://stackoverflow.com/questions/60516987/msbuild-2019-ignores-include-environment-variable
+        $env:IncludePath = "${{ env.wtl-folder }}\Include"
+        msbuild.exe /property:Platform=x64 JPEGView.sln
