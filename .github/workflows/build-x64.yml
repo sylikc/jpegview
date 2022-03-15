@@ -15,14 +15,14 @@ jobs:
       wtl-folder: WTL10_10320_Release
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
 
     - name: setup-msbuild
       # https://github.com/marketplace/actions/setup-msbuild
       uses: microsoft/setup-msbuild@v1.1
       with:
         # Fixed on Visual Studio 2019 -- https://docs.microsoft.com/en-us/visualstudio/releases/2019/history
-        vs-version: '[,17.0)'
+        vs-version: '[16.0,17.0)'
         msbuild-architecture: x64
 
     # https://gist.github.com/hibearpanda/d5b5b58bd319132ffd7af606ffa333fc
@@ -48,7 +48,15 @@ jobs:
     # https://github.community/t/download-remote-file-in-github-actions/175417
     # https://support.moonpoint.com/os/windows/PowerShell/wget-curl.php
     - name: Download WTL
-      run: IF EXIST "${{ env.wtl-folder }}" (echo Cache found, not downloading) ELSE (Invoke-WebRequest -OutFile wtl.zip "${{ env.wtl-url }}")
+      run: |
+        if ( Test-Path -Path "${{ env.wtl-folder }}" ) {
+          echo Cache found, not downloading
+        } else {
+          echo Need to Download
+          Invoke-WebRequest -OutFile wtl.zip "${{ env.wtl-url }}"
+          7z e wtl.zip -o"${{ env.wtl-folder }}"
+        }
+
 
     - name: Build Solution
       run: msbuild.exe JPEGView.sln
