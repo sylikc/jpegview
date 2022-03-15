@@ -74,7 +74,7 @@ jobs:
       #msbuild.exe /property:IncludePath="${{ env.wtl-folder }}\Include" /property:Platform=x64 JPEGView.sln
       # https://stackoverflow.com/questions/60516987/msbuild-2019-ignores-include-environment-variable
       run: |
-        SET IncludePath="${{ env.wtl-folder }}\Include"
+        SET IncludePath="%CD%\${{ env.wtl-folder }}\Include"
         SET
         echo %IncludePath%
         msbuild.exe /property:Platform=x64 JPEGView.sln
