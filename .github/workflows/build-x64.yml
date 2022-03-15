@@ -69,4 +69,4 @@ jobs:
 
 
     - name: Build Solution
-      run: msbuild.exe /p:AdditionalIncludePaths="${{ env.wtl-folder }}" JPEGView.sln
+      run: msbuild.exe /property:AdditionalIncludePaths="${{ env.wtl-folder }}\Include" /property:Platform=x64 JPEGView.sln
