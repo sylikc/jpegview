@@ -65,6 +65,9 @@ jobs:
           Invoke-WebRequest -UserAgent "Wget" -OutFile wtl.zip "${{ env.wtl-url }}"
           Get-ChildItem
           7z x wtl.zip -o"${{ env.wtl-folder }}"
+
+          Get-ChildItem "${{ env.wtl-folder }}"
+          Get-ChildItem "${{ env.wtl-folder }}\Include"
         }
 
 
