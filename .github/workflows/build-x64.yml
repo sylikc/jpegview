@@ -37,8 +37,8 @@ jobs:
       run: |
         echo "$env:WIX_PATH\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
         echo $PATH
-        echo where.exe candle.exe
-        echo where.exe light.exe
+        where.exe candle.exe
+        where.exe light.exe
 
     - name: Cache WTL
       # https://docs.github.com/en/actions/using-workflows/caching-dependencies-to-speed-up-workflows
@@ -62,7 +62,7 @@ jobs:
           # if you don't use UserAgent, the whole file doesn't come out ...
           Invoke-WebRequest -UserAgent "Wget" -OutFile wtl.zip "${{ env.wtl-url }}"
           Get-ChildItem
-          7z e wtl.zip -o"${{ env.wtl-folder }}"
+          7z x wtl.zip -o"${{ env.wtl-folder }}"
         }
 
 
