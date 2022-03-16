@@ -1,0 +1,9 @@
+[submodule "deps/WTL-sf"]
+	path = deps/WTL-sf
+	url = https://git.code.sf.net/p/wtl/git
+[submodule "extras/libjpeg-turbo"]
+	path = extras/libjpeg-turbo
+	url = https://github.com/libjpeg-turbo/libjpeg-turbo.git
+[submodule "extras/libwebp"]
+	path = extras/libwebp
+	url = https://chromium.googlesource.com/webm/libwebp
