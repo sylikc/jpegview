@@ -3,6 +3,9 @@ name: Build Test x64
 
 on: [push, pull_request]
 
+# TODO i changed the WTL into a submodule, but this is not reflected here yet
+# I would like to cache the submodule source files still, but doing a submodule clone with checkout@v3 does it for all submodules...
+
 jobs:
   build:
     # if windows-latest, might not find VS 2019
@@ -77,6 +80,6 @@ jobs:
         REM must be unquoted!
         SET IncludePath=%CD%\${{ env.wtl-folder }}\Include
         echo %IncludePath%
-        msbuild.exe /property:Platform=x64 JPEGView.sln
+        msbuild.exe /property:Platform=x64 /property:configuration="Release" src\JPEGView.sln
 
       shell: cmd
