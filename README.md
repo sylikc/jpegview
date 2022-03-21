@@ -69,7 +69,7 @@ Windows XP SP2 or later is needed to run the 32 bit version.
 ## What's New
 
 * See what has changed in the [latest releases](https://github.com/sylikc/jpegview/releases)
-* Or Check the [readme.txt](https://github.com/sylikc/jpegview/blob/master/readme.txt) to review new features in detail.
+* Or Check the [CHANGELOG.txt](https://github.com/sylikc/jpegview/blob/master/CHANGELOG.txt) to review new features in detail.
 
 
 # Brief History

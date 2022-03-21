@@ -1,37 +1,13 @@
-JPEGView source code readme
-***************************
+JPEGView Changelog
+******************
 
-To compile JPEGView you need:
-
-- Visual Studio 2010 (JPEGView 32 bit version supported) or
-  Visual Studio 2013 professional (JPEGView 32 and 64 bit versions supported) or
-  Visual Studio 2017 professional (JPEGView 32 and 64 bit versions supported) or 
-  Visual Studio 2019 professional or community editions (JPEGView 32 and 64 bit versions supported)
-- Windows Template Library (WTL), Version 8.1 (http://sourceforge.net/projects/wtl/) installed to
-  $(VCInstallDir)WTL\
-
-The include directories of WTL must be added to the include directories for VC++:
-In Visual Studio: Properties of JPEGView project > VC++-Directories-Include Directories and Library Directories 
-                  Include Directories: $(VCInstallDir)WTL\Include;$(IncludePath)
-
-To compile the MSI installer, you need:
-- WiX Toolset v3.11 or later (https://wixtoolset.org/releases/)
-- WiX Toolset Visual Studio Extension for your version of Visual Studio
-
-
-Please note: 
-Windows XP SP2 or later is needed to run the 32 bit version.
-64 bit Windows 7 or later is needed to run the 64 bit version.
-
-
-Changelog
-*********
 [] Not Yet Released.
 Other changes:
 - Created new MSI installer for JPEGView using WiX.  It's rudimentary, but functional.
 - Submitted MSI installer to official Microsoft WinGet repositories.  Use "winget install jpegview" on Windows 10 1709+, or Windows 11 to use.
 - Added known dates for all past releases into readme.txt
 - Updated README.md with official releases info.
+- rename "readme.txt" which contained the changelog to "CHANGELOG.txt".  Created separate COMPILING.txt for compile instructions.
 
 [1.0.39.1] 2022-02-11
 Bugs fixed:
@@ -266,7 +242,7 @@ New features:
 - Esc key can now be re-defined in keymap (e.g. to display to 'Open file' dialog)
   Default remains to exit JPEGView
 - Some minor changes in navigation panel appearance
-  
+
 [1.0.30] 2013-11-02
 Bugs fixed:
 - Fixed crash (leading to potential exploit) when image width or height is larger than 32767
@@ -370,7 +346,7 @@ New features:
                    Example: jpegview.exe c:\pictures /slideshow 2 /order z
                    Shows a slideshow of the files in the folder "c:\pictures" using random ordering and an interval of 2 seconds.
 Other changes:
-- Because the tjpeg static library cannot be linked with VS2005, JPEGView is now compiled with VS2010. If you are using Windows XP 
+- Because the tjpeg static library cannot be linked with VS2005, JPEGView is now compiled with VS2010. If you are using Windows XP
   before SP2, install SP2 or keep using version 1.0.26.
 
 [1.0.26] 2012-01-23
@@ -433,7 +409,7 @@ Bugs fixed:
 - Modification date displayed with correct time zone adjustment
 New features:
 - Portuguese translation, thanks to Carpegieri Torezan
-- New windowed mode that fits window size to image size, avoiding black borders. 
+- New windowed mode that fits window size to image size, avoiding black borders.
   Enable in INI file using:
   DefaultWindowRect=image
 - New auto full screen mode that starts JPEGView in fullscreen mode when the image is larger than the screen
@@ -628,7 +604,7 @@ Other changes:
 - Color and contrast correction switched off in default INI file.
   It is recommended to switch it on for dedicated folders only, e.g. folders with digicam photos.
   Of course any user INI file remains untouched by this change.
-- Due to an internal code simplification, all parameter DB entries for BMP images created with older versions 
+- Due to an internal code simplification, all parameter DB entries for BMP images created with older versions
   are lost with 1.0.14. Note that other formats (e.g. JPG) are not affected.
 
 [1.0.13] 2007-06-04

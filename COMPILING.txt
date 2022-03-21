@@ -1,0 +1,27 @@
+JPEGView source code readme
+***************************
+
+To compile JPEGView you need:
+
+- Visual Studio 2010 (JPEGView 32 bit version supported) or
+  Visual Studio 2013 professional (JPEGView 32 and 64 bit versions supported) or
+  Visual Studio 2017 professional (JPEGView 32 and 64 bit versions supported) or
+  Visual Studio 2019 professional or community editions (JPEGView 32 and 64 bit versions supported)
+- Windows Template Library (WTL), Version 8.1+ (http://sourceforge.net/projects/wtl/) installed to
+  $(ProjectDir)..\..\deps\WTL-sf (This can be be automatically populated by cloning the submodule)
+
+The include directories of WTL must be added to the include directories for VC++:
+In Visual Studio: Properties of JPEGView project > VC++-Directories-Include Directories and Library Directories
+                  Include Directories: $(VCInstallDir)WTL\Include;$(IncludePath)
+
+To compile the MSI installer, you need:
+- WiX Toolset v3.11 or later (https://wixtoolset.org/releases/)
+- WiX Toolset Visual Studio Extension for your version of Visual Studio
+
+
+Please note:
+- Windows XP SP2 or later is needed to run the 32-bit version.
+- 64-bit Windows 7 or later is needed to run the 64-bit version.
+
+
+NOTE: VS2019 is the current active JPEGView development environment.  Older solution files are not maintained.
