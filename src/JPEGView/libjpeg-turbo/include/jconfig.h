@@ -1,6 +1,6 @@
 #define JPEG_LIB_VERSION  62
-#define LIBJPEG_TURBO_VERSION  2.1.2
-#define LIBJPEG_TURBO_VERSION_NUMBER  2001002
+#define LIBJPEG_TURBO_VERSION  2.1.3
+#define LIBJPEG_TURBO_VERSION_NUMBER  2001003
 
 #define C_ARITH_CODING_SUPPORTED
 #define D_ARITH_CODING_SUPPORTED
@@ -9,14 +9,6 @@
 
 #define BITS_IN_JSAMPLE  8      /* use 8 or 12 */
 
-#define HAVE_STDDEF_H
-#define HAVE_STDLIB_H
-#undef NEED_SYS_TYPES_H
-#undef NEED_BSD_STRINGS
-
-#define HAVE_UNSIGNED_CHAR
-#define HAVE_UNSIGNED_SHORT
-#undef INCOMPLETE_TYPES_BROKEN
 #undef RIGHT_SHIFT_IS_UNSIGNED
 
 /* Define "boolean" as unsigned char, not int, per Windows custom */
