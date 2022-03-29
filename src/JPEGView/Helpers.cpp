@@ -212,7 +212,7 @@ CPUType ProbeCPU(void) {
 #ifdef _WIN64
 	return ProbeSSEorAVX2(); // 64 bit always supports at least SSE
 #else
-	// Structured exception handling is mantatory, try/catch(...) does not catch such severe stuff.
+	// Structured exception handling is mandatory, try/catch(...) does not catch such severe stuff.
 	cpuType = CPU_Generic;
 	__try {
 		uint32 FeatureMask;

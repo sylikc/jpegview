@@ -125,7 +125,7 @@ CJPEGImage::CJPEGImage(int nWidth, int nHeight, void* pPixels, void* pEXIFData, 
 	m_pCachedProcessedHistogram = NULL;
 
 	m_bCropped = false;
-	m_bIsDestructivlyProcessed = false;
+	m_bIsDestructivelyProcessed = false;
 	m_bIsProcessedNoParamDB = false;
 	m_bRotationByEXIF = false;
 	m_bFirstReprocessing = true;
@@ -994,7 +994,7 @@ void* CJPEGImage::GetDIBInternal(CSize fullTargetSize, CSize clippingSize, CPoin
 			}
 		}
 
-		// if ResampleWithPan() has preseved this DIB, we can reuse it
+		// if ResampleWithPan() has preserved this DIB, we can reuse it
 		if (m_pDIBPixelsLUTProcessed == NULL) {
 			pDIBUnsharpMasked = ApplyUnsharpMask(pUnsharpMaskParams, false);
 			pDIB = ApplyCorrectionLUTandLDC(imageProcParams, eProcFlags, m_pDIBPixelsLUTProcessed, fullTargetSize, 
@@ -1019,7 +1019,7 @@ void* CJPEGImage::GetDIBInternal(CSize fullTargetSize, CSize clippingSize, CPoin
 	} else {
 		m_bUnsharpMaskParamsValid = false;
 	}
-	// do not touch sharpen parameter if no resampling done - avoids cummulative error propagation
+	// do not touch sharpen parameter if no resampling done - avoids cumulative error propagation
 	if (!bMustResampleProcessings) {
 		m_imageProcParams.Sharpen = dOldSharpen;
 	}
@@ -1419,7 +1419,7 @@ int CJPEGImage::GetRotationFromEXIF(int nOrigRotation) {
 }
 
 void CJPEGImage::MarkAsDestructivelyProcessed() {
-	m_bIsDestructivlyProcessed = true;
+	m_bIsDestructivelyProcessed = true;
 	m_rotationParams.FreeRotation = 0.0;
 	m_rotationParams.Flags = RFLAG_None;
 }

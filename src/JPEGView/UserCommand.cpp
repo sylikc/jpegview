@@ -11,7 +11,7 @@
 // Helpers
 //////////////////////////////////////////////////////////////////////////////////////
 
-// Extracts from a string the part that is between two appostrophs e.g. "text" from "command:'text'"
+// Extracts from a string the part that is between two apostrophes e.g. "text" from "command:'text'"
 static CString ParseString(const CString & sSource, int nStartIdx) {
 	int nStart = sSource.Find(_T('\''), nStartIdx);
 	if (nStart < 0) {
@@ -354,7 +354,7 @@ void CUserCommand::_ParseCommandline(const CString& sCommandLine, bool removeHyp
 	nIndex++;
 	if (nIndex < sCommandLine.GetLength()) {
 		sParameters = CString((LPCTSTR)sCommandLine + nIndex);
-		// remove enclosing hypens, some programs do not like this for parameters
+		// remove enclosing hyphens, some programs do not like this for parameters
 		if (removeHypen && sParameters[0] == _T('"') && sParameters[sParameters.GetLength()-1] == _T('"')) {
 			sParameters = sParameters.Mid(1, sParameters.GetLength()-2);
 		}

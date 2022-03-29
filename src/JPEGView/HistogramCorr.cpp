@@ -211,7 +211,7 @@ static void CalculateLUT(uint8* pTarget, float fBlackPt, float fWhitePt, float f
 	}
 }
 
-// Calculates the color componsation needed due to black/white point correction
+// Calculates the color compensation needed due to black/white point correction
 static float CalcBWColorCompensation(float fMidPt, float fBlackPt, float fWhitePt) {
 	float fA = 1.0f/max(0.001f, fWhitePt - fBlackPt);
 	float fB = -fBlackPt*fA;
@@ -226,7 +226,7 @@ uint8* CHistogramCorr::CalculateCorrectionLUT(const CHistogram & histogram, floa
 											  const float fColorCastCorrection[3], const float fColorCorrectionStrength[6],
 											  float fContrastCorrectionFactor) {
 	const float cCuttingLevel = 0.001f; // black/white point cutting level
-	const float cBrightnessCorr = 1.0f; // strenght of brighness correction
+	const float cBrightnessCorr = 1.0f; // strength of brightness correction
 	const float cLog0dot5 = log10f(0.5f);
 	const float cCastFactor = 0.3f;
 
@@ -256,7 +256,7 @@ uint8* CHistogramCorr::CalculateCorrectionLUT(const CHistogram & histogram, floa
 	fWhitePtG = 1 - (1 - fWhitePtG)*pow(fWhitePtG*fWhitePtGrey, fStrength)*fHistogramWidthFactor;
 	fWhitePtR = 1 - (1 - fWhitePtR)*pow(fWhitePtR*fWhitePtGrey, fStrength)*fHistogramWidthFactor;
 
-	// If the brighness decreased by the correction, undo this
+	// If the brightness decreased by the correction, undo this
 	float fMeanBlackPt = (fBlackPtB + fBlackPtG + fBlackPtR)/3;
 	float fMeanWhitePt = (fWhitePtB + fWhitePtG + fWhitePtR)/3; 
 	float fA = 1.0f/(fMeanWhitePt - fMeanBlackPt);

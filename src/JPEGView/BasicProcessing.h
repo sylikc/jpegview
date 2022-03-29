@@ -20,7 +20,7 @@ public:
 	// No exception is thrown in this case.
 
 	// Note on DIBs: The rows of DIBs are padded to the next 4 byte boundary. For 32 bpp DIBs this is
-	// implicitely true (no padding needed), for other types the padding must be considered.
+	// implicitly true (no padding needed), for other types the padding must be considered.
 	
 	// Note: The output format of the JPEG lib is 24 bit BGR format. Padding is to 4 byte boundaries, as DIBs.
 
@@ -77,7 +77,7 @@ public:
 	// dSaturation must be between 0 and 2
 	//  0: Grayscale image
 	//  1: Image unmodified
-	//  2: Image strongly staturated
+	//  2: Image strongly saturated
 	// Creates 6 * 256 int32 entries for the matrix elements of the saturation matrix. The elements are in 8.24 fixed point format.
 	static int32* CreateColorSaturationLUTs(double dSaturation);
 
@@ -125,13 +125,13 @@ public:
 	// pLUT: three channel LUT (BBBBB..., GGGGG..., RRRRRR..., 256 entries per channel)
 	// pLDCMap: LDC map, 8 bits per pixel, grayscale
 	// fBlackPt, fWhitePt: Black and white point of original unprocessed, unclipped image
-	// fBlackPtSteepness: Stepness of black point correction (0..1)
+	// fBlackPtSteepness: Steepness of black point correction (0..1)
 	static void* ApplyLDC32bpp(CSize fullTargetSize, CPoint fullTargetOffset, CSize clippedTargetSize,
 		CSize ldcMapSize, const void* pDIBPixels, const int32* pSatLUTs, const uint8* pLUT, const uint8* pLDCMap, 
 		float fBlackPt, float fWhitePt, float fBlackPtSteepness);
 
 	// Resize 32 or 24 bpp BGR(A) image using point sampling (i.e. no interpolation).
-	// Point sampling is fast but produces a lot of aliasing artefacts.
+	// Point sampling is fast but produces a lot of aliasing artifacts.
 	// Notice that the A channel is kept unchanged for 32 bpp images.
 	// Notice that the returned image is always 32 bpp!
 	// fullTargetSize: Virtual size of target image (unclipped).

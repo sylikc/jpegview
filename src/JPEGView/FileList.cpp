@@ -9,7 +9,7 @@
 // Helpers
 ///////////////////////////////////////////////////////////////////////////////////
 
-// static intializers
+// static initializers
 Helpers::ESorting CFileDesc::sm_eSorting = Helpers::FS_LastModTime;
 bool CFileDesc::sm_bSortUpcounting = true;
 Helpers::ENavigationMode CFileList::sm_eMode = Helpers::NM_LoopDirectory;

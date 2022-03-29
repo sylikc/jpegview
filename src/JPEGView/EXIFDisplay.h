@@ -66,7 +66,7 @@ private:
 	int m_nLineHeight;
 	int m_nTitleWidth;
 	int m_nTitleHeight;
-	int m_nPrefixLenght;
+	int m_nPrefixLength;
 	CSize m_nNoHistogramSize;
 	CPoint m_pos;
 	CSize m_size;

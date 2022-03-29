@@ -21,7 +21,7 @@ public:
 	// Returns -1 if key name not valid
 	static int GetVirtualKeyCode(LPCTSTR keyName);
 
-	// gets a combinded key code
+	// gets a combined key code
 	static int GetCombinedKeyCode(int keyCode, bool alt, bool control, bool shift);
 
 	// gets the shortcut key name, e.g. 'Ctrl+P'

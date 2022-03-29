@@ -48,7 +48,7 @@ public:
 	// The returned DIB is a 32 bpp DIB (BGRA). Note that the returned pointer must not
 	// be deleted by the caller and is only valid until another call to GetDIB() is done, the CJPEGImage
 	// object is disposed or the Rotate(), Crop() or any other method affecting original pixels is called!
-	// Note: The method tries to satisfy consecuting requests as efficient as possible. Calling the GetDIB()
+	// Note: The method tries to satisfy consecutive requests as efficient as possible. Calling the GetDIB()
 	// method multiple times with the same set of parameters will return the same image starting from the second
 	// call without doing image processing anymore.
 	void* GetDIB(CSize fullTargetSize, CSize clippingSize, CPoint targetOffset,
@@ -192,7 +192,7 @@ public:
 	bool IsCropped() { return m_bCropped; }
 
 	// Returns if this image's original pixels have been processed destructively (e.g. cropped or rotated by non-90 degrees steps)
-	bool IsDestructivlyProcessed() { return m_bIsDestructivlyProcessed; }
+	bool IsDestructivelyProcessed() { return m_bIsDestructivelyProcessed; }
 
 	// Returns if this image has been processed in a way not supported to be stored in the parameter DB.
 	bool IsProcessedNoParamDB() { return m_bIsProcessedNoParamDB; }
@@ -252,7 +252,7 @@ public:
 	// Gets the processing parameters and flags according to param DB or file path.
 	void GetFileParams(LPCTSTR sFileName, EProcessingFlags& eFlags, CImageProcessingParams& params) const;
 
-	// To be called after creation of the object to intialize the initial processing parameters.
+	// To be called after creation of the object to initialize the initial processing parameters.
 	// Input are the global defaults for the processing parameters, output (in pParams) are the
 	// processing parameters for this file (maybe different from the global ones)
 	void SetFileDependentProcessParams(LPCTSTR sFileName, CProcessParams* pParams);
@@ -326,7 +326,7 @@ public:
 	// Debug: Returns if this could be a sun set (heuristic, between 0 and 1)
 	float IsSunset() const;
 
-	// Debug: Ticks (millseconds) of the last operation
+	// Debug: Ticks (milliseconds) of the last operation
 	double LastOpTickCount() const { return m_dLastOpTickCount; }
 
 	// Debug: Loading time of image in ms
@@ -404,7 +404,7 @@ private:
 	float m_fLightenShadowFactor;
 
 	bool m_bCropped; // Image has been cropped
-	bool m_bIsDestructivlyProcessed; // Original image pixels destructively processed (i.e. cropped or size changed)
+	bool m_bIsDestructivelyProcessed; // Original image pixels destructively processed (i.e. cropped or size changed)
 	bool m_bIsProcessedNoParamDB;
 	CRotationParams m_rotationParams; // current rotation
 	bool m_bRotationByEXIF; // is the rotation given by EXIF
@@ -497,7 +497,7 @@ private:
 	// Gets the rotation from EXIF if available
 	int GetRotationFromEXIF(int nOrigRotation);
 
-	// Sets the m_bIsDestructivlyProcessed flag to true and resets rotation
+	// Sets the m_bIsDestructivelyProcessed flag to true and resets rotation
 	void MarkAsDestructivelyProcessed();
 
 	// Called when the original pixels have changed (rotate, crop, unsharp mask), all cached pixel data gets invalid

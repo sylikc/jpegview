@@ -2,15 +2,15 @@
 
 enum RegResult {
 	Reg_Success,
-	Reg_WarningNeedsChangeDACL,  // DACL needs to be changed to write the enty
+	Reg_WarningNeedsChangeDACL,  // DACL needs to be changed to write the entry
 	Reg_ErrorNeedsWriteDACLRights, // Right to change DACL is not present
 	Reg_ErrorWriteKey, // Error writing the key
 	Reg_ErrorChangeDACL, // Error changing the DACL
-	Reg_ErrorProtectedByHash, // Key is protected by kryptographic hash (Windows 8 only)
+	Reg_ErrorProtectedByHash, // Key is protected by cryptographic hash (Windows 8 only)
 	Reg_Internal
 };
 
-// Class to support registring file extensions in the Windows registry to be opened by JPEGView
+// Class to support registering file extensions in the Windows registry to be opened by JPEGView
 // This class only works for Windows <= Windows 7. For windows 8, the only way to register file extensions
 // is to call the 'default programs' dialog from Windows.
 class CFileExtensionsRegistry

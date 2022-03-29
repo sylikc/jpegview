@@ -54,7 +54,7 @@ public:
 	// strength of histogram correction (black-white points), in 0 .. 1
 	static void SetContrastCorrectionStrength(float fStrength) { sm_ContrastCorrectionStrength = fStrength; }
 
-	// strenght of brightness correction in 0 .. 1
+	// strength of brightness correction in 0 .. 1
 	static void SetBrightnessCorrectionStrength(float fStrength) { sm_BrightnessCorrStrength = fStrength; }
 
 	// Calculate a three channel correction LUT for color and contrast correction given a histogram

@@ -33,7 +33,7 @@ public:
 	// processParams: Parameters for processing the image.
 	// Return value
 	// Returns the processed JPEG image.
-	// The caller must not delete the retuned image but notify the provider when no longer used with NotifyNotUsed()
+	// The caller must not delete the returned image but notify the provider when no longer used with NotifyNotUsed()
 	// The CJPEGProvider class then decides whether to delete or to cache the image.
 	// Remarks
 	// When the requested image is already cached, it is returned immediately. Otherwise the method

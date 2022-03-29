@@ -35,10 +35,10 @@ public:
 	CWorkThread(bool bCoInitialize);
 	virtual ~CWorkThread(void);
 
-	// Clean termination, finishs the currently processed request before terminating
+	// Clean termination, finishes the currently processed request before terminating
 	void Terminate();
 
-	// Aborts the thread immediatly. Leaves an undefined state - only call on process termination.
+	// Aborts the thread immediately. Leaves an undefined state - only call on process termination.
 	void Abort();
 
 protected:

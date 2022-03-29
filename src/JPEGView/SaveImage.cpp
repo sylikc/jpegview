@@ -284,7 +284,7 @@ static int GetEncoderClsid(const WCHAR* format, CLSID* pClsid) {
    return -1;  // Failure
 }
 
-// Saves the given 24 bpp DIB data to the file namge given using GDI+
+// Saves the given 24 bpp DIB data to the file name given using GDI+
 static bool SaveGDIPlus(LPCTSTR sFileName, EImageFormat eFileFormat, void* pData, int nWidth, int nHeight) {
 	Gdiplus::Bitmap* pBitmap = new Gdiplus::Bitmap(nWidth, nHeight, Helpers::DoPadding(nWidth*3, 4), PixelFormat24bppRGB, (BYTE*)pData);
 	if (pBitmap->GetLastStatus() != Gdiplus::Ok) {

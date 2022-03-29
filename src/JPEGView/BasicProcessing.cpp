@@ -1009,7 +1009,7 @@ void* CBasicProcessing::PointSampleWithRotation(CSize fullTargetSize, CPoint ful
 	return pDIB;
 }
 
-// The prepective correction can be accelerated enourmously by taking into account that the projection
+// The perspective correction can be accelerated enormously by taking into account that the projection
 // rectangle is aligned to the camera plane (Doom engine did the same, only allowing horizontal floor and vertical walls)
 // We only have to precalculate a map for the intersection of the y-scanlines (pTableY, in 16.16 fixed point format)
 // The caller needs to delete the returned map when no longer needed
@@ -1041,7 +1041,7 @@ static int* CalculateTrapezoidYIntersectionTable(const CTrapezoid& trapezoid, in
 		// Perspective correction needed, y-scanlines are not homogenous.
 		// The unknowns in the projection equation are found using the following conditions:
 		// pTable(y) = a/(y + c) + b
-		// The pole of the projection is at position H, respecively h - H (depending on the sign of the trapezoid)
+		// The pole of the projection is at position H, respectively h - H (depending on the sign of the trapezoid)
 		// -> This directly leads to: H + c = 0, thus c = -H, respectively c = H - h
 		// a and b are found using the following two border conditions:
 		// 0 = a/c + b
@@ -1156,7 +1156,7 @@ void* CBasicProcessing::PointSampleTrapezoid(CSize fullTargetSize, const CTrapez
 
 // Bicubic resampling of one pixel at pSource (in 3 or 4 channel format) into one destination pixel in 32 bit format
 // The fractional part of the pixel position is given in .16 fixed point format
-// pKernels contains NUM_KERNELS_BICUBIC precalculated bicubic filter kernels each of lenght 4, applied with offset -1 to the source pixels
+// pKernels contains NUM_KERNELS_BICUBIC precalculated bicubic filter kernels each of length 4, applied with offset -1 to the source pixels
 static void InterpolateBicubic(const uint8* pSource, uint8* pDest, int16* pKernels, int32 nFracX, int32 nFracY, int nPaddedSourceWidth, int nChannels) {
 	int16* pKernelX = &(pKernels[4*(nFracX >> (16 - NUM_KERNELS_LOG2))]);
 	int16* pKernelY = &(pKernels[4*(nFracY >> (16 - NUM_KERNELS_LOG2))]);
@@ -1334,7 +1334,7 @@ static inline void Get4Pixels16(const uint16* pSrc, uint16 dest[4], int nFrom, i
 // Bicubic resampling of one pixel at pSource (in 3 or 4 channel format) into one destination pixel in 32 bit format
 // Interpolates only in x-direction
 // The fractional part of the pixel position is given in .16 fixed point format
-// pKernels contains NUM_KERNELS_BICUBIC precalculated bicubic filter kernels each of lenght 4, applied with offset -1 to the source pixels
+// pKernels contains NUM_KERNELS_BICUBIC precalculated bicubic filter kernels each of length 4, applied with offset -1 to the source pixels
 static void InterpolateBicubicX(const uint16* pSource, uint8* pDest, int16* pKernels, int32 nFracX) {
 	int16* pKernelX = &(pKernels[4*(nFracX >> (16 - NUM_KERNELS_LOG2))]);
 	for (int i = 0; i < 3; i++) {
@@ -2056,7 +2056,7 @@ startYLoop:
 		add ebx, nFilterOffset
 		mov ecx, pKernelIndexStart
 		mov ecx, [ecx + 4*ebx] // now the address of the XMM filter kernel to use is in ecx
-		mov ebx, [ecx] // filter lenght is in ebx
+		mov ebx, [ecx] // filter length is in ebx
 		mov edx, [ecx + 4] // filter offset is in edx
 		add ecx, 16 // ecx now on first filter element
 
@@ -2066,7 +2066,7 @@ startYLoop:
 
 		// For the row loop, the following register allocations are done.
 		// These registers are not touched in the pixel loop.
-		// EDX: Lenght of one row per channel, fixed
+		// EDX: Length of one row per channel, fixed
 		// ESI: Source pixel ptr for row loop
 		// EDI: Target pixel ptr for row loop
 		mov edx, nChannelLenBytes
@@ -2212,7 +2212,7 @@ startYLoop:
 		add ebx, nFilterOffset
 		mov ecx, pKernelIndexStart
 		mov ecx, [ecx + 4*ebx] // now the address of the XMM filter kernel to use is in ecx
-		mov ebx, [ecx] // filter lenght is in ebx
+		mov ebx, [ecx] // filter length is in ebx
 		mov edx, [ecx + 4] // filter offset is in edx
 		add ecx, 16  // ecx now on first filter element
 
@@ -2222,7 +2222,7 @@ startYLoop:
 
 		// For the row loop, the following register allocations are done.
 		// These registers are not touched in the pixel loop.
-		// EDX: Lenght of one row per channel, fixed
+		// EDX: Length of one row per channel, fixed
 		// ESI: Source pixel ptr for row loop
 		// EDI: Target pixel ptr for row loop
 		mov edx, nChannelLenBytes

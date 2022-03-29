@@ -33,7 +33,7 @@ namespace HelpersGUI {
 	// Selects the default GUI font into the given DC.
 	void SelectDefaultGUIFont(HDC dc);
 
-	// Selectes the default system font into the given DC.
+	// Selects the default system font into the given DC.
 	void SelectDefaultSystemFont(HDC dc);
 
 	// Selects the default file name font into the given DC.

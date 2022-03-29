@@ -196,7 +196,7 @@ int CCropCtl::ShowCropContextMenu() {
 	if (hMenu != NULL) {
 		HMENU hMenuTrackPopup = ::GetSubMenu(hMenu, 0);
 		int nSubMenuPosCropMode = SUBMENU_POS_CROPMODE;
-		if (m_pMainDlg->GetCurrentImage()->GetImageFormat() != IF_JPEG || m_pMainDlg->GetCurrentImage()->IsDestructivlyProcessed()) {
+		if (m_pMainDlg->GetCurrentImage()->GetImageFormat() != IF_JPEG || m_pMainDlg->GetCurrentImage()->IsDestructivelyProcessed()) {
 			::DeleteMenu(hMenuTrackPopup, IDM_LOSSLESS_CROP_SEL, MF_BYCOMMAND);
 			nSubMenuPosCropMode--;
 		}

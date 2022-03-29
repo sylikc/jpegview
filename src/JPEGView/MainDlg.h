@@ -220,7 +220,7 @@ public:
 private:
 
 	CString m_sStartupFile; // file passed on command line
-	int m_nAutoStartSlideShow; // if positive: Auto start slide show with given intervall in seconds, passed on command line
+	int m_nAutoStartSlideShow; // if positive: Auto start slide show with given interval in seconds, passed on command line
 	bool m_bAutoExit;
 	Helpers::ESorting m_eForcedSorting; // forced sorting mode on command line
 	CFileList* m_pFileList; // used for navigation

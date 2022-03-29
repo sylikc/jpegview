@@ -74,8 +74,8 @@ static int ParseCommandLineForAutostart(LPCTSTR sCommandLine) {
 	if (sAutoStart == NULL) {
 		return 0;
 	}
-	int intervall = _ttoi(sAutoStart + _tcslen(_T("/slideshow")));
-	return (intervall == 0) ? 5 : intervall;
+	int interval = _ttoi(sAutoStart + _tcslen(_T("/slideshow")));
+	return (interval == 0) ? 5 : interval;
 }
 
 static bool ParseCommandLineForFullScreen(LPCTSTR sCommandLine) {

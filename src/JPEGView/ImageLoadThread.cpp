@@ -15,7 +15,7 @@
 
 using namespace Gdiplus;
 
-// static intializers
+// static initializers
 volatile int CImageLoadThread::m_curHandle = 0;
 
 static inline uint32 WebpAlphaBlendBackground(uint32 pixel, uint32 backgroundColor)
@@ -141,7 +141,7 @@ static CJPEGImage* ConvertGDIPlusBitmapToJPEGImage(Gdiplus::Bitmap* pBitmap, int
 	delete[] pDimensionIDs;
 
 	// If there is an alpha channel in the original file we must blit the image onto a background color offscreen
-	// bitmap first to archieve proper rendering.
+	// bitmap first to achieve proper rendering.
 	CJPEGImage* pJPEGImage = NULL;
 	Gdiplus::PixelFormat pixelFormat = pBitmap->GetPixelFormat();
 	bool bHasAlphaChannel = (pixelFormat & (PixelFormatAlpha | PixelFormatPAlpha));
@@ -409,7 +409,7 @@ void CImageLoadThread::ProcessReadBMPRequest(CRequest * request) {
 	if (bOutOfMemory) {
 		request->OutOfMemory = true;
 	} else if (request->Image == NULL) {
-		// probabely one of the bitmap formats that can not be read directly, try with GDI+
+		// probably one of the bitmap formats that can not be read directly, try with GDI+
 		ProcessReadGDIPlusRequest(request);
 	}
 }

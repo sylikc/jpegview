@@ -147,7 +147,7 @@ class CProcessParams {
 public:
 	// TargetWidth,TargetHeight is the dimension of the target output window, the image is fit into this rectangle
 	// nRotation must be 0, 90, 270 degrees, nUserRotation will be added to it
-	// dZoom is the zoom factor compared to intial image size (1.0 means no zoom)
+	// dZoom is the zoom factor compared to initial image size (1.0 means no zoom)
 	// offsets are relative to center of image and refer to original image size (not zoomed)
 	CProcessParams(int nTargetWidth, int nTargetHeight,
 		CSize monitorSize,

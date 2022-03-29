@@ -128,14 +128,14 @@ public:
 
 	// Returns if a user INI file exists
 	bool ExistsUserINI();
-	// Copies the user INI file (in AppData/roamin) from the INI file template JPEGView.ini.tpl
+	// Copies the user INI file (in AppData/Roaming) from the INI file template JPEGView.ini.tpl
 	void CopyUserINIFromTemplate();
 
 	std::list<CUserCommand*> & UserCommandList() { return m_userCommands; }
 	std::list<CUserCommand*> & OpenWithCommandList() { return m_openWithCommands; }
 
-	// This will only save a subset of settings to the inifile located in AppData\JPEGView\JPEGView.ini.
-	// Note that this INI file has precedence over the ini file at the program directory
+	// This will only save a subset of settings to the INI file located in AppData\JPEGView\JPEGView.ini.
+	// Note that this INI file has precedence over the INI file at the program directory
 	void SaveSettings(const CImageProcessingParams& procParams,
 		EProcessingFlags eProcFlags,
 		Helpers::ENavigationMode eNavigationMode, Helpers::ESorting eFileSorting, bool isSortedUpcounting,

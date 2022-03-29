@@ -8,7 +8,7 @@ public:
 	CUserCommand(int index, const CString & sCommandLine, bool allowNoMenuAssignment);
 	~CUserCommand(void);
 
-	// Index of command in INI file (this is not the index in the command list, there are probabely gaps in the index)
+	// Index of command in INI file (this is not the index in the command list, there are probably gaps in the index)
 	int GetIndex() const { return m_nIndex;  }
 
 	// Returns if the user command is valid, i.e. if the definition is valid

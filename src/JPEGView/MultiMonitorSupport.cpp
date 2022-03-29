@@ -27,7 +27,7 @@ CRect CMultiMonitorSupport::GetVirtualDesktop() {
 		CSize(::GetSystemMetrics(SM_CXVIRTUALSCREEN), ::GetSystemMetrics(SM_CYVIRTUALSCREEN)));
 }
 
-// Callback called during enumaration of monitors
+// Callback called during enumeration of monitors
 static BOOL CALLBACK MonitorEnumProc(HMONITOR hMonitor, HDC hdcMonitor, LPRECT lprcMonitor, LPARAM dwData) {
 	MONITORINFO monitorInfo;
 	monitorInfo.cbSize = sizeof(MONITORINFO);

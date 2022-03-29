@@ -4,7 +4,7 @@
 #include <math.h>
 #include <stdlib.h>
 
-// We cannot enlarge to a factor above the number of kernels without artefacts
+// We cannot enlarge to a factor above the number of kernels without artifacts
 #define NUM_KERNELS_RESIZE 128
 #define NUM_KERNELS_RESIZE_LOG2 7
 

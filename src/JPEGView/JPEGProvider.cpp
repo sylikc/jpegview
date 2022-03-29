@@ -344,5 +344,5 @@ void CJPEGProvider::DeleteElement(CImageRequest* pRequest) {
 }
 
 bool CJPEGProvider::IsDestructivelyProcessed(CJPEGImage* pImage) {
-	return pImage != NULL && pImage->IsDestructivlyProcessed();
+	return pImage != NULL && pImage->IsDestructivelyProcessed();
 }

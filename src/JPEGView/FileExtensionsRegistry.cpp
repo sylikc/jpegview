@@ -562,10 +562,10 @@ bool CFileExtensionsRegistrationWindows8::RegisterJPEGView() {
 	
 	// Declare all supported file endings
 	CString fileEndings = CFileList::GetSupportedFileEndings();
-	int lenght = fileEndings.GetLength();
-	LPTSTR buffer = fileEndings.GetBuffer(lenght + 1);
+	int length = fileEndings.GetLength();
+	LPTSTR buffer = fileEndings.GetBuffer(length + 1);
 	LPCTSTR fileEnding = buffer;
-	for (int i = 0; i <= lenght; i++) {
+	for (int i = 0; i <= length; i++) {
 		if (buffer[i] == _T(';') || buffer[i] == 0) {
 			fileEnding++; // strip the *
 			buffer[i] = 0;
