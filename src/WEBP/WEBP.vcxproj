@@ -71,33 +71,33 @@
     <LinkIncremental>true</LinkIncremental>
     <IncludePath>$(ProjectDir)\include\webp;$(IncludePath)</IncludePath>
     <LibraryPath>$(ProjectDir)\lib;$(LibraryPath)</LibraryPath>
-    <OutDir>$(SolutionDir)JPEGView\x86\$(Configuration)\</OutDir>
+    <OutDir>$(SolutionDir)JPEGView\bin\x86\$(Configuration)\</OutDir>
     <TargetName>webp</TargetName>
-    <IntDir>x86\$(Configuration)\</IntDir>
+    <IntDir>obj\x86\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <TargetName>webp</TargetName>
     <LinkIncremental>true</LinkIncremental>
     <IncludePath>$(ProjectDir)\include\webp;$(IncludePath)</IncludePath>
     <LibraryPath>$(ProjectDir)\lib;$(LibraryPath)</LibraryPath>
-    <OutDir>$(SolutionDir)JPEGView\x64\$(Configuration)\</OutDir>
-    <IntDir>x64\$(Configuration)\</IntDir>
+    <OutDir>$(SolutionDir)JPEGView\bin\x64\$(Configuration)\</OutDir>
+    <IntDir>obj\x64\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <IncludePath>$(ProjectDir)\include\webp;$(IncludePath)</IncludePath>
     <LibraryPath>$(ProjectDir)\lib;$(LibraryPath)</LibraryPath>
-    <OutDir>$(SolutionDir)JPEGView\x86\$(Configuration)\</OutDir>
+    <OutDir>$(SolutionDir)JPEGView\bin\x86\$(Configuration)\</OutDir>
     <TargetName>webp</TargetName>
-    <IntDir>x86\$(Configuration)\</IntDir>
+    <IntDir>obj\x86\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <TargetName>webp</TargetName>
     <LinkIncremental>false</LinkIncremental>
     <IncludePath>$(ProjectDir)\include\webp;$(IncludePath)</IncludePath>
     <LibraryPath>$(ProjectDir)\lib;$(LibraryPath)</LibraryPath>
-    <OutDir>$(SolutionDir)JPEGView\x64\$(Configuration)\</OutDir>
-    <IntDir>x64\$(Configuration)\</IntDir>
+    <OutDir>$(SolutionDir)JPEGView\bin\x64\$(Configuration)\</OutDir>
+    <IntDir>obj\x64\$(Configuration)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

@@ -1,18 +1,22 @@
 JPEGView Changelog
 ******************
 
-[] Not Yet Released.
+[1.0.40] 2022-03-30
 Other changes:
 - Created new MSI installer for JPEGView using WiX.  It's rudimentary, but functional.
-- Submitted MSI installer to official Microsoft WinGet repositories.  Use "winget install jpegview" on Windows 10 1709+, or Windows 11 to use.
-- Added known dates for all past releases into readme.txt
-- Updated README.md with official releases info.
-- rename "readme.txt" which contained the changelog to "CHANGELOG.txt".  Created separate COMPILING.txt for compile instructions.
-- Updated some links in readme.html and homepage link in About dialog
 - Updated Japanese translation, thanks maboroshin (GH https://github.com/maboroshin)
+- Updated to latest dcraw 9.28 (6/1/2018)
+  PR #30, thanks kakuty (GH https://github.com/doyaGu)
 - Updated to Turbo JPEG version 2.1.3 (2/25/2022)
 - Updated to Google's WebP library version 1.2.2 HEAD at commit 7a68afa (3/21/2022)
-
+Misc changes:
+- Submitted MSI installer to official Microsoft WinGet repositories.
+  Use "winget install jpegview" on Windows 10 1709+, or Windows 11 to use.
+- Updated repository README.md with official releases info.
+- Split "readme.txt" which contained the changelog to "CHANGELOG.txt",
+  and created "COMPILING.txt" for source compile instructions.
+- Added known dates for all past releases into CHANGELOG.txt
+- Updated some links in readme.html, and homepage link in About dialog
 
 [1.0.39.1] 2022-02-11
 Bugs fixed:
@@ -77,9 +81,9 @@ Other changes:
     Set to true to turn on landscape enhancement mode by default
   IniEditor
     Sets the application to use for editing INI files
-- New command line paramters: /ini [INI file title]
+- New command line parameters: /ini [INI file title]
     Allows using alternative INI files
-- Improved precision of fixed point arithmetics in up- and downsampling filters
+- Improved precision of fixed point arithmetic in up- and downsampling filters
   Using more filter kernels for upsampling, thus allowing larger upsampling factors (> 30)
 
 [1.0.35.1] 2016-04-04
@@ -109,7 +113,7 @@ Bugs fixed:
 - Fit to screen is kept with 'Keep parameters' when zoom is required in full screen mode
 - Removing image from read-ahead cache when it was destructively processed so that it gets reloaded next time it is accessed
 New features:
-- Printing: Fill with crop mode and ability to move the image with the mouse within the printeable area
+- Printing: Fill with crop mode and ability to move the image with the mouse within the printable area
 - JPEG comment segment is taken over from existing JPEG when saving to new JPEG
 - Showing some meta data for camera RAW images with F2
 - Considering image orientation from camera RAW images
@@ -171,12 +175,12 @@ Bugs fixed:
 Other changes:
 - Expanding environment variables in user commands and open with commands
 - New command available for mapping to a key: IDM_RENAME to rename current file.
-  By default this command is not mapped to a key and only availabe by clicking on the file name on the bottom panel.
+  By default this command is not mapped to a key and only available by clicking on the file name on the bottom panel.
 - Finer granularity control over deleting files (confirmations, availability)
   AllowFileDeletion=false : Allows disabling file deleting in JPEGView
   DeleteConfirmation=Always/OnlyWhenNoRecycleBin/Never : Controls confirmation when deleting with navigation panel button
 - When deleting files with the navigation panel button (x), a confirmation is required for files that are deleted permanently.
-  This is the case for drives that have no recylce bin, like memory sticks or network drives.
+  This is the case for drives that have no recycle bin, like memory sticks or network drives.
 - Updated Portuguese translation
 
 [1.0.32.0] 2014-03-21
@@ -257,7 +261,7 @@ Bugs fixed:
 - Fixed size cropping bug fixed
 - Always registering JPEGView in registry when changing file assignments, thus fixing any invalid path, e.g. resulting from move
   of the EXE to another directory
-- Animated GIFs and multifram TIFFs can now be moved or deleted while displayed
+- Animated GIFs and multiframe TIFFs can now be moved or deleted while displayed
 New features:
 - New command line parameter '/autoexit'. If passed, ESC key will terminate JPEGView also if a slideshow is running or an animated GIF is playing.
   Additionally it will auto-terminate JPEGView after the slideshow has finished when combined with the '/slideshow' command line parameter.
@@ -360,7 +364,7 @@ Bugs fixed:
   Note that the file title must not contain Unicode characters due to the fact that jpegtrans.exe does not support this.
 New features:
 - Portuguese (Portugal) translation, thanks to Sérgio Marques
-- Support for viewing embedded JPEG images in camera RAW files using code from the dcraw project.
+- Support for viewing embedded JPEG images in camera RAW files using code from the dcraw project (v8.86).
 - Support for loading images using Windows Image Codecs (WIC). By default WIC is used to load JPEG XR files (also called
   High definition photo). When using Windows Vista or Windows 7, the Windows Camera Codec pack can be installed to get
   support for full size camera RAW images in JPEGView. Refer to the readme.html for instructions.
@@ -375,7 +379,7 @@ New features:
 - Improved crop handling: Crop rectangle can be resized using handles
 - When in 'Adjust window to image' zoom mode and in window mode, the window adjusts automatically to zoomed image size while zooming
 Other changes:
-- Russian version of keymap and INI file (KeyMap_ru.txt, JPEGView_ru.ini) containig explanations in Russian. Be aware that
+- Russian version of keymap and INI file (KeyMap_ru.txt, JPEGView_ru.ini) containing explanations in Russian. Be aware that
   these files must be renamed to KeyMap.txt and JPEGView.ini and copied over the original (English) versions when JPEGView shall use them.
 
 [1.0.25.1] 2011-11-13
@@ -466,7 +470,7 @@ New features:
 - Updating EXIF thumbnail image when saving processed image
 - New button on navigation panel: Keep processing parameters between images
 - Changed behavior of fit to screen/actual size button, fit to screen is now default when not yet fit to screen
-- Keeping fit to screen when rezising JPEGView window
+- Keeping fit to screen when resizing JPEGView window
 - Image processing panel: Temporarily reset slider by clicking with the mouse on slider number
 - Image processing panel: Reset slider to default value by double-clicking above slider
 - Romanian translation (thanks to Silviu)
@@ -554,7 +558,7 @@ Bugs removed:
 - The 'R' key for rotating lossless works again
 - Navigation panel was not visible when OS regional settings did not use a point as decimal number separator
   (All other INI file settings represented by floating point numbers were also not read correctly in this case)
-- Crash removed when scaling up images with heigth=1
+- Crash removed when scaling up images with height=1
 - Cropping small areas (1 x n, n x 1) now possible
 - Not using IJL for 1 channel JPEGs anymore - seems to crash sometimes. GDI+ is used for these images instead.
 - Two bugs fixed causing crashes with very small images or images with extreme aspect ratio
@@ -577,7 +581,7 @@ Bugs removed:
 - File name flickering fixed in image processing area (was happening when file name was long)
 - Zoom to 100% now always correctly zooms mouse cursor centered when the cursor is visible
 New features:
-- Display of EXIF information from digicam JPEG files (F2) - can be made permanantly using the INI file
+- Display of EXIF information from digicam JPEG files (F2) - can be made permanently using the INI file
 - Smoother screen update with less flickering by using back buffering of transparent areas
 - Navigation panel blended into image. The navigation panel is turned on by default but can be disabled with the F11 key.
   To disable it permanently, press F11 then save the settings to the INI file with the context menu.
@@ -598,7 +602,7 @@ Bugs removed:
 - Reader no longer crashes when stripe is negative for images read with GDI+
 - Images with ending TIFF are no longer duplicated in file list
 New features:
-- File open... always uses tumbnail view (not only in 'my picture' directory)
+- File open... always uses thumbnail view (not only in 'my picture' directory)
 - Saving files is now possible in the following formats: JPG, BMP, TIFF, PNG
 - Copy/rename dialog: New placeholder %n for number from original file name
 - Panning is faster and uses high quality resampling mode during pan

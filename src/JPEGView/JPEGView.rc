@@ -489,8 +489,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 1,0,39,1
- PRODUCTVERSION 1,0,39,1
+ FILEVERSION 1,0,40,0
+ PRODUCTVERSION 1,0,40,0
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -507,12 +507,12 @@ BEGIN
         BEGIN
             VALUE "CompanyName", "David Kleiner"
             VALUE "FileDescription", "JPEGView"
-            VALUE "FileVersion", "1.0.39.1"
+            VALUE "FileVersion", "1.0.40.0"
             VALUE "InternalName", "JPEGView"
             VALUE "LegalCopyright", "Copyright 2006-2018 David Kleiner\nCopyright 2020-2022 Kevin M (sylikc)"
             VALUE "OriginalFilename", "JPEGView.exe"
             VALUE "ProductName", "JPEGView Application"
-            VALUE "ProductVersion", "1.0.39.1"
+            VALUE "ProductVersion", "1.0.40.0"
         END
     END
     BLOCK "VarFileInfo"
