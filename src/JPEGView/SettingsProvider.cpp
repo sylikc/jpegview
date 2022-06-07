@@ -177,6 +177,9 @@ CSettingsProvider::CSettingsProvider(void) {
 	m_nWEBPSaveQuality = GetInt(_T("WEBPSaveQuality"), 85, 0, 100);
 	m_sDefaultSaveFormat = GetString(_T("DefaultSaveFormat"), _T("jpg"));
 	m_sFilesProcessedByWIC = GetString(_T("FilesProcessedByWIC"), _T("*.wdp;*.mdp;*.hdp"));
+	m_sFilesProcessedByLepton = GetString(_T("FilesProcessedByLepton"), _T("*.lep"));
+	m_sLeptonToolName = GetString(_T("LeptonToolName"), _T("lepton-avx.exe"));
+	m_sLeptonToolExtraArgs = GetString(_T("LeptonToolExtraArgs"), _T("-allowprogressive -memory=1024M -threadmemory=128M"));
 	m_sFileEndingsRAW = GetString(_T("FileEndingsRAW"), _T("*.pef;*.dng;*.crw;*.nef;*.cr2;*.mrw;*.rw2;*.orf;*.x3f;*.arw;*.kdc;*.nrw;*.dcr;*.sr2;*.raf"));
 	m_bCreateParamDBEntryOnSave = GetBool(_T("CreateParamDBEntryOnSave"), true);
 	m_bWrapAroundFolder = GetBool(_T("WrapAroundFolder"), true);
@@ -285,10 +288,7 @@ CSettingsProvider::CSettingsProvider(void) {
 
 	m_sWallpaperPath = GetString(_T("WallpaperPath"), _T("%temp%"));
 	if (m_sWallpaperPath == _T("%temp%")) {
-		TCHAR tempPath[MAX_PATH];
-		tempPath[0] = 0;
-		::GetTempPath(MAX_PATH, tempPath);
-		m_sWallpaperPath = tempPath;
+		m_sWallpaperPath = Helpers::GetTempPath();
 	}
 	else {
 		TCHAR buffer[MAX_PATH];

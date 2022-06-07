@@ -1,4 +1,4 @@
-
+﻿
 #include "StdAfx.h"
 #include "ImageLoadThread.h"
 #include <gdiplus.h>
@@ -20,6 +20,7 @@
 #include "WEBPWrapper.h"
 #include "QOIWrapper.h"
 #include "MaxImageDef.h"
+#include "LepLoader.h"
 
 
 using namespace Gdiplus;
@@ -88,6 +89,8 @@ static EImageFormat GetImageFormat(LPCTSTR sFileName) {
 	} else if ((header[0] == 0xff && header[1] == 0x0a) ||
 		memcmp(header, "\x00\x00\x00\x0cJXL\x20\x0d\x0a\x87\x0a", 12) == 0) {
 		return IF_JXL;
+	} else if (header[0] == 0xcf && header[1] == 0x84) {
+		return IF_Lepton;
 
 	// Unfortunately, TIFF detection by header bytes is not reliable
 	// A few RAW image formats use TIFF as the container
@@ -399,6 +402,10 @@ void CImageLoadThread::ProcessRequest(CRequestBase& request) {
 			DeleteCachedAvifDecoder();
 			ProcessReadRAWRequest(&rq);
 			break;
+		case IF_Lepton:
+			DeleteCachedGDIBitmap();
+			ProcessReadLeptonRequest(&rq);
+			break;
 		case IF_WIC:
 			DeleteCachedGDIBitmap();
 			DeleteCachedWebpDecoder();
@@ -492,8 +499,12 @@ void CImageLoadThread::DeleteCachedAvifDecoder() {
 #endif
 }
 
-void CImageLoadThread::ProcessReadJPEGRequest(CRequest * request) {
-	HANDLE hFile = ::CreateFile(request->FileName, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, 0, NULL);
+void CImageLoadThread::ProcessReadJPEGRequest(CRequest* request) {
+	ProcessReadJPEGRequest(request, request->FileName);
+}
+
+void CImageLoadThread::ProcessReadJPEGRequest(CRequest* request, const CString& fileName) {
+	HANDLE hFile = ::CreateFile(fileName, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, 0, NULL);
 	if (hFile == INVALID_HANDLE_VALUE) {
 		return;
 	}
@@ -1017,6 +1028,49 @@ void CImageLoadThread::ProcessReadGDIPlusRequest(CRequest * request) {
 	if (!isAnimatedGIF) {
 		DeleteCachedGDIBitmap();
 	}
+}
+
+void CImageLoadThread::ProcessReadLeptonRequest(CRequest* request) {
+	static const CString space(_T(" "));
+	static const CString quote(_T("\""));
+
+	// Convert the Lepton image into a temporary JPEG file and read then as a regular JPEG file.
+	CString guid(Helpers::GetGuidString());
+	guid.Replace(_T("-"), _T(""));
+	guid.Replace(_T("{"), _T(""));
+	guid.Replace(_T("}"), _T(""));
+
+	CString tempFile = Helpers::GetTempPath() + CW2T(guid);
+	CString sCommandLine = CSettingsProvider::This().LeptonToolExtraArgs();
+	if (!sCommandLine.IsEmpty())
+		sCommandLine += space;
+
+	sCommandLine += quote + request->FileName + quote + space + quote + tempFile + quote;
+
+	STARTUPINFO si = { 0 };
+	si.cb = sizeof(STARTUPINFO);
+	si.dwFlags = STARTF_UNTRUSTEDSOURCE;
+	PROCESS_INFORMATION pi = { 0 };
+	if (!::CreateProcess(LepLoader::GetToolPath(), sCommandLine.GetBuffer(),
+		NULL, NULL, FALSE, CREATE_UNICODE_ENVIRONMENT|CREATE_NO_WINDOW, NULL, NULL, &si, &pi)) {
+		sCommandLine.ReleaseBuffer();
+		request->Image = NULL;
+		request->OutOfMemory = request->Image == NULL;
+		return;
+	}
+
+	sCommandLine.ReleaseBuffer();
+	::WaitForSingleObject(pi.hProcess, INFINITE);
+
+	::CloseHandle(pi.hProcess);
+	::CloseHandle(pi.hThread);
+
+	// Pass the temporary JPEG file to the routine, but specify the temp file path
+	// instead of requested LEP file.
+	ProcessReadJPEGRequest(request, tempFile);
+
+	// Delete the temporary file as it is not needed anymore.
+	::DeleteFile(tempFile);
 }
 
 static unsigned char* alloc(int sizeInBytes) {

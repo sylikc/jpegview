@@ -4,6 +4,7 @@
 #include "Helpers.h"
 #include "DirectoryWatcher.h"
 #include "Shlwapi.h"
+#include "LepLoader.h"
 
 ///////////////////////////////////////////////////////////////////////////////////
 // Helpers
@@ -182,6 +183,11 @@ static LPCTSTR* GetSupportedFileEndingList() {
 		if (_tcslen(sFileEndingsWIC) > 2 && WICPresentGuarded()) {
 			ParseAndAddFileEndings(sFileEndingsWIC);
 		}
+
+		if (LepLoader::LeptonToolPresent()) {
+			ParseAndAddFileEndings(CSettingsProvider::This().FilesProcessedByLepton());
+		}
+
 		ParseAndAddFileEndings(CSettingsProvider::This().FileEndingsRAW());
 	}
 	return sFileEndings;

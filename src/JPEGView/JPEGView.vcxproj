@@ -327,6 +327,7 @@
     <ClCompile Include="JPEGView.cpp" />
     <ClCompile Include="JXLWrapper.cpp" />
     <ClCompile Include="KeyMap.cpp" />
+    <ClCompile Include="LepLoader.cpp" />
     <ClCompile Include="LocalDensityCorr.cpp" />
     <ClCompile Include="ManageOpenWithDlg.cpp" />
     <ClCompile Include="MultiMonitorSupport.cpp" />
@@ -416,6 +417,7 @@
     <ClInclude Include="JPEGProvider.h" />
     <ClInclude Include="JXLWrapper.h" />
     <ClInclude Include="KeyMap.h" />
+    <ClInclude Include="LepLoader.h" />
     <ClInclude Include="LocalDensityCorr.h" />
     <ClInclude Include="ManageOpenWithDlg.h" />
     <ClInclude Include="MaxImageDef.h" />

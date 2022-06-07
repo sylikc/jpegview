@@ -107,6 +107,8 @@ private:
 	void DeleteCachedJxlDecoder();
 	void DeleteCachedAvifDecoder();
 
+	// Special overload for Lepton files, where actual Lepton file goes via a temporary file.
+	void ProcessReadJPEGRequest(CRequest* request, const CString& fileName);
 	void ProcessReadJPEGRequest(CRequest * request);
 	void ProcessReadPNGRequest(CRequest * request);
 	void ProcessReadBMPRequest(CRequest * request);
@@ -119,6 +121,7 @@ private:
 	void ProcessReadRAWRequest(CRequest * request);
 	void ProcessReadGDIPlusRequest(CRequest * request);
 	void ProcessReadWICRequest(CRequest* request);
+	void ProcessReadLeptonRequest(CRequest* request);
 
 	static void SetFileDependentProcessParams(CRequest * request);
 	static bool ProcessImageAfterLoad(CRequest * request);

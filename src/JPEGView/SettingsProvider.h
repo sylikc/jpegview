@@ -77,6 +77,9 @@ public:
 	int WEBPSaveQuality() { return m_nWEBPSaveQuality; }
 	LPCTSTR DefaultSaveFormat() { return m_sDefaultSaveFormat; }
 	LPCTSTR FilesProcessedByWIC() { return m_sFilesProcessedByWIC; }
+	LPCTSTR FilesProcessedByLepton() { return m_sFilesProcessedByLepton; }
+	const CString& LeptonToolName() const { return m_sLeptonToolName; }
+	const CString& LeptonToolExtraArgs() const { return m_sLeptonToolExtraArgs; }
 	LPCTSTR FileEndingsRAW() { return m_sFileEndingsRAW; }
 	void AddTemporaryRAWFileEnding(LPCTSTR sEnding) { m_sFileEndingsRAW += CString(_T(";*.")) + sEnding; }
 	bool CreateParamDBEntryOnSave() { return m_bCreateParamDBEntryOnSave; }
@@ -244,6 +247,9 @@ private:
 	int m_nWEBPSaveQuality;
 	CString m_sDefaultSaveFormat;
 	CString m_sFilesProcessedByWIC;
+	CString m_sFilesProcessedByLepton;
+	CString m_sLeptonToolName;
+	CString m_sLeptonToolExtraArgs;
 	CString m_sFileEndingsRAW;
 	bool m_bCreateParamDBEntryOnSave;
 	bool m_bWrapAroundFolder;
