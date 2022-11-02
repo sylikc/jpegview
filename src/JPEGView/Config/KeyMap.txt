@@ -14,6 +14,7 @@
 #define IDM_PRINT		1700			// print image
 #define IDM_COPY		2000			// copy image to clipboard in screen size
 #define IDM_COPY_FULL		2500			// copy image to clipboard in original size
+#define IDM_COPY_PATH		2525			// copy image path to clipboard
 #define IDM_PASTE		2550			// paste image from clipboard
 #define IDM_BATCH_COPY		2600			// open batch copy dialog
 #define IDM_RENAME		2610			// rename current file, only works when image processing panel can be shown (i.e. panel not disabled in INI and window size big enough)
@@ -181,6 +182,7 @@ Ctrl+Down               IDM_ZOOM_DEC
 Ctrl+Up                 IDM_ZOOM_INC
 Ctrl+A                  IDM_EXCHANGE_PROC_PARAMS
 Ctrl+C                  IDM_COPY
+Ctrl+Shift+C            IDM_COPY_PATH
 C                       IDM_SORT_CREATION_DATE
 Ctrl+N                  IDM_SHOW_NAVPANEL
 N                       IDM_SORT_NAME
