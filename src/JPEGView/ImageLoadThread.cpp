@@ -250,14 +250,17 @@ void CImageLoadThread::ProcessRequest(CRequestBase& request) {
 	switch (GetImageFormat(rq.FileName)) {
 		case IF_JPEG :
 			DeleteCachedGDIBitmap();
+			DeleteCachedWebpDecoder();
 			ProcessReadJPEGRequest(&rq);
 			break;
 		case IF_WindowsBMP :
 			DeleteCachedGDIBitmap();
+			DeleteCachedWebpDecoder();
 			ProcessReadBMPRequest(&rq);
 			break;
 		case IF_TGA :
 			DeleteCachedGDIBitmap();
+			DeleteCachedWebpDecoder();
 			ProcessReadTGARequest(&rq);
 			break;
 		case IF_WEBP:
@@ -266,14 +269,17 @@ void CImageLoadThread::ProcessRequest(CRequestBase& request) {
 			break;
 		case IF_CameraRAW:
 			DeleteCachedGDIBitmap();
+			DeleteCachedWebpDecoder();
 			ProcessReadRAWRequest(&rq);
 			break;
 		case IF_WIC:
 			DeleteCachedGDIBitmap();
+			DeleteCachedWebpDecoder();
 			ProcessReadWICRequest(&rq);
 			break;
 		default:
 			// try with GDI+
+			DeleteCachedWebpDecoder();
 			ProcessReadGDIPlusRequest(&rq);
 			break;
 	}
@@ -320,6 +326,12 @@ void CImageLoadThread::DeleteCachedGDIBitmap() {
 	}
 	m_pLastBitmap = NULL;
 	m_sLastFileName.Empty();
+}
+
+void CImageLoadThread::DeleteCachedWebpDecoder() {
+	__declspec(dllexport) void Webp_Dll_AnimDecoderDelete();
+	Webp_Dll_AnimDecoderDelete();
+	m_sLastWebpFileName.Empty();
 }
 
 void CImageLoadThread::ProcessReadJPEGRequest(CRequest * request) {
@@ -423,6 +435,8 @@ void CImageLoadThread::ProcessReadTGARequest(CRequest * request) {
 }
 
 __declspec(dllimport) int Webp_Dll_GetInfo(const uint8* data, size_t data_size, int* width, int* height);
+__declspec(dllexport) bool Webp_Dll_HasAnimation(const uint8* data, uint32 data_size);
+__declspec(dllexport) uint8* Webp_Dll_AnimDecodeBGRAInto(const uint8* data, uint32 data_size, uint8* output_buffer, int output_buffer_size, int* nFrameCount, int* nFrameTimeMs);
 __declspec(dllimport) uint8* Webp_Dll_DecodeBGRInto(const uint8* data, uint32 data_size, uint8* output_buffer, int output_buffer_size, int output_stride);
 __declspec(dllimport) uint8* Webp_Dll_DecodeBGRAInto(const uint8* data, uint32 data_size, uint8* output_buffer, int output_buffer_size, int output_stride);
 
@@ -456,13 +470,23 @@ void CImageLoadThread::ProcessReadWEBPRequest(CRequest * request) {
 						int nStride = nWidth*4;
 						uint8* pPixelData = new(std::nothrow) unsigned char[nStride * nHeight];
 						if (pPixelData != NULL) {
-							if (Webp_Dll_DecodeBGRAInto((uint8*)pBuffer, nFileSize, pPixelData, nStride * nHeight, nStride)) {
+							bool has_animation = Webp_Dll_HasAnimation((uint8*)pBuffer, nFileSize);
+							const wchar_t* sFileName;
+							sFileName = (const wchar_t*)request->FileName;
+							if (sFileName != m_sLastWebpFileName) {
+								DeleteCachedWebpDecoder();
+								m_sLastWebpFileName = sFileName;
+							}
+							int nFrameCount = 1;
+							int nFrameTimeMs = 0;
+							if ((has_animation && Webp_Dll_AnimDecodeBGRAInto((uint8*)pBuffer, nFileSize, pPixelData, nStride * nHeight, &nFrameCount, &nFrameTimeMs)) ||
+								(!has_animation && Webp_Dll_DecodeBGRAInto((uint8*)pBuffer, nFileSize, pPixelData, nStride * nHeight, nStride))) {
 								// Multiply alpha value into each AABBGGRR pixel
 								uint32* pImage32 = (uint32*)pPixelData;
 								for (int i = 0; i < nWidth*nHeight; i++)
 									*pImage32++ = WebpAlphaBlendBackground(*pImage32, CSettingsProvider::This().ColorTransparency());
 
-								request->Image = new CJPEGImage(nWidth, nHeight, pPixelData, NULL, 4, 0, IF_WEBP, false, 0, 1, 0);
+								request->Image = new CJPEGImage(nWidth, nHeight, pPixelData, NULL, 4, 0, IF_WEBP, has_animation, request->FrameIndex, nFrameCount, nFrameTimeMs);
 							} else {
 								delete[] pPixelData;
 							}
