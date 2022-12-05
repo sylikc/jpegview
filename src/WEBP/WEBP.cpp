@@ -23,6 +23,17 @@ __declspec(dllexport) bool Webp_Dll_HasAnimation(const uint8_t* data, uint32_t d
 WebPAnimDecoder* cached_webp_decoder = NULL;
 WebPData cached_webp_data = {0};
 int cached_webp_prev_frame_timestamp = 0;
+int cached_webp_width = 0;
+int cached_webp_height = 0;
+
+__declspec(dllexport) int Webp_Dll_GetInfoCached(int& width, int& height)
+{
+	if (!cached_webp_decoder || !cached_webp_data.bytes)
+		return 0;
+	width = cached_webp_width;
+	height = cached_webp_height;
+	return 1;
+}
 
 __declspec(dllexport) void Webp_Dll_AnimDecoderDelete()
 {
@@ -30,6 +41,8 @@ __declspec(dllexport) void Webp_Dll_AnimDecoderDelete()
 	cached_webp_decoder = NULL;
 	WebPDataClear(&cached_webp_data);
 	cached_webp_prev_frame_timestamp = 0;
+	cached_webp_width = 0;
+	cached_webp_height = 0;
 }
 
 __declspec(dllexport) uint8_t* Webp_Dll_AnimDecodeBGRAInto(const uint8_t* data, uint32_t data_size, uint8_t* output_buffer, int output_buffer_size, int& nFrameCount, int& nFrameTimeMs)
@@ -45,6 +58,8 @@ __declspec(dllexport) uint8_t* Webp_Dll_AnimDecodeBGRAInto(const uint8_t* data, 
 		cached_webp_data.bytes = cached_webp_bytes;
 		cached_webp_data.size = data_size;
 		cached_webp_decoder = WebPAnimDecoderNew(&cached_webp_data, &anim_config);
+		if (!Webp_Dll_GetInfo(data, data_size, &cached_webp_width, &cached_webp_height))
+			return NULL;
 	}
 	WebPAnimDecoder* decoder = cached_webp_decoder;
 	WebPData webp_data = cached_webp_data;
