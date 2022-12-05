@@ -22,19 +22,20 @@ __declspec(dllexport) bool Webp_Dll_HasAnimation(const uint8_t* data, uint32_t d
 // These are necessary to properly animate frames without playing the entire file for each one
 WebPAnimDecoder* cached_webp_decoder = NULL;
 WebPData cached_webp_data = {0};
+int cached_webp_prev_frame_timestamp = 0;
 
 __declspec(dllexport) void Webp_Dll_AnimDecoderDelete()
 {
 	WebPAnimDecoderDelete(cached_webp_decoder);
 	cached_webp_decoder = NULL;
 	WebPDataClear(&cached_webp_data);
+	cached_webp_prev_frame_timestamp = 0;
 }
-__declspec(dllexport) uint8_t* Webp_Dll_AnimDecodeBGRAInto(const uint8_t* data, uint32_t data_size, uint8_t* output_buffer, int output_buffer_size, int* nFrameCount, int* nFrameTimeMs)
+
+__declspec(dllexport) uint8_t* Webp_Dll_AnimDecodeBGRAInto(const uint8_t* data, uint32_t data_size, uint8_t* output_buffer, int output_buffer_size, int& nFrameCount, int& nFrameTimeMs)
 {
-	if (cached_webp_decoder && cached_webp_data.bytes) {
-		;
-	}
-	else {
+	if (!cached_webp_decoder || !cached_webp_data.bytes) {
+		// Cache WebP data and decoder to keep track of where we are in the file
 		Webp_Dll_AnimDecoderDelete();
 		WebPAnimDecoderOptions anim_config;
 		WebPAnimDecoderOptionsInit(&anim_config);
@@ -50,26 +51,26 @@ __declspec(dllexport) uint8_t* Webp_Dll_AnimDecodeBGRAInto(const uint8_t* data, 
 	
 	if (decoder == NULL)
 		return NULL;
-	
-	// Get animation info
-	WebPIterator iter;
-	WebPDemuxer* demux = WebPDemux(&webp_data); // Add to cache?
-	if (WebPDemuxGetFrame(demux, 1, &iter)) {
-		*nFrameCount = max(iter.num_frames, 1);
-		*nFrameTimeMs = max(iter.duration, 0);
-	}
-	else
-		return NULL;
-	WebPDemuxReleaseIterator(&iter); 
-	WebPDemuxDelete(demux);
 
 	// Decode frame
 	int timestamp;
 	uint8_t* buf;
 	if (!WebPAnimDecoderHasMoreFrames(decoder))
 		WebPAnimDecoderReset(decoder);
-	if (!WebPAnimDecoderHasMoreFrames(decoder) || !WebPAnimDecoderGetNext(decoder, &buf, &timestamp))
+	if (!WebPAnimDecoderGetNext(decoder, &buf, &timestamp))
 		return NULL;
+
+	// Set frametime and frame count
+	WebPAnimInfo anim_info;
+	WebPAnimDecoderGetInfo(decoder, &anim_info);
+	nFrameCount = max(anim_info.frame_count, 1);
+	timestamp = max(timestamp, 0);
+	if (timestamp < cached_webp_prev_frame_timestamp)
+		cached_webp_prev_frame_timestamp = 0;
+	nFrameTimeMs = timestamp - cached_webp_prev_frame_timestamp;
+	cached_webp_prev_frame_timestamp = timestamp;
+
+	// Copy frame to output buffer
 	memcpy(output_buffer, buf, output_buffer_size);
 	return output_buffer;
 }
