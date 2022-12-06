@@ -482,6 +482,8 @@ void CImageLoadThread::ProcessReadWEBPRequest(CRequest * request) {
 				::CloseHandle(hFile);
 				return;
 			}
+		} else {
+			nFileSize = 0; // to avoid compiler warnings, not used
 		}
 		if (bUseCachedDecoder || (::ReadFile(hFile, pBuffer, nFileSize, (LPDWORD)&nNumBytesRead, NULL) && nNumBytesRead == nFileSize)) {
 			int nWidth, nHeight;
@@ -524,8 +526,10 @@ void CImageLoadThread::ProcessReadWEBPRequest(CRequest * request) {
 		delete request->Image;
 		request->Image = NULL;
 	}
-	::CloseHandle(hFile);
-	delete[] pBuffer;
+	if (!bUseCachedDecoder) {
+		::CloseHandle(hFile);
+		delete[] pBuffer;
+	}
 }
 
 void CImageLoadThread::ProcessReadRAWRequest(CRequest * request) {
