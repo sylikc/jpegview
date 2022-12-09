@@ -333,7 +333,7 @@ void CImageLoadThread::DeleteCachedGDIBitmap() {
 }
 
 void CImageLoadThread::DeleteCachedWebpDecoder() {
-	__declspec(dllexport) void Webp_Dll_AnimDecoderDelete();
+	__declspec(dllimport) void Webp_Dll_AnimDecoderDelete();
 	Webp_Dll_AnimDecoderDelete();
 	m_sLastWebpFileName.Empty();
 }
@@ -439,9 +439,9 @@ void CImageLoadThread::ProcessReadTGARequest(CRequest * request) {
 }
 
 __declspec(dllimport) int Webp_Dll_GetInfo(const uint8* data, size_t data_size, int* width, int* height);
-__declspec(dllexport) int Webp_Dll_GetInfoCached(int& width, int& height);
-__declspec(dllexport) bool Webp_Dll_HasAnimation(const uint8* data, uint32 data_size);
-__declspec(dllexport) uint8* Webp_Dll_AnimDecodeBGRAInto(const uint8* data, uint32 data_size, uint8* output_buffer, int output_buffer_size, int& nFrameCount, int& nFrameTimeMs);
+__declspec(dllimport) int Webp_Dll_GetInfoCached(int& width, int& height);
+__declspec(dllimport) bool Webp_Dll_HasAnimation(const uint8* data, uint32 data_size);
+__declspec(dllimport) uint8* Webp_Dll_AnimDecodeBGRAInto(const uint8* data, uint32 data_size, uint8* output_buffer, int output_buffer_size, int& nFrameCount, int& nFrameTimeMs);
 __declspec(dllimport) uint8* Webp_Dll_DecodeBGRInto(const uint8* data, uint32 data_size, uint8* output_buffer, int output_buffer_size, int output_stride);
 __declspec(dllimport) uint8* Webp_Dll_DecodeBGRAInto(const uint8* data, uint32 data_size, uint8* output_buffer, int output_buffer_size, int output_stride);
 
