@@ -11,6 +11,7 @@
 #include "BasicProcessing.h"
 #include "dcraw_mod.h"
 #include "TJPEGWrapper.h"
+#include "J40Wrapper.h"
 #include "MaxImageDef.h"
 
 using namespace Gdiplus;
@@ -69,6 +70,9 @@ static EImageFormat GetImageFormat(LPCTSTR sFileName) {
 	} else if (header[0] == 'R' && header[1] == 'I' && header[2] == 'F' && header[3] == 'F' &&
 		header[8] == 'W' && header[9] == 'E' && header[10] == 'B' && header[11] == 'P') {
 		return IF_WEBP;
+	} else if ((header[0] == 0xff && header[1] == 0x0a) ||
+		memcmp(header, "\x00\x00\x00\x0cJXL\x20\x0d\x0a\x87\x0a", 12) == 0) {
+		return IF_JXL;
 	} else {
 		return Helpers::GetImageFormat(sFileName);
 	}
@@ -263,6 +267,10 @@ void CImageLoadThread::ProcessRequest(CRequestBase& request) {
 		case IF_WEBP:
 			DeleteCachedGDIBitmap();
 			ProcessReadWEBPRequest(&rq);
+			break;
+		case IF_JXL:
+			DeleteCachedGDIBitmap();
+			ProcessReadJXLRequest(&rq);
 			break;
 		case IF_CameraRAW:
 			DeleteCachedGDIBitmap();
@@ -481,6 +489,51 @@ void CImageLoadThread::ProcessReadWEBPRequest(CRequest * request) {
 	}
 	::CloseHandle(hFile);
 	delete[] pBuffer;
+}
+
+void CImageLoadThread::ProcessReadJXLRequest(CRequest * request) {
+	HANDLE hFile = ::CreateFile(request->FileName, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, 0, NULL);
+	if (hFile == INVALID_HANDLE_VALUE) {
+		return;
+	}
+
+	char* pBuffer = NULL;
+	try {
+		// Don't read too huge files
+		unsigned int nFileSize = ::GetFileSize(hFile, NULL);
+		if (nFileSize > MAX_WEBP_FILE_SIZE) { // TODO: MAX_JXL_FILE_SIZE
+			request->OutOfMemory = true;
+			::CloseHandle(hFile);
+			return;
+		}
+		unsigned int nNumBytesRead;
+		pBuffer = new(std::nothrow) char[nFileSize];
+		if (pBuffer == NULL) {
+			request->OutOfMemory = true;
+			::CloseHandle(hFile);
+			return;
+		}
+		if (::ReadFile(hFile, pBuffer, nFileSize, (LPDWORD)&nNumBytesRead, NULL) && nNumBytesRead == nFileSize) {
+			int nWidth, nHeight, nBPP;
+
+			uint8* pPixelData = (uint8*)J40JxlReader::ReadImage(nWidth, nHeight, nBPP, request->OutOfMemory, pBuffer, nFileSize);
+			if (pPixelData != NULL) {
+				// Multiply alpha value into each AABBGGRR pixel
+				uint32* pImage32 = (uint32*)pPixelData;
+				for (int i = 0; i < nWidth * nHeight; i++)
+					*pImage32++ = WebpAlphaBlendBackground(*pImage32, CSettingsProvider::This().ColorTransparency());
+
+				request->Image = new CJPEGImage(nWidth, nHeight, pPixelData, NULL, 4, 0, IF_JXL, false, 0, 1, 0);
+			}
+		}
+	}
+	catch (...) {
+		delete request->Image;
+		request->Image = NULL;
+	}
+	::CloseHandle(hFile);
+	// pBuffer was already freed by ReadImage
+	// delete[] pBuffer;
 }
 
 void CImageLoadThread::ProcessReadRAWRequest(CRequest * request) {

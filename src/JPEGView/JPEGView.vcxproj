@@ -308,6 +308,7 @@
     <ClCompile Include="ImageLoadThread.cpp" />
     <ClCompile Include="InfoButtonPanel.cpp" />
     <ClCompile Include="InfoButtonPanelCtl.cpp" />
+    <ClCompile Include="J40Wrapper.cpp" />
     <ClCompile Include="JPEGImage.cpp" />
     <ClCompile Include="JPEGLosslessTransform.cpp" />
     <ClCompile Include="JPEGProvider.cpp" />
@@ -391,6 +392,7 @@
     <ClInclude Include="ImageProcessingTypes.h" />
     <ClInclude Include="InfoButtonPanel.h" />
     <ClInclude Include="InfoButtonPanelCtl.h" />
+    <ClInclude Include="J40Wrapper.h" />
     <ClInclude Include="JPEGImage.h" />
     <ClInclude Include="JPEGLosslessTransform.h" />
     <ClInclude Include="JPEGProvider.h" />
