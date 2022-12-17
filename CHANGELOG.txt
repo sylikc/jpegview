@@ -1,6 +1,21 @@
 JPEGView Changelog
 ******************
 
+[] Not Yet Released
+Bugs fixed:
+- Stop animation/slideshow state when opening file.
+  Prevents still images in a folder unintentionally played like an animation.
+  Bug documented in PR #95, thanks qbnu (GH https://github.com/qbnu)
+New features:
+- Check magic bytes to open file for PNG, GIF, and TIFF before falling back to extension.
+  PR #93, thanks qbnu (GH https://github.com/qbnu)
+Other changes:
+Changed behavior:
+Installer Changes:
+
+TODO wix add right-click open-with on all default supported formats?
+
+
 [1.0.40] 2022-03-30
 Other changes:
 - Created new MSI installer for JPEGView using WiX.  It's rudimentary, but functional.
