@@ -66,6 +66,15 @@ static EImageFormat GetImageFormat(LPCTSTR sFileName) {
 		return IF_WindowsBMP;
 	} else if (header[0] == 0xff && header[1] == 0xd8) {
 		return IF_JPEG;
+	} else if (header[0] == 0x89 && header[1] == 'P' && header[2] == 'N' && header[3] == 'G' &&
+		header[4] == 0x0d && header[5] == 0x0a && header[6] == 0x1a && header[7] == 0x0a) {
+		return IF_PNG;
+	} else if (header[0] == 'G' && header[1] == 'I' && header[2] == 'F' && header[3] == '8' &&
+		(header[4] == '7' || header[4] == '9') && header[5] == 'a') {
+		return IF_GIF;
+	} else if ((header[0] == 0x49 && header[1] == 0x49 && header[2] == 0x2a && header[3] == 0x00) ||
+		(header[0] == 0x4d && header[1] == 0x4d && header[2] == 0x00 && header[3] == 0x2a)) {
+		return IF_TIFF;
 	} else if (header[0] == 'R' && header[1] == 'I' && header[2] == 'F' && header[3] == 'F' &&
 		header[8] == 'W' && header[9] == 'E' && header[10] == 'B' && header[11] == 'P') {
 		return IF_WEBP;
