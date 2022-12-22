@@ -10,6 +10,6 @@
 [submodule "extras/libpng"]
 	path = extras/libpng
 	url = https://github.com/glennrp/libpng
-[submodule "extras/libpng-apng/zlib"]
+[submodule "extras/zlib"]
 	path = extras/zlib
 	url = https://github.com/madler/zlib
