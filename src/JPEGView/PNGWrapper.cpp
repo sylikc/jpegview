@@ -2,6 +2,7 @@
 
 #include "PNGWrapper.h"
 #include "MaxImageDef.h"
+#include <stdexcept>
 
 /*
  * Modified from "load4apng.c"
@@ -179,10 +180,12 @@ bool BeginReading(void* buffer, size_t sizebytes, bool& outOfMemory)
 	png_infop   info_ptr = png_create_info_struct(png_ptr);
 	if (png_ptr && info_ptr)
 	{
+		env.info_ptr = info_ptr;
+		env.png_ptr = png_ptr;
 		if (setjmp(png_jmpbuf(png_ptr)))
 		{
-			png_destroy_read_struct(&png_ptr, &info_ptr, NULL);
-			return false;
+			PngReader::DeleteCache();
+			throw std::runtime_error::runtime_error("Image contains errors.");
 		}
 		// skip png signature since we already checked it
 		png_set_sig_bytes(png_ptr, 8);
@@ -250,8 +253,8 @@ bool BeginReading(void* buffer, size_t sizebytes, bool& outOfMemory)
 			env.channels = channels;
 			env.h0 = h0;
 			env.height = height;
-			env.info_ptr = info_ptr;
-			env.png_ptr = png_ptr;
+			// env.info_ptr = info_ptr;
+			// env.png_ptr = png_ptr;
 			env.p_image = p_image;
 			env.p_frame = p_frame;
 			env.p_temp = p_temp;
