@@ -13,8 +13,6 @@
 #include "TJPEGWrapper.h"
 #include "PNGWrapper.h"
 #include "MaxImageDef.h"
-#include <io.h>
-#include <fcntl.h>
 
 using namespace Gdiplus;
 
