@@ -338,9 +338,8 @@ void* PngReader::ReadImage(int& width,
 	// https://wiki.mozilla.org/APNG_Specification
 	// "If the denominator is 0, it is to be treated as if it were 100"
 	if (!env.delay_den)
-		env.delay_den = 100; 
-	// "If the the value of the numerator is 0 the decoder should render the next frame as quickly as possible"
-	frame_time = max((int)(1000.0 * env.delay_num / env.delay_den), 1);
+		env.delay_den = 100;
+	frame_time = 1000.0 * env.delay_num / env.delay_den;
 
 	return pixels;
 }
