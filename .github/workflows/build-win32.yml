@@ -1,4 +1,4 @@
-name: Build Test x64
+name: Build Test Win32
 # later it'll test and maybe lint
 
 on: [push, pull_request]
@@ -27,7 +27,7 @@ jobs:
       with:
         # Fixed on Visual Studio 2019 -- https://docs.microsoft.com/en-us/visualstudio/releases/2019/history
         vs-version: '[16.0,17.0)'
-        msbuild-architecture: x64
+        msbuild-architecture: Win32
 
     # https://gist.github.com/hibearpanda/d5b5b58bd319132ffd7af606ffa333fc
     #  https://github.com/felixrieseberg/electron-wix-msi/issues/1#issuecomment-674598795
@@ -73,18 +73,18 @@ jobs:
 
     - name: Build Solution
       # didn't work for some reason
-      #msbuild.exe /property:AdditionalIncludePaths="${{ env.wtl-folder }}\Include" /property:Platform=x64 JPEGView.sln
-      #msbuild.exe /property:IncludePath="${{ env.wtl-folder }}\Include" /property:Platform=x64 JPEGView.sln
+      #msbuild.exe /property:AdditionalIncludePaths="${{ env.wtl-folder }}\Include" /property:Platform=Win32 JPEGView.sln
+      #msbuild.exe /property:IncludePath="${{ env.wtl-folder }}\Include" /property:Platform=Win32 JPEGView.sln
       # https://stackoverflow.com/questions/60516987/msbuild-2019-ignores-include-environment-variable
       run: |
         REM must be unquoted!
         SET IncludePath=%CD%\${{ env.wtl-folder }}\Include
         echo %IncludePath%
-        msbuild.exe /property:Platform=x64 /property:configuration="Release" src\JPEGView.sln
+        msbuild.exe /property:Platform=Win32 /property:configuration="Release" src\JPEGView.sln
 
       shell: cmd
     - name: Upload output
       uses: actions/upload-artifact@v3
       with:
-        name: release-x64
+        name: release-win32
         path: src/JPEGView/bin
