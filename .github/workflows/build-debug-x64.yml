@@ -1,4 +1,4 @@
-name: Build Test x64
+name: Build Test x64 (Debug)
 # later it'll test and maybe lint
 
 on: [push, pull_request]
@@ -80,11 +80,11 @@ jobs:
         REM must be unquoted!
         SET IncludePath=%CD%\${{ env.wtl-folder }}\Include
         echo %IncludePath%
-        msbuild.exe /property:Platform=x64 /property:configuration="Release" src\JPEGView.sln
+        msbuild.exe /property:Platform=x64 /property:configuration="Debug" src\JPEGView.sln
 
       shell: cmd
     - name: Upload output
       uses: actions/upload-artifact@v3
       with:
-        name: release-x64
+        name: debug-x64
         path: src/JPEGView/bin
