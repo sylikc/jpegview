@@ -1,6 +1,6 @@
 # JPEGView - Image Viewer and Editor
 
-This is the semi-official re-release of JPEGView.
+This is the official re-release of JPEGView.
 
 ## Description
 
@@ -18,10 +18,10 @@ Features
 
 ## Official Releases
 
-Official releases will be made to [sylikc's GitHub Releases](https://github.com/sylikc/jpegview/releases) page.  It includes:
+Official releases will be made to [sylikc's GitHub Releases](https://github.com/sylikc/jpegview/releases) page.  Each release includes:
 * **Archive Zip/7z** - Portable
 * **Windows Installer MSI** - For Installs
-* **Source code** - Build yourself
+* **Source code** - Build it yourself
 
 ## Portable
 
@@ -74,8 +74,12 @@ Windows XP SP2 or later is needed to run the 32 bit version.
 
 # Brief History
 
-This GitHub repo continues the legacy (is a "fork") of the excellent project [JPEGView by David Kleiner](https://sourceforge.net/projects/jpegview/).  Unfortunately as of 2020, the SourceForge project has essentially been abandoned, with the last update being [2018-02-24 (1.0.37)](https://sourceforge.net/projects/jpegview/files/jpegview/).  It's an excellent lightweight image viewer that I use almost daily!
+This GitHub repo continues the legacy (is a "fork") of the excellent project [JPEGView by David Kleiner](https://sourceforge.net/projects/jpegview/).  Unfortunately, starting in 2020, the SourceForge project has essentially been abandoned, with the last update being [2018-02-24 (1.0.37)](https://sourceforge.net/projects/jpegview/files/jpegview/).  It's an excellent lightweight image viewer that I use almost daily!
 
 The starting point for this repo was a direct clone from SourceForge SVN to GitHub Git.  By continuing this way, it retains all previous commits and all original author comments.  
 
 I'm hoping with this project, some devs might help me keep the project alive!  It's been awhile, and could use some new features or updates.  Looking forward to the community making suggestions, and devs will help with some do pull requests as some of the image code is quite a learning curve for me to pick it up. -sylikc
+
+## Special Thanks
+
+Special thanks to [qbnu](https://github.com/qbnu) who added Animated WebP and Animated PNG support!

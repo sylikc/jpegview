@@ -7,11 +7,19 @@ Bugs fixed:
   Prevents still images in a folder unintentionally played like an animation.
   Bug documented in PR #95, thanks qbnu (GH https://github.com/qbnu)
 New features:
-- Check magic bytes to open file for PNG, GIF, and TIFF before falling back to extension.
-  PR #93, thanks qbnu (GH https://github.com/qbnu)
+- Animated WebP support
+  Different durations for each frame supported
+  Caches decoder for speed improvement on loading large files
+  PR #90, thanks qbnu (GH https://github.com/qbnu)
+- Animated PNG support
+  Animation of 0ms delay defaults to 100ms, like major web browsers
+  PR #96, thanks qbnu (GH https://github.com/qbnu)
 Other changes:
 Changed behavior:
+- Check magic bytes to open file for PNG, GIF, and TIFF before falling back to extension.
+  PR #93, thanks qbnu (GH https://github.com/qbnu)
 Installer Changes:
+
 
 TODO wix add right-click open-with on all default supported formats?
 
