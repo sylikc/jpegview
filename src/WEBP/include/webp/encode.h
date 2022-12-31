@@ -455,7 +455,7 @@ WEBP_EXTERN int WebPPictureIsView(const WebPPicture* picture);
 // dimension will be calculated preserving the aspect ratio.
 // No gamma correction is applied.
 // Returns false in case of error (invalid parameter or insufficient memory).
-WEBP_EXTERN int WebPPictureRescale(WebPPicture* pic, int width, int height);
+WEBP_EXTERN int WebPPictureRescale(WebPPicture* picture, int width, int height);
 
 // Colorspace conversion function to import RGB samples.
 // Previous buffer will be free'd, if any.
@@ -526,7 +526,7 @@ WEBP_EXTERN int WebPPictureHasTransparency(const WebPPicture* picture);
 // Remove the transparency information (if present) by blending the color with
 // the background color 'background_rgb' (specified as 24bit RGB triplet).
 // After this call, all alpha values are reset to 0xff.
-WEBP_EXTERN void WebPBlendAlpha(WebPPicture* pic, uint32_t background_rgb);
+WEBP_EXTERN void WebPBlendAlpha(WebPPicture* picture, uint32_t background_rgb);
 
 //------------------------------------------------------------------------------
 // Main call
