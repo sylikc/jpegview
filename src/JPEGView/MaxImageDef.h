@@ -9,6 +9,12 @@ const unsigned int MAX_JPEG_FILE_SIZE = 1024 * 1024 * 50;
 #endif
 
 #ifdef _WIN64
+const unsigned int MAX_PNG_FILE_SIZE = 1024 * 1024 * 300;
+#else
+const unsigned int MAX_PNG_FILE_SIZE = 1024 * 1024 * 50;
+#endif
+
+#ifdef _WIN64
 const unsigned int MAX_WEBP_FILE_SIZE = 1024 * 1024 * 150;
 #else
 const unsigned int MAX_WEBP_FILE_SIZE = 1024 * 1024 * 50;

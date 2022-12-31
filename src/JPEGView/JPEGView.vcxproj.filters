@@ -258,6 +258,9 @@
     <ClCompile Include="HashCompareLPCTSTR.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="PNGWrapper.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BasicProcessing.h">
@@ -501,6 +504,9 @@
       <Filter>Header Files\Dialogs</Filter>
     </ClInclude>
     <ClInclude Include="HashCompareLPCTSTR.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PNGWrapper.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
