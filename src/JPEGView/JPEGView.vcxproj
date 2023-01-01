@@ -126,7 +126,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <TargetMachine>MachineX86</TargetMachine>
-      <DelayLoadDLLs>WICLoader.dll;webp.dll;libpng16.dll;jxl_dec.dll;jxl_threads.dll</DelayLoadDLLs>
+      <DelayLoadDLLs>WICLoader.dll;webp.dll;jxl_dec.dll;jxl_threads.dll</DelayLoadDLLs>
       <IgnoreSpecificDefaultLibraries>LIBCMT</IgnoreSpecificDefaultLibraries>
     </Link>
     <Manifest>
@@ -174,7 +174,7 @@ xcopy "$(ProjectDir)libjxl\bin\*.dll" "$(ProjectDir)$(OutDir)" /Y /D</Command>
       </ModuleDefinitionFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
-      <DelayLoadDLLs>WICLoader.dll;webp.dll;libpng16.dll;jxl_dec.dll;jxl_threads.dll</DelayLoadDLLs>
+      <DelayLoadDLLs>WICLoader.dll;webp.dll;jxl_dec.dll;jxl_threads.dll</DelayLoadDLLs>
       <IgnoreSpecificDefaultLibraries>LIBCMT</IgnoreSpecificDefaultLibraries>
     </Link>
     <Manifest>
@@ -228,7 +228,7 @@ xcopy "$(ProjectDir)libjxl\bin64\*.dll" "$(ProjectDir)$(OutDir)" /Y /D</Command>
       <SubSystem>Windows</SubSystem>
       <TargetMachine>MachineX86</TargetMachine>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
-      <DelayLoadDLLs>WICLoader.dll;webp.dll;libpng16.dll;jxl_dec.dll;jxl_threads.dll</DelayLoadDLLs>
+      <DelayLoadDLLs>WICLoader.dll;webp.dll;jxl_dec.dll;jxl_threads.dll</DelayLoadDLLs>
     </Link>
     <Manifest>
       <EnableDPIAwareness>true</EnableDPIAwareness>
@@ -279,7 +279,7 @@ xcopy "$(ProjectDir)libjxl\bin\*.dll" "$(ProjectDir)$(OutDir)" /Y /D</Command>
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
-      <DelayLoadDLLs>WICLoader.dll;webp.dll;libpng16.dll;jxl_dec.dll;jxl_threads.dll</DelayLoadDLLs>
+      <DelayLoadDLLs>WICLoader.dll;webp.dll;jxl_dec.dll;jxl_threads.dll</DelayLoadDLLs>
     </Link>
     <Manifest>
       <EnableDPIAwareness>true</EnableDPIAwareness>
