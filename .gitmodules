@@ -13,3 +13,6 @@
 [submodule "extras/zlib"]
 	path = extras/libpng-apng.src-patch/zlib
 	url = https://github.com/madler/zlib
+[submodule "extras/libjxl"]
+	path = extras/libjxl
+	url = https://github.com/libjxl/libjxl/

@@ -425,6 +425,15 @@ namespace HelpersGUI {
 		if (bOutOfMemory) {
 			_tcscat_s(buff, BUF_LEN, _T("\n"));
 			_tcscat_s(buff, BUF_LEN, CNLS::GetString(_T("Reason: Not enough memory available")));
+		} else if (nFileLoadError == FileLoad_LoadError) {
+			LPCTSTR sEnding = _tcsrchr(sFailedFileName, _T('.'));
+			if (sEnding != NULL) {
+				sEnding += 1;
+				if (_tcsicmp(sEnding, _T("JXL")) == 0) {
+					_tcscat_s(buff, BUF_LEN, _T("\n"));
+					_tcscat_s(buff, BUF_LEN, CNLS::GetString(_T("JXL decoding requires the Microsoft Visual C++ Redistributable")));
+				}
+			}
 		}
 		dc.DrawText(buff, -1, &rectText, DT_CENTER | DT_WORDBREAK | DT_NOPREFIX);
 	}
