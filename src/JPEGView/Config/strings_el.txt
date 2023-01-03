@@ -332,6 +332,3 @@ Update user settings...	Ενημέρωση ρυθμίσεων χρήστη...
 Manage 'Open image with' menu...	Διαχείριση μενού 'Άνοιγμα με...'
 No image loaded!	Δεν έχει φορτωθεί εικόνα!
 Right mouse button: Context menu	Δεξί πλήκτρο ποντικιού: Μενού περιβάλλοντος 
-
-
-
