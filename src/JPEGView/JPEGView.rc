@@ -114,7 +114,7 @@ FONT 8, "MS Shell Dlg", 0, 0, 0x1
 BEGIN
     DEFPUSHBUTTON   "",IDC_CLOSE,133,120,104,15
     LTEXT           "",IDC_JPEGVIEW,64,7,163,9,NOT WS_GROUP
-    LTEXT           "Copyright 2006-2018 David Kleiner\nCopyright 2020-2022 Kevin M (sylikc)",IDC_COPYRIGHT,64,17,163,18,NOT WS_GROUP
+    LTEXT           "Copyright 2006-2018 David Kleiner\nCopyright 2020-2023 Kevin M (sylikc)",IDC_COPYRIGHT,64,17,163,18,NOT WS_GROUP
     ICON            IDR_MAINFRAME,IDC_ICONJPEGVIEW,12,6,64,64
     CONTROL         "",IDC_LICENSE,"RichEdit20W",WS_TABSTOP | 0x804,64,68,168,42
     LTEXT           "",IDC_SIMDMODE,64,36,163,10,NOT WS_GROUP
@@ -489,8 +489,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 1,1,41,0
- PRODUCTVERSION 1,1,41,0
+ FILEVERSION 1,1,41,1
+ PRODUCTVERSION 1,1,41,1
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -507,12 +507,12 @@ BEGIN
         BEGIN
             VALUE "CompanyName", "Kevin M (sylikc)"
             VALUE "FileDescription", "JPEGView"
-            VALUE "FileVersion", "1.1.41.0"
+            VALUE "FileVersion", "1.1.41.1"
             VALUE "InternalName", "JPEGView"
             VALUE "LegalCopyright", "Copyright 2020-2023 Kevin M (sylikc), 2006-2018 David Kleiner"
             VALUE "OriginalFilename", "JPEGView.exe"
             VALUE "ProductName", "JPEGView Application"
-            VALUE "ProductVersion", "1.1.41.0"
+            VALUE "ProductVersion", "1.1.41.1"
         END
     END
     BLOCK "VarFileInfo"

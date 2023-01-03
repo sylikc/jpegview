@@ -1,7 +1,14 @@
 JPEGView Changelog
 ******************
 
-[] Not Yet Released
+[1.1.41.1] 2023-01-03
+Bugs fixed:
+- Fixed regression introduced in 1.1.41 which caused CR2 and DNG files
+  failing to open due to magic bytes detecting them as TIFF files.
+Other changes:
+- Updated French localization string for command added in 1.0.39 (GH #58)
+
+[1.1.41] 2022-12-31
 Bugs fixed:
 - Stop animation/slideshow state when opening file.
   Prevents still images in a folder unintentionally played like an animation.
@@ -20,9 +27,6 @@ Changed behavior:
 Other changes:
 - Updated to Turbo JPEG version 2.1.4 (8/12/2022)
 - Updated to Google's WebP library version 1.3.0-rc1 HEAD at commit b557776 (12/20/2022)
-Installer Changes:
-
-
 
 [1.0.40] 2022-03-30
 Other changes:

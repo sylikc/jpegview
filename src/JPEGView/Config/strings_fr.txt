@@ -402,3 +402,4 @@ Bottom	Bas
 Fill paper with crop	Remplir la page et rogner l'image
 Location:	Localitè:
 Altitude (m):	Altitude (m):
+Open containing folder in Explorer	Afficher le fichier dans l'explorateur
