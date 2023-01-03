@@ -87,4 +87,6 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: debug-x64
-        path: src/JPEGView/bin
+        path: |
+          src/JPEGView/bin
+          src/JPEGView.Setup/bin
