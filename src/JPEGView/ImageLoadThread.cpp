@@ -689,7 +689,7 @@ void CImageLoadThread::ProcessReadJXLRequest(CRequest* request) {
 	char* pBuffer = NULL;
 	UINT nPrevErrorMode = SetErrorMode(SEM_FAILCRITICALERRORS);
 	try {
-		unsigned int nFileSize;
+		unsigned int nFileSize = 0;
 		unsigned int nNumBytesRead;
 		if (!bUseCachedDecoder) {
 			// Don't read too huge files
@@ -706,8 +706,6 @@ void CImageLoadThread::ProcessReadJXLRequest(CRequest* request) {
 				::CloseHandle(hFile);
 				return;
 			}
-		} else {
-			nFileSize = 0; // to avoid compiler warnings, not used
 		}
 		if (bUseCachedDecoder || (::ReadFile(hFile, pBuffer, nFileSize, (LPDWORD)&nNumBytesRead, NULL) && nNumBytesRead == nFileSize)) {
 			int nWidth, nHeight, nBPP, nFrameCount, nFrameTimeMs;
