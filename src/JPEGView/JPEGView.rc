@@ -301,6 +301,7 @@ BEGIN
         MENUITEM SEPARATOR
         MENUITEM "Copy to clipboard",           IDM_COPY
         MENUITEM "Copy original size image",    IDM_COPY_FULL
+        MENUITEM "Copy file path",              IDM_COPY_PATH
         MENUITEM "Paste from clipboard",        IDM_PASTE
         MENUITEM SEPARATOR
         MENUITEM "Show picture info (EXIF)",    IDM_SHOW_FILEINFO

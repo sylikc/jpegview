@@ -21,6 +21,7 @@
 #define IDM_PRINT		1700			// распечатать изображение
 #define IDM_COPY		2000			// скопировать изображение в буфер обмена с экранным размером
 #define IDM_COPY_FULL		2500			// скопировать изображение в буфер обмена с полным размером
+#define IDM_COPY_PATH		2525			//
 #define IDM_PASTE		2550			// вставить изображение из буфера обмена
 #define IDM_BATCH_COPY		2600			// открыть окно пакетного копирования
 #define IDM_RENAME		2610			// переименовать текущий файл (только если возможен показ панели редактирования, т.е. она не запрещена в INI-файле и окно достаточно велико)
@@ -123,7 +124,7 @@
 // Раздел ниже содержит назначения клавиш.
 // Некоторые клавиши предопределены и не могут быть переназначены:
 // F1 – справка, Alt+F4 – выход, 0 .. 9 – слайдшоу.
-// Распознаваемые клавиши (названия): 
+// Распознаваемые клавиши (названия):
 // Alt, Ctrl, Shift, Esc, Return, Space, End, Home, Back, Tab, PgDn, PgUp
 // Left, Right, Up, Down, Insert, Del, Plus, Minus, Mul, Div, Comma, Period
 // A .. Z  F1 .. F12
@@ -191,6 +192,7 @@ Shift+Right		IDM_PAN_RIGHT
 Ctrl+Down		IDM_ZOOM_DEC
 Ctrl+Up			IDM_ZOOM_INC
 Ctrl+A			IDM_EXCHANGE_PROC_PARAMS
+Ctrl+Shift+C	IDM_COPY_PATH
 Ctrl+C			IDM_COPY
 C			IDM_SORT_CREATION_DATE
 Ctrl+N			IDM_SHOW_NAVPANEL
