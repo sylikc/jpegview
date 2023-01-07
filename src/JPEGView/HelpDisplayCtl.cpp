@@ -68,6 +68,7 @@ void CHelpDisplayCtl::GenerateHelpDisplay() {
 	m_pHelpDisplay->AddLine(_KeyDesc(IDM_COPY, IDM_COPY_FULL), CNLS::GetString(_T("Copy screen to clipboard/ Copy processed full size image to clipboard")));
 	m_pHelpDisplay->AddLine(_KeyDesc(IDM_COPY_PATH), CNLS::GetString(_T("Copy file path of the image to clipboard")));
 	m_pHelpDisplay->AddLine(_KeyDesc(IDM_OPEN), CNLS::GetString(_T("Open new image or slideshow file")));
+	m_pHelpDisplay->AddLine(_KeyDesc(IDM_EXPLORE), CNLS::GetString(_T("Open folder containing image and select in Windows Explorer")));
 	m_pHelpDisplay->AddLine(_KeyDesc(IDM_SAVE_ALLOW_NO_PROMPT), CNLS::GetString(_T("Save processed image to JPEG file (original size)")));
 	m_pHelpDisplay->AddLine(_KeyDesc(IDM_SAVE_SCREEN), CNLS::GetString(_T("Save processed image to JPEG file (screen size)")));
 	_stprintf_s(buffMI, 256, CNLS::GetString(_T("Save (%s)/ delete (%s) image processing parameters in/from parameter DB")), _KeyDesc(IDM_SAVE_PARAM_DB), _KeyDesc(IDM_CLEAR_PARAM_DB));

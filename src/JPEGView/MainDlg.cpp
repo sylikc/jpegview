@@ -1183,6 +1183,7 @@ LRESULT CMainDlg::OnContextMenu(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam,
 		if (m_bKeepParams || m_pCurrentImage->IsClipboardImage())
 			::EnableMenuItem(hMenuTrackPopup, IDM_SAVE_PARAM_DB, MF_BYCOMMAND | MF_GRAYED);
 		if (m_pCurrentImage->IsClipboardImage()) {
+			::EnableMenuItem(hMenuTrackPopup, IDM_EXPLORE, MF_BYCOMMAND | MF_GRAYED);  // cannot explore clipboard image
 			::EnableMenuItem(hMenuTrackPopup, IDM_COPY_PATH, MF_BYCOMMAND | MF_GRAYED);
 			::EnableMenuItem(hMenuModDate, IDM_TOUCH_IMAGE, MF_BYCOMMAND | MF_GRAYED);
 			::EnableMenuItem(hMenuModDate, IDM_TOUCH_IMAGE_EXIF, MF_BYCOMMAND | MF_GRAYED);
@@ -1309,7 +1310,9 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 			OpenFileWithDialog(false, false);
 			break;
 		case IDM_EXPLORE:
-			ExploreFile();
+			if (!m_pCurrentImage->IsClipboardImage()) {
+				ExploreFile();
+			}
 			break;
 		case IDM_SAVE:
 		case IDM_SAVE_SCREEN:
