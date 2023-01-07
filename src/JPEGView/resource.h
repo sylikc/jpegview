@@ -141,6 +141,7 @@
 #define IDM_PRINT			1700
 #define IDM_COPY			2000
 #define IDM_COPY_FULL		2500
+#define IDM_COPY_PATH		2525
 #define IDM_PASTE			2550
 #define IDM_BATCH_COPY		2600
 #define IDM_RENAME			2610
