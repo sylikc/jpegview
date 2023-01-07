@@ -2930,12 +2930,12 @@ bool CMainDlg::ImageToScreen(float & fX, float & fY) {
 	return true;
 }
 
-LPCTSTR CMainDlg::CurrentFileName(bool bFileTitle) {
+LPCTSTR CMainDlg::CurrentFileName(bool bFullNameInTitle) {
 	if (m_pCurrentImage != NULL && m_pCurrentImage->IsClipboardImage()) {
 		return _T("Clipboard Image");
 	}
 	if (m_pFileList != NULL) {
-		return bFileTitle ? m_pFileList->CurrentFileTitle() : m_pFileList->Current();
+		return bFullNameInTitle ? m_pFileList->Current() : m_pFileList->CurrentFileTitle();
 	} else {
 		return NULL;
 	}
@@ -3020,7 +3020,8 @@ void CMainDlg::EditINIFile(bool bGlobalINI) {
 }
 
 void CMainDlg::UpdateWindowTitle() {
-	LPCTSTR sCurrentFileName = CurrentFileName(true);
+	bool bShowFullNameInTitle  = CSettingsProvider::This().ShowFullNameInTitle();
+	LPCTSTR sCurrentFileName = CurrentFileName(bShowFullNameInTitle);
 	if (sCurrentFileName == NULL || m_pCurrentImage == NULL) {
 		this->SetWindowText(_T("JPEGView"));
 	} else {
