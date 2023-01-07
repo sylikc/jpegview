@@ -4,15 +4,40 @@ This is the official re-release of JPEGView.
 
 ## Description
 
-JPEGView is a lean, fast and highly configurable viewer/editor for JPEG, BMP, PNG, WEBP, TGA, GIF and TIFF images with a minimal GUI. Basic on-the-fly image processing is provided - allowing adjusting typical parameters as sharpness, color balance, rotation, perspective, contrast and local under-/overexposure.
+JPEGView is a lean, fast and highly configurable image viewer/editor with a minimal GUI.
 
-Features
+### Formats Supported
+
+JPEGView has built-in support the following formats:
+
+* Popular: JPEG, GIF
+* Lossless: BMP, PNG, TIFF
+* Web: WEBP, JXL
+* Legacy: TGA, WDP, HDP, JXR
+* Camera RAW formats:
+  * Adobe (DNG), Canon (CRW, CR2), Nikon (NEF, NRW), Sony (ARW, SR2)
+  * Olympus (ORF), Panasonic (RW2), Fujifilm (RAF)
+  * Sigma (X3F), Pentax (PEF),  Minolta (MRW), Kodak (KDC, DCR)
+
+Many additional formats are supported by Windows Imaging Component (WIC)
+
+### Basic Image Editor
+
+Basic on-the-fly image processing is provided - allowing adjusting typical parameters:
+
+* sharpness
+* color balance
+* rotation
+* perspective
+* contrast
+* local under-/over-exposure
+
+### Other Features:
+
 * Small and fast, uses SSE2 and up to 4 CPU cores
 * High quality resampling filter, preserving sharpness of images
 * Basic image processing tools can be applied realtime during viewing
-* Movie mode to play folder of JPEGs as movie
-
-(summary from the original SourceForge project page)
+* Movie/Slideshow mode - to play folder of JPEGs as movie
 
 # Installation
 
@@ -33,7 +58,7 @@ For those who prefer to have JPEGView installed for All Users, a 32-bit/64-bit i
 
 ### WinGet
 
-If you're on Windows 11, or Windows 10 1709 or later, you can also download it directly from the official [Microsoft WinGet tool](https://docs.microsoft.com/en-us/windows/package-manager/winget/) repository.  This downloads the latest MSI installer directly from GitHub for installation.
+If you're on Windows 11, or Windows 10 (build 1709 or later), you can also download it directly from the official [Microsoft WinGet tool](https://docs.microsoft.com/en-us/windows/package-manager/winget/) repository.  This downloads the latest MSI installer directly from GitHub for installation.
 
 Example Usage:
 
@@ -62,9 +87,9 @@ Another option is to use the official [JPEGView on PortableApps](https://portabl
 
 ## System Requirements
 
-Windows XP SP2 or later is needed to run the 32 bit version.
+32-bit version: Windows XP SP2 or later
 
-64 bit Windows 7 or later is needed to run the 64 bit version.
+64-bit version: Windows 7/8/10/11 64-bit or later
 
 ## What's New
 
@@ -82,4 +107,7 @@ I'm hoping with this project, some devs might help me keep the project alive!  I
 
 ## Special Thanks
 
-Special thanks to [qbnu](https://github.com/qbnu) who added Animated WebP and Animated PNG support!
+Special thanks to [qbnu](https://github.com/qbnu) for adding additional codec support!
+* Animated WebP
+* Animated PNG
+* JPEG XL with animation support
