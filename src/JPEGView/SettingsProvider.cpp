@@ -113,6 +113,7 @@ CSettingsProvider::CSettingsProvider(void) {
 	m_bAutoFullScreen = GetString(_T("ShowFullScreen"), _T("")).CompareNoCase(_T("auto")) == 0;
 	m_bShowFullScreen = m_bAutoFullScreen ? true : GetBool(_T("ShowFullScreen"), true);
 	m_bShowEXIFDateInTitle = GetBool(_T("ShowEXIFDateInTitle"), true);
+	m_bShowFullPathInTitle = GetBool(_T("ShowFilePathInTitle"), false);
 	m_bShowHistogram = GetBool(_T("ShowHistogram"), false);
 	m_bShowJPEGComments = GetBool(_T("ShowJPEGComments"), true);
 	m_bShowBottomPanel = GetBool(_T("ShowBottomPanel"), true);

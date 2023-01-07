@@ -32,6 +32,7 @@ public:
 	bool ShowFileName() { return m_bShowFileName; }
 	bool ShowFileInfo() { return m_bShowFileInfo; }
 	bool ShowEXIFDateInTitle() { return m_bShowEXIFDateInTitle; }
+	bool ShowFullPathInTitle() { return m_bShowFullPathInTitle; }
 	bool ShowHistogram() { return m_bShowHistogram; }
 	bool ShowJPEGComments() { return m_bShowJPEGComments; }
 	bool ShowNavPanel() { return m_bShowNavPanel; }
@@ -195,6 +196,7 @@ private:
 	bool m_bShowFileName;
 	bool m_bShowFileInfo;
 	bool m_bShowEXIFDateInTitle;
+	bool m_bShowFullPathInTitle;
 	bool m_bShowHistogram;
 	bool m_bShowJPEGComments;
 	bool m_bShowNavPanel;

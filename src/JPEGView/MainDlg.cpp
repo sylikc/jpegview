@@ -2930,10 +2930,16 @@ bool CMainDlg::ImageToScreen(float & fX, float & fY) {
 	return true;
 }
 
+/// <summary>
+/// Get current filename/filepath
+/// </summary>
+/// <param name="bFileTitle">If true, returns only the filename part.  If false, returns complete filepath</param>
+/// <returns>Returns the filename either just the title or full filepath</returns>
 LPCTSTR CMainDlg::CurrentFileName(bool bFileTitle) {
 	if (m_pCurrentImage != NULL && m_pCurrentImage->IsClipboardImage()) {
 		return _T("Clipboard Image");
 	}
+
 	if (m_pFileList != NULL) {
 		return bFileTitle ? m_pFileList->CurrentFileTitle() : m_pFileList->Current();
 	} else {
@@ -3020,7 +3026,9 @@ void CMainDlg::EditINIFile(bool bGlobalINI) {
 }
 
 void CMainDlg::UpdateWindowTitle() {
-	LPCTSTR sCurrentFileName = CurrentFileName(true);
+	bool bShowFullPathInTitle  = CSettingsProvider::This().ShowFullPathInTitle();
+	LPCTSTR sCurrentFileName = CurrentFileName(!bShowFullPathInTitle);
+
 	if (sCurrentFileName == NULL || m_pCurrentImage == NULL) {
 		this->SetWindowText(_T("JPEGView"));
 	} else {
