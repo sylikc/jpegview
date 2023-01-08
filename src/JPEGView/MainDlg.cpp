@@ -260,6 +260,7 @@ CMainDlg::CMainDlg(bool bForceFullScreen) {
 	m_dLastImageDisplayTime = 0.0;
 	m_isUserFitToScreen = false;
 	m_autoZoomFitToScreen = Helpers::ZM_FillScreen;
+	m_bWindowOverlapped = true;  // default real window with border
 
 	m_pPanelMgr = new CPanelMgr();
 	m_pZoomNavigatorCtl = NULL;
@@ -780,6 +781,24 @@ LRESULT CMainDlg::OnLButtonUp(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, B
 	return 0;
 }
 
+
+// based on https://www.codeproject.com/Articles/18400/How-to-move-a-dialog-which-does-not-have-a-caption
+// https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-nchittest
+LRESULT CMainDlg::OnNCHitTest(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled) {
+	bool bAlt = (::GetKeyState(VK_MENU) & 0x8000) != 0;
+	bool bLButton = ::GetAsyncKeyState(MK_LBUTTON) < 0;
+
+	// only move when alt is held down, double click causes this to expand as well
+	if (!m_bFullScreenMode && bAlt && ::DefWindowProc(m_hWnd, uMsg, wParam, lParam) == HTCLIENT && bLButton) {
+		// don't allow intercepting if we're in full screen mode
+		// (which is really just the window repositioned so the titlebar falls off the screen)
+		return HTCAPTION;
+	}
+
+	bHandled = FALSE;  // if not moving window, considered unhandled, or else all the mouse button code stops working
+	return 0;
+}
+
 LRESULT CMainDlg::OnNCLButtonDown(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& bHandled) {
 	m_dZoomAtResizeStart = m_dZoom;
 	bHandled = FALSE; // do not handle message, this would block correct processing by OS
@@ -796,8 +815,27 @@ LRESULT CMainDlg::OnRButtonUp(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*
 	return 0;
 }
 
-LRESULT CMainDlg::OnMButtonDown(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, BOOL& /*bHandled*/) {
+LRESULT CMainDlg::OnMButtonDown(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, BOOL& bHandled) {
 	this->SetCapture();
+
+	bool bAlt = (::GetKeyState(VK_MENU) & 0x8000) != 0;
+	if (bAlt && !m_bFullScreenMode) {
+		m_bWindowOverlapped = !m_bWindowOverlapped;
+		if (m_bWindowOverlapped) {
+			this->SetWindowLongW(GWL_STYLE, this->GetWindowLongW(GWL_STYLE) | WS_OVERLAPPEDWINDOW);
+		} else {
+			this->SetWindowLongW(GWL_STYLE, this->GetWindowLongW(GWL_STYLE) & ~WS_OVERLAPPEDWINDOW | WS_MINIMIZEBOX | WS_MAXIMIZEBOX); // lose sizing
+			// just doing (& ~WS_CAPTION) leads to having a sliver of white bar on top for resizing
+		}
+
+		// force a redraw since the client rects and draw areas all shifted
+		// call the OnSize, as if a resize happened
+		//this->Invalidate(FALSE);
+		//this->UpdateWindow();
+		this->OnSize(NULL, NULL, NULL, bHandled);  // piggyback on the resize handler to resize the preview/nav bars
+		return 0;
+	}
+
 	if (HandleMouseButtonByKeymap(VK_MBUTTON)) {
 		return 0;
 	}
