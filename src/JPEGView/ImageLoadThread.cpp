@@ -155,7 +155,6 @@ static CJPEGImage* ConvertGDIPlusBitmapToJPEGImage(Gdiplus::Bitmap* pBitmap, int
 			PropertyItem* pPropertyItem = (PropertyItem*)new char[nTagFrameDelaySize];
 			if (pBitmap->GetPropertyItem(PropertyTagFrameDelay, nTagFrameDelaySize, pPropertyItem) == Gdiplus::Ok) {
 				nFrameTimeMs = ((long*)pPropertyItem->value)[nFrameIndex] * 10;
-				if (nFrameTimeMs <= 0) nFrameTimeMs = 100;
 			}
 			delete[] pPropertyItem;
 		}
