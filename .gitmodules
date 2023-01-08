@@ -16,3 +16,12 @@
 [submodule "extras/libjxl"]
 	path = extras/libjxl
 	url = https://github.com/libjxl/libjxl/
+[submodule "extras/libheif"]
+	path = extras/libheif/libheif
+	url = https://github.com/strukturag/libheif
+[submodule "extras/dav1d"]
+	path = extras/libheif/dav1d
+	url = https://code.videolan.org/videolan/dav1d
+[submodule "extras/libde265"]
+	path = extras/libheif/libde265
+	url = https://github.com/strukturag/libde265
