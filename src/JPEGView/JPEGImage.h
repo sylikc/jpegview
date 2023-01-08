@@ -302,7 +302,8 @@ public:
 	int NumberOfFrames() const { return m_nNumberOfFrames; }
 
 	// Gets the frame time in milliseconds for animations (animated GIF)
-	int FrameTimeMs() const { return m_nFrameTimeMs; }
+	// Defaults to 100ms for frame times <=10, to match behavior of web browsers
+	int FrameTimeMs() const { return m_nFrameTimeMs <= 10 ? 100 : m_nFrameTimeMs; }
 
 	// Gets if this image was created by pasting from clipboard
 	bool IsClipboardImage() const { return m_eImageFormat == IF_CLIPBOARD; }
