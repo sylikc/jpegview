@@ -762,61 +762,41 @@ void CImageLoadThread::ProcessReadJXLRequest(CRequest* request) {
 }
 
 void CImageLoadThread::ProcessReadHEIFRequest(CRequest* request) {
-	bool bUseCachedDecoder = false;
-	const wchar_t* sFileName;
-	sFileName = (const wchar_t*)request->FileName;
-	if (sFileName != m_sLastJxlFileName) {
-		DeleteCachedJxlDecoder();
-	}
-	else {
-		bUseCachedDecoder = true;
-	}
-
 	HANDLE hFile;
-	if (!bUseCachedDecoder) {
-		hFile = ::CreateFile(request->FileName, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, 0, NULL);
-		if (hFile == INVALID_HANDLE_VALUE) {
-			return;
-		}
+	hFile = ::CreateFile(request->FileName, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, 0, NULL);
+	if (hFile == INVALID_HANDLE_VALUE) {
+		return;
 	}
 	char* pBuffer = NULL;
 	try {
 		unsigned int nFileSize = 0;
 		unsigned int nNumBytesRead;
-		if (!bUseCachedDecoder) {
-			// Don't read too huge files
-			nFileSize = ::GetFileSize(hFile, NULL);
-			if (nFileSize > MAX_JXL_FILE_SIZE) {
-				request->OutOfMemory = true;
-				::CloseHandle(hFile);
-				return;
-			}
-
-			pBuffer = new(std::nothrow) char[nFileSize];
-			if (pBuffer == NULL) {
-				request->OutOfMemory = true;
-				::CloseHandle(hFile);
-				return;
-			}
+		// Don't read too huge files
+		nFileSize = ::GetFileSize(hFile, NULL);
+		if (nFileSize > MAX_HEIF_FILE_SIZE) {
+			request->OutOfMemory = true;
+			::CloseHandle(hFile);
+			return;
 		}
-		if (bUseCachedDecoder || (::ReadFile(hFile, pBuffer, nFileSize, (LPDWORD)&nNumBytesRead, NULL) && nNumBytesRead == nFileSize)) {
+
+		pBuffer = new(std::nothrow) char[nFileSize];
+		if (pBuffer == NULL) {
+			request->OutOfMemory = true;
+			::CloseHandle(hFile);
+			return;
+		}
+		if (::ReadFile(hFile, pBuffer, nFileSize, (LPDWORD)&nNumBytesRead, NULL) && nNumBytesRead == nFileSize) {
 			int nWidth, nHeight, nBPP, nFrameCount, nFrameTimeMs;
 			nFrameCount = 1;
 			nFrameTimeMs = 0;
-			bool bHasAnimation = false;
 			uint8* pPixelData = (uint8*)HeifReader::ReadImage(nWidth, nHeight, nBPP, request->OutOfMemory, pBuffer, nFileSize);
 			if (pPixelData != NULL) {
-				if (bHasAnimation)
-					; // m_sLastJxlFileName = sFileName;
 				// Multiply alpha value into each AABBGGRR pixel
 				uint32* pImage32 = (uint32*)pPixelData;
 				for (int i = 0; i < nWidth * nHeight; i++)
 					*pImage32++ = WebpAlphaBlendBackground(*pImage32, CSettingsProvider::This().ColorTransparency());
 
-				request->Image = new CJPEGImage(nWidth, nHeight, pPixelData, NULL, nBPP, 0, IF_HEIF, bHasAnimation, request->FrameIndex, nFrameCount, nFrameTimeMs);
-			}
-			else {
-				; // DeleteCachedJxlDecoder();
+				request->Image = new CJPEGImage(nWidth, nHeight, pPixelData, NULL, nBPP, 0, IF_HEIF, false, request->FrameIndex, nFrameCount, nFrameTimeMs);
 			}
 		}
 	}
@@ -824,10 +804,8 @@ void CImageLoadThread::ProcessReadHEIFRequest(CRequest* request) {
 		delete request->Image;
 		request->Image = NULL;
 	}
-	if (!bUseCachedDecoder) {
-		::CloseHandle(hFile);
-		delete[] pBuffer;
-	}
+	::CloseHandle(hFile);
+	delete[] pBuffer;
 }
 
 void CImageLoadThread::ProcessReadRAWRequest(CRequest * request) {
