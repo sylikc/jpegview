@@ -737,6 +737,10 @@ EImageFormat GetImageFormat(LPCTSTR sFileName) {
 			return IF_WEBP;
 		} else if (_tcsicmp(sEnding, _T("JXL")) == 0) {
 			return IF_JXL;
+		} else if (_tcsicmp(sEnding, _T("HEIF")) == 0) {
+			return IF_HEIF;
+		} else if (_tcsicmp(sEnding, _T("HEIC")) == 0) {
+			return IF_HEIF;
 		} else if (_tcsicmp(sEnding, _T("TGA")) == 0) {
 			return IF_TGA;
 		} else if (IsInFileEndingList(CSettingsProvider::This().FilesProcessedByWIC(), sEnding)) {
