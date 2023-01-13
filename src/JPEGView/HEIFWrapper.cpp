@@ -7,7 +7,9 @@
 void * HeifReader::ReadImage(int &width,
 					   int &height,
 					   int &nchannels,
+					   int &frame_count,
 					   bool &outOfMemory,
+					   int frame_index,
 					   const void *buffer,
 					   int sizebytes)
 {
@@ -19,7 +21,9 @@ void * HeifReader::ReadImage(int &width,
 
 	heif::Context context;
 	context.read_from_memory_without_copy(buffer, sizebytes);
-	heif::ImageHandle handle = context.get_primary_image_handle();
+	frame_count = context.get_number_of_top_level_images();
+	heif_item_id item_id = context.get_list_of_top_level_image_IDs().at(frame_index);
+	heif::ImageHandle handle = context.get_image_handle(item_id);
 	// height = handle.get_height();
 	// width = handle.get_width();
 	heif::Image image = handle.decode_image(heif_colorspace_RGB, heif_chroma_interleaved_RGBA);

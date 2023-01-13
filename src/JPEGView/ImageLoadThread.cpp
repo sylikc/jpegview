@@ -94,10 +94,10 @@ static EImageFormat GetImageFormat(LPCTSTR sFileName) {
 	//	(header[0] == 0x4d && header[1] == 0x4d && header[2] == 0x00 && header[3] == 0x2a)) {
 	//	return IF_TIFF;
 
-	}
-	else if (header[0] == 0x00 && header[1] == 0x00 && header[2] == 0x00 &&
+	} else if (header[0] == 0x00 && header[1] == 0x00 && header[2] == 0x00 &&
 		memcmp(header+4, "ftyp", 4) == 0 &&
 		(
+			// https://github.com/strukturag/libheif/issues/83
 			// memcmp(header+8, "avif", 4) == 0 ||
 			// memcmp(header+8, "avis", 4) == 0 ||
 			memcmp(header+8, "heic", 4) == 0 ||
@@ -789,7 +789,7 @@ void CImageLoadThread::ProcessReadHEIFRequest(CRequest* request) {
 			int nWidth, nHeight, nBPP, nFrameCount, nFrameTimeMs;
 			nFrameCount = 1;
 			nFrameTimeMs = 0;
-			uint8* pPixelData = (uint8*)HeifReader::ReadImage(nWidth, nHeight, nBPP, request->OutOfMemory, pBuffer, nFileSize);
+			uint8* pPixelData = (uint8*)HeifReader::ReadImage(nWidth, nHeight, nBPP, nFrameCount, request->OutOfMemory, request->FrameIndex, pBuffer, nFileSize);
 			if (pPixelData != NULL) {
 				// Multiply alpha value into each AABBGGRR pixel
 				uint32* pImage32 = (uint32*)pPixelData;
