@@ -1,8 +1,13 @@
 #include "stdafx.h"
 
 #include "PNGWrapper.h"
+#include "png.h"
 #include "MaxImageDef.h"
 #include <stdexcept>
+#include <stdlib.h>
+
+// Uncomment to build without APNG support
+//#undef PNG_APNG_SUPPORTED
 
 /*
  * Modified from "load4apng.c"
@@ -36,10 +41,8 @@
  * 3. This notice may not be removed or altered from any source distribution.
  *
  */
-#include <stdlib.h>
-#include "png.h"
 
-struct FrameData {
+struct PngReader::png_cache {
 	png_structp png_ptr;
 	png_infop info_ptr;
 	png_uint_32 w0;
@@ -62,12 +65,12 @@ struct FrameData {
 	unsigned int channels;
 	unsigned int frame_index;
 	png_uint_32 frame_count;
+	void* buffer;
+	size_t buffer_size;
 	int buffer_offset;
 };
 
-struct FrameData env = { 0 };
-size_t cached_buffer_size = 0;
-void* cached_buffer = NULL;
+PngReader::png_cache PngReader::cache = { 0 };
 
 #ifdef PNG_APNG_SUPPORTED
 void BlendOver(unsigned char** rows_dst, unsigned char** rows_src, unsigned int x, unsigned int y, unsigned int w, unsigned int h)
@@ -104,69 +107,55 @@ void BlendOver(unsigned char** rows_dst, unsigned char** rows_src, unsigned int 
 }
 #endif
 
-void* ReadNextFrame()
+void* PngReader::ReadNextFrame()
 {
 	unsigned int j;
 #ifdef PNG_APNG_SUPPORTED
-	if (png_get_valid(env.png_ptr, env.info_ptr, PNG_INFO_acTL))
+	if (png_get_valid(cache.png_ptr, cache.info_ptr, PNG_INFO_acTL))
 	{
-		png_read_frame_head(env.png_ptr, env.info_ptr);
-		png_get_next_frame_fcTL(env.png_ptr, env.info_ptr, &env.w0, &env.h0, &env.x0, &env.y0, &env.delay_num, &env.delay_den, &env.dop, &env.bop);
+		png_read_frame_head(cache.png_ptr, cache.info_ptr);
+		png_get_next_frame_fcTL(cache.png_ptr, cache.info_ptr, &cache.w0, &cache.h0, &cache.x0, &cache.y0, &cache.delay_num, &cache.delay_den, &cache.dop, &cache.bop);
 	}
-	if (env.frame_index == env.first)
+	if (cache.frame_index == cache.first)
 	{
-		env.bop = PNG_BLEND_OP_SOURCE;
-		if (env.dop == PNG_DISPOSE_OP_PREVIOUS)
-			env.dop = PNG_DISPOSE_OP_BACKGROUND;
+		cache.bop = PNG_BLEND_OP_SOURCE;
+		if (cache.dop == PNG_DISPOSE_OP_PREVIOUS)
+			cache.dop = PNG_DISPOSE_OP_BACKGROUND;
 	}
 #endif
-	png_read_image(env.png_ptr, env.rows_frame);
+	png_read_image(cache.png_ptr, cache.rows_frame);
 
 #ifdef PNG_APNG_SUPPORTED
-	if (env.dop == PNG_DISPOSE_OP_PREVIOUS)
-		memcpy(env.p_temp, env.p_image, env.size);
+	if (cache.dop == PNG_DISPOSE_OP_PREVIOUS)
+		memcpy(cache.p_temp, cache.p_image, cache.size);
 
-	if (env.bop == PNG_BLEND_OP_OVER)
-		BlendOver(env.rows_image, env.rows_frame, env.x0, env.y0, env.w0, env.h0);
+	if (cache.bop == PNG_BLEND_OP_OVER)
+		BlendOver(cache.rows_image, cache.rows_frame, cache.x0, cache.y0, cache.w0, cache.h0);
 	else
 #endif
-		for (j = 0; j < env.h0; j++)
-			memcpy(env.rows_image[j + env.y0] + env.x0 * 4, env.rows_frame[j], env.w0 * 4);
+		for (j = 0; j < cache.h0; j++)
+			memcpy(cache.rows_image[j + cache.y0] + cache.x0 * 4, cache.rows_frame[j], cache.w0 * 4);
 
-	void* pixels = malloc(env.width * env.height * env.channels);
+	void* pixels = malloc(cache.width * cache.height * cache.channels);
 	if (pixels == NULL)
 		return NULL;
-	for (unsigned int j = 0; j < env.height; j++)
-		memcpy((char*)pixels + j * env.width * env.channels, env.rows_image[j], env.width * env.channels);
+	for (unsigned int j = 0; j < cache.height; j++)
+		memcpy((char*)pixels + j * cache.width * cache.channels, cache.rows_image[j], cache.width * cache.channels);
 
 #ifdef PNG_APNG_SUPPORTED
-	if (env.dop == PNG_DISPOSE_OP_PREVIOUS)
-		memcpy(env.p_image, env.p_temp, env.size);
+	if (cache.dop == PNG_DISPOSE_OP_PREVIOUS)
+		memcpy(cache.p_image, cache.p_temp, cache.size);
 	else
-		if (env.dop == PNG_DISPOSE_OP_BACKGROUND)
-			for (j = 0; j < env.h0; j++)
-				memset(env.rows_image[j + env.y0] + env.x0 * 4, 0, env.w0 * 4);
+		if (cache.dop == PNG_DISPOSE_OP_BACKGROUND)
+			for (j = 0; j < cache.h0; j++)
+				memset(cache.rows_image[j + cache.y0] + cache.x0 * 4, 0, cache.w0 * 4);
 #endif
-	env.frame_index++;
-	env.frame_index %= env.frame_count;
+	cache.frame_index++;
+	cache.frame_index %= cache.frame_count;
 	return pixels;
 }
 
-void read_data_fn(png_structp png_ptr, png_bytep outbuffer, png_size_t sizebytes)
-{
-	png_voidp io_ptr = png_get_io_ptr(png_ptr);
-	if (io_ptr == NULL)
-		png_error(png_ptr, "png_get_io_ptr returned NULL");
-	else if (env.buffer_offset + sizebytes > cached_buffer_size)
-		png_error(png_ptr, "Attempted to read out of bounds");
-	else
-	{
-		memcpy(outbuffer, (char*)io_ptr + env.buffer_offset, sizebytes);
-		env.buffer_offset += sizebytes;
-	}
-}
-
-bool BeginReading(void* buffer, size_t sizebytes, bool& outOfMemory)
+bool PngReader::BeginReading(void* buffer, size_t sizebytes, bool& outOfMemory)
 {
 	unsigned int    width, height, channels, rowbytes, size, i, j;
 	png_bytepp      rows_image;
@@ -180,8 +169,8 @@ bool BeginReading(void* buffer, size_t sizebytes, bool& outOfMemory)
 	png_infop   info_ptr = png_create_info_struct(png_ptr);
 	if (png_ptr && info_ptr)
 	{
-		env.info_ptr = info_ptr;
-		env.png_ptr = png_ptr;
+		cache.info_ptr = info_ptr;
+		cache.png_ptr = png_ptr;
 		if (setjmp(png_jmpbuf(png_ptr)))
 		{
 			PngReader::DeleteCache();
@@ -190,6 +179,19 @@ bool BeginReading(void* buffer, size_t sizebytes, bool& outOfMemory)
 		// skip png signature since we already checked it
 		png_set_sig_bytes(png_ptr, 8);
 		// custom read function so we can read from memory
+		png_rw_ptr read_data_fn = [](png_structp png_ptr, png_bytep outbuffer, png_size_t sizebytes)
+		{
+			png_voidp io_ptr = png_get_io_ptr(png_ptr);
+			if (io_ptr == NULL)
+				png_error(png_ptr, "png_get_io_ptr returned NULL");
+			else if (cache.buffer_offset + sizebytes > cache.buffer_size)
+				png_error(png_ptr, "Attempted to read out of bounds");
+			else
+			{
+				memcpy(outbuffer, (char*)io_ptr + cache.buffer_offset, sizebytes);
+				cache.buffer_offset += sizebytes;
+			}
+		};
 		png_set_read_fn(png_ptr, (char*)buffer, read_data_fn);
 		png_read_info(png_ptr, info_ptr);
 		png_set_expand(png_ptr);
@@ -243,29 +245,29 @@ bool BeginReading(void* buffer, size_t sizebytes, bool& outOfMemory)
 				rows_frame[j] = p_frame + j * rowbytes;
 
 #ifdef PNG_APNG_SUPPORTED
-			env.bop = bop;
-			// env.plays = plays
-			env.delay_den = delay_den;
-			env.delay_num = delay_num;
-			env.dop = dop;
-			env.first = first;
+			cache.bop = bop;
+			// cache.plays = plays
+			cache.delay_den = delay_den;
+			cache.delay_num = delay_num;
+			cache.dop = dop;
+			cache.first = first;
 #endif
-			env.channels = channels;
-			env.h0 = h0;
-			env.height = height;
-			// env.info_ptr = info_ptr;
-			// env.png_ptr = png_ptr;
-			env.p_image = p_image;
-			env.p_frame = p_frame;
-			env.p_temp = p_temp;
-			env.rows_frame = rows_frame;
-			env.rows_image = rows_image;
-			env.size = size;
-			env.w0 = w0;
-			env.width = width;
-			env.x0 = x0;
-			env.y0 = y0;
-			env.frame_count = frames;
+			cache.channels = channels;
+			cache.h0 = h0;
+			cache.height = height;
+			// cache.info_ptr = info_ptr;
+			// cache.png_ptr = png_ptr;
+			cache.p_image = p_image;
+			cache.p_frame = p_frame;
+			cache.p_temp = p_temp;
+			cache.rows_frame = rows_frame;
+			cache.rows_image = rows_image;
+			cache.size = size;
+			cache.w0 = w0;
+			cache.width = width;
+			cache.x0 = x0;
+			cache.y0 = y0;
+			cache.frame_count = frames;
 			return frames > 0;
 		}
 		free(p_image);
@@ -278,19 +280,23 @@ bool BeginReading(void* buffer, size_t sizebytes, bool& outOfMemory)
 	return false;
 }
 
-void DeleteCacheInternal(bool freeBuffer)
+void PngReader::DeleteCacheInternal(bool free_buffer)
 {
-	// png_read_end(env.png_ptr, env.info_ptr);
-	free(env.rows_frame);
-	free(env.rows_image);
-	free(env.p_temp);
-	free(env.p_frame);
-	free(env.p_image);
-	png_destroy_read_struct(&env.png_ptr, &env.info_ptr, NULL);
-	env = { 0 };
-	if (freeBuffer) {
-		free(cached_buffer);
-		cached_buffer = NULL;
+	// png_read_end(cache.png_ptr, cache.info_ptr);
+	free(cache.rows_frame);
+	free(cache.rows_image);
+	free(cache.p_temp);
+	free(cache.p_frame);
+	free(cache.p_image);
+	png_destroy_read_struct(&cache.png_ptr, &cache.info_ptr, NULL);
+	void* temp_buffer = cache.buffer;
+	size_t temp_buffer_size = cache.buffer_size;
+	cache = { 0 };
+	if (free_buffer) {
+		free(temp_buffer);
+	} else {
+		cache.buffer = temp_buffer;
+		cache.buffer_size = temp_buffer_size;
 	}
 }
 
@@ -304,19 +310,19 @@ void* PngReader::ReadImage(int& width,
 	void* buffer,
 	size_t sizebytes)
 {
-	if (!cached_buffer) {
+	if (!cache.buffer) {
 		if (sizebytes < 8)
 			return NULL;
-		cached_buffer = malloc(sizebytes-8);
-		if (!cached_buffer)
+		cache.buffer = malloc(sizebytes-8);
+		if (!cache.buffer)
 			return NULL;
 		// copy everything except the PNG signature (first 8 bytes)
-		memcpy(cached_buffer, (char*)buffer+8, sizebytes-8);
-		cached_buffer_size = sizebytes-8;
+		memcpy(cache.buffer, (char*)buffer+8, sizebytes-8);
+		cache.buffer_size = sizebytes-8;
 	}
-	buffer = cached_buffer;
-	sizebytes = cached_buffer_size;
-	if (!env.png_ptr || env.frame_index == 0) {
+	buffer = cache.buffer;
+	sizebytes = cache.buffer_size;
+	if (!cache.png_ptr || cache.frame_index == 0) {
 		DeleteCacheInternal(false);
 		if (!buffer || !BeginReading(buffer, sizebytes, outOfMemory)) {
 			return NULL;
@@ -324,22 +330,22 @@ void* PngReader::ReadImage(int& width,
 
 	}
 
-	bool read_two = env.frame_index < env.first;
+	bool read_two = cache.frame_index < cache.first;
 	void* pixels = ReadNextFrame();
 	if (pixels && read_two)
 		pixels = ReadNextFrame();
 	
-	width = env.width;
-	height = env.height;
-	nchannels = env.channels;
-	has_animation = (env.frame_count > 1);
-	frame_count = env.frame_count;
+	width = cache.width;
+	height = cache.height;
+	nchannels = cache.channels;
+	has_animation = (cache.frame_count > 1);
+	frame_count = cache.frame_count;
 
 	// https://wiki.mozilla.org/APNG_Specification
 	// "If the denominator is 0, it is to be treated as if it were 100"
-	if (!env.delay_den)
-		env.delay_den = 100;
-	frame_time = 1000.0 * env.delay_num / env.delay_den;
+	if (!cache.delay_den)
+		cache.delay_den = 100;
+	frame_time = 1000.0 * cache.delay_num / cache.delay_den;
 
 	return pixels;
 }
