@@ -98,8 +98,8 @@ static EImageFormat GetImageFormat(LPCTSTR sFileName) {
 		memcmp(header+4, "ftyp", 4) == 0 &&
 		(
 			// https://github.com/strukturag/libheif/issues/83
-			// memcmp(header+8, "avif", 4) == 0 ||
-			// memcmp(header+8, "avis", 4) == 0 ||
+			memcmp(header+8, "avif", 4) == 0 ||
+			memcmp(header+8, "avis", 4) == 0 ||
 			memcmp(header+8, "heic", 4) == 0 ||
 			memcmp(header+8, "heix", 4) == 0 ||
 			memcmp(header+8, "hevc", 4) == 0 ||
