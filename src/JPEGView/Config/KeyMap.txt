@@ -161,7 +161,7 @@ F4                      IDM_KEEP_PARAMETERS
 F5                      IDM_AUTO_CORRECTION
 Shift+F5                IDM_AUTO_CORRECTION_SECTION
 F6                      IDM_LDC
-Shift+Ctrl+F6           IDM_LDC_HIGHLIGHTS_INC
+Ctrl+Shift+F6           IDM_LDC_HIGHLIGHTS_INC
 Ctrl+F6                 IDM_LDC_SHADOWS_INC
 Alt+Shift+F6            IDM_LDC_HIGHLIGHTS_DEC
 Alt+F6                  IDM_LDC_SHADOWS_DEC
@@ -209,3 +209,4 @@ Ctrl+L                  IDM_LANDSCAPE_MODE
 R                       IDM_ROTATE_90_LOSSLESS_CONFIRM
 T                       IDM_ROTATE_270_LOSSLESS_CONFIRM
 W                       IDM_EXPLORE
+Shift+F12               IDM_ALWAYS_ON_TOP
