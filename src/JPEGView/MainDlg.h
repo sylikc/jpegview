@@ -281,6 +281,7 @@ private:
 	CPoint m_DIBOffsets;
 	int m_nCapturedX, m_nCapturedY;
 	int m_nMouseX, m_nMouseY;
+	bool m_bDefaultSelectionMode;
 	bool m_bShowFileName;
 	bool m_bFullScreenMode;
 	bool m_bAutoFitWndToImage;
@@ -324,6 +325,7 @@ private:
 	bool m_isBeforeFileSelected;
 	double m_dLastImageDisplayTime;
 	bool m_bWindowOverlapped;
+	bool m_bAlwaysOnTop;
 
 	void ExploreFile();
 	bool OpenFileWithDialog(bool bFullScreen, bool bAfterStartup);
@@ -367,6 +369,7 @@ private:
 	void CleanupAndTerminate();
 	void InvalidateHelpDlg();
 	bool CloseHelpDlg();
+	LONG SetCurrentWindowStyle();
 	// this is for animated GIFs
 	void StartAnimation();
 	void AdjustAnimationFrameTime();

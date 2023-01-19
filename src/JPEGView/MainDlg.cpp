@@ -195,6 +195,7 @@ CMainDlg::CMainDlg(bool bForceFullScreen) {
 	m_bCurrentImageIsSpecialProcessing = false;
 	m_dCurrentInitialLightenShadows = -1;
 
+	m_bDefaultSelectionMode = sp.DefaultSelectionMode();
 	m_bShowFileName = sp.ShowFileName();
 	m_bKeepParams = sp.KeepParams();
 	m_eAutoZoomModeWindowed = sp.AutoZoomMode();
@@ -389,7 +390,7 @@ LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam
 
 	if (!m_bFullScreenMode) {
 		// Window mode, set correct window size
-		this->SetWindowLongW(GWL_STYLE, this->GetWindowLongW(GWL_STYLE) | WS_OVERLAPPEDWINDOW | WS_VISIBLE);
+		SetCurrentWindowStyle();
 		if (!IsAdjustWindowToImage()) {
 			CRect windowRect = CMultiMonitorSupport::GetDefaultWindowRect();
 			this->SetWindowPos(HWND_TOP, windowRect.left, windowRect.top, windowRect.Width(), windowRect.Height(), SWP_NOZORDER | SWP_NOCOPYBITS);
@@ -493,7 +494,7 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 		} else if (m_pTiltCorrectionPanelCtl->IsVisible()) {
 			pDIBData = m_pTiltCorrectionPanelCtl->GetDIBForPreview(newSize, clippedSize, offsetsInImage, 
 				*m_pImageProcParams, CreateProcessingFlags(false, m_bAutoContrast, m_bAutoContrastSection, m_bLDC, false, m_bLandscapeMode));
-		}  else {
+		} else {
 			pDIBData = m_pCurrentImage->GetDIB(newSize, clippedSize, offsetsInImage, 
 				*m_pImageProcParams, 
 				CreateProcessingFlags(m_bHQResampling && !m_bTemporaryLowQ && !m_bZoomMode, m_bAutoContrast, m_bAutoContrastSection, m_bLDC, false, m_bLandscapeMode));
@@ -752,9 +753,10 @@ LRESULT CMainDlg::OnLButtonDown(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam,
 				m_bZoomMode = true;
 				m_dStartZoom = m_dZoom;
 				m_nCapturedX = m_nMouseX; m_nCapturedY = m_nMouseY;
-			} else if ((bCtrl || !bDraggingRequired || bHandleByCropping) && !bTransformPanelShown) {
+			} else if ((bCtrl || bHandleByCropping || (!bDraggingRequired && m_bDefaultSelectionMode)) && !bTransformPanelShown) {
+				// always go into selection/crop when in the right state and CTRL held down, otherwise it depends on the DefaultSelectionMode setting
 				m_pCropCtl->StartCropping(pointClicked.x, pointClicked.y);
-			} else if (!bTransformPanelShown) {
+			} else if (bDraggingRequired && !bTransformPanelShown) {
 				StartDragging(pointClicked.x, pointClicked.y, false);
 			} 
 		}
@@ -1724,12 +1726,8 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 			if (!m_bFullScreenMode) {
 				CRect windowRect;
 
-				if (m_bWindowOverlapped) {
-					this->SetWindowLongW(GWL_STYLE, this->GetWindowLongW(GWL_STYLE) | WS_OVERLAPPEDWINDOW | WS_VISIBLE);
-				} else {
-					// restore hidden title bar if enabled
-					this->SetWindowLongW(GWL_STYLE, this->GetWindowLongW(GWL_STYLE) & ~WS_OVERLAPPEDWINDOW | WS_MINIMIZEBOX | WS_MAXIMIZEBOX | WS_VISIBLE);
-				}
+				// restore hidden title bar if enabled
+				SetCurrentWindowStyle();
 
 				HICON hIconSmall = (HICON)::LoadImage(_Module.GetResourceInstance(), MAKEINTRESOURCE(IDR_MAINFRAME), 
 					IMAGE_ICON, ::GetSystemMetrics(SM_CXSMICON), ::GetSystemMetrics(SM_CYSMICON), LR_DEFAULTCOLOR);
@@ -1766,26 +1764,20 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 				// only available when full screen mode is not active
 
 				m_bWindowOverlapped = !m_bWindowOverlapped;
-				if (m_bWindowOverlapped) {
-					this->SetWindowLongW(GWL_STYLE, this->GetWindowLongW(GWL_STYLE) | WS_OVERLAPPEDWINDOW);
-				} else {
-					this->SetWindowLongW(GWL_STYLE, this->GetWindowLongW(GWL_STYLE) & ~WS_OVERLAPPEDWINDOW | WS_MINIMIZEBOX | WS_MAXIMIZEBOX); // lose sizing
-					// just doing (& ~WS_CAPTION) leads to having a sliver of white bar on top for resizing
-				}
+				SetCurrentWindowStyle();
 
-				// TODO still fixing the redraw
-				// force a redraw since the client rects and draw areas all shifted
-				// call the OnSize, as if a resize happened
-				//this->Invalidate(FALSE);
-				//this->UpdateWindow();
-
-				BOOL t;  // unused, just needs to be passed into OnSize (temporary)
-				this->OnSize(NULL, NULL, NULL, t);  // piggyback on the resize handler to resize the preview/nav bars
+				StartLowQTimer(ZOOM_TIMEOUT);  // cause a redraw as if zoom changed
 			}
 
 			break;
 		case IDM_ALWAYS_ON_TOP:
-			// TODO stub only
+			m_bAlwaysOnTop = !m_bAlwaysOnTop;
+
+			this->SetWindowPos(
+				m_bAlwaysOnTop ? HWND_TOPMOST : HWND_NOTOPMOST,
+				0, 0, 0, 0,
+				SWP_NOMOVE | SWP_NOSIZE  // causes SetWindowPos to ignore the parameters for top/left/width/height
+			);
 
 			break;
 		case IDM_FIT_WINDOW_TO_IMAGE:
@@ -2049,6 +2041,18 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 		ExecuteUserCommand(HelpersGUI::FindOpenWithCommand(nCommand - IDM_FIRST_OPENWITH_CMD));
 	}
 }
+
+// Setting window styles have gotten out of hand with the addition of no title bar
+// instead of each call trying to figure out the logic, consolidate it to one function
+LONG CMainDlg::SetCurrentWindowStyle() {
+	if (m_bWindowOverlapped) {
+		return this->SetWindowLongW(GWL_STYLE, this->GetWindowLongW(GWL_STYLE) | WS_OVERLAPPEDWINDOW | WS_VISIBLE);
+	} else {
+		return this->SetWindowLongW(GWL_STYLE, this->GetWindowLongW(GWL_STYLE) & ~WS_OVERLAPPEDWINDOW | WS_MINIMIZEBOX | WS_MAXIMIZEBOX | WS_VISIBLE);  // lose resizing
+		// just doing (& ~WS_CAPTION) leads to having a sliver of white bar on top but allows for resizing
+	}
+}
+
 
 void CMainDlg::ExploreFile() {
 	ITEMIDLIST* pidl = ILCreateFromPath(CurrentFileName(false));
@@ -2807,7 +2811,7 @@ void CMainDlg::MouseOn() {
 		::ShowCursor(TRUE);
 		m_bMouseOn = true;
 		if (m_pNavPanelCtl != NULL) { // can be called very early
-		  this->InvalidateRect(m_pNavPanelCtl->PanelRect(), FALSE);
+			this->InvalidateRect(m_pNavPanelCtl->PanelRect(), FALSE);
 		}
 	}
 }
