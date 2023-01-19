@@ -815,27 +815,8 @@ LRESULT CMainDlg::OnRButtonUp(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*
 	return 0;
 }
 
-LRESULT CMainDlg::OnMButtonDown(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, BOOL& bHandled) {
+LRESULT CMainDlg::OnMButtonDown(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, BOOL& /*bHandled*/) {
 	this->SetCapture();
-
-	bool bAlt = (::GetKeyState(VK_MENU) & 0x8000) != 0;
-	if (bAlt && !m_bFullScreenMode) {
-		m_bWindowOverlapped = !m_bWindowOverlapped;
-		if (m_bWindowOverlapped) {
-			this->SetWindowLongW(GWL_STYLE, this->GetWindowLongW(GWL_STYLE) | WS_OVERLAPPEDWINDOW);
-		} else {
-			this->SetWindowLongW(GWL_STYLE, this->GetWindowLongW(GWL_STYLE) & ~WS_OVERLAPPEDWINDOW | WS_MINIMIZEBOX | WS_MAXIMIZEBOX); // lose sizing
-			// just doing (& ~WS_CAPTION) leads to having a sliver of white bar on top for resizing
-		}
-
-		// force a redraw since the client rects and draw areas all shifted
-		// call the OnSize, as if a resize happened
-		//this->Invalidate(FALSE);
-		//this->UpdateWindow();
-		this->OnSize(NULL, NULL, NULL, bHandled);  // piggyback on the resize handler to resize the preview/nav bars
-		return 0;
-	}
-
 	if (HandleMouseButtonByKeymap(VK_MBUTTON)) {
 		return 0;
 	}
@@ -1157,6 +1138,7 @@ LRESULT CMainDlg::OnContextMenu(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam,
 	HMENU hMenuZoom = ::GetSubMenu(hMenuTrackPopup, SUBMENU_POS_ZOOM);
 	if (m_bSpanVirtualDesktop) ::CheckMenuItem(hMenuZoom,  IDM_SPAN_SCREENS, MF_CHECKED);
 	if (m_bFullScreenMode) ::CheckMenuItem(hMenuZoom,  IDM_FULL_SCREEN_MODE, MF_CHECKED);
+	if (!m_bWindowOverlapped) ::CheckMenuItem(hMenuZoom, IDM_HIDE_TITLE_BAR, MF_CHECKED);
 	if (IsAdjustWindowToImage() && IsImageExactlyFittingWindow()) ::CheckMenuItem(hMenuZoom, IDM_FIT_WINDOW_TO_IMAGE, MF_CHECKED);
 	HMENU hMenuAutoZoomMode = ::GetSubMenu(hMenuTrackPopup, SUBMENU_POS_AUTOZOOMMODE);
 	::CheckMenuItem(hMenuAutoZoomMode, GetAutoZoomMode() * 10 + IDM_AUTO_ZOOM_FIT_NO_ZOOM, MF_CHECKED);
@@ -1185,6 +1167,7 @@ LRESULT CMainDlg::OnContextMenu(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam,
 	if (CSettingsProvider::This().StoreToEXEPath()) ::EnableMenuItem(hMenuSettings, IDM_UPDATE_USER_CONFIG, MF_BYCOMMAND | MF_GRAYED);
 	if (m_bFullScreenMode) ::EnableMenuItem(hMenuZoom, IDM_FIT_WINDOW_TO_IMAGE, MF_BYCOMMAND | MF_GRAYED);
 	if (!m_bFullScreenMode) ::EnableMenuItem(hMenuZoom, IDM_SPAN_SCREENS, MF_BYCOMMAND | MF_GRAYED);
+	if (m_bFullScreenMode) ::EnableMenuItem(hMenuZoom, IDM_HIDE_TITLE_BAR, MF_BYCOMMAND | MF_GRAYED);
 
 	::EnableMenuItem(hMenuMovie, IDM_SLIDESHOW_START, MF_BYCOMMAND | MF_GRAYED);
 	::EnableMenuItem(hMenuMovie, IDM_MOVIE_START_FPS, MF_BYCOMMAND | MF_GRAYED);
@@ -1719,7 +1702,7 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 			}
 			break;
 		case IDM_SPAN_SCREENS:
-			if (CMultiMonitorSupport::IsMultiMonitorSystem() && m_bFullScreenMode) {
+			if (m_bFullScreenMode && CMultiMonitorSupport::IsMultiMonitorSystem()) {
 				m_dZoom = -1.0;
 				this->Invalidate(FALSE);
 				if (m_bSpanVirtualDesktop) {
@@ -1738,7 +1721,14 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 			m_dZoomAtResizeStart = 1.0;
 			if (!m_bFullScreenMode) {
 				CRect windowRect;
-				this->SetWindowLongW(GWL_STYLE, this->GetWindowLongW(GWL_STYLE) | WS_OVERLAPPEDWINDOW | WS_VISIBLE);
+
+				if (m_bWindowOverlapped) {
+					this->SetWindowLongW(GWL_STYLE, this->GetWindowLongW(GWL_STYLE) | WS_OVERLAPPEDWINDOW | WS_VISIBLE);
+				} else {
+					// restore hidden title bar if enabled
+					this->SetWindowLongW(GWL_STYLE, this->GetWindowLongW(GWL_STYLE) & ~WS_OVERLAPPEDWINDOW | WS_MINIMIZEBOX | WS_MAXIMIZEBOX | WS_VISIBLE);
+				}
+
 				HICON hIconSmall = (HICON)::LoadImage(_Module.GetResourceInstance(), MAKEINTRESOURCE(IDR_MAINFRAME), 
 					IMAGE_ICON, ::GetSystemMetrics(SM_CXSMICON), ::GetSystemMetrics(SM_CYSMICON), LR_DEFAULTCOLOR);
 				SetIcon(hIconSmall, FALSE);
@@ -1768,6 +1758,29 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 			m_dZoom = -1;
 			StartLowQTimer(ZOOM_TIMEOUT);
 			this->SetWindowPos(NULL, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_NOCOPYBITS | SWP_FRAMECHANGED);
+			break;
+		case IDM_HIDE_TITLE_BAR:
+			if (!m_bFullScreenMode) {
+				// only available when full screen mode is not active
+
+				m_bWindowOverlapped = !m_bWindowOverlapped;
+				if (m_bWindowOverlapped) {
+					this->SetWindowLongW(GWL_STYLE, this->GetWindowLongW(GWL_STYLE) | WS_OVERLAPPEDWINDOW);
+				} else {
+					this->SetWindowLongW(GWL_STYLE, this->GetWindowLongW(GWL_STYLE) & ~WS_OVERLAPPEDWINDOW | WS_MINIMIZEBOX | WS_MAXIMIZEBOX); // lose sizing
+					// just doing (& ~WS_CAPTION) leads to having a sliver of white bar on top for resizing
+				}
+
+				// TODO still fixing the redraw
+				// force a redraw since the client rects and draw areas all shifted
+				// call the OnSize, as if a resize happened
+				//this->Invalidate(FALSE);
+				//this->UpdateWindow();
+
+				BOOL t;  // unused, just needs to be passed into OnSize (temporary)
+				this->OnSize(NULL, NULL, NULL, t);  // piggyback on the resize handler to resize the preview/nav bars
+			}
+
 			break;
 		case IDM_FIT_WINDOW_TO_IMAGE:
 			// Note: If auto fit is on but the window size does not match the image size (due to manual window resizing), restore window to image
