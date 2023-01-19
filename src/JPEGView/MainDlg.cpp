@@ -261,6 +261,7 @@ CMainDlg::CMainDlg(bool bForceFullScreen) {
 	m_isUserFitToScreen = false;
 	m_autoZoomFitToScreen = Helpers::ZM_FillScreen;
 	m_bWindowOverlapped = true;  // default real window with border
+	m_bAlwaysOnTop = false;  // default normal
 
 	m_pPanelMgr = new CPanelMgr();
 	m_pZoomNavigatorCtl = NULL;
@@ -1139,6 +1140,7 @@ LRESULT CMainDlg::OnContextMenu(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam,
 	if (m_bSpanVirtualDesktop) ::CheckMenuItem(hMenuZoom,  IDM_SPAN_SCREENS, MF_CHECKED);
 	if (m_bFullScreenMode) ::CheckMenuItem(hMenuZoom,  IDM_FULL_SCREEN_MODE, MF_CHECKED);
 	if (!m_bWindowOverlapped) ::CheckMenuItem(hMenuZoom, IDM_HIDE_TITLE_BAR, MF_CHECKED);
+	if (m_bAlwaysOnTop) ::CheckMenuItem(hMenuZoom, IDM_ALWAYS_ON_TOP, MF_CHECKED);
 	if (IsAdjustWindowToImage() && IsImageExactlyFittingWindow()) ::CheckMenuItem(hMenuZoom, IDM_FIT_WINDOW_TO_IMAGE, MF_CHECKED);
 	HMENU hMenuAutoZoomMode = ::GetSubMenu(hMenuTrackPopup, SUBMENU_POS_AUTOZOOMMODE);
 	::CheckMenuItem(hMenuAutoZoomMode, GetAutoZoomMode() * 10 + IDM_AUTO_ZOOM_FIT_NO_ZOOM, MF_CHECKED);
@@ -1780,6 +1782,10 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 				BOOL t;  // unused, just needs to be passed into OnSize (temporary)
 				this->OnSize(NULL, NULL, NULL, t);  // piggyback on the resize handler to resize the preview/nav bars
 			}
+
+			break;
+		case IDM_ALWAYS_ON_TOP:
+			// TODO stub only
 
 			break;
 		case IDM_FIT_WINDOW_TO_IMAGE:
