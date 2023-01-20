@@ -1767,12 +1767,14 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 				SetCurrentWindowStyle();
 
 				StartLowQTimer(ZOOM_TIMEOUT);  // cause a redraw as if zoom changed
+				this->SetWindowPos(NULL, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_NOCOPYBITS | SWP_FRAMECHANGED);  // tell the window the Frame has changed
 			}
 
 			break;
 		case IDM_ALWAYS_ON_TOP:
 			m_bAlwaysOnTop = !m_bAlwaysOnTop;
 
+			// SetWindowPos - https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setwindowpos
 			this->SetWindowPos(
 				m_bAlwaysOnTop ? HWND_TOPMOST : HWND_NOTOPMOST,
 				0, 0, 0, 0,
