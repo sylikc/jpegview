@@ -429,9 +429,12 @@ namespace HelpersGUI {
 			LPCTSTR sEnding = _tcsrchr(sFailedFileName, _T('.'));
 			if (sEnding != NULL) {
 				sEnding += 1;
-				if (_tcsicmp(sEnding, _T("JXL")) == 0) {
+				if (_tcsicmp(sEnding, _T("JXL")) == 0 ||
+					_tcsicmp(sEnding, _T("HEIF")) == 0 ||
+					_tcsicmp(sEnding, _T("HEIC")) == 0 ||
+					_tcsicmp(sEnding, _T("AVIF")) == 0) {
 					_tcscat_s(buff, BUF_LEN, _T("\n"));
-					_tcscat_s(buff, BUF_LEN, CNLS::GetString(_T("JXL decoding requires the Microsoft Visual C++ Redistributable")));
+					_tcscat_s(buff, BUF_LEN, CNLS::GetString(_T("Decoding this format requires the Microsoft Visual C++ Redistributable.")));
 				}
 			}
 		}

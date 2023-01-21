@@ -768,6 +768,7 @@ void CImageLoadThread::ProcessReadHEIFRequest(CRequest* request) {
 		return;
 	}
 	char* pBuffer = NULL;
+	UINT nPrevErrorMode = SetErrorMode(SEM_FAILCRITICALERRORS);
 	try {
 		unsigned int nFileSize = 0;
 		unsigned int nNumBytesRead;
@@ -804,6 +805,7 @@ void CImageLoadThread::ProcessReadHEIFRequest(CRequest* request) {
 		delete request->Image;
 		request->Image = NULL;
 	}
+	SetErrorMode(nPrevErrorMode);
 	::CloseHandle(hFile);
 	delete[] pBuffer;
 }
