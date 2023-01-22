@@ -324,7 +324,7 @@ private:
 	bool m_bUseLosslessWEBP;
 	bool m_isBeforeFileSelected;
 	double m_dLastImageDisplayTime;
-	bool m_bWindowOverlapped;
+	bool m_bWindowBorderless;
 	bool m_bAlwaysOnTop;
 
 	void ExploreFile();
