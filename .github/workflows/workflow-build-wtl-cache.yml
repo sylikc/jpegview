@@ -4,6 +4,7 @@ name: Build and Upload Artifacts
 
 
 
+# GH Action Reusable Workflow -- https://docs.github.com/en/actions/using-workflows/reusing-workflows
 on:
   workflow_call:
     inputs:
@@ -24,7 +25,12 @@ on:
 #
 # Thus, the process below still caches the WTL source files from a specific release
 # download.  This may not match the release version linked to the submodule.
-# Update as necessary
+#
+# (Update referenced version as necessary)
+#
+# NOTE: This workflow may not be used in the future, but kept around for historical
+# reasons (might need to use this cache routine in the future for other libs),
+# or in case it is preferred to use this if the other breaks
 
 
 jobs:
