@@ -29,6 +29,7 @@ public:
 	double MagentaGreen() { return m_dMagentaGreen; }
 	double YellowBlue() { return m_dYellowBlue; }
 	bool HighQualityResampling() { return m_bHQRS; }
+	bool DefaultSelectionMode() { return m_bDefaultSelectionMode; }
 	bool ShowFileName() { return m_bShowFileName; }
 	bool ShowFileInfo() { return m_bShowFileInfo; }
 	bool ShowEXIFDateInTitle() { return m_bShowEXIFDateInTitle; }
@@ -193,6 +194,7 @@ private:
 	double m_dMagentaGreen;
 	double m_dYellowBlue;
 	bool m_bHQRS;
+	bool m_bDefaultSelectionMode;
 	bool m_bShowFileName;
 	bool m_bShowFileInfo;
 	bool m_bShowEXIFDateInTitle;

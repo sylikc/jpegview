@@ -130,7 +130,7 @@ namespace Helpers {
 	void GetZoomParameters(float & fZoom, CPoint & offsets, CSize imageSize, CSize windowSize, CRect zoomRect);
 
 	// Gets a window rectangle (in screen coordinates) that fits the given image
-	CRect GetWindowRectMatchingImageSize(HWND hWnd, CSize minSize, CSize maxSize, double& dZoom, CJPEGImage* pImage, bool bForceCenterWindow, bool bKeepAspectRatio);
+	CRect GetWindowRectMatchingImageSize(HWND hWnd, CSize minSize, CSize maxSize, double& dZoom, CJPEGImage* pImage, bool bForceCenterWindow, bool bKeepAspectRatio, bool bWindowBorderless);
 
 	// Gets if the given image can be displayed without sampling down the image.
 	bool CanDisplayImageWithoutResize(HWND hWnd, CJPEGImage* pImage);
@@ -140,6 +140,9 @@ namespace Helpers {
 
 	// Gets the maximum client size for a framed window that fits into the working area of the screen the given window is placed on
 	CSize GetMaxClientSize(HWND hWnd);
+
+	// gets the size from GetSystemMetrics() for SM_CYCAPTION
+	int GetWindowCaptionSize();
 
 	// Gets the total border size of a window. This includes the frame sizes and the size of the window caption area.
 	// The window size equals the client area size plus this border size

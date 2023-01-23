@@ -1,6 +1,6 @@
 // This file defines the key mapping for JPEGView
-// Make sure not to corrupt it - else no keys are working anymore!
-// It is possible to map multiple keys to the same command but not multiple commands to the same key
+// Make sure not to corrupt it - or else no keys will work anymore!
+// Mapping multiple keys to the same command is allowed, but not multiple commands to the same key
 
 // This section contains the definitions of the available JPEGView commands - do not modify!
 #define IDM_DONOTHING		1			// do nothing (can be used to disable a standard command for a mouse button)
@@ -70,6 +70,8 @@
 #define IDM_FIT_WINDOW_TO_IMAGE	12005			// toggle fit window automatically to image, avoiding black borders
 #define IDM_SPAN_SCREENS	12010			// span over all screens
 #define IDM_FULL_SCREEN_MODE 	12011			// toggle full screen mode
+#define IDM_HIDE_TITLE_BAR		12012			// toggle hiding window title bar.  Note: in this mode, the window can't be manually resized
+#define IDM_ALWAYS_ON_TOP		12013			// toggle window mode to always on top
 #define IDM_ZOOM_400        	12020			// zoom to 400 %
 #define IDM_ZOOM_200		12030			// zoom to 200 %
 #define IDM_ZOOM_100		12040			// zoom to 100 %
@@ -116,19 +118,20 @@
 
 // This section contains the key map. A small number of keys is predefined and cannot be changed:
 // F1 for help, Alt+F4 for exit, 0..9 for slide show
-// The following keys are recognized: 
+// The following keys are recognized:
 // Alt, Ctrl, Shift, Esc, Return, Space, End, Home, Back, Tab, PgDn, PgUp
 // Left, Right, Up, Down, Insert, Del, Plus, Minus, Mul, Div, Comma, Period
 // A .. Z  F1 .. F12
 
-// It is also possible to bind a command to a mouse button. Be aware that you override the default
-// functionality (e.g. to pan with left mouse) when you do so! Mouse buttons can be combined with 
-// Alt, Ctrl and Shift but not with other keys or other mouse buttons.
+// It is also possible to bind a command to a mouse button.
+// Be careful when you override the default functionality (e.g. to pan with left mouse)!
+// Mouse buttons can be combined with:  Alt, Ctrl and Shift
+// but not with other keys or other mouse buttons.
 // The following mouse buttons are recognized:
 // MouseL, MouseR, MouseM, MouseX1, MouseX2, MouseDblClk
 // (Left, right, middle, extra mouse buttons, mouse left double click)
 
-// Uncomment the following line if you want to exit JPEGView with the Esc key immediatly when playing an animation or a slideshow
+// Uncomment the following line if you want to exit JPEGView with the Esc key immediately when playing an animation or a slideshow
 // Esc                    IDM_EXIT
 PgDn                    IDM_NEXT
 Right                   IDM_NEXT
@@ -158,7 +161,7 @@ F4                      IDM_KEEP_PARAMETERS
 F5                      IDM_AUTO_CORRECTION
 Shift+F5                IDM_AUTO_CORRECTION_SECTION
 F6                      IDM_LDC
-Shift+Ctrl+F6           IDM_LDC_HIGHLIGHTS_INC
+Ctrl+Shift+F6           IDM_LDC_HIGHLIGHTS_INC
 Ctrl+F6                 IDM_LDC_SHADOWS_INC
 Alt+Shift+F6            IDM_LDC_HIGHLIGHTS_DEC
 Alt+F6                  IDM_LDC_SHADOWS_DEC
@@ -166,6 +169,7 @@ F7                      IDM_LOOP_FOLDER
 F8                      IDM_LOOP_RECURSIVELY
 F9                      IDM_LOOP_SIBLINGS
 F11                     IDM_FULL_SCREEN_MODE
+Shift+F11               IDM_HIDE_TITLE_BAR
 Ctrl+F11                IDM_FIT_WINDOW_TO_IMAGE
 F12                     IDM_SPAN_SCREENS
 Ctrl+F12                IDM_TOGGLE_MONITOR
@@ -205,3 +209,4 @@ Ctrl+L                  IDM_LANDSCAPE_MODE
 R                       IDM_ROTATE_90_LOSSLESS_CONFIRM
 T                       IDM_ROTATE_270_LOSSLESS_CONFIRM
 W                       IDM_EXPLORE
+Shift+F12               IDM_ALWAYS_ON_TOP

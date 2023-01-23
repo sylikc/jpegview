@@ -412,6 +412,9 @@ BEGIN
             MENUITEM "Full screen mode",            IDM_FULL_SCREEN_MODE
             MENUITEM "Fit window to image",         IDM_FIT_WINDOW_TO_IMAGE
             MENUITEM SEPARATOR
+            MENUITEM "Hide window title bar",       IDM_HIDE_TITLE_BAR
+            MENUITEM "Set window always on top",    IDM_ALWAYS_ON_TOP
+            MENUITEM SEPARATOR
             MENUITEM "400 %",                       IDM_ZOOM_400
             MENUITEM "200 %",                       IDM_ZOOM_200
             MENUITEM "100 %\t0x3a98",               IDM_ZOOM_100

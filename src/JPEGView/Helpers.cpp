@@ -539,25 +539,33 @@ double GetExactTickCount() {
 	}
 }
 
+int GetWindowCaptionSize() {
+	return ::GetSystemMetrics(SM_CYCAPTION);
+}
+
 CSize GetTotalBorderSize() {
-	const int SM_CXP_ADDEDBORDER = 92;
+	const int SM_CXP_ADDEDBORDER = 92;  // in MSDN this is SM_CXPADDEDBORDER, but for some reason it's not always available depending on configuration
 	int nBorderWidth = (::GetSystemMetrics(SM_CXSIZEFRAME) + ::GetSystemMetrics(SM_CXP_ADDEDBORDER)) * 2;
 	int nBorderHeight = (::GetSystemMetrics(SM_CYSIZEFRAME) + ::GetSystemMetrics(SM_CXP_ADDEDBORDER)) * 2 + ::GetSystemMetrics(SM_CYCAPTION);
 	return CSize(nBorderWidth, nBorderHeight);
 }
 
-CRect GetWindowRectMatchingImageSize(HWND hWnd, CSize minSize, CSize maxSize, double& dZoom, CJPEGImage* pImage, bool bForceCenterWindow, bool bKeepAspectRatio) {
-	const int SM_CXP_ADDEDBORDER = 92;
-	
+CRect GetWindowRectMatchingImageSize(HWND hWnd, CSize minSize, CSize maxSize, double& dZoom, CJPEGImage* pImage, bool bForceCenterWindow, bool bKeepAspectRatio, bool bWindowBorderless) {
 	int nOrigWidth = (pImage == NULL) ? ::GetSystemMetrics(SM_CXSCREEN) / 2 : pImage->OrigWidth();
 	int nOrigWidthUnzoomed = nOrigWidth;
 	int nOrigHeight = (pImage == NULL) ? ::GetSystemMetrics(SM_CYSCREEN) / 2 : pImage->OrigHeight();
 	if (dZoom > 0) {
-		nOrigWidth = (int) (nOrigWidth * dZoom + 0.5);
-		nOrigHeight = (int) (nOrigHeight * dZoom + 0.5);
+		nOrigWidth = (int)(nOrigWidth * dZoom + 0.5);
+		nOrigHeight = (int)(nOrigHeight * dZoom + 0.5);
 	}
 
-	CSize borderSize = GetTotalBorderSize();
+	CSize borderSize;
+	if (!bWindowBorderless) {
+		borderSize = GetTotalBorderSize();
+	} else {
+		borderSize = { 0, 0 };
+	}
+
 	int nRequiredWidth = borderSize.cx + nOrigWidth;
 	int nRequiredHeight = borderSize.cy + nOrigHeight;
 	CRect workingArea = CMultiMonitorSupport::GetWorkingRect(hWnd);
