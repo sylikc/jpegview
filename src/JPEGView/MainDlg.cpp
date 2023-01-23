@@ -1861,7 +1861,7 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 			break;
 		case IDM_UPDATE_USER_CONFIG:
 			if (::MessageBox(m_hWnd, CString(CNLS::GetString(_T("Update user settings with new settings from settings template file?"))) + _T('\n') +
-				CNLS::GetString(_T("All existing user settings will be preserved.")), _T("JPEGView"), MB_YESNOCANCEL | MB_ICONQUESTION) == IDYES) {
+				CNLS::GetString(_T("All existing user settings will be preserved.")), _T(JPEGVIEW_TITLE), MB_YESNOCANCEL | MB_ICONQUESTION) == IDYES) {
 				CSettingsProvider::This().UpdateUserSettings();
 			}
 			break;
@@ -1988,7 +1988,7 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 				_stprintf_s(buff1, 128, CNLS::GetString(_T("Number of JPEG files in folder: %d")), result.NumberOfSucceededFiles + result.NumberOfFailedFiles);
 				TCHAR buff2[256];
 				_stprintf_s(buff2, 256, CNLS::GetString(_T("EXIF date successfully set on %d images, failed on %d images")), result.NumberOfSucceededFiles, result.NumberOfFailedFiles);
-				::MessageBox(m_hWnd, CString(buff1) + _T('\n') + buff2, _T("JPEGView"), MB_OK | MB_ICONINFORMATION);
+				::MessageBox(m_hWnd, CString(buff1) + _T('\n') + buff2, _T(JPEGVIEW_TITLE), MB_OK | MB_ICONINFORMATION);
 				m_pFileList->Reload();
 				if (m_pEXIFDisplayCtl->IsActive()) {
 					this->Invalidate(FALSE);
@@ -3089,7 +3089,7 @@ void CMainDlg::EditINIFile(bool bGlobalINI) {
 	if (!bGlobalINI) {
 		if (!CSettingsProvider::This().ExistsUserINI()) {
 			// No user INI file, ask if global INI shall be copied
-			if (IDYES == ::MessageBox(m_hWnd, CNLS::GetString(_T("No user INI file exits yet. Create user INI file from INI file template?")), _T("JPEGView"), MB_YESNO | MB_ICONQUESTION)) {
+			if (IDYES == ::MessageBox(m_hWnd, CNLS::GetString(_T("No user INI file exits yet. Create user INI file from INI file template?")), _T(JPEGVIEW_TITLE), MB_YESNO | MB_ICONQUESTION)) {
 				CSettingsProvider::This().CopyUserINIFromTemplate();
 			} else {
 				return;
@@ -3119,7 +3119,7 @@ void CMainDlg::UpdateWindowTitle() {
 	LPCTSTR sCurrentFileName = CurrentFileName(!bShowFullPathInTitle);
 
 	if (sCurrentFileName == NULL || m_pCurrentImage == NULL) {
-		this->SetWindowText(_T("JPEGView"));
+		this->SetWindowText(_T(JPEGVIEW_TITLE));
 	} else {
 		CString sWindowText =  sCurrentFileName;
 		sWindowText += Helpers::GetMultiframeIndex(m_pCurrentImage);
@@ -3129,7 +3129,7 @@ void CMainDlg::UpdateWindowTitle() {
 				sWindowText += " - " + Helpers::SystemTimeToString(pEXIF->GetAcquisitionTime());
 			}
 		}
-		sWindowText += _T(" - JPEGView");
+		sWindowText += " - " + CString(JPEGVIEW_TITLE);
 		this->SetWindowText(sWindowText);
 	}
 }
