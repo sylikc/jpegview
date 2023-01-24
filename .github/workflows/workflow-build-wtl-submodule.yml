@@ -105,8 +105,8 @@ jobs:
           src/JPEGView/bin
 
     - name: Upload All Outputs
-      # reduce the rogue installers out there by
-      # only includin the installer for master branch
+      # reduce the ambiguous versions of installers in the wild by
+      # only including the installer for master branch
       if: github.ref_name == 'master'
       uses: actions/upload-artifact@v3
       with:
