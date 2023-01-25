@@ -878,7 +878,7 @@ CString GetFileInfoString(LPCTSTR sFormat, CJPEGImage* pImage, CFileList* pFilel
 	}
 	bool isClipboardImage = pImage->IsClipboardImage();
 	if (_tcscmp(sFormat, _T("<i>  <p>")) == 0) {
-		if (isClipboardImage) return CString(_T("Clipboard Image"));
+		if (isClipboardImage) return CString(CNLS::GetString(_T("Clipboard Image")));
 		CString sFileInfo;
 		sFileInfo.Format(_T("[%d/%d]  %s"), pFilelist->CurrentIndex() + 1, pFilelist->Size(), pFilelist->Current() + GetMultiframeIndex(pImage));
 		return sFileInfo;
@@ -887,11 +887,11 @@ CString GetFileInfoString(LPCTSTR sFormat, CJPEGImage* pImage, CFileList* pFilel
 	CString sFileInfo(sFormat);
 	sFileInfo.Replace(_T("\\t"), _T("        "));
 	if (_tcsstr(sFormat, _T("<f>")) != NULL) {
-		CString sFileName = isClipboardImage ? _T("Clipboard Image") : pFilelist->CurrentFileTitle() + GetMultiframeIndex(pImage);
+		CString sFileName = isClipboardImage ? CNLS::GetString(_T("Clipboard Image")) : pFilelist->CurrentFileTitle() + GetMultiframeIndex(pImage);
 		sFileInfo.Replace(_T("<f>"), sFileName);
 	}
 	if (_tcsstr(sFormat, _T("<p>")) != NULL) {
-		CString sFilePath = isClipboardImage ? _T("Clipboard Image") : pFilelist->Current() + GetMultiframeIndex(pImage);
+		CString sFilePath = isClipboardImage ? CNLS::GetString(_T("Clipboard Image")) : pFilelist->Current() + GetMultiframeIndex(pImage);
 		sFileInfo.Replace(_T("<p>"), sFilePath);
 	}
 	if (_tcsstr(sFormat, _T("<i>")) != NULL) {

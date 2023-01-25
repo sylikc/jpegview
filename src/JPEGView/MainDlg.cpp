@@ -3026,7 +3026,7 @@ bool CMainDlg::ImageToScreen(float & fX, float & fY) {
 /// <returns>Returns the filename either just the title or full filepath</returns>
 LPCTSTR CMainDlg::CurrentFileName(bool bFileTitle) {
 	if (m_pCurrentImage != NULL && m_pCurrentImage->IsClipboardImage()) {
-		return _T("Clipboard Image");
+		return CNLS::GetString(_T("Clipboard Image"));
 	}
 
 	if (m_pFileList != NULL) {
