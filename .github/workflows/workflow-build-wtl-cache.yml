@@ -79,7 +79,8 @@ jobs:
       env:
         cache-name: cache-wtl
       with:
-        # path where we would extract the ExifTool source files
+        # path where we would extract the WTL source files
+        # NOTE: potential bug is that cache-name is not invalidated when wtl-url changes, which it should
         path: ${{ env.wtl-folder }}
         key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ env.wtl-folder }}
 
