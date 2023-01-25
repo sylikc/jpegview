@@ -13,6 +13,7 @@
 #include "TJPEGWrapper.h"
 #include "PNGWrapper.h"
 #include "JXLWrapper.h"
+#include "HEIFWrapper.h"
 #include "MaxImageDef.h"
 
 using namespace Gdiplus;
@@ -93,6 +94,24 @@ static EImageFormat GetImageFormat(LPCTSTR sFileName) {
 	//	(header[0] == 0x4d && header[1] == 0x4d && header[2] == 0x00 && header[3] == 0x2a)) {
 	//	return IF_TIFF;
 
+	} else if (header[0] == 0x00 && header[1] == 0x00 && header[2] == 0x00 &&
+		memcmp(header+4, "ftyp", 4) == 0 &&
+		(
+			// https://github.com/strukturag/libheif/issues/83
+			memcmp(header+8, "avif", 4) == 0 ||
+			memcmp(header+8, "avis", 4) == 0 ||
+			memcmp(header+8, "heic", 4) == 0 ||
+			memcmp(header+8, "heix", 4) == 0 ||
+			memcmp(header+8, "hevc", 4) == 0 ||
+			memcmp(header+8, "hevx", 4) == 0 ||
+			memcmp(header+8, "heim", 4) == 0 ||
+			memcmp(header+8, "heis", 4) == 0 ||
+			memcmp(header+8, "hevm", 4) == 0 ||
+			memcmp(header+8, "hevs", 4) == 0 ||
+			memcmp(header+8, "mif1", 4) == 0 ||
+			memcmp(header+8, "msf1", 4) == 0	
+		)) {
+		return IF_HEIF;
 	} else {
 		return Helpers::GetImageFormat(sFileName);
 	}
@@ -315,6 +334,13 @@ void CImageLoadThread::ProcessRequest(CRequestBase& request) {
 			DeleteCachedWebpDecoder();
 			DeleteCachedPngDecoder();
 			ProcessReadJXLRequest(&rq);
+			break;
+		case IF_HEIF:
+			DeleteCachedGDIBitmap();
+			DeleteCachedWebpDecoder();
+			DeleteCachedPngDecoder();
+			DeleteCachedJxlDecoder();
+			ProcessReadHEIFRequest(&rq);
 			break;
 		case IF_CameraRAW:
 			DeleteCachedGDIBitmap();
@@ -733,6 +759,55 @@ void CImageLoadThread::ProcessReadJXLRequest(CRequest* request) {
 		::CloseHandle(hFile);
 		// delete[] pBuffer;
 	}
+}
+
+void CImageLoadThread::ProcessReadHEIFRequest(CRequest* request) {
+	HANDLE hFile;
+	hFile = ::CreateFile(request->FileName, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, 0, NULL);
+	if (hFile == INVALID_HANDLE_VALUE) {
+		return;
+	}
+	char* pBuffer = NULL;
+	UINT nPrevErrorMode = SetErrorMode(SEM_FAILCRITICALERRORS);
+	try {
+		unsigned int nFileSize = 0;
+		unsigned int nNumBytesRead;
+		// Don't read too huge files
+		nFileSize = ::GetFileSize(hFile, NULL);
+		if (nFileSize > MAX_HEIF_FILE_SIZE) {
+			request->OutOfMemory = true;
+			::CloseHandle(hFile);
+			return;
+		}
+
+		pBuffer = new(std::nothrow) char[nFileSize];
+		if (pBuffer == NULL) {
+			request->OutOfMemory = true;
+			::CloseHandle(hFile);
+			return;
+		}
+		if (::ReadFile(hFile, pBuffer, nFileSize, (LPDWORD)&nNumBytesRead, NULL) && nNumBytesRead == nFileSize) {
+			int nWidth, nHeight, nBPP, nFrameCount, nFrameTimeMs;
+			nFrameCount = 1;
+			nFrameTimeMs = 0;
+			uint8* pPixelData = (uint8*)HeifReader::ReadImage(nWidth, nHeight, nBPP, nFrameCount, request->OutOfMemory, request->FrameIndex, pBuffer, nFileSize);
+			if (pPixelData != NULL) {
+				// Multiply alpha value into each AABBGGRR pixel
+				uint32* pImage32 = (uint32*)pPixelData;
+				for (int i = 0; i < nWidth * nHeight; i++)
+					*pImage32++ = WebpAlphaBlendBackground(*pImage32, CSettingsProvider::This().ColorTransparency());
+
+				request->Image = new CJPEGImage(nWidth, nHeight, pPixelData, NULL, nBPP, 0, IF_HEIF, false, request->FrameIndex, nFrameCount, nFrameTimeMs);
+			}
+		}
+	}
+	catch (...) {
+		delete request->Image;
+		request->Image = NULL;
+	}
+	SetErrorMode(nPrevErrorMode);
+	::CloseHandle(hFile);
+	delete[] pBuffer;
 }
 
 void CImageLoadThread::ProcessReadRAWRequest(CRequest * request) {
