@@ -5,6 +5,53 @@ This directory contains all the additional resources/libraries that JPEGView use
 To clone the versions specified, use the following command:
 `git submodule update --init --recursive`
 
+## libheif
+
+libheif and related libraries are built and included in `src\JPEGView\libheif\bin[64]` and `src\JPEGView\libheif\lib[64]`
+
+The full source files are not necessary to compile JPEGView.
+
+### dav1d
+
+AV1 Decoder
+
+License: [BSD 2-Clause "Simplified" License](https://code.videolan.org/videolan/dav1d/-/blob/master/COPYING)
+
+[Compiling](https://code.videolan.org/videolan/dav1d#compile)
+
+Initialize your environment for Win32/x64 build, then run:
+
+1. Ensure `meson`, `ninja`, and `nasm` are on the PATH
+2. mkdir build && cd build
+3. meson ..
+4. ninja
+
+Find `dav1d.dll` in `build\src` directory.
+
+### libde265
+
+Open h.265 video codec implementation
+
+License: [GNU Lesser General Public License v3](https://github.com/strukturag/libde265/blob/master/COPYING)
+
+Initialize your environment for Win32/x64 build, then run
+
+> build.bat [x86 | x64]
+
+Find files in bin_x86 or bin_x64
+
+### libheif
+
+HEIF and AVIF file format decoder and encoder
+
+License: [GNU Lesser General Public License v3](https://github.com/strukturag/libheif/blob/master/COPYING)
+
+ md build && cd build
+ cmake -G"NMake Makefiles" -DCMAKE_BUILD_TYPE=Release -DDAV1D_LIBRARY=..\..\dav1d\build\src -DLIBDE265_LIBRARY=..\..\libde265\libde265 ..
+ nmake
+
+Find the `heif.dll` and `heif.lib` in `build\libheif`
+
 ## libjpeg-turbo
 
 libjpeg-turbo library is built and included by JPEGView in `src\JPEGView\libjpeg-turbo`
