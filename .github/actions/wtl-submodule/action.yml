@@ -1,0 +1,18 @@
+name: Action - Setup WTL via Submodule
+description: Action to set up WTL includes by submodule init
+
+# WTL is a submodule, so this GH actions specifically clones ONLY that
+# This will match the formal release build environment.
+#
+# While I would like to do a submodule clone with checkout@v3, there's no option
+# to check out only ONE submodule.  There's a lot of submodules in this project
+# which are not directly required for building, and that seems fairly inefficient.
+
+
+runs:
+  using: composite
+  steps:
+    - name: WTL includes submodule init
+      shell: cmd
+      # Run git commands directly without using the GH checkout action
+      run: git submodule update --init deps/WTL-sf

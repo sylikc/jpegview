@@ -16,16 +16,6 @@ on:
         type: string
 
 
-
-# WTL is a submodule, so this GH actions specifically clones ONLY that
-# This will match the formal release build environment.
-#
-# While I would like to do a submodule clone with checkout@v3, there's no option
-# to check out only ONE submodule.  There's a lot of submodules in this project
-# which are not directly required for building, and that seems fairly inefficient.
-
-
-
 jobs:
   build:
     # if windows-latest, might not find VS 2019
@@ -43,74 +33,16 @@ jobs:
         vs-version: '[16.0,17.0)'
         msbuild-architecture: ${{ inputs.platform-arch }}
 
-    # https://gist.github.com/hibearpanda/d5b5b58bd319132ffd7af606ffa333fc
-    #  https://github.com/felixrieseberg/electron-wix-msi/issues/1#issuecomment-674598795
-    #  https://docs.github.com/en/free-pro-team@latest/actions/reference/workflow-commands-for-github-actions#adding-a-system-path
-    #  https://stackoverflow.com/a/64831469
-    #  https://github.community/t/set-path-for-wix-toolset-in-windows-runner/154708
-    - name: Set WiX path for candle and light
-      env:
-        WIX_PATH: ${{ env.wix }}
-      run: |
-        #echo "$env:WIX_PATH\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
-        # https://github.community/t/set-path-for-wix-toolset-in-windows-runner/154708/3
-        $env:Path += ";C:\Program Files (x86)\WiX Toolset v3.11\bin"
-        echo "$PATH"
-        # check that they're found (old way)
-        #where.exe candle.exe
-        #where.exe light.exe
-        # check where they're found, with all information
-        Get-Command candle.exe | Format-List
-        Get-Command light.exe | Format-List
+    - uses: ./.github/actions/setup-wix
 
-    - name: WTL Submodule init
-      # Run git commands directly without using the GH checkout action
-      run: git submodule update --init deps/WTL-sf
+    - uses: ./.github/actions/wtl-submodule
 
-    - name: Setup Git Short SHA env var
-      # the hacky way to get the sha1 short hash into a GH variable instead of powershell variable
-      # on Windows, unlike the help says, it's $env:GITHUB_ENV or else nothing works
-      run: |
-        echo "short_sha=$(git rev-parse --short "${{ github.sha }}")" >> $env:GITHUB_ENV
-        # print out other info related to the repo to make it easier to see what triggered the workflow
-        echo "Repository: ${{ github.repository }}"
-        echo "Branch: ${{ github.ref_name }}"
-        echo "Commit: ${{ github.sha }}"
-        echo "GH Trigger: ${{ github.event_name }}"
-
-    - name: Replace resource vars
-      # Replace the version information for auto-GH builds so it's clear to me and others that this was not a formal release
-      run: |
-        # needed on older runners: $env:Path += ";C:\Program Files\Git\usr\bin"
-        Get-Command sed.exe | Format-List
-        #$env:GIT_SHORT_HASH=$(git rev-parse --short "${{ github.sha }}")
-        # " doesn't have to be escaped in linux but needs to be escaped in windows powershell, ps also needs that extra \\\
-        # lots of problems getting environment $env: to work inside single quotes... so doing it a bit more hacky by setting it up in a separate step
-        #sed.exe -i -r -e 's/(#define JPEGVIEW_VERSION \"[0-9, ]+)(\\\0\")/\1 \(~GHdevtest ${{ github.repository_owner }}\/$env:GIT_SHORT_HASH\)\2/g' -e 's/(#define JPEGVIEW_TITLE \"JPEGView)(\")/\1 \(~GHdevtest ${{ github.repository_owner }}\/$env:GIT_SHORT_HASH\)\2/g' src/JPEGView/resource.h
-        sed.exe -i -r -e 's/(#define JPEGVIEW_VERSION \"[0-9, ]+)(\\\0\")/\1 \(~GHdevtest ${{ github.repository_owner }}\/${{ env.short_sha }}\)\2/g' -e 's/(#define JPEGVIEW_TITLE \"JPEGView)(\")/\1 \(~GHdevtest ${{ github.repository_owner }}\/${{ env.short_sha }}\)\2/g' src/JPEGView/resource.h
-        # see output
-        Select-String -Path src/JPEGView/resource.h -Pattern "JPEGVIEW_"
-
-    - name: Build Solution
-      run: msbuild.exe /property:Platform=${{ inputs.platform-arch }} /property:configuration="${{ inputs.build-config }}" src\JPEGView.sln
-      shell: cmd
-
-    - name: Upload No-Install Outputs Only
-      # if not master branch, only upload the extract-and-run artifact
-      if: github.ref_name != 'master'
-      uses: actions/upload-artifact@v3
+    - uses: ./.github/actions/build-solution
       with:
-        name: release-${{ inputs.platform-arch }}
-        path: |
-          src/JPEGView/bin
+        platform-arch: ${{ inputs.platform-arch }}
+        build-config: ${{ inputs.build-config }}
 
-    - name: Upload All Outputs
-      # reduce the ambiguous versions of installers in the wild by
-      # only including the installer for master branch
-      if: github.ref_name == 'master'
-      uses: actions/upload-artifact@v3
+    - uses: ./.github/actions/upload-some-artifacts
       with:
-        name: release-${{ inputs.platform-arch }}
-        path: |
-          src/JPEGView/bin
-          src/JPEGView.Setup/bin
+        platform-arch: ${{ inputs.platform-arch }}
+        build-config: ${{ inputs.build-config }}
