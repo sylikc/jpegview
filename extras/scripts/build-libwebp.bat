@@ -26,6 +26,10 @@ copy /y "%XOUT_DIR%\release-static\x64\lib\libwebp.lib" "%XSRC_DIR%\WEBP\lib\lib
 IF ERRORLEVEL 1 exit /b 1
 
 
+echo === HEADER FILES NOT MAINTAINED BY SCRIPT ===
+echo NOTE: as for the header files, copy/replace files AS NEEDED
+echo extras\libwebp\src\webp -to- src\WEBP\include\webp
+
 exit /b 0
 
 
@@ -42,5 +46,9 @@ mkdir "%XOUT_DIR%" 2>nul
 call "%~dp0vs-init.bat" %1
 
 pushd "%XLIB_DIR%"
-nmake /f Makefile.vc CFG=release-static RTLIBCFG=static OBJDIR="%XOUT_DIR%"
-exit /b %ERRORLEVEL%
+nmake.exe /f Makefile.vc CFG=release-static RTLIBCFG=static OBJDIR="%XOUT_DIR%"
+SET XERROR=%ERRORLEVEL%
+
+popd
+
+exit /b %XERROR%
