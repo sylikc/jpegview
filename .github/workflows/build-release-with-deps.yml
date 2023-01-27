@@ -7,10 +7,8 @@ jobs:
     uses: ./.github/workflows/workflow-rebuild-all-deps.yml
     with:
       platform-arch: Win32
-      build-config: Release
 
   call-workflow-build-x64:
     uses: ./.github/workflows/workflow-rebuild-all-deps.yml
     with:
       platform-arch: x64
-      build-config: Release

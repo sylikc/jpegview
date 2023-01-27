@@ -1,5 +1,7 @@
 name: Reusable - Rebuild All Libs
-description: This reusable workflow rebuilds all binary dependencies.  While you can pass in a build-config, only 'Release' configuration is supported because all libraries are built in release configuration.
+# This reusable workflow rebuilds all binary dependencies.  While you can pass in a build-config, only 'Release' configuration is supported because all libraries are built in release configuration.
+
+# NOTE: we don't replace any header files here... or anything else, ONLY binaries, so if there's a broken build, it could be caused by those things... and that ought to be updated in the source directly
 
 on:
   workflow_call:
