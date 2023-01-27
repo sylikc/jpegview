@@ -1,6 +1,41 @@
 JPEGView Changelog
 ******************
 
+[1.1.42] 2023-01-26
+New features:
+- JPEG XL support, with animation
+  (NOTE: Microsoft Visual C++ Runtime vcruntime140.dll required when opening
+  JPEG XL files.  Most Windows 10+ systems have this installed already.
+  Otherwise, download it for free from Microsoft.)
+  PR #99, thanks qbnu (GH https://github.com/qbnu)
+- Add a new command "Hide window title bar"
+  Default shortcut key: "SHIFT+F11"
+  This toggles JPEGView window to show or hide title bar.
+  NOTE: in this mode, you cannot resize the window (although full screen is still supported)
+- Add a new mouse gesture to move the JPEGView window at any time: ALT+LeftClick
+  This allows moving the window without directly clicking on the title bar (or if title bar is hidden).
+- Add a new command "Always on Top"
+  Default shortcut key: "SHIFT+F12"
+  This toggles the JPEGView window to display above all other windows, even when not in focus
+- Add new command "Copy file path"
+  Default shortcut key: "CTRL+SHIFT+C"
+  This copies file path of the image to clipboard
+  PR #62, thanks Trevor Kropp (GH https://github.com/kropptrevor)
+Changed behavior:
+- Animated formats: frame durations <= 10ms are set to 100ms
+  (Matches behavior of most web browers)
+  PR #108, thanks qbnu (GH https://github.com/qbnu)
+Other changes:
+- New INI file setting: "ShowFullPathInTitle"
+  Show full file path and name in the window title
+  (shows only file name by default)
+- New INI file setting: "DefaultSelectionMode"
+  Allows for disabling the default selection mode behavior when clicking on an image in JPEGView.
+  Set to false to use selection mode only when CTRL is pressed, to prevent unintended cropping/zooming.
+  (CTRL+LeftClick always results in selection, regardless of image zoom)
+- New KeyMap.txt entry to allow a keybind for IDM_CHANGESIZE
+  This allows binding a key to the "Transform image > Change size..." popup dialog
+
 [1.1.41.1] 2023-01-03
 Bugs fixed:
 - Fixed regression introduced in 1.1.41 which caused CR2 and DNG files

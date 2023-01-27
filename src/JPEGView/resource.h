@@ -3,7 +3,7 @@
 // Used by JPEGView.RC
 //
 
-#define JPEGVIEW_VERSION "1, 1, 41, 1\0"
+#define JPEGVIEW_VERSION "1, 1, 42, 0\0"
 // title for main window and msgbox so it can be change via actions
 #define JPEGVIEW_TITLE "JPEGView"
 
