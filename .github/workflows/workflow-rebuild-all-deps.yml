@@ -1,0 +1,55 @@
+name: Reusable - Rebuild All Libs
+description: This reusable workflow rebuilds all binary dependencies.  While you can pass in a build-config, only 'Release' configuration is supported because all libraries are built in release configuration.
+
+on:
+  workflow_call:
+    inputs:
+      platform-arch:
+        required: true
+        type: string
+
+      build-config:
+        required: false
+        type: string
+        default: Release
+
+
+jobs:
+  build:
+    # if windows-latest, might not find VS 2019
+    runs-on: windows-2019
+
+    steps:
+    - name: Checkout code with all Submodules
+      uses: actions/checkout@v3
+      with:
+        submodules: recursive
+    
+    - name: Remove all pre-built libs and dlls
+      shell: cmd
+      run: del /s *.lib *.dll
+    
+    # TODO cache outputs?  if refresh cache or like make sure it builds here
+    # if caching, key off of the hash ${{ hashFiles('.gitmodules') }} so that it'll rebuild all again if any submodules were updated
+
+    - name: Setup msbuild
+      # https://github.com/marketplace/actions/setup-msbuild
+      uses: microsoft/setup-msbuild@v1.1
+      with:
+        # Fixed on Visual Studio 2019 -- https://docs.microsoft.com/en-us/visualstudio/releases/2019/history
+        vs-version: '[16.0,17.0)'
+        msbuild-architecture: ${{ inputs.platform-arch }}
+
+    - uses: ./.github/actions/setup-wix
+
+    - uses: ./.github/actions/wtl-submodule
+
+    - uses: ./.github/actions/build-solution
+      with:
+        platform-arch: ${{ inputs.platform-arch }}
+        build-config: ${{ inputs.build-config }}
+
+    - uses: ./.github/actions/upload-some-artifacts
+      with:
+        platform-arch: ${{ inputs.platform-arch }}
+        build-config: ${{ inputs.build-config }}
