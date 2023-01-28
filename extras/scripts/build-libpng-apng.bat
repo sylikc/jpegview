@@ -2,11 +2,21 @@
 
 setlocal
 REM this builds libpng and replaces the libs in the JPEGView src folder
+REM zlib does not need to be built separately, as it is part of the libpng build process
+
+REM FYI: building zlib separately with CMake deletes zconf.h in the source directory
+REM because the makefiles to build are in whatever directory you built them
+REM so when libpng builds, it'll break... so we no longer build zlib separately
+REM https://github.com/madler/zlib/issues/133
 
 REM https://stackoverflow.com/questions/10906554/how-do-i-revert-my-changes-to-a-git-submodule
 REM NOTE: this modifies files in the submodule... to reset do:
 REM  $ git submodule deinit -f -- extras/libpng-apng.src-patch/libpng
 REM  $ git submodule update --init -- extras/libpng-apng.src-patch/libpng
+
+REM if zlib gets dirty after building
+REM  $ git submodule deinit -f -- extras/libpng-apng.src-patch/zlib
+REM  $ git submodule update --init -- extras/libpng-apng.src-patch/zlib
 
 
 SET XSRC_DIR=%~dp0..\..\src
@@ -43,7 +53,11 @@ IF ERRORLEVEL 1 exit /b 1
 REM copy the libs over
 copy /y "%XOUT_DIR_32%\libpng16.lib" "%XSRC_DIR%\JPEGView\libpng-apng\lib\"
 IF ERRORLEVEL 1 exit /b 1
+copy /y "%XOUT_DIR_32%\zlib.lib" "%XSRC_DIR%\JPEGView\libpng-apng\lib\"
+IF ERRORLEVEL 1 exit /b 1
 copy /y "%XOUT_DIR_64%\libpng16.lib" "%XSRC_DIR%\JPEGView\libpng-apng\lib64\"
+IF ERRORLEVEL 1 exit /b 1
+copy /y "%XOUT_DIR_64%\zlib.lib" "%XSRC_DIR%\JPEGView\libpng-apng\lib64\"
 IF ERRORLEVEL 1 exit /b 1
 
 

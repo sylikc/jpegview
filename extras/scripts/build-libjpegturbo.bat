@@ -12,6 +12,17 @@ IF EXIST "%XOUT_DIR%" (
 	exit /b 1
 )
 
+echo + Looking up NASM
+where nasm.exe
+IF ERRORLEVEL 1 (
+	echo !!! NASM isn't required for building but highly recommended for speed improvements. !!!
+	echo NASM isn't found on path!
+	IF /I "%~1" NEQ "nonasm" (
+		echo pass in parameter "nonasm" to skip this check
+		exit /b 1
+	)
+)
+
 call :BUILD_JPEGT x86
 IF ERRORLEVEL 1 exit /b 1
 call :BUILD_JPEGT x64

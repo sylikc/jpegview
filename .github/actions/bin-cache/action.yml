@@ -53,6 +53,15 @@ runs:
 
     # the cache-hit based on documentation is a string, not a boolean, hence why it looks so funky below
 
+
+    # for speed improvements in some libs, libjpeg-turbo benefits
+    - name: Setup NASM
+      # https://github.com/marketplace/actions/set-up-nasm
+      uses: ilammy/setup-nasm@v1
+
+
+
+
     # run all the batch files to rebuild the required libs/dlls
     # calling them separately makes it clearer and easier to debug, and
     # makes sure to die whenever one of these throws an error
@@ -70,11 +79,7 @@ runs:
     - name: libpng
       if: ${{ steps.cache-bin.outputs.cache-hit != 'true' }}
       shell: cmd
-      run: |
-        call extras\scripts\build-libpng-zlib.bat
-        IF ERRORLEVEL 1 exit /b 1
-        call extras\scripts\build-libpng-apng.bat
-        IF ERRORLEVEL 1 exit /b 1
+      run: call extras\scripts\build-libpng-apng.bat
 
     - name: libjpxl
       if: ${{ steps.cache-bin.outputs.cache-hit != 'true' }}
