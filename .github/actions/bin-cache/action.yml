@@ -51,22 +51,24 @@ runs:
 
     # cache prevents the rebuild-all to happen twice, since each invocation of the workflow (once for x86, once for x64) causes a rebuild
 
+    # the cache-hit based on documentation is a string, not a boolean, hence why it looks so funky below
+
     # run all the batch files to rebuild the required libs/dlls
     # calling them separately makes it clearer and easier to debug, and
     # makes sure to die whenever one of these throws an error
 
     - name: libwebp
-      if: ! steps.cache-bin.outputs.cache-hit
+      if: ${{ steps.cache-bin.outputs.cache-hit != 'true' }}
       shell: cmd
       run: call build-libwebp.bat
 
     - name: libjpeg-turbo
-      if: ! steps.cache-bin.outputs.cache-hit
+      if: ${{ steps.cache-bin.outputs.cache-hit != 'true' }}
       shell: cmd
       run: call build-libjpegturbo.bat
 
     - name: libpng
-      if: ! steps.cache-bin.outputs.cache-hit
+      if: ${{ steps.cache-bin.outputs.cache-hit != 'true' }}
       shell: cmd
       run: |
         call build-libpng-zlib.bat
@@ -75,6 +77,6 @@ runs:
         IF ERRORLEVEL 1 exit /b 1
 
     - name: libjpxl
-      if: ! steps.cache-bin.outputs.cache-hit
+      if: ${{ steps.cache-bin.outputs.cache-hit != 'true' }}
       shell: cmd
       run: call build-libjxl.bat
