@@ -391,7 +391,11 @@ void CImageLoadThread::DeleteCachedGDIBitmap() {
 
 void CImageLoadThread::DeleteCachedWebpDecoder() {
 	__declspec(dllimport) void Webp_Dll_AnimDecoderDelete();
-	Webp_Dll_AnimDecoderDelete();
+	try {
+		Webp_Dll_AnimDecoderDelete();
+	} catch (...) {
+		;
+	}
 	m_sLastWebpFileName.Empty();
 }
 
