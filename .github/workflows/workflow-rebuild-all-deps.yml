@@ -26,11 +26,11 @@ jobs:
       uses: actions/checkout@v3
       with:
         submodules: recursive
-    
+
     - name: Remove all pre-built libs and dlls
       shell: cmd
       run: del /s *.lib *.dll
-    
+
     # TODO cache outputs?  if refresh cache or like make sure it builds here
     # if caching, key off of the hash ${{ hashFiles('.gitmodules') }} so that it'll rebuild all again if any submodules were updated
 
@@ -44,7 +44,17 @@ jobs:
 
     - uses: ./.github/actions/setup-wix
 
-    - uses: ./.github/actions/wtl-submodule
+    - name: Rebuild all libs
+      shell: cmd
+      run: |
+        REM run all the batch files to rebuild the required libs/dlls
+        pushd "extras\scripts"
+        call build-libwebp.bat
+        call build-libjpegturbo.bat
+        call build-libpng-zlib.bat
+        call build-libpng-apng.bat
+        call build-libjxl.bat
+        popd
 
     - uses: ./.github/actions/build-solution
       with:
