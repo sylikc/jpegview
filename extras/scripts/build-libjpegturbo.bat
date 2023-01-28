@@ -1,7 +1,7 @@
 @echo off
 
 setlocal
-REM this builds libwebp and replaces the libs in the JPEGView src folder
+REM this builds libjpeg-turbo and replaces the libs in the JPEGView src folder
 
 SET XSRC_DIR=%~dp0..\..\src
 SET XLIB_DIR=%~dp0..\libjpeg-turbo
