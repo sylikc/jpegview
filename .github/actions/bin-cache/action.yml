@@ -60,23 +60,23 @@ runs:
     - name: libwebp
       if: ${{ steps.cache-bin.outputs.cache-hit != 'true' }}
       shell: cmd
-      run: call build-libwebp.bat
+      run: call extras\scripts\build-libwebp.bat
 
     - name: libjpeg-turbo
       if: ${{ steps.cache-bin.outputs.cache-hit != 'true' }}
       shell: cmd
-      run: call build-libjpegturbo.bat
+      run: call extras\scripts\build-libjpegturbo.bat
 
     - name: libpng
       if: ${{ steps.cache-bin.outputs.cache-hit != 'true' }}
       shell: cmd
       run: |
-        call build-libpng-zlib.bat
+        call extras\scripts\build-libpng-zlib.bat
         IF ERRORLEVEL 1 exit /b 1
-        call build-libpng-apng.bat
+        call extras\scripts\build-libpng-apng.bat
         IF ERRORLEVEL 1 exit /b 1
 
     - name: libjpxl
       if: ${{ steps.cache-bin.outputs.cache-hit != 'true' }}
       shell: cmd
-      run: call build-libjxl.bat
+      run: call extras\scripts\build-libjxl.bat
