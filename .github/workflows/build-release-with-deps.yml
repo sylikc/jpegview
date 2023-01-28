@@ -1,6 +1,14 @@
 name: Build Win32/x64 with all deps (Release)
 
-on: [push, workflow_dispatch]
+# triggers:
+on:
+  # run this action when kicked off manually
+  workflow_dispatch:
+  # when a tag or branch created
+  create:
+  # published releases get checked
+  release:
+    types: [published]
 
 jobs:
   call-workflow-build-win32:
