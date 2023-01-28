@@ -22,7 +22,12 @@ REM copy the libs over
 REM error checking if a copy fails... throws error to caller
 copy /y "%XOUT_DIR%\release-static\x86\lib\libwebp.lib" "%XSRC_DIR%\WEBP\lib\"
 IF ERRORLEVEL 1 exit /b 1
+copy /y "%XOUT_DIR%\release-static\x86\lib\libwebpdemux.lib" "%XSRC_DIR%\WEBP\lib\"
+IF ERRORLEVEL 1 exit /b 1
+
 copy /y "%XOUT_DIR%\release-static\x64\lib\libwebp.lib" "%XSRC_DIR%\WEBP\lib\libwebp64.lib"
+IF ERRORLEVEL 1 exit /b 1
+copy /y "%XOUT_DIR%\release-static\x64\lib\libwebpdemux.lib" "%XSRC_DIR%\WEBP\lib\libwebpdemux64.lib"
 IF ERRORLEVEL 1 exit /b 1
 
 
