@@ -26,10 +26,12 @@
 		<?define Win64 = "yes" ?>
 		<?define PlatformProgramFilesFolder = "ProgramFiles64Folder" ?>
 		<?define JPEGViewExeSourcePath = "$(var.JPEGView.ProjectDir)\x64\Release\JPEGView.exe" ?>
+		<?define JxlDllFolder = "$(var.JPEGView.ProjectDir)\libjxl\bin64" ?>
 	<?else ?>
 		<?define Win64 = "no" ?>
 		<?define PlatformProgramFilesFolder = "ProgramFilesFolder" ?>
 		<?define JPEGViewExeSourcePath = "$(var.JPEGView.ProjectDir)\x86\Release\JPEGView.exe" ?>
+		<?define JxlDllFolder = "$(var.JPEGView.ProjectDir)\libjxl\bin" ?>
 	<?endif ?>
 
 	<!--
@@ -164,6 +166,12 @@
 				<ComponentRef Id="APPLICATIONFOLDER_comp"/>
 				<ComponentRef Id="JPEGViewExe"/>
 				<ComponentRef Id="NavPanel.png"/>
+			</Feature>
+			<Feature Id="FeatureJXL" Title="JPEG XL Support">
+				<ComponentRef Id="brotlicommonDLL"/>
+				<ComponentRef Id="brotlidecDLL"/>
+				<ComponentRef Id="jxl_decDLL"/>
+				<ComponentRef Id="jxl_threadsDLL"/>
 			</Feature>
 			<Feature Id="FeatureWebP" Title="WebP Support">
 				<ComponentRef Id="webpDLL"/>
@@ -338,10 +346,23 @@
 						<!-- Optional: add an 'Edit with XYZ' to 'right click' even when not associated -->
 						<RegistryValue Root="HKLM" Key="SOFTWARE\Classes\SystemFileAssociations\.xyz\shell\edit.MyApp.exe" Value="!(loc.ExplorerMenuEditREG)" Type="string" />
 						<RegistryValue Root="HKLM" Key="SOFTWARE\Classes\SystemFileAssociations\.xyz\shell\edit.MyApp.exe\command" Value="&quot;[APPLICATIONFOLDER]MyApp.exe&quot; &quot;%1&quot;" Type="string" />
-
-
-
 					</Component>
+
+					<!-- DLLs required for JXL support -->
+					<Component Id="brotlicommonDLL" Guid="97c26f44-4776-489d-be8a-0b732a42ea34">
+						<File Id="brotlicommon.dll" Name="brotlicommon.dll" Source="$(var.JxlDllFolder)\brotlicommon.dll" />
+					</Component>
+					<Component Id="brotlidecDLL" Guid="dc648a37-d726-40f9-9098-dfde491dbb44">
+						<File Id="brotlidec.dll" Name="brotlidec.dll" Source="$(var.JxlDllFolder)\brotlidec.dll" />
+					</Component>
+					<Component Id="jxl_decDLL" Guid="a65bca95-9ddf-476c-88b5-5048a3a9bde6">
+						<File Id="jxl_dec.dll" Name="jxl_dec.dll" Source="$(var.JxlDllFolder)\jxl_dec.dll" />
+					</Component>
+					<Component Id="jxl_threadsDLL" Guid="964ed16e-138a-4419-9c4c-8eb45a04d0f6">
+						<File Id="jxl_threads.dll" Name="jxl_threads.dll" Source="$(var.JxlDllFolder)\jxl_threads.dll" />
+					</Component>
+
+
 					<Component Id="webpDLL" Guid="43e917db-b269-40bf-81ab-b2d1453b225f">
 						<File Id="webp.dll" Name="webp.dll" Source="$(var.WEBP.TargetDir)webp.dll" />
 					</Component>
