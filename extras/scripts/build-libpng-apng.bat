@@ -86,20 +86,31 @@ REM but this is just meant to work for me, and for the GH runners
 REM set up path to find the required bin files
 SET PATH=%ProgramFiles%\Git\usr\bin;%PATH%
 
-where.exe bash.exe >nul 2>nul
+where.exe bash.exe 2>nul
 IF ERRORLEVEL 1 (
 	echo bash.exe not found in PATH
 	exit /b 1
 )
 
 REM can't check where.exe's together as the ERRORLEVEL doesn't come back as 1 if at least one thing was found
-where.exe patch.exe >nul 2>nul
+where.exe patch.exe 2>nul
 IF ERRORLEVEL 1 (
 	echo bash.exe not found in PATH
 	exit /b 1
 )
 
+pushd %XPATCH_DIR%
+REM bash.exe is on the path somewhere, honor the path order
+bash.exe -c "./patch-libpng.sh"
+SET XERROR=%ERRORLEVEL%
 
+popd
+exit /b %XERROR%
+
+
+
+
+REM **** I don't think there's need for this type of trickery, if we can just get it working with the above ****
 REM this is where it gets super hacky...
 
 SET BASH_EXE=
@@ -112,10 +123,8 @@ FOR /F "usebackq tokens=*" %%I IN (`where.exe patch.exe`) DO (
 	SET PATCH_EXE=%%I
 )
 
-
 echo Bash: %BASH_EXE%
 echo Patch: %PATCH_EXE%
-
 
 pushd %XPATCH_DIR%
 REM because the script just calls "patch" we can fudge what that stands for by using an alias
@@ -123,6 +132,5 @@ REM because the script just calls "patch" we can fudge what that stands for by u
 SET XERROR=%ERRORLEVEL%
 
 popd
-
 
 exit /b %XERROR%

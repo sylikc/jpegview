@@ -37,34 +37,44 @@ runs:
         key: ${{ runner.os }}-build-${{ inputs.cache-name }}-${{ hashFiles('.gitmodules') }}
         path: |
           src/WEBP/lib/lib*.lib
+
           src/JPEGView/libjpeg-turbo/lib/*.lib
           src/JPEGView/libjpeg-turbo/lib64/*.lib
+
           src/JPEGView/libpng-apng/lib/*.lib
           src/JPEGView/libpng-apng/lib64/*.lib
+
           src/JPEGView/libjxl/lib/*.lib
           src/JPEGView/libjxl/lib64/*.lib
           src/JPEGView/libjxl/bin/*.dll
           src/JPEGView/libjxl/bin64/*.dll
 
     # cache prevents the rebuild-all to happen twice, since each invocation of the workflow (once for x86, once for x64) causes a rebuild
-    - name: Rebuild all libs
+
+    # run all the batch files to rebuild the required libs/dlls
+    # calling them separately makes it clearer and easier to debug, and
+    # makes sure to die whenever one of these throws an error
+
+    - name: libwebp
+      if: ! steps.cache-bin.outputs.cache-hit
+      shell: cmd
+      run: call build-libwebp.bat
+
+    - name: libjpeg-turbo
+      if: ! steps.cache-bin.outputs.cache-hit
+      shell: cmd
+      run: call build-libjpegturbo.bat
+
+    - name: libpng
       if: ! steps.cache-bin.outputs.cache-hit
       shell: cmd
       run: |
-        REM run all the batch files to rebuild the required libs/dlls
-        pushd "extras\scripts"
-
-        REM make sure to die whenever one of these throws an error
-
-        call build-libwebp.bat
-        IF ERRORLEVEL 1 exit /b 1
-        call build-libjpegturbo.bat
-        IF ERRORLEVEL 1 exit /b 1
         call build-libpng-zlib.bat
         IF ERRORLEVEL 1 exit /b 1
         call build-libpng-apng.bat
         IF ERRORLEVEL 1 exit /b 1
-        call build-libjxl.bat
-        IF ERRORLEVEL 1 exit /b 1
 
-        popd
+    - name: libjpxl
+      if: ! steps.cache-bin.outputs.cache-hit
+      shell: cmd
+      run: call build-libjxl.bat

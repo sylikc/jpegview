@@ -1,6 +1,6 @@
 name: Build Win32/x64 with all deps (Release)
 
-on: [workflow_dispatch]
+on: [push, workflow_dispatch]
 
 jobs:
   call-workflow-build-win32:
