@@ -33,8 +33,6 @@ Other changes:
   Allows for disabling the default selection mode behavior when clicking on an image in JPEGView.
   Set to false to use selection mode only when CTRL is pressed, to prevent unintended cropping/zooming.
   (CTRL+LeftClick always results in selection, regardless of image zoom)
-- New KeyMap.txt entry to allow a keybind for IDM_CHANGESIZE
-  This allows binding a key to the "Transform image > Change size..." popup dialog
 
 [1.1.41.1] 2023-01-03
 Bugs fixed:

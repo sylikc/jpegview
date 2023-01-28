@@ -115,8 +115,6 @@
 #define IDM_SHARPEN_INC		15300			// increase sharpness
 #define IDM_SHARPEN_DEC		15301			// decrease sharpness
 #define IDM_CONTEXT_MENU	16000			// display context menu
-// popup dialogs
-#define IDM_CHANGESIZE		9120			// Open JPEGView dialog: Transform image > Change size...
 
 
 // This section contains the key map. A small number of keys is predefined and cannot be changed:
