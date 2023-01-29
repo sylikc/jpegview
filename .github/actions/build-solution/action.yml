@@ -1,0 +1,62 @@
+name: Action - Build JPEGView Solution
+description: Action to build the solution and apply any customizations if requested
+
+inputs:
+  patch-version:
+    description: Apply patch to the version labels to reflect the owner and sha of commit.
+    required: false
+    type: boolean
+    default: true
+  
+  platform-arch:
+    description: Architecture for building
+    required: true
+    type: string
+
+  build-config:
+    description: Debug/Release for building
+    required: true
+    type: string
+
+
+runs:
+  using: composite
+  steps:
+    - name: Setup Git Short SHA env var
+      shell: powershell
+      # the hacky way to get the sha1 short hash into a GH variable instead of powershell variable
+      # on Windows, unlike the help says, it's $env:GITHUB_ENV or else nothing works
+      run: |
+        echo "short_sha=$(git rev-parse --short "${{ github.sha }}")" >> $env:GITHUB_ENV
+        # print out other info related to the repo to make it easier to see what triggered the workflow
+        echo "Repository: ${{ github.repository }}"
+        echo "Branch: ${{ github.ref_name }}"
+        echo "Commit: ${{ github.sha }}"
+        echo "GH Trigger: ${{ github.event_name }}"
+
+
+    - name: Replace resource vars
+      if: ${{ inputs.patch-version }}
+      shell: powershell
+      # Replace the version information for auto-GH builds so it's clear to me and others that this was not a formal release
+      run: |
+        # needed on older runners: $env:Path += ";C:\Program Files\Git\usr\bin"
+        Get-Command sed.exe | Format-List
+        #$env:GIT_SHORT_HASH=$(git rev-parse --short "${{ github.sha }}")
+        # " doesn't have to be escaped in linux but needs to be escaped in windows powershell, ps also needs that extra \\\
+        # lots of problems getting environment $env: to work inside single quotes... so doing it a bit more hacky by setting it up in a separate step
+        #sed.exe -i -r -e 's/(#define JPEGVIEW_VERSION \"[0-9, ]+)(\\\0\")/\1 \(~GHdevtest ${{ github.repository_owner }}\/$env:GIT_SHORT_HASH\)\2/g' -e 's/(#define JPEGVIEW_TITLE \"JPEGView)(\")/\1 \(~GHdevtest ${{ github.repository_owner }}\/$env:GIT_SHORT_HASH\)\2/g' src/JPEGView/resource.h
+        sed.exe -i -r -e 's/(#define JPEGVIEW_VERSION \"[0-9, ]+)(\\\0\")/\1 \(~GHdevtest ${{ github.repository_owner }}\/${{ env.short_sha }}\)\2/g' -e 's/(#define JPEGVIEW_TITLE \"JPEGView)(\")/\1 \(~GHdevtest ${{ github.repository_owner }}\/${{ env.short_sha }}\)\2/g' src/JPEGView/resource.h
+        # see output
+        Select-String -Path src/JPEGView/resource.h -Pattern "JPEGVIEW_"
+
+
+    - name: Build Solution
+      shell: cmd
+      env:
+        # equivalent to SET IncludePath=${{ env.include_path }}
+        # IncludePath variable must be unquoted!
+        IncludePath: ${{ env.include_path }}
+      run: |
+        echo (Optional) IncludePath: %IncludePath%
+        msbuild.exe /property:Platform=${{ inputs.platform-arch }} /property:configuration="${{ inputs.build-config }}" src\JPEGView.sln

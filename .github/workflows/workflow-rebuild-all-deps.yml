@@ -1,19 +1,19 @@
-name: Reusable - Build/Upload WTL submod
-# TODO later test and lint
-# TODO test building library dependencies (the prebuilt stuff)
+name: Reusable - Rebuild All Libs
+# This reusable workflow rebuilds all binary dependencies.  While you can pass in a build-config, only 'Release' configuration is supported because all libraries are built in release configuration.
 
+# NOTE: we don't replace any header files here... or anything else, ONLY binaries, so if there's a broken build, it could be caused by those things... and that ought to be updated in the source directly
 
-
-# GH Action Reusable Workflow -- https://docs.github.com/en/actions/using-workflows/reusing-workflows
 on:
   workflow_call:
     inputs:
       platform-arch:
         required: true
         type: string
+
       build-config:
-        required: true
+        required: false
         type: string
+        default: Release
 
 
 jobs:
@@ -22,8 +22,10 @@ jobs:
     runs-on: windows-2019
 
     steps:
-    - name: Checkout code
+    - name: Checkout code with all Submodules
       uses: actions/checkout@v3
+      with:
+        submodules: recursive
 
     - name: Setup msbuild
       # https://github.com/marketplace/actions/setup-msbuild
@@ -35,7 +37,7 @@ jobs:
 
     - uses: ./.github/actions/setup-wix
 
-    - uses: ./.github/actions/wtl-submodule
+    - uses: ./.github/actions/bin-cache
 
     - uses: ./.github/actions/build-solution
       with:

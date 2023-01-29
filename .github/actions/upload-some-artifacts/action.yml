@@ -1,0 +1,45 @@
+name: Action - Selectively Upload Artifacts
+description: Action to selectively upload artifacts based on branch
+
+
+inputs:
+  branch-match:
+    description: branch to match to get all artifacts, or only some
+    required: false
+    default: master
+  
+  platform-arch:
+    description: The architecture for naming artifact
+    required: true
+    type: string
+
+  build-config:
+    description: The build config for naming artifact
+    required: true
+    type: string
+  
+  
+
+runs:
+  using: composite
+  steps:
+    - name: Upload No-Install Outputs Only
+      # if not master branch, only upload the extract-and-run artifact
+      if: github.ref_name != inputs.branch-match
+      uses: actions/upload-artifact@v3
+      with:
+        name: JPEGView-GH_${{ github.repository_owner }}-${{ inputs.build-config }}_${{ inputs.platform-arch }}-${{ env.short_sha }}
+        path: |
+          src/JPEGView/bin
+
+    - name: Upload All Outputs
+      # reduce the ambiguous versions of installers in the wild
+      # by only including the installer for master branch
+      if: github.ref_name == inputs.branch-match
+      uses: actions/upload-artifact@v3
+      with:
+        # short_sha comes from the build step
+        name: JPEGView-GH_${{ github.repository_owner }}-${{ inputs.build-config }}_${{ inputs.platform-arch }}-${{ env.short_sha }}
+        path: |
+          src/JPEGView/bin
+          src/JPEGView.Setup/bin
