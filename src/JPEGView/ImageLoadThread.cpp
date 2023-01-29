@@ -391,6 +391,7 @@ void CImageLoadThread::DeleteCachedGDIBitmap() {
 
 void CImageLoadThread::DeleteCachedWebpDecoder() {
 	__declspec(dllimport) void Webp_Dll_AnimDecoderDelete();
+	// temporary fix to prevent crashing when webp.dll is not found
 	try {
 		Webp_Dll_AnimDecoderDelete();
 	} catch (...) {
