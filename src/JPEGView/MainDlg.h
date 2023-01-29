@@ -157,6 +157,9 @@ public:
 	bool IsShowZoomFactor() { return m_bShowZoomFactor; }
 	bool IsPanMouseCursorSet() { return m_bPanMouseCursorSet; }
 	bool IsMouseOn() { return m_bMouseOn; }
+	bool IsWindowBorderless() { return m_bWindowBorderless; }
+	bool IsAlwaysOnTop() { return m_bAlwaysOnTop; }
+
 	CPoint GetMousePos() { return CPoint(m_nMouseX, m_nMouseY); }
 	double GetZoom() { return m_dZoom; }
 	int GetRotation() { return m_nRotation; }
