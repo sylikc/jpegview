@@ -87,9 +87,10 @@ Another option is to use the official [JPEGView on PortableApps](https://portabl
 
 ## System Requirements
 
-32-bit version: Windows XP SP2 or later
+* 32-bit version: Windows 7 or later
+** ~~Windows XP SP2~~ was formerly supported, last known version to work was 1.0.37, but it wouldn't support decoding the new formats anyways (aka HEIC)
 
-64-bit version: Windows 7/8/10/11 64-bit or later
+* 64-bit version: Windows 7/8/10/11 64-bit or later
 
 ## What's New
 
@@ -111,3 +112,4 @@ Special thanks to [qbnu](https://github.com/qbnu) for adding additional codec su
 * Animated WebP
 * Animated PNG
 * JPEG XL with animation support
+* HEIF/HEIC/AVIF support
