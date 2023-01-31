@@ -397,9 +397,9 @@ namespace HelpersGUI {
 		return sText;
 	}
 
-	void DrawImageLoadErrorText(CDC& dc, const CRect& clientRect, LPCTSTR sFailedFileName, int nFileLoadError) {
-		bool bOutOfMemory = nFileLoadError & FileLoad_OutOfMemory;
-		nFileLoadError &= ~FileLoad_OutOfMemory;
+	void DrawImageLoadErrorText(CDC& dc, const CRect& clientRect, LPCTSTR sFailedFileName, int nFileLoadError, int nLoadErrorDetail) {
+		bool bOutOfMemory = nLoadErrorDetail & FileLoad_OutOfMemory;
+		bool bExceptionError = nLoadErrorDetail & FileLoad_ExceptionError;
 
 		const int BUF_LEN = 512;
 		TCHAR buff[BUF_LEN];
@@ -429,9 +429,15 @@ namespace HelpersGUI {
 			LPCTSTR sEnding = _tcsrchr(sFailedFileName, _T('.'));
 			if (sEnding != NULL) {
 				sEnding += 1;
-				if (_tcsicmp(sEnding, _T("JXL")) == 0) {
-					_tcscat_s(buff, BUF_LEN, _T("\n"));
-					_tcscat_s(buff, BUF_LEN, CNLS::GetString(_T("JXL decoding requires the Microsoft Visual C++ Redistributable")));
+				if (_tcsicmp(sEnding, _T("JXL")) == 0 ||
+					_tcsicmp(sEnding, _T("HEIF")) == 0 ||
+					_tcsicmp(sEnding, _T("HEIC")) == 0 ||
+					_tcsicmp(sEnding, _T("AVIF")) == 0) {
+
+					if (bExceptionError) {
+						_tcscat_s(buff, BUF_LEN, _T("\n"));
+						_tcscat_s(buff, BUF_LEN, CNLS::GetString(_T("Decoding this format requires the Microsoft Visual C++ Redistributable.")));
+					}
 				}
 			}
 		}

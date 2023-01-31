@@ -40,7 +40,7 @@ public:
 	// blocks until the image is ready. If not specified otherwise, a read-ahead request for the next image is
 	// created automatically so that the next image will be ready immediately when requested in the future.
 	CJPEGImage* RequestImage(CFileList* pFileList, EReadAheadDirection eDirection, LPCTSTR strFileName, int nFrameIndex,
-		const CProcessParams & processParams, bool& bOutOfMemory);
+		const CProcessParams & processParams, bool& bOutOfMemory, bool& bExceptionError);
 
 	// Notifies that the specified image is no longer used and its memory can be freed.
 	// The CJPEGProvider class may decide to keep the image cached.
@@ -79,6 +79,7 @@ private:
 		bool Deleted; // true if the request is marked for deletion (but cannot be deleted now as it is not ready)
 		bool IsActive; // true if this request is active (i.e. requested but not ready or ready and in use).
 		bool OutOfMemory; // true if the image failed loading due to out of memory
+		bool ExceptionError; // true if the image failed loading due to an unhandled exception
 		int AccessTimeStamp; // LRU handling
 		CImageLoadThread* HandlingThread; // thread that is loading the image, NULL when image is ready
 		HANDLE EventFinished; // event fired when image has finished loading
@@ -93,6 +94,7 @@ private:
 			Deleted = false;
 			IsActive = true;
 			OutOfMemory = false;
+			ExceptionError = false;
 			AccessTimeStamp = -1;
 			HandlingThread = NULL;
 			EventFinished = ::CreateEvent(NULL, TRUE, FALSE, NULL);

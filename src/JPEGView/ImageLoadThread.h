@@ -15,10 +15,13 @@ public:
 	CJPEGImage* Image;
 	// True if the request failed due to memory
 	bool IsRequestFailedOutOfMemory;
+	// True if the request failed due to an unhandled exception
+	bool IsRequestFailedException;
 
-	CImageData(CJPEGImage* pImage, bool isRequestFailedOutOfMemory) {
+	CImageData(CJPEGImage* pImage, bool isRequestFailedOutOfMemory, bool isRequestFailedException) {
 		Image = pImage;
 		IsRequestFailedOutOfMemory = isRequestFailedOutOfMemory;
+		IsRequestFailedException = isRequestFailedException;
 	}
 };
 
@@ -61,6 +64,7 @@ private:
 			RequestHandle = ::InterlockedIncrement((LONG*)&m_curHandle);
 			Image = NULL;
 			OutOfMemory = false;
+			ExceptionError = false;
 		}
 
 		CString FileName;
@@ -69,7 +73,8 @@ private:
 		int RequestHandle;
 		CJPEGImage* Image;
 		CProcessParams ProcessParams;
-		bool OutOfMemory;
+		bool OutOfMemory;  // load caused an out of memory condition
+		bool ExceptionError;  // an unhandled exception caused the load to fail
 	};
 
 	// Request to release image file
@@ -106,6 +111,7 @@ private:
 	void ProcessReadTGARequest(CRequest * request);
 	void ProcessReadWEBPRequest(CRequest * request);
 	void ProcessReadJXLRequest(CRequest* request);
+	void ProcessReadHEIFRequest(CRequest * request);
 	void ProcessReadRAWRequest(CRequest * request);
 	void ProcessReadGDIPlusRequest(CRequest * request);
 	void ProcessReadWICRequest(CRequest* request);
