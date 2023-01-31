@@ -27,11 +27,13 @@
 		<?define PlatformProgramFilesFolder = "ProgramFiles64Folder" ?>
 		<?define JPEGViewExeSourcePath = "$(var.JPEGView.ProjectDir)\x64\Release\JPEGView.exe" ?>
 		<?define JxlDllFolder = "$(var.JPEGView.ProjectDir)\libjxl\bin64" ?>
+		<?define HeifDllFolder = "$(var.JPEGView.ProjectDir)\libheif\bin64" ?>
 	<?else ?>
 		<?define Win64 = "no" ?>
 		<?define PlatformProgramFilesFolder = "ProgramFilesFolder" ?>
 		<?define JPEGViewExeSourcePath = "$(var.JPEGView.ProjectDir)\x86\Release\JPEGView.exe" ?>
 		<?define JxlDllFolder = "$(var.JPEGView.ProjectDir)\libjxl\bin" ?>
+		<?define HeifDllFolder = "$(var.JPEGView.ProjectDir)\libheif\bin" ?>
 	<?endif ?>
 
 	<!--
@@ -173,6 +175,13 @@
 				<ComponentRef Id="jxl_decDLL"/>
 				<ComponentRef Id="jxl_threadsDLL"/>
 			</Feature>
+			<Feature Id="FeatureHEIF" Title="HEIF/AVIF Support">
+				<ComponentRef Id="dav1dDLL"/>
+				<ComponentRef Id="heifDLL"/>
+				<ComponentRef Id="libde265DLL"/>
+			</Feature>
+
+
 			<Feature Id="FeatureWebP" Title="WebP Support">
 				<ComponentRef Id="webpDLL"/>
 			</Feature>
@@ -360,6 +369,18 @@
 					</Component>
 					<Component Id="jxl_threadsDLL" Guid="964ed16e-138a-4419-9c4c-8eb45a04d0f6">
 						<File Id="jxl_threads.dll" Name="jxl_threads.dll" Source="$(var.JxlDllFolder)\jxl_threads.dll" />
+					</Component>
+
+
+					<!-- DLLs required for HEIF/AVIF support -->
+					<Component Id="dav1dDLL" Guid="ef9a6d34-487d-4edf-b8fb-58e3e16452e4">
+						<File Id="dav1d.dll" Name="dav1d.dll" Source="$(var.HeifDllFolder)\dav1d.dll" />
+					</Component>
+					<Component Id="heifDLL" Guid="46c300a1-229a-45ad-a861-edf53cc97c46">
+						<File Id="heif.dll" Name="heif.dll" Source="$(var.HeifDllFolder)\heif.dll" />
+					</Component>
+					<Component Id="libde265DLL" Guid="c6d43557-f20f-478a-b9e7-a213fca72648">
+						<File Id="libde265.dll" Name="libde265.dll" Source="$(var.HeifDllFolder)\libde265.dll" />
 					</Component>
 
 
