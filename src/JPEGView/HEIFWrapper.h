@@ -1,5 +1,6 @@
-
 #pragma once
+
+#include "libheif/heif_cxx.h"
 
 class HeifReader
 {
@@ -13,5 +14,4 @@ public:
 						 int frame_index, // index of requested frame
 						 const void *buffer, // memory address containing heic compressed data.
 						 int sizebytes); // size of heic compressed data.
-
 };

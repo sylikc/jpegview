@@ -16,6 +16,7 @@
 #include "HEIFWrapper.h"
 #include "MaxImageDef.h"
 
+
 using namespace Gdiplus;
 
 // static initializers
@@ -256,18 +257,20 @@ CImageData CImageLoadThread::GetLoadedImage(int nHandle) {
 	Helpers::CAutoCriticalSection criticalSection(m_csList);
 	CJPEGImage* imageFound = NULL;
 	bool bFailedMemory = false;
+	bool bFailedException = false;
 	std::list<CRequestBase*>::iterator iter;
 	for (iter = m_requestList.begin( ); iter != m_requestList.end( ); iter++ ) {
 		CRequest* pRequest = (CRequest*)(*iter);
 		if (pRequest->Processed && pRequest->Deleted == false && pRequest->RequestHandle == nHandle) {
 			imageFound = pRequest->Image;
 			bFailedMemory = pRequest->OutOfMemory;
+			bFailedException = pRequest->ExceptionError;
 			// only mark as deleted
 			pRequest->Deleted = true;
 			break;
 		}
 	}
-	return CImageData(imageFound, bFailedMemory);
+	return CImageData(imageFound, bFailedMemory, bFailedException);
 }
 
 void CImageLoadThread::ReleaseFile(LPCTSTR strFileName) {
@@ -506,6 +509,7 @@ void CImageLoadThread::ProcessReadJPEGRequest(CRequest * request) {
 	} catch (...) {
 		delete request->Image;
 		request->Image = NULL;
+		request->ExceptionError = true;
 	}
 	::CloseHandle(hFile);
 	if (pBuffer) ::GlobalUnlock(hFileBuffer);
@@ -572,6 +576,7 @@ void CImageLoadThread::ProcessReadPNGRequest(CRequest* request) {
 	} catch (...) {
 		// delete request->Image;
 		// request->Image = NULL;
+		request->ExceptionError = true;
 	}
 	if (!bUseCachedDecoder) {
 		::CloseHandle(hFile);
@@ -753,6 +758,7 @@ void CImageLoadThread::ProcessReadJXLRequest(CRequest* request) {
 	catch (...) {
 		delete request->Image;
 		request->Image = NULL;
+		request->ExceptionError = true;
 	}
 	SetErrorMode(nPrevErrorMode);
 	if (!bUseCachedDecoder) {
@@ -800,10 +806,14 @@ void CImageLoadThread::ProcessReadHEIFRequest(CRequest* request) {
 				request->Image = new CJPEGImage(nWidth, nHeight, pPixelData, NULL, nBPP, 0, IF_HEIF, false, request->FrameIndex, nFrameCount, nFrameTimeMs);
 			}
 		}
-	}
-	catch (...) {
+	} catch(heif::Error he) {
+		// invalid image
 		delete request->Image;
 		request->Image = NULL;
+	} catch (...) {
+		delete request->Image;
+		request->Image = NULL;
+		request->ExceptionError = true;
 	}
 	SetErrorMode(nPrevErrorMode);
 	::CloseHandle(hFile);

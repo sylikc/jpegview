@@ -230,6 +230,7 @@ private:
 	CJPEGProvider * m_pJPEGProvider; // reads image (of any format, not only JPEGs) files, using read ahead
 	CJPEGImage * m_pCurrentImage; // currently displayed image
 	bool m_bOutOfMemoryLastImage; // true if the last image could not be requested because not enough memory
+	bool m_bExceptionErrorLastImage; // true if the last image could not be requested because of an unhandled exception
 	int m_nLastLoadError; // one of HelpersGUI::EFileLoadError
 	
 	// Current parameter set

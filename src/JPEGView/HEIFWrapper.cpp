@@ -1,7 +1,6 @@
 #include "stdafx.h"
 
 #include "HEIFWrapper.h"
-#include "libheif/heif_cxx.h"
 #include "MaxImageDef.h"
 
 void * HeifReader::ReadImage(int &width,

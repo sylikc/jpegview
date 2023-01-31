@@ -211,6 +211,7 @@ CMainDlg::CMainDlg(bool bForceFullScreen) {
 	m_pJPEGProvider = NULL;
 	m_pCurrentImage = NULL;
 	m_bOutOfMemoryLastImage = false;
+	m_bExceptionErrorLastImage = false;
 	m_nLastLoadError = HelpersGUI::FileLoad_Ok;
 
 	m_dMovieFPS = 1.0;
@@ -380,7 +381,7 @@ LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam
 	// create JPEG provider and request first image - do no processing yet if not in fullscreen mode (as we do not know the size yet)
 	m_pJPEGProvider = new CJPEGProvider(m_hWnd, NUM_THREADS, READ_AHEAD_BUFFERS);	
 	m_pCurrentImage = m_pJPEGProvider->RequestImage(m_pFileList, CJPEGProvider::FORWARD,
-		m_pFileList->Current(), 0, CreateProcessParams(!m_bFullScreenMode), m_bOutOfMemoryLastImage);
+		m_pFileList->Current(), 0, CreateProcessParams(!m_bFullScreenMode), m_bOutOfMemoryLastImage, m_bExceptionErrorLastImage);
 	if (m_pCurrentImage != NULL && m_pCurrentImage->IsAnimation()) {
 		StartAnimation();
 	}
@@ -646,7 +647,8 @@ void CMainDlg::DisplayErrors(CJPEGImage* pCurrentImage, const CRect& clientRect,
 		HelpersGUI::DrawImageLoadErrorText(dc, clientRect,
 			(m_nLastLoadError == HelpersGUI::FileLoad_SlideShowListInvalid) ? m_sStartupFile :
 			(m_nLastLoadError == HelpersGUI::FileLoad_NoFilesInDirectory) ? m_pFileList->CurrentDirectory() : CurrentFileName(false),
-			m_nLastLoadError + (m_bOutOfMemoryLastImage ? HelpersGUI::FileLoad_OutOfMemory : 0));
+			m_nLastLoadError,
+			(m_bOutOfMemoryLastImage ? HelpersGUI::FileLoad_OutOfMemory : 0) | (m_bExceptionErrorLastImage ? HelpersGUI::FileLoad_ExceptionError : 0));
 	}
 }
 
@@ -2119,7 +2121,8 @@ void CMainDlg::OpenFile(LPCTSTR sFileName, bool bAfterStartup) {
 	m_pJPEGProvider->NotifyNotUsed(m_pCurrentImage);
 	m_pJPEGProvider->ClearAllRequests();
 	m_pCurrentImage = m_pJPEGProvider->RequestImage(m_pFileList, CJPEGProvider::FORWARD,
-		m_pFileList->Current(), 0, CreateProcessParams(!m_bFullScreenMode && (bAfterStartup || IsAdjustWindowToImage())), m_bOutOfMemoryLastImage);
+		m_pFileList->Current(), 0, CreateProcessParams(!m_bFullScreenMode && (bAfterStartup || IsAdjustWindowToImage())),
+		m_bOutOfMemoryLastImage, m_bExceptionErrorLastImage);
 	m_nLastLoadError = GetLoadErrorAfterOpenFile();
 	if (bAfterStartup) CheckIfApplyAutoFitWndToImage(false);
 	AfterNewImageLoaded(true, false, false);
@@ -2465,7 +2468,8 @@ void CMainDlg::GotoImage(EImagePosition ePos, int nFlags) {
 		}
 	} else {
 		m_pCurrentImage = m_pJPEGProvider->RequestImage(m_pFileList, (ePos == POS_AwayFromCurrent) ? CJPEGProvider::NONE : eDirection,  
-			m_pFileList->Current(), nFrameIndex, procParams, m_bOutOfMemoryLastImage);
+			m_pFileList->Current(), nFrameIndex, procParams,
+			m_bOutOfMemoryLastImage, m_bExceptionErrorLastImage);
 		m_nLastLoadError = (m_pCurrentImage == NULL) ? ((m_pFileList->Current() == NULL) ? HelpersGUI::FileLoad_NoFilesInDirectory : HelpersGUI::FileLoad_LoadError) : HelpersGUI::FileLoad_Ok;
 	}
 	double minimalDisplayTime = CSettingsProvider::This().MinimalDisplayTime();

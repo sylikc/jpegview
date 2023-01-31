@@ -32,9 +32,11 @@ CJPEGProvider::~CJPEGProvider(void) {
 }
 
 CJPEGImage* CJPEGProvider::RequestImage(CFileList* pFileList, EReadAheadDirection eDirection,
-									   LPCTSTR strFileName, int nFrameIndex, const CProcessParams & processParams, bool& bOutOfMemory) {
+                                        LPCTSTR strFileName, int nFrameIndex, const CProcessParams & processParams,
+                                        bool& bOutOfMemory, bool& bExceptionError) {
 	if (strFileName == NULL) {
 		bOutOfMemory = false;
+		bExceptionError = false;
 		return NULL;
 	}
 
@@ -97,6 +99,7 @@ CJPEGImage* CJPEGProvider::RequestImage(CFileList* pFileList, EReadAheadDirectio
 	}
 
 	bOutOfMemory = pRequest->OutOfMemory;
+	bExceptionError = pRequest->ExceptionError;
 	return pRequest->Image;
 }
 
@@ -241,6 +244,7 @@ void CJPEGProvider::GetLoadedImageFromWorkThread(CImageRequest* pRequest) {
 		CImageData imageData = pRequest->HandlingThread->GetLoadedImage(pRequest->Handle);
 		pRequest->Image = imageData.Image;
 		pRequest->OutOfMemory = imageData.IsRequestFailedOutOfMemory;
+		pRequest->ExceptionError = imageData.IsRequestFailedException;
 		pRequest->Ready = true;
 		pRequest->HandlingThread = NULL;
 	}
