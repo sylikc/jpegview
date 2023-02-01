@@ -3,6 +3,10 @@
 // Used by JPEGView.RC
 //
 
+// scripts in the extras directory will search this for strings as to which keys to include in KeyMap
+// if a define is to be included in the publicly-exposed definitions, start the comment with ":KeyMap:"
+// don't worry about the formatting, the script that auto-generates the definition will take care of it
+
 #define JPEGVIEW_VERSION "1, 1, 42, 0\0"
 // title for main window and msgbox so it can be change via actions
 #define JPEGVIEW_TITLE "JPEGView"
@@ -131,48 +135,51 @@
 #define IDC_PD_ED_BOTTOM                2036
 #define IDC_PD_CM3                      2037
 
+// this is not used anywhere in code, but defined in KeyMap as an "invalid command", so make sure the defined number doesn't match anything!
+#define IDM_DONOTHING		1			// :KeyMap: do nothing (can be used to disable a standard command for a mouse button)
+
 #define IDM_DEFAULT_ESC		255
 #define IDM_STOP_MOVIE		1000
-#define IDM_MINIMIZE		1010
-#define IDM_OPEN			1100
-#define IDM_EXPLORE			1101
-#define IDM_SAVE			1500
-#define IDM_SAVE_SCREEN		1501
-#define IDM_SAVE_ALLOW_NO_PROMPT	1502
-#define IDM_RELOAD			1600
-#define IDM_PRINT			1700
-#define IDM_COPY			2000
-#define IDM_COPY_FULL		2500
-#define IDM_COPY_PATH		2525
-#define IDM_PASTE			2550
-#define IDM_BATCH_COPY		2600
-#define IDM_RENAME			2610
-#define IDM_MOVE_TO_RECYCLE_BIN 2620
-#define IDM_MOVE_TO_RECYCLE_BIN_CONFIRM 2621
-#define IDM_MOVE_TO_RECYCLE_BIN_CONFIRM_PERMANENT_DELETE 2622
-#define IDM_TOUCH_IMAGE		2700
-#define IDM_TOUCH_IMAGE_EXIF 2710
-#define IDM_TOUCH_IMAGE_EXIF_FOLDER 2720
-#define IDM_SET_WALLPAPER_ORIG 2770
-#define IDM_SET_WALLPAPER_DISPLAY 2774
-#define IDM_SHOW_FILEINFO   2800
-#define IDM_SHOW_FILENAME	3000
-#define IDM_SHOW_NAVPANEL   3100
-#define IDM_NEXT			4000
-#define IDM_PREV			5000
-#define IDM_FIRST			5100
-#define IDM_LAST			5200
-#define IDM_LOOP_FOLDER		6000
-#define IDM_LOOP_RECURSIVELY 6010
-#define IDM_LOOP_SIBLINGS	6020
-#define IDM_SORT_MOD_DATE	7000
-#define IDM_SORT_CREATION_DATE 7010
-#define IDM_SORT_NAME		7020
-#define IDM_SORT_RANDOM		7030
-#define IDM_SORT_SIZE		7040
-#define IDM_SORT_UPCOUNTING	7100
-#define IDM_SORT_DOWNCOUNTING 7110
-#define IDM_SLIDESHOW_RESUME 7399
+#define IDM_MINIMIZE		1010		// :KeyMap: minimize window
+#define IDM_OPEN			1100		// :KeyMap: open file
+#define IDM_EXPLORE			1101		// :KeyMap: open and select file in Explorer
+#define IDM_SAVE			1500		// :KeyMap: save to file in original size, don't allow override without prompt
+#define IDM_SAVE_SCREEN		1501		// :KeyMap: save to file in screen size
+#define IDM_SAVE_ALLOW_NO_PROMPT	1502		// :KeyMap: save to file in original size, allow override without prompt when enabled in INI
+#define IDM_RELOAD			1600		// :KeyMap: reload image
+#define IDM_PRINT			1700		// :KeyMap: print image
+#define IDM_COPY			2000		// :KeyMap: copy image to clipboard in screen size
+#define IDM_COPY_FULL		2500		// :KeyMap: copy image to clipboard in original size
+#define IDM_COPY_PATH		2525		// :KeyMap: copy image path to clipboard
+#define IDM_PASTE			2550		// :KeyMap: paste image from clipboard
+#define IDM_BATCH_COPY		2600		// :KeyMap: open batch copy dialog
+#define IDM_RENAME			2610		// :KeyMap: rename current file, only works when image processing panel can be shown (i.e. panel not disabled in INI and window size is big enough)
+#define IDM_MOVE_TO_RECYCLE_BIN 2620		// :KeyMap: delete the current file on disk - no confirmation (by moving it to the recycle bin)
+#define IDM_MOVE_TO_RECYCLE_BIN_CONFIRM 2621		// :KeyMap: delete the current file on disk - with user confirmation (by moving it to the recycle bin)
+#define IDM_MOVE_TO_RECYCLE_BIN_CONFIRM_PERMANENT_DELETE 2622		// :KeyMap: delete the current file on disk - confirmation when no recycle bin for this drive
+#define IDM_TOUCH_IMAGE		2700		// :KeyMap: set modification time to current time
+#define IDM_TOUCH_IMAGE_EXIF 2710		// :KeyMap: set modification time to EXIF time
+#define IDM_TOUCH_IMAGE_EXIF_FOLDER 2720		// :KeyMap: set modification time to EXIF time for all images in folder
+#define IDM_SET_WALLPAPER_ORIG 2770		// :KeyMap: Set original image file as desktop wallpaper
+#define IDM_SET_WALLPAPER_DISPLAY 2774		// :KeyMap: Set image as displayed as desktop wallpaper
+#define IDM_SHOW_FILEINFO   2800		// :KeyMap: toggle show file and EXIF info box in top, left corner
+#define IDM_SHOW_FILENAME	3000		// :KeyMap: toggle show file name on top of screen
+#define IDM_SHOW_NAVPANEL   3100		// :KeyMap: toggle show navigation panel
+#define IDM_NEXT			4000		// :KeyMap: go to next image
+#define IDM_PREV			5000		// :KeyMap: go to previous image
+#define IDM_FIRST			5100		// :KeyMap: go to first image
+#define IDM_LAST			5200		// :KeyMap: go to last image
+#define IDM_LOOP_FOLDER		6000		// :KeyMap: set navigation mode loop through folder
+#define IDM_LOOP_RECURSIVELY 6010		// :KeyMap: set navigation mode loop through folder and subfolders
+#define IDM_LOOP_SIBLINGS	6020		// :KeyMap: set navigation mode loop through folders on same level
+#define IDM_SORT_MOD_DATE	7000		// :KeyMap: sorting order by modification date
+#define IDM_SORT_CREATION_DATE 7010		// :KeyMap: sorting order by creation date
+#define IDM_SORT_NAME		7020		// :KeyMap: sorting order by name
+#define IDM_SORT_RANDOM		7030		// :KeyMap: sorting order random
+#define IDM_SORT_SIZE		7040		// :KeyMap: sorting order file size in bytes
+#define IDM_SORT_UPCOUNTING	7100		// :KeyMap: sort upcounting (ascending)
+#define IDM_SORT_DOWNCOUNTING 7110		// :KeyMap: sort downcounting (descending)
+#define IDM_SLIDESHOW_RESUME 7399		// :KeyMap: resume slide show (after stop)
 #define IDM_SLIDESHOW_START 7400
 #define IDM_SLIDESHOW_1		7401
 #define IDM_SLIDESHOW_2		7402
@@ -208,84 +215,84 @@
 #define IDM_MOVIE_30_FPS	7530
 #define IDM_MOVIE_50_FPS	7550
 #define IDM_MOVIE_100_FPS	7600
-#define IDM_ROTATE_90		8000
-#define IDM_ROTATE_270		9000
-#define IDM_ROTATE          9100
-#define IDM_CHANGESIZE      9120
-#define IDM_PERSPECTIVE     9150
-#define IDM_MIRROR_H        9200
-#define IDM_MIRROR_V        9300
-#define IDM_ROTATE_90_LOSSLESS 9400
-#define IDM_ROTATE_90_LOSSLESS_CONFIRM 9401
-#define IDM_ROTATE_270_LOSSLESS 9410
-#define IDM_ROTATE_270_LOSSLESS_CONFIRM 9411
-#define IDM_ROTATE_180_LOSSLESS 9420
-#define IDM_MIRROR_H_LOSSLESS 9430
-#define IDM_MIRROR_V_LOSSLESS 9440
-#define IDM_AUTO_CORRECTION	10000
-#define IDM_AUTO_CORRECTION_SECTION	10100
-#define IDM_LDC				10500
-#define IDM_LANDSCAPE_MODE	10700
-#define IDM_KEEP_PARAMETERS	11000
-#define IDM_SAVE_PARAMETERS 11010
-#define IDM_SAVE_PARAM_DB   11500
+#define IDM_ROTATE_90		8000		// :KeyMap: rotate image 90 deg
+#define IDM_ROTATE_270		9000		// :KeyMap: rotate image 270 deg
+#define IDM_ROTATE          9100		// :KeyMap: show free rotation dialog
+#define IDM_CHANGESIZE      9120		// :KeyMap: show dialog to change size of image
+#define IDM_PERSPECTIVE     9150		// :KeyMap: show perpective correction dialog
+#define IDM_MIRROR_H        9200		// :KeyMap: mirror image horizontally
+#define IDM_MIRROR_V        9300		// :KeyMap: mirror image vertically
+#define IDM_ROTATE_90_LOSSLESS 9400		// :KeyMap: Lossless JPEG transformation: rotate image 90 deg
+#define IDM_ROTATE_90_LOSSLESS_CONFIRM 9401		// :KeyMap: Lossless JPEG transformation: rotate image 90 deg with user confirmation
+#define IDM_ROTATE_270_LOSSLESS 9410		// :KeyMap: Lossless JPEG transformation: rotate image 270 deg
+#define IDM_ROTATE_270_LOSSLESS_CONFIRM 9411		// :KeyMap: Lossless JPEG transformation: rotate image 270 deg with user confirmation
+#define IDM_ROTATE_180_LOSSLESS 9420		// :KeyMap: Lossless JPEG transformation: rotate image 180 deg
+#define IDM_MIRROR_H_LOSSLESS 9430		// :KeyMap: Lossless JPEG transformation: mirror image horizontally
+#define IDM_MIRROR_V_LOSSLESS 9440		// :KeyMap: Lossless JPEG transformation: mirror image vertically
+#define IDM_AUTO_CORRECTION	10000		// :KeyMap: toggle auto color and contrast correction
+#define IDM_AUTO_CORRECTION_SECTION	10100		// :KeyMap: auto contrast correction on visible section only
+#define IDM_LDC				10500		// :KeyMap: toggle local density correction (lighten shadows, darken highlights)
+#define IDM_LANDSCAPE_MODE	10700		// :KeyMap: toogle landscape picture enhancement mode
+#define IDM_KEEP_PARAMETERS	11000		// :KeyMap: toogle keep parameters between images
+#define IDM_SAVE_PARAMETERS 11010		// :KeyMap: save to parameter DB
+#define IDM_SAVE_PARAM_DB   11500		// :KeyMap: delete from parameter DB
 #define IDM_CLEAR_PARAM_DB  11510
-#define IDM_FIT_TO_SCREEN	12000
-#define IDM_FILL_WITH_CROP	12001
+#define IDM_FIT_TO_SCREEN	12000		// :KeyMap: fit image to screen
+#define IDM_FILL_WITH_CROP	12001		// :KeyMap: fit image to fill screen with crop
 #define IDM_FIT_TO_SCREEN_NO_ENLARGE 12002
-#define IDM_FIT_WINDOW_TO_IMAGE 12005
-#define IDM_SPAN_SCREENS	12010
-#define IDM_FULL_SCREEN_MODE 12011
-#define IDM_HIDE_TITLE_BAR  12012
-#define IDM_ALWAYS_ON_TOP   12013
-#define IDM_ZOOM_400        12020
-#define IDM_ZOOM_200		12030
-#define IDM_ZOOM_100		12040
-#define IDM_ZOOM_50			12050
-#define IDM_ZOOM_25			12060
-#define IDM_ZOOM_INC		12100
-#define IDM_ZOOM_DEC		12200
+#define IDM_FIT_WINDOW_TO_IMAGE 12005		// :KeyMap: toggle fit window automatically to image, avoiding black borders
+#define IDM_SPAN_SCREENS	12010		// :KeyMap: span over all screens
+#define IDM_TOGGLE_MONITOR	14900		// :KeyMap: move to other monitor
+#define IDM_FULL_SCREEN_MODE 12011		// :KeyMap: toggle full screen mode
+#define IDM_HIDE_TITLE_BAR  12012		// :KeyMap: toggle hiding window title bar.  Note: in this mode, the window can't be manually resized
+#define IDM_ALWAYS_ON_TOP   12013		// :KeyMap: toggle window mode to always on top
+#define IDM_ZOOM_400        12020		// :KeyMap: zoom to 400 %
+#define IDM_ZOOM_200		12030		// :KeyMap: zoom to 200 %
+#define IDM_ZOOM_100		12040		// :KeyMap: zoom to 100 %
+#define IDM_ZOOM_50			12050		// :KeyMap: zoom to 50 %
+#define IDM_ZOOM_25			12060		// :KeyMap: zoom to 25 %
+#define IDM_ZOOM_INC		12100		// :KeyMap: zoom in
+#define IDM_ZOOM_DEC		12200		// :KeyMap: zoom out
 #define IDM_ZOOM_MODE		12300
-#define IDM_AUTO_ZOOM_FIT_NO_ZOOM	12500
-#define IDM_AUTO_ZOOM_FILL_NO_ZOOM	12510
-#define IDM_AUTO_ZOOM_FIT	12520
-#define IDM_AUTO_ZOOM_FILL	12530
-#define IDM_EDIT_GLOBAL_CONFIG 12600
-#define IDM_EDIT_USER_CONFIG   12610
+#define IDM_AUTO_ZOOM_FIT_NO_ZOOM	12500		// :KeyMap: set auto zoom mode fit to screen, never zoom
+#define IDM_AUTO_ZOOM_FILL_NO_ZOOM	12510		// :KeyMap: set auto zoom mode fill screen, never zoom
+#define IDM_AUTO_ZOOM_FIT	12520		// :KeyMap: set auto zoom mode fit to screen
+#define IDM_AUTO_ZOOM_FILL	12530		// :KeyMap: set auto zoom mode fill screen
+#define IDM_EDIT_GLOBAL_CONFIG 12600		// :KeyMap: edit global configuration
+#define IDM_EDIT_USER_CONFIG   12610		// :KeyMap: edit user configuration
 #define IDM_MANAGE_OPEN_WITH_MENU 12612
 #define IDM_SET_AS_DEFAULT_VIEWER 12615
 #define IDM_UPDATE_USER_CONFIG 12617
-#define IDM_BACKUP_PARAMDB     12620
-#define IDM_RESTORE_PARAMDB    12630
-#define IDM_ABOUT			12900
-#define IDM_EXIT			13000
+#define IDM_BACKUP_PARAMDB     12620		// :KeyMap: backup parameter DB
+#define IDM_RESTORE_PARAMDB    12630		// :KeyMap: restore parameter DB
+#define IDM_ABOUT			12900		// :KeyMap: show about box
+#define IDM_EXIT			13000		// :KeyMap: exit JPEGView application
 #define IDM_HELP			14000
-#define IDM_TOGGLE			14100
-#define IDM_MARK_FOR_TOGGLE			14101
-#define IDM_COLOR_CORRECTION_INC	14200
-#define IDM_COLOR_CORRECTION_DEC	14201
-#define IDM_CONTRAST_CORRECTION_INC	14300
-#define IDM_CONTRAST_CORRECTION_DEC	14301
-#define IDM_CONTRAST_INC	14400
-#define IDM_CONTRAST_DEC	14401
-#define IDM_GAMMA_INC		14500
-#define IDM_GAMMA_DEC		14501
-#define IDM_LDC_SHADOWS_INC		14600
-#define IDM_LDC_SHADOWS_DEC		14601
-#define IDM_LDC_HIGHLIGHTS_INC		14700
-#define IDM_LDC_HIGHLIGHTS_DEC		14701
-#define IDM_TOGGLE_RESAMPLING_QUALITY	14800
-#define IDM_TOGGLE_MONITOR	14900
-#define IDM_TOGGLE_FIT_TO_SCREEN_100_PERCENTS	15000
-#define IDM_TOGGLE_FILL_WITH_CROP_100_PERCENTS	15001
-#define IDM_EXCHANGE_PROC_PARAMS	15100
-#define IDM_PAN_UP	15200
-#define IDM_PAN_DOWN	15201
-#define IDM_PAN_RIGHT	15202
-#define IDM_PAN_LEFT	15203
-#define IDM_SHARPEN_INC		15300
-#define IDM_SHARPEN_DEC		15301
-#define IDM_CONTEXT_MENU	16000
+#define IDM_TOGGLE			14100		// :KeyMap: toggle between marked image and current image
+#define IDM_MARK_FOR_TOGGLE			14101		// :KeyMap: mark current image for toggling
+#define IDM_COLOR_CORRECTION_INC	14200		// :KeyMap: increase color correction amount
+#define IDM_COLOR_CORRECTION_DEC	14201		// :KeyMap: decrease color correction amount
+#define IDM_CONTRAST_CORRECTION_INC	14300		// :KeyMap: increase contrast correction amount
+#define IDM_CONTRAST_CORRECTION_DEC	14301		// :KeyMap: decrease contrast correction amount
+#define IDM_CONTRAST_INC	14400		// :KeyMap: increase contrast
+#define IDM_CONTRAST_DEC	14401		// :KeyMap: decrease contrast
+#define IDM_GAMMA_INC		14500		// :KeyMap: increase gamma (brightness)
+#define IDM_GAMMA_DEC		14501		// :KeyMap: decrease gamma (brightness)
+#define IDM_LDC_SHADOWS_INC		14600		// :KeyMap: increase lighting shadows
+#define IDM_LDC_SHADOWS_DEC		14601		// :KeyMap: decrease lighting shadows
+#define IDM_LDC_HIGHLIGHTS_INC		14700		// :KeyMap: increase darken highlights
+#define IDM_LDC_HIGHLIGHTS_DEC		14701		// :KeyMap: decrease darken highlights
+#define IDM_SHARPEN_INC		15300		// :KeyMap: increase sharpness
+#define IDM_SHARPEN_DEC		15301		// :KeyMap: decrease sharpness
+#define IDM_TOGGLE_RESAMPLING_QUALITY	14800		// :KeyMap: toggle resampling quality (between point sampling and filtering)
+#define IDM_TOGGLE_FIT_TO_SCREEN_100_PERCENTS	15000		// :KeyMap: toggle between fit to screen and 100 % zoom
+#define IDM_TOGGLE_FILL_WITH_CROP_100_PERCENTS	15001		// :KeyMap: toggle between fill with crop and 100 % zoom
+#define IDM_EXCHANGE_PROC_PARAMS	15100		// :KeyMap: toggle between two sets of image processing parameters
+#define IDM_PAN_UP	15200		// :KeyMap: pan up
+#define IDM_PAN_DOWN	15201		// :KeyMap: pan down
+#define IDM_PAN_RIGHT	15202		// :KeyMap: pan right
+#define IDM_PAN_LEFT	15203		// :KeyMap: pan left
+#define IDM_CONTEXT_MENU	16000		// :KeyMap: display context menu
 
 #define IDM_CROP_SEL		20000
 #define IDM_LOSSLESS_CROP_SEL 20010
