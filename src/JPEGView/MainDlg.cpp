@@ -1626,10 +1626,10 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 				if (!bAskIfToTrim || bTrim) {
 					if (!bAskIfToTrim && (nCommand == IDM_ROTATE_90_LOSSLESS_CONFIRM || nCommand == IDM_ROTATE_270_LOSSLESS_CONFIRM)) {
 						LPCTSTR sConfirmMsg = (nCommand == IDM_ROTATE_90_LOSSLESS_CONFIRM) ?
-							_T("Rotate current file on disk lossless by 90 deg (W/H must be multiple of 16)") :
-							_T("Rotate current file on disk lossless by 270 deg (W/H must be multiple of 16)");
+							CNLS::GetString(_T("Rotate current file on disk lossless by 90 deg (W/H must be multiple of 16)")) :
+							CNLS::GetString(_T("Rotate current file on disk lossless by 270 deg (W/H must be multiple of 16)"));
 						bPerformTransformation = IDYES == ::MessageBox(m_hWnd, 
-							CNLS::GetString(sConfirmMsg), CNLS::GetString(_T("Confirm")), MB_YESNOCANCEL | MB_ICONWARNING);
+							sConfirmMsg, CNLS::GetString(_T("Confirm")), MB_YESNOCANCEL | MB_ICONWARNING);
 					}
 					if (bPerformTransformation) {
 						CJPEGLosslessTransform::EResult eResult =

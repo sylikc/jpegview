@@ -20,7 +20,7 @@ CString CNLS::GetLocalizedFileName(LPCTSTR sPath, LPCTSTR sPrefixName, LPCTSTR s
 		}
 	}
 	if (sNLSFile.IsEmpty()) {
-		sNLSFile = CString(sPath) + sPrefixName + _T("_") + sLanguageCode + __T(".") + sExtension;
+		sNLSFile = CString(sPath) + sPrefixName + _T("_") + sLanguageCode + _T(".") + sExtension;
 	}
 	return sNLSFile;
 }
