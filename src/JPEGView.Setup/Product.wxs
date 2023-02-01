@@ -194,13 +194,15 @@
 				<ComponentRef Id="JPEGView_ru.ini"/>
 				<ComponentRef Id="JPEGView_ru.ini.tpl"/>
 				<ComponentRef Id="KeyMap.txt"/>
-				<ComponentRef Id="KeyMap_ru.txt"/>
+				<ComponentRef Id="symbols.km"/>
+				<!-- <ComponentRef Id="KeyMap_ru.txt"/> -->
 			</Feature>
 			<Feature Id="Docs" Title="Documentation">
 				<ComponentRef Id="LICENSE.txt"/>
 				<ComponentRef Id="readme.html"/>
 				<ComponentRef Id="readme_ru.html"/>
 				<ComponentRef Id="readme_uk.html"/>
+				<ComponentRef Id="KeyMap-README.html"/>
 			</Feature>
 			<Feature Id="Localization" Title="Localization Strings">
 				<ComponentRef Id="strings_bel.txt" />
@@ -413,9 +415,14 @@
 					<Component Id="KeyMap.txt" Guid="*">
 						<File Id="KeyMap.txt" Name="KeyMap.txt" Source="$(var.JPEGView.TargetDir)KeyMap.txt" />
 					</Component>
+					<Component Id="symbols.km" Guid="*">
+						<File Id="symbols.km" Name="symbols.km" Source="$(var.JPEGView.TargetDir)symbols.km" />
+					</Component>
+					<!--
 					<Component Id="KeyMap_ru.txt" Guid="*">
 						<File Id="KeyMap_ru.txt" Name="KeyMap_ru.txt" Source="$(var.JPEGView.TargetDir)KeyMap_ru.txt" />
 					</Component>
+					-->
 
 					<Component Id="LICENSE.txt" Guid="*">
 						<File Id="LICENSE.txt" Name="LICENSE.txt" Source="$(var.JPEGView.TargetDir)LICENSE.txt" />
@@ -428,6 +435,9 @@
 					</Component>
 					<Component Id="readme_uk.html" Guid="*">
 						<File Id="readme_uk.html" Name="readme_uk.html" Source="$(var.JPEGView.TargetDir)readme_uk.html" />
+					</Component>
+					<Component Id="KeyMap-README.html" Guid="*">
+						<File Id="KeyMap-README.html" Name="KeyMap-README.html" Source="$(var.JPEGView.TargetDir)KeyMap-README.html" />
 					</Component>
 
 
