@@ -202,7 +202,7 @@
 				<ComponentRef Id="readme.html"/>
 				<ComponentRef Id="readme_ru.html"/>
 				<ComponentRef Id="readme_uk.html"/>
-				<ComponentRef Id="KeyMap-README.html"/>
+				<ComponentRef Id="KeyMap_README.html"/>
 			</Feature>
 			<Feature Id="Localization" Title="Localization Strings">
 				<ComponentRef Id="strings_bel.txt" />
@@ -436,8 +436,8 @@
 					<Component Id="readme_uk.html" Guid="*">
 						<File Id="readme_uk.html" Name="readme_uk.html" Source="$(var.JPEGView.TargetDir)readme_uk.html" />
 					</Component>
-					<Component Id="KeyMap-README.html" Guid="*">
-						<File Id="KeyMap-README.html" Name="KeyMap-README.html" Source="$(var.JPEGView.TargetDir)KeyMap-README.html" />
+					<Component Id="KeyMap_README.html" Guid="*">
+						<File Id="KeyMap_README.html" Name="KeyMap-README.html" Source="$(var.JPEGView.TargetDir)KeyMap-README.html" />
 					</Component>
 
 
