@@ -1,10 +1,11 @@
 @echo off
 
 setlocal
-REM this builds libwebp and replaces the libs in the JPEGView src folder
+REM this builds libjxl and replaces the libs in the JPEGView src folder
 
 REM for me it takes like 15min to build
-echo NOTE: this takes a LONG time to build, don't be alarmed... if it looks like the build process hung... it didn't, it' just WAY SLOW
+echo NOTE: this takes a LONG time to build, don't be alarmed...
+echo       if it looks like the build process hung... it didn't, it's just WAY SLOW!
 
 SET XSRC_DIR=%~dp0..\..\src
 SET XLIB_DIR=%~dp0..\libjxl
