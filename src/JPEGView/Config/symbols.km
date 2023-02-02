@@ -4,6 +4,8 @@
 //
 // For the curious: JPEGView reads this file on startup to define the internally mapped values to KeyMap definitions.
 //
+// NOTE: This file does NOT need to be localized, as users do not (should not) interact with this file.
+//
 // Devs: see "extras\scripts" for more info.
 
 #define IDM_DONOTHING 1

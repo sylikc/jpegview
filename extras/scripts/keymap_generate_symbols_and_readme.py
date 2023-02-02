@@ -62,6 +62,8 @@ def keymap_generate_internal_config():
 //
 // For the curious: JPEGView reads this file on startup to define the internally mapped values to KeyMap definitions.
 //
+// NOTE: This file does NOT need to be localized, as users do not (should not) interact with this file.
+//
 // Devs: see "extras\scripts" for more info.\n\n""")
 
         for k, v in d_index.items():
@@ -235,10 +237,7 @@ but not with other keys or other mouse buttons.
             # https://www.peterbe.com/plog/how-to-pad-fill-string-by-variable-python
             #f.write(f"{k + ' ':.<{padding}} {v}\n")
             f.write(f"""
-  <tr>
-    <td>
-      {k}
-    </td>
+  <tr><td>{k}</td>
     <td>
       {v}
     </td>
