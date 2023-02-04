@@ -2,6 +2,8 @@ name: Build Win32/x64 with all deps (Release)
 
 # triggers:
 on:
+  # use push only when debugging this workflow
+  #push:
   # run this action when kicked off manually
   workflow_dispatch:
   # when a tag or branch created

@@ -23,6 +23,11 @@ runs:
       shell: cmd
       run: del /s *.lib *.dll
 
+    - name: Setup Python (for dav1d build)
+      uses: actions/setup-python@v4
+      with:
+        # any version will do for right now, just have it set fixed to a version
+        python-version: '3.10'
 
     - name: BIN Cache - Restore LIBs/DLLs from previous GH Action
       # https://docs.github.com/en/actions/using-workflows/caching-dependencies-to-speed-up-workflows
@@ -44,10 +49,15 @@ runs:
           src/JPEGView/libpng-apng/lib/*.lib
           src/JPEGView/libpng-apng/lib64/*.lib
 
-          src/JPEGView/libjxl/lib/*.lib
-          src/JPEGView/libjxl/lib64/*.lib
+          src/JPEGView/libheif/bin/*.dll
+          src/JPEGView/libheif/bin64/*.dll
+          src/JPEGView/libheif/lib/*.lib
+          src/JPEGView/libheif/lib64/*.lib
+
           src/JPEGView/libjxl/bin/*.dll
           src/JPEGView/libjxl/bin64/*.dll
+          src/JPEGView/libjxl/lib/*.lib
+          src/JPEGView/libjxl/lib64/*.lib
 
     # cache prevents the rebuild-all to happen twice, since each invocation of the workflow (once for x86, once for x64) causes a rebuild
 
@@ -81,6 +91,12 @@ runs:
       shell: cmd
       run: call extras\scripts\build-libpng-apng.bat
 
+    - name: libheif
+      if: ${{ steps.cache-bin.outputs.cache-hit != 'true' }}
+      shell: cmd
+      run: call extras\scripts\build-libheif.bat
+
+    # put this last since it takes the longest to build
     - name: libjpxl
       if: ${{ steps.cache-bin.outputs.cache-hit != 'true' }}
       shell: cmd
