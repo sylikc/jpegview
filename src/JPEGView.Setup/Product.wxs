@@ -176,7 +176,6 @@
 				<ComponentRef Id="jxl_threadsDLL"/>
 			</Feature>
 			<Feature Id="FeatureHEIF" Title="HEIF/AVIF Support">
-				<ComponentRef Id="dav1dDLL"/>
 				<ComponentRef Id="heifDLL"/>
 				<ComponentRef Id="libde265DLL"/>
 			</Feature>
@@ -375,9 +374,6 @@
 
 
 					<!-- DLLs required for HEIF/AVIF support -->
-					<Component Id="dav1dDLL" Guid="ef9a6d34-487d-4edf-b8fb-58e3e16452e4">
-						<File Id="dav1d.dll" Name="dav1d.dll" Source="$(var.HeifDllFolder)\dav1d.dll" />
-					</Component>
 					<Component Id="heifDLL" Guid="46c300a1-229a-45ad-a861-edf53cc97c46">
 						<File Id="heif.dll" Name="heif.dll" Source="$(var.HeifDllFolder)\heif.dll" />
 					</Component>
