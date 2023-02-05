@@ -15,6 +15,7 @@
 #include "PNGWrapper.h"
 #include "JXLWrapper.h"
 #include "HEIFWrapper.h"
+#include "WEBPWrapper.h"
 #endif
 #include "MaxImageDef.h"
 
@@ -423,13 +424,7 @@ void CImageLoadThread::DeleteCachedGDIBitmap() {
 }
 
 void CImageLoadThread::DeleteCachedWebpDecoder() {
-	__declspec(dllimport) void Webp_Dll_AnimDecoderDelete();
-	// temporary fix to prevent crashing when webp.dll is not found
-	try {
-		Webp_Dll_AnimDecoderDelete();
-	} catch (...) {
-		;
-	}
+	WebpReaderWriter::DeleteCache();
 	m_sLastWebpFileName.Empty();
 }
 
@@ -549,13 +544,6 @@ void CImageLoadThread::ProcessReadTGARequest(CRequest * request) {
 	}
 }
 
-__declspec(dllimport) int Webp_Dll_GetInfo(const uint8* data, size_t data_size, int* width, int* height);
-__declspec(dllimport) int Webp_Dll_GetInfoCached(int& width, int& height);
-__declspec(dllimport) bool Webp_Dll_HasAnimation(const uint8* data, uint32 data_size);
-__declspec(dllimport) uint8* Webp_Dll_AnimDecodeBGRAInto(const uint8* data, uint32 data_size, uint8* output_buffer, int output_buffer_size, int& nFrameCount, int& nFrameTimeMs);
-__declspec(dllimport) uint8* Webp_Dll_DecodeBGRInto(const uint8* data, uint32 data_size, uint8* output_buffer, int output_buffer_size, int output_stride);
-__declspec(dllimport) uint8* Webp_Dll_DecodeBGRAInto(const uint8* data, uint32 data_size, uint8* output_buffer, int output_buffer_size, int output_stride);
-
 void CImageLoadThread::ProcessReadWEBPRequest(CRequest * request) {
 	bool bUseCachedDecoder = false;
 	const wchar_t* sFileName;
@@ -576,7 +564,7 @@ void CImageLoadThread::ProcessReadWEBPRequest(CRequest * request) {
 	}
 	char* pBuffer = NULL;
 	try {
-		unsigned int nFileSize;
+		unsigned int nFileSize = 0;
 		unsigned int nNumBytesRead;
 		if (!bUseCachedDecoder) {
 			// Don't read too huge files
@@ -593,44 +581,28 @@ void CImageLoadThread::ProcessReadWEBPRequest(CRequest * request) {
 				::CloseHandle(hFile);
 				return;
 			}
-		} else {
-			nFileSize = 0; // to avoid compiler warnings, not used
 		}
 		if (bUseCachedDecoder || (::ReadFile(hFile, pBuffer, nFileSize, (LPDWORD)&nNumBytesRead, NULL) && nNumBytesRead == nFileSize)) {
 			int nWidth, nHeight;
-			if ((bUseCachedDecoder && Webp_Dll_GetInfoCached(nWidth, nHeight)) ||
-				(!bUseCachedDecoder && Webp_Dll_GetInfo((uint8*)pBuffer, nFileSize, &nWidth, &nHeight))) {
-				if (nWidth <= MAX_IMAGE_DIMENSION && nHeight <= MAX_IMAGE_DIMENSION) {
-					if ((double)nWidth * nHeight <= MAX_IMAGE_PIXELS) {
-						int nStride = nWidth*4;
-						uint8* pPixelData = new(std::nothrow) unsigned char[nStride * nHeight];
-						if (pPixelData != NULL) {
-							bool bHasAnimation = bUseCachedDecoder || Webp_Dll_HasAnimation((uint8*)pBuffer, nFileSize);
-							if (bHasAnimation) {
-								m_sLastWebpFileName = sFileName;
-							}
+			bool bHasAnimation = bUseCachedDecoder;
+			int nFrameCount = 1;
+			int nFrameTimeMs = 0;
+			int nBPP;
+			uint8* pPixelData = (uint8*)WebpReaderWriter::ReadImage(nWidth, nHeight, nBPP, bHasAnimation, nFrameCount, nFrameTimeMs, request->OutOfMemory, pBuffer, nFileSize);
+			if (pPixelData && nBPP == 4) {
+				// Multiply alpha value into each AABBGGRR pixel
+				uint32* pImage32 = (uint32*)pPixelData;
+				for (int i = 0; i < nWidth * nHeight; i++)
+					*pImage32++ = WebpAlphaBlendBackground(*pImage32, CSettingsProvider::This().ColorTransparency());
 
-							int nFrameCount = 1;
-							int nFrameTimeMs = 0;
-							if ((bHasAnimation && Webp_Dll_AnimDecodeBGRAInto((uint8*)pBuffer, nFileSize, pPixelData, nStride * nHeight, nFrameCount, nFrameTimeMs)) ||
-								(!bHasAnimation && Webp_Dll_DecodeBGRAInto((uint8*)pBuffer, nFileSize, pPixelData, nStride * nHeight, nStride))) {
-								// Multiply alpha value into each AABBGGRR pixel
-								uint32* pImage32 = (uint32*)pPixelData;
-								for (int i = 0; i < nWidth*nHeight; i++)
-									*pImage32++ = WebpAlphaBlendBackground(*pImage32, CSettingsProvider::This().ColorTransparency());
-
-								request->Image = new CJPEGImage(nWidth, nHeight, pPixelData, NULL, 4, 0, IF_WEBP, bHasAnimation, request->FrameIndex, nFrameCount, nFrameTimeMs);
-							} else {
-								delete[] pPixelData;
-								DeleteCachedWebpDecoder();
-							}
-						} else {
-							request->OutOfMemory = true;
-						}
-					} else {
-						request->OutOfMemory = true;
-					}
+				if (bHasAnimation) {
+					m_sLastWebpFileName = sFileName;
 				}
+				request->Image = new CJPEGImage(nWidth, nHeight, pPixelData, NULL, nBPP, 0, IF_WEBP, bHasAnimation, request->FrameIndex, nFrameCount, nFrameTimeMs);
+			}
+			else {
+				delete[] pPixelData;
+				DeleteCachedWebpDecoder();
 			}
 		}
 	} catch (...) {

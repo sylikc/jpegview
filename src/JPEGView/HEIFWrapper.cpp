@@ -31,6 +31,12 @@ void * HeifReader::ReadImage(int &width,
 	width = image.get_width(heif_channel_interleaved);
 	height = image.get_height(heif_channel_interleaved);
 
+	if (width > MAX_IMAGE_DIMENSION || height > MAX_IMAGE_DIMENSION)
+		return NULL;
+	if (abs((double)width * height) > MAX_IMAGE_PIXELS) {
+		outOfMemory = true;
+		return NULL;
+	}
 	if (width < 1 || height < 1 || width * nchannels > stride)
 		return NULL;
 
