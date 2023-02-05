@@ -1,17 +1,14 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.21005.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.33026.149
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "JPEGView", "JPEGView\JPEGView_VS2017.vcxproj", "{F6D355BF-A245-46FA-AE41-DAA541556245}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "JPEGView_VS2017", "JPEGView\JPEGView_VS2017.vcxproj", "{F6D355BF-A245-46FA-AE41-DAA541556245}"
 	ProjectSection(ProjectDependencies) = postProject
-		{238F5CD4-8E56-4831-8A1F-525281EBD79E} = {238F5CD4-8E56-4831-8A1F-525281EBD79E}
 		{91D548E5-3C0D-4AE3-9429-391910852D8C} = {91D548E5-3C0D-4AE3-9429-391910852D8C}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WICLoader", "WICLoader\WICLoader_VS2017.vcxproj", "{91D548E5-3C0D-4AE3-9429-391910852D8C}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WEBP", "WEBP\WEBP_VS2017.vcxproj", "{238F5CD4-8E56-4831-8A1F-525281EBD79E}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WICLoader_VS2017", "WICLoader\WICLoader_VS2017.vcxproj", "{91D548E5-3C0D-4AE3-9429-391910852D8C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -37,16 +34,11 @@ Global
 		{91D548E5-3C0D-4AE3-9429-391910852D8C}.Release|Win32.Build.0 = Release|Win32
 		{91D548E5-3C0D-4AE3-9429-391910852D8C}.Release|x64.ActiveCfg = Release|x64
 		{91D548E5-3C0D-4AE3-9429-391910852D8C}.Release|x64.Build.0 = Release|x64
-		{238F5CD4-8E56-4831-8A1F-525281EBD79E}.Debug|Win32.ActiveCfg = Debug|Win32
-		{238F5CD4-8E56-4831-8A1F-525281EBD79E}.Debug|Win32.Build.0 = Debug|Win32
-		{238F5CD4-8E56-4831-8A1F-525281EBD79E}.Debug|x64.ActiveCfg = Debug|x64
-		{238F5CD4-8E56-4831-8A1F-525281EBD79E}.Debug|x64.Build.0 = Debug|x64
-		{238F5CD4-8E56-4831-8A1F-525281EBD79E}.Release|Win32.ActiveCfg = Release|Win32
-		{238F5CD4-8E56-4831-8A1F-525281EBD79E}.Release|Win32.Build.0 = Release|Win32
-		{238F5CD4-8E56-4831-8A1F-525281EBD79E}.Release|x64.ActiveCfg = Release|x64
-		{238F5CD4-8E56-4831-8A1F-525281EBD79E}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D9D69E9B-F16C-4D81-96E4-B3E75436FD87}
 	EndGlobalSection
 EndGlobal

@@ -15,8 +15,8 @@
 #include "PNGWrapper.h"
 #include "JXLWrapper.h"
 #include "HEIFWrapper.h"
-#include "WEBPWrapper.h"
 #endif
+#include "WEBPWrapper.h"
 #include "MaxImageDef.h"
 
 
@@ -688,7 +688,10 @@ void CImageLoadThread::ProcessReadPNGRequest(CRequest* request) {
 	if (!bSuccess)
 		return ProcessReadGDIPlusRequest(request);
 }
+#endif
 
+
+#ifndef WINXP
 void CImageLoadThread::ProcessReadJXLRequest(CRequest* request) {
 	bool bUseCachedDecoder = false;
 	const wchar_t* sFileName;
@@ -756,7 +759,10 @@ void CImageLoadThread::ProcessReadJXLRequest(CRequest* request) {
 		// delete[] pBuffer;
 	}
 }
+#endif
 
+
+#ifndef WINXP
 void CImageLoadThread::ProcessReadHEIFRequest(CRequest* request) {
 	HANDLE hFile;
 	hFile = ::CreateFile(request->FileName, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, 0, NULL);

@@ -258,6 +258,9 @@
     <ClCompile Include="HashCompareLPCTSTR.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="WEBPWrapper.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="PNGWrapper.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -265,9 +268,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="HEIFWrapper.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="WEBPWrapper.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -515,6 +515,9 @@
     <ClInclude Include="HashCompareLPCTSTR.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="WEBPWrapper.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="PNGWrapper.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -522,9 +525,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="HEIFWrapper.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="WEBPWrapper.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
