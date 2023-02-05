@@ -203,6 +203,10 @@ bool PngReader::BeginReading(void* buffer, size_t sizebytes, bool& outOfMemory)
 		png_read_update_info(png_ptr, info_ptr);
 		width = png_get_image_width(png_ptr, info_ptr);
 		height = png_get_image_height(png_ptr, info_ptr);
+		if (width > MAX_IMAGE_DIMENSION || height > MAX_IMAGE_DIMENSION) {
+			png_destroy_read_struct(&png_ptr, &info_ptr, NULL);
+			return false;
+		}
 		if (abs((double)width * height) > MAX_IMAGE_PIXELS) {
 			png_destroy_read_struct(&png_ptr, &info_ptr, NULL);
 			outOfMemory = true;
