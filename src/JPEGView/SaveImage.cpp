@@ -8,6 +8,7 @@
 #include "EXIFReader.h"
 #include "TJPEGWrapper.h"
 #include "libjpeg-turbo\include\turbojpeg.h"
+#include "WEBPWrapper.h"
 #include <gdiplus.h>
 
 //////////////////////////////////////////////////////////////////////////////////////////////
@@ -225,10 +226,6 @@ static void* CompressAndSave(LPCTSTR sFileName, CJPEGImage * pImage,
 	return pTargetStream;
 }
 
-__declspec(dllimport) size_t Webp_Dll_EncodeBGRLossy(const uint8* bgr, int width, int height, int stride, float quality_factor, uint8** output);
-__declspec(dllimport) size_t Webp_Dll_EncodeBGRLossless(const uint8* bgr, int width, int height, int stride, uint8** output);
-__declspec(dllimport) void Webp_Dll_FreeMemory(void* pointer);
-
 // pData must point to 24 bit BGR DIB
 static bool SaveWebP(LPCTSTR sFileName, void* pData, int nWidth, int nHeight, bool bUseLosslessWEBP) {
 	FILE *fptr = _tfopen(sFileName, _T("wb"));
@@ -239,13 +236,12 @@ static bool SaveWebP(LPCTSTR sFileName, void* pData, int nWidth, int nHeight, bo
 	bool bSuccess = false;
 	try {
 		uint8* pOutput;
+		size_t nSize;
 		int nQuality = CSettingsProvider::This().WEBPSaveQuality();
-		size_t nSize = bUseLosslessWEBP ? 
-			Webp_Dll_EncodeBGRLossless((uint8*)pData, nWidth, nHeight, Helpers::DoPadding(nWidth*3, 4), &pOutput) :
-			Webp_Dll_EncodeBGRLossy((uint8*)pData, nWidth, nHeight, Helpers::DoPadding(nWidth*3, 4), (float)nQuality, &pOutput);
+		pOutput = (uint8*)WebpReaderWriter::Compress((uint8*)pData, nWidth, nHeight, nSize, nQuality, bUseLosslessWEBP);
 		bSuccess = fwrite(pOutput, 1, nSize, fptr) == nSize;
 		fclose(fptr);
-		Webp_Dll_FreeMemory(pOutput);
+		WebpReaderWriter::FreeMemory(pOutput);
 	} catch(...) {
 		fclose(fptr);
 	}

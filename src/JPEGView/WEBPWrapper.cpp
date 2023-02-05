@@ -5,15 +5,19 @@
 #include "webp/encode.h"
 #include "webp/demux.h"
 #include "MaxImageDef.h"
+#include "Helpers.h"
 
-// These are necessary to properly animate frames without playing the entire file for each one
-WebPAnimDecoder* cached_webp_decoder = NULL;
-WebPData cached_webp_data = { 0 };
-int cached_webp_prev_frame_timestamp = 0;
-int cached_webp_width = 0;
-int cached_webp_height = 0;
+struct WebpReaderWriter::webp_cache {
+	WebPAnimDecoder* decoder;
+	WebPData data;
+	int prev_frame_timestamp;
+	int width;
+	int height;
+};
 
-void* WebpReader::ReadImage(int& width,
+WebpReaderWriter::webp_cache WebpReaderWriter::cache = { 0 };
+
+void* WebpReaderWriter::ReadImage(int& width,
 	int& height,
 	int& nchannels,
 	bool& has_animation,
@@ -28,7 +32,7 @@ void* WebpReader::ReadImage(int& width,
 	width = height = 0;
 	nchannels = 4;
 	outOfMemory = false;
-	if (!cached_webp_decoder || !cached_webp_data.bytes) {
+	if (!cache.decoder || !cache.data.bytes) {
 		if (!WebPGetInfo((const uint8_t*)buffer, sizebytes, &width, &height))
 			return NULL;
 		if (width > MAX_IMAGE_DIMENSION || height > MAX_IMAGE_DIMENSION)
@@ -59,16 +63,16 @@ void* WebpReader::ReadImage(int& width,
 		anim_config.color_mode = MODE_BGRA;
 		uint8_t* cached_webp_bytes = new uint8_t[sizebytes];
 		memcpy(cached_webp_bytes, buffer, sizebytes);
-		cached_webp_data.bytes = cached_webp_bytes;
-		cached_webp_data.size = sizebytes;
-		cached_webp_decoder = WebPAnimDecoderNew(&cached_webp_data, &anim_config);
-		cached_webp_width = width;
-		cached_webp_height = height;
+		cache.data.bytes = cached_webp_bytes;
+		cache.data.size = sizebytes;
+		cache.decoder = WebPAnimDecoderNew(&cache.data, &anim_config);
+		cache.width = width;
+		cache.height = height;
 	}
-	WebPAnimDecoder* decoder = cached_webp_decoder;
-	WebPData webp_data = cached_webp_data;
-	width = cached_webp_width;
-	height = cached_webp_height;
+	WebPAnimDecoder* decoder = cache.decoder;
+	WebPData webp_data = cache.data;
+	width = cache.width;
+	height = cache.height;
 
 	if (decoder == NULL)
 		return NULL;
@@ -86,10 +90,10 @@ void* WebpReader::ReadImage(int& width,
 	WebPAnimDecoderGetInfo(decoder, &anim_info);
 	frame_count = max(anim_info.frame_count, 1);
 	timestamp = max(timestamp, 0);
-	if (timestamp < cached_webp_prev_frame_timestamp)
-		cached_webp_prev_frame_timestamp = 0;
-	frame_time = timestamp - cached_webp_prev_frame_timestamp;
-	cached_webp_prev_frame_timestamp = timestamp;
+	if (timestamp < cache.prev_frame_timestamp)
+		cache.prev_frame_timestamp = 0;
+	frame_time = timestamp - cache.prev_frame_timestamp;
+	cache.prev_frame_timestamp = timestamp;
 
 	pPixelData = new(std::nothrow) unsigned char[width * height * nchannels];
 	if (pPixelData == NULL) {
@@ -102,11 +106,30 @@ void* WebpReader::ReadImage(int& width,
 
 }
 
-void WebpReader::DeleteCache() {
-	WebPAnimDecoderDelete(cached_webp_decoder);
-	cached_webp_decoder = NULL;
-	WebPDataClear(&cached_webp_data);
-	cached_webp_prev_frame_timestamp = 0;
-	cached_webp_width = 0;
-	cached_webp_height = 0;
+void WebpReaderWriter::DeleteCache() {
+	WebPAnimDecoderDelete(cache.decoder);
+	cache.decoder = NULL;
+	WebPDataClear(&cache.data);
+	cache.prev_frame_timestamp = 0;
+	cache.width = 0;
+	cache.height = 0;
+}
+
+void* WebpReaderWriter::Compress(const void* source,
+	int width,
+	int height,
+	size_t& len,
+	int quality,
+	bool lossless) {
+
+	uint8* pOutput = NULL;
+	if (lossless)
+		len = WebPEncodeLosslessBGR((uint8*)source, width, height, Helpers::DoPadding(width * 3, 4), &pOutput);
+	else
+		len = WebPEncodeBGR((uint8*)source, width, height, Helpers::DoPadding(width * 3, 4), (float)quality, &pOutput);
+	return pOutput;
+}
+
+void WebpReaderWriter::FreeMemory(void* pointer) {
+	free(pointer);
 }

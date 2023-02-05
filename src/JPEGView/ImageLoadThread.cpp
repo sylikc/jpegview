@@ -417,7 +417,7 @@ void CImageLoadThread::DeleteCachedGDIBitmap() {
 }
 
 void CImageLoadThread::DeleteCachedWebpDecoder() {
-	WebpReader::DeleteCache();
+	WebpReaderWriter::DeleteCache();
 	m_sLastWebpFileName.Empty();
 }
 
@@ -644,7 +644,7 @@ void CImageLoadThread::ProcessReadWEBPRequest(CRequest * request) {
 			int nFrameCount = 1;
 			int nFrameTimeMs = 0;
 			int nBPP;
-			uint8* pPixelData = (uint8*)WebpReader::ReadImage(nWidth, nHeight, nBPP, bHasAnimation, nFrameCount, nFrameTimeMs, request->OutOfMemory, pBuffer, nFileSize);
+			uint8* pPixelData = (uint8*)WebpReaderWriter::ReadImage(nWidth, nHeight, nBPP, bHasAnimation, nFrameCount, nFrameTimeMs, request->OutOfMemory, pBuffer, nFileSize);
 			if (pPixelData && nBPP == 4) {
 				// Multiply alpha value into each AABBGGRR pixel
 				uint32* pImage32 = (uint32*)pPixelData;
