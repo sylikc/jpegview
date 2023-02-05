@@ -39,14 +39,6 @@
       <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
       <RefTargetDir>INSTALLFOLDER</RefTargetDir>
     </ProjectReference>
-    <ProjectReference Include="..\WEBP\WEBP.vcxproj">
-      <Name>WEBP</Name>
-      <Project>{238f5cd4-8e56-4831-8a1f-525281ebd79e}</Project>
-      <Private>True</Private>
-      <DoNotHarvest>True</DoNotHarvest>
-      <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
-      <RefTargetDir>INSTALLFOLDER</RefTargetDir>
-    </ProjectReference>
     <ProjectReference Include="..\WICLoader\WICLoader.vcxproj">
       <Name>WICLoader</Name>
       <Project>{91d548e5-3c0d-4ae3-9429-391910852d8c}</Project>
