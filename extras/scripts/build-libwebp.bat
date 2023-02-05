@@ -3,7 +3,7 @@
 setlocal
 REM this builds libwebp and replaces the libs in the JPEGView src folder
 
-SET XSRC_DIR=%~dp0..\..\src
+SET XSRC_DIR=%~dp0..\..\src\JPEGView\libwebp
 SET XLIB_DIR=%~dp0..\libwebp
 SET XOUT_DIR=%~dp0libwebp
 
@@ -12,22 +12,9 @@ IF EXIST "%XOUT_DIR%" (
 	exit /b 1
 )
 
-call :BUILD_WEBP x86
+call :BUILD_COPY_WEBP x86 lib
 IF ERRORLEVEL 1 exit /b 1
-call :BUILD_WEBP x64
-IF ERRORLEVEL 1 exit /b 1
-
-
-REM copy the libs over
-REM error checking if a copy fails... throws error to caller
-copy /y "%XOUT_DIR%\release-static\x86\lib\libwebp.lib" "%XSRC_DIR%\WEBP\lib\"
-IF ERRORLEVEL 1 exit /b 1
-copy /y "%XOUT_DIR%\release-static\x86\lib\libwebpdemux.lib" "%XSRC_DIR%\WEBP\lib\"
-IF ERRORLEVEL 1 exit /b 1
-
-copy /y "%XOUT_DIR%\release-static\x64\lib\libwebp.lib" "%XSRC_DIR%\WEBP\lib\libwebp64.lib"
-IF ERRORLEVEL 1 exit /b 1
-copy /y "%XOUT_DIR%\release-static\x64\lib\libwebpdemux.lib" "%XSRC_DIR%\WEBP\lib\libwebpdemux64.lib"
+call :BUILD_COPY_WEBP x64 lib64
 IF ERRORLEVEL 1 exit /b 1
 
 
@@ -41,7 +28,7 @@ exit /b 0
 
 
 
-:BUILD_WEBP
+:BUILD_COPY_WEBP
 
 REM so the environments don't pollute each other
 setlocal
@@ -51,9 +38,18 @@ mkdir "%XOUT_DIR%" 2>nul
 call "%~dp0vs-init.bat" %1
 
 pushd "%XLIB_DIR%"
+
 nmake.exe /f Makefile.vc CFG=release-static RTLIBCFG=static OBJDIR="%XOUT_DIR%"
-SET XERROR=%ERRORLEVEL%
+IF ERRORLEVEL 1 exit /b 1
 
 popd
 
-exit /b %XERROR%
+REM copy the libs over
+REM error checking if a copy fails... throws error to caller
+copy /y "%XOUT_DIR%\release-static\%1\lib\libwebp.lib" "%XSRC_DIR%\%2\"
+IF ERRORLEVEL 1 exit /b 1
+copy /y "%XOUT_DIR%\release-static\%1\lib\libwebpdemux.lib" "%XSRC_DIR%\%2\"
+IF ERRORLEVEL 1 exit /b 1
+
+
+exit /b 0
