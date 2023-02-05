@@ -35,7 +35,7 @@ void * HeifReader::ReadImage(int &width,
 		return NULL;
 	if (abs((double)width * height) > MAX_IMAGE_PIXELS) {
 		outOfMemory = true;
-		return false;
+		return NULL;
 	}
 	if (width < 1 || height < 1 || width * nchannels > stride)
 		return NULL;
