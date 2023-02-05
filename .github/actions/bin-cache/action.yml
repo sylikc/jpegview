@@ -1,0 +1,103 @@
+name: Action - Delete and Rebuild Libs w/ Cache
+description: Action to set up LIBs/DLLs either full rebuilds or from cache
+
+inputs:
+  delete-first:
+    description: Delete all lib/dll before starting (currently, not sure if cache overwrites)
+    required: false
+    type: boolean
+    default: true
+
+  cache-name:
+    description: part of the cache name, the rest of the key is a hash of .gitmodules
+    required: false
+    default: bin-cache
+
+
+runs:
+  using: composite
+  steps:
+
+    - name: Remove all pre-built libs and dlls
+      if: ${{ inputs.delete-first }}
+      shell: cmd
+      run: del /s *.lib *.dll
+
+    - name: Setup Python (for dav1d build)
+      uses: actions/setup-python@v4
+      with:
+        # any version will do for right now, just have it set fixed to a version
+        python-version: '3.10'
+
+    - name: BIN Cache - Restore LIBs/DLLs from previous GH Action
+      # https://docs.github.com/en/actions/using-workflows/caching-dependencies-to-speed-up-workflows
+      id: cache-bin
+      uses: actions/cache@v3
+      with:
+        # cache key changes with every .gitmodules change, so you can run this again manually
+        # but as long as the .gitmodules did not change, it won't try to rebuild
+        # if you want to force a rebuild, delete the cache
+        #
+        # append ${{ github.sha }} if you want to rebuild for every commit
+        key: ${{ runner.os }}-build-${{ inputs.cache-name }}-${{ hashFiles('.gitmodules') }}
+        path: |
+          src/WEBP/lib/lib*.lib
+
+          src/JPEGView/libjpeg-turbo/lib/*.lib
+          src/JPEGView/libjpeg-turbo/lib64/*.lib
+
+          src/JPEGView/libpng-apng/lib/*.lib
+          src/JPEGView/libpng-apng/lib64/*.lib
+
+          src/JPEGView/libheif/bin/*.dll
+          src/JPEGView/libheif/bin64/*.dll
+          src/JPEGView/libheif/lib/*.lib
+          src/JPEGView/libheif/lib64/*.lib
+
+          src/JPEGView/libjxl/bin/*.dll
+          src/JPEGView/libjxl/bin64/*.dll
+          src/JPEGView/libjxl/lib/*.lib
+          src/JPEGView/libjxl/lib64/*.lib
+
+    # cache prevents the rebuild-all to happen twice, since each invocation of the workflow (once for x86, once for x64) causes a rebuild
+
+    # the cache-hit based on documentation is a string, not a boolean, hence why it looks so funky below
+
+
+    # for speed improvements in some libs, libjpeg-turbo benefits
+    - name: Setup NASM
+      # https://github.com/marketplace/actions/set-up-nasm
+      uses: ilammy/setup-nasm@v1
+
+
+
+
+    # run all the batch files to rebuild the required libs/dlls
+    # calling them separately makes it clearer and easier to debug, and
+    # makes sure to die whenever one of these throws an error
+
+    - name: libwebp
+      if: ${{ steps.cache-bin.outputs.cache-hit != 'true' }}
+      shell: cmd
+      run: call extras\scripts\build-libwebp.bat
+
+    - name: libjpeg-turbo
+      if: ${{ steps.cache-bin.outputs.cache-hit != 'true' }}
+      shell: cmd
+      run: call extras\scripts\build-libjpegturbo.bat
+
+    - name: libpng
+      if: ${{ steps.cache-bin.outputs.cache-hit != 'true' }}
+      shell: cmd
+      run: call extras\scripts\build-libpng-apng.bat
+
+    - name: libheif
+      if: ${{ steps.cache-bin.outputs.cache-hit != 'true' }}
+      shell: cmd
+      run: call extras\scripts\build-libheif.bat
+
+    # put this last since it takes the longest to build
+    - name: libjpxl
+      if: ${{ steps.cache-bin.outputs.cache-hit != 'true' }}
+      shell: cmd
+      run: call extras\scripts\build-libjxl.bat

@@ -1,0 +1,66 @@
+name: Action - Build JPEGView Solution
+description: Action to build the solution and apply any customizations if requested
+
+inputs:
+  patch-version:
+    description: Apply patch to the version labels to reflect the owner and sha of commit.
+    required: false
+    type: boolean
+    default: true
+
+  platform-arch:
+    description: Architecture for building
+    required: true
+    type: string
+
+  build-config:
+    description: Debug/Release for building
+    required: true
+    type: string
+
+
+runs:
+  using: composite
+  steps:
+    - name: Setup Git Short SHA env var + Print GitHub commit/trigger info
+      shell: powershell
+      # the hacky way to get the sha1 short hash into a GH variable instead of powershell variable
+      # on Windows, unlike the help says, it's $env:GITHUB_ENV or else nothing works
+      run: |
+        # NOTE: this variable is used by other steps, like uploading artifacts
+        echo "short_sha=$(git rev-parse --short "${{ github.sha }}")" >> $env:GITHUB_ENV
+        # print out other info related to the repo to make it easier to see what triggered the workflow
+        echo "Repository: ${{ github.repository }}"
+        echo "Branch: ${{ github.ref_name }}"
+        echo "Commit: ${{ github.sha }}"
+        echo "GH Trigger: ${{ github.event_name }}"
+
+
+    - name: Replace resource vars
+      if: ${{ inputs.patch-version }}
+      shell: powershell
+      # Replace the version information for auto-GH builds so it's clear to me and others that this was not a formal release:
+      # * replaces in JPEGView main window and About dialog
+      # * replaces in Setup's initial startup screen
+      run: |
+        # needed on older runners (or when testing locally): $env:Path += ";C:\Program Files\Git\usr\bin"
+        Get-Command sed.exe | Format-List
+        $GIT_SHORT_HASH=$(git.exe rev-parse --short "${{ github.sha }}")
+        $APPEND_VER_STR="\(~GHdevtest ${{ github.repository_owner }}\/$GIT_SHORT_HASH\)"
+        # " doesn't have to be escaped in linux but needs to be escaped in windows powershell with `, powershell also needs that extra \\\ when \\ will do in linux
+        sed.exe -i -r -e "s/(#define JPEGVIEW_VERSION \`"[0-9, ]+)(\\\0\`")/\1 $APPEND_VER_STR\2/g" -e "s/(#define JPEGVIEW_TITLE \`"JPEGView)(\`")/\1 $APPEND_VER_STR\2/g" src/JPEGView/resource.h
+        sed.exe -i -r -e "s/(\<Product.*ApplicationName\))/\1 $APPEND_VER_STR/g" src/JPEGView.Setup/Product.wxs
+        # see output
+        Select-String -Path src/JPEGView/resource.h -Pattern "JPEGVIEW_"
+        Select-String -Path src/JPEGView.Setup/Product.wxs -Pattern "<Product"
+
+
+    - name: Build Solution
+      shell: cmd
+      env:
+        # equivalent to SET IncludePath=${{ env.include_path }}
+        # IncludePath variable must be unquoted!
+        IncludePath: ${{ env.include_path }}
+      run: |
+        echo (Optional) IncludePath: %IncludePath%
+        msbuild.exe /property:Platform=${{ inputs.platform-arch }} /property:configuration="${{ inputs.build-config }}" src\JPEGView.sln

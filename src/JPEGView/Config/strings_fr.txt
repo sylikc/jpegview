@@ -201,6 +201,7 @@ no	non
 Show navigation panel	Afficher la barre de navigation
 Show/hide navigation panel	Afficher/masquer la barre de navigation
 About JPEGView...	A propos de JPEGView...
+About JPEGView (64 bit version)...	A propos de JPEGView (version 64 bits)...
 SIMD mode used:	Mode SIMD utilisé :
 Number of CPU cores used:	Nombre de coeurs de processeur utilisés:
 Licensed under the GNU general public license (GPL), see readme file for details:	Sous licence GNU-GPL, voir le fichier README pour plus de détails :
@@ -285,14 +286,14 @@ Drag at the left or right border for asymmetric correction.	Déplacez le bord ga
 Fit window to image	Ajuster la fenêtre à l'image
 Keep aspect ratio on crop	Maintenir le ratio largeur / hauteur lors du rognage
 Lossless JPEG transformations	Transformations JPEG sans perte
-Performing the lossless transformation failed!  Echec lors de la tranformation sans perte !
+Performing the lossless transformation failed!	Echec lors de la tranformation sans perte !
 Image width and height must be dividable by the JPEG block size (8 or 16) for lossless transformations!	Pour effectuer une transformation sans perte, la largeur et la hauteur de l'image doivent être divisibles par la taille de bloc JPEG (8 ou 16).
 Reading the JPEG file from disk failed	Echec de lecture du fichier JPEG
 Writing the resulting JPEG file to disk failed	Echec d'écriture du fichier JPEG sur le disque
 Performing the transformation failed	Echec lors de la tentative de transformation
 The transformation can be applied if the image is trimmed to the next matching size but this will remove some border pixels.	La transformation peut être effectuée en redécoupant l'image à la taille convenable la plus proche, mais quelques pixels de bord vont être perdus.
 Trim the image and apply transformation? Trimming cannot be undone!	Redécouper l'image et effectuer la transformation ? (le redécoupage ne peut pas être annulé).
-Note: Set the key 'TrimWithoutPromptLosslessJPEG=true' in the INI file to always trim without showing this message. Note : si vous souhaitez systématiquement redécouper sans montrer ce message d'alerte, spécifiez la valeur 'TrimWithoutPromptLosslessJPEG=true' dans le fichier INI.
+Note: Set the key 'TrimWithoutPromptLosslessJPEG=true' in the INI file to always trim without showing this message.	Note : si vous souhaitez systématiquement redécouper sans montrer ce message d'alerte, spécifiez la valeur 'TrimWithoutPromptLosslessJPEG=true' dans le fichier INI.
 None	Aucun
 Blend	Mélanger les calques
 Slide from right	Faire glisser depuis la droite
@@ -314,7 +315,7 @@ Normal	Normal
 Slow	Lent
 Very slow	Très lent
 Error	Erreur
-Warning Alerte
+Warning	Alerte
 Error while writing the following registry key:	Erreur lors de l'écriture de la clé de registre :
 Set as default viewer...	Définir comme visualisateur par défaut...
 Set JPEGView as default image viewer	Définir JPEGView comme visualisateur d'images par défaut
@@ -350,7 +351,7 @@ Modifier keys:	Touches de bascule :
 Known keys:	Touches connues :
 Combine keys with '+'	Combiner les touches avec '+'
 Example:	Exemple : 
-Shortcut Help Aide raccourcis
+Shortcut Help	Aide raccourcis
 [new entry]	[nouvelle entrée]
 Applications	Applications
 Select application	Choisir une application
@@ -396,10 +397,13 @@ Printer driver	Pilote d'imprimante
 Alignment:	Alignement :
 Margins:	Marges :
 Left	Gauche
-Right Droite
+Right	Droite
 Top	Haut
 Bottom	Bas
 Fill paper with crop	Remplir la page et rogner l'image
 Location:	Localitè:
 Altitude (m):	Altitude (m):
 Open containing folder in Explorer	Afficher le fichier dans l'explorateur
+Update user settings...	Mettre à jour les paramètres utilisateur...
+Update user settings with new settings from settings template file?	Mettre à jour le fichier des paramètres utilisateur avec les nouveaux paramètres issus du fichier template?
+All existing user settings will be preserved.	Tous les paramètres utilisateur existants seront préservés

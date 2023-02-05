@@ -1,0 +1,54 @@
+name: Reusable - Build/Upload WTL cached
+# TODO later test and lint
+# TODO test building library dependencies (the prebuilt stuff)
+
+
+
+# GH Action Reusable Workflow -- https://docs.github.com/en/actions/using-workflows/reusing-workflows
+on:
+  workflow_call:
+    inputs:
+      platform-arch:
+        required: true
+        type: string
+      build-config:
+        required: true
+        type: string
+
+
+# NOTE: This workflow may not be used in the future, but kept around for historical
+# reasons (might need to use this cache routine in the future for other libs),
+# or in case it is preferred to use this if the other breaks
+#
+# Currently this is used as the process for Debug releases
+
+
+jobs:
+  build:
+    # if windows-latest, might not find VS 2019
+    runs-on: windows-2019
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: setup-msbuild
+      # https://github.com/marketplace/actions/setup-msbuild
+      uses: microsoft/setup-msbuild@v1.1
+      with:
+        # Fixed on Visual Studio 2019 -- https://docs.microsoft.com/en-us/visualstudio/releases/2019/history
+        vs-version: '[16.0,17.0)'
+        msbuild-architecture: ${{ inputs.platform-arch }}
+
+    - uses: ./.github/actions/setup-wix
+
+    - uses: ./.github/actions/wtl-cache
+
+    - uses: ./.github/actions/build-solution
+      with:
+        platform-arch: ${{ inputs.platform-arch }}
+        build-config: ${{ inputs.build-config }}
+
+    - uses: ./.github/actions/upload-some-artifacts
+      with:
+        platform-arch: ${{ inputs.platform-arch }}
+        build-config: ${{ inputs.build-config }}

@@ -1,0 +1,27 @@
+name: Build Win32/x64 with all deps (Release)
+
+# triggers:
+on:
+  # use push only when debugging this workflow
+  #push:
+  # run this action when kicked off manually
+  workflow_dispatch:
+  # when a tag or branch created
+  create:
+  # published releases get checked
+  release:
+    types: [published]
+
+jobs:
+  call-workflow-build-win32:
+    uses: ./.github/workflows/workflow-rebuild-all-deps.yml
+    with:
+      platform-arch: Win32
+
+  call-workflow-build-x64:
+    # make sure these two jobs run sequentially, so that the libs are only built on one and not the other
+    # https://stackoverflow.com/questions/63148639/create-dependencies-between-jobs-in-github-actions
+    needs: call-workflow-build-win32
+    uses: ./.github/workflows/workflow-rebuild-all-deps.yml
+    with:
+      platform-arch: x64

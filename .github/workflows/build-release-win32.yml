@@ -1,0 +1,10 @@
+name: Build Win32 (Release)
+
+on: [push, pull_request]
+
+jobs:
+  call-workflow-build:
+    uses: ./.github/workflows/workflow-build-wtl-submodule.yml
+    with:
+      platform-arch: Win32
+      build-config: Release

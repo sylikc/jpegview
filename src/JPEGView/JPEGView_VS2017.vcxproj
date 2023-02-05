@@ -26,22 +26,22 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <CharacterSet>Unicode</CharacterSet>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v141_xp</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <CharacterSet>Unicode</CharacterSet>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v141_xp</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <CharacterSet>Unicode</CharacterSet>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v141_xp</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <CharacterSet>Unicode</CharacterSet>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v141_xp</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -69,14 +69,14 @@
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">obj\x86\$(Configuration)\</IntDir>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkIncremental>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkIncremental>
-    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(ProjectDir)..\..\deps\WTL-sf\Include;$(ProjectDir)libpng-apng\include;$(ProjectDir)libjxl\include;$(IncludePath)</IncludePath>
-    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(ProjectDir)..\..\deps\WTL-sf\Include;$(ProjectDir)libpng-apng\include;$(ProjectDir)libjxl\include;$(IncludePath)</IncludePath>
-    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(ProjectDir)libjpeg-turbo\lib;$(ProjectDir)libpng-apng\lib;$(ProjectDir)libjxl\lib;$(LibraryPath)</LibraryPath>
-    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(ProjectDir)libjpeg-turbo\lib64;$(ProjectDir)libpng-apng\lib64;$(ProjectDir)libjxl\lib64;$(LibraryPath)</LibraryPath>
-    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(ProjectDir)..\..\deps\WTL-sf\Include;$(ProjectDir)libpng-apng\include;$(ProjectDir)libjxl\include;$(IncludePath)</IncludePath>
-    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ProjectDir)..\..\deps\WTL-sf\Include;$(ProjectDir)libpng-apng\include;$(ProjectDir)libjxl\include;$(IncludePath)</IncludePath>
-    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(ProjectDir)libjpeg-turbo\lib;$(ProjectDir)libpng-apng\lib;$(ProjectDir)libjxl\lib;$(LibraryPath)</LibraryPath>
-    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ProjectDir)libjpeg-turbo\lib64;$(ProjectDir)libpng-apng\lib64;$(ProjectDir)libjxl\lib64;$(LibraryPath)</LibraryPath>
+    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(ProjectDir)..\..\deps\WTL-sf\Include;$(IncludePath)</IncludePath>
+    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(ProjectDir)..\..\deps\WTL-sf\Include;$(IncludePath)</IncludePath>
+    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(ProjectDir)libjpeg-turbo\lib;$(LibraryPath)</LibraryPath>
+    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(ProjectDir)libjpeg-turbo\lib64;$(LibraryPath)</LibraryPath>
+    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(ProjectDir)..\..\deps\WTL-sf\Include;$(IncludePath)</IncludePath>
+    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ProjectDir)..\..\deps\WTL-sf\Include;$(IncludePath)</IncludePath>
+    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(ProjectDir)libjpeg-turbo\lib;$(LibraryPath)</LibraryPath>
+    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ProjectDir)libjpeg-turbo\lib64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutDir>bin\x64\$(Configuration)\</OutDir>
@@ -88,7 +88,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Midl>
-      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;WINXP;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MkTypLibCompatible>false</MkTypLibCompatible>
       <TargetEnvironment>Win32</TargetEnvironment>
       <GenerateStublessProxies>true</GenerateStublessProxies>
@@ -102,7 +102,7 @@
     <ClCompile>
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;_WINDOWS;STRICT;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;STRICT;_DEBUG;WINXP;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <ExceptionHandling>Async</ExceptionHandling>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -114,19 +114,19 @@
       <OpenMPSupport>false</OpenMPSupport>
     </ClCompile>
     <ResourceCompile>
-      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;WINXP;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <Culture>0x0409</Culture>
       <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>Dbghelp.lib;gdiplus.lib;WICLoader.lib;turbojpeg-static.lib;webp.lib;libpng16.lib;zlib.lib;jxl_dec.lib;jxl_threads.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Dbghelp.lib;gdiplus.lib;WICLoader.lib;turbojpeg-static.lib;webp.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>bin\x86\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ModuleDefinitionFile>
       </ModuleDefinitionFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <TargetMachine>MachineX86</TargetMachine>
-      <DelayLoadDLLs>WICLoader.dll;webp.dll;jxl_dec.dll;jxl_threads.dll</DelayLoadDLLs>
+      <DelayLoadDLLs>WICLoader.dll;webp.dll</DelayLoadDLLs>
       <IgnoreSpecificDefaultLibraries>LIBCMT</IgnoreSpecificDefaultLibraries>
     </Link>
     <Manifest>
@@ -138,7 +138,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Midl>
-      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;WINXP;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MkTypLibCompatible>false</MkTypLibCompatible>
       <GenerateStublessProxies>true</GenerateStublessProxies>
       <TypeLibraryName>$(IntDir)JPEGView.tlb</TypeLibraryName>
@@ -151,7 +151,7 @@
     <ClCompile>
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;_WINDOWS;STRICT;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;STRICT;_DEBUG;WINXP;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ExceptionHandling>Async</ExceptionHandling>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -162,18 +162,18 @@
       <OpenMPSupport>false</OpenMPSupport>
     </ClCompile>
     <ResourceCompile>
-      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;WINXP;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <Culture>0x0409</Culture>
       <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>legacy_stdio_definitions.lib;legacy_stdio_wide_specifiers.lib;Dbghelp.lib;gdiplus.lib;WICLoader.lib;turbojpeg-static.lib;webp.lib;libpng16.lib;zlib.lib;jxl_dec.lib;jxl_threads.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>legacy_stdio_definitions.lib;legacy_stdio_wide_specifiers.lib;Dbghelp.lib;gdiplus.lib;WICLoader.lib;turbojpeg-static.lib;webp.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>bin\x64\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ModuleDefinitionFile>
       </ModuleDefinitionFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
-      <DelayLoadDLLs>WICLoader.dll;webp.dll;jxl_dec.dll;jxl_threads.dll</DelayLoadDLLs>
+      <DelayLoadDLLs>WICLoader.dll;webp.dll</DelayLoadDLLs>
       <IgnoreSpecificDefaultLibraries>LIBCMT</IgnoreSpecificDefaultLibraries>
     </Link>
     <Manifest>
@@ -185,7 +185,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Midl>
-      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;WINXP;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MkTypLibCompatible>false</MkTypLibCompatible>
       <TargetEnvironment>Win32</TargetEnvironment>
       <GenerateStublessProxies>true</GenerateStublessProxies>
@@ -199,7 +199,7 @@
     <ClCompile>
       <Optimization>MaxSpeed</Optimization>
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;_WINDOWS;STRICT;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;STRICT;NDEBUG;WINXP;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>false</StringPooling>
       <ExceptionHandling>Async</ExceptionHandling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
@@ -215,18 +215,18 @@
       <CompileAs>CompileAsCpp</CompileAs>
     </ClCompile>
     <ResourceCompile>
-      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;WINXP;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <Culture>0x0409</Culture>
       <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>gdiplus.lib;WICLoader.lib;turbojpeg-static.lib;webp.lib;libpng16.lib;zlib.lib;jxl_dec.lib;jxl_threads.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>gdiplus.lib;WICLoader.lib;turbojpeg-static.lib;webp.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>bin\x86\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <TargetMachine>MachineX86</TargetMachine>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
-      <DelayLoadDLLs>WICLoader.dll;webp.dll;jxl_dec.dll;jxl_threads.dll</DelayLoadDLLs>
+      <DelayLoadDLLs>WICLoader.dll;webp.dll</DelayLoadDLLs>
     </Link>
     <Manifest>
       <EnableDPIAwareness>true</EnableDPIAwareness>
@@ -237,7 +237,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Midl>
-      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;WINXP;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MkTypLibCompatible>false</MkTypLibCompatible>
       <GenerateStublessProxies>true</GenerateStublessProxies>
       <TypeLibraryName>$(IntDir)JPEGView.tlb</TypeLibraryName>
@@ -250,7 +250,7 @@
     <ClCompile>
       <Optimization>MaxSpeed</Optimization>
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;_WINDOWS;STRICT;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;STRICT;NDEBUG;WINXP;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>false</StringPooling>
       <ExceptionHandling>Async</ExceptionHandling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
@@ -266,17 +266,17 @@
       <CompileAs>CompileAsCpp</CompileAs>
     </ClCompile>
     <ResourceCompile>
-      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;WINXP;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <Culture>0x0409</Culture>
       <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>legacy_stdio_definitions.lib;legacy_stdio_wide_specifiers.lib;gdiplus.lib;WICLoader.lib;turbojpeg-static.lib;webp.lib;libpng16.lib;zlib.lib;jxl_dec.lib;jxl_threads.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>legacy_stdio_definitions.lib;legacy_stdio_wide_specifiers.lib;gdiplus.lib;WICLoader.lib;turbojpeg-static.lib;webp.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>bin\x64\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
-      <DelayLoadDLLs>WICLoader.dll;webp.dll;jxl_dec.dll;jxl_threads.dll</DelayLoadDLLs>
+      <DelayLoadDLLs>WICLoader.dll;webp.dll</DelayLoadDLLs>
     </Link>
     <Manifest>
       <EnableDPIAwareness>true</EnableDPIAwareness>
@@ -312,14 +312,12 @@
     <ClCompile Include="JPEGLosslessTransform.cpp" />
     <ClCompile Include="JPEGProvider.cpp" />
     <ClCompile Include="JPEGView.cpp" />
-    <ClCompile Include="JXLWrapper.cpp" />
     <ClCompile Include="KeyMap.cpp" />
     <ClCompile Include="LocalDensityCorr.cpp" />
     <ClCompile Include="ManageOpenWithDlg.cpp" />
     <ClCompile Include="MultiMonitorSupport.cpp" />
     <ClCompile Include="NLS.cpp" />
     <ClCompile Include="ParameterDB.cpp" />
-    <ClCompile Include="PNGWrapper.cpp" />
     <ClCompile Include="PrintDlg.cpp" />
     <ClCompile Include="PrintImage.cpp" />
     <ClCompile Include="ProcessingThreadPool.cpp" />
@@ -396,7 +394,6 @@
     <ClInclude Include="JPEGImage.h" />
     <ClInclude Include="JPEGLosslessTransform.h" />
     <ClInclude Include="JPEGProvider.h" />
-    <ClInclude Include="JXLWrapper.h" />
     <ClInclude Include="KeyMap.h" />
     <ClInclude Include="LocalDensityCorr.h" />
     <ClInclude Include="ManageOpenWithDlg.h" />
@@ -405,7 +402,6 @@
     <ClInclude Include="MultiMonitorSupport.h" />
     <ClInclude Include="NLS.h" />
     <ClInclude Include="ParameterDB.h" />
-    <ClInclude Include="PNGWrapper.h" />
     <ClInclude Include="PrintDlg.h" />
     <ClInclude Include="PrintImage.h" />
     <ClInclude Include="PrintParameters.h" />

@@ -539,25 +539,33 @@ double GetExactTickCount() {
 	}
 }
 
+int GetWindowCaptionSize() {
+	return ::GetSystemMetrics(SM_CYCAPTION);
+}
+
 CSize GetTotalBorderSize() {
-	const int SM_CXP_ADDEDBORDER = 92;
+	const int SM_CXP_ADDEDBORDER = 92;  // in MSDN this is SM_CXPADDEDBORDER, but for some reason it's not always available depending on configuration
 	int nBorderWidth = (::GetSystemMetrics(SM_CXSIZEFRAME) + ::GetSystemMetrics(SM_CXP_ADDEDBORDER)) * 2;
 	int nBorderHeight = (::GetSystemMetrics(SM_CYSIZEFRAME) + ::GetSystemMetrics(SM_CXP_ADDEDBORDER)) * 2 + ::GetSystemMetrics(SM_CYCAPTION);
 	return CSize(nBorderWidth, nBorderHeight);
 }
 
-CRect GetWindowRectMatchingImageSize(HWND hWnd, CSize minSize, CSize maxSize, double& dZoom, CJPEGImage* pImage, bool bForceCenterWindow, bool bKeepAspectRatio) {
-	const int SM_CXP_ADDEDBORDER = 92;
-	
+CRect GetWindowRectMatchingImageSize(HWND hWnd, CSize minSize, CSize maxSize, double& dZoom, CJPEGImage* pImage, bool bForceCenterWindow, bool bKeepAspectRatio, bool bWindowBorderless) {
 	int nOrigWidth = (pImage == NULL) ? ::GetSystemMetrics(SM_CXSCREEN) / 2 : pImage->OrigWidth();
 	int nOrigWidthUnzoomed = nOrigWidth;
 	int nOrigHeight = (pImage == NULL) ? ::GetSystemMetrics(SM_CYSCREEN) / 2 : pImage->OrigHeight();
 	if (dZoom > 0) {
-		nOrigWidth = (int) (nOrigWidth * dZoom + 0.5);
-		nOrigHeight = (int) (nOrigHeight * dZoom + 0.5);
+		nOrigWidth = (int)(nOrigWidth * dZoom + 0.5);
+		nOrigHeight = (int)(nOrigHeight * dZoom + 0.5);
 	}
 
-	CSize borderSize = GetTotalBorderSize();
+	CSize borderSize;
+	if (!bWindowBorderless) {
+		borderSize = GetTotalBorderSize();
+	} else {
+		borderSize = { 0, 0 };
+	}
+
 	int nRequiredWidth = borderSize.cx + nOrigWidth;
 	int nRequiredHeight = borderSize.cy + nOrigHeight;
 	CRect workingArea = CMultiMonitorSupport::GetWorkingRect(hWnd);
@@ -874,7 +882,7 @@ CString GetFileInfoString(LPCTSTR sFormat, CJPEGImage* pImage, CFileList* pFilel
 	}
 	bool isClipboardImage = pImage->IsClipboardImage();
 	if (_tcscmp(sFormat, _T("<i>  <p>")) == 0) {
-		if (isClipboardImage) return CString(_T("Clipboard Image"));
+		if (isClipboardImage) return CString(CNLS::GetString(_T("Clipboard Image")));
 		CString sFileInfo;
 		sFileInfo.Format(_T("[%d/%d]  %s"), pFilelist->CurrentIndex() + 1, pFilelist->Size(), pFilelist->Current() + GetMultiframeIndex(pImage));
 		return sFileInfo;
@@ -883,11 +891,11 @@ CString GetFileInfoString(LPCTSTR sFormat, CJPEGImage* pImage, CFileList* pFilel
 	CString sFileInfo(sFormat);
 	sFileInfo.Replace(_T("\\t"), _T("        "));
 	if (_tcsstr(sFormat, _T("<f>")) != NULL) {
-		CString sFileName = isClipboardImage ? _T("Clipboard Image") : pFilelist->CurrentFileTitle() + GetMultiframeIndex(pImage);
+		CString sFileName = isClipboardImage ? CNLS::GetString(_T("Clipboard Image")) : pFilelist->CurrentFileTitle() + GetMultiframeIndex(pImage);
 		sFileInfo.Replace(_T("<f>"), sFileName);
 	}
 	if (_tcsstr(sFormat, _T("<p>")) != NULL) {
-		CString sFilePath = isClipboardImage ? _T("Clipboard Image") : pFilelist->Current() + GetMultiframeIndex(pImage);
+		CString sFilePath = isClipboardImage ? CNLS::GetString(_T("Clipboard Image")) : pFilelist->Current() + GetMultiframeIndex(pImage);
 		sFileInfo.Replace(_T("<p>"), sFilePath);
 	}
 	if (_tcsstr(sFormat, _T("<i>")) != NULL) {

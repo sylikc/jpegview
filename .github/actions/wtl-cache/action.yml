@@ -1,0 +1,70 @@
+name: Action - Setup WTL via Cache
+description: Action to set up WTL includes by downloading and caching an official zip
+
+# NOTE: although WTL is now a submodule, this is not reflected in this GH action
+#
+# While I would like to do a submodule clone with checkout@v3, there's no option
+# to check out only ONE submodule.  There's a lot of submodules in this project
+# which are not directly required for building, and that seems fairly inefficient.
+#
+# Thus, the process below still caches the WTL source files from a specific release
+# download.  This may not match the release version linked to the submodule.
+#
+# (Update referenced version wtl-url as necessary)
+
+
+# there isn't an "env" globally for the action, so use inputs to specify these params
+inputs:
+  wtl-url:
+    description: ZIP Download URL of version of WTL to build with
+    required: false
+    default: https://sourceforge.net/projects/wtl/files/WTL%2010/WTL%2010.0.10320%20Release/WTL10_10320_Release.zip/download
+
+  wtl-folder:
+    description: place it'll be extracted to, doesn't have to be unique if you change the cache name on version changes
+    required: false
+    default: WTL_Release
+
+  wtl-cache-name:
+    description: cache name of the release, make this unique when version changes
+    required: false
+    default: wtl-cache-10320
+
+runs:
+  using: composite
+  steps:
+    - name: WTL Cache - Restore Download
+      # https://docs.github.com/en/actions/using-workflows/caching-dependencies-to-speed-up-workflows
+      uses: actions/cache@v3
+      with:
+        # path where we would extract the WTL source files
+        # NOTE: potential bug is that cache-name is not invalidated when wtl-url changes, which it should
+        path: ${{ inputs.wtl-folder }}
+        key: ${{ runner.os }}-build-${{ inputs.wtl-cache-name }}-${{ inputs.wtl-folder }}
+
+
+    # download WTF if needed
+    - name: WTL includes via download or cache
+      shell: powershell
+      # https://github.community/t/download-remote-file-in-github-actions/175417
+      # https://support.moonpoint.com/os/windows/PowerShell/wget-curl.php
+      run: |
+        if ( Test-Path -Path "${{ inputs.wtl-folder }}" ) {
+          echo "Cache found, not re-downloading WTL: ${{ inputs.wtl-folder }}"
+        } else {
+          echo "WTL Cache not found - Need to Download"
+          # https://stackoverflow.com/questions/69552662/how-to-download-a-file-from-sourceforge-using-powershell
+          # if you don't use UserAgent, the whole file doesn't come out ...
+          Invoke-WebRequest -UserAgent "Wget" -OutFile wtl.zip "${{ inputs.wtl-url }}"
+          #Get-ChildItem
+          7z x wtl.zip -o"${{ inputs.wtl-folder }}"
+        }
+        # save the IncludePath for the building step (the building step will incorporate this optional includepath
+        # %CD%\${{ inputs.wtl-folder }}\Include
+        ("include_path=" + $(Join-Path -Path $pwd -ChildPath "${{ inputs.wtl-folder }}\Include")) | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+
+      # had to do it this way because:
+      # didn't work for some reason
+      #msbuild.exe /property:AdditionalIncludePaths="${{ inputs.wtl-folder }}\Include" /property:Platform=Win32 JPEGView.sln
+      #msbuild.exe /property:IncludePath="${{ inputs.wtl-folder }}\Include" /property:Platform=Win32 JPEGView.sln
+      # https://stackoverflow.com/questions/60516987/msbuild-2019-ignores-include-environment-variable

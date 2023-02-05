@@ -287,6 +287,7 @@ void CFileExtensionsDlg::FillFileExtensionsList() {
 	InsertExtension(_T("*.tga"), FormatHint(CNLS::GetString(_T("%s images")), _T("TGA")));
 	InsertExtension(_T("*.webp"), FormatHint(CNLS::GetString(_T("%s images")), _T("Google WEBP")));
 	InsertExtension(_T("*.jxl"), FormatHint(CNLS::GetString(_T("%s images")), _T("JPEG XL")));
+	InsertExtension(_T("*.avif"), FormatHint(CNLS::GetString(_T("%s images")), _T("AV1 Image File")));
 	InsertExtension(_T("*.heif"), FormatHint(CNLS::GetString(_T("%s images")), _T("High Efficiency Image File")));
 	InsertExtension(_T("*.heic"), FormatHint(CNLS::GetString(_T("%s images")), _T("High Efficiency Image Container")));
 	InsertExtensions(CSettingsProvider::This().FilesProcessedByWIC(), CNLS::GetString(_T("%s images (processed by Window Imaging Component - WIC)")));

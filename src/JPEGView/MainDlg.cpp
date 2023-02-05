@@ -195,6 +195,7 @@ CMainDlg::CMainDlg(bool bForceFullScreen) {
 	m_bCurrentImageIsSpecialProcessing = false;
 	m_dCurrentInitialLightenShadows = -1;
 
+	m_bDefaultSelectionMode = sp.DefaultSelectionMode();
 	m_bShowFileName = sp.ShowFileName();
 	m_bKeepParams = sp.KeepParams();
 	m_eAutoZoomModeWindowed = sp.AutoZoomMode();
@@ -210,6 +211,7 @@ CMainDlg::CMainDlg(bool bForceFullScreen) {
 	m_pJPEGProvider = NULL;
 	m_pCurrentImage = NULL;
 	m_bOutOfMemoryLastImage = false;
+	m_bExceptionErrorLastImage = false;
 	m_nLastLoadError = HelpersGUI::FileLoad_Ok;
 
 	m_dMovieFPS = 1.0;
@@ -260,6 +262,8 @@ CMainDlg::CMainDlg(bool bForceFullScreen) {
 	m_dLastImageDisplayTime = 0.0;
 	m_isUserFitToScreen = false;
 	m_autoZoomFitToScreen = Helpers::ZM_FillScreen;
+	m_bWindowBorderless = false;  // default real window with border
+	m_bAlwaysOnTop = false;  // default normal
 
 	m_pPanelMgr = new CPanelMgr();
 	m_pZoomNavigatorCtl = NULL;
@@ -272,7 +276,7 @@ CMainDlg::CMainDlg(bool bForceFullScreen) {
 	m_pImageProcPanelCtl = NULL;
 	m_pNavPanelCtl = NULL;
 	m_pCropCtl = new CCropCtl(this);
-	m_pKeyMap = new CKeyMap(CString(CSettingsProvider::This().GetEXEPath()) + _T("KeyMap.txt"));
+	m_pKeyMap = new CKeyMap(CString(CSettingsProvider::This().GetEXEPath()) + _T("KeyMap.txt"), CString(CSettingsProvider::This().GetEXEPath()) + _T("symbols.km"));
 	m_pPrintImage = new CPrintImage(CSettingsProvider::This().PrintMargin(), CSettingsProvider::This().DefaultPrintWidth());
 	m_pHelpDlg = NULL;
 }
@@ -377,7 +381,7 @@ LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam
 	// create JPEG provider and request first image - do no processing yet if not in fullscreen mode (as we do not know the size yet)
 	m_pJPEGProvider = new CJPEGProvider(m_hWnd, NUM_THREADS, READ_AHEAD_BUFFERS);	
 	m_pCurrentImage = m_pJPEGProvider->RequestImage(m_pFileList, CJPEGProvider::FORWARD,
-		m_pFileList->Current(), 0, CreateProcessParams(!m_bFullScreenMode), m_bOutOfMemoryLastImage);
+		m_pFileList->Current(), 0, CreateProcessParams(!m_bFullScreenMode), m_bOutOfMemoryLastImage, m_bExceptionErrorLastImage);
 	if (m_pCurrentImage != NULL && m_pCurrentImage->IsAnimation()) {
 		StartAnimation();
 	}
@@ -387,7 +391,7 @@ LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam
 
 	if (!m_bFullScreenMode) {
 		// Window mode, set correct window size
-		this->SetWindowLongW(GWL_STYLE, this->GetWindowLongW(GWL_STYLE) | WS_OVERLAPPEDWINDOW | WS_VISIBLE);
+		SetCurrentWindowStyle();
 		if (!IsAdjustWindowToImage()) {
 			CRect windowRect = CMultiMonitorSupport::GetDefaultWindowRect();
 			this->SetWindowPos(HWND_TOP, windowRect.left, windowRect.top, windowRect.Width(), windowRect.Height(), SWP_NOZORDER | SWP_NOCOPYBITS);
@@ -491,7 +495,7 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 		} else if (m_pTiltCorrectionPanelCtl->IsVisible()) {
 			pDIBData = m_pTiltCorrectionPanelCtl->GetDIBForPreview(newSize, clippedSize, offsetsInImage, 
 				*m_pImageProcParams, CreateProcessingFlags(false, m_bAutoContrast, m_bAutoContrastSection, m_bLDC, false, m_bLandscapeMode));
-		}  else {
+		} else {
 			pDIBData = m_pCurrentImage->GetDIB(newSize, clippedSize, offsetsInImage, 
 				*m_pImageProcParams, 
 				CreateProcessingFlags(m_bHQResampling && !m_bTemporaryLowQ && !m_bZoomMode, m_bAutoContrast, m_bAutoContrastSection, m_bLDC, false, m_bLandscapeMode));
@@ -643,7 +647,8 @@ void CMainDlg::DisplayErrors(CJPEGImage* pCurrentImage, const CRect& clientRect,
 		HelpersGUI::DrawImageLoadErrorText(dc, clientRect,
 			(m_nLastLoadError == HelpersGUI::FileLoad_SlideShowListInvalid) ? m_sStartupFile :
 			(m_nLastLoadError == HelpersGUI::FileLoad_NoFilesInDirectory) ? m_pFileList->CurrentDirectory() : CurrentFileName(false),
-			m_nLastLoadError + (m_bOutOfMemoryLastImage ? HelpersGUI::FileLoad_OutOfMemory : 0));
+			m_nLastLoadError,
+			(m_bOutOfMemoryLastImage ? HelpersGUI::FileLoad_OutOfMemory : 0) | (m_bExceptionErrorLastImage ? HelpersGUI::FileLoad_ExceptionError : 0));
 	}
 }
 
@@ -750,9 +755,10 @@ LRESULT CMainDlg::OnLButtonDown(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam,
 				m_bZoomMode = true;
 				m_dStartZoom = m_dZoom;
 				m_nCapturedX = m_nMouseX; m_nCapturedY = m_nMouseY;
-			} else if ((bCtrl || !bDraggingRequired || bHandleByCropping) && !bTransformPanelShown) {
+			} else if ((bCtrl || bHandleByCropping || (!bDraggingRequired && m_bDefaultSelectionMode)) && !bTransformPanelShown) {
+				// always go into selection/crop when in the right state and CTRL held down, otherwise it depends on the DefaultSelectionMode setting
 				m_pCropCtl->StartCropping(pointClicked.x, pointClicked.y);
-			} else if (!bTransformPanelShown) {
+			} else if (bDraggingRequired && !bTransformPanelShown) {
 				StartDragging(pointClicked.x, pointClicked.y, false);
 			} 
 		}
@@ -777,6 +783,24 @@ LRESULT CMainDlg::OnLButtonUp(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, B
 	}
 	::ReleaseCapture();
 	InvalidateHelpDlg();
+	return 0;
+}
+
+
+// based on https://www.codeproject.com/Articles/18400/How-to-move-a-dialog-which-does-not-have-a-caption
+// https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-nchittest
+LRESULT CMainDlg::OnNCHitTest(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled) {
+	bool bAlt = (::GetKeyState(VK_MENU) & 0x8000) != 0;
+	bool bLButton = ::GetAsyncKeyState(MK_LBUTTON) < 0;
+
+	// only move when alt is held down, double click causes this to expand as well
+	if (!m_bFullScreenMode && bAlt && ::DefWindowProc(m_hWnd, uMsg, wParam, lParam) == HTCLIENT && bLButton) {
+		// don't allow intercepting if we're in full screen mode
+		// (which is really just the window repositioned so the titlebar falls off the screen)
+		return HTCAPTION;
+	}
+
+	bHandled = FALSE;  // if not moving window, considered unhandled, or else all the mouse button code stops working
 	return 0;
 }
 
@@ -1119,6 +1143,8 @@ LRESULT CMainDlg::OnContextMenu(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam,
 	HMENU hMenuZoom = ::GetSubMenu(hMenuTrackPopup, SUBMENU_POS_ZOOM);
 	if (m_bSpanVirtualDesktop) ::CheckMenuItem(hMenuZoom,  IDM_SPAN_SCREENS, MF_CHECKED);
 	if (m_bFullScreenMode) ::CheckMenuItem(hMenuZoom,  IDM_FULL_SCREEN_MODE, MF_CHECKED);
+	if (m_bWindowBorderless) ::CheckMenuItem(hMenuZoom, IDM_HIDE_TITLE_BAR, MF_CHECKED);
+	if (m_bAlwaysOnTop) ::CheckMenuItem(hMenuZoom, IDM_ALWAYS_ON_TOP, MF_CHECKED);
 	if (IsAdjustWindowToImage() && IsImageExactlyFittingWindow()) ::CheckMenuItem(hMenuZoom, IDM_FIT_WINDOW_TO_IMAGE, MF_CHECKED);
 	HMENU hMenuAutoZoomMode = ::GetSubMenu(hMenuTrackPopup, SUBMENU_POS_AUTOZOOMMODE);
 	::CheckMenuItem(hMenuAutoZoomMode, GetAutoZoomMode() * 10 + IDM_AUTO_ZOOM_FIT_NO_ZOOM, MF_CHECKED);
@@ -1147,6 +1173,7 @@ LRESULT CMainDlg::OnContextMenu(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam,
 	if (CSettingsProvider::This().StoreToEXEPath()) ::EnableMenuItem(hMenuSettings, IDM_UPDATE_USER_CONFIG, MF_BYCOMMAND | MF_GRAYED);
 	if (m_bFullScreenMode) ::EnableMenuItem(hMenuZoom, IDM_FIT_WINDOW_TO_IMAGE, MF_BYCOMMAND | MF_GRAYED);
 	if (!m_bFullScreenMode) ::EnableMenuItem(hMenuZoom, IDM_SPAN_SCREENS, MF_BYCOMMAND | MF_GRAYED);
+	if (m_bFullScreenMode) ::EnableMenuItem(hMenuZoom, IDM_HIDE_TITLE_BAR, MF_BYCOMMAND | MF_GRAYED);
 
 	::EnableMenuItem(hMenuMovie, IDM_SLIDESHOW_START, MF_BYCOMMAND | MF_GRAYED);
 	::EnableMenuItem(hMenuMovie, IDM_MOVIE_START_FPS, MF_BYCOMMAND | MF_GRAYED);
@@ -1310,9 +1337,12 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 			OpenFileWithDialog(false, false);
 			break;
 		case IDM_EXPLORE:
-			if (!m_pCurrentImage->IsClipboardImage()) {
-				ExploreFile();
+			if (m_pCurrentImage != NULL && m_pCurrentImage->IsClipboardImage()) {
+				// don't try to "Explore" path if clipboard image
+				break;
 			}
+			// otherwise, allowed even for invalid file loads
+			ExploreFile();
 			break;
 		case IDM_SAVE:
 		case IDM_SAVE_SCREEN:
@@ -1596,10 +1626,10 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 				if (!bAskIfToTrim || bTrim) {
 					if (!bAskIfToTrim && (nCommand == IDM_ROTATE_90_LOSSLESS_CONFIRM || nCommand == IDM_ROTATE_270_LOSSLESS_CONFIRM)) {
 						LPCTSTR sConfirmMsg = (nCommand == IDM_ROTATE_90_LOSSLESS_CONFIRM) ?
-							_T("Rotate current file on disk lossless by 90 deg (W/H must be multiple of 16)") :
-							_T("Rotate current file on disk lossless by 270 deg (W/H must be multiple of 16)");
+							CNLS::GetString(_T("Rotate current file on disk lossless by 90 deg (W/H must be multiple of 16)")) :
+							CNLS::GetString(_T("Rotate current file on disk lossless by 270 deg (W/H must be multiple of 16)"));
 						bPerformTransformation = IDYES == ::MessageBox(m_hWnd, 
-							CNLS::GetString(sConfirmMsg), CNLS::GetString(_T("Confirm")), MB_YESNOCANCEL | MB_ICONWARNING);
+							sConfirmMsg, CNLS::GetString(_T("Confirm")), MB_YESNOCANCEL | MB_ICONWARNING);
 					}
 					if (bPerformTransformation) {
 						CJPEGLosslessTransform::EResult eResult =
@@ -1681,7 +1711,7 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 			}
 			break;
 		case IDM_SPAN_SCREENS:
-			if (CMultiMonitorSupport::IsMultiMonitorSystem() && m_bFullScreenMode) {
+			if (m_bFullScreenMode && CMultiMonitorSupport::IsMultiMonitorSystem()) {
 				m_dZoom = -1.0;
 				this->Invalidate(FALSE);
 				if (m_bSpanVirtualDesktop) {
@@ -1700,13 +1730,16 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 			m_dZoomAtResizeStart = 1.0;
 			if (!m_bFullScreenMode) {
 				CRect windowRect;
-				this->SetWindowLongW(GWL_STYLE, this->GetWindowLongW(GWL_STYLE) | WS_OVERLAPPEDWINDOW | WS_VISIBLE);
+
+				// restore hidden title bar if enabled
+				SetCurrentWindowStyle();
+
 				HICON hIconSmall = (HICON)::LoadImage(_Module.GetResourceInstance(), MAKEINTRESOURCE(IDR_MAINFRAME), 
 					IMAGE_ICON, ::GetSystemMetrics(SM_CXSMICON), ::GetSystemMetrics(SM_CYSMICON), LR_DEFAULTCOLOR);
 				SetIcon(hIconSmall, FALSE);
 				CRect defaultWindowRect = CMultiMonitorSupport::GetDefaultWindowRect();
 				double dZoom = -1;
-				windowRect = sp.ExplicitWindowRect() ? defaultWindowRect : Helpers::GetWindowRectMatchingImageSize(m_hWnd, CSize(MIN_WND_WIDTH, MIN_WND_HEIGHT), defaultWindowRect.Size(), dZoom, m_pCurrentImage, false, true);
+				windowRect = sp.ExplicitWindowRect() ? defaultWindowRect : Helpers::GetWindowRectMatchingImageSize(m_hWnd, CSize(MIN_WND_WIDTH, MIN_WND_HEIGHT), defaultWindowRect.Size(), dZoom, m_pCurrentImage, false, true, m_bWindowBorderless);
 				this->SetWindowPos(HWND_TOP, windowRect.left, windowRect.top, windowRect.Width(), windowRect.Height(), SWP_NOZORDER | SWP_NOCOPYBITS);
 				this->MouseOn();
 				m_bSpanVirtualDesktop = false;
@@ -1730,6 +1763,60 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 			m_dZoom = -1;
 			StartLowQTimer(ZOOM_TIMEOUT);
 			this->SetWindowPos(NULL, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_NOCOPYBITS | SWP_FRAMECHANGED);
+			break;
+		case IDM_HIDE_TITLE_BAR:
+			if (!m_bFullScreenMode) {
+				// only available when full screen mode is not active
+
+				m_bWindowBorderless = !m_bWindowBorderless;
+				SetCurrentWindowStyle();
+
+				// get the size of the border to shift the window pos downwards
+				int windowCaptionHeight = Helpers::GetWindowCaptionSize();
+				double dZoom = -1;
+				CRect windowRect = Helpers::GetWindowRectMatchingImageSize(m_hWnd, CSize(MIN_WND_WIDTH, MIN_WND_HEIGHT), HUGE_SIZE, dZoom, m_pCurrentImage, false, true, m_bWindowBorderless);
+
+				// don't try to adjust for an image that isn't loaded!
+				if (m_pCurrentImage != NULL)
+				{
+					// this is the new top to move it to so that the experience seems seamless
+					int newTop;
+					int t = m_pCurrentImage->OrigHeight();
+
+					// these are experimental values figured out through trial and error
+					// it appears if the caption size is odd, and just using /2,
+					// it causes the window to shift up one pixel at a time when going between borderless and not borderless repeatedly
+					// in other cases, it shifts downwards depending on rounding errors resizing the window and image... hard to hunt down but it's as good as it can get right now
+					if (windowCaptionHeight % 2 == 0) {
+						newTop = m_bWindowBorderless ? windowRect.top + (windowCaptionHeight / 2) : windowRect.top - (windowCaptionHeight / 2);
+					} else {
+						newTop = m_bWindowBorderless ? windowRect.top + (windowCaptionHeight / 2) : windowRect.top - (windowCaptionHeight / 2) + 1;
+					}
+
+					// tell the window the Frame has changed, not sure if it makes a difference
+					this->SetWindowPos(HWND_TOP, windowRect.left, newTop, windowRect.Width(), windowRect.Height(), SWP_NOZORDER | SWP_NOCOPYBITS | SWP_FRAMECHANGED);
+
+					// don't auto adjust unless auto is selected in options
+					if (IsAdjustWindowToImage() && !(m_bAutoFitWndToImage && !IsImageExactlyFittingWindow())) {
+						AdjustWindowToImage(false);
+						this->Invalidate(FALSE);
+					}
+
+					StartLowQTimer(ZOOM_TIMEOUT);  // trigger a redraw as if zoom changed (might not be necessary)
+				}
+			}
+
+			break;
+		case IDM_ALWAYS_ON_TOP:
+			m_bAlwaysOnTop = !m_bAlwaysOnTop;
+
+			// SetWindowPos - https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setwindowpos
+			this->SetWindowPos(
+				m_bAlwaysOnTop ? HWND_TOPMOST : HWND_NOTOPMOST,
+				0, 0, 0, 0,
+				SWP_NOMOVE | SWP_NOSIZE  // causes SetWindowPos to ignore the parameters for top/left/width/height
+			);
+
 			break;
 		case IDM_FIT_WINDOW_TO_IMAGE:
 			// Note: If auto fit is on but the window size does not match the image size (due to manual window resizing), restore window to image
@@ -1784,7 +1871,7 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 			break;
 		case IDM_UPDATE_USER_CONFIG:
 			if (::MessageBox(m_hWnd, CString(CNLS::GetString(_T("Update user settings with new settings from settings template file?"))) + _T('\n') +
-				CNLS::GetString(_T("All existing user settings will be preserved.")), _T("JPEGView"), MB_YESNOCANCEL | MB_ICONQUESTION) == IDYES) {
+				CNLS::GetString(_T("All existing user settings will be preserved.")), _T(JPEGVIEW_TITLE), MB_YESNOCANCEL | MB_ICONQUESTION) == IDYES) {
 				CSettingsProvider::This().UpdateUserSettings();
 			}
 			break;
@@ -1911,7 +1998,7 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 				_stprintf_s(buff1, 128, CNLS::GetString(_T("Number of JPEG files in folder: %d")), result.NumberOfSucceededFiles + result.NumberOfFailedFiles);
 				TCHAR buff2[256];
 				_stprintf_s(buff2, 256, CNLS::GetString(_T("EXIF date successfully set on %d images, failed on %d images")), result.NumberOfSucceededFiles, result.NumberOfFailedFiles);
-				::MessageBox(m_hWnd, CString(buff1) + _T('\n') + buff2, _T("JPEGView"), MB_OK | MB_ICONINFORMATION);
+				::MessageBox(m_hWnd, CString(buff1) + _T('\n') + buff2, _T(JPEGVIEW_TITLE), MB_OK | MB_ICONINFORMATION);
 				m_pFileList->Reload();
 				if (m_pEXIFDisplayCtl->IsActive()) {
 					this->Invalidate(FALSE);
@@ -1993,6 +2080,18 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 	}
 }
 
+// Setting window styles have gotten out of hand with the addition of no title bar
+// instead of each call trying to figure out the logic, consolidate it to one function
+LONG CMainDlg::SetCurrentWindowStyle() {
+	if (!m_bWindowBorderless) {
+		return this->SetWindowLongW(GWL_STYLE, this->GetWindowLongW(GWL_STYLE) | WS_OVERLAPPEDWINDOW | WS_VISIBLE);
+	} else {
+		return this->SetWindowLongW(GWL_STYLE, this->GetWindowLongW(GWL_STYLE) & ~WS_OVERLAPPEDWINDOW | WS_MINIMIZEBOX | WS_MAXIMIZEBOX | WS_VISIBLE);  // lose resizing
+		// just doing (& ~WS_CAPTION) leads to having a sliver of white bar on top but allows for resizing
+	}
+}
+
+
 void CMainDlg::ExploreFile() {
 	ITEMIDLIST* pidl = ILCreateFromPath(CurrentFileName(false));
 	if (pidl) {
@@ -2030,7 +2129,8 @@ void CMainDlg::OpenFile(LPCTSTR sFileName, bool bAfterStartup) {
 	m_pJPEGProvider->NotifyNotUsed(m_pCurrentImage);
 	m_pJPEGProvider->ClearAllRequests();
 	m_pCurrentImage = m_pJPEGProvider->RequestImage(m_pFileList, CJPEGProvider::FORWARD,
-		m_pFileList->Current(), 0, CreateProcessParams(!m_bFullScreenMode && (bAfterStartup || IsAdjustWindowToImage())), m_bOutOfMemoryLastImage);
+		m_pFileList->Current(), 0, CreateProcessParams(!m_bFullScreenMode && (bAfterStartup || IsAdjustWindowToImage())),
+		m_bOutOfMemoryLastImage, m_bExceptionErrorLastImage);
 	m_nLastLoadError = GetLoadErrorAfterOpenFile();
 	if (bAfterStartup) CheckIfApplyAutoFitWndToImage(false);
 	AfterNewImageLoaded(true, false, false);
@@ -2376,7 +2476,8 @@ void CMainDlg::GotoImage(EImagePosition ePos, int nFlags) {
 		}
 	} else {
 		m_pCurrentImage = m_pJPEGProvider->RequestImage(m_pFileList, (ePos == POS_AwayFromCurrent) ? CJPEGProvider::NONE : eDirection,  
-			m_pFileList->Current(), nFrameIndex, procParams, m_bOutOfMemoryLastImage);
+			m_pFileList->Current(), nFrameIndex, procParams,
+			m_bOutOfMemoryLastImage, m_bExceptionErrorLastImage);
 		m_nLastLoadError = (m_pCurrentImage == NULL) ? ((m_pFileList->Current() == NULL) ? HelpersGUI::FileLoad_NoFilesInDirectory : HelpersGUI::FileLoad_LoadError) : HelpersGUI::FileLoad_Ok;
 	}
 	double minimalDisplayTime = CSettingsProvider::This().MinimalDisplayTime();
@@ -2561,7 +2662,7 @@ void CMainDlg::ResetZoomToFitScreen(bool bFillWithCrop, bool bAllowEnlarge, bool
 	if (m_pCurrentImage != NULL) {
 		if (bAdjustWindowSize && !m_bFullScreenMode && !IsZoomed() && m_bAutoFitWndToImage) {
 			m_dZoom = bAllowEnlarge ? Helpers::ZoomMax : 1;
-			CRect wndRect = Helpers::GetWindowRectMatchingImageSize(m_hWnd, CSize(MIN_WND_WIDTH, MIN_WND_HEIGHT), HUGE_SIZE, m_dZoom, m_pCurrentImage, false, true);
+			CRect wndRect = Helpers::GetWindowRectMatchingImageSize(m_hWnd, CSize(MIN_WND_WIDTH, MIN_WND_HEIGHT), HUGE_SIZE, m_dZoom, m_pCurrentImage, false, true, m_bWindowBorderless);
 			if (m_dZoom <= 1) {
 				m_dZoom = -1;
 			}
@@ -2750,7 +2851,7 @@ void CMainDlg::MouseOn() {
 		::ShowCursor(TRUE);
 		m_bMouseOn = true;
 		if (m_pNavPanelCtl != NULL) { // can be called very early
-		  this->InvalidateRect(m_pNavPanelCtl->PanelRect(), FALSE);
+			this->InvalidateRect(m_pNavPanelCtl->PanelRect(), FALSE);
 		}
 	}
 }
@@ -2845,7 +2946,7 @@ void CMainDlg::AdjustWindowToImage(bool bAfterStartup) {
 	if (IsAdjustWindowToImage() && (m_pCurrentImage != NULL || bAfterStartup)) {
 		// window size shall be adjusted to image size (at least keep aspect ratio)
 		double dZoom = m_dZoom;
-		CRect windowRect = Helpers::GetWindowRectMatchingImageSize(m_hWnd, CSize(MIN_WND_WIDTH, MIN_WND_HEIGHT), HUGE_SIZE, dZoom, m_pCurrentImage, bAfterStartup, dZoom < 0);
+		CRect windowRect = Helpers::GetWindowRectMatchingImageSize(m_hWnd, CSize(MIN_WND_WIDTH, MIN_WND_HEIGHT), HUGE_SIZE, dZoom, m_pCurrentImage, bAfterStartup, dZoom < 0, m_bWindowBorderless);
 		CRect defaultRect = CMultiMonitorSupport::GetDefaultWindowRect();
 		if (bAfterStartup && CSettingsProvider::This().ExplicitWindowRect()) {
 			windowRect = CRect(defaultRect.TopLeft(), windowRect.Size());
@@ -2937,7 +3038,7 @@ bool CMainDlg::ImageToScreen(float & fX, float & fY) {
 /// <returns>Returns the filename either just the title or full filepath</returns>
 LPCTSTR CMainDlg::CurrentFileName(bool bFileTitle) {
 	if (m_pCurrentImage != NULL && m_pCurrentImage->IsClipboardImage()) {
-		return _T("Clipboard Image");
+		return CNLS::GetString(_T("Clipboard Image"));
 	}
 
 	if (m_pFileList != NULL) {
@@ -3000,7 +3101,7 @@ void CMainDlg::EditINIFile(bool bGlobalINI) {
 	if (!bGlobalINI) {
 		if (!CSettingsProvider::This().ExistsUserINI()) {
 			// No user INI file, ask if global INI shall be copied
-			if (IDYES == ::MessageBox(m_hWnd, CNLS::GetString(_T("No user INI file exits yet. Create user INI file from INI file template?")), _T("JPEGView"), MB_YESNO | MB_ICONQUESTION)) {
+			if (IDYES == ::MessageBox(m_hWnd, CNLS::GetString(_T("No user INI file exits yet. Create user INI file from INI file template?")), _T(JPEGVIEW_TITLE), MB_YESNO | MB_ICONQUESTION)) {
 				CSettingsProvider::This().CopyUserINIFromTemplate();
 			} else {
 				return;
@@ -3030,7 +3131,7 @@ void CMainDlg::UpdateWindowTitle() {
 	LPCTSTR sCurrentFileName = CurrentFileName(!bShowFullPathInTitle);
 
 	if (sCurrentFileName == NULL || m_pCurrentImage == NULL) {
-		this->SetWindowText(_T("JPEGView"));
+		this->SetWindowText(_T(JPEGVIEW_TITLE));
 	} else {
 		CString sWindowText =  sCurrentFileName;
 		sWindowText += Helpers::GetMultiframeIndex(m_pCurrentImage);
@@ -3040,7 +3141,7 @@ void CMainDlg::UpdateWindowTitle() {
 				sWindowText += " - " + Helpers::SystemTimeToString(pEXIF->GetAcquisitionTime());
 			}
 		}
-		sWindowText += _T(" - JPEGView");
+		sWindowText += " - " + CString(JPEGVIEW_TITLE);
 		this->SetWindowText(sWindowText);
 	}
 }

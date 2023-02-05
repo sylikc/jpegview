@@ -146,9 +146,18 @@ static CString _GetKeyShortcutName(int nShortcut) {
 	return sKeyDesc;
 }
 
-CKeyMap::CKeyMap(LPCTSTR sKeyMapFile) {
-	FILE *fptr = _tfopen(sKeyMapFile, _T("r"));
-	if (fptr == NULL) {
+CKeyMap::CKeyMap(LPCTSTR sKeyMapFile, LPCTSTR sKeyMapSymbolsFile) {
+	// no keymap file
+	FILE *fkm_ptr = _tfopen(sKeyMapFile, _T("r"));
+	if (fkm_ptr == NULL) {
+		AddDefaultEscapeHandling();
+		return;
+	}
+
+	// no symbols file
+	FILE* fsym_ptr = _tfopen(sKeyMapSymbolsFile, _T("r"));
+	if (fsym_ptr == NULL) {
+		fclose(fkm_ptr);
 		AddDefaultEscapeHandling();
 		return;
 	}
@@ -163,10 +172,12 @@ CKeyMap::CKeyMap(LPCTSTR sKeyMapFile) {
 
 	stdext::hash_map<LPCTSTR, int, CHashCompareLPCTSTR> m_symbolMap;
 
-	while (_fgetts(lineBuff, BUFF_LEN, fptr) != NULL) {
+	// read the symbols file first to get all valid symbols
+	while (_fgetts(lineBuff, BUFF_LEN, fsym_ptr) != NULL) {
 		LPTSTR sLine = _SkipWhiteSpace(lineBuff);
 		if (*sLine == 0) continue;
 		if (_IsComment(sLine)) continue;
+
 		if (_tcsncmp(sLine, _T("#define"), 7) == 0) {
 			LPTSTR sSymbol = sLine + 7;
 			sSymbol = _SkipWhiteSpace(sSymbol);
@@ -180,21 +191,30 @@ CKeyMap::CKeyMap(LPCTSTR sKeyMapFile) {
 				m_symbolMap[pSymbolTable] = nValue;
 				pSymbolTable += nSymbolLen + 1;
 			} // else the symbol table is full
-		} else {
-			LPTSTR sCommandId = _Parse(sLine);
-			if (*sCommandId == 0) continue;
-			int nCommandId = _FindCommandId(m_symbolMap, sCommandId);
-			if (nCommandId < 0) continue;
-			int nKeyCode = _ParseKeys(sLine);
-			if (nKeyCode == 0) continue;
-			m_keyMap[nKeyCode] = nCommandId;
-		}
-		
+		} // the symbols file is standalone, all other definitions are ignored
+	}
+
+	fclose(fsym_ptr);
+
+	// read just the keymap file
+	while (_fgetts(lineBuff, BUFF_LEN, fkm_ptr) != NULL) {
+		LPTSTR sLine = _SkipWhiteSpace(lineBuff);
+		if (*sLine == 0) continue;
+		if (_IsComment(sLine)) continue;
+		if (_tcsncmp(sLine, _T("#define"), 7) == 0) continue; // the symbols in the KeyMap are ignored (in case you have an old keymap file which defined the symbols and keybindings together)
+
+		LPTSTR sCommandId = _Parse(sLine);
+		if (*sCommandId == 0) continue;
+		int nCommandId = _FindCommandId(m_symbolMap, sCommandId);
+		if (nCommandId < 0) continue;
+		int nKeyCode = _ParseKeys(sLine);
+		if (nKeyCode == 0) continue;
+		m_keyMap[nKeyCode] = nCommandId;
 	}
 
 	AddDefaultEscapeHandling();
 
-	fclose(fptr);
+	fclose(fkm_ptr);
 }
 
 int CKeyMap::GetVirtualKeyCode(LPCTSTR keyName) {

@@ -26,10 +26,14 @@
 		<?define Win64 = "yes" ?>
 		<?define PlatformProgramFilesFolder = "ProgramFiles64Folder" ?>
 		<?define JPEGViewExeSourcePath = "$(var.JPEGView.ProjectDir)\x64\Release\JPEGView.exe" ?>
+		<?define JxlDllFolder = "$(var.JPEGView.ProjectDir)\libjxl\bin64" ?>
+		<?define HeifDllFolder = "$(var.JPEGView.ProjectDir)\libheif\bin64" ?>
 	<?else ?>
 		<?define Win64 = "no" ?>
 		<?define PlatformProgramFilesFolder = "ProgramFilesFolder" ?>
 		<?define JPEGViewExeSourcePath = "$(var.JPEGView.ProjectDir)\x86\Release\JPEGView.exe" ?>
+		<?define JxlDllFolder = "$(var.JPEGView.ProjectDir)\libjxl\bin" ?>
+		<?define HeifDllFolder = "$(var.JPEGView.ProjectDir)\libheif\bin" ?>
 	<?endif ?>
 
 	<!--
@@ -165,6 +169,18 @@
 				<ComponentRef Id="JPEGViewExe"/>
 				<ComponentRef Id="NavPanel.png"/>
 			</Feature>
+			<Feature Id="FeatureJXL" Title="JPEG XL Support">
+				<ComponentRef Id="brotlicommonDLL"/>
+				<ComponentRef Id="brotlidecDLL"/>
+				<ComponentRef Id="jxl_decDLL"/>
+				<ComponentRef Id="jxl_threadsDLL"/>
+			</Feature>
+			<Feature Id="FeatureHEIF" Title="HEIF/AVIF Support">
+				<ComponentRef Id="heifDLL"/>
+				<ComponentRef Id="libde265DLL"/>
+			</Feature>
+
+
 			<Feature Id="FeatureWebP" Title="WebP Support">
 				<ComponentRef Id="webpDLL"/>
 			</Feature>
@@ -177,13 +193,15 @@
 				<ComponentRef Id="JPEGView_ru.ini"/>
 				<ComponentRef Id="JPEGView_ru.ini.tpl"/>
 				<ComponentRef Id="KeyMap.txt"/>
-				<ComponentRef Id="KeyMap_ru.txt"/>
+				<ComponentRef Id="symbols.km"/>
+				<!-- <ComponentRef Id="KeyMap_ru.txt"/> -->
 			</Feature>
 			<Feature Id="Docs" Title="Documentation">
 				<ComponentRef Id="LICENSE.txt"/>
 				<ComponentRef Id="readme.html"/>
 				<ComponentRef Id="readme_ru.html"/>
 				<ComponentRef Id="readme_uk.html"/>
+				<ComponentRef Id="KeyMap_README.html"/>
 			</Feature>
 			<Feature Id="Localization" Title="Localization Strings">
 				<ComponentRef Id="strings_bel.txt" />
@@ -338,10 +356,32 @@
 						<!-- Optional: add an 'Edit with XYZ' to 'right click' even when not associated -->
 						<RegistryValue Root="HKLM" Key="SOFTWARE\Classes\SystemFileAssociations\.xyz\shell\edit.MyApp.exe" Value="!(loc.ExplorerMenuEditREG)" Type="string" />
 						<RegistryValue Root="HKLM" Key="SOFTWARE\Classes\SystemFileAssociations\.xyz\shell\edit.MyApp.exe\command" Value="&quot;[APPLICATIONFOLDER]MyApp.exe&quot; &quot;%1&quot;" Type="string" />
-
-
-
 					</Component>
+
+					<!-- DLLs required for JXL support -->
+					<Component Id="brotlicommonDLL" Guid="97c26f44-4776-489d-be8a-0b732a42ea34">
+						<File Id="brotlicommon.dll" Name="brotlicommon.dll" Source="$(var.JxlDllFolder)\brotlicommon.dll" />
+					</Component>
+					<Component Id="brotlidecDLL" Guid="dc648a37-d726-40f9-9098-dfde491dbb44">
+						<File Id="brotlidec.dll" Name="brotlidec.dll" Source="$(var.JxlDllFolder)\brotlidec.dll" />
+					</Component>
+					<Component Id="jxl_decDLL" Guid="a65bca95-9ddf-476c-88b5-5048a3a9bde6">
+						<File Id="jxl_dec.dll" Name="jxl_dec.dll" Source="$(var.JxlDllFolder)\jxl_dec.dll" />
+					</Component>
+					<Component Id="jxl_threadsDLL" Guid="964ed16e-138a-4419-9c4c-8eb45a04d0f6">
+						<File Id="jxl_threads.dll" Name="jxl_threads.dll" Source="$(var.JxlDllFolder)\jxl_threads.dll" />
+					</Component>
+
+
+					<!-- DLLs required for HEIF/AVIF support -->
+					<Component Id="heifDLL" Guid="46c300a1-229a-45ad-a861-edf53cc97c46">
+						<File Id="heif.dll" Name="heif.dll" Source="$(var.HeifDllFolder)\heif.dll" />
+					</Component>
+					<Component Id="libde265DLL" Guid="c6d43557-f20f-478a-b9e7-a213fca72648">
+						<File Id="libde265.dll" Name="libde265.dll" Source="$(var.HeifDllFolder)\libde265.dll" />
+					</Component>
+
+
 					<Component Id="webpDLL" Guid="43e917db-b269-40bf-81ab-b2d1453b225f">
 						<File Id="webp.dll" Name="webp.dll" Source="$(var.WEBP.TargetDir)webp.dll" />
 					</Component>
@@ -371,9 +411,14 @@
 					<Component Id="KeyMap.txt" Guid="*">
 						<File Id="KeyMap.txt" Name="KeyMap.txt" Source="$(var.JPEGView.TargetDir)KeyMap.txt" />
 					</Component>
+					<Component Id="symbols.km" Guid="*">
+						<File Id="symbols.km" Name="symbols.km" Source="$(var.JPEGView.TargetDir)symbols.km" />
+					</Component>
+					<!--
 					<Component Id="KeyMap_ru.txt" Guid="*">
 						<File Id="KeyMap_ru.txt" Name="KeyMap_ru.txt" Source="$(var.JPEGView.TargetDir)KeyMap_ru.txt" />
 					</Component>
+					-->
 
 					<Component Id="LICENSE.txt" Guid="*">
 						<File Id="LICENSE.txt" Name="LICENSE.txt" Source="$(var.JPEGView.TargetDir)LICENSE.txt" />
@@ -386,6 +431,9 @@
 					</Component>
 					<Component Id="readme_uk.html" Guid="*">
 						<File Id="readme_uk.html" Name="readme_uk.html" Source="$(var.JPEGView.TargetDir)readme_uk.html" />
+					</Component>
+					<Component Id="KeyMap_README.html" Guid="*">
+						<File Id="KeyMap_README.html" Name="KeyMap-README.html" Source="$(var.JPEGView.TargetDir)KeyMap-README.html" />
 					</Component>
 
 

@@ -50,15 +50,15 @@ LRESULT CAboutDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lPara
 
 #ifdef _DEBUG
 #ifdef _WIN64
-	LPCTSTR sTitle = _T("About JPEGView... (Debug version, 64 bit)");
+	LPCTSTR sTitle = _T("About JPEGView (Debug version, 64-bit)...");
 #else
-	LPCTSTR sTitle = _T("About JPEGView... (Debug version, 32 bit)");
+	LPCTSTR sTitle = _T("About JPEGView (Debug version, 32-bit)...");
 #endif
 #else
 #ifdef _WIN64
-	LPCTSTR sTitle = CNLS::GetString(_T("About JPEGView (64 bit version)..."));
+	LPCTSTR sTitle = CNLS::GetString(_T("About JPEGView (64-bit version)..."));
 #else
-	LPCTSTR sTitle = CNLS::GetString(_T("About JPEGView..."));
+	LPCTSTR sTitle = CNLS::GetString(_T("About JPEGView (32-bit version)..."));
 #endif
 #endif
 	this->SetWindowText(sTitle);

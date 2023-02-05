@@ -11,11 +11,14 @@
 #include "BasicProcessing.h"
 #include "dcraw_mod.h"
 #include "TJPEGWrapper.h"
+#ifndef WINXP
 #include "PNGWrapper.h"
 #include "JXLWrapper.h"
 #include "HEIFWrapper.h"
 #include "WEBPWrapper.h"
+#endif
 #include "MaxImageDef.h"
+
 
 using namespace Gdiplus;
 
@@ -99,8 +102,8 @@ static EImageFormat GetImageFormat(LPCTSTR sFileName) {
 		memcmp(header+4, "ftyp", 4) == 0 &&
 		(
 			// https://github.com/strukturag/libheif/issues/83
-			// memcmp(header+8, "avif", 4) == 0 ||
-			// memcmp(header+8, "avis", 4) == 0 ||
+			memcmp(header+8, "avif", 4) == 0 ||
+			memcmp(header+8, "avis", 4) == 0 ||
 			memcmp(header+8, "heic", 4) == 0 ||
 			memcmp(header+8, "heix", 4) == 0 ||
 			memcmp(header+8, "hevc", 4) == 0 ||
@@ -257,18 +260,20 @@ CImageData CImageLoadThread::GetLoadedImage(int nHandle) {
 	Helpers::CAutoCriticalSection criticalSection(m_csList);
 	CJPEGImage* imageFound = NULL;
 	bool bFailedMemory = false;
+	bool bFailedException = false;
 	std::list<CRequestBase*>::iterator iter;
 	for (iter = m_requestList.begin( ); iter != m_requestList.end( ); iter++ ) {
 		CRequest* pRequest = (CRequest*)(*iter);
 		if (pRequest->Processed && pRequest->Deleted == false && pRequest->RequestHandle == nHandle) {
 			imageFound = pRequest->Image;
 			bFailedMemory = pRequest->OutOfMemory;
+			bFailedException = pRequest->ExceptionError;
 			// only mark as deleted
 			pRequest->Deleted = true;
 			break;
 		}
 	}
-	return CImageData(imageFound, bFailedMemory);
+	return CImageData(imageFound, bFailedMemory, bFailedException);
 }
 
 void CImageLoadThread::ReleaseFile(LPCTSTR strFileName) {
@@ -330,6 +335,13 @@ void CImageLoadThread::ProcessRequest(CRequestBase& request) {
 			DeleteCachedJxlDecoder();
 			ProcessReadWEBPRequest(&rq);
 			break;
+#ifndef WINXP
+		case IF_PNG:
+			DeleteCachedGDIBitmap();
+			DeleteCachedWebpDecoder();
+			DeleteCachedJxlDecoder();
+			ProcessReadPNGRequest(&rq);
+			break;
 		case IF_JXL:
 			DeleteCachedGDIBitmap();
 			DeleteCachedWebpDecoder();
@@ -343,6 +355,7 @@ void CImageLoadThread::ProcessRequest(CRequestBase& request) {
 			DeleteCachedJxlDecoder();
 			ProcessReadHEIFRequest(&rq);
 			break;
+#endif
 		case IF_CameraRAW:
 			DeleteCachedGDIBitmap();
 			DeleteCachedWebpDecoder();
@@ -356,12 +369,6 @@ void CImageLoadThread::ProcessRequest(CRequestBase& request) {
 			DeleteCachedPngDecoder();
 			DeleteCachedJxlDecoder();
 			ProcessReadWICRequest(&rq);
-			break;
-		case IF_PNG:
-			DeleteCachedGDIBitmap();
-			DeleteCachedWebpDecoder();
-			DeleteCachedJxlDecoder();
-			ProcessReadPNGRequest(&rq);
 			break;
 		default:
 			// try with GDI+
@@ -422,13 +429,17 @@ void CImageLoadThread::DeleteCachedWebpDecoder() {
 }
 
 void CImageLoadThread::DeleteCachedPngDecoder() {
+#ifndef WINXP
 	PngReader::DeleteCache();
 	m_sLastPngFileName.Empty();
+#endif
 }
 
 void CImageLoadThread::DeleteCachedJxlDecoder() {
+#ifndef WINXP
 	JxlReader::DeleteCache();
 	m_sLastJxlFileName.Empty();
+#endif
 }
 
 void CImageLoadThread::ProcessReadJPEGRequest(CRequest * request) {
@@ -506,80 +517,13 @@ void CImageLoadThread::ProcessReadJPEGRequest(CRequest * request) {
 	} catch (...) {
 		delete request->Image;
 		request->Image = NULL;
+		request->ExceptionError = true;
 	}
 	::CloseHandle(hFile);
 	if (pBuffer) ::GlobalUnlock(hFileBuffer);
 	if (hFileBuffer) ::GlobalFree(hFileBuffer);
 }
 
-void CImageLoadThread::ProcessReadPNGRequest(CRequest* request) {
-	bool bSuccess = false;
-	bool bUseCachedDecoder = false;
-	const wchar_t* sFileName;
-	sFileName = (const wchar_t*)request->FileName;
-	if (sFileName != m_sLastPngFileName) {
-		DeleteCachedPngDecoder();
-	}
-	else {
-		bUseCachedDecoder = true;
-	}
-
-	HANDLE hFile;
-	if (!bUseCachedDecoder) {
-		hFile = ::CreateFile(request->FileName, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, 0, NULL);
-		if (hFile == INVALID_HANDLE_VALUE) {
-			return;
-		}
-	}
-	char* pBuffer = NULL;
-	try {
-		unsigned int nFileSize;
-		unsigned int nNumBytesRead;
-		if (!bUseCachedDecoder) {
-			// Don't read too huge files
-			nFileSize = ::GetFileSize(hFile, NULL);
-			if (nFileSize > MAX_PNG_FILE_SIZE) {
-				::CloseHandle(hFile);
-				return ProcessReadGDIPlusRequest(request);
-			}
-
-			pBuffer = new(std::nothrow) char[nFileSize];
-			if (pBuffer == NULL) {
-				::CloseHandle(hFile);
-				return ProcessReadGDIPlusRequest(request);
-			}
-		} else {
-			nFileSize = 0; // to avoid compiler warnings, not used
-		}
-		if (bUseCachedDecoder || (::ReadFile(hFile, pBuffer, nFileSize, (LPDWORD)&nNumBytesRead, NULL) && nNumBytesRead == nFileSize)) {
-			int nWidth, nHeight, nBPP, nFrameCount, nFrameTimeMs;
-			bool bHasAnimation;
-			uint8* pPixelData = (uint8*)PngReader::ReadImage(nWidth, nHeight, nBPP, bHasAnimation, nFrameCount, nFrameTimeMs, request->OutOfMemory, pBuffer, nFileSize);
-			if (pPixelData != NULL) {
-				if (bHasAnimation)
-					m_sLastPngFileName = sFileName;
-				// Multiply alpha value into each AABBGGRR pixel
-				uint32* pImage32 = (uint32*)pPixelData;
-				for (int i = 0; i < nWidth * nHeight; i++)
-					*pImage32++ = WebpAlphaBlendBackground(*pImage32, CSettingsProvider::This().ColorTransparency());
-
-				request->Image = new CJPEGImage(nWidth, nHeight, pPixelData, NULL, 4, 0, IF_PNG, bHasAnimation, request->FrameIndex, nFrameCount, nFrameTimeMs);
-			} else {
-				DeleteCachedPngDecoder();
-			}
-		}
-		bSuccess = true;
-	} catch (...) {
-		// delete request->Image;
-		// request->Image = NULL;
-	}
-	if (!bUseCachedDecoder) {
-		::CloseHandle(hFile);
-		delete[] pBuffer;
-	}
-	if (!bSuccess)
-		return ProcessReadGDIPlusRequest(request);
-}
 
 void CImageLoadThread::ProcessReadBMPRequest(CRequest * request) {
 	bool bOutOfMemory;
@@ -671,6 +615,80 @@ void CImageLoadThread::ProcessReadWEBPRequest(CRequest * request) {
 	}
 }
 
+#ifndef WINXP
+void CImageLoadThread::ProcessReadPNGRequest(CRequest* request) {
+	bool bSuccess = false;
+	bool bUseCachedDecoder = false;
+	const wchar_t* sFileName;
+	sFileName = (const wchar_t*)request->FileName;
+	if (sFileName != m_sLastPngFileName) {
+		DeleteCachedPngDecoder();
+	}
+	else {
+		bUseCachedDecoder = true;
+	}
+
+	HANDLE hFile;
+	if (!bUseCachedDecoder) {
+		hFile = ::CreateFile(request->FileName, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, 0, NULL);
+		if (hFile == INVALID_HANDLE_VALUE) {
+			return;
+		}
+	}
+	char* pBuffer = NULL;
+	try {
+		unsigned int nFileSize;
+		unsigned int nNumBytesRead;
+		if (!bUseCachedDecoder) {
+			// Don't read too huge files
+			nFileSize = ::GetFileSize(hFile, NULL);
+			if (nFileSize > MAX_PNG_FILE_SIZE) {
+				::CloseHandle(hFile);
+				return ProcessReadGDIPlusRequest(request);
+			}
+
+			pBuffer = new(std::nothrow) char[nFileSize];
+			if (pBuffer == NULL) {
+				::CloseHandle(hFile);
+				return ProcessReadGDIPlusRequest(request);
+			}
+		}
+		else {
+			nFileSize = 0; // to avoid compiler warnings, not used
+		}
+		if (bUseCachedDecoder || (::ReadFile(hFile, pBuffer, nFileSize, (LPDWORD)&nNumBytesRead, NULL) && nNumBytesRead == nFileSize)) {
+			int nWidth, nHeight, nBPP, nFrameCount, nFrameTimeMs;
+			bool bHasAnimation;
+			uint8* pPixelData = (uint8*)PngReader::ReadImage(nWidth, nHeight, nBPP, bHasAnimation, nFrameCount, nFrameTimeMs, request->OutOfMemory, pBuffer, nFileSize);
+			if (pPixelData != NULL) {
+				if (bHasAnimation)
+					m_sLastPngFileName = sFileName;
+				// Multiply alpha value into each AABBGGRR pixel
+				uint32* pImage32 = (uint32*)pPixelData;
+				for (int i = 0; i < nWidth * nHeight; i++)
+					*pImage32++ = WebpAlphaBlendBackground(*pImage32, CSettingsProvider::This().ColorTransparency());
+
+				request->Image = new CJPEGImage(nWidth, nHeight, pPixelData, NULL, 4, 0, IF_PNG, bHasAnimation, request->FrameIndex, nFrameCount, nFrameTimeMs);
+			}
+			else {
+				DeleteCachedPngDecoder();
+			}
+		}
+		bSuccess = true;
+	}
+	catch (...) {
+		// delete request->Image;
+		// request->Image = NULL;
+		request->ExceptionError = true;
+	}
+	if (!bUseCachedDecoder) {
+		::CloseHandle(hFile);
+		delete[] pBuffer;
+	}
+	if (!bSuccess)
+		return ProcessReadGDIPlusRequest(request);
+}
+
 void CImageLoadThread::ProcessReadJXLRequest(CRequest* request) {
 	bool bUseCachedDecoder = false;
 	const wchar_t* sFileName;
@@ -730,6 +748,7 @@ void CImageLoadThread::ProcessReadJXLRequest(CRequest* request) {
 	catch (...) {
 		delete request->Image;
 		request->Image = NULL;
+		request->ExceptionError = true;
 	}
 	SetErrorMode(nPrevErrorMode);
 	if (!bUseCachedDecoder) {
@@ -745,6 +764,7 @@ void CImageLoadThread::ProcessReadHEIFRequest(CRequest* request) {
 		return;
 	}
 	char* pBuffer = NULL;
+	UINT nPrevErrorMode = SetErrorMode(SEM_FAILCRITICALERRORS);
 	try {
 		unsigned int nFileSize = 0;
 		unsigned int nNumBytesRead;
@@ -776,14 +796,20 @@ void CImageLoadThread::ProcessReadHEIFRequest(CRequest* request) {
 				request->Image = new CJPEGImage(nWidth, nHeight, pPixelData, NULL, nBPP, 0, IF_HEIF, false, request->FrameIndex, nFrameCount, nFrameTimeMs);
 			}
 		}
-	}
-	catch (...) {
+	} catch(heif::Error he) {
+		// invalid image
 		delete request->Image;
 		request->Image = NULL;
+	} catch (...) {
+		delete request->Image;
+		request->Image = NULL;
+		request->ExceptionError = true;
 	}
+	SetErrorMode(nPrevErrorMode);
 	::CloseHandle(hFile);
 	delete[] pBuffer;
 }
+#endif
 
 void CImageLoadThread::ProcessReadRAWRequest(CRequest * request) {
 	bool bOutOfMemory = false;

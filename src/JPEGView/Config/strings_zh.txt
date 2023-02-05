@@ -4,6 +4,7 @@
 //Translation Info
 //Translator:风逸兰
 //Update:2021/06/28 补全翻译，调整部分原有翻译使其更符合简体中文阅读习惯 by dunkeng
+//Update:2022/10/17 by mowumo
 
 Contrast	对比度
 Brightness	亮度
@@ -112,6 +113,7 @@ Rotate the following file lossless by 90 deg?\n%filename%	您想要以下文件�
 Rotate the following file lossless by 270 deg?\n%filename%	您想要以下文件无损旋转 270 度吗?\n%filename%
 Open image...	打开图片...
 Save processed image...	保存处理后的图片...
+Open containing folder in Explorer	打开图片所在文件夹
 Reload image	重新加载图片
 Copy to clipboard	复制到剪贴板
 Copy original size image	复制原始大小图片
@@ -394,7 +396,7 @@ Printer:	打印机:
 Paper:	纸张大小:
 Source:	纸张来源:
 Orientation:	纸张方向:
-Portrait	坚
+Portrait	竖
 Landscape	横
 Size:	大小:
 Fit to paper	适应纸张大小
