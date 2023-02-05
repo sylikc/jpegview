@@ -41,7 +41,8 @@ runs:
         # append ${{ github.sha }} if you want to rebuild for every commit
         key: ${{ runner.os }}-build-${{ inputs.cache-name }}-${{ hashFiles('.gitmodules') }}
         path: |
-          src/WEBP/lib/lib*.lib
+          src/JPEGView/libwebp/lib/*.lib
+          src/JPEGView/libwebp/lib64/*.lib
 
           src/JPEGView/libjpeg-turbo/lib/*.lib
           src/JPEGView/libjpeg-turbo/lib64/*.lib
