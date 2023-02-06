@@ -117,7 +117,7 @@ LRESULT CPrintDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lPara
 	m_lblSize.SetWindowText(CNLS::GetString(_T("Size:")));
 	m_rbFitToPaper.SetWindowText(CNLS::GetString(_T("Fit to paper")));
 	m_rbFillWithCrop.SetWindowText(CNLS::GetString(_T("Fill paper with crop")));
-	m_lblCM.SetWindowText(m_useInches ? _T("in") : CNLS::GetString(_T("cm")));
+	m_lblCM.SetWindowText(m_useInches ? CNLS::GetString(_T("in")) : CNLS::GetString(_T("cm")));
 	m_lblScalingMode.SetWindowText(CNLS::GetString(_T("Scaling mode:")));
 	m_rbScalingModePrinterDriver.SetWindowText(CNLS::GetString(_T("Printer driver")));
 	m_lblAlignment.SetWindowText(CNLS::GetString(_T("Alignment:")));
@@ -126,8 +126,8 @@ LRESULT CPrintDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lPara
 	m_lblRight.SetWindowText(CNLS::GetString(_T("Right")));
 	m_lblTop.SetWindowText(CNLS::GetString(_T("Top")));
 	m_lblBottom.SetWindowText(CNLS::GetString(_T("Bottom")));
-	m_lblCM2.SetWindowText(m_useInches ? _T("in") : CNLS::GetString(_T("cm")));
-	m_lblCM3.SetWindowText(m_useInches ? _T("in") : CNLS::GetString(_T("cm")));
+	m_lblCM2.SetWindowText(m_useInches ? CNLS::GetString(_T("in")) : CNLS::GetString(_T("cm")));
+	m_lblCM3.SetWindowText(m_useInches ? CNLS::GetString(_T("in")) : CNLS::GetString(_T("cm")));
 
 	m_edtWidth.SetLimitText(6);
 	m_edtHeight.SetLimitText(6);

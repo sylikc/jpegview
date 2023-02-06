@@ -49,6 +49,7 @@ LRESULT CAboutDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lPara
 	SetIcon(hIconSmall, FALSE);
 
 #ifdef _DEBUG
+	// the debug version does not require localized title strings
 #ifdef _WIN64
 	LPCTSTR sTitle = _T("About JPEGView (Debug version, 64-bit)...");
 #else
