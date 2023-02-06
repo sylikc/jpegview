@@ -98,7 +98,7 @@ runs:
       run: call extras\scripts\build-libheif.bat
 
     # put this last since it takes the longest to build
-    - name: libjpxl
+    - name: libjxl
       if: ${{ steps.cache-bin.outputs.cache-hit != 'true' }}
       shell: cmd
       run: call extras\scripts\build-libjxl.bat
