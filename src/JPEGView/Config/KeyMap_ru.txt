@@ -7,7 +7,7 @@
 //TranslatorName=Dmitry Yerokhin
 //Contact=erodim@mail.ru
 //TranslatorURL=none
-//LastUpdated=Jan 11, 2018
+//LastUpdated=Jan 29, 2023
 
 // Этот раздел содержит определения команд JPEGView - НЕ ИЗМЕНЯЙТЕ ЕГО!
 #define IDM_DONOTHING		1			// ничего не делать (можно использовать для отключения стандартной команды по нажатию кнопки мыши)
@@ -77,8 +77,8 @@
 #define IDM_FIT_WINDOW_TO_IMAGE	12005			// вкл./выкл. автоподгонку окна по изображению (избегая чёрные поля)
 #define IDM_SPAN_SCREENS	12010			// распределить по всем экранам
 #define IDM_FULL_SCREEN_MODE 	12011			// вкл./выкл. полноэкранный режим
-#define IDM_HIDE_TITLE_BAR		12012			//
-#define IDM_ALWAYS_ON_TOP		12013			//
+#define IDM_HIDE_TITLE_BAR	12012			// вкл./выкл. скрытие строки заголовка окна (внимание: в этом режиме нельзя вручную изменять размер окна)
+#define IDM_ALWAYS_ON_TOP	12013			// вкл./выкл. режим вывода окна поверх остальных окон
 #define IDM_ZOOM_400        	12020			// масштабировать до 400%
 #define IDM_ZOOM_200		12030			// масштабировать до 200%
 #define IDM_ZOOM_100		12040			// масштабировать до 100%
@@ -122,6 +122,8 @@
 #define IDM_SHARPEN_INC		15300			// усилить резкость
 #define IDM_SHARPEN_DEC		15301			// ослабить резкость
 #define IDM_CONTEXT_MENU	16000			// показать контекстное меню
+// popup dialogs
+#define IDM_CHANGESIZE		9120			// открыть диалоговое окно JPEGView: Преобразование изображения > Изменить размер...
 
 // Раздел ниже содержит назначения клавиш.
 // Некоторые клавиши предопределены и не могут быть переназначены:
@@ -143,8 +145,10 @@
 //Esc			IDM_EXIT
 PgDn			IDM_NEXT
 Right			IDM_NEXT
+Space			IDM_NEXT
 Left			IDM_PREV
 PgUp			IDM_PREV
+Back			IDM_PREV
 Ctrl+Left		IDM_TOGGLE
 Ctrl+Right		IDM_TOGGLE
 Home			IDM_FIRST
@@ -177,15 +181,15 @@ F7			IDM_LOOP_FOLDER
 F8			IDM_LOOP_RECURSIVELY
 F9			IDM_LOOP_SIBLINGS
 F11			IDM_FULL_SCREEN_MODE
-Shift+F11		IDM_HIDE_TITLE_BAR
+Shift+F11               IDM_HIDE_TITLE_BAR
 Ctrl+F11		IDM_FIT_WINDOW_TO_IMAGE
 F12			IDM_SPAN_SCREENS
 Ctrl+F12		IDM_TOGGLE_MONITOR
-Space			IDM_TOGGLE_FIT_TO_SCREEN_100_PERCENTS
+Div			IDM_TOGGLE_FIT_TO_SCREEN_100_PERCENTS
 Return			IDM_FIT_TO_SCREEN
 Ctrl+Return		IDM_FILL_WITH_CROP
-Down		IDM_ROTATE_90
-Up			IDM_ROTATE_270
+Alt+Down		IDM_ROTATE_90
+Alt+Up			IDM_ROTATE_270
 Shift+Up		IDM_PAN_UP
 Shift+Down		IDM_PAN_DOWN
 Shift+Left		IDM_PAN_LEFT
@@ -194,7 +198,7 @@ Ctrl+Down		IDM_ZOOM_DEC
 Ctrl+Up			IDM_ZOOM_INC
 Ctrl+A			IDM_EXCHANGE_PROC_PARAMS
 Ctrl+C			IDM_COPY
-Ctrl+Shift+C	IDM_COPY_PATH
+Ctrl+Shift+C		IDM_COPY_PATH
 C			IDM_SORT_CREATION_DATE
 Ctrl+N			IDM_SHOW_NAVPANEL
 N			IDM_SORT_NAME
