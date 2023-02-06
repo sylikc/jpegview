@@ -3,8 +3,455 @@
     <title>
         JPEGView - KeyMap.txt README
     </title>
-</head>
-<body>
+    <style>
+.IDM_DONOTHING:before {
+  content: "do nothing (can be used to disable a standard command for a mouse button)"
+}
+
+.IDM_MINIMIZE:before {
+  content: "minimize window"
+}
+
+.IDM_OPEN:before {
+  content: "open file"
+}
+
+.IDM_EXPLORE:before {
+  content: "open and select file in Explorer"
+}
+
+.IDM_SAVE:before {
+  content: "save to file in original size, don't allow override without prompt"
+}
+
+.IDM_SAVE_SCREEN:before {
+  content: "save to file in screen size"
+}
+
+.IDM_SAVE_ALLOW_NO_PROMPT:before {
+  content: "save to file in original size, allow override without prompt when enabled in INI"
+}
+
+.IDM_RELOAD:before {
+  content: "reload image"
+}
+
+.IDM_PRINT:before {
+  content: "print image"
+}
+
+.IDM_COPY:before {
+  content: "copy image to clipboard in screen size"
+}
+
+.IDM_COPY_FULL:before {
+  content: "copy image to clipboard in original size"
+}
+
+.IDM_COPY_PATH:before {
+  content: "copy image path to clipboard"
+}
+
+.IDM_PASTE:before {
+  content: "paste image from clipboard"
+}
+
+.IDM_BATCH_COPY:before {
+  content: "open batch copy dialog"
+}
+
+.IDM_RENAME:before {
+  content: "rename current file, only works when image processing panel can be shown (i.e. panel not disabled in INI and window size is big enough)"
+}
+
+.IDM_MOVE_TO_RECYCLE_BIN:before {
+  content: "delete the current file on disk - no confirmation (by moving it to the recycle bin)"
+}
+
+.IDM_MOVE_TO_RECYCLE_BIN_CONFIRM:before {
+  content: "delete the current file on disk - with user confirmation (by moving it to the recycle bin)"
+}
+
+.IDM_MOVE_TO_RECYCLE_BIN_CONFIRM_PERMANENT_DELETE:before {
+  content: "delete the current file on disk - confirmation when no recycle bin for this drive"
+}
+
+.IDM_TOUCH_IMAGE:before {
+  content: "set modification time to current time"
+}
+
+.IDM_TOUCH_IMAGE_EXIF:before {
+  content: "set modification time to EXIF time"
+}
+
+.IDM_TOUCH_IMAGE_EXIF_FOLDER:before {
+  content: "set modification time to EXIF time for all images in folder"
+}
+
+.IDM_SET_WALLPAPER_ORIG:before {
+  content: "Set original image file as desktop wallpaper"
+}
+
+.IDM_SET_WALLPAPER_DISPLAY:before {
+  content: "Set image as displayed as desktop wallpaper"
+}
+
+.IDM_SHOW_FILEINFO:before {
+  content: "toggle show file and EXIF info box in top, left corner"
+}
+
+.IDM_SHOW_FILENAME:before {
+  content: "toggle show file name on top of screen"
+}
+
+.IDM_SHOW_NAVPANEL:before {
+  content: "toggle show navigation panel"
+}
+
+.IDM_NEXT:before {
+  content: "go to next image"
+}
+
+.IDM_PREV:before {
+  content: "go to previous image"
+}
+
+.IDM_FIRST:before {
+  content: "go to first image"
+}
+
+.IDM_LAST:before {
+  content: "go to last image"
+}
+
+.IDM_LOOP_FOLDER:before {
+  content: "set navigation mode loop through folder"
+}
+
+.IDM_LOOP_RECURSIVELY:before {
+  content: "set navigation mode loop through folder and subfolders"
+}
+
+.IDM_LOOP_SIBLINGS:before {
+  content: "set navigation mode loop through folders on same level"
+}
+
+.IDM_SORT_MOD_DATE:before {
+  content: "sorting order by modification date"
+}
+
+.IDM_SORT_CREATION_DATE:before {
+  content: "sorting order by creation date"
+}
+
+.IDM_SORT_NAME:before {
+  content: "sorting order by name"
+}
+
+.IDM_SORT_RANDOM:before {
+  content: "sorting order random"
+}
+
+.IDM_SORT_SIZE:before {
+  content: "sorting order file size in bytes"
+}
+
+.IDM_SORT_UPCOUNTING:before {
+  content: "sort upcounting (ascending)"
+}
+
+.IDM_SORT_DOWNCOUNTING:before {
+  content: "sort downcounting (descending)"
+}
+
+.IDM_SLIDESHOW_RESUME:before {
+  content: "resume slide show (after stop)"
+}
+
+.IDM_ROTATE_90:before {
+  content: "rotate image 90 deg"
+}
+
+.IDM_ROTATE_270:before {
+  content: "rotate image 270 deg"
+}
+
+.IDM_ROTATE:before {
+  content: "show free rotation dialog"
+}
+
+.IDM_CHANGESIZE:before {
+  content: "show dialog to change size of image"
+}
+
+.IDM_PERSPECTIVE:before {
+  content: "show perpective correction dialog"
+}
+
+.IDM_MIRROR_H:before {
+  content: "mirror image horizontally"
+}
+
+.IDM_MIRROR_V:before {
+  content: "mirror image vertically"
+}
+
+.IDM_ROTATE_90_LOSSLESS:before {
+  content: "Lossless JPEG transformation: rotate image 90 deg"
+}
+
+.IDM_ROTATE_90_LOSSLESS_CONFIRM:before {
+  content: "Lossless JPEG transformation: rotate image 90 deg with user confirmation"
+}
+
+.IDM_ROTATE_270_LOSSLESS:before {
+  content: "Lossless JPEG transformation: rotate image 270 deg"
+}
+
+.IDM_ROTATE_270_LOSSLESS_CONFIRM:before {
+  content: "Lossless JPEG transformation: rotate image 270 deg with user confirmation"
+}
+
+.IDM_ROTATE_180_LOSSLESS:before {
+  content: "Lossless JPEG transformation: rotate image 180 deg"
+}
+
+.IDM_MIRROR_H_LOSSLESS:before {
+  content: "Lossless JPEG transformation: mirror image horizontally"
+}
+
+.IDM_MIRROR_V_LOSSLESS:before {
+  content: "Lossless JPEG transformation: mirror image vertically"
+}
+
+.IDM_AUTO_CORRECTION:before {
+  content: "toggle auto color and contrast correction"
+}
+
+.IDM_AUTO_CORRECTION_SECTION:before {
+  content: "auto contrast correction on visible section only"
+}
+
+.IDM_LDC:before {
+  content: "toggle local density correction (lighten shadows, darken highlights)"
+}
+
+.IDM_LANDSCAPE_MODE:before {
+  content: "toogle landscape picture enhancement mode"
+}
+
+.IDM_KEEP_PARAMETERS:before {
+  content: "toogle keep parameters between images"
+}
+
+.IDM_SAVE_PARAMETERS:before {
+  content: "save to parameter DB"
+}
+
+.IDM_SAVE_PARAM_DB:before {
+  content: "delete from parameter DB"
+}
+
+.IDM_FIT_TO_SCREEN:before {
+  content: "fit image to screen"
+}
+
+.IDM_FILL_WITH_CROP:before {
+  content: "fit image to fill screen with crop"
+}
+
+.IDM_FIT_WINDOW_TO_IMAGE:before {
+  content: "toggle fit window automatically to image, avoiding black borders"
+}
+
+.IDM_SPAN_SCREENS:before {
+  content: "span over all screens"
+}
+
+.IDM_TOGGLE_MONITOR:before {
+  content: "move to other monitor"
+}
+
+.IDM_FULL_SCREEN_MODE:before {
+  content: "toggle full screen mode"
+}
+
+.IDM_HIDE_TITLE_BAR:before {
+  content: "toggle hiding window title bar.  Note: in this mode, the window can't be manually resized"
+}
+
+.IDM_ALWAYS_ON_TOP:before {
+  content: "toggle window mode to always on top"
+}
+
+.IDM_ZOOM_400:before {
+  content: "zoom to 400 %"
+}
+
+.IDM_ZOOM_200:before {
+  content: "zoom to 200 %"
+}
+
+.IDM_ZOOM_100:before {
+  content: "zoom to 100 %"
+}
+
+.IDM_ZOOM_50:before {
+  content: "zoom to 50 %"
+}
+
+.IDM_ZOOM_25:before {
+  content: "zoom to 25 %"
+}
+
+.IDM_ZOOM_INC:before {
+  content: "zoom in"
+}
+
+.IDM_ZOOM_DEC:before {
+  content: "zoom out"
+}
+
+.IDM_AUTO_ZOOM_FIT_NO_ZOOM:before {
+  content: "set auto zoom mode fit to screen, never zoom"
+}
+
+.IDM_AUTO_ZOOM_FILL_NO_ZOOM:before {
+  content: "set auto zoom mode fill screen, never zoom"
+}
+
+.IDM_AUTO_ZOOM_FIT:before {
+  content: "set auto zoom mode fit to screen"
+}
+
+.IDM_AUTO_ZOOM_FILL:before {
+  content: "set auto zoom mode fill screen"
+}
+
+.IDM_EDIT_GLOBAL_CONFIG:before {
+  content: "edit global configuration"
+}
+
+.IDM_EDIT_USER_CONFIG:before {
+  content: "edit user configuration"
+}
+
+.IDM_BACKUP_PARAMDB:before {
+  content: "backup parameter DB"
+}
+
+.IDM_RESTORE_PARAMDB:before {
+  content: "restore parameter DB"
+}
+
+.IDM_ABOUT:before {
+  content: "show about box"
+}
+
+.IDM_EXIT:before {
+  content: "exit JPEGView application"
+}
+
+.IDM_TOGGLE:before {
+  content: "toggle between marked image and current image"
+}
+
+.IDM_MARK_FOR_TOGGLE:before {
+  content: "mark current image for toggling"
+}
+
+.IDM_COLOR_CORRECTION_INC:before {
+  content: "increase color correction amount"
+}
+
+.IDM_COLOR_CORRECTION_DEC:before {
+  content: "decrease color correction amount"
+}
+
+.IDM_CONTRAST_CORRECTION_INC:before {
+  content: "increase contrast correction amount"
+}
+
+.IDM_CONTRAST_CORRECTION_DEC:before {
+  content: "decrease contrast correction amount"
+}
+
+.IDM_CONTRAST_INC:before {
+  content: "increase contrast"
+}
+
+.IDM_CONTRAST_DEC:before {
+  content: "decrease contrast"
+}
+
+.IDM_GAMMA_INC:before {
+  content: "increase gamma (brightness)"
+}
+
+.IDM_GAMMA_DEC:before {
+  content: "decrease gamma (brightness)"
+}
+
+.IDM_LDC_SHADOWS_INC:before {
+  content: "increase lighting shadows"
+}
+
+.IDM_LDC_SHADOWS_DEC:before {
+  content: "decrease lighting shadows"
+}
+
+.IDM_LDC_HIGHLIGHTS_INC:before {
+  content: "increase darken highlights"
+}
+
+.IDM_LDC_HIGHLIGHTS_DEC:before {
+  content: "decrease darken highlights"
+}
+
+.IDM_SHARPEN_INC:before {
+  content: "increase sharpness"
+}
+
+.IDM_SHARPEN_DEC:before {
+  content: "decrease sharpness"
+}
+
+.IDM_TOGGLE_RESAMPLING_QUALITY:before {
+  content: "toggle resampling quality (between point sampling and filtering)"
+}
+
+.IDM_TOGGLE_FIT_TO_SCREEN_100_PERCENTS:before {
+  content: "toggle between fit to screen and 100 % zoom"
+}
+
+.IDM_TOGGLE_FILL_WITH_CROP_100_PERCENTS:before {
+  content: "toggle between fill with crop and 100 % zoom"
+}
+
+.IDM_EXCHANGE_PROC_PARAMS:before {
+  content: "toggle between two sets of image processing parameters"
+}
+
+.IDM_PAN_UP:before {
+  content: "pan up"
+}
+
+.IDM_PAN_DOWN:before {
+  content: "pan down"
+}
+
+.IDM_PAN_RIGHT:before {
+  content: "pan right"
+}
+
+.IDM_PAN_LEFT:before {
+  content: "pan left"
+}
+
+.IDM_CONTEXT_MENU:before {
+  content: "display context menu"
+}
+</style></head><body>
 
 <header>
     <h1>
@@ -18,9 +465,9 @@ JPEGView allows customizing what each key and key combination will do.
     Translator Credits
 </h2>
 Language: English<br />
-TranslatorName: <br />
-Contact: <br />
-LastUpdated: 31-JAN-2023<br />
+Translator Name(s): <br />
+Contact(s): <br />
+Last Updated: 31-JAN-2023<br />
 
 <h1>
     Basics
@@ -89,7 +536,7 @@ but not with other keys or other mouse buttons.
 </h2>
 
 <p>
-    NOTE: Mapping multiple keys to the same command is allowed, but not multiple commands to the same key
+    Mapping multiple keys to the same command is allowed, but not multiple commands to the same key
 </p>
 
 <p><b>
@@ -108,20 +555,20 @@ but not with other keys or other mouse buttons.
 
 <p>
     <b>
-        NOTE: THIS LIST WAS AUTO-GENERATED FROM SOURCE
+        NOTE: THIS LIST WAS AUTO-GENERATED
     </b>
     <br />
     <i>
-        -- LastUpdated: 2023-02-01T17:47:55.625362+00:00
+        -- Last Updated: 2023-02-06T02:53:39.869277+00:00
     </i>
 </p>
 
-<p><i>
-    (JPEGView does not read this file, it's for documentation only)
-</i></p>
+<!--
 <p><i>
     (Devs: see "extras\scripts" for more info.)
 </i></p>
+-->
+
 
 
 <table border="1">
@@ -137,672 +584,673 @@ but not with other keys or other mouse buttons.
 
   <tr><td>IDM_DONOTHING</td>
     <td>
-      do nothing (can be used to disable a standard command for a mouse button)
+      <span class="IDM_DONOTHING" />
     </td>
   </tr>
 
   <tr><td>IDM_MINIMIZE</td>
     <td>
-      minimize window
+      <span class="IDM_MINIMIZE" />
     </td>
   </tr>
 
   <tr><td>IDM_OPEN</td>
     <td>
-      open file
+      <span class="IDM_OPEN" />
     </td>
   </tr>
 
   <tr><td>IDM_EXPLORE</td>
     <td>
-      open and select file in Explorer
+      <span class="IDM_EXPLORE" />
     </td>
   </tr>
 
   <tr><td>IDM_SAVE</td>
     <td>
-      save to file in original size, don't allow override without prompt
+      <span class="IDM_SAVE" />
     </td>
   </tr>
 
   <tr><td>IDM_SAVE_SCREEN</td>
     <td>
-      save to file in screen size
+      <span class="IDM_SAVE_SCREEN" />
     </td>
   </tr>
 
   <tr><td>IDM_SAVE_ALLOW_NO_PROMPT</td>
     <td>
-      save to file in original size, allow override without prompt when enabled in INI
+      <span class="IDM_SAVE_ALLOW_NO_PROMPT" />
     </td>
   </tr>
 
   <tr><td>IDM_RELOAD</td>
     <td>
-      reload image
+      <span class="IDM_RELOAD" />
     </td>
   </tr>
 
   <tr><td>IDM_PRINT</td>
     <td>
-      print image
+      <span class="IDM_PRINT" />
     </td>
   </tr>
 
   <tr><td>IDM_COPY</td>
     <td>
-      copy image to clipboard in screen size
+      <span class="IDM_COPY" />
     </td>
   </tr>
 
   <tr><td>IDM_COPY_FULL</td>
     <td>
-      copy image to clipboard in original size
+      <span class="IDM_COPY_FULL" />
     </td>
   </tr>
 
   <tr><td>IDM_COPY_PATH</td>
     <td>
-      copy image path to clipboard
+      <span class="IDM_COPY_PATH" />
     </td>
   </tr>
 
   <tr><td>IDM_PASTE</td>
     <td>
-      paste image from clipboard
+      <span class="IDM_PASTE" />
     </td>
   </tr>
 
   <tr><td>IDM_BATCH_COPY</td>
     <td>
-      open batch copy dialog
+      <span class="IDM_BATCH_COPY" />
     </td>
   </tr>
 
   <tr><td>IDM_RENAME</td>
     <td>
-      rename current file, only works when image processing panel can be shown (i.e. panel not disabled in INI and window size is big enough)
+      <span class="IDM_RENAME" />
     </td>
   </tr>
 
   <tr><td>IDM_MOVE_TO_RECYCLE_BIN</td>
     <td>
-      delete the current file on disk - no confirmation (by moving it to the recycle bin)
+      <span class="IDM_MOVE_TO_RECYCLE_BIN" />
     </td>
   </tr>
 
   <tr><td>IDM_MOVE_TO_RECYCLE_BIN_CONFIRM</td>
     <td>
-      delete the current file on disk - with user confirmation (by moving it to the recycle bin)
+      <span class="IDM_MOVE_TO_RECYCLE_BIN_CONFIRM" />
     </td>
   </tr>
 
   <tr><td>IDM_MOVE_TO_RECYCLE_BIN_CONFIRM_PERMANENT_DELETE</td>
     <td>
-      delete the current file on disk - confirmation when no recycle bin for this drive
+      <span class="IDM_MOVE_TO_RECYCLE_BIN_CONFIRM_PERMANENT_DELETE" />
     </td>
   </tr>
 
   <tr><td>IDM_TOUCH_IMAGE</td>
     <td>
-      set modification time to current time
+      <span class="IDM_TOUCH_IMAGE" />
     </td>
   </tr>
 
   <tr><td>IDM_TOUCH_IMAGE_EXIF</td>
     <td>
-      set modification time to EXIF time
+      <span class="IDM_TOUCH_IMAGE_EXIF" />
     </td>
   </tr>
 
   <tr><td>IDM_TOUCH_IMAGE_EXIF_FOLDER</td>
     <td>
-      set modification time to EXIF time for all images in folder
+      <span class="IDM_TOUCH_IMAGE_EXIF_FOLDER" />
     </td>
   </tr>
 
   <tr><td>IDM_SET_WALLPAPER_ORIG</td>
     <td>
-      Set original image file as desktop wallpaper
+      <span class="IDM_SET_WALLPAPER_ORIG" />
     </td>
   </tr>
 
   <tr><td>IDM_SET_WALLPAPER_DISPLAY</td>
     <td>
-      Set image as displayed as desktop wallpaper
+      <span class="IDM_SET_WALLPAPER_DISPLAY" />
     </td>
   </tr>
 
   <tr><td>IDM_SHOW_FILEINFO</td>
     <td>
-      toggle show file and EXIF info box in top, left corner
+      <span class="IDM_SHOW_FILEINFO" />
     </td>
   </tr>
 
   <tr><td>IDM_SHOW_FILENAME</td>
     <td>
-      toggle show file name on top of screen
+      <span class="IDM_SHOW_FILENAME" />
     </td>
   </tr>
 
   <tr><td>IDM_SHOW_NAVPANEL</td>
     <td>
-      toggle show navigation panel
+      <span class="IDM_SHOW_NAVPANEL" />
     </td>
   </tr>
 
   <tr><td>IDM_NEXT</td>
     <td>
-      go to next image
+      <span class="IDM_NEXT" />
     </td>
   </tr>
 
   <tr><td>IDM_PREV</td>
     <td>
-      go to previous image
+      <span class="IDM_PREV" />
     </td>
   </tr>
 
   <tr><td>IDM_FIRST</td>
     <td>
-      go to first image
+      <span class="IDM_FIRST" />
     </td>
   </tr>
 
   <tr><td>IDM_LAST</td>
     <td>
-      go to last image
+      <span class="IDM_LAST" />
     </td>
   </tr>
 
   <tr><td>IDM_LOOP_FOLDER</td>
     <td>
-      set navigation mode loop through folder
+      <span class="IDM_LOOP_FOLDER" />
     </td>
   </tr>
 
   <tr><td>IDM_LOOP_RECURSIVELY</td>
     <td>
-      set navigation mode loop through folder and subfolders
+      <span class="IDM_LOOP_RECURSIVELY" />
     </td>
   </tr>
 
   <tr><td>IDM_LOOP_SIBLINGS</td>
     <td>
-      set navigation mode loop through folders on same level
+      <span class="IDM_LOOP_SIBLINGS" />
     </td>
   </tr>
 
   <tr><td>IDM_SORT_MOD_DATE</td>
     <td>
-      sorting order by modification date
+      <span class="IDM_SORT_MOD_DATE" />
     </td>
   </tr>
 
   <tr><td>IDM_SORT_CREATION_DATE</td>
     <td>
-      sorting order by creation date
+      <span class="IDM_SORT_CREATION_DATE" />
     </td>
   </tr>
 
   <tr><td>IDM_SORT_NAME</td>
     <td>
-      sorting order by name
+      <span class="IDM_SORT_NAME" />
     </td>
   </tr>
 
   <tr><td>IDM_SORT_RANDOM</td>
     <td>
-      sorting order random
+      <span class="IDM_SORT_RANDOM" />
     </td>
   </tr>
 
   <tr><td>IDM_SORT_SIZE</td>
     <td>
-      sorting order file size in bytes
+      <span class="IDM_SORT_SIZE" />
     </td>
   </tr>
 
   <tr><td>IDM_SORT_UPCOUNTING</td>
     <td>
-      sort upcounting (ascending)
+      <span class="IDM_SORT_UPCOUNTING" />
     </td>
   </tr>
 
   <tr><td>IDM_SORT_DOWNCOUNTING</td>
     <td>
-      sort downcounting (descending)
+      <span class="IDM_SORT_DOWNCOUNTING" />
     </td>
   </tr>
 
   <tr><td>IDM_SLIDESHOW_RESUME</td>
     <td>
-      resume slide show (after stop)
+      <span class="IDM_SLIDESHOW_RESUME" />
     </td>
   </tr>
 
   <tr><td>IDM_ROTATE_90</td>
     <td>
-      rotate image 90 deg
+      <span class="IDM_ROTATE_90" />
     </td>
   </tr>
 
   <tr><td>IDM_ROTATE_270</td>
     <td>
-      rotate image 270 deg
+      <span class="IDM_ROTATE_270" />
     </td>
   </tr>
 
   <tr><td>IDM_ROTATE</td>
     <td>
-      show free rotation dialog
+      <span class="IDM_ROTATE" />
     </td>
   </tr>
 
   <tr><td>IDM_CHANGESIZE</td>
     <td>
-      show dialog to change size of image
+      <span class="IDM_CHANGESIZE" />
     </td>
   </tr>
 
   <tr><td>IDM_PERSPECTIVE</td>
     <td>
-      show perpective correction dialog
+      <span class="IDM_PERSPECTIVE" />
     </td>
   </tr>
 
   <tr><td>IDM_MIRROR_H</td>
     <td>
-      mirror image horizontally
+      <span class="IDM_MIRROR_H" />
     </td>
   </tr>
 
   <tr><td>IDM_MIRROR_V</td>
     <td>
-      mirror image vertically
+      <span class="IDM_MIRROR_V" />
     </td>
   </tr>
 
   <tr><td>IDM_ROTATE_90_LOSSLESS</td>
     <td>
-      Lossless JPEG transformation: rotate image 90 deg
+      <span class="IDM_ROTATE_90_LOSSLESS" />
     </td>
   </tr>
 
   <tr><td>IDM_ROTATE_90_LOSSLESS_CONFIRM</td>
     <td>
-      Lossless JPEG transformation: rotate image 90 deg with user confirmation
+      <span class="IDM_ROTATE_90_LOSSLESS_CONFIRM" />
     </td>
   </tr>
 
   <tr><td>IDM_ROTATE_270_LOSSLESS</td>
     <td>
-      Lossless JPEG transformation: rotate image 270 deg
+      <span class="IDM_ROTATE_270_LOSSLESS" />
     </td>
   </tr>
 
   <tr><td>IDM_ROTATE_270_LOSSLESS_CONFIRM</td>
     <td>
-      Lossless JPEG transformation: rotate image 270 deg with user confirmation
+      <span class="IDM_ROTATE_270_LOSSLESS_CONFIRM" />
     </td>
   </tr>
 
   <tr><td>IDM_ROTATE_180_LOSSLESS</td>
     <td>
-      Lossless JPEG transformation: rotate image 180 deg
+      <span class="IDM_ROTATE_180_LOSSLESS" />
     </td>
   </tr>
 
   <tr><td>IDM_MIRROR_H_LOSSLESS</td>
     <td>
-      Lossless JPEG transformation: mirror image horizontally
+      <span class="IDM_MIRROR_H_LOSSLESS" />
     </td>
   </tr>
 
   <tr><td>IDM_MIRROR_V_LOSSLESS</td>
     <td>
-      Lossless JPEG transformation: mirror image vertically
+      <span class="IDM_MIRROR_V_LOSSLESS" />
     </td>
   </tr>
 
   <tr><td>IDM_AUTO_CORRECTION</td>
     <td>
-      toggle auto color and contrast correction
+      <span class="IDM_AUTO_CORRECTION" />
     </td>
   </tr>
 
   <tr><td>IDM_AUTO_CORRECTION_SECTION</td>
     <td>
-      auto contrast correction on visible section only
+      <span class="IDM_AUTO_CORRECTION_SECTION" />
     </td>
   </tr>
 
   <tr><td>IDM_LDC</td>
     <td>
-      toggle local density correction (lighten shadows, darken highlights)
+      <span class="IDM_LDC" />
     </td>
   </tr>
 
   <tr><td>IDM_LANDSCAPE_MODE</td>
     <td>
-      toogle landscape picture enhancement mode
+      <span class="IDM_LANDSCAPE_MODE" />
     </td>
   </tr>
 
   <tr><td>IDM_KEEP_PARAMETERS</td>
     <td>
-      toogle keep parameters between images
+      <span class="IDM_KEEP_PARAMETERS" />
     </td>
   </tr>
 
   <tr><td>IDM_SAVE_PARAMETERS</td>
     <td>
-      save to parameter DB
+      <span class="IDM_SAVE_PARAMETERS" />
     </td>
   </tr>
 
   <tr><td>IDM_SAVE_PARAM_DB</td>
     <td>
-      delete from parameter DB
+      <span class="IDM_SAVE_PARAM_DB" />
     </td>
   </tr>
 
   <tr><td>IDM_FIT_TO_SCREEN</td>
     <td>
-      fit image to screen
+      <span class="IDM_FIT_TO_SCREEN" />
     </td>
   </tr>
 
   <tr><td>IDM_FILL_WITH_CROP</td>
     <td>
-      fit image to fill screen with crop
+      <span class="IDM_FILL_WITH_CROP" />
     </td>
   </tr>
 
   <tr><td>IDM_FIT_WINDOW_TO_IMAGE</td>
     <td>
-      toggle fit window automatically to image, avoiding black borders
+      <span class="IDM_FIT_WINDOW_TO_IMAGE" />
     </td>
   </tr>
 
   <tr><td>IDM_SPAN_SCREENS</td>
     <td>
-      span over all screens
+      <span class="IDM_SPAN_SCREENS" />
     </td>
   </tr>
 
   <tr><td>IDM_TOGGLE_MONITOR</td>
     <td>
-      move to other monitor
+      <span class="IDM_TOGGLE_MONITOR" />
     </td>
   </tr>
 
   <tr><td>IDM_FULL_SCREEN_MODE</td>
     <td>
-      toggle full screen mode
+      <span class="IDM_FULL_SCREEN_MODE" />
     </td>
   </tr>
 
   <tr><td>IDM_HIDE_TITLE_BAR</td>
     <td>
-      toggle hiding window title bar.  Note: in this mode, the window can't be manually resized
+      <span class="IDM_HIDE_TITLE_BAR" />
     </td>
   </tr>
 
   <tr><td>IDM_ALWAYS_ON_TOP</td>
     <td>
-      toggle window mode to always on top
+      <span class="IDM_ALWAYS_ON_TOP" />
     </td>
   </tr>
 
   <tr><td>IDM_ZOOM_400</td>
     <td>
-      zoom to 400 %
+      <span class="IDM_ZOOM_400" />
     </td>
   </tr>
 
   <tr><td>IDM_ZOOM_200</td>
     <td>
-      zoom to 200 %
+      <span class="IDM_ZOOM_200" />
     </td>
   </tr>
 
   <tr><td>IDM_ZOOM_100</td>
     <td>
-      zoom to 100 %
+      <span class="IDM_ZOOM_100" />
     </td>
   </tr>
 
   <tr><td>IDM_ZOOM_50</td>
     <td>
-      zoom to 50 %
+      <span class="IDM_ZOOM_50" />
     </td>
   </tr>
 
   <tr><td>IDM_ZOOM_25</td>
     <td>
-      zoom to 25 %
+      <span class="IDM_ZOOM_25" />
     </td>
   </tr>
 
   <tr><td>IDM_ZOOM_INC</td>
     <td>
-      zoom in
+      <span class="IDM_ZOOM_INC" />
     </td>
   </tr>
 
   <tr><td>IDM_ZOOM_DEC</td>
     <td>
-      zoom out
+      <span class="IDM_ZOOM_DEC" />
     </td>
   </tr>
 
   <tr><td>IDM_AUTO_ZOOM_FIT_NO_ZOOM</td>
     <td>
-      set auto zoom mode fit to screen, never zoom
+      <span class="IDM_AUTO_ZOOM_FIT_NO_ZOOM" />
     </td>
   </tr>
 
   <tr><td>IDM_AUTO_ZOOM_FILL_NO_ZOOM</td>
     <td>
-      set auto zoom mode fill screen, never zoom
+      <span class="IDM_AUTO_ZOOM_FILL_NO_ZOOM" />
     </td>
   </tr>
 
   <tr><td>IDM_AUTO_ZOOM_FIT</td>
     <td>
-      set auto zoom mode fit to screen
+      <span class="IDM_AUTO_ZOOM_FIT" />
     </td>
   </tr>
 
   <tr><td>IDM_AUTO_ZOOM_FILL</td>
     <td>
-      set auto zoom mode fill screen
+      <span class="IDM_AUTO_ZOOM_FILL" />
     </td>
   </tr>
 
   <tr><td>IDM_EDIT_GLOBAL_CONFIG</td>
     <td>
-      edit global configuration
+      <span class="IDM_EDIT_GLOBAL_CONFIG" />
     </td>
   </tr>
 
   <tr><td>IDM_EDIT_USER_CONFIG</td>
     <td>
-      edit user configuration
+      <span class="IDM_EDIT_USER_CONFIG" />
     </td>
   </tr>
 
   <tr><td>IDM_BACKUP_PARAMDB</td>
     <td>
-      backup parameter DB
+      <span class="IDM_BACKUP_PARAMDB" />
     </td>
   </tr>
 
   <tr><td>IDM_RESTORE_PARAMDB</td>
     <td>
-      restore parameter DB
+      <span class="IDM_RESTORE_PARAMDB" />
     </td>
   </tr>
 
   <tr><td>IDM_ABOUT</td>
     <td>
-      show about box
+      <span class="IDM_ABOUT" />
     </td>
   </tr>
 
   <tr><td>IDM_EXIT</td>
     <td>
-      exit JPEGView application
+      <span class="IDM_EXIT" />
     </td>
   </tr>
 
   <tr><td>IDM_TOGGLE</td>
     <td>
-      toggle between marked image and current image
+      <span class="IDM_TOGGLE" />
     </td>
   </tr>
 
   <tr><td>IDM_MARK_FOR_TOGGLE</td>
     <td>
-      mark current image for toggling
+      <span class="IDM_MARK_FOR_TOGGLE" />
     </td>
   </tr>
 
   <tr><td>IDM_COLOR_CORRECTION_INC</td>
     <td>
-      increase color correction amount
+      <span class="IDM_COLOR_CORRECTION_INC" />
     </td>
   </tr>
 
   <tr><td>IDM_COLOR_CORRECTION_DEC</td>
     <td>
-      decrease color correction amount
+      <span class="IDM_COLOR_CORRECTION_DEC" />
     </td>
   </tr>
 
   <tr><td>IDM_CONTRAST_CORRECTION_INC</td>
     <td>
-      increase contrast correction amount
+      <span class="IDM_CONTRAST_CORRECTION_INC" />
     </td>
   </tr>
 
   <tr><td>IDM_CONTRAST_CORRECTION_DEC</td>
     <td>
-      decrease contrast correction amount
+      <span class="IDM_CONTRAST_CORRECTION_DEC" />
     </td>
   </tr>
 
   <tr><td>IDM_CONTRAST_INC</td>
     <td>
-      increase contrast
+      <span class="IDM_CONTRAST_INC" />
     </td>
   </tr>
 
   <tr><td>IDM_CONTRAST_DEC</td>
     <td>
-      decrease contrast
+      <span class="IDM_CONTRAST_DEC" />
     </td>
   </tr>
 
   <tr><td>IDM_GAMMA_INC</td>
     <td>
-      increase gamma (brightness)
+      <span class="IDM_GAMMA_INC" />
     </td>
   </tr>
 
   <tr><td>IDM_GAMMA_DEC</td>
     <td>
-      decrease gamma (brightness)
+      <span class="IDM_GAMMA_DEC" />
     </td>
   </tr>
 
   <tr><td>IDM_LDC_SHADOWS_INC</td>
     <td>
-      increase lighting shadows
+      <span class="IDM_LDC_SHADOWS_INC" />
     </td>
   </tr>
 
   <tr><td>IDM_LDC_SHADOWS_DEC</td>
     <td>
-      decrease lighting shadows
+      <span class="IDM_LDC_SHADOWS_DEC" />
     </td>
   </tr>
 
   <tr><td>IDM_LDC_HIGHLIGHTS_INC</td>
     <td>
-      increase darken highlights
+      <span class="IDM_LDC_HIGHLIGHTS_INC" />
     </td>
   </tr>
 
   <tr><td>IDM_LDC_HIGHLIGHTS_DEC</td>
     <td>
-      decrease darken highlights
+      <span class="IDM_LDC_HIGHLIGHTS_DEC" />
     </td>
   </tr>
 
   <tr><td>IDM_SHARPEN_INC</td>
     <td>
-      increase sharpness
+      <span class="IDM_SHARPEN_INC" />
     </td>
   </tr>
 
   <tr><td>IDM_SHARPEN_DEC</td>
     <td>
-      decrease sharpness
+      <span class="IDM_SHARPEN_DEC" />
     </td>
   </tr>
 
   <tr><td>IDM_TOGGLE_RESAMPLING_QUALITY</td>
     <td>
-      toggle resampling quality (between point sampling and filtering)
+      <span class="IDM_TOGGLE_RESAMPLING_QUALITY" />
     </td>
   </tr>
 
   <tr><td>IDM_TOGGLE_FIT_TO_SCREEN_100_PERCENTS</td>
     <td>
-      toggle between fit to screen and 100 % zoom
+      <span class="IDM_TOGGLE_FIT_TO_SCREEN_100_PERCENTS" />
     </td>
   </tr>
 
   <tr><td>IDM_TOGGLE_FILL_WITH_CROP_100_PERCENTS</td>
     <td>
-      toggle between fill with crop and 100 % zoom
+      <span class="IDM_TOGGLE_FILL_WITH_CROP_100_PERCENTS" />
     </td>
   </tr>
 
   <tr><td>IDM_EXCHANGE_PROC_PARAMS</td>
     <td>
-      toggle between two sets of image processing parameters
+      <span class="IDM_EXCHANGE_PROC_PARAMS" />
     </td>
   </tr>
 
   <tr><td>IDM_PAN_UP</td>
     <td>
-      pan up
+      <span class="IDM_PAN_UP" />
     </td>
   </tr>
 
   <tr><td>IDM_PAN_DOWN</td>
     <td>
-      pan down
+      <span class="IDM_PAN_DOWN" />
     </td>
   </tr>
 
   <tr><td>IDM_PAN_RIGHT</td>
     <td>
-      pan right
+      <span class="IDM_PAN_RIGHT" />
     </td>
   </tr>
 
   <tr><td>IDM_PAN_LEFT</td>
     <td>
-      pan left
+      <span class="IDM_PAN_LEFT" />
     </td>
   </tr>
 
   <tr><td>IDM_CONTEXT_MENU</td>
     <td>
-      display context menu
+      <span class="IDM_CONTEXT_MENU" />
     </td>
   </tr>
+</html>

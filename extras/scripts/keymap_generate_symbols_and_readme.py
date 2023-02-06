@@ -100,8 +100,21 @@ def keymap_generate_reference_readme():
     <title>
         JPEGView - KeyMap.txt README
     </title>
-</head>
-<body>
+    <style>""")
+
+
+        for k, v in d_comment.items():
+            v_escaped = v.replace('\\', '\\\\').replace(r'"', r'\"')  # CSS needs certain things escaped
+            f.write(f"""
+.{k}:before {{
+  content: "{v_escaped}"
+}}
+""")
+
+
+        f.write("</style></head>")
+
+        f.write(f"""<body>
 
 <header>
     <h1>
@@ -115,9 +128,9 @@ JPEGView allows customizing what each key and key combination will do.
     Translator Credits
 </h2>
 Language: English<br />
-TranslatorName: <br />
-Contact: <br />
-LastUpdated: 31-JAN-2023<br />
+Translator Name(s): <br />
+Contact(s): <br />
+Last Updated: 31-JAN-2023<br />
 
 <h1>
     Basics
@@ -186,7 +199,7 @@ but not with other keys or other mouse buttons.
 </h2>
 
 <p>
-    NOTE: Mapping multiple keys to the same command is allowed, but not multiple commands to the same key
+    Mapping multiple keys to the same command is allowed, but not multiple commands to the same key
 </p>
 
 <p><b>
@@ -205,20 +218,22 @@ but not with other keys or other mouse buttons.
 
 <p>
     <b>
-        NOTE: THIS LIST WAS AUTO-GENERATED FROM SOURCE
+        NOTE: THIS LIST WAS AUTO-GENERATED
     </b>
     <br />
     <i>
-        -- LastUpdated: {datetime.now(timezone.utc).isoformat()}
+        -- Last Updated: {datetime.now(timezone.utc).isoformat()}
     </i>
 </p>
 
-<p><i>
-    (JPEGView does not read this file, it's for documentation only)
-</i></p>
+<!--
 <p><i>
     (Devs: see "extras\scripts" for more info.)
-</i></p>\n\n""")
+</i></p>
+-->
+
+<!-- ###################### TRANSLATORS - THERE IS _NOTHING_ TO TRANSLATE BELOW THIS LINE ###################### -->
+\n\n""")
 
 
         #f.write(f"{'***** Command ***** ':<{padding}} ***** Description *****\n")
@@ -235,13 +250,16 @@ but not with other keys or other mouse buttons.
         for k, v in d_comment.items():
             # pad with dots so that there's no question of whether it's spaces, tabs, etc... and things line up... also looks prettier than _ or -
             # https://www.peterbe.com/plog/how-to-pad-fill-string-by-variable-python
-            #f.write(f"{k + ' ':.<{padding}} {v}\n")
+            #f.write(f"{k + ' ':.<{padding}} {v}\n")  # write to text file style
+
             f.write(f"""
   <tr><td>{k}</td>
     <td>
-      {v}
+      <span class="{k}" />
     </td>
   </tr>\n""")
+
+        f.write("</html>")
 
 
 
