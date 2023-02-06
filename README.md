@@ -12,7 +12,7 @@ JPEGView has built-in support the following formats:
 
 * Popular: JPEG, GIF
 * Lossless: BMP, PNG, TIFF
-* Web: WEBP, JXL
+* Web: WEBP, JXL, HEIF/HEIC, AVIF
 * Legacy: TGA, WDP, HDP, JXR
 * Camera RAW formats:
   * Adobe (DNG), Canon (CRW, CR2), Nikon (NEF, NRW), Sony (ARW, SR2)
@@ -44,6 +44,7 @@ Basic on-the-fly image processing is provided - allowing adjusting typical param
 ## Official Releases
 
 Official releases will be made to [sylikc's GitHub Releases](https://github.com/sylikc/jpegview/releases) page.  Each release includes:
+
 * **Archive Zip/7z** - Portable
 * **Windows Installer MSI** - For Installs
 * **Source code** - Build it yourself
@@ -54,7 +55,7 @@ JPEGView _does not require installation_ to run.  Just **unzip, and run** either
 
 ## MSI Installer
 
-For those who prefer to have JPEGView installed for All Users, a 32-bit/64-bit installer will be available to download starting with v1.0.40.  I don't own a code signing certificate yet, so the MSI release is not signed.
+For those who prefer to have JPEGView installed for All Users, a 32-bit/64-bit installer is available to download starting with v1.0.40.  (Unfortunately, I don't own a code signing certificate yet, so the MSI release is not signed.  Please verify checksums!)
 
 ### WinGet
 
@@ -88,9 +89,10 @@ Another option is to use the official [JPEGView on PortableApps](https://portabl
 ## System Requirements
 
 * 32-bit version: Windows 7 or later
-** ~~Windows XP SP2~~ was formerly supported, last known version to work was 1.0.37, but it wouldn't support decoding the new formats anyways (aka HEIC)
+** A special Windows XP SP2 build is available, which supports most formats (except for formats added after v1.0.37.1, ex. Animated PNG, JXL, HEIC).  Other features and options are the same as the normal builds.
 
 * 64-bit version: Windows 7/8/10/11 64-bit or later
+
 
 ## What's New
 

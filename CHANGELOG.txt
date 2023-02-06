@@ -1,10 +1,26 @@
 JPEGView Changelog
 ******************
 
-[]
+[1.1.43] 2023-02-06
+New features:
+- HEIF/AVIF support
+  Supports AV1/HEVC encoded still images and image collections
+  (Not yet supported: thumbnails, animations, or AVC encoded images)
+  (NOTE: Microsoft Visual C++ Runtime vcruntime140.dll required)
+  PR #109, thanks qbnu (GH https://github.com/qbnu)
+Changed behavior:
+- KeyMap.txt is now optional, the defaults from KeyMap.txt.default will be loaded if a user-customized version does not exist
+  KeyMap.txt search paths: %AppData%\JPEGView\KeyMap.txt -> (JPEGView.exe dir)\KeyMap.txt -> (JPEGView.exe dir)\KeyMap.txt.default
+  (This means, extracting new releases will not overwrite your customized KeyMap.txt)
+- KeyMap.txt is now simplified to only the include key mappings.  The list of commands and help can be found in the KeyMap-README.html
+  (KeyMap.txt from older versions will continue to work if you have customized one)
+- Help Display now properly shows the on/off status of "hide window title bar" and "always on top" modes
 Other changes:
 - Updated French translation, thanks LaurentGrenet (GH https://github.com/LaurentGrenet)
-- Help Display now properly shows the on/off status of "hide window title bar" and "always on top" modes
+- Updated Japanese translation, thanks maboroshin (GH https://github.com/maboroshin)
+- Updated Russian translation, thanks Dmitry Yerokhin
+- Windows XP is still supported and special WinXP-compatible builds will be released (WinXP builds do not support new formats added after v1.0.37.1)
+- WebP is now integrated into JPEGView without needing webp.dll
 
 [1.1.42] 2023-01-26
 New features:
