@@ -6,9 +6,9 @@
 //TranslatorName=Hiroyuki Matenokoji, maboroshin
 //Contact=none
 //TranslatorURL=https://pc.genkaku.in/
-//LastUpdated=Mar 14, 2022
+//LastUpdated=2023-02-05
 // 1st Japanese translation : by Hiroyuki Matenokoji. (2015)
-// 2nd translator: Japanese by maboroshin (2019-2022, Adjustment, and translate little new part)
+// 2nd translator: Japanese by maboroshin (2019-2023, Adjustment, and translate little new part)
 Contrast	コントラスト
 Brightness	明るさ
 Sharpen	シャープ
@@ -416,4 +416,7 @@ Update user settings with new settings from settings template file?	設定用テ
 All existing user settings will be preserved.	すべての個人設定は保存されます。
 Location:	位置情報:
 Altitude (m): 標高 (メートル):
-Open containing folder in Explorer	エクスプローラーで含むフォルダを開く
+Open containing folder in Explorer	エクスプローラーでこのフォルダを開く
+Copy file path	ファイルのパスをコピー
+Hide window title bar	ウィンドウのタイトルバーを隠す
+Set window always on top	常に手前に表示
