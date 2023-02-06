@@ -189,7 +189,7 @@
 				<ComponentRef Id="JPEGView.ini.tpl"/>
 				<ComponentRef Id="JPEGView_ru.ini"/>
 				<ComponentRef Id="JPEGView_ru.ini.tpl"/>
-				<ComponentRef Id="KeyMap.txt"/>
+				<ComponentRef Id="KeyMap.txt.default"/>
 				<ComponentRef Id="symbols.km"/>
 				<!-- <ComponentRef Id="KeyMap_ru.txt"/> -->
 			</Feature>
@@ -402,8 +402,8 @@
 					<Component Id="JPEGView_ru.ini.tpl" Guid="*">
 						<File Id="JPEGView_ru.ini.tpl" Name="JPEGView_ru.ini.tpl" Source="$(var.JPEGView.TargetDir)JPEGView_ru.ini.tpl" />
 					</Component>
-					<Component Id="KeyMap.txt" Guid="*">
-						<File Id="KeyMap.txt" Name="KeyMap.txt" Source="$(var.JPEGView.TargetDir)KeyMap.txt" />
+					<Component Id="KeyMap.txt.default" Guid="*">
+						<File Id="KeyMap.txt.default" Name="KeyMap.txt.default" Source="$(var.JPEGView.TargetDir)KeyMap.txt.default" />
 					</Component>
 					<Component Id="symbols.km" Guid="*">
 						<File Id="symbols.km" Name="symbols.km" Source="$(var.JPEGView.TargetDir)symbols.km" />

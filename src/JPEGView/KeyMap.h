@@ -8,8 +8,8 @@
 class CKeyMap
 {
 public:
-	// Reads the keymap file with the specified file name, along with the symbols file
-	CKeyMap(LPCTSTR sKeyMapFile, LPCTSTR sKeyMapSymbolsFile);
+	// Reads the keymap file with logic for loading from different locations, including the default
+	CKeyMap();
 
 	// Gets a command Id for a keycode and modifier keys. Returns -1 if no command available for this key.
 	int GetCommandIdForKey(int nVirtualKeyCode, bool bAlt, bool bCtrl, bool bShift);

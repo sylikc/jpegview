@@ -276,7 +276,7 @@ CMainDlg::CMainDlg(bool bForceFullScreen) {
 	m_pImageProcPanelCtl = NULL;
 	m_pNavPanelCtl = NULL;
 	m_pCropCtl = new CCropCtl(this);
-	m_pKeyMap = new CKeyMap(CString(CSettingsProvider::This().GetEXEPath()) + _T("KeyMap.txt"), CString(CSettingsProvider::This().GetEXEPath()) + _T("symbols.km"));
+	m_pKeyMap = new CKeyMap(); // routine to load the keymap, it's not as simple as just loading one file anymore, but all logic handled by CKeyMap
 	m_pPrintImage = new CPrintImage(CSettingsProvider::This().PrintMargin(), CSettingsProvider::This().DefaultPrintWidth());
 	m_pHelpDlg = NULL;
 }
