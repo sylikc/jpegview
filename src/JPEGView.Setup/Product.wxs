@@ -201,6 +201,7 @@
 				<ComponentRef Id="KeyMap_README.html"/>
 			</Feature>
 			<Feature Id="Localization" Title="Localization Strings">
+				<ComponentRef Id="strings.txt" />
 				<ComponentRef Id="strings_bel.txt" />
 				<ComponentRef Id="strings_cs.txt" />
 				<ComponentRef Id="strings_de.txt" />
@@ -431,6 +432,9 @@
 					</Component>
 
 
+					<Component Id="strings.txt" Guid="*">
+						<File Id="strings.txt" Name="strings.txt" Source="$(var.JPEGView.TargetDir)strings.txt" />
+					</Component>
 					<Component Id="strings_bel.txt" Guid="*">
 						<File Id="strings_bel.txt" Name="strings_bel.txt" Source="$(var.JPEGView.TargetDir)strings_bel.txt" />
 					</Component>
