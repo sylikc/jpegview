@@ -294,10 +294,10 @@ namespace HelpersGUI {
 			_stprintf_s(buff, BUFF_SIZE, CString(CNLS::GetString(_T("Deep Shadows"))) + _T(": %.2f\n"), procParams.LightenShadowSteepness);
 			sText += buff;
 		}
-		AddFlagText(sText, CNLS::GetString(_T("Auto contrast and color correction: ")), GetProcessingFlag(eProcFlags, PFLAG_AutoContrast));
-		AddFlagText(sText, CNLS::GetString(_T("Local density correction: ")), GetProcessingFlag(eProcFlags, PFLAG_LDC));
-		AddFlagText(sText, CNLS::GetString(_T("High quality resampling: ")), GetProcessingFlag(eProcFlags, PFLAG_HighQualityResampling));
-		AddFlagText(sText, CString(CNLS::GetString(_T("Keep parameters"))) + _T(": "), GetProcessingFlag(eProcFlags, PFLAG_KeepParams));
+		AddFlagText(sText, CNLS::GetString(_T("Auto contrast and color correction")) + CString(_T(": ")), GetProcessingFlag(eProcFlags, PFLAG_AutoContrast));
+		AddFlagText(sText, CNLS::GetString(_T("Local density correction")) + CString(_T(": ")), GetProcessingFlag(eProcFlags, PFLAG_LDC));
+		AddFlagText(sText, CNLS::GetString(_T("High quality resampling")) + CString(_T(": ")), GetProcessingFlag(eProcFlags, PFLAG_HighQualityResampling));
+		AddFlagText(sText, CNLS::GetString(_T("Keep parameters")) + CString(_T(": ")), GetProcessingFlag(eProcFlags, PFLAG_KeepParams));
 		sText += CNLS::GetString(_T("Navigation")); sText += _T(": ");
 		if (eNavigationMode == Helpers::NM_LoopSameDirectoryLevel) {
 			sText += CNLS::GetString(_T("Loop siblings"));
@@ -309,7 +309,7 @@ namespace HelpersGUI {
 			sText += CNLS::GetString(_T("Loop folder"));
 		}
 		sText += _T("\n");
-		sText += CNLS::GetString(_T("Order files by: "));
+		sText += CNLS::GetString(_T("Order files by")); sText += _T(": ");
 		if (eFileSorting == Helpers::FS_CreationTime) {
 			sText += CNLS::GetString(_T("Creation date/time"));
 		} else if (eFileSorting == Helpers::FS_LastModTime) {

@@ -1635,8 +1635,8 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 						CJPEGLosslessTransform::EResult eResult =
 							CJPEGLosslessTransform::PerformTransformation(m_pFileList->Current(), m_pFileList->Current(), HelpersGUI::CommandIdToLosslessTransformation(nCommand), bTrim || sp.TrimWithoutPromptLosslessJPEG());
 						if (eResult != CJPEGLosslessTransform::Success) {
-							::MessageBox(m_hWnd, CString(CNLS::GetString(_T("Performing the lossless transformation failed!"))) + 
-								+ _T("\n") + CNLS::GetString(_T("Reason:")) + _T(" ") + HelpersGUI::LosslessTransformationResultToString(eResult), 
+							::MessageBox(m_hWnd, CString(CNLS::GetString(_T("Performing the lossless transformation failed!"))) +
+								_T("\n") + CNLS::GetString(_T("Reason:")) + _T(" ") + HelpersGUI::LosslessTransformationResultToString(eResult),
 								CNLS::GetString(_T("Lossless JPEG transformations")), MB_OK | MB_ICONWARNING);
 						} else {
 							ReloadImage(false); // reload current image
@@ -2238,8 +2238,8 @@ void CMainDlg::SetAsDefaultViewer() {
 		if (registry.RegisterJPEGView()) {
 			registry.LaunchApplicationAssociationDialog();
 		} else {
-			CString sError = CNLS::GetString(_T("Error while writing the following registry key:"));
-			sError += _T("\n");
+			CString sError = CNLS::GetString(_T("Error while writing the following registry key"));
+			sError += _T(":\n");
 			sError += registry.GetLastFailedRegistryKey();
 			::MessageBox(m_hWnd, sError, CNLS::GetString(_T("Error")), MB_OK | MB_ICONERROR);
 		}

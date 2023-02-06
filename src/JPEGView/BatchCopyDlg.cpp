@@ -236,7 +236,7 @@ LRESULT CBatchCopyDlg::OnRename(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*/
 				strError.Format(CNLS::GetString(_T("The file '%s' could not be %s.")), iter->GetTitle(),
 					CNLS::GetString(bCopyNeeded ? _T("copied") : _T("renamed")));
 				strError += _T("\n");
-				strError += CNLS::GetString(_T("Reason: "));
+				strError += CNLS::GetString(_T("Reason:")); strError += _T(" ");
 				LPTSTR lpMsgBuf = NULL;
 				::FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM, NULL, lastError,
 					MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPTSTR) &lpMsgBuf, 0, NULL);

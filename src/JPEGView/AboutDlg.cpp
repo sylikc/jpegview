@@ -73,18 +73,18 @@ LRESULT CAboutDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lPara
 
 	m_lblVersion.SetWindowText(CString(_T("JPEGView ")) + JPEGVIEW_VERSION);
 
-	m_lblSIMD.SetWindowText(CString(CNLS::GetString(_T("SIMD mode used:"))) + _T(" ") + GetSIMDModeString());
+	m_lblSIMD.SetWindowText(CString(CNLS::GetString(_T("SIMD mode used"))) + _T(": ") + GetSIMDModeString());
 	TCHAR sNumCores[16];
 	_sntprintf_s(sNumCores, 16, 16, _T("%d"), CSettingsProvider::This().NumberOfCoresToUse());
-	m_lblNumCores.SetWindowText(CString(CNLS::GetString(_T("Number of CPU cores used:"))) + _T(" ") + sNumCores);
+	m_lblNumCores.SetWindowText(CString(CNLS::GetString(_T("Number of CPU cores used"))) + _T(": ") + sNumCores);
 	m_btnClose.SetWindowText(CNLS::GetString(_T("Close")));
 
 	m_richEdit.SetBackgroundColor(::GetSysColor(COLOR_3DFACE));
 	m_richEdit.SetAutoURLDetect(TRUE);
-	m_richEdit.SetWindowText(CString(CNLS::GetString(_T("Licensed under the GNU general public license (GPL), see readme file for details:"))) + 
-		_T("\nfile://") + GetReadmeFileName() + _T("\n") + 
-		CNLS::GetString(_T("Project home page:")) + 
-		_T(" \nhttps://github.com/sylikc/jpegview/\n"));
+	m_richEdit.SetWindowText(CString(CNLS::GetString(_T("Licensed under the GNU general public license (GPL), see readme file for details"))) + 
+		_T(":\nfile://") + GetReadmeFileName() + _T("\n") + 
+		CNLS::GetString(_T("Project home page")) + 
+		_T(":\nhttps://github.com/sylikc/jpegview/\n"));
 	m_richEdit.SetEventMask(ENM_LINK);
 
 	HICON hIconLarge = (HICON)::LoadImage(_Module.GetResourceInstance(), MAKEINTRESOURCE(IDR_MAINFRAME),

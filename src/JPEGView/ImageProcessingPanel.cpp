@@ -59,10 +59,10 @@ CImageProcessingPanel::CImageProcessingPanel(HWND hWnd, INotifiyMouseCapture* pN
 	AddSlider(ID_slSharpen, CNLS::GetString(_T("Sharpen")), &(pParams->Sharpen), NULL, 0.0, 0.5, 0.0, false, false, false);
 	
 	AddButton(ID_btnUnsharpMask, CNLS::GetString(_T("Unsharp mask...")));
-	AddText(ID_txtParamDB, CNLS::GetString(_T("Parameter DB:")), false);
+	AddText(ID_txtParamDB, CNLS::GetString(_T("Parameter DB")) + CString(_T(":")), false);
 	AddButton(ID_btnSaveTo, CNLS::GetString(_T("Save to")));
 	AddButton(ID_btnRemoveFrom, CNLS::GetString(_T("Remove from")));
-	AddText(ID_txtRename, CNLS::GetString(_T("Rename:")), false);
+	AddText(ID_txtRename, CNLS::GetString(_T("Rename")) + CString(_T(":")), false);
 	AddText(ID_txtFilename, NULL, true);
 	CTextCtrl* pAcqDate = AddText(ID_txtAcqDate, NULL, false);
 	pAcqDate->SetRightAligned(true);

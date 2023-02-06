@@ -487,7 +487,7 @@ void CCropCtl::CropLossless() {
 		CJPEGLosslessTransform::EResult eResult = CJPEGLosslessTransform::PerformCrop(sInputFileName, sCropFileName, cropRect);
 		if (eResult != CJPEGLosslessTransform::Success) {
 			::MessageBox(m_pMainDlg->GetHWND(), CString(CNLS::GetString(_T("Performing the lossless transformation failed!"))) + 
-				+ _T("\n") + CNLS::GetString(_T("Reason:")) + _T(" ") + HelpersGUI::LosslessTransformationResultToString(eResult), 
+				+ _T("\n") + CNLS::GetString(_T("Reason:")) + _T(" ") + HelpersGUI::LosslessTransformationResultToString(eResult),
 				CNLS::GetString(_T("Lossless JPEG transformations")), MB_OK | MB_ICONWARNING);
 		} else {
 			if (_tcscmp(sInputFileName, sCropFileName) == 0) {

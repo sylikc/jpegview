@@ -66,7 +66,7 @@ static void HandleErrorAndCloseHandle(EFileError eError, LPCTSTR sParamDBName, H
 		::FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM, NULL, lastError,
 			MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPTSTR) &lpMsgBuf, 0, NULL);
 		sError += _T("\n");
-		sError += CNLS::GetString(_T("Reason: "));
+		sError += CNLS::GetString(_T("Reason:")); sError += _T(" ");
 		sError += lpMsgBuf;
 		LocalFree(lpMsgBuf);
 	}
