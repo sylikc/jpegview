@@ -67,7 +67,7 @@ struct PngReader::png_cache {
 	png_uint_32 frame_count;
 	void* buffer;
 	size_t buffer_size;
-	int buffer_offset;
+	size_t buffer_offset;
 };
 
 PngReader::png_cache PngReader::cache = { 0 };
@@ -139,7 +139,7 @@ void* PngReader::ReadNextFrame()
 	void* pixels = malloc(cache.width * cache.height * cache.channels);
 	if (pixels == NULL)
 		return NULL;
-	for (unsigned int j = 0; j < cache.height; j++)
+	for (j = 0; j < cache.height; j++)
 		memcpy((char*)pixels + j * cache.width * cache.channels, cache.rows_image[j], cache.width * cache.channels);
 
 #ifdef PNG_APNG_SUPPORTED
@@ -157,7 +157,7 @@ void* PngReader::ReadNextFrame()
 
 bool PngReader::BeginReading(void* buffer, size_t sizebytes, bool& outOfMemory)
 {
-	unsigned int    width, height, channels, rowbytes, size, i, j;
+	unsigned int    width, height, channels, rowbytes, size, j;
 	png_bytepp      rows_image;
 	png_bytepp      rows_frame;
 	unsigned char*  p_image;

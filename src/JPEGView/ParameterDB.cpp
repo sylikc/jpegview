@@ -301,7 +301,7 @@ uint8 CParameterDBEntry::Convert(float value, float lowerLimit, float upperLimit
 float CParameterDBEntry::Convert(uint8 value, float lowerLimit, float upperLimit, bool isLog10) const {
 	float fValue = value*(upperLimit - lowerLimit)/255.0f + lowerLimit;
 	if (isLog10) {
-		fValue = pow(fValue, 10);
+		fValue = powf(fValue, 10);
 	}
 	return fValue;
 }

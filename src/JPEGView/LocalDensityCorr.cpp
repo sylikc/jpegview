@@ -14,9 +14,9 @@
 // values. The curve is piecewise polynominal and has the form of a saddle.
 static void CalculateLDCResponseLUT(uint8* pLUT) {
 	const float fExp = 2.5f;
-	float fDivisor = pow(127.5f, fExp - 1);
+	float fDivisor = powf(127.5f, fExp - 1);
 	for (int i = 0; i < 128; i++) {
-		float fVal = pow(i + 0.5f, fExp)/fDivisor;
+		float fVal = powf(i + 0.5f, fExp)/fDivisor;
 		pLUT[127-i] = (uint8) (127.0f + fVal + 0.49f);
 		pLUT[128+i] = (uint8) (127.0f - fVal + 0.49f);
 	}
