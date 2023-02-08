@@ -1,6 +1,6 @@
-﻿// This file must be encoded with UTF-8 (e.g. with Windows Notepad)	
-// Filename is 'strings_%languagecode%.txt' where %languagecode% is the ISO 639 language code e.g. 'fr' for French	
-// Format is: English string<tab>Translated string<newline>	
+﻿// This file must be encoded with UTF-8 (e.g. with Windows Notepad)
+// Filename is 'strings_%languagecode%.txt' where %languagecode% is the ISO 639 language code e.g. 'fr' for French
+// Format is: English string<tab>Translated string<newline>
 Contrast	Contraste
 Brightness	Gamma
 Sharpen	Netteté
@@ -9,7 +9,7 @@ Darken Highlights	Assombrir les clairs
 Deep Shadows	Sombres profonds
 Color Correction	Correction des couleurs
 Contrast Correction	Correction du contraste
-Parameter DB:	DB traitements :
+Parameter DB	DB traitements
 Save to	Enregistrer
 Remove from	Supprimer
 Rename:	Renommer :
@@ -78,13 +78,13 @@ The file is read-only!	Le fichier est en lecture seule !
 Can't rename file	Impossible de renommer le fichier
 New name contains backslash character!	Le nouveau nom contient un caractère anti-slash !
 Renaming file failed!	Le renommage a échoué !
-Reason: 	Raison : 
-on	marche
-off	arrêt
+Reason:	Raison:
+on	Actif
+off	Inactif
 Do you really want to save the following parameters as default to the INI file	Confirmer la sauvegarde par défaut de ces réglages dans le fichier INI
-Auto contrast and color correction: 	Corrections couleurs et contrastes : 
-Local density correction: 	Corrections sombres et clairs : 
-Order files by: 	Tri des fichiers par : 
+Auto contrast and color correction	Corrections couleurs et contrastes
+Local density correction	Corrections sombres et clairs
+Order files by	Tri des fichiers par
 Creation date/time	Date de création
 Last modification date/time	Date de dernière modification
 File name	Nom du fichier
@@ -108,7 +108,7 @@ Rotate the following file lossless by 90 deg?\n%filename%	Pivoter de 90° et enr
 Rotate the following file lossless by 270 deg?\n%filename%	Pivoter de 270° et enregistrer le fichier ?\n%filename%
 Open image...	Ouvrir...
 Save processed image...	Enregistrer l'image traitée...
-Reload image	Actualiser
+Reload image	Recharger l'image
 Copy to clipboard	Copier l'image traitée (capture écran)
 Copy original size image	Copier l'image traitée (taille réelle)
 Paste from clipboard	Coller
@@ -195,17 +195,18 @@ Flash fired:	Flash utilisé :
 Focal length (mm):	Focale (mm) :
 F-Number:	Ouverture (F-number) :
 ISO Speed:	Vitesse ISO :
-Modification date:	Date de modification :
+Modification date :	Date de modification :
 yes	oui
 no	non
 Show navigation panel	Afficher la barre de navigation
 Show/hide navigation panel	Afficher/masquer la barre de navigation
 About JPEGView...	A propos de JPEGView...
-About JPEGView (64 bit version)...	A propos de JPEGView (version 64 bits)...
-SIMD mode used:	Mode SIMD utilisé :
-Number of CPU cores used:	Nombre de coeurs de processeur utilisés:
-Licensed under the GNU general public license (GPL), see readme file for details:	Sous licence GNU-GPL, voir le fichier README pour plus de détails :
-Project home page:	Page d'accueil du projet :
+About JPEGView (32-bit version)...	A propos de JPEGView (version 32 bits)...
+About JPEGView (64-bit version)...	A propos de JPEGView (version 64 bits)...
+SIMD mode used	Mode SIMD utilisé
+Number of CPU cores used	Nombre de coeurs de processeur utilisés
+Licensed under the GNU general public license (GPL), see readme file for details	Sous licence GNU-GPL, voir le fichier README pour plus de détails
+Project home page	Page d'accueil du projet
 Show first image in folder	Première image du dossier
 Show previous image	Image précédente
 Show next image	Image suivante
@@ -237,7 +238,7 @@ Free	Libre
 Fixed size...	Taille fixe...
 Set Fixed Crop Size	Définir la taille fixe du rognage
 Width	Largeur
-Height	Hauteur 
+Height	Hauteur
 Pixels	Pixels
 Screen Pixels	Pixels écran
 Image Pixels	Pixels image
@@ -264,7 +265,7 @@ Rotate Image	Pivoter
 Show grid lines	Afficher la grille
 Auto crop rotated image (avoids black border)	Rognage automatique de l'image pivotée (évite les bords noirs)
 Align image to horizontal or vertical line	Aligner l'image avec une ligne horizontale ou verticale
-Use the mouse to draw a line that shall be horizontal or vertical.	Utilisez la souris pour dessiner une ligne horizontale ou verticale.	
+Use the mouse to draw a line that shall be horizontal or vertical.	Utilisez la souris pour dessiner une ligne horizontale ou verticale.
 Rotate the image by dragging with the mouse.	Cliquez et bougez la souris dans la direction où vous souhaitez faire pivoter l'image.
 The operation failed because not enough memory is available!	Mémoire insuffisante pour effectuer l'opération !
 to EXIF date (all files in folder)	à la date EXIF (tous les fichiers du dossier)
@@ -316,7 +317,7 @@ Slow	Lent
 Very slow	Très lent
 Error	Erreur
 Warning	Alerte
-Error while writing the following registry key:	Erreur lors de l'écriture de la clé de registre :
+Error while writing the following registry key	Erreur lors de l'écriture de la clé de registre
 Set as default viewer...	Définir comme visualisateur par défaut...
 Set JPEGView as default image viewer	Définir JPEGView comme visualisateur d'images par défaut
 JPEGView is registered as default viewer for the selected file formats.	JPEGView sera le visualisateur par défaut pour les formats sélectionnés.
@@ -350,7 +351,7 @@ Delete	Supprimer
 Modifier keys:	Touches de bascule :
 Known keys:	Touches connues :
 Combine keys with '+'	Combiner les touches avec '+'
-Example:	Exemple : 
+Example:	Exemple :
 Shortcut Help	Aide raccourcis
 [new entry]	[nouvelle entrée]
 Applications	Applications
@@ -407,3 +408,16 @@ Open containing folder in Explorer	Afficher le fichier dans l'explorateur
 Update user settings...	Mettre à jour les paramètres utilisateur...
 Update user settings with new settings from settings template file?	Mettre à jour le fichier des paramètres utilisateur avec les nouveaux paramètres issus du fichier template?
 All existing user settings will be preserved.	Tous les paramètres utilisateur existants seront préservés
+Clipboard Image	Image du Presse-Papier
+Copy file path of the image to clipboard	Copier le chemin complet de l'image
+Decoding this format requires the Microsoft Visual C++ Redistributable.	Décoder ce format requiert que Microsoft Visual C++ Redistributable soit installé.
+High quality resampling	Réechantillonnage de haute qualité
+Open folder containing image and select in Windows Explorer	Afficher le fichier dans l'explorateur
+Reset	Réinitialiser
+Toggle window always on top mode	Activer/désactiver le mode "Toujours au premier plan"
+Toggle window title bar hidden mode	Activer/désactiver le mode "Barre de titre cachée"
+Transition Effect	Effet de transition
+in	in
+Copy file path	Copier le chemin complet de l'image
+Hide window title bar	Cacher la barre de titre
+Set window always on top	Fenêtre toujours au premier plan
