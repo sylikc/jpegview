@@ -4,7 +4,7 @@
 Contrast	Contraste
 Brightness	Brillo
 Sharpen	Nitidez
-Lighten Shadows	Sombras leves 
+Lighten Shadows	Sombras leves
 Darken Highlights	Sombras medias
 Deep Shadows	Sombras profundas
 Color Correction	Corrección de Colores
@@ -78,13 +78,13 @@ The file is read-only!	¡El archivo es de sólo lectura!
 Can't rename file	No se puede renombrar el archivo
 New name contains backslash character!	¡El nuevo nombre contiene una barra invertida!
 Renaming file failed!	¡El renombrado del archivo falló!
-Reason: 	Razón: 
+Reason: 	Razón:
 on	Activo
 off	Inactivo
 Do you really want to save the following parameters as default to the INI file	¿Realmente quiere guardar los siguientes parámetros como por defecto en el archivo INI?
-Auto contrast and color correction: 	Auto corrección de contraste y color: 
-Local density correction: 	Corrección de densidad Local: 
-Order files by: 	Ordenar archivos por: 
+Auto contrast and color correction: 	Auto corrección de contraste y color:
+Local density correction: 	Corrección de densidad Local:
+Order files by: 	Ordenar archivos por:
 Creation date/time	Hora/Fecha de creación
 Last modification date/time	Hora/Fecha de última modificación
 File name	Nombre de archivo
@@ -158,7 +158,7 @@ Number with N digits	Número con N dígitos
 Extracted number from original file name	Número extraído del nombre original del archivo
 Original file name (with extension)	Nombre original del archivo (Con extensión)
 Original file name (without extension)	Nombre original del archivo (Sin extensión)
-Original file extension	Extensión original del archivo 
+Original file extension	Extensión original del archivo
 'My Pictures' folder	Carpeta 'Mis imágenes'
 Day / Month / Year (as numbers)	Día / Mes / Año (Numéricos)
 Year short form (2 digits)	Año en forma corta (2 dígitos)
@@ -245,7 +245,7 @@ Image Pixels	Píxeles de la imagen
 Set modification date	Establecer fecha de modificación
 to current date	A la fecha actual
 to EXIF date	A la fecha del EXIF
-Mark image for toggling. Use %s to toggle between marked and current image  Marcar imagen para intercambio. Use %s intercambiar entre la imagen marcada y la actual.
+Mark image for toggling. Use %s to toggle between marked and current image	Marcar imagen para intercambio. Use %s intercambiar entre la imagen marcada y la actual.
 Saturation	Saturación
 Unsharp mask...	 Máscara de desenfoque
 Apply Unsharp Mask	Aplicar máscara de desenfoque
@@ -302,7 +302,7 @@ Slide from left	Deslizar desde la izquierda
 Slide from top	Deslizar desde arriba
 Slide from bottom	Deslizar desde abajo
 Roll from right	Enrollar desde la derecha
-Roll from left	Enrollar desde izquierda 
+Roll from left	Enrollar desde izquierda
 Roll from top	Enrollar desde arriba
 Roll from bottom	Enrollar desde abajo
 Scroll from right	Rodar desde la derecha

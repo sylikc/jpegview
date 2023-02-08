@@ -30,7 +30,7 @@ Show/hide file name	파일명 보이기/숨기기
 Enable/disable high quality resampling	고품질 리샘플링 켜기/끄기
 Enable/disable keeping of geometry related (zoom/pan/rotation)	보기(배율/이동/회전) 및 이미지 처리(밝기/대비/선명) 매개변수를
 and image processing (brightness/contrast/sharpen) parameters between images	유지하기 켜기/끄기
-Enable/disable automatic contrast correction (histogram equalization)	자동 대비 보정을 켜기/끄기 (히스토그램 균일화) 
+Enable/disable automatic contrast correction (histogram equalization)	자동 대비 보정을 켜기/끄기 (히스토그램 균일화)
 Apply auto contrast correction using only visible section of image	이미지의 보이는 부분만 자동 대비 보정을 적용
 Enable/disable automatic density correction (local brightness correction)	자동 농도 보정 켜기/끄기 (부분 농도 보정이 켜있어야 함)
 Increase/decrease lightening of shadows (LDC must be on)	Shadow의 밝기를 증가/감소 (부분 농도 보정이 켜있어야 함)
@@ -79,13 +79,13 @@ The file is read-only!	파일이 읽기 전용임!
 Can't rename file	파일을 다른 이름으로 바꿀 수 없음
 New name contains backslash character!	새 이름이 \ 문자를 포함함!
 Renaming file failed!	파일명 변경 실패!
-Reason: 	이유: 
+Reason: 	이유:
 on	켜기
 off	끄기
 Do you really want to save the following parameters as default to the INI file	다음 매개변수를 INI 파일에 기본값으로 저장할 것입니까?
 Auto contrast and color correction: 	자동 대비 및 색상 보정:
-Local density correction: 	부분 농도 보정: 
-Order files by: 	파일 정렬: 
+Local density correction: 	부분 농도 보정:
+Order files by: 	파일 정렬:
 Creation date/time	만든 날짜/시각
 Last modification date/time	마지막으로 수정한 날짜/시각
 File name	파일명

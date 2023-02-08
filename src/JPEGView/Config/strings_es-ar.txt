@@ -1,11 +1,11 @@
 ﻿// This file must be encoded with UTF-8 (e.g. with Windows Notepad)
 // Filename is 'strings_%languagecode%.txt' where %languagecode% is the ISO 639 language code e.g. 'fr' for French
 // Format is: English string<tab>Translated string<newline>
-// Translation made by ThecaTTony (thecattony@users.sourceforge.net - thecattony@thecattony.com.ar) 
+// Translation made by ThecaTTony (thecattony@users.sourceforge.net - thecattony@thecattony.com.ar)
 Contrast	Contraste
 Brightness	Brillo
 Sharpen	Nitidez
-Lighten Shadows	Sombras leves 
+Lighten Shadows	Sombras leves
 Darken Highlights	Sombras medias
 Deep Shadows	Sombras profundas
 Color Correction	Corrección de colores
@@ -79,13 +79,13 @@ The file is read-only!	¡El archivo es de sólo lectura!
 Can't rename file	No se puede renombrar el archivo
 New name contains backslash character!	¡El nuevo nombre contiene una barra invertida!
 Renaming file failed!	¡El renombrado del archivo falló!
-Reason: 	Razón: 
+Reason: 	Razón:
 on	activado
 off	desact.
 Do you really want to save the following parameters as default to the INI file	Realmente quiere guardar los siguientes parámetros como defecto en el archivo INI
-Auto contrast and color correction: 	Autocorrección de contraste y color: 
-Local density correction: 	Corrección de densidad local: 
-Order files by: 	Ordenar archivos por: 
+Auto contrast and color correction: 	Autocorrección de contraste y color:
+Local density correction: 	Corrección de densidad local:
+Order files by: 	Ordenar archivos por:
 Creation date/time	Hora/fecha de creación
 Last modification date/time	Hora/fecha de última modificación
 File name	Nombre de archivo

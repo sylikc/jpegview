@@ -81,13 +81,13 @@ The file is read-only!	唯讀檔案!
 Can't rename file	無法重新命名檔案
 New name contains backslash character!	新名稱中包含反斜線字元!
 Renaming file failed!	重新命名失敗!
-Reason: 	原因: 
+Reason: 	原因:
 on	開啟
 off	關閉
 Do you really want to save the following parameters as default to the INI file	您真的想要儲存以下參數作為預設的 INI 檔案?
 Auto contrast and color correction: 	自動對比度和色彩校正:
-Local density correction: 	局部密度校正: 
-Order files by: 	檔案排序依據: 
+Local density correction: 	局部密度校正:
+Order files by: 	檔案排序依據:
 Creation date/time	建立日期/時間
 Last modification date/time	最後修改日期/時間
 File name	檔案名稱
@@ -274,7 +274,7 @@ Number of JPEG files in folder: %d	該資料夾中的 JPEG 檔案數量: %d
 EXIF date successfully set on %d images, failed on %d images	%d 個圖像的 EXIF 日期設定成功，%d 個圖像失敗
 Reason: Not enough memory available	原因: 沒有足夠的可用記憶體
 Transform image	轉換圖像
-Rotate...	旋轉... 
+Rotate...	旋轉...
 Mirror horizontally	水平翻轉
 Mirror vertically	垂直翻轉
 Random	隨機

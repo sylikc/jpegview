@@ -83,9 +83,9 @@ Reason: 	Прычына:
 on	так
 off	не
 Do you really want to save the following parameters as default to the INI file	Ці захаваць гэтыя наладкі як асноўныя ў INI-файле
-Auto contrast and color correction: 	Аўтакарэкцыя колеру і кантрасту: 
-Local density correction: 	Лакальная карэкцыя шчыльнасьці: 
-Order files by: 	Парадкаваць файлы паводе: 
+Auto contrast and color correction: 	Аўтакарэкцыя колеру і кантрасту:
+Local density correction: 	Лакальная карэкцыя шчыльнасьці:
+Order files by: 	Парадкаваць файлы паводе:
 Creation date/time	даты/часу стварэньня
 Last modification date/time	даты/часу мадыфікацыі
 File name	назваў
@@ -170,7 +170,7 @@ Rename	Выканаць
 Preview	Папярэдні прагляд
 Save as template	Захаваць як шаблон
 Close	Закрыць
-Old name	Старая назва 
+Old name	Старая назва
 Date	Дата
 New name (>> : file gets copied)	Новая назва (>> : шлях капіраваньня)
 Select all	Выбраць усё

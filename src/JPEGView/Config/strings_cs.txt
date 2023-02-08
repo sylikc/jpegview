@@ -32,7 +32,7 @@ Enable/disable keeping of geometry related (zoom/pan/rotation)	Povolit/zakázat 
 and image processing (brightness/contrast/sharpen) parameters between images	a změný parametrů(jas/kontrast/ostření) obrazu mezi obrázky
 Enable/disable automatic contrast correction (histogram equalization)	Povolit/zakázat automatickou korekci kontrastu
 Apply auto contrast correction using only visible section of image	Použít automatickou korekci kontrastu jen na viditelnou sekci obrázku
-Enable/disable automatic density correction (local brightness correction)	Povolit/zakázat automatickou korekci sytosti (lokální korekce jasu) 
+Enable/disable automatic density correction (local brightness correction)	Povolit/zakázat automatickou korekci sytosti (lokální korekce jasu)
 Increase/decrease lightening of shadows (LDC must be on)	Snížit/zvýšit jas stínů (LDC musí být povoleno)
 Increase/decrease darkening of highlights (LDC must be on)	Snížit/zvýšit potlačení jasu u nejsvětlejších míst (LDC musí být povoleno)
 Loop through files in current folder	Cyklické prohlížení souborů v aktuální složce
@@ -73,19 +73,19 @@ Ctrl + Left mouse	Ctrl + levé tlačítko myši
 Forward mouse button	Tlačítko myši kupředu
 Back mouse button	Tlačítko myši zpět
 Delete current file on disk permanently	Trvale vymazat aktuální soubor z disku
-Rotate current file on disk lossless by 90 deg (W/H must be multiple of 16)	Otočit aktuální obrázek (bezeztrátově) na disku o 90 stupňů (rozměry musí být násobek 16) 
+Rotate current file on disk lossless by 90 deg (W/H must be multiple of 16)	Otočit aktuální obrázek (bezeztrátově) na disku o 90 stupňů (rozměry musí být násobek 16)
 Rotate current file on disk lossless by 270 deg (W/H must be multiple of 16)	Otočit aktuální obrázek (bezeztrátově) na disku o 270 stupňů (rozměry musí být násobek 16)
 The file is read-only!	Rozměr obrázku je jen k přečtení!
 Can't rename file	Nelze přejmenovat soubor
 New name contains backslash character!	Nové jméno obsazuje znak zpětné lomítko (\) !
 Renaming file failed!	Přejmenování souboru selhalo!
-Reason: 	Důvod: 
+Reason: 	Důvod:
 on	zapnuto
 off	vypnuto
 Do you really want to save the following parameters as default to the INI file	Chcete skutečně uložit následující parametry jako výchozí do INI souboru
-Auto contrast and color correction: 	Automatická korekce kontrastu a barev: 
-Local density correction: 	Lokální korekce hustoty: 
-Order files by: 	Řadi soubory podle: 
+Auto contrast and color correction: 	Automatická korekce kontrastu a barev:
+Local density correction: 	Lokální korekce hustoty:
+Order files by: 	Řadi soubory podle:
 Creation date/time	Datum a čas pořízení
 Last modification date/time	Datum a čas poslední změny
 File name	Jméno souboru
@@ -132,7 +132,7 @@ Rotate +90	Otočit +90
 Rotate -90	Otočit -90
 Rotate 180	Otočit 180
 Auto correction	Auto korekce
-Local density correction	Lokální korekce hustoty: 
+Local density correction	Lokální korekce hustoty:
 Keep parameters	Uchovat parametry
 Set current parameters as default values...	Uložit parametry do INI...
 Save parameters to DB	Uložit parametry to DB
@@ -276,29 +276,29 @@ Rotate...	Rotovat...
 Mirror horizontally	Zrcadlit vodorovně
 Mirror vertically	Zrcadlit svisle
 Random	Náhodně
-Zoom mode (drag mouse to zoom)	Změna rozlišení (táhnout myší ke změně) 
+Zoom mode (drag mouse to zoom)	Změna rozlišení (táhnout myší ke změně)
 Correct converging lines (perspective correction)	Korekce konvergujicích čar (pespektivní korekce)
 Perspective Correction	Perspektivní korekce
 Perspective correction...	Perspektivní korekce...
 Auto crop corrected image (avoids black border)	Korigovat obraz automatickým ostřížením (zabránit černému pozadí)
-Click and drag the mouse vertically to correct image tilt.	Kliknout a táhnout myší vertikálně pro korekci náklonu obrazu. 
-Drag at the left or right border for asymmetric correction.	Táhnout myší na levém nebo pravém pozadí pro nesymetrickou korekci. 
+Click and drag the mouse vertically to correct image tilt.	Kliknout a táhnout myší vertikálně pro korekci náklonu obrazu.
+Drag at the left or right border for asymmetric correction.	Táhnout myší na levém nebo pravém pozadí pro nesymetrickou korekci.
 Fit window to image	Upnout okno k obrazu
 Keep aspect ratio on crop	Držet poměr stran při zastřižení
 Lossless JPEG transformations	Bezeztrátové JPEG transformace
 Performing the lossless transformation failed!	Provedení bezeztrátové transformace selhalo!
-Image width and height must be dividable by the JPEG block size (8 or 16) for lossless transformations!	Šířka i výška obrázku musí být dělitelná rozměrem JPEG bloku (8 nebo 16) pro bezeztrátové transformace! 
+Image width and height must be dividable by the JPEG block size (8 or 16) for lossless transformations!	Šířka i výška obrázku musí být dělitelná rozměrem JPEG bloku (8 nebo 16) pro bezeztrátové transformace!
 Reading the JPEG file from disk failed	Chyba čtení JPEG souboru z disku!
 Writing the resulting JPEG file to disk failed	Chyba zápisu výsledného JPEG souboru na disk!
 Performing the transformation failed	Chyba při provádění transformace!
-The transformation can be applied if the image is trimmed to the next matching size but this will remove some border pixels.	Transformace muže být provedena jen s ostřižením obrázku na nejbližší vhodný rozměr, to způsobí odstranění některých bodů na krajích. 
+The transformation can be applied if the image is trimmed to the next matching size but this will remove some border pixels.	Transformace muže být provedena jen s ostřižením obrázku na nejbližší vhodný rozměr, to způsobí odstranění některých bodů na krajích.
 Trim the image and apply transformation? Trimming cannot be undone!	Ostřihnou obrázek a provést transformaci? Ostřižení nelze vrátit!
 Note: Set the key 'TrimWithoutPromptLosslessJPEG=true' in the INI file to always trim without showing this message.	Pozn.:Nastavením klíče 'TrimWithoutPromptLosslessJPEG=true' v INI souboru lze ostřihovat vše bez této zprávy.
-Transition Effect	Přechodový efekt	
+Transition Effect	Přechodový efekt
 None	Žádný
 Blend	Míchání
-Slide from right	Posun zprava	
-Slide from left	Posun zleva 
+Slide from right	Posun zprava
+Slide from left	Posun zleva
 Slide from top	Posun zhora
 Slide from bottom	Posun zdola
 Roll from right	Rolovat zprava

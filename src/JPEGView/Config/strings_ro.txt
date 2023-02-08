@@ -71,20 +71,20 @@ Left mouse & drag	Stânga mouse şi trage
 Ctrl + Left mouse	Ctrl + Butonul stâng al mouse-ului
 Forward mouse button	'Forward' la mouse
 Back mouse button	'Back' la mouse
-Delete current file on disk permanently	Şterge fişierul curent permanent de pe harddisk! 
+Delete current file on disk permanently	Şterge fişierul curent permanent de pe harddisk!
 Rotate current file on disk lossless by 90 deg (W/H must be multiple of 16)	Roteşte fişierul curent pe harddisk 90gr. (spre dreapta) (W/H trebuie să fie multiplu de 16)
 Rotate current file on disk lossless by 270 deg (W/H must be multiple of 16)	Roteşte fişierul curent pe harddisk -90gr. (spre stânga) (W/H trebuie să fie multiplu de 16)
 The file is read-only!	Fişierul este read-only (se poate doar citit nu şi modifica)!
 Can't rename file!	Fişierul nu poate fi redenumit!
 New name contains backslash character!	Noul nume conţine caracterul backslash (\)!
 Renaming file failed!	Redenumeşte fişierul eşuat!
-Reason:	Cauza: 
+Reason:	Cauza:
 on	Pornit
 off	Oprit
 Do you really want to save the following parameters as default to the INI file	Sunteţi sigur că doriţi să salvaţi următorii parametrii ca de bază ai fişierului INI
-Auto contrast and color correction:	Autocorecţie de contrast şi culoare: 
-Local density correction:	Densitatea locală de corecţie: 
-Order files by:	Ordonează fişierele după: 
+Auto contrast and color correction:	Autocorecţie de contrast şi culoare:
+Local density correction:	Densitatea locală de corecţie:
+Order files by:	Ordonează fişierele după:
 Creation date/time	Data producerii / timpul
 Last modification	Ultima modificare
 File name	Numele fişierului
@@ -119,7 +119,7 @@ Navigation	Navigare
 Loop folder	Reia directorul
 Loop recursively	Buclă recursivă
 Loop siblings	Buclă pe nivel
-Display order	Afişează (ordinea de afişare) după 
+Display order	Afişează (ordinea de afişare) după
 Modification date	Data modificării
 Creation date	Data producerii
 Play folder as slideshow/movie	Rulează fişierele directorului ca prezentare / film
@@ -150,7 +150,6 @@ Yellow-Blue	Galben - Albastru
 C - R	C - R
 M - G	M - G
 Y - B	Y - B
-Batch rename/copy of files	Redenumire multipla / copierea fisierelor
 Batch rename/copy of files	Redenumire multipla / copierea fisierelor
 Image files in folder	Fisierele imagine din directorul
 Placeholders:	Substituenti:
@@ -289,8 +288,8 @@ Lossless JPEG transformations	Transformări JPEG fără pierderi
 Performing the lossless transformation failed!	Transformarea fără pierderi a eșuat!
 Image width and height must be dividable by the JPEG block size (8 or 16) for lossless transformations!	Lățimea și înălțimea imaginii trebuie să fie divizibilă cu blocul de mărime JPEG (8 sau 16) pentru transformări fără pierderi!
 Reading the JPEG file from disk failed	Citirea fișierului JPEG de pe disc a eșuat!
-Writing the resulting JPEG file to disk failed	Scrierea rezultatului fișierului JPEG pe disc a eșuat! 
+Writing the resulting JPEG file to disk failed	Scrierea rezultatului fișierului JPEG pe disc a eșuat!
 Performing the transformation failed	Efectuarea transformării a eșuat!
-The transformation can be applied if the image is trimmed to the next matching size but this will remove some border pixels.	Transformarea poate fi aplicată doar dacă imaginea este tăiată la dimensiunea potrivită dar acet lucru va tăia pixeli din marginile imaginii. 
+The transformation can be applied if the image is trimmed to the next matching size but this will remove some border pixels.	Transformarea poate fi aplicată doar dacă imaginea este tăiată la dimensiunea potrivită dar acet lucru va tăia pixeli din marginile imaginii.
 Trim the image and apply transformation? Trimming cannot be undone!	Decupează imaginea și aplică transformarea? Decuparea nu poate fi făcută!
-Note: Set the key 'TrimWithoutPromptLosslessJPEG=true' in the INI file to always trim without showing this message.	Notă: Setarea parametrului 'TrimWithoutPromptLosslessJPEG=true' 'DecupareJPEGFărăPiederiFărăAtenționare=adevărat' in fișierul INI tot timpul va decupa imaginea fără să arate acest mesaj. 
+Note: Set the key 'TrimWithoutPromptLosslessJPEG=true' in the INI file to always trim without showing this message.	Notă: Setarea parametrului 'TrimWithoutPromptLosslessJPEG=true' 'DecupareJPEGFărăPiederiFărăAtenționare=adevărat' in fișierul INI tot timpul va decupa imaginea fără să arate acest mesaj.

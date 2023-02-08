@@ -83,13 +83,13 @@ The file is read-only!	只读文件!
 Can't rename file	无法重命名文件
 New name contains backslash character!	新名中包含反斜线字符!
 Renaming file failed!	重命名失败!
-Reason: 	原因: 
+Reason: 	原因:
 on	打开
 off	关闭
 Do you really want to save the following parameters as default to the INI file	您真的想要将以下参数保存为默认的 INI 文件?
 Auto contrast and color correction: 	自动对比度和色彩校正:
-Local density correction: 	局部密度校正: 
-Order files by: 	文件排序依据: 
+Local density correction: 	局部密度校正:
+Order files by: 	文件排序依据:
 Creation date/time	创建日期/时间
 Last modification date/time	最后修改日期/时间
 File name	文件名
@@ -277,7 +277,7 @@ Number of JPEG files in folder: %d	该文件夹中的 JPEG 文件数量: %d
 EXIF date successfully set on %d images, failed on %d images	%d 个图片的 EXIF 日期设定成功，%d 个图片失败
 Reason: Not enough memory available	原因: 没有足够的可用内存
 Transform image	转换图片
-Rotate...	旋转... 
+Rotate...	旋转...
 Mirror horizontally	水平翻转
 Mirror vertically	垂直翻转
 Random	随机
@@ -288,7 +288,6 @@ Perspective correction...	透视校正...
 Auto crop corrected image (avoids black border)	自动裁剪校正后的图片 (避免黑边框)
 Click and drag the mouse vertically to correct image tilt.	点选并垂直拖动鼠标来校正图片倾斜。
 Drag at the left or right border for asymmetric correction.	如要非对称校正请拖动左边或右边的边框。
-Fit window to image	窗口适合图片
 Keep aspect ratio on crop	保持画面比例裁剪
 Lossless JPEG transformations	无损 JPEG 转换
 Performing the lossless transformation failed!	执行无损转换失败!

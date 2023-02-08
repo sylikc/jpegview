@@ -49,7 +49,7 @@ Maximize/restore to/from virtual desktop (only for multi-monitor systems)	最大
 Copy screen to clipboard/ Copy processed full size image to clipboard	画面をクリップボードにコピー/加工したフルサイズ画像をクリップボードにコピー
 Open new image or slideshow file	画像またはスライドショーを開く
 Save processed image to JPEG file (original size)	加工した画像をJPEGファイルに保存
-Save (%s)/ delete (%s) image processing parameters in/from parameter DB	画像加工のパラメーターを保存(%s)/削除(%s) 
+Save (%s)/ delete (%s) image processing parameters in/from parameter DB	画像加工のパラメーターを保存(%s)/削除(%s)
 Sort images by creation date, resp. modification date, resp. file name	作成日時/更新日時/ファイル名で画像を並び替え
 Goto previous image	前の画像
 Goto next image	次の画像
@@ -86,7 +86,7 @@ The file is read-only!	このファイルは読み取り専用です。
 Can't rename file	名前を変更できません
 New name contains backslash character!	改名先の名前にバックスラッシュ \ が含まれています。
 Renaming file failed!	名前の変更に失敗
-Reason: 	原因: 
+Reason: 	原因:
 on	オン
 off	オフ
 Do you really want to save the following parameters as default to the INI file	以下のパラメーターを規定としてINIファイルに保存しますか？
@@ -159,7 +159,7 @@ C - R	C - V
 M - G	M - V
 Y - B	A - A
 Batch rename/copy of files	ファイルを一括で改名/コピー
-Image files in folder	このフォルダ内の画像ファイル: 
+Image files in folder	このフォルダ内の画像ファイル:
 Placeholders:	引数の使用:
 Number (consecutively numbered)	通し番号
 Number with N digits	N桁の番号
@@ -221,7 +221,7 @@ Show last image in folder	フォルダ内の最後の画像を表示
 Rotate image 90 deg clockwise	右回り90度回転
 Rotate image 90 deg counter-clockwise	左回り90度回転
 Landscape picture enhancement mode	風景画像の改善モード
-Display image (EXIF) information	画像情報(EXIF)を表示	
+Display image (EXIF) information	画像情報(EXIF)を表示
 Actual size of image	実際の画像サイズ
 Toggle between screens (only for multi-monitor systems)	マルチモニターで別画面に表示
 Enable/disable full screen mode	全画面表示を有効化/無効化

@@ -84,13 +84,13 @@ The file is read-only!	Этот файл только для чтения!
 Can't rename file	Невозможно переименовать файл
 New name contains backslash character!	В новом имени содержится символ '\'.
 Renaming file failed!	Ошибка переименования файла.
-Reason: 	Причина: 
+Reason: 	Причина:
 on	вкл.
 off	выкл.
 Do you really want to save the following parameters as default to the INI file	Хотите сохранить эти параметры в INI-файле как стандартные
-Auto contrast and color correction: 	Автокоррекция контрастности и цвета: 
-Local density correction: 	Коррекция светов/теней: 
-Order files by: 	Сортировка файлов: 
+Auto contrast and color correction: 	Автокоррекция контрастности и цвета:
+Local density correction: 	Коррекция светов/теней:
+Order files by: 	Сортировка файлов:
 Creation date/time	Дата/время создания
 Last modification date/time	Дата/время изменения
 File name	Имя файла

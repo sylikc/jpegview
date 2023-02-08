@@ -30,7 +30,7 @@ Enable/disable high quality resampling	Włącz/wyłącz przetwarzanie wysokiej j
 Enable/disable keeping of geometry related (zoom/pan/rotation)	Włącz/wyłącz utrzymywanie wyświetlanej geometrii (Powiększenie/Fragment/Obrót)
 and image processing (brightness/contrast/sharpen) parameters between images	oraz parametrów przetwarzania (jasność/kontrast/ostrość) pomiędzy obrazami.
 Enable/disable automatic contrast correction (histogram equalization)	Włącz/wyłącz automatyczną korekcję kontrastu (wyrównanie histogramu)
-Apply auto contrast correction using only visible section of image	Automatyczna korekcja kontrastu z użyciem tylko widocznej części obrazu 
+Apply auto contrast correction using only visible section of image	Automatyczna korekcja kontrastu z użyciem tylko widocznej części obrazu
 Enable/disable automatic density correction (local brightness correction)	Włącz/wyłącz automatyczną korekcję gęstości (lokalna korekcja jasności)
 Increase/decrease lightening of shadows (LDC must be on)	Zwiększenie/zmniejszenie podświetlenia cieni (LDC musi być włączone)
 Increase/decrease darkening of highlights (LDC must be on)	Zwiększenie/zmniejszenie przyciemniania jasności (LDC musi być włączone)
@@ -78,13 +78,13 @@ The file is read-only!	Ten plik jest tylko do odczytu!
 Can't rename file	Nie można zmienić nazwy pliku
 New name contains backslash character!	Nazwa zawiera ukośnik (\)!
 Renaming file failed!	Niepowodzenie zmiany nazwy!
-Reason: 	Powód: 
+Reason: 	Powód:
 on	wł.
 off	wył.
 Do you really want to save the following parameters as default to the INI file	Rzeczywiście chcesz zapisać parametry jako domyślne do pliku INI?
-Auto contrast and color correction: 	Automatyczna korekcja kontrastu i koloru: 
-Local density correction: 	Lokalna korekcja gęstości: 
-Order files by: 	Sortuj pliki wg: 
+Auto contrast and color correction: 	Automatyczna korekcja kontrastu i koloru:
+Local density correction: 	Lokalna korekcja gęstości:
+Order files by: 	Sortuj pliki wg:
 Creation date/time	Data utworzenia
 Last modification date/time	Data ostatnie modyfikacji
 File name	Nazwa pliku
@@ -262,7 +262,7 @@ Save cropped image	Zachowaj wykadrowany obraz
 Rotate image by user-defined angle	Obrót o zadany kąt
 Rotate Image	Obrót
 Show grid lines	Pokaż linie siatki
-Auto crop rotated image (avoids black border)	Auto kadrowanie obracanego obrazu (zapobiega czarnemu obramowaniu) 
+Auto crop rotated image (avoids black border)	Auto kadrowanie obracanego obrazu (zapobiega czarnemu obramowaniu)
 Align image to horizontal or vertical line	Wyrównaj obraz do poziomej lub pionowej linii
 Use the mouse to draw a line that shall be horizontal or vertical.	Użyj myszki do narysowania poziomej lub pionowej linii.
 Rotate the image by dragging with the mouse.	Obróć obraz przeciągając myszką.

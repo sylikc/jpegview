@@ -78,13 +78,13 @@ The file is read-only!	Το αρχείο είναι μόνο-για-ανάγνω
 Can't rename file	Η μετονομασία δεν έγινε
 New name contains backslash character!	Η νέα ονομασία περιέχει (\)!
 Renaming file failed!	Αποτυχία μετονομασίας αρχείου!
-Reason: 	Αιτία: 
+Reason: 	Αιτία:
 on	on
 off	off
 Do you really want to save the following parameters as default to the INI file	Θέλεις να αποθηκεύσεις τις ακόλουθες παραμέτρους ως προεπιλογή στο αρχείο INI
-Auto contrast and color correction: 	Αυτόματη διόρθωση αντίθεσης και χρώματος: 
-Local density correction: 	Διόρθωση τοπικής πυκνότητας: 
-Order files by: 	Ταξινόμιση αρχείων κατά: 
+Auto contrast and color correction: 	Αυτόματη διόρθωση αντίθεσης και χρώματος:
+Local density correction: 	Διόρθωση τοπικής πυκνότητας:
+Order files by: 	Ταξινόμιση αρχείων κατά:
 Creation date/time	Ημερομηνία δημιουργίας
 Last modification date/time	Ημερομηνία τελευταίας τροποποίησης
 File name	Όνομα αρχείου
@@ -119,7 +119,7 @@ Navigation	Πλοήγηση
 Loop folder	Έρευνα στο φάκελο
 Loop recursively	Ψάξιμο στα μέσα επίπεδα
 Loop siblings	Ψάξε στα πρώτα επίπεδα
-Display order	Σειρά εμφάνισης εικόνων κατά 
+Display order	Σειρά εμφάνισης εικόνων κατά
 Modification date	Ημερομηνία τροποποίησης
 Creation date	Ημερομηνία δημιουργίας
 Play folder as slideshow/movie	Αναπαραγωγή ως παρουσίαση/ταινία
@@ -258,7 +258,7 @@ Show histogram	Προβολή ιστογράμματος
 Hide histogram	Απόκρυψη ιστογράμματος
 Crop Selection Lossless...	Περικοπή επιλογής χωρίς απώλεια...
 Save cropped image	Αποθήκευση περικομένης εικόνας
-Rotate image by user-defined angle	Περιστροφή εικόνας κατά ορισμένη γωνία 
+Rotate image by user-defined angle	Περιστροφή εικόνας κατά ορισμένη γωνία
 Rotate Image	Περιστροφή εικόνας
 Show grid lines	Εμφάνιση πλέγματος
 Auto crop rotated image (avoids black border)	Αυτόματη περικοπή περιστραμμένης εικόνας (αποφυγή του μαύρου περιθωρίου)
@@ -331,4 +331,4 @@ Downcounting	Φθίνουσα
 Update user settings...	Ενημέρωση ρυθμίσεων χρήστη...
 Manage 'Open image with' menu...	Διαχείριση μενού 'Άνοιγμα με...'
 No image loaded!	Δεν έχει φορτωθεί εικόνα!
-Right mouse button: Context menu	Δεξί πλήκτρο ποντικιού: Μενού περιβάλλοντος 
+Right mouse button: Context menu	Δεξί πλήκτρο ποντικιού: Μενού περιβάλλοντος

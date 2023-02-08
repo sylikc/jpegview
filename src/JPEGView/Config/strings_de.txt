@@ -78,13 +78,13 @@ The file is read-only!	Die Datei ist schreibgeschützt!
 Can't rename file	Datei kann nicht umbenannt werden
 New name contains backslash character!	Der neue Dateiname darf kein Backslashzeichen (\) enthalten!
 Renaming file failed!	Datei umbenennen fehlgeschlagen!
-Reason: 	Ursache: 
+Reason: 	Ursache:
 on	ein
 off	aus
 Do you really want to save the following parameters as default to the INI file	Sollen diese Parameter wirklich als Standardparameter in der INI-Datei gespeichert werden
-Auto contrast and color correction: 	Automatische Kontrast- und Farbkorrektur: 
-Local density correction: 	Lokale Helligkeitskorrektur: 
-Order files by: 	Dateien sortieren nach: 
+Auto contrast and color correction: 	Automatische Kontrast- und Farbkorrektur:
+Local density correction: 	Lokale Helligkeitskorrektur:
+Order files by: 	Dateien sortieren nach:
 Creation date/time	Erstellungsdatum
 Last modification date/time	Änderungsdatum
 File name	Dateiname

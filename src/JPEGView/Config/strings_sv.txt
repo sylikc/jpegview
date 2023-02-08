@@ -87,7 +87,7 @@ off	av
 Do you really want to save the following parameters as default to the INI file	Vill du verkligen spara följande parametrar som standard?
 Auto contrast and color correction: 	Automatisk kontrast- och färgkorrektion:
 Local density correction: 	Lokal densitetkorrektion (LDC):
-Order files by: 	Sortera filer efter: 
+Order files by: 	Sortera filer efter:
 Creation date/time	Skapad datum/tid
 Last modification date/time	  Senast ändrad datum/tid
 File name	Filnamn
@@ -106,7 +106,7 @@ Parameter DB error	Databasfel
 Error saving file	Fel! Kunde inte spara fil
 Error writing file to disk!	Fel! Kunde inte skriva fil till disk
 Confirm	  Bekräfta
-Do you really want to permanently delete the file %filename%?	Vill du verkligen ta bort %filename% permanent? 
+Do you really want to permanently delete the file %filename%?	Vill du verkligen ta bort %filename% permanent?
 Rotate the following file lossless by 90 deg?\n%filename%	Rotera följande bild förlustfritt 90 grader?\n%filename%
 Rotate the following file lossless by 270 deg?\n%filename%	 Rotera följande bild förlustfritt 270 grader?\n%filename%
 Open image...	Öppna bild...
@@ -274,9 +274,9 @@ Number of JPEG files in folder: %d	Antal JPEG-filer i mappen: %d
 EXIF date successfully set on %d images, failed on %d images	EXIF-data applicerat på %d bilder, misslyckades med %d bilder
 Reason: Not enough memory available	Orsak: För lite tillgängligt minne
 Transform image	Redigera bild
-Rotate...	Rotera... 
-Mirror horizontally	Vänd horisontellt 
-Mirror vertically	Vänd vertikalt 
+Rotate...	Rotera...
+Mirror horizontally	Vänd horisontellt
+Mirror vertically	Vänd vertikalt
 Random	Slumpmässig
 Zoom mode (drag mouse to zoom)	Zoom-läge (Dra med musen för att zooma)
 Correct converging lines (perspective correction)	Korrigera konvergerande linjer (perspektivkorrigering)
@@ -362,8 +362,8 @@ Applications	Program
 Select application	Välj program
 Save	Spara
 Edit	Redigera
-Upcounting	Stigande	
-Downcounting	Fallande	
+Upcounting	Stigande
+Downcounting	Fallande
 File size	Filstorlek
 Do you really want to delete the current image file on disk?	Vill du verkligen ta bort den aktuella bildfilen från disken?
 Delete image file	Ta bort bildfil

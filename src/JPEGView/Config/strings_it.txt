@@ -71,20 +71,20 @@ Left mouse & drag	Tasto sinistro mouse e trascina
 Ctrl + Left mouse	Ctrl + Tasto sinistro del mouse
 Forward mouse button	Tasto avanti del mouse
 Back mouse button	Tasto indietro del mouse
-Delete current file on disk permanently	Cancella definitivamente dal disco il file attuale 
+Delete current file on disk permanently	Cancella definitivamente dal disco il file attuale
 Rotate current file on disk lossless by 90 deg (W/H must be multiple of 16)	Ruota immagine attuale su disco senza perdita di qualità di 90 gradi (larghezza/altezza deve essere multiplo di 16)
 Rotate current file on disk lossless by 270 deg (W/H must be multiple of 16)	Ruota immagine attuale su disco senza perdita di qualità di 270 gradi (larghezza/altezza deve essere multiplo di 16)
 The file is read-only!	Il file è in sola lettura!
 Can't rename file	Non è possibile rinominare il file
 New name contains backslash character!	Il nuovo nome contiene il carattere barra inversa (\)!
 Renaming file failed!	Rinomina del file fallita!
-Reason: 	Motivo: 
+Reason: 	Motivo:
 on	on
 off	off
 Do you really want to save the following parameters as default to the INI file	Vuoi davvero salvare i seguenti parametri come default nel file INI
 Auto contrast and color correction: 	Correzione automatica del contrasto e del colore:
-Local density correction: 	Correzione della densità locale: 
-Order files by: 	Ordina i file per: 
+Local density correction: 	Correzione della densità locale:
+Order files by: 	Ordina i file per:
 Creation date/time	Data/ora di creazione
 Last modification date/time	Data/ora dell’ultima modifica
 File name	Nome file
@@ -155,7 +155,7 @@ Image files in folder	File immagine nella cartella
 Placeholders:	Segnaposto:
 Number (consecutively numbered)	Numero (numerazione consecutiva)
 Number with N digits	Numero con N cifre
-Extracted number from original file name	Numero estratto dal nome originale del file 
+Extracted number from original file name	Numero estratto dal nome originale del file
 Original file name (with extension)	Nome originale del file (con estensione)
 Original file name (without extension)	Nome originale del file (senza estensione)
 Original file extension	Estensione originale del file
@@ -271,7 +271,7 @@ Number of JPEG files in folder: %d	Numero di files JPEG nella cartella: %d
 EXIF date successfully set on %d images, failed on %d images	la data EXIF è stata settata correttamente a %d immagini, operazione non riuscita su %d immagini
 Reason: Not enough memory available	Motivo: memoria disponibile insufficiente
 Transform image	Trasforma immagine
-Rotate...	Ruota... 
+Rotate...	Ruota...
 Mirror horizontally	Rifletti orizzontalmente
 Mirror vertically	Rifletti verticalmente
 Random	Casuale
@@ -296,7 +296,7 @@ Note: Set the key 'TrimWithoutPromptLosslessJPEG=true' in the INI file to always
 Transition Effect	Effetto di transizione
 None	Nessuno
 Blend	Fusione
-Slide from right	A scorrimento da destra	
+Slide from right	A scorrimento da destra
 Slide from left	A scorrimento da sinistra
 Slide from top	A scorrimento dall'alto
 Slide from bottom	A scorrimento dal basso
@@ -326,7 +326,7 @@ File type	Tipo di file
 The following file extensions cannot be unregistered because they have been registered in the 'local machine' registry area.	Non si può annullare la registrazione delle seguenti estensioni di file, perché sono state registrate tramite la sezione 'local machine' del registro di sistema.
 Registering or unregistering file extensions in this registry area requires administration privileges and cannot be done in JPEGView.	La registrazione o l'annullamento della registrazione delle estensioni di file in quest'area del registro di sitema richiede i privilegi di amministratore e non può essere effettuata tramite JPEGView.
 Press 'OK' to continue with registration or 'Cancel' to not modify any registrations.	Premere 'OK' per continuare con la registrazione o 'Annulla' per non modificare nulla.
-Unregistering not possible	Annullamento della registrazione impossibile 
+Unregistering not possible	Annullamento della registrazione impossibile
 %s images	%s immagini
 %s images (processed by Window Imaging Component - WIC)	%s immagini (processate come WIC - Windows Imaging Component)
 %s camera raw images (embedded JPEGs only)	%s immagini "raw" della fotocamera (solo JPEGs incorporate)
@@ -373,7 +373,7 @@ New height:	Nuova altezza:
 Filter:	Filtro:
 Box	Box
 Lanczos/Bicubic	Lanczos/Bicubic
-Sharpen low	Contrasto basso 
+Sharpen low	Contrasto basso
 Sharpen medium	Contrasto medio
 The new size is too large - width or height is larger than 65535 or total number of pixels is too large!	La nuova dimensione è troppo grande - larghezza o altezza sono maggiori di 65535 oppure il numero totale di pixel è troppo grande!
 Hour / Minute (as numbers)	Ore / Minuti (come numeri)

@@ -131,7 +131,6 @@ Rotate +90	Rotation +90
 Rotate -90	Rotation -90
 Rotate 180	Rotation 180
 Auto correction	Corrections couleurs et contraste
-Local density correction	Corrections sombres et clairs
 Keep parameters	Garder le traitement entre les images
 Set current parameters as default values...	Sauvegarder les réglages comme défaut dans le fichier INI...
 Save parameters to DB	Sauvegarder le traitement dans la DB
