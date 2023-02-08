@@ -105,6 +105,8 @@ def keymap_generate_reference_readme():
 
         for k, v in d_comment.items():
             v_escaped = v.replace('\\', '\\\\').replace(r'"', r'\"')  # CSS needs certain things escaped
+            # https://stackoverflow.com/questions/2741312/using-css-to-insert-text
+            # CSS3 is different: https://developer.mozilla.org/en-US/docs/Learn/CSS/Howto/Generated_content
             f.write(f"""
 .{k}:before {{
   content: "{v_escaped}"
