@@ -233,8 +233,11 @@ LRESULT CBatchCopyDlg::OnRename(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*/
 				// Failure, ask user if to continue
 				if (lastError == 0) lastError = ::GetLastError();
 				CString strError;
-				strError.Format(CNLS::GetString(_T("The file '%s' could not be %s.")), iter->GetTitle(),
-					bCopyNeeded ? CNLS::GetString(_T("copied")) : CNLS::GetString(_T("renamed")));
+				// to make translation easier, the code has been "expanded"
+				//previously: GetString(_T("The file '%s' could not be %s.")), iter->GetTitle(), bCopyNeeded ? GetString(_T("copied")) : GetString(_T("renamed")));
+				strError.Format(
+					bCopyNeeded ? CNLS::GetString(_T("The file '%s' could not be copied!")) : CNLS::GetString(_T("The file '%s' could not be renamed!")),
+					iter->GetTitle());
 				strError += _T("\n");
 				strError += CNLS::GetString(_T("Reason:")); strError += _T(" ");
 				LPTSTR lpMsgBuf = NULL;

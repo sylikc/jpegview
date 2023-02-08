@@ -144,8 +144,8 @@ LRESULT CManageOpenWithDlg::OnShortcutHelp(WORD /*wNotifyCode*/, WORD wID, HWND 
 	::MessageBox(m_hWnd, CString(CNLS::GetString(_T("Modifier keys:"))) + _T(" Alt, Ctrl, Shift\n\n") + 
 		CNLS::GetString(_T("Known keys:")) + + _T(" Esc, Return, Space, End, Home, Back, Tab, PgDn, PgUp, Left, Right, Up, Down, Insert, Del, Plus, Minus, Mul, Div, Comma, Period, A .. Z, F1 .. F12\n\n") +
 		CNLS::GetString(_T("Combine keys with '+'")) + _T("\n\n") +
-		CNLS::GetString(_T("Example:")) + _T("'Alt+Ctrl+F7'")
-		, CNLS::GetString(_T("Shortcut Help")), MB_OK | MB_ICONINFORMATION);
+		CNLS::GetString(_T("Example:")) + _T("'Ctrl+Alt+F7'"),
+		CNLS::GetString(_T("Shortcut Help")), MB_OK | MB_ICONINFORMATION);
 	return 0;
 }
 
@@ -212,7 +212,7 @@ void CManageOpenWithDlg::EnterEditMode(bool addNewEntry) {
 	m_btnEdit.EnableWindow(FALSE);
 	m_btnDelete.EnableWindow(FALSE);
 	if (addNewEntry) {
-		m_lbMenuEntries.AddString(_T("[new entry]"));
+		m_lbMenuEntries.AddString(CNLS::GetString(_T("[new entry]")));
 		m_lbMenuEntries.SetCurSel(m_lbMenuEntries.GetCount() - 1);
 		m_btnClose.EnableWindow(FALSE);
 	}
