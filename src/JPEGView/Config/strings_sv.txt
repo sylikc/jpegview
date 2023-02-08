@@ -1,5 +1,22 @@
-﻿// This file must be encoded with UTF-8 (e.g. with Windows Notepad)
-// Filename Convention: 'strings_%languagecode%.txt' where %languagecode% is the ISO 639 language code e.g. 'fr' for French
+﻿//! This file must be encoded with UTF-8 (e.g. with Windows Notepad)
+//! LICENSE: This localization file is part of JPEGView <https://github.com/sylikc/jpegview> and distributed under the same license.  See <https://github.com/sylikc/jpegview/blob/master/LICENSE.txt> for more info.
+
+//! Filename Convention: 'strings_%languagecode%.txt' where %languagecode% is the ISO 639 language code e.g. 'en' for English
+
+////////////////////
+// ::: Translation Info ::: //
+//: ISO 639 code: en
+//: Language: English
+//: Translator(s):
+//: Last Updated:
+//: Additional Notes:
+//Language = Swedish
+//TranslatorName = Åke Engelbrektson
+//TranslatorContact = eson57@gmail.com
+//TranslatorURL = http://svenskasprakfiler.se
+//LastUpdated = 2013-12-08
+//
+////////////////////
 
 ////////////////////
 // ::: Instructions / Help ::: //
@@ -23,23 +40,8 @@
 //?   "on"/"off" in context is for showing a setting active or not
 ////////////////////
 
-////////////////////
-// ::: Translator Credits ::: //
-//: Language: English
-//: Translator Name(s) / Contact(s):
-//: History/Notes:
-//: Last Updated:
-////////////////////
-
-
 
 // ::: Program Strings ::: (sorted alphabetically) //
-//Language = Swedish
-//TranslatorName = Åke Engelbrektson
-//TranslatorContact = eson57@gmail.com
-//TranslatorURL = http://svenskasprakfiler.se
-//LastUpdated = 2013-12-08
-//
 %d file(s) renamed, %d file(s) copied, %d folder(s) created	%d  %d fil(er) omdöpt(a), %d fil(er) kopierad(e), %d mapp(ar) skapad(e)	%d
 %s camera raw images (embedded JPEGs only)	%s rå-bilder (endast inbäddad JPEG)
 %s images	%s bilder
@@ -574,4 +576,4 @@ Zoom to Selection	Zooma in markerat område
 //! Set window always on top
 //! Update user settings...
 
-// ::: STATUS: Last Checked/Updated by Script ::: 2023-02-08T20:43:47.532937+00:00 //
+// ::: STATUS: Last Checked/Updated by Script ::: 2023-02-08T22:01:06.287308+00:00 //

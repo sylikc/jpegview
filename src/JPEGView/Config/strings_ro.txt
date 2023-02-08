@@ -1,5 +1,16 @@
-﻿// This file must be encoded with UTF-8 (e.g. with Windows Notepad)
-// Filename Convention: 'strings_%languagecode%.txt' where %languagecode% is the ISO 639 language code e.g. 'fr' for French
+﻿//! This file must be encoded with UTF-8 (e.g. with Windows Notepad)
+//! LICENSE: This localization file is part of JPEGView <https://github.com/sylikc/jpegview> and distributed under the same license.  See <https://github.com/sylikc/jpegview/blob/master/LICENSE.txt> for more info.
+
+//! Filename Convention: 'strings_%languagecode%.txt' where %languagecode% is the ISO 639 language code e.g. 'en' for English
+
+////////////////////
+// ::: Translation Info ::: //
+//: ISO 639 code: en
+//: Language: English
+//: Translator(s):
+//: Last Updated:
+//: Additional Notes:
+////////////////////
 
 ////////////////////
 // ::: Instructions / Help ::: //
@@ -22,15 +33,6 @@
 //?   "yes"/"no" in context is for showing EXIF flags
 //?   "on"/"off" in context is for showing a setting active or not
 ////////////////////
-
-////////////////////
-// ::: Translator Credits ::: //
-//: Language: English
-//: Translator Name(s) / Contact(s):
-//: History/Notes:
-//: Last Updated:
-////////////////////
-
 
 
 // ::: Program Strings ::: (sorted alphabetically) //
@@ -655,4 +657,4 @@ Zoom to Selection	Măreşte selecţia
 //! Set as default viewer...
 //! User commands
 
-// ::: STATUS: Last Checked/Updated by Script ::: 2023-02-08T20:43:47.504464+00:00 //
+// ::: STATUS: Last Checked/Updated by Script ::: 2023-02-08T22:01:06.254227+00:00 //

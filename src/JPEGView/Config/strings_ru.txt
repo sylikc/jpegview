@@ -1,5 +1,25 @@
-﻿// This file must be encoded with UTF-8 (e.g. with Windows Notepad)
-// Filename Convention: 'strings_%languagecode%.txt' where %languagecode% is the ISO 639 language code e.g. 'fr' for French
+﻿//! This file must be encoded with UTF-8 (e.g. with Windows Notepad)
+//! LICENSE: This localization file is part of JPEGView <https://github.com/sylikc/jpegview> and distributed under the same license.  See <https://github.com/sylikc/jpegview/blob/master/LICENSE.txt> for more info.
+
+//! Filename Convention: 'strings_%languagecode%.txt' where %languagecode% is the ISO 639 language code e.g. 'en' for English
+
+////////////////////
+// ::: Translation Info ::: //
+//: ISO 639 code: en
+//: Language: English
+//: Translator(s):
+//: Last Updated:
+//: Additional Notes:
+// Этот файл должен иметь кодировку UTF-8 (для редактирования подойдёт, например, Блокнот Windows)
+// Имя файла должно иметь вид 'strings_%languagecode%.txt' (где %languagecode% – код языка согласно ISO 639, пример: 'fr' –  французский)
+// Формат: Английская строка<tab>Переведённая строка<cr/lf>
+//Language=Russian
+//TranslatorName=Dmitry Yerokhin
+//Contact=erodim@mail.ru
+//TranslatorURL=none
+//LastUpdated=Jan 8, 2018
+//
+////////////////////
 
 ////////////////////
 // ::: Instructions / Help ::: //
@@ -23,26 +43,8 @@
 //?   "on"/"off" in context is for showing a setting active or not
 ////////////////////
 
-////////////////////
-// ::: Translator Credits ::: //
-//: Language: English
-//: Translator Name(s) / Contact(s):
-//: History/Notes:
-//: Last Updated:
-////////////////////
-
-
 
 // ::: Program Strings ::: (sorted alphabetically) //
-// Этот файл должен иметь кодировку UTF-8 (для редактирования подойдёт, например, Блокнот Windows)
-// Имя файла должно иметь вид 'strings_%languagecode%.txt' (где %languagecode% – код языка согласно ISO 639, пример: 'fr' –  французский)
-// Формат: Английская строка<tab>Переведённая строка<cr/lf>
-//Language=Russian
-//TranslatorName=Dmitry Yerokhin
-//Contact=erodim@mail.ru
-//TranslatorURL=none
-//LastUpdated=Jan 8, 2018
-//
 %d file(s) renamed, %d file(s) copied, %d folder(s) created	Файлов переименовано: %d, скопировано: %d, создано папок: %d
 %s camera raw images (embedded JPEGs only)	Raw-изображения %s (только встроенные JPEG)
 %s images	Изображения %s
@@ -566,4 +568,4 @@ Zoom to Selection	Масштабировать до выделенного
 //! Hide window title bar
 //! Set window always on top
 
-// ::: STATUS: Last Checked/Updated by Script ::: 2023-02-08T20:43:47.519453+00:00 //
+// ::: STATUS: Last Checked/Updated by Script ::: 2023-02-08T22:01:06.271448+00:00 //

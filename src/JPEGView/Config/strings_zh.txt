@@ -1,5 +1,20 @@
-﻿// This file must be encoded with UTF-8 (e.g. with Windows Notepad)
-// Filename Convention: 'strings_%languagecode%.txt' where %languagecode% is the ISO 639 language code e.g. 'fr' for French
+﻿//! This file must be encoded with UTF-8 (e.g. with Windows Notepad)
+//! LICENSE: This localization file is part of JPEGView <https://github.com/sylikc/jpegview> and distributed under the same license.  See <https://github.com/sylikc/jpegview/blob/master/LICENSE.txt> for more info.
+
+//! Filename Convention: 'strings_%languagecode%.txt' where %languagecode% is the ISO 639 language code e.g. 'en' for English
+
+////////////////////
+// ::: Translation Info ::: //
+//: ISO 639 code: en
+//: Language: English
+//: Translator(s):
+//: Last Updated:
+//: Additional Notes:
+//Translation Info
+//Translator:风逸兰
+//Update:2021/06/28 补全翻译，调整部分原有翻译使其更符合简体中文阅读习惯 by dunkeng
+//Update:2022/10/17 by mowumo
+////////////////////
 
 ////////////////////
 // ::: Instructions / Help ::: //
@@ -23,21 +38,8 @@
 //?   "on"/"off" in context is for showing a setting active or not
 ////////////////////
 
-////////////////////
-// ::: Translator Credits ::: //
-//: Language: English
-//: Translator Name(s) / Contact(s):
-//: History/Notes:
-//: Last Updated:
-////////////////////
-
-
 
 // ::: Program Strings ::: (sorted alphabetically) //
-//Translation Info
-//Translator:风逸兰
-//Update:2021/06/28 补全翻译，调整部分原有翻译使其更符合简体中文阅读习惯 by dunkeng
-//Update:2022/10/17 by mowumo
 %d file(s) renamed, %d file(s) copied, %d folder(s) created	已重命名 %d 个文件，已复制 %d 个文件，已创建 %d 个文件夹
 %s camera raw images (embedded JPEGs only)	%s 相机原始图片 (仅嵌入式 JPEG)
 %s images	%s 图片
@@ -558,4 +560,4 @@ Zoom to Selection	缩放到选择内容
 //! Hide window title bar
 //! Set window always on top
 
-// ::: STATUS: Last Checked/Updated by Script ::: 2023-02-08T20:43:47.580883+00:00 //
+// ::: STATUS: Last Checked/Updated by Script ::: 2023-02-08T22:01:06.336249+00:00 //

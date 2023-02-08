@@ -1,5 +1,23 @@
-﻿// This file must be encoded with UTF-8 (e.g. with Windows Notepad)
-// Filename Convention: 'strings_%languagecode%.txt' where %languagecode% is the ISO 639 language code e.g. 'fr' for French
+﻿//! This file must be encoded with UTF-8 (e.g. with Windows Notepad)
+//! LICENSE: This localization file is part of JPEGView <https://github.com/sylikc/jpegview> and distributed under the same license.  See <https://github.com/sylikc/jpegview/blob/master/LICENSE.txt> for more info.
+
+//! Filename Convention: 'strings_%languagecode%.txt' where %languagecode% is the ISO 639 language code e.g. 'en' for English
+
+////////////////////
+// ::: Translation Info ::: //
+//: ISO 639 code: en
+//: Language: English
+//: Translator(s):
+//: Last Updated:
+//: Additional Notes:
+//Language=Japanese
+//TranslatorName=Hiroyuki Matenokoji, maboroshin
+//Contact=none
+//TranslatorURL=https://pc.genkaku.in/
+//LastUpdated=2023-02-05
+// 1st Japanese translation : by Hiroyuki Matenokoji. (2015)
+// 2nd translator: Japanese by maboroshin (2019-2023, Adjustment, and translate little new part)
+////////////////////
 
 ////////////////////
 // ::: Instructions / Help ::: //
@@ -23,25 +41,8 @@
 //?   "on"/"off" in context is for showing a setting active or not
 ////////////////////
 
-////////////////////
-// ::: Translator Credits ::: //
-//: Language: English
-//: Translator Name(s) / Contact(s):
-//: History/Notes:
-//: Last Updated:
-////////////////////
-
-
 
 // ::: Program Strings ::: (sorted alphabetically) //
-// This file is distributed under the same license as the JPEGView package
-//Language=Japanese
-//TranslatorName=Hiroyuki Matenokoji, maboroshin
-//Contact=none
-//TranslatorURL=https://pc.genkaku.in/
-//LastUpdated=2023-02-05
-// 1st Japanese translation : by Hiroyuki Matenokoji. (2015)
-// 2nd translator: Japanese by maboroshin (2019-2023, Adjustment, and translate little new part)
 %d file(s) renamed, %d file(s) copied, %d folder(s) created	%d個を改名 %d個をコピー %d個のフォルダを作成
 %s camera raw images (embedded JPEGs only)	%s 個のRAW画像 (埋め込みJPEGのみ)
 %s images	%s 個の画像
@@ -560,4 +561,4 @@ Zoom to Selection	選択範囲を拡大
 //! 50 fps
 //! 100 fps
 
-// ::: STATUS: Last Checked/Updated by Script ::: 2023-02-08T20:43:47.420484+00:00 //
+// ::: STATUS: Last Checked/Updated by Script ::: 2023-02-08T22:01:06.193384+00:00 //

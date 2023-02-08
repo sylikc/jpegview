@@ -28,7 +28,7 @@ def parse_strings_txt(filepath):
     returns a dict and a list and a dict...
         dict: key-value pairs for existing translations
         list: comments in the file
-        dict
+        dict: special dict, with translation info
     """
     # first cache the file entirely, we need to build up the mappings
     with open(filepath, 'rt', encoding=UTF8) as f:
@@ -38,6 +38,7 @@ def parse_strings_txt(filepath):
     # the mapping is "english string":
     file_dict = {}
     file_comments = []  # this is a list of comments which will be moved to the new file
+    file_info = {}
 
     for line in file_lines:
         # strip the UTF-8 header if it exists
@@ -46,7 +47,12 @@ def parse_strings_txt(filepath):
 
         if line.startswith("//"):
             # check a special condition
-            if "\t" in line:
+            if line.startswith("//: "):
+                # check this comment for special sequences, like this translator sequence
+                (k, v) = line[4:].split(":", 1)
+                file_info[k] = v.strip()
+                print(f"FOUND INFO: {k}={v.strip()}")
+            elif "\t" in line:
                 # this is a previously commented out translation
                 try:
                     (e, t) = line[2:].split("\t", 1)  # if this causes an error, we have to fix on a case-by-case basis...
@@ -99,7 +105,7 @@ def parse_strings_txt(filepath):
         else:
             file_dict[e_strip] = t_strip
 
-    return (file_dict, file_comments)
+    return (file_dict, file_comments, file_info)
 
 
 def sync_strings_to_reference(reference_lines, filepath):
@@ -110,14 +116,14 @@ def sync_strings_to_reference(reference_lines, filepath):
     but this is both a bit difficult, and pollutes the translation file, so it's better to write it out separately
     """
 
-    (file_dict, file_comments) = parse_strings_txt(filepath)
+    (file_dict, file_comments, info_dict) = parse_strings_txt(filepath)
 
     missing_list = []
 
     # it's safe to re-write the file because it's version controlled... if we need to revert, we can checkout a previous copy
     with open(filepath, 'wt', encoding=UTF8) as f:
         found_start_line = False
-        finished_comments = False
+        info_block = False  # are we in the info block?
 
         # loop the reference lines
         for line in reference_lines:
@@ -135,7 +141,64 @@ def sync_strings_to_reference(reference_lines, filepath):
 
             # write the reference comments verbatim into file
             if line.startswith("//"):
-                f.write(f"{line}\n")
+                # special handling is required inside the info block
+                if line.startswith("// ::: Transla"):  # !!!WARNING!!! THIS IS TIGHTLY COUPLED TO strings_txt_builder... if you change the header text there, it MUST MATCH HERE !!!!!!!!
+                    info_block = True  # start the info block
+                    f.write(f"{line}\n")
+
+                elif info_block:
+                    # if we are "inside the info block"
+                    if line.startswith("///////"):
+                        info_block = False  # leaving info block
+
+                        # right before leaving the info block once and for all, we write out any additional stuff left in info_dict, and dump out comments
+
+                        # dump info_dict
+                        for k, v in info_dict.items():
+                            f.write(f"//: {k}:")
+                            f.write(f" {v}\n" if v else "\n")  # don't write a space unless there's a value
+
+                        # dump out any comments... they should all be related to some info
+                        #f.writelines(file_comments)
+                        # no \r\n in the list, so do manually
+                        for x in file_comments:
+                            # skip special sequences
+
+                            # headers
+                            if x.startswith("// :::"):
+                                continue
+                            # auto-generated missing parts
+                            if x.startswith("//! "):
+                                continue
+                            # help
+                            if x.startswith("//? "):
+                                continue
+                            if x.startswith("//////////"):
+                                continue
+
+                            f.write(f"{x}\n")
+
+                        f.write(f"{line}\n")   # write the actual end block line
+                    else:
+                        # we're inside the info block, check the keys against the info_dict
+                        # !!!WARNING!!! THIS IS TIGHTLY COUPLED TO strings_txt_builder ... if the naming there changes, this will also be affected
+                        (k, v) = line[4:].split(":", 1)
+                        if k in info_dict:
+                            # found same key info in the dict
+                            f.write(f"//: {k}:")
+                            f.write(f" {info_dict[k]}\n" if info_dict[k] else "\n")  # don't write a space unless there's a value
+
+                            # delete it in info_dict
+                            del info_dict[k]
+                        else:
+                            # not found in info_dict, write default value from reference template
+                            f.write(f"//: {k}:")
+                            f.write(f" {v}\n" if v else "\n")  # don't write a space unless there's a value
+
+                else:
+                    f.write(f"{line}\n")
+
+
 
                 # remove this line from file_comments if it exists
                 # so the header doesn't get re-written on subsequent updates
@@ -147,34 +210,12 @@ def sync_strings_to_reference(reference_lines, filepath):
                 except ValueError:
                     pass
 
-                # TODO, extra logic to keep from re-writing header
-
                 continue
 
             # empty lines go over as well
             if len(line) == 0:
                 f.write("\n")
                 continue
-
-            # if we got here, the initial comments block is complete, dump the comments section
-            if not finished_comments:
-                #f.writelines(file_comments)
-                # no \r\n so do manually
-                for x in file_comments:
-                    # skip special sequences
-
-                    # headers
-                    if x.startswith("// :::"):
-                        continue
-                    # auto-generated missing parts
-                    if x.startswith("//! "):
-                        continue
-                    # help
-                    if x.startswith("//? "):
-                        continue
-
-                    f.write(f"{x}\n")
-                finished_comments = True
 
             # what's remaining is the english string to split, there should be nothing on the other side though
             (e_index, e_none) = line.split("\t")
