@@ -1,408 +1,500 @@
-﻿//Language = Swedish
+﻿// This file must be encoded with UTF-8 (e.g. with Windows Notepad)
+// Filename Convention: 'strings_%languagecode%.txt' where %languagecode% is the ISO 639 language code e.g. 'fr' for French
+
+////////////////////
+// Line Format:    English string<tab>Translated string<newline>
+// * Lines beginning with "//" are ignored
+// * Blank lines are ignored
+// * Lines without a <tab> or have no text after the tab are ignored
+// * multiple tabs are permitted between English and Translated string, e.g. this is valid:    English string<tab><tab><tab>Translated string<newline>
+
+// NOTE: %s %d have special meanings in the strings, so make sure they appear somewhere in the translated string
+
+// For the strings below which are short and have no context:
+//   "in" in context is shorthand for "inch"
+//   "cm" in context is shorthand for "centimeter"
+//   "C - R" in context is "Cyan Red" colors
+//   "M - G" in context is "Magenta Green" colors
+//   "Y - B" in context is "Yellow Blue" colors
+//   "yes"/"no" in context is for showing EXIF flags
+//   "on"/"off" in context is for showing a setting active or not
+////////////////////
+
+////////////////////
+// == Translator Credits ==
+// Language: English
+// Translator Name(s) / Contact(s):
+// History/Notes:
+// Last Updated:
+////////////////////
+
+// ::: Program Strings ::: (sorted alphabetically) //
+//Language = Swedish
 //TranslatorName = Åke Engelbrektson
 //TranslatorContact = eson57@gmail.com
 //TranslatorURL = http://svenskasprakfiler.se
 //LastUpdated = 2013-12-08
 //
-Contrast	Kontrast
-Brightness	Ljus
-Sharpen	Skärpa
-Lighten Shadows	Ljusa skuggor
-Darken Highlights	Högdagrar
-Deep Shadows	Djupa skuggor
-Color Correction	Färger
-Contrast Correction	Kontrastjustering
-Parameter DB:	Databas:
-Save to	Spara till
-Remove from	Ta bort från
-Rename:	Byt namn:
-No file or folder name was provided as command line parameter!	Ingen fil eller mapp angavs som kommandoradsparameter!
-To use JPEGView, associate JPG, JPEG and BMP files with JPEGView.	För att använda JPEGView, associera JPG-, JPEG- och BMP-filer med JPEGView.
-Press ESC to exit...	Tryck 'ESC' för att avsluta...
-The file '%s' could not be read!	Filen '%s' kunde inte läsas!
-The file '%s' does not contain a list of file names!	Filen '%s' innehåller ingen lista på filnamn!
-The directory '%s' does not contain any image files!	Mappen '%s' innehåller inga bildfiler!
-Press any key to search the subdirectories for image files.	Tryck på valfri tangent för att söka igenom undermappar efter bildfiler.
-JPEGView Help	JPEGView hjälp
-Current image	Aktuell bild
-Close help text display / Close JPEGView	Stäng hjälpfilen/Stäng JPEGView
-Show/hide this help text	Visa/Dölj denna hjälptext
-Show/hide picture information (EXIF data)	Visa/Dölj bildinformation (EXIF-data)
-Show/hide file name	Visa/Dölj filnamn
-Enable/disable high quality resampling	Aktivera/Inaktivera högkvalitativ omsampling
-Enable/disable keeping of geometry related (zoom/pan/rotation)	Aktivera/Inaktivera bevarande av geometrirelaterad (zoom/pan/rotation)
-and image processing (brightness/contrast/sharpen) parameters between images	och bildprocessande (ljus/kontrast/skärpa) parametrar mellan bilder.
-Enable/disable automatic contrast correction (histogram equalization)	Aktivera/Inaktivera automatisk kontrastkorrigering (histogramutjämning)
-Apply auto contrast correction using only visible section of image	Använd automatisk kontrastkorrigering med hjälp av endast synlig del av bild
-Enable/disable automatic density correction (local brightness correction)	Aktivera/Inaktivera automatisk densitetkorrigering (LDC)
-Increase/decrease lightening of shadows (LDC must be on)	Öka/Minska ljussättning av skuggor (LDC måste vara aktiverat)
-Increase/decrease darkening of highlights (LDC must be on)	Öka/Minska nedtoning av högdagrar (LDC måste vara aktiverat)
-Loop through files in current folder	Gå igenom filer i aktuell katalog
-Loop through files in current directory and all subfolders	Gå igenom filer i aktuell mapp och alla undermappar
-Loop through files in current directory and all sibling folders (folders on same level)	Gå igenom filer i aktuell mapp och alla undermappar (mappar på samma nivå)
-Maximize/restore to/from virtual desktop (only for multi-monitor systems)	Maximera/Återställ till/från virtuellt skrivbord (endast för multiskärmsystem)
-Copy screen to clipboard/ Copy processed full size image to clipboard	Kopiera skärmbild till urklipp/Kopiera bearbetad fullstorleksbild till urklipp
-Open new image or slideshow file	Öppna ny bild- eller bildspelsfil
-Save processed image to JPEG file (original size)	Spara bearbetad bild som JPEG-fil (originalstorlek)
-Save (%s)/ delete (%s) image processing parameters in/from parameter DB	Spara(%s)/Ta bort(%s) berbetningsparametrar i/från databas (DB)
-Sort images by creation date, resp. modification date, resp. file name	Sortera bilder efter respektive Skapad/Senast ändrad/Filnamn
-Goto previous image	Gå till föregående bild
-Goto next image	Gå till nästa bild
-PgUp or Left	PgUp eller vänster
-PgDn or Right	PgDn eller höger
-Goto first/last image of current folder (using sort order as defined)	Gå till första/sista bilden i aktuell mapp (sorterat enligt specifikation)
-Increase/decrease brightness	Justera ljus
-Increase/decrease contrast	Justera kontrast
-Increase/decrease sharpness	 Justera skärpa
-Increase/decrease auto color cast correction amount	 Justera automatisk färgkorrigering
-Increase/decrease auto contrast correction amount	Justera automatisk kontrastkorrigering
-Enable/disable landscape picture enhancement mode	Aktivera/Inaktivera optimeringsläge för liggande bild
-Slide show with timeout of n seconds (ESC to stop)	Bildspel med n sekunders timeout (ESC för att stoppa)
-Set timeout to n/10 sec, respectively n/100 sec (Ctrl+Shift)	Bestäm timeout till n/10 sek, respektive n/100 sek (Ctrl+Shift)
-Rotate image and fit to screen	Rotera bild och anpassa till skärm
-Fit image to screen	Anpassa bild till skärm
-Zoom 1:1 (100 %)	Zoom 1:1 (100 %)
-Zoom in (%s)/Zoom out (%s)	Zoom in (%s)/Zoom ut (%s)
-Zoom in/out image	Zoom in/ut
-Pan image	Panoramabild
-Crop image	Beskär
-Next image	Nästa bild
-Previous image	Föregående bild
-up/down	upp/ner
-Mouse wheel	Mushjul
-Left mouse & drag	Vänster musknapp & drag
-Ctrl + Left mouse	Ctrl + Vänster musknapp
-Forward mouse button	Framåt-musknapp
-Back mouse button	Tillbaka-musknapp
-Delete current file on disk permanently	  Ta bort aktuell fil permanent
-Rotate current file on disk lossless by 90 deg (W/H must be multiple of 16)	 Rotera aktuell bild förlustfritt 90 grader (W/H måste vara multipel 16)
-Rotate current file on disk lossless by 270 deg (W/H must be multiple of 16)	 Rotera aktuell bild förlustfritt 270 grader (W/H måste vara multipel 16)
-The file is read-only!	 Filen är skrivskyddad!
-Can't rename file	 Kan inte döpa om filen
-New name contains backslash character!	 Det nya namnet innehåller snedstreck!
-Renaming file failed!	 Namnändring misslyckades!
-Reason:	Orsak:
-on	på
-off	av
-Do you really want to save the following parameters as default to the INI file	Vill du verkligen spara följande parametrar som standard?
-Auto contrast and color correction: 	Automatisk kontrast- och färgkorrektion:
-Local density correction: 	Lokal densitetkorrektion (LDC):
-Order files by: 	Sortera filer efter:
-Creation date/time	Skapad datum/tid
-Last modification date/time	  Senast ändrad datum/tid
-File name	Filnamn
-These values will override the values from the INI file located in the program folder of JPEGView!	Dessa värden kommer att åsidosätta värdena från ini-filen i JPEGView-programmappen!
-Confirm save default parameters	Bekräfta standardparametrar
-Images	Bilder
+%d file(s) renamed, %d file(s) copied, %d folder(s) created	%d  %d fil(er) omdöpt(a), %d fil(er) kopierad(e), %d mapp(ar) skapad(e)	%d
+%s camera raw images (embedded JPEGs only)	%s rå-bilder (endast inbäddad JPEG)
+%s images	%s bilder
+%s images (processed by Window Imaging Component - WIC)	%s bilder (bearbetade av Window Imaging Component - WIC)
+'My Pictures' folder	'Mina bilder'
+About JPEGView (32-bit version)...	
+About JPEGView (64-bit version)...	
+Acquisition date:	Anskaffningsdatum:
+Align image to horizontal or vertical line	Justera bildposition efter horisontell eller vertikal linje
+Alignment:	Justering:
 All Files	Alla filer
-Parameter DB file '%s' could not be opened!	Databasfilen '%s' kan inte öppnas!
-Parameter DB file '%s' is not valid (invalid header)!	Databasfilen '%s' är inte giltig !
-Cannot write to parameter DB file '%s'!	 Kan inte skriva till databasfilen '%s'!
+All existing user settings will be preserved.	
+Alternatively, right-click an image file of the given type in Windows Explorer and select 'Open with... > Choose default program'	
+Altitude (m):	
+Amount	Mängd
+Application:	Program:
+Applications	Program
+Apply	Verkställ
+Apply Unsharp Mask	Justera oskärpa
+Apply auto contrast correction using only visible section of image	Använd automatisk kontrastkorrigering med hjälp av endast synlig del av bild
+Ascending	
+Auto contrast and color correction	
+Auto crop corrected image (avoids black border)	Beskär korrigerad bild automatiskt (förhindrar svarat kanter)
+Auto crop rotated image (avoids black border)	Beskär roterad bild automatiskt (förebygger svart kant)
+Auto zoom mode	Auto-zoom
+Back mouse button	Tillbaka-musknapp
+Batch rename/copy of files	Byt namn/Kopiera filer (Batch-läge)
+Blend	Blanda
+Bottom	Underkant
+Box	
+Brightness	Ljus
+Browse...	Bläddra...
+C - R	
+Camera model:	Kameramodell:
+Can't rename file	 Kan inte döpa om filen
+Cancel	Avbryt
 Cannot read from parameter DB file '%s'!	Kan inte läsa från databasfilen '%s'!
 Cannot read parameter DB file '%s' because it is too large!	  Kan inte läsa databasfilen '%s' för att den är för stor!
-The parameter DB file '%s' has been created by a newer version of JPEGView!	Databasfilen '%s' har skapats av en nyare version av JPEGView!
-The old parameter DB file '%s' could not be renamed during conversion to new format!	Den gamla databasfilen '%s' kunde inte döpas om under konvertering till nytt format!
-Parameter DB error	Databasfel
-Error saving file	Fel! Kunde inte spara fil
-Error writing file to disk!	Fel! Kunde inte skriva fil till disk
+Cannot write to parameter DB file '%s'!	 Kan inte skriva till databasfilen '%s'!
+Click and drag the mouse vertically to correct image tilt.	Klicka och dra vertikalt med musen, för att korrigera bildens lutning
+Clipboard Image	
+Close	Stäng
+Close help text display / Close JPEGView	Stäng hjälpfilen/Stäng JPEGView
+Color Correction	Färger
+Combine keys with '+'	Kombinera tangenter med '+'
 Confirm	  Bekräfta
-Do you really want to permanently delete the file %filename%?	Vill du verkligen ta bort %filename% permanent?
-Rotate the following file lossless by 90 deg?\n%filename%	Rotera följande bild förlustfritt 90 grader?\n%filename%
-Rotate the following file lossless by 270 deg?\n%filename%	 Rotera följande bild förlustfritt 270 grader?\n%filename%
-Open image...	Öppna bild...
-Save processed image...	Spara bearbetad bild...
-Reload image	Uppdatera bild från original
-Copy to clipboard	Kopiera till urklipp
-Copy original size image	Kopiera bild i originalstorlek
-Paste from clipboard	Klistra in från urklipp
-Batch rename/copy...	Byt namn/kopiera (Batch-läge)
-Show filename	Visa filnamn
-Navigation	Navigation
+Confirm save default parameters	Bekräfta standardparametrar
+Conflicting entries in Param DB	Databasposter i konflikt
+Continue rename/copy?	Fortsätta byta namn/kopiera?
+Contrast	Kontrast
+Contrast Correction	Kontrastjustering
+Copy file path of the image to clipboard	
+Copy screen to clipboard/ Copy processed full size image to clipboard	Kopiera skärmbild till urklipp/Kopiera bearbetad fullstorleksbild till urklipp
+Copying parameter DB to file '%s' failed. Reason: %s	Kopiering av databas till '%s' misslyckades. Orsak: %s
+Correct converging lines (perspective correction)	Korrigera konvergerande linjer (perspektivkorrigering)
+Creation date/time	Skapad datum/tid
+Crop image	Beskär
+Ctrl + Left mouse	Ctrl + Vänster musknapp
+Current image	Aktuell bild
+Cyan-Red	Cyan-Röd
+Darken Highlights	Högdagrar
+Date	Datum
+Date placeholders use the modification date of the image.	Datum-platshållare använder 'Senast ändrad' från bilden
+Day / Month / Year (as numbers)	Dag/Månad/År (med siffror)
+Decoding this format requires the Microsoft Visual C++ Redistributable.	
+Deep Shadows	Djupa skuggor
+Delete	Ta bort
+Delete image file	Ta bort bildfil
+Descending	
+Display image (EXIF) information	Visa bildinformation (EXIF)
+Do you really want to delete the current image file on disk?	Vill du verkligen ta bort den aktuella bildfilen från disken?
+Do you really want to save the following parameters as default to the INI file	Vill du verkligen spara följande parametrar som standard?
+Drag at the left or right border for asymmetric correction.	Dra i vänster eller höger kant för asymmetrisk korrigering
+EXIF date successfully set on %d images, failed on %d images	EXIF-data applicerat på %d bilder, misslyckades med %d bilder
+Edit	Redigera
+Enable/disable automatic contrast correction (histogram equalization)	Aktivera/Inaktivera automatisk kontrastkorrigering (histogramutjämning)
+Enable/disable automatic density correction (local brightness correction)	Aktivera/Inaktivera automatisk densitetkorrigering (LDC)
+Enable/disable full screen mode	Aktivera/Inaktivera helskärmsläge
+Enable/disable high quality resampling	Aktivera/Inaktivera högkvalitativ omsampling
+Enable/disable keeping of geometry related (zoom/pan/rotation)	Aktivera/Inaktivera bevarande av geometrirelaterad (zoom/pan/rotation)
+Enable/disable landscape picture enhancement mode	Aktivera/Inaktivera optimeringsläge för liggande bild
+Error	Fel
+Error during rename/copy	Fel vid namnbyte/kopiering
+Error saving file	Fel! Kunde inte spara fil
+Error while writing the following registry key	
+Error writing file to disk!	Fel! Kunde inte skriva fil till disk
+Example:	Exempel:
+Exposure bias (EV):	 Bias:
+Exposure time (s):	Exponeringstid:
+Extension	Filtillägg
+Extracted number from original file name	Nummer extraherade från ursprungligt filnamn
+F-Number:	F-Nummer:
+File name	Filnamn
+File size	Filstorlek
+File type	Filtyp
+Fill paper with crop	
+Fill with crop	Fyll ut med beskuren bild
+Fill with crop (no zoom)	Sträck ut över alla skärmar (ingen zoom)
+Filter:	
+Fit image to screen	Anpassa bild till skärm
+Fit to paper	Anpassa till papper
+Fit to screen	Anpassa till skärm
+Fit to screen (no zoom)	Anpassa till skärm (ingen zoom)
+Flash fired:	Blixt:
+Focal length (mm):	Brännvidd:
+Forward mouse button	Framåt-musknapp
+Goto first/last image of current folder (using sort order as defined)	Gå till första/sista bilden i aktuell mapp (sorterat enligt specifikation)
+Goto next image	Gå till nästa bild
+Goto previous image	Gå till föregående bild
+Height	Höjd
+Hide histogram	Dölj Histogram
+High quality resampling	
+Hour / Minute (as numbers)	Timmar / Minuter (i siffror)
+ISO Speed:	ISO:
+Image Pixels	Bildpunkter
+Image files in folder	Bildfiler i mapp
+Image height:	Höjd:
+Image width and height must be dividable by the JPEG block size (8 or 16) for lossless transformations!	Bildbredd och -höjd måste vara delbart med JPEG-blockstorlek (8 eller 16), för förlustfri transformering!
+Image width:	Bredd:
+Images	Bilder
+Increase/decrease auto color cast correction amount	 Justera automatisk färgkorrigering
+Increase/decrease auto contrast correction amount	Justera automatisk kontrastkorrigering
+Increase/decrease brightness	Justera ljus
+Increase/decrease contrast	Justera kontrast
+Increase/decrease darkening of highlights (LDC must be on)	Öka/Minska nedtoning av högdagrar (LDC måste vara aktiverat)
+Increase/decrease lightening of shadows (LDC must be on)	Öka/Minska ljussättning av skuggor (LDC måste vara aktiverat)
+Increase/decrease sharpness	 Justera skärpa
+Insufficient rights to change the privilege (DACL) on the registry entry. Continue?	
+JPEGView Help	JPEGView hjälp
+JPEGView is a lean, fast and highly configurable viewer/editor for JPEG, BMP, PNG, WEBP, TGA, GIF and TIFF images with a minimal GUI.	JPEGView är en lätt, snabb och mycket konfigurerbar visare/redigerare för JPEG, BMP, PNG, WEBP, TGA, GIF och TIFF-filer med ett minimalt användargränssnitt.
+JPEGView is registered as default viewer for the selected file formats.	JPEGView är registrerad som standardvisare för de valda filtilläggen.
+Keep aspect ratio on crop	Bevara proportioner vid beskärning
+Keep parameters	Bevara parametrar
+Keep processing parameters between images	Behåll berbetningsparametrar mellan bilder
+Known keys:	Giltiga tangenter:
+Lanczos/Bicubic	
+Landscape	Landskap
+Landscape picture enhancement mode	Optimeringsläge för liggande bild
+Last modification date/time	  Senast ändrad datum/tid
+Left	Vänster
+Left mouse & drag	Vänster musknapp & drag
+Licensed under the GNU general public license (GPL), see readme file for details	
+Lighten Shadows	Ljusa skuggor
+Local density correction	Lokal densitetkorrektion (LDC)
+Location:	
 Loop folder	Upprepa mapp
 Loop recursively	Upprepa rekursivt
 Loop siblings	Upprepa mappar på samma nivå
+Loop through files in current directory and all sibling folders (folders on same level)	Gå igenom filer i aktuell mapp och alla undermappar (mappar på samma nivå)
+Loop through files in current directory and all subfolders	Gå igenom filer i aktuell mapp och alla undermappar
+Loop through files in current folder	Gå igenom filer i aktuell katalog
+Lossless JPEG transformations	Förlustfri JPEG-transformering
+M - G	
+Magenta-Green	Magenta-Grön
+Manage 'Open image with' menu...	Hantera menyn 'Öppna bild med'...
+Margins:	Marginaler:
+Mark image for toggling. Use %s to toggle between marked and current image	Markera bild för växling. Använd %s för att växla mellan markerad och aktuell bild
+Maximize/restore to/from virtual desktop (only for multi-monitor systems)	Maximera/Återställ till/från virtuellt skrivbord (endast för multiskärmsystem)
+Menu entries:	Menyposter:
+Modification date:	Senast ändrad:
+Modifier keys:	Modifierartangenter:
+Month / Short form (text)	Månad/kortform (text)
+Mouse wheel	Mushjul
+Navigation	
+New	Ny
+New height:	Ny höjd:
+New name (>> : file gets copied)	Nytt namn (>> : filen kopieras)
+New name contains backslash character!	 Det nya namnet innehåller snedstreck!
+New size:	Ny storlek:
+New width:	Ny bredd:
+Next image	Nästa bild
+No image loaded!	Ingen bild inläst
+No user INI file exists yet. Create user INI file from INI file template?	
+None	Ingen
+Not enough memory available	
+Note: Set the key 'TrimWithoutPromptLosslessJPEG=true' in the INI file to always trim without showing this message.	Notera! Du kan ändra värdet i nyckeln 'TrimWithoutPromptLosslessJPEG=true' i inställningsfilen 'JPEGView.ini' för att alltid beskära, utan att visa detta meddelande.
+Number (consecutively numbered)	Nummer (löpande numrering)
+Number of CPU cores used	
+Number of JPEG files in folder: %d	Antal JPEG-filer i mappen: %d
+Number with N digits	Nummer med N-siffror
+OK	
+Old name	Tidigare namn
+Open folder containing image and select in Windows Explorer	
+Open new image or slideshow file	Öppna ny bild- eller bildspelsfil
+Order files by	
+Orientation:	Orientering:
+Original file extension	 Ursprungligt filnamnstillägg
+Original file name (with extension)	 Ursprungligt filnamn (med filnamnstillägg)
+Original file name (without extension)	Ursprungligt filnamn (utan filnamnstillägg)
+Pan image	Panoramabild
+Paper:	Papper:
+Parameter DB	
+Parameter DB error	Databasfel
+Parameter DB file '%s' could not be opened!	Databasfilen '%s' kan inte öppnas!
+Parameter DB file '%s' is not valid (invalid header)!	Databasfilen '%s' är inte giltig !
+Paste from clipboard	Klistra in från urklipp
+Pasting image from clipboard failed!	Kunde inte klistra in från urklipp!
+Performing the lossless transformation failed!	Förlustfri transformering misslyckades!
+Performing the transformation failed	Kunde inte transformera
+Perspective Correction	Perspektivkorrigering
+Pixels	Pixel
+Placeholders:	Platshållare:
+Portrait	Porträtt
+Press 'OK' to continue with registration or 'Cancel' to abort all registrations.	
+Press ESC to exit...	Tryck 'ESC' för att avsluta...
+Press any key to search the subdirectories for image files.	Tryck på valfri tangent för att söka igenom undermappar efter bildfiler.
+Preview	Förhandsgranskning
+Previous image	Föregående bild
+Print	Skriv ut
+Print Image	Skriv ut bild
+Printer driver	Skrivardrivrutin
+Printer:	Skrivare:
+Project home page	
+Radius	Radie
+Random	Slumpmässig
+Reading the JPEG file from disk failed	Kunde inte läsa in JPEG-filen
+Reason:	Orsak:
+Registering or unregistering file extensions in this registry area requires administrator privileges and cannot be done in JPEGView.	
+Registration applies to the current user only.	Inställningen gäller endast aktuellt användarkonto
+Remove from	Ta bort från
+Rename	Byt namn
+Rename/copy images to:	Byt namn/ Kopiera bilder till:
+Renaming file failed!	 Namnändring misslyckades!
+Reset	Återställ
+Resize Image	Ändra bildstorlek
+Right	Höger
+Right mouse button: Context menu	Höger musknapp: Kontextmeny
+Roll from bottom	Rulla in från botten
+Roll from left	Rulla in från vänster
+Roll from right	Rulla in från höger
+Roll from top	Rulla in från toppen
+Rotate Image	Rotera bild
+Rotate current file on disk lossless by 270 deg (W/H must be multiple of 16)	 Rotera aktuell bild förlustfritt 270 grader (W/H måste vara multipel 16)
+Rotate current file on disk lossless by 90 deg (W/H must be multiple of 16)	 Rotera aktuell bild förlustfritt 90 grader (W/H måste vara multipel 16)
+Rotate image 90 deg clockwise	Rotera bilden 90 grader medurs
+Rotate image 90 deg counter-clockwise	Rotera bilden 90 grader moturs
+Rotate image and fit to screen	Rotera bild och anpassa till skärm
+Rotate image by user-defined angle	Rotera bild till anpassad vinkel
+Rotate the image by dragging with the mouse.	Rotera bilden genom att dra med musen
+SIMD mode used	
+Saturation	Mättnad
+Save	Spara
+Save (%s)/ delete (%s) image processing parameters in/from parameter DB	Spara(%s)/Ta bort(%s) berbetningsparametrar i/från databas (DB)
+Save as (in screen size/resolution)	Spara som (i skärmstorlek/-upplösning
+Save as template	Spara som mall
+Save cropped image	Spara beskuren bild
+Save processed image to JPEG file (original size)	Spara bearbetad bild som JPEG-fil (originalstorlek)
+Save processed image to JPEG file (screen size)	Spara bearbetad bild i JPEG-format (skärmstorlek)
+Save to	Spara till
+Scaling mode:	Skalningsläge:
+Screen Pixels	Skärm-pixel
+Scroll from bottom	Skrolla från botten
+Scroll from left	Skrolla från vänster
+Scroll from right	Skrolla från höger
+Scroll from top	Skrolla från toppen
+Select Printer...	Välj skrivare...
+Select all	Markera alla
+Select application	Välj program
+Select file to display in 'File Open' dialog	Välj fil att visa med 'Öppna fil'
+Select none	  Avmarkera alla
+Select parameter DB to restore	Välj databas att återställa
+Set Fixed Crop Size	Bestäm fixerad beskärningsstorlek
+Set JPEGView as default image viewer	Ange JPEGView som standardbildvisare
+Set timeout to n/10 sec, respectively n/100 sec (Ctrl+Shift)	Bestäm timeout till n/10 sek, respektive n/100 sek (Ctrl+Shift)
+Shall existing entries be preserved (Yes) or be overriden by the imported entries (No)?	Skall dom nuvarande posterna bevaras (Ja) eller skrivas över av importerade poster (Nej)?
+Sharpen	Skärpa
+Sharpen low	Låg skärpa
+Sharpen medium	Medium skärpa
+Shortcut Help	Genvägshjälp
+Shortcut key:	Tangentbordsgenväg:
+Show filename	Visa filnamn
+Show first image in folder	Visa första bilden i mappen
+Show grid lines	Visa stödlinjer
+Show histogram	Visa Histogram
+Show last image in folder	Visa sista bilden i mappen
+Show navigation panel	Visa navigationspanel
+Show next image	Visa nästa bild
+Show picture info (EXIF)	Visa bildinformation (EXIF)
+Show previous image	Visa föregående bild
+Show/hide file name	Visa/Dölj filnamn
+Show/hide navigation panel	 Visa/Dölj navigationspanel
+Show/hide picture information (EXIF data)	Visa/Dölj bildinformation (EXIF-data)
+Show/hide this help text	Visa/Dölj denna hjälptext
+Size:	Storlek:
+Slide from bottom	Skjut in från botten
+Slide from left	Skjut in från vänster
+Slide from right	Skjut in från höger
+Slide from top	Skjut in från toppen
+Slideshow	Bildspel
+Slideshow with timeout of 'n' seconds (ESC to stop)	
+Sort images by creation date, resp. modification date, resp. file name	Sortera bilder efter respektive Skapad/Senast ändrad/Filnamn
+Source:	Källa:
+Target folders that do not yet exist are created as needed.	
+The directory '%s' does not contain any image files!	Mappen '%s' innehåller inga bildfiler!
+The file '%s' could not be copied!	
+The file '%s' could not be read!	Filen '%s' kunde inte läsas!
+The file '%s' could not be renamed!	
+The file '%s' does not contain a list of file names!	Filen '%s' innehåller ingen lista på filnamn!
+The file is read-only!	 Filen är skrivskyddad!
+The following file extensions cannot be unregistered because they have been registered in the 'local machine' registry area.	Följande filtillägg kan inte avregistreras eftersom de har registrerats i registersektionen 'HKEY_LOCAL_MACHINE'.
+The following image extensions are protected by the operating system.	Följande filtillägg skyddas av operativsystemet.
+The imported param DB contains entries already present in active param DB.	Den importerade databasen innehåller poster som redan finns i aktiv databas.
+The new size is too large - width or height is larger than 65535 or total number of pixels is too large!	Den nya storleken är för stor - Bredd eller höjd är större än 65535, eller totala pixelantalet är för stort!
+The old parameter DB file '%s' could not be renamed during conversion to new format!	Den gamla databasfilen '%s' kunde inte döpas om under konvertering till nytt format!
+The operation failed because not enough memory is available!	Åtgärden misslyckades, eftersom det inte finns tillräckligt med ledigt minne tillgängligt.
+The parameter DB file '%s' has been created by a newer version of JPEGView!	Databasfilen '%s' har skapats av en nyare version av JPEGView!
+The transformation can be applied if the image is trimmed to the next matching size but this will remove some border pixels.	Transformering kan utföras om bilden beskärs till närmast matchande storlek, men bilden blir alltså något beskuren.
+These values will override the values from the INI file located in the program folder of JPEGView!	Dessa värden kommer att åsidosätta värdena från ini-filen i JPEGView-programmappen!
+Threshold	Tröskelvärde
+Title:	Namn:
+Toggle between screens (only for multi-monitor systems)	Växla mellan skärmar (endast flerskärmssystem)
+Toggle window always on top mode	
+Toggle window title bar hidden mode	
+Top	Överkant
+Transition Effect	Övergångseffekt
+Trim the image and apply transformation? Trimming cannot be undone!	Vill du beskära bilden och slutföra transformeringen? Beskärningen kan inte ångras!
+Unregistering not possible	Avregistrering är inte möjlig
+Unsharp mask...	Oskärpa...
+Update user settings with new settings from settings template file?	
+Use the 'Default Programs' configuration dialog from the operating system instead.	Använd istället operativsystemets inställningsdialog för 'Standardprogram'.
+Use the mouse to draw a line that shall be horizontal or vertical.	Rita en horisontell eler vertikal linje med musen.
+Warning	Varning
+Width	Bredd
+Windows 8 (and above) blocks JPEGView from changing the default program for these file extensions.	
+Writing the resulting JPEG file to disk failed	Kunde inte skriva utdatafilen till disk
+Y - B	G - B
+Year short form (2 digits)	År/kortform (2 siffror)
+Yellow-Blue	Gul-Blå
+Zoom 1:1 (100 %)	
+Zoom in (%s)/Zoom out (%s)	Zoom in (%s)/Zoom ut (%s)
+Zoom in/out image	Zoom in/ut
+Zoom mode (drag mouse to zoom)	Zoom-läge (Dra med musen för att zooma)
+and image processing (brightness/contrast/sharpen) parameters between images	och bildprocessande (ljus/kontrast/skärpa) parametrar mellan bilder.
+cm	
+in	
+new menu entry	
+no	nej
+off	av
+on	på
+yes	ja
+
+// ::: Popup Menu Strings ::: (unsorted to preserve context) //
+Stop slide show/movie	Stoppa bildspel/film
+Open image...	Öppna bild...
+Open image with	Öppna bild med
+Save processed image...	Spara bearbetad bild...
+Reload image	Uppdatera bild från original
+Open containing folder in Explorer	
+Print image...	Skriv ut bild...
+Batch rename/copy...	Byt namn/kopiera (Batch-läge)
+Set modification date	Ange 'Senast ändrad'...
+to current date	till aktuellt datum
+to EXIF date	till EXIF-datum
+to EXIF date (all files in folder)	till EXIF-data (alla filer i mappen)
+Set as desktop wallpaper	Använd som skrivbordsbakgrund
+Use original image	Använd originalbild
+Use processed image as displayed	Använd bearbetad bild som visas
+Copy to clipboard	Kopiera till urklipp
+Copy original size image	Kopiera bild i originalstorlek
+Copy file path	
 Display order	Sortera efter
 Modification date	Senast ändrad
 Creation date	Skapad
 Play folder as slideshow/movie	Visa mappen som bildspel/film
-Slideshow	Bildspel
-Movie	Film
 Waiting time	Väntetid
-Stop slide show/movie	Stoppa bildspel/film
-Rotate +90	Rotera +90
-Rotate -90	Rotera -90
-Rotate 180	Rotera 180
-Auto correction	Automatisk bildjustering
-Local density correction	Lokal densitetkorrektion (LDC)
-Keep parameters	Bevara parametrar
-Set current parameters as default values...	Spara parametrar till INI...
-Save parameters to DB	Spara parametrar till databas
-Clear parameters from DB	Ta bort parametrar från databas
-Zoom	Zoom
-Fit to screen	Anpassa till skärm
-Fill with crop	Fyll ut med beskuren bild
-Span all screens	Sträck ut över alla skärmar
-Auto zoom mode	Auto-zoom
-Fit to screen (no zoom)	Anpassa till skärm (ingen zoom)
-Fill with crop (no zoom)	Sträck ut över alla skärmar (ingen zoom)
-Exit	Avsluta
-Cyan-Red	Cyan-Röd
-Magenta-Green	Magenta-Grön
-Yellow-Blue	Gul-Blå
-C - R	C - R
-M - G	M - G
-Y - B	G - B
-Batch rename/copy of files	Byt namn/Kopiera filer (Batch-läge)
-Image files in folder	Bildfiler i mapp
-Placeholders:	Platshållare:
-Number (consecutively numbered)	Nummer (löpande numrering)
-Number with N digits	Nummer med N-siffror
-Extracted number from original file name	Nummer extraherade från ursprungligt filnamn
-Original file name (with extension)	 Ursprungligt filnamn (med filnamnstillägg)
-Original file name (without extension)	Ursprungligt filnamn (utan filnamnstillägg)
-Original file extension	 Ursprungligt filnamnstillägg
-'My Pictures' folder	'Mina bilder'
-Day / Month / Year (as numbers)	Dag/Månad/År (med siffror)
-Year short form (2 digits)	År/kortform (2 siffror)
-Month / Short form (text)	Månad/kortform (text)
-Target folders that are not yet existing are created as needed.	Målmapp som ännu inte existerar skapas vid behov
-Date placeholders use the modification date of the image.	Datum-platshållare använder 'Senast ändrad' från bilden
-Rename/copy images to:	Byt namn/ Kopiera bilder till:
-Rename	Byt namn
-Preview	Förhandsgranskning
-Save as template	Spara som mall
-Close	Stäng
-Old name	Tidigare namn
-Date	Datum
-New name (>> : file gets copied)	Nytt namn (>> : filen kopieras)
-Select all	Markera alla
-Select none	  Avmarkera alla
-The file '%s' could not be %s.	Filen '%s' kan inte vara %s
-copied	kopierad
-renamed	  omdöpt
-Continue rename/copy?	Fortsätta byta namn/kopiera?
-Error during rename/copy	Fel vid namnbyte/kopiering
-%d file(s) renamed, %d file(s) copied, %d folder(s) created	%d  %d fil(er) omdöpt(a), %d fil(er) kopierad(e), %d mapp(ar) skapad(e)	%d
-Crop Selection	Beskär
-Copy Selection to Clipboard	Kopiera markerat område till urklipp
-Zoom to Selection	Zooma in markerat område
-Pasting image from clipboard failed!	Kunde inte klistra in från urklipp!
-Image width:	Bredd:
-Image height:	Höjd:
-Acquisition date:	Anskaffningsdatum:
-Camera model:	Kameramodell:
-Exposure time (s):	Exponeringstid:
-Exposure bias (EV):	 Bias:
-Flash fired:	Blixt:
-Focal length (mm):	Brännvidd:
-F-Number:	F-Nummer:
-ISO Speed:	ISO:
-Modification date:	Senast ändrad:
-yes	ja
-no	nej
-Show navigation panel	Visa navigationspanel
-Show/hide navigation panel	 Visa/Dölj navigationspanel
-About JPEGView...	Om JPEGView...
-SIMD mode used:	SIMD-läge:
-Number of CPU cores used:	Antal processorkärnor:
-Licensed under the GNU general public license (GPL), see readme file for details:	Licensierad under GNU general public license (GPL), se readme.txt för detaljer:
-Project home page:	Projektets hemsida:
-Show first image in folder	Visa första bilden i mappen
-Show previous image	Visa föregående bild
-Show next image	Visa nästa bild
-Show last image in folder	Visa sista bilden i mappen
-Rotate image 90 deg clockwise	Rotera bilden 90 grader medurs
-Rotate image 90 deg counter-clockwise	Rotera bilden 90 grader moturs
-Landscape picture enhancement mode	Optimeringsläge för liggande bild
-Display image (EXIF) information	Visa bildinformation (EXIF)
-Actual size of image	Verklig bildstorlek
-Toggle between screens (only for multi-monitor systems)	Växla mellan skärmar (endast flerskärmssystem)
-Enable/disable full screen mode	Aktivera/Inaktivera helskärmsläge
-Full screen mode	Helskärmsläge
-Window mode	Fönsterläge
-Save as (in screen size/resolution)	Spara som (i skärmstorlek/-upplösning
-Save processed image to JPEG file (screen size)	Spara bearbetad bild i JPEG-format (skärmstorlek)
-Settings/Admin	Inställningar/Administration
-Edit global settings...	Redigera globala inställningar...
-Edit user settings...	Redigera användarinställningar...
-Backup parameter DB...	Säkerhetskopiera databas...
-Restore parameter DB...	Återställ databas...
-No user INI file exits yet. Create user INI file from INI file template?	Det finns ännu ingen INI-fil för användarinställningar. Vill du skapa en med hjälp av standardmallen?
-Copying parameter DB to file '%s' failed. Reason: %s	Kopiering av databas till '%s' misslyckades. Orsak: %s
-Select parameter DB to restore	Välj databas att återställa
-Conflicting entries in Param DB	Databasposter i konflikt
-The imported param DB contains entries already present in active param DB.	Den importerade databasen innehåller poster som redan finns i aktiv databas.
-Shall existing entries be preserved (Yes) or be overriden by the imported entries (No)?	Skall dom nuvarande posterna bevaras (Ja) eller skrivas över av importerade poster (Nej)?
-Select file to display in 'File Open' dialog	Välj fil att visa med 'Öppna fil'
-Crop Mode	Beskärningsalternativ
-Free	Flexibel storlek
-Fixed size...	Fixerad storlek...
-Set Fixed Crop Size	Bestäm fixerad beskärningsstorlek
-Width	Bredd
-Height	Höjd
-Pixels	Pixel
-Screen Pixels	Skärm-pixel
-Image Pixels	Bildpunkter
-Set modification date	Ange 'Senast ändrad'...
-to current date	till aktuellt datum
-to EXIF date	till EXIF-datum
-Mark image for toggling. Use %s to toggle between marked and current image	Markera bild för växling. Använd %s för att växla mellan markerad och aktuell bild
-Saturation	Mättnad
-Unsharp mask...	Oskärpa...
-Apply Unsharp Mask	Justera oskärpa
-Radius	Radie
-Amount	Mängd
-Threshold	Tröskelvärde
-Apply	Verkställ
-Cancel	Avbryt
-Keep processing parameters between images	Behåll berbetningsparametrar mellan bilder
-Show histogram	Visa Histogram
-Hide histogram	Dölj Histogram
-Show picture info (EXIF)	Visa bildinformation (EXIF)
-Crop Selection Lossless...	Beskär förlustfritt...
-Save cropped image	Spara beskuren bild
-Rotate image by user-defined angle	Rotera bild till anpassad vinkel
-Rotate Image	Rotera bild
-Show grid lines	Visa stödlinjer
-Auto crop rotated image (avoids black border)	Beskär roterad bild automatiskt (förebygger svart kant)
-Align image to horizontal or vertical line	Justera bildposition efter horisontell eller vertikal linje
-Use the mouse to draw a line that shall be horizontal or vertical.	Rita en horisontell eler vertikal linje med musen.
-Rotate the image by dragging with the mouse.	Rotera bilden genom att dra med musen
-The operation failed because not enough memory is available!	Åtgärden misslyckades, eftersom det inte finns tillräckligt med ledigt minne tillgängligt.
-to EXIF date (all files in folder)	till EXIF-data (alla filer i mappen)
-Number of JPEG files in folder: %d	Antal JPEG-filer i mappen: %d
-EXIF date successfully set on %d images, failed on %d images	EXIF-data applicerat på %d bilder, misslyckades med %d bilder
-Reason: Not enough memory available	Orsak: För lite tillgängligt minne
-Transform image	Redigera bild
-Rotate...	Rotera...
-Mirror horizontally	Vänd horisontellt
-Mirror vertically	Vänd vertikalt
-Random	Slumpmässig
-Zoom mode (drag mouse to zoom)	Zoom-läge (Dra med musen för att zooma)
-Correct converging lines (perspective correction)	Korrigera konvergerande linjer (perspektivkorrigering)
-Perspective Correction	Perspektivkorrigering
-Perspective correction...	Perspektivkorrigering...
-Auto crop corrected image (avoids black border)	Beskär korrigerad bild automatiskt (förhindrar svarat kanter)
-Click and drag the mouse vertically to correct image tilt.	Klicka och dra vertikalt med musen, för att korrigera bildens lutning
-Drag at the left or right border for asymmetric correction.	Dra i vänster eller höger kant för asymmetrisk korrigering
-Fit window to image	Anpassa fönster efter bild
-Keep aspect ratio on crop	Bevara proportioner vid beskärning
-Lossless JPEG transformations	Förlustfri JPEG-transformering
-Performing the lossless transformation failed!	Förlustfri transformering misslyckades!
-Image width and height must be dividable by the JPEG block size (8 or 16) for lossless transformations!	Bildbredd och -höjd måste vara delbart med JPEG-blockstorlek (8 eller 16), för förlustfri transformering!
-Reading the JPEG file from disk failed	Kunde inte läsa in JPEG-filen
-Writing the resulting JPEG file to disk failed	Kunde inte skriva utdatafilen till disk
-Performing the transformation failed	Kunde inte transformera
-The transformation can be applied if the image is trimmed to the next matching size but this will remove some border pixels.	Transformering kan utföras om bilden beskärs till närmast matchande storlek, men bilden blir alltså något beskuren.
-Trim the image and apply transformation? Trimming cannot be undone!	Vill du beskära bilden och slutföra transformeringen? Beskärningen kan inte ångras!
-Note: Set the key 'TrimWithoutPromptLosslessJPEG=true' in the INI file to always trim without showing this message.	Notera! Du kan ändra värdet i nyckeln 'TrimWithoutPromptLosslessJPEG=true' i inställningsfilen 'JPEGView.ini' för att alltid beskära, utan att visa detta meddelande.
-Transition Effect	Övergångseffekt
-None	Ingen
-Blend	Blanda
-Slide from right	Skjut in från höger
-Slide from left	Skjut in från vänster
-Slide from top	Skjut in från toppen
-Slide from bottom	Skjut in från botten
-Roll from right	Rulla in från höger
-Roll from left	Rulla in från vänster
-Roll from top	Rulla in från toppen
-Roll from bottom	Rulla in från botten
-Scroll from right	Skrolla från höger
-Scroll from left	Skrolla från vänster
-Scroll from top	Skrolla från toppen
-Scroll from bottom	Skrolla från botten
+1 sec	
+2 sec	
+3 sec	
+4 sec	
+5 sec	
+7 sec	
+10 sec	
+20 sec	
 Transition Speed	Övergångshastighet
 Very fast	Mycket snabb
 Fast	Snabb
-Normal	Normal
+Normal	
 Slow	Långsam
 Very slow	Mycket långsam
-Error	Fel
-Warning	Varning
-Error while writing the following registry key:	Kunde inte skriva till följande registernyckel:
-Set as default viewer...	Ange som standardvisare...
-Set JPEGView as default image viewer	Ange JPEGView som standardbildvisare
-JPEGView is registered as default viewer for the selected file formats.	JPEGView är registrerad som standardvisare för de valda filtilläggen.
-Registration applies to the current user only.	Inställningen gäller endast aktuellt användarkonto
-Extension	Filtillägg
-File type	Filtyp
-The following file extensions cannot be unregistered because they have been registered in the 'local machine' registry area.	Följande filtillägg kan inte avregistreras eftersom de har registrerats i registersektionen 'HKEY_LOCAL_MACHINE'.
-Registering or unregistering file extensions in this registry area requires administration privileges and cannot be done in JPEGView.	Registrering eller avregistrering av filtillägg i den här registersektionen kräver administratörsbehörighet och kan inte utföras i JPEGView.
-Press 'OK' to continue with registration or 'Cancel' to not modify any registrations.	Tryck 'OK' för att fortsätta med associeringen eller 'Avbryt' för att avbryta all registrering.
-Unregistering not possible	Avregistrering är inte möjlig
-%s images	%s bilder
-%s images (processed by Window Imaging Component - WIC)	%s bilder (bearbetade av Window Imaging Component - WIC)
-%s camera raw images (embedded JPEGs only)	%s rå-bilder (endast inbäddad JPEG)
-The following image extensions are protected by the operating system.	Följande filtillägg skyddas av operativsystemet.
-JPEGView can try to remove the restrictions automatically.	JPEGView kan försöka ta bort restriktionerna automatiskt.
-However this will fail if the current user has no administration privileges.	Det kommer dock att misslyckas om aktuellt användarkonto saknar administratörsrättigheter.
-Insufficient rights to remove the restrictions. Continue?	Otillräckliga rättigheter för att ta bort restriktionerna. Vill du fortsätta?
-No image loaded!	Ingen bild inläst
-Right mouse button: Context menu	Höger musknapp: Kontextmeny
-Windows 8 blocks JPEGView from changing the default program for these file endings.	Windows 8 blockerar JPEGViews försök att ändra standardprogram för dessa filändelser.
-Use the 'Default Programs' configuration dialog from the operating system instead.	Använd istället operativsystemets inställningsdialog för 'Standardprogram'.
-Alternatively, right click an image file of the given type in Windows Explorer and select 'Open with... > Choose default program'	Alternativt, högerklicka på en bild i Utforskaren och välj 'Öppna med', samt välj önskat standardprogram.
-User commands	Användarkommandon
-Open image with	Öppna bild med
-Manage 'Open image with' menu...	Hantera menyn 'Öppna bild med'...
-Menu entries:	Menyposter:
-Title:	Namn:
-Application:	Program:
-Shortcut key:	Tangentbordsgenväg:
-Browse...	Bläddra...
-New	Ny
-Delete	Ta bort
-Modifier keys:	Modifierartangenter:
-Known keys:	Giltiga tangenter:
-Combine keys with '+'	Kombinera tangenter med '+'
-Example:	Exempel:
-Shortcut Help	Genvägshjälp
-[new entry]	[ny post]
-Applications	Program
-Select application	Välj program
-Save	Spara
-Edit	Redigera
-Upcounting	Stigande
-Downcounting	Fallande
-File size	Filstorlek
-Do you really want to delete the current image file on disk?	Vill du verkligen ta bort den aktuella bildfilen från disken?
-Delete image file	Ta bort bildfil
+Movie	Film
+Playback speed	
+5 fps	
+10 fps	
+25 fps	
+30 fps	
+50 fps	
+100 fps	
+Transform image	Redigera bild
+Rotate +90	Rotera +90
+Rotate -90	Rotera -90
+Rotate...	Rotera...
 Change size...	Ändra storlek...
-Resize Image	Ändra bildstorlek
-OK	OK
-New size:	Ny storlek:
-New width:	Ny bredd:
-New height:	Ny höjd:
-Filter:	Filter:
-Box	Box
-Lanczos/Bicubic	Lanczos/Bicubic
-Sharpen low	Låg skärpa
-Sharpen medium	Medium skärpa
-The new size is too large - width or height is larger than 65535 or total number of pixels is too large!	Den nya storleken är för stor - Bredd eller höjd är större än 65535, eller totala pixelantalet är för stort!
-JPEGView is a lean, fast and highly configurable viewer/editor for JPEG, BMP, PNG, WEBP, TGA, GIF and TIFF images with a minimal GUI.	JPEGView är en lätt, snabb och mycket konfigurerbar visare/redigerare för JPEG, BMP, PNG, WEBP, TGA, GIF och TIFF-filer med ett minimalt användargränssnitt.
-Hour / Minute (as numbers)	Timmar / Minuter (i siffror)
-Set as desktop wallpaper	Använd som skrivbordsbakgrund
-Use original image	Använd originalbild
-Use processed image as displayed	Använd bearbetad bild som visas
-Reset	Återställ
-Print image...	Skriv ut bild...
-Print Image	Skriv ut bild
-Print	Skriv ut
-Select Printer...	Välj skrivare...
-Printer:	Skrivare:
-Paper:	Papper:
-Source:	Källa:
-Orientation:	Orientering:
-Portrait	Porträtt
-Landscape	Landskap
-Size:	Storlek:
-Fit to paper	Anpassa till papper
-cm	cm
-Scaling mode:	Skalningsläge:
-Printer driver	Skrivardrivrutin
-Alignment:	Justering:
-Margins:	Marginaler:
-Left	Vänster
-Right	Höger
-Top	Överkant
-Bottom	Underkant
+Perspective correction...	Perspektivkorrigering...
+Mirror horizontally	Vänd horisontellt
+Mirror vertically	Vänd vertikalt
+Rotate 180	Rotera 180
+Auto correction	Automatisk bildjustering
+Save parameters to DB	Spara parametrar till databas
+Clear parameters from DB	Ta bort parametrar från databas
+Zoom	
+Span all screens	Sträck ut över alla skärmar
+Full screen mode	Helskärmsläge
+Fit window to image	Anpassa fönster efter bild
+Hide window title bar	
+Set window always on top	
+Settings/Admin	Inställningar/Administration
+Edit global settings...	Redigera globala inställningar...
+Edit user settings...	Redigera användarinställningar...
+Update user settings...	
+Set current parameters as default values...	Spara parametrar till INI...
+Set as default viewer...	Ange som standardvisare...
+Backup parameter DB...	Säkerhetskopiera databas...
+Restore parameter DB...	Återställ databas...
+User commands	Användarkommandon
+About JPEGView...	Om JPEGView...
+Exit	Avsluta
+Crop Selection	Beskär
+Crop Selection Lossless...	Beskär förlustfritt...
+Copy Selection to Clipboard	Kopiera markerat område till urklipp
+Crop Mode	Beskärningsalternativ
+Free	Flexibel storlek
+Fixed size...	Fixerad storlek...
+Zoom to Selection	Zooma in markerat område
+
+// ::: Out-of-date Translations ::: (Not in Use anymore, safe to delete) //
+//Parameter DB:	Databas:
+//Rename:	Byt namn:
+//No file or folder name was provided as command line parameter!	Ingen fil eller mapp angavs som kommandoradsparameter!
+//To use JPEGView, associate JPG, JPEG and BMP files with JPEGView.	För att använda JPEGView, associera JPG-, JPEG- och BMP-filer med JPEGView.
+//PgUp or Left	PgUp eller vänster
+//PgDn or Right	PgDn eller höger
+//Slide show with timeout of n seconds (ESC to stop)	Bildspel med n sekunders timeout (ESC för att stoppa)
+//up/down	upp/ner
+//Delete current file on disk permanently	  Ta bort aktuell fil permanent
+//Auto contrast and color correction:	Automatisk kontrast- och färgkorrektion:
+//Local density correction:	Lokal densitetkorrektion (LDC):
+//Order files by:	Sortera filer efter:
+//Do you really want to permanently delete the file %filename%?	Vill du verkligen ta bort %filename% permanent?
+//Rotate the following file lossless by 90 deg?\n%filename%	Rotera följande bild förlustfritt 90 grader?\n%filename%
+//Rotate the following file lossless by 270 deg?\n%filename%	 Rotera följande bild förlustfritt 270 grader?\n%filename%
+//Target folders that are not yet existing are created as needed.	Målmapp som ännu inte existerar skapas vid behov
+//The file '%s' could not be %s.	Filen '%s' kan inte vara %s
+//copied	kopierad
+//renamed	  omdöpt
+//SIMD mode used:	SIMD-läge:
+//Number of CPU cores used:	Antal processorkärnor:
+//Licensed under the GNU general public license (GPL), see readme file for details:	Licensierad under GNU general public license (GPL), se readme.txt för detaljer:
+//Project home page:	Projektets hemsida:
+//Actual size of image	Verklig bildstorlek
+//Window mode	Fönsterläge
+//No user INI file exits yet. Create user INI file from INI file template?	Det finns ännu ingen INI-fil för användarinställningar. Vill du skapa en med hjälp av standardmallen?
+//Reason: Not enough memory available	Orsak: För lite tillgängligt minne
+//Error while writing the following registry key:	Kunde inte skriva till följande registernyckel:
+//Registering or unregistering file extensions in this registry area requires administration privileges and cannot be done in JPEGView.	Registrering eller avregistrering av filtillägg i den här registersektionen kräver administratörsbehörighet och kan inte utföras i JPEGView.
+//Press 'OK' to continue with registration or 'Cancel' to not modify any registrations.	Tryck 'OK' för att fortsätta med associeringen eller 'Avbryt' för att avbryta all registrering.
+//JPEGView can try to remove the restrictions automatically.	JPEGView kan försöka ta bort restriktionerna automatiskt.
+//However this will fail if the current user has no administration privileges.	Det kommer dock att misslyckas om aktuellt användarkonto saknar administratörsrättigheter.
+//Insufficient rights to remove the restrictions. Continue?	Otillräckliga rättigheter för att ta bort restriktionerna. Vill du fortsätta?
+//Windows 8 blocks JPEGView from changing the default program for these file endings.	Windows 8 blockerar JPEGViews försök att ändra standardprogram för dessa filändelser.
+//Alternatively, right click an image file of the given type in Windows Explorer and select 'Open with... > Choose default program'	Alternativt, högerklicka på en bild i Utforskaren och välj 'Öppna med', samt välj önskat standardprogram.
+//[new entry]	[ny post]
+//Upcounting	Stigande
+//Downcounting	Fallande

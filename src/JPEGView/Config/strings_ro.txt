@@ -1,295 +1,488 @@
 ﻿// This file must be encoded with UTF-8 (e.g. with Windows Notepad)
+// Filename Convention: 'strings_%languagecode%.txt' where %languagecode% is the ISO 639 language code e.g. 'fr' for French
+
+////////////////////
+// Line Format:    English string<tab>Translated string<newline>
+// * Lines beginning with "//" are ignored
+// * Blank lines are ignored
+// * Lines without a <tab> or have no text after the tab are ignored
+// * multiple tabs are permitted between English and Translated string, e.g. this is valid:    English string<tab><tab><tab>Translated string<newline>
+
+// NOTE: %s %d have special meanings in the strings, so make sure they appear somewhere in the translated string
+
+// For the strings below which are short and have no context:
+//   "in" in context is shorthand for "inch"
+//   "cm" in context is shorthand for "centimeter"
+//   "C - R" in context is "Cyan Red" colors
+//   "M - G" in context is "Magenta Green" colors
+//   "Y - B" in context is "Yellow Blue" colors
+//   "yes"/"no" in context is for showing EXIF flags
+//   "on"/"off" in context is for showing a setting active or not
+////////////////////
+
+////////////////////
+// == Translator Credits ==
+// Language: English
+// Translator Name(s) / Contact(s):
+// History/Notes:
+// Last Updated:
+////////////////////
+
+// ::: Program Strings ::: (sorted alphabetically) //
 // Filename is 'strings_%languagecode%.txt' where %languagecode% is the ISO 639 language code e.g. 'fr' for French
 // Format is: English string<tab>Translated string<newline>
-Contrast	Contrast
-Brightness	Luminozitate
-Sharpen	Claritate
-Lighten Shadows	Luminarea Umbrelor
-Darken Highlights	Întunecarea Luminilor
-Deep Shadows	Adâncimea Umbrelor
-Color Correction	Corectează Culoarea
-Contrast Correction	Corectează Contrastul
-Parameter DB:	Parametrul DB:
-Save to	Salvează ca
-Remove from	Elimină din
-Rename:	Redenumeşte:
-No file or folder name was provided as command line parameter!	Nici un nume de fişier sau director nu a fost furnizat ca parametru al liniei de comandă!
-To use JPEGView, associate JPG, JPEG and BMP files with JPEGView.	Foloseşte JPEGView pentru a asocia fişiere de tip JPG, JPEG şi BMP.
-Press ESC to exit...	Apasa ESC pentru a ieşi...
-The file '%s' could not be read!	Fişierul '%s' nu poate fi citit!
-The file '%s' does not contain a list of file names!	Fişierul '%s' nu conţine o listă de nume de fişiere!
-The directory '%s' does not contain any image files!	Directorul '%s' nu conţine niciun fişier imagine!
-Press any key to search the subdirectories for image files.	Apasă orice tastă pentru a căuta fişiere imagine în subdirectoare.
-JPEGView Help	JPEGView Ajutor
-Current image	Imaginea curentă
-Close help text display / Close JPEGView	Închide afişarea textului ajutător / Închide JPEGView
-Show/hide this help text	Afişează / Ascunde textul ajutător
-Show/hide picture information (EXIF data)	Afişează / Ascunde informaţiile fotografiei(Datele EXIF)
-Show/hide file name	Afişează / Ascunde numele fişierului
-Enable/disable high quality resampling	Activează / Dezactivează calitatea mare a reeşantionării
-Enable/disable keeping of geometry related (zoom/pan/rotation)	Activează / Dezactivează păstrarea proporţiei geometrice (mărire/mişcare/rotire)
-and image processing (brightness/contrast/sharpen) parameters between images	Procesează parametrii imaginilor(luminozitate/contrast/claritate).
-Enable/disable automatic contrast correction (histogram equalization)	Activează / Dezactivează corecţia automată a contrastului (egalizarea histogramei)
-Apply auto contrast correction using only visible section of image	Aplică autocorecţia contrastului folosind numai secţiunile vizibile ale imaginii
-Enable/disable automatic density correction (local brightness correction)	Activează / Dezactivează corecţia automată a densităţii (corecţia locală a luminozităţii)
-Increase/decrease lightening of shadows (LDC must be on)	Măreşte / Micşorează luminozitatea umbrelor (LDC trebuie activat)
-Increase/decrease darkening of highlights (LDC must be on)	Măreşte / Micşorează întunericul luminiilor (LDC trebuie activat)
-Loop through files in current folder	Reia redarea fişierelor din directoru
-Loop through files in current directory and all subfolders	Reia redarea fişierelor din directorul curent şi toate subdirectoarele
-Loop through files in current directory and all sibling folders (folders on same level)	Reia redarea fişierelor din directorul curent şi toate directoarele frate (directorele de pe acelaşi nivel)
-Maximize/restore to/from virtual desktop (only for multi-monitor systems)	Maximizează / reafişează / de la desktop-ul virtual (numai pentru sistemele multi-monitor)
-Copy screen to clipboard/ Copy processed full size image to clipboard	Copiază imaginea de pe ecran în clipboard / Copiază imaginea procesată cu mărime originală în clipboard
-Open new image or slideshow file	Deschide o nouă imagine ori prezentarea de imagini
-Save processed image to JPEG file (original size)	Salvează imaginea procesată ca fişier JPEG (în mărime originală)
-Save (%s)/ delete (%s) image processing parameters in/from parameter DB	Salvează / Şterge parametrii imaginii procesate în / de la parametrul DB
-Sort images by creation date, resp. modification date, resp. file name	Sortează imaginile după data de creare, după data modificării, după nume
-Goto previous image	Imaginea anterioară
-Goto next image	Imaginea următoare
-PgUp or Left	Tasta "Săgeată stânga"
-PgDn or Right	Tasta "Săgeată dreapta"
-Goto first/last image of current folder (using sort order as defined)	Mergi la prima/ultima imagine a directorului (folosind sortarea predefinită)
-Increase/decrease brightness	Măreşte / Micşorează Luminozitatea
-Increase/decrease contrast	Măreşte / Micşorează Contrastul
-Increase/decrease sharpness	Măreşte / Micşorează Claritatea
-Increase/decrease auto color cast correction amount	Măreşte / Micşorează mărimea autocorecţiei nuanţei de culoare
-Increase/decrease auto contrast correction amount	Măreşte / Micşorează mărimea autocorecţiei contrastului
-Enable/disable landscape picture enhancement mode	Activează / Dezactivează vizualizarea panoramică, modul intensificat
-Slide show with timeout of n seconds (ESC to stop)	Prezentare de imagini cu rulare la "n" secunde (apasă ESC pentru "Stop")
-Set timeout to n/10 sec, respectively n/100 sec (Ctrl+Shift)	Setează timpul de rulare la 'n/10' sec (Ctrl+Shift)
-Rotate image and fit to screen	Roteşte imaginea şi o încadrează pe ecran
-Fit image to screen	Încadrează imaginea pe ecran
-Zoom 1:1 (100%)	Mărime 1:1 (100%)
-Zoom in (%s)/Zoom out (%s)	Măreşte (%s)/ Micşorează (%s) imaginea
-Zoom in/out image	Măreşte / Micşorează imaginea
-Pan image	Mişcarea imaginii
-Crop image	Taie imaginea
-Next image	Imaginea următoare
-Previous image	Imaginea anterioară
-up/down	sus/jos
-Mouse wheel	Rotiţa mouse-ului
-Left mouse & drag	Stânga mouse şi trage
-Ctrl + Left mouse	Ctrl + Butonul stâng al mouse-ului
-Forward mouse button	'Forward' la mouse
-Back mouse button	'Back' la mouse
-Delete current file on disk permanently	Şterge fişierul curent permanent de pe harddisk!
-Rotate current file on disk lossless by 90 deg (W/H must be multiple of 16)	Roteşte fişierul curent pe harddisk 90gr. (spre dreapta) (W/H trebuie să fie multiplu de 16)
-Rotate current file on disk lossless by 270 deg (W/H must be multiple of 16)	Roteşte fişierul curent pe harddisk -90gr. (spre stânga) (W/H trebuie să fie multiplu de 16)
-The file is read-only!	Fişierul este read-only (se poate doar citit nu şi modifica)!
-Can't rename file!	Fişierul nu poate fi redenumit!
-New name contains backslash character!	Noul nume conţine caracterul backslash (\)!
-Renaming file failed!	Redenumeşte fişierul eşuat!
-Reason:	Cauza:
-on	Pornit
-off	Oprit
-Do you really want to save the following parameters as default to the INI file	Sunteţi sigur că doriţi să salvaţi următorii parametrii ca de bază ai fişierului INI
-Auto contrast and color correction:	Autocorecţie de contrast şi culoare:
-Local density correction:	Densitatea locală de corecţie:
-Order files by:	Ordonează fişierele după:
-Creation date/time	Data producerii / timpul
-Last modification	Ultima modificare
-File name	Numele fişierului
-These values will override the values from the INI file located in the program folder of JPEGView!	Aceste valori vor fi trecute peste valorile din fişierul INI aflat în directorul programului JPEGView!
-Confirm save default parameters	Confirmaţi salvarea parametrilor iniţiali
-Images	Imaginile
+%d file(s) renamed, %d file(s) copied, %d folder(s) created	%d fisier(e) redenumit(e), %d fisier(e) copiat(e), %d director(e) creat(e)
+%s camera raw images (embedded JPEGs only)	
+%s images	
+%s images (processed by Window Imaging Component - WIC)	
+'My Pictures' folder	Directorul 'My Pictures (Fotografiile Mele)'
+About JPEGView (32-bit version)...	
+About JPEGView (64-bit version)...	
+Acquisition date:	Data fotografierii:
+Align image to horizontal or vertical line	Aliniați imaginea la liniile orizontale sau verticale
+Alignment:	
 All Files	Toate Fişierele
-Parameter DB file '%s' could not be opened!	Fişierul cu Parametrii DB '%s' nu poate fi deschis!
-Parameter DB file '%s' is not valid (invalid header)!	Fişierul cu Parametrii DB '%s' este invalid (antet invalid)!
-Cannot write to parameter DB file '%s'!	Nu poate fi scris fişierul cu Parametrii Db '%s'!
+All existing user settings will be preserved.	
+Alternatively, right-click an image file of the given type in Windows Explorer and select 'Open with... > Choose default program'	
+Altitude (m):	
+Amount	Mărimea
+Application:	
+Applications	
+Apply	Aplică
+Apply Unsharp Mask	Aplică masca de claritate
+Apply auto contrast correction using only visible section of image	Aplică autocorecţia contrastului folosind numai secţiunile vizibile ale imaginii
+Ascending	
+Auto contrast and color correction	
+Auto crop corrected image (avoids black border)	Auto-tăierea imaginii corectate (anularea marginilor negre)
+Auto crop rotated image (avoids black border)	Tăiați automat imaginea rotită (Evitați bordura neagră)
+Auto zoom mode	Modul automărire
+Back mouse button	'Back' la mouse
+Batch rename/copy of files	Redenumire multipla / copierea fisierelor
+Blend	
+Bottom	
+Box	
+Brightness	Luminozitate
+Browse...	
+C - R	
+Camera model:	Modelul aparatului foto:
+Can't rename file	
+Cancel	Închide
 Cannot read from parameter DB file '%s'!	Nu poate fi citit fişierul cu Parametrii DB '%s'!
 Cannot read parameter DB file '%s' because it is too large!	Nu poate fi citit fişierul cu Parametrii DB '%s' pentru că este prea mare!
-The parameter DB file '%s' has been created by a newer version of JPEGView!	Fişierul cu Parametrii DB '%s' a fost creat de o nouă versiune JPEGView!
-The old parameter DB file '%s' could not be renamed during conversion to new format!	Vechiul fişier cu Parametrii DB '%s' nu poate fi redenumit în timpul conversiei la noul format!
-Parameter DB error	Eroare de Parametru DB
-Error saving file	Eroare de salvare a fişierului
-Error writing file to disk!	Eroare de scriere a fişierului pe harddisk!
+Cannot write to parameter DB file '%s'!	Nu poate fi scris fişierul cu Parametrii Db '%s'!
+Click and drag the mouse vertically to correct image tilt.	Clic şi trage mouse-ul vertical pentru a corecta imaginile înclinate.
+Clipboard Image	
+Close	Inchide
+Close help text display / Close JPEGView	Închide afişarea textului ajutător / Închide JPEGView
+Color Correction	Corectează Culoarea
+Combine keys with '+'	
 Confirm	Confirmă
-Do you really want to permanently delete the file %filename%?	Sigur doriţi ştergerea permanentă a fişierului %filename%?
-Rotate the following file lossless by 90 deg?\n%filename%	Roteşte fişier cu 90gr.?\n%filename%
-Rotate the following file lossless by 270 deg?\n%filename%	Roteşte fişier cu 270gr.?\n%filename%
-Open image...	Deschide imaginea...
-Save processed image...	Salvează imaginea procesată...
-Reload image	Reîncarcă imaginea
-Copy to clipboard	Copiază în Clipboard
-Copy original size image	Copiază imaginea cu mărime originală
-Paste from clipboard	Lipeşte din Clipboard
-Batch rename/copy...	Redenumire multiplă / copiere...
-Show picture info (EXIF)	Afişează informaţiile fotografiei (EXIF)
-Show filename	Afişează numele fişierului
-Navigation	Navigare
+Confirm save default parameters	Confirmaţi salvarea parametrilor iniţiali
+Conflicting entries in Param DB	Conflict apărut în Parametrii DB
+Continue rename/copy?	Continua redenumirea / copierea?
+Contrast	
+Contrast Correction	Corectează Contrastul
+Copy file path of the image to clipboard	
+Copy screen to clipboard/ Copy processed full size image to clipboard	Copiază imaginea de pe ecran în clipboard / Copiază imaginea procesată cu mărime originală în clipboard
+Copying parameter DB to file '%s' failed. Reason: %s	Copierea Parametrilor DB în fişierul '%s' nu a reuşit.
+Correct converging lines (perspective correction)	Corectează liniile convergente (corectează perspectiva)
+Creation date/time	Data producerii / timpul
+Crop image	Taie imaginea
+Ctrl + Left mouse	Ctrl + Butonul stâng al mouse-ului
+Current image	Imaginea curentă
+Cyan-Red	Verde-Albăstrui - Roşu
+Darken Highlights	Întunecarea Luminilor
+Date	Data
+Date placeholders use the modification date of the image.	Utilizati substituentii de date de mai sus, pentru a modifica datele imaginii.
+Day / Month / Year (as numbers)	Ziua / Luna / Anul (ca numar)
+Decoding this format requires the Microsoft Visual C++ Redistributable.	
+Deep Shadows	Adâncimea Umbrelor
+Delete	
+Delete image file	
+Descending	
+Display image (EXIF) information	Afişează informaţiile imaginii (EXIF)
+Do you really want to delete the current image file on disk?	
+Do you really want to save the following parameters as default to the INI file	Sunteţi sigur că doriţi să salvaţi următorii parametrii ca de bază ai fişierului INI
+Drag at the left or right border for asymmetric correction.	Trage la stânga sau la dreapta bordura pentru corecţie asimetrică.
+EXIF date successfully set on %d images, failed on %d images	Datele EXIF setate cu succes la %d imagini, eroare la %d imagini
+Edit	
+Enable/disable automatic contrast correction (histogram equalization)	Activează / Dezactivează corecţia automată a contrastului (egalizarea histogramei)
+Enable/disable automatic density correction (local brightness correction)	Activează / Dezactivează corecţia automată a densităţii (corecţia locală a luminozităţii)
+Enable/disable full screen mode	Activează / Dezactivează modul Imagine pe tot ecranul
+Enable/disable high quality resampling	Activează / Dezactivează calitatea mare a reeşantionării
+Enable/disable keeping of geometry related (zoom/pan/rotation)	Activează / Dezactivează păstrarea proporţiei geometrice (mărire/mişcare/rotire)
+Enable/disable landscape picture enhancement mode	Activează / Dezactivează vizualizarea panoramică, modul intensificat
+Error	
+Error during rename/copy	Eroare de redenumire
+Error saving file	Eroare de salvare a fişierului
+Error while writing the following registry key	
+Error writing file to disk!	Eroare de scriere a fişierului pe harddisk!
+Example:	
+Exposure bias (EV):	Polarizarea expunerii (EV):
+Exposure time (s):	Timpul de expunere (s):
+Extension	
+Extracted number from original file name	Numarul extras din numele original al fisierului
+F-Number:	Numărul F:
+File name	Numele fişierului
+File size	
+File type	
+Fill paper with crop	
+Fill with crop	Adaptează imaginea la lăţimea ecranului
+Fill with crop (no zoom)	Umplere ecran (fără mărire)
+Filter:	
+Fit image to screen	Încadrează imaginea pe ecran
+Fit to paper	
+Fit to screen	Încadrează imaginea în ecran
+Fit to screen (no zoom)	Încadrează în ecran(fără mărire)
+Flash fired:	Bliţ:
+Focal length (mm):	Distanţa focală (mm):
+Forward mouse button	'Forward' la mouse
+Goto first/last image of current folder (using sort order as defined)	Mergi la prima/ultima imagine a directorului (folosind sortarea predefinită)
+Goto next image	Imaginea următoare
+Goto previous image	Imaginea anterioară
+Height	Înălţime
+Hide histogram	Ascunde histograma
+High quality resampling	
+Hour / Minute (as numbers)	
+ISO Speed:	Viteza ISO:
+Image Pixels	Pixelii imaginii
+Image files in folder	Fisierele imagine din directorul
+Image height:	Înălţimea imaginii:
+Image width and height must be dividable by the JPEG block size (8 or 16) for lossless transformations!	Lățimea și înălțimea imaginii trebuie să fie divizibilă cu blocul de mărime JPEG (8 sau 16) pentru transformări fără pierderi!
+Image width:	Lăţimea imaginii:
+Images	Imaginile
+Increase/decrease auto color cast correction amount	Măreşte / Micşorează mărimea autocorecţiei nuanţei de culoare
+Increase/decrease auto contrast correction amount	Măreşte / Micşorează mărimea autocorecţiei contrastului
+Increase/decrease brightness	Măreşte / Micşorează Luminozitatea
+Increase/decrease contrast	Măreşte / Micşorează Contrastul
+Increase/decrease darkening of highlights (LDC must be on)	Măreşte / Micşorează întunericul luminiilor (LDC trebuie activat)
+Increase/decrease lightening of shadows (LDC must be on)	Măreşte / Micşorează luminozitatea umbrelor (LDC trebuie activat)
+Increase/decrease sharpness	Măreşte / Micşorează Claritatea
+Insufficient rights to change the privilege (DACL) on the registry entry. Continue?	
+JPEGView Help	JPEGView Ajutor
+JPEGView is a lean, fast and highly configurable viewer/editor for JPEG, BMP, PNG, WEBP, TGA, GIF and TIFF images with a minimal GUI.	
+JPEGView is registered as default viewer for the selected file formats.	
+Keep aspect ratio on crop	Păstrează proporţia imaginii la decupare
+Keep parameters	Păstreză Parametrii
+Keep processing parameters between images	Păstrează parametri de procesare între imagini
+Known keys:	
+Lanczos/Bicubic	
+Landscape	
+Landscape picture enhancement mode	Imagine panoramică, modul intensificat
+Last modification date/time	
+Left	
+Left mouse & drag	Stânga mouse şi trage
+Licensed under the GNU general public license (GPL), see readme file for details	
+Lighten Shadows	Luminarea Umbrelor
+Local density correction	Corectează densitatea locală
+Location:	
 Loop folder	Reia directorul
 Loop recursively	Buclă recursivă
 Loop siblings	Buclă pe nivel
+Loop through files in current directory and all sibling folders (folders on same level)	Reia redarea fişierelor din directorul curent şi toate directoarele frate (directorele de pe acelaşi nivel)
+Loop through files in current directory and all subfolders	Reia redarea fişierelor din directorul curent şi toate subdirectoarele
+Loop through files in current folder	Reia redarea fişierelor din directoru
+Lossless JPEG transformations	Transformări JPEG fără pierderi
+M - G	
+Magenta-Green	Roz - Verde
+Manage 'Open image with' menu...	
+Margins:	
+Mark image for toggling. Use %s to toggle between marked and current image	Marchează imaginea pentru răsturnare. Folosiţi %s pentru a comuta între imagini
+Maximize/restore to/from virtual desktop (only for multi-monitor systems)	Maximizează / reafişează / de la desktop-ul virtual (numai pentru sistemele multi-monitor)
+Menu entries:	
+Modification date:	Data modificări:
+Modifier keys:	
+Month / Short form (text)	Luna / Forma scurta (text)
+Mouse wheel	Rotiţa mouse-ului
+Navigation	Navigare
+New	
+New height:	
+New name (>> : file gets copied)	Nume nou (>>: fisierul este copiat)
+New name contains backslash character!	Noul nume conţine caracterul backslash (\)!
+New size:	
+New width:	
+Next image	Imaginea următoare
+No image loaded!	
+No user INI file exists yet. Create user INI file from INI file template?	
+None	
+Not enough memory available	
+Note: Set the key 'TrimWithoutPromptLosslessJPEG=true' in the INI file to always trim without showing this message.	Notă: Setarea parametrului 'TrimWithoutPromptLosslessJPEG=true' 'DecupareJPEGFărăPiederiFărăAtenționare=adevărat' in fișierul INI tot timpul va decupa imaginea fără să arate acest mesaj.
+Number (consecutively numbered)	Numar (numerotare consecutiva)
+Number of CPU cores used	
+Number of JPEG files in folder: %d	Numărul de fișiere JPEG din folder:
+Number with N digits	Numarul pe 'N' digiti
+OK	
+Old name	Nume vechi
+Open folder containing image and select in Windows Explorer	
+Open new image or slideshow file	Deschide o nouă imagine ori prezentarea de imagini
+Order files by	
+Orientation:	
+Original file extension	Extensia originala a fisierului
+Original file name (with extension)	Numele original al fisierului (cu extensie)
+Original file name (without extension)	Numele original al fisierului (fara extensie)
+Pan image	Mişcarea imaginii
+Paper:	
+Parameter DB	
+Parameter DB error	Eroare de Parametru DB
+Parameter DB file '%s' could not be opened!	Fişierul cu Parametrii DB '%s' nu poate fi deschis!
+Parameter DB file '%s' is not valid (invalid header)!	Fişierul cu Parametrii DB '%s' este invalid (antet invalid)!
+Paste from clipboard	Lipeşte din Clipboard
+Pasting image from clipboard failed!	Lipirea imaginii de la Clipboard nu a reuşit!
+Performing the lossless transformation failed!	Transformarea fără pierderi a eșuat!
+Performing the transformation failed	Efectuarea transformării a eșuat!
+Perspective Correction	Corecţia Perspectievei
+Pixels	Pixeli
+Placeholders:	Substituenti:
+Portrait	
+Press 'OK' to continue with registration or 'Cancel' to abort all registrations.	
+Press ESC to exit...	Apasa ESC pentru a ieşi...
+Press any key to search the subdirectories for image files.	Apasă orice tastă pentru a căuta fişiere imagine în subdirectoare.
+Preview	Previzualizare
+Previous image	Imaginea anterioară
+Print	
+Print Image	
+Printer driver	
+Printer:	
+Project home page	
+Radius	Raza
+Random	Aleatoriu
+Reading the JPEG file from disk failed	Citirea fișierului JPEG de pe disc a eșuat!
+Reason:	Cauza:
+Registering or unregistering file extensions in this registry area requires administrator privileges and cannot be done in JPEGView.	
+Registration applies to the current user only.	
+Remove from	Elimină din
+Rename	Redenumeste
+Rename/copy images to:	Redenumeste/copiaza imaginea ca:
+Renaming file failed!	Redenumeşte fişierul eşuat!
+Reset	
+Resize Image	
+Right	
+Right mouse button: Context menu	
+Roll from bottom	
+Roll from left	
+Roll from right	
+Roll from top	
+Rotate Image	Rotiți imaginea
+Rotate current file on disk lossless by 270 deg (W/H must be multiple of 16)	Roteşte fişierul curent pe harddisk -90gr. (spre stânga) (W/H trebuie să fie multiplu de 16)
+Rotate current file on disk lossless by 90 deg (W/H must be multiple of 16)	Roteşte fişierul curent pe harddisk 90gr. (spre dreapta) (W/H trebuie să fie multiplu de 16)
+Rotate image 90 deg clockwise	Roteşte imaginea cu 90 de grade spre dreapta
+Rotate image 90 deg counter-clockwise	Roteşte imaginea cu 90 de grade spre stânga
+Rotate image and fit to screen	Roteşte imaginea şi o încadrează pe ecran
+Rotate image by user-defined angle	Rotiți imaginea cu unghiul definit de utilizator
+Rotate the image by dragging with the mouse.	Rotiți imaginea prin tragerea cu mouse-ul.
+SIMD mode used	
+Saturation	Saturaţie
+Save	
+Save (%s)/ delete (%s) image processing parameters in/from parameter DB	Salvează / Şterge parametrii imaginii procesate în / de la parametrul DB
+Save as (in screen size/resolution)	Salvează ca (mărime a ecranului / rezoluţiei)
+Save as template	Salveaza ca sablon
+Save cropped image	Salvați imaginea tăiată
+Save processed image to JPEG file (original size)	Salvează imaginea procesată ca fişier JPEG (în mărime originală)
+Save processed image to JPEG file (screen size)	Salvează imaginea procesată ca fişier JPEG (mărimea ecranului)
+Save to	Salvează ca
+Scaling mode:	
+Screen Pixels	Pixelii ecranului
+Scroll from bottom	
+Scroll from left	
+Scroll from right	
+Scroll from top	
+Select Printer...	
+Select all	Selecteaza toate
+Select application	
+Select file to display in 'File Open' dialog	Selectează fizierul pentru a vizualiza în fereastra de dialog 'Deschide Fişier'
+Select none	Deselecteaza
+Select parameter DB to restore	Selectează Parametrii DB pentru refacere
+Set Fixed Crop Size	Setează mărime fixă de tăiere
+Set JPEGView as default image viewer	
+Set timeout to n/10 sec, respectively n/100 sec (Ctrl+Shift)	Setează timpul de rulare la 'n/10' sec (Ctrl+Shift)
+Shall existing entries be preserved (Yes) or be overriden by the imported entries (No)?	Înscrierile existente să fie conservate (Da) sau să fie suprascrise de intrările importate (Nu)?
+Sharpen	Claritate
+Sharpen low	
+Sharpen medium	
+Shortcut Help	
+Shortcut key:	
+Show filename	Afişează numele fişierului
+Show first image in folder	Afişează prima imagine din director
+Show grid lines	Afișează grila de linii
+Show histogram	Arată histograma
+Show last image in folder	Afişează ultima imagine din director
+Show navigation panel	Afişează panoul de navigare
+Show next image	Afişează imaginea următoare
+Show picture info (EXIF)	Afişează informaţiile fotografiei (EXIF)
+Show previous image	Afişează imaginea anterioară
+Show/hide file name	Afişează / Ascunde numele fişierului
+Show/hide navigation panel	Afişează / Ascunde Panoul de navigare
+Show/hide picture information (EXIF data)	Afişează / Ascunde informaţiile fotografiei(Datele EXIF)
+Show/hide this help text	Afişează / Ascunde textul ajutător
+Size:	
+Slide from bottom	
+Slide from left	
+Slide from right	
+Slide from top	
+Slideshow	Prezentare
+Slideshow with timeout of 'n' seconds (ESC to stop)	
+Sort images by creation date, resp. modification date, resp. file name	Sortează imaginile după data de creare, după data modificării, după nume
+Source:	
+Target folders that do not yet exist are created as needed.	
+The directory '%s' does not contain any image files!	Directorul '%s' nu conţine niciun fişier imagine!
+The file '%s' could not be copied!	
+The file '%s' could not be read!	Fişierul '%s' nu poate fi citit!
+The file '%s' could not be renamed!	
+The file '%s' does not contain a list of file names!	Fişierul '%s' nu conţine o listă de nume de fişiere!
+The file is read-only!	Fişierul este read-only (se poate doar citit nu şi modifica)!
+The following file extensions cannot be unregistered because they have been registered in the 'local machine' registry area.	
+The following image extensions are protected by the operating system.	
+The imported param DB contains entries already present in active param DB.	Parametrii DB importaţi conţin intrări deja existente în Parametrii DB activi.
+The new size is too large - width or height is larger than 65535 or total number of pixels is too large!	
+The old parameter DB file '%s' could not be renamed during conversion to new format!	Vechiul fişier cu Parametrii DB '%s' nu poate fi redenumit în timpul conversiei la noul format!
+The operation failed because not enough memory is available!	Operațiunea a eșuat datorită faptului că nu este suficientă memorie disponibilă!
+The parameter DB file '%s' has been created by a newer version of JPEGView!	Fişierul cu Parametrii DB '%s' a fost creat de o nouă versiune JPEGView!
+The transformation can be applied if the image is trimmed to the next matching size but this will remove some border pixels.	Transformarea poate fi aplicată doar dacă imaginea este tăiată la dimensiunea potrivită dar acet lucru va tăia pixeli din marginile imaginii.
+These values will override the values from the INI file located in the program folder of JPEGView!	Aceste valori vor fi trecute peste valorile din fişierul INI aflat în directorul programului JPEGView!
+Threshold	Pragul
+Title:	
+Toggle between screens (only for multi-monitor systems)	Schimbă între ecrane (numai pentru sitemele multi monitor)
+Toggle window always on top mode	
+Toggle window title bar hidden mode	
+Top	
+Transition Effect	
+Trim the image and apply transformation? Trimming cannot be undone!	Decupează imaginea și aplică transformarea? Decuparea nu poate fi făcută!
+Unregistering not possible	
+Unsharp mask...	Mască de claritate...
+Update user settings with new settings from settings template file?	
+Use the 'Default Programs' configuration dialog from the operating system instead.	
+Use the mouse to draw a line that shall be horizontal or vertical.	Folosiți mouse-ul pentru a desena o linie orizontală sau verticală.
+Warning	
+Width	Lăţime
+Windows 8 (and above) blocks JPEGView from changing the default program for these file extensions.	
+Writing the resulting JPEG file to disk failed	Scrierea rezultatului fișierului JPEG pe disc a eșuat!
+Y - B	
+Year short form (2 digits)	Anul, forma scurta (2 digiti)
+Yellow-Blue	Galben - Albastru
+Zoom 1:1 (100 %)	
+Zoom in (%s)/Zoom out (%s)	Măreşte (%s)/ Micşorează (%s) imaginea
+Zoom in/out image	Măreşte / Micşorează imaginea
+Zoom mode (drag mouse to zoom)	Mărire (trageţi mouse-ul pentru a mări)
+and image processing (brightness/contrast/sharpen) parameters between images	Procesează parametrii imaginilor(luminozitate/contrast/claritate).
+cm	
+in	
+new menu entry	
+no	Nu
+off	Oprit
+on	Pornit
+yes	Da
+
+// ::: Popup Menu Strings ::: (unsorted to preserve context) //
+Stop slide show/movie	Opreşte prezentarea / filmul
+Open image...	Deschide imaginea...
+Open image with	
+Save processed image...	Salvează imaginea procesată...
+Reload image	Reîncarcă imaginea
+Open containing folder in Explorer	
+Print image...	
+Batch rename/copy...	Redenumire multiplă / copiere...
+Set modification date	Setează data modificării
+to current date	la data curentă
+to EXIF date	la data din informaţiile EXIF
+to EXIF date (all files in folder)	la datele EXIF (toate fișierele din folder)
+Set as desktop wallpaper	
+Use original image	
+Use processed image as displayed	
+Copy to clipboard	Copiază în Clipboard
+Copy original size image	Copiază imaginea cu mărime originală
+Copy file path	
 Display order	Afişează (ordinea de afişare) după
 Modification date	Data modificării
 Creation date	Data producerii
 Play folder as slideshow/movie	Rulează fişierele directorului ca prezentare / film
-Slideshow	Prezentare
-Movie	Film
 Waiting time	după fiecare
-Stop slide show/movie	Opreşte prezentarea / filmul
+1 sec	
+2 sec	
+3 sec	
+4 sec	
+5 sec	
+7 sec	
+10 sec	
+20 sec	
+Transition Speed	
+Very fast	
+Fast	
+Normal	
+Slow	
+Very slow	
+Movie	Film
+Playback speed	
+5 fps	
+10 fps	
+25 fps	
+30 fps	
+50 fps	
+100 fps	
+Transform image	Rotire - oglindire imagine
 Rotate +90	Roteşte cu +90gr. (la dreapta)
 Rotate -90	Roteşte cu -90gr. (la stânga)
+Rotate...	Rotire...
+Change size...	
+Perspective correction...	Corecţia perspectivei...
+Mirror horizontally	Oglindire pe orizontală
+Mirror vertically	Oglindire pe verticală
 Rotate 180	Roteşte cu 180gr.
 Auto correction	Autocorectare
-Local density correction	Corectează densitatea locală
-Keep parameters	Păstreză Parametrii
-Set current parameters as default values...	Salvează Parametrii în INI...
 Save parameters to DB	Salvează setările în Parametrii DB
 Clear parameters from DB	Şterge setările salvate în Parametrii DB
 Zoom	Măreşte
-Fit to screen	Încadrează imaginea în ecran
-Fill with crop	Adaptează imaginea la lăţimea ecranului
 Span all screens	Deschide toate ecranele
-Auto zoom mode	Modul automărire
-Fit to screen (no zoom)	Încadrează în ecran(fără mărire)
-Fill with crop (no zoom)	Umplere ecran (fără mărire)
-Exit	Ieşire
-Cyan-Red	Verde-Albăstrui - Roşu
-Magenta-Green	Roz - Verde
-Yellow-Blue	Galben - Albastru
-C - R	C - R
-M - G	M - G
-Y - B	Y - B
-Batch rename/copy of files	Redenumire multipla / copierea fisierelor
-Image files in folder	Fisierele imagine din directorul
-Placeholders:	Substituenti:
-Number (consecutively numbered)	Numar (numerotare consecutiva)
-Number with N digits	Numarul pe 'N' digiti
-Extracted number from original file name	Numarul extras din numele original al fisierului
-Original file name (with extension)	Numele original al fisierului (cu extensie)
-Original file name (without extension)	Numele original al fisierului (fara extensie)
-Original file extension	Extensia originala a fisierului
-'My Pictures' folder	Directorul 'My Pictures (Fotografiile Mele)'
-Day / Month / Year (as numbers)	Ziua / Luna / Anul (ca numar)
-Year short form (2 digits)	Anul, forma scurta (2 digiti)
-Month / Short form (text)	Luna / Forma scurta (text)
-Target folders that are not yet existing are created as needed.	Directoarele tinta care nu sunt inca existente sunt create dupa cum este necesar.
-Date placeholders use the modification date of the image.	Utilizati substituentii de date de mai sus, pentru a modifica datele imaginii.
-Rename/copy images to:	Redenumeste/copiaza imaginea ca:
-Rename	Redenumeste
-Preview	Previzualizare
-Save as template	Salveaza ca sablon
-Close	Inchide
-Old name	Nume vechi
-Date	Data
-New name (>> : file gets copied)	Nume nou (>>: fisierul este copiat)
-Select all	Selecteaza toate
-Select none	Deselecteaza
-The file '%s' could not be %s.	Fisierul '%s' nu poate fi %s.
-copied	copiat
-renamed	redenumit
-Continue rename/copy?	Continua redenumirea / copierea?
-Error during rename/copy	Eroare de redenumire
-%d file(s) renamed, %d file(s) copied, %d folder(s) created	%d fisier(e) redenumit(e), %d fisier(e) copiat(e), %d director(e) creat(e)
-Crop Selection	Taie selecţia
-Copy Selection to Clipboard	Copiază selecţia în Clipboard
-Zoom to Selection	Măreşte selecţia
-Pasting image from clipboard failed!	Lipirea imaginii de la Clipboard nu a reuşit!
-Image width:	Lăţimea imaginii:
-Image height:	Înălţimea imaginii:
-Acquisition date:	Data fotografierii:
-Camera model:	Modelul aparatului foto:
-Exposure time (s):	Timpul de expunere (s):
-Exposure bias (EV):	Polarizarea expunerii (EV):
-Flash fired:	Bliţ:
-Focal length (mm):	Distanţa focală (mm):
-F-Number:	Numărul F:
-ISO Speed:	Viteza ISO:
-Modification date:	Data modificări:
-yes	Da
-no	Nu
-Show navigation panel	Afişează panoul de navigare
-Show/hide navigation panel	Afişează / Ascunde Panoul de navigare
-About JPEGView...	Despre JPEGView...
-SIMD mode used:	Modul folosit SIMD:
-Number of CPU cores used:	Numarul de nuclee de procesor utilizate:
-Licensed under the GNU general public license (GPL), see readme file for details:	Licenţa sub GNU,s licenţă publică generală (GPL), vezi fişierul "readme" pentru detalii:
-Project home page:	Pagina de start a proiectului:
-Show first image in folder	Afişează prima imagine din director
-Show previous image	Afişează imaginea anterioară
-Show next image	Afişează imaginea următoare
-Show last image in folder	Afişează ultima imagine din director
-Rotate image 90 deg clockwise	Roteşte imaginea cu 90 de grade spre dreapta
-Rotate image 90 deg counter-clockwise	Roteşte imaginea cu 90 de grade spre stânga
-Landscape picture enhancement mode	Imagine panoramică, modul intensificat
-Display image (EXIF) information	Afişează informaţiile imaginii (EXIF)
-Actual size of image	Mărimea actuală a imaginii
-Toggle between screens (only for multi-monitor systems)	Schimbă între ecrane (numai pentru sitemele multi monitor)
-Enable/disable full screen mode	Activează / Dezactivează modul Imagine pe tot ecranul
 Full screen mode	Modul Imagine pe tot ecranul
-Window mode	Modul Fereastră
-Save as (in screen size/resolution)	Salvează ca (mărime a ecranului / rezoluţiei)
-Save processed image to JPEG file (screen size)	Salvează imaginea procesată ca fişier JPEG (mărimea ecranului)
+Fit window to image	Ajustează fereastra la mărimea imaginii
+Hide window title bar	
+Set window always on top	
 Settings/Admin	Setări/Administrator
 Edit global settings...	Editează setările globale...
 Edit user settings...	Editează setările utilizatorului...
+Update user settings...	
+Set current parameters as default values...	Salvează Parametrii în INI...
+Set as default viewer...	
 Backup parameter DB...	Salvează Parametrii DB...
 Restore parameter DB...	Încarcă Parametrii DB...
-No user INI file exits yet. Create user INI file from INI file template?	Nu există încă fişier INI al utilizatorului
-Copying parameter DB to file '%s' failed. Reason: %s	Copierea Parametrilor DB în fişierul '%s' nu a reuşit.
-Select parameter DB to restore	Selectează Parametrii DB pentru refacere
-Conflicting entries in Param DB	Conflict apărut în Parametrii DB
-The imported param DB contains entries already present in active param DB.	Parametrii DB importaţi conţin intrări deja existente în Parametrii DB activi.
-Shall existing entries be preserved (Yes) or be overriden by the imported entries (No)?	Înscrierile existente să fie conservate (Da) sau să fie suprascrise de intrările importate (Nu)?
-Select file to display in 'File Open' dialog	Selectează fizierul pentru a vizualiza în fereastra de dialog 'Deschide Fişier'
+User commands	
+About JPEGView...	Despre JPEGView...
+Exit	Ieşire
+Crop Selection	Taie selecţia
+Crop Selection Lossless...	Tăiați selecția fără pierderi...
+Copy Selection to Clipboard	Copiază selecţia în Clipboard
 Crop Mode	Modul de tăiere
 Free	Liber
 Fixed size...	Mărime fixă
-Set Fixed Crop Size	Setează mărime fixă de tăiere
-Width	Lăţime
-Height	Înălţime
-Pixels	Pixeli
-Screen Pixels	Pixelii ecranului
-Image Pixels	Pixelii imaginii
-Set modification date	Setează data modificării
-to current date	la data curentă
-to EXIF date	la data din informaţiile EXIF
-Mark image for toggling. Use %s to toggle between marked and current image	Marchează imaginea pentru răsturnare. Folosiţi %s pentru a comuta între imagini
-Saturation	Saturaţie
-Unsharp mask...	Mască de claritate...
-Apply Unsharp Mask	Aplică masca de claritate
-Radius	Raza
-Amount	Mărimea
-Threshold	Pragul
-Apply	Aplică
-Cancel	Închide
-Keep processing parameters between images	Păstrează parametri de procesare între imagini
-Show histogram	Arată histograma
-Hide histogram	Ascunde histograma
-Crop Selection Lossless...	Tăiați selecția fără pierderi...
-Save cropped image	Salvați imaginea tăiată
-Rotate image by user-defined angle	Rotiți imaginea cu unghiul definit de utilizator
-Rotate Image	Rotiți imaginea
-Show grid lines	Afișează grila de linii
-Auto crop rotated image (avoids black border)	Tăiați automat imaginea rotită (Evitați bordura neagră)
-Align image to horizontal or vertical line	Aliniați imaginea la liniile orizontale sau verticale
-Use the mouse to draw a line that shall be horizontal or vertical.	Folosiți mouse-ul pentru a desena o linie orizontală sau verticală.
-Rotate the image by dragging with the mouse.	Rotiți imaginea prin tragerea cu mouse-ul.
-The operation failed because not enough memory is available!	Operațiunea a eșuat datorită faptului că nu este suficientă memorie disponibilă!
-to EXIF date (all files in folder)	la datele EXIF (toate fișierele din folder)
-Number of JPEG files in folder: %d	Numărul de fișiere JPEG din folder:
-EXIF date successfully set on %d images, failed on %d images	Datele EXIF setate cu succes la %d imagini, eroare la %d imagini
-Reason: Not enough memory available	Motivul: Nu este suficientă memorie disponibilă
-Transform image	Rotire - oglindire imagine
-Rotate...	Rotire...
-Mirror horizontally	Oglindire pe orizontală
-Mirror vertically	Oglindire pe verticală
-Random	Aleatoriu
-Zoom mode (drag mouse to zoom)	Mărire (trageţi mouse-ul pentru a mări)
-Correct converging lines (perspective correction)	Corectează liniile convergente (corectează perspectiva)
-Perspective Correction	Corecţia Perspectievei
-Perspective correction...	Corecţia perspectivei...
-Auto crop corrected image (avoids black border)	Auto-tăierea imaginii corectate (anularea marginilor negre)
-Click and drag the mouse vertically to correct image tilt.	Clic şi trage mouse-ul vertical pentru a corecta imaginile înclinate.
-Drag at the left or right border for asymmetric correction.	Trage la stânga sau la dreapta bordura pentru corecţie asimetrică.
-Fit window to image	Ajustează fereastra la mărimea imaginii
-Keep aspect ratio on crop	Păstrează proporţia imaginii la decupare
-Lossless JPEG transformations	Transformări JPEG fără pierderi
-Performing the lossless transformation failed!	Transformarea fără pierderi a eșuat!
-Image width and height must be dividable by the JPEG block size (8 or 16) for lossless transformations!	Lățimea și înălțimea imaginii trebuie să fie divizibilă cu blocul de mărime JPEG (8 sau 16) pentru transformări fără pierderi!
-Reading the JPEG file from disk failed	Citirea fișierului JPEG de pe disc a eșuat!
-Writing the resulting JPEG file to disk failed	Scrierea rezultatului fișierului JPEG pe disc a eșuat!
-Performing the transformation failed	Efectuarea transformării a eșuat!
-The transformation can be applied if the image is trimmed to the next matching size but this will remove some border pixels.	Transformarea poate fi aplicată doar dacă imaginea este tăiată la dimensiunea potrivită dar acet lucru va tăia pixeli din marginile imaginii.
-Trim the image and apply transformation? Trimming cannot be undone!	Decupează imaginea și aplică transformarea? Decuparea nu poate fi făcută!
-Note: Set the key 'TrimWithoutPromptLosslessJPEG=true' in the INI file to always trim without showing this message.	Notă: Setarea parametrului 'TrimWithoutPromptLosslessJPEG=true' 'DecupareJPEGFărăPiederiFărăAtenționare=adevărat' in fișierul INI tot timpul va decupa imaginea fără să arate acest mesaj.
+Zoom to Selection	Măreşte selecţia
+
+// ::: Out-of-date Translations ::: (Not in Use anymore, safe to delete) //
+//Parameter DB:	Parametrul DB:
+//Rename:	Redenumeşte:
+//No file or folder name was provided as command line parameter!	Nici un nume de fişier sau director nu a fost furnizat ca parametru al liniei de comandă!
+//To use JPEGView, associate JPG, JPEG and BMP files with JPEGView.	Foloseşte JPEGView pentru a asocia fişiere de tip JPG, JPEG şi BMP.
+//PgUp or Left	Tasta "Săgeată stânga"
+//PgDn or Right	Tasta "Săgeată dreapta"
+//Slide show with timeout of n seconds (ESC to stop)	Prezentare de imagini cu rulare la "n" secunde (apasă ESC pentru "Stop")
+//Zoom 1:1 (100%)	Mărime 1:1 (100%)
+//up/down	sus/jos
+//Delete current file on disk permanently	Şterge fişierul curent permanent de pe harddisk!
+//Can't rename file!	Fişierul nu poate fi redenumit!
+//Auto contrast and color correction:	Autocorecţie de contrast şi culoare:
+//Local density correction:	Densitatea locală de corecţie:
+//Order files by:	Ordonează fişierele după:
+//Last modification	Ultima modificare
+//Do you really want to permanently delete the file %filename%?	Sigur doriţi ştergerea permanentă a fişierului %filename%?
+//Rotate the following file lossless by 90 deg?\n%filename%	Roteşte fişier cu 90gr.?\n%filename%
+//Rotate the following file lossless by 270 deg?\n%filename%	Roteşte fişier cu 270gr.?\n%filename%
+//Target folders that are not yet existing are created as needed.	Directoarele tinta care nu sunt inca existente sunt create dupa cum este necesar.
+//The file '%s' could not be %s.	Fisierul '%s' nu poate fi %s.
+//copied	copiat
+//renamed	redenumit
+//SIMD mode used:	Modul folosit SIMD:
+//Number of CPU cores used:	Numarul de nuclee de procesor utilizate:
+//Licensed under the GNU general public license (GPL), see readme file for details:	Licenţa sub GNU,s licenţă publică generală (GPL), vezi fişierul "readme" pentru detalii:
+//Project home page:	Pagina de start a proiectului:
+//Actual size of image	Mărimea actuală a imaginii
+//Window mode	Modul Fereastră
+//No user INI file exits yet. Create user INI file from INI file template?	Nu există încă fişier INI al utilizatorului
+//Reason: Not enough memory available	Motivul: Nu este suficientă memorie disponibilă
