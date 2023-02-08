@@ -273,12 +273,13 @@ def dump_strings_txt(sorted_strings_dict, menu_list):
 
 // This file must be encoded with UTF-8 (e.g. with Windows Notepad)
 // Filename Convention: 'strings_%languagecode%.txt' where %languagecode% is the ISO 639 language code e.g. 'fr' for French
-//
+
+////////////////////
 // Line Format:   English string<tab>Translated string<newline>
 // * Lines beginning with "//" are ignored
 // * Blank lines are ignored
 // * Lines without a <tab> or have no text after the tab are ignored
-//
+
 // NOTE: %s %d have special meanings in the strings, so make sure they appear somewhere in the translated string
 //
 // For the strings below which are short and have no context:
@@ -289,11 +290,17 @@ def dump_strings_txt(sorted_strings_dict, menu_list):
 //   "Y - B" in context is "Yellow Blue" colors
 //   "yes"/"no" in context for showing EXIF flags
 //   "on"/"off" in context for showing a setting active or not
-//
-// = Credits =
+////////////////////
+
+////////////////////
+// == Translator Credits ==
 // Language: English
 // Translator Name(s) / Contact(s):
+// History/Notes:
 // Last Updated:
+////////////////////
+
+// ::: Program Strings ::: (sorted alphabetically) //
 """)
         keys = list(sorted_strings_dict.keys())
         #keys.sort(key=str.casefold)  # case-insensitive
@@ -313,7 +320,7 @@ def dump_strings_txt(sorted_strings_dict, menu_list):
                 pass
 
         f.write("""
-// Popup Menu Strings
+// ::: Popup Menu Strings ::: (unsorted to preserve context) //
 """)
         # these aren't sorted alphabetically, for clarity (and context)
         for k in menu_strings:

@@ -92,7 +92,7 @@ void CHelpDisplayCtl::GenerateHelpDisplay() {
 	m_pHelpDisplay->AddLineInfo(_KeyDesc(IDM_COLOR_CORRECTION_INC, IDM_COLOR_CORRECTION_DEC), buff3, CNLS::GetString(_T("Increase/decrease auto color cast correction amount")));
 	TCHAR buff4[16]; _stprintf_s(buff4, 16, _T("%.2f"), m_pImageProcParams->ContrastCorrectionFactor);
 	m_pHelpDisplay->AddLineInfo(_KeyDesc(IDM_CONTRAST_CORRECTION_INC, IDM_CONTRAST_CORRECTION_DEC), buff4, CNLS::GetString(_T("Increase/decrease auto contrast correction amount")));
-	m_pHelpDisplay->AddLine(_T("1 .. 9"), CNLS::GetString(_T("Slide show with timeout of n seconds (ESC to stop)")));
+	m_pHelpDisplay->AddLine(_T("1 .. 9"), CNLS::GetString(_T("Slideshow with timeout of 'n' seconds (ESC to stop)")));
 	m_pHelpDisplay->AddLineInfo(_T("Ctrl[+Shift] 1 .. 9"),  LPCTSTR(NULL), CNLS::GetString(_T("Set timeout to n/10 sec, respectively n/100 sec (Ctrl+Shift)")));
 	m_pHelpDisplay->AddLine(_KeyDesc(IDM_ROTATE_270, IDM_ROTATE_90), CNLS::GetString(_T("Rotate image and fit to screen")));
 	m_pHelpDisplay->AddLine(_KeyDesc(IDM_FIT_TO_SCREEN), CNLS::GetString(_T("Fit image to screen")));

@@ -114,7 +114,7 @@ LRESULT CBatchCopyDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*l
 		CString(_T("%h %min : ")) + CNLS::GetString(_T("Hour / Minute (as numbers)")) + _T("\n") +
 		CString(_T("%2y : ")) + CNLS::GetString(_T("Year short form (2 digits)")) + _T("\n") +
 		CString(_T("%M %3M : ")) + CNLS::GetString(_T("Month / Short form (text)")) );
-	m_lblRemark.SetWindowText(CString(CNLS::GetString(_T("Target folders that are not yet existing are created as needed."))) + _T("\n") +
+	m_lblRemark.SetWindowText(CString(CNLS::GetString(_T("Target folders that do not yet exist are created as needed."))) + _T("\n") +
 		CNLS::GetString(_T("Date placeholders use the modification date of the image.")));
 	m_lblCopy.SetWindowText(CNLS::GetString(_T("Rename/copy images to:")));
 

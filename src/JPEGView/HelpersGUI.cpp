@@ -324,7 +324,7 @@ namespace HelpersGUI {
 		}
 		if (eFileSorting != Helpers::FS_Random) {
 			sText += _T(", ");
-			sText += isSortedUpcounting ? CNLS::GetString(_T("Upcounting")) : CNLS::GetString(_T("Downcounting"));
+			sText += isSortedUpcounting ? CNLS::GetString(_T("Ascending")) : CNLS::GetString(_T("Descending"));
 		}
 		sText += _T("\n");
 		sText += CNLS::GetString(_T("Auto zoom mode")); sText += _T(": ");
@@ -425,7 +425,7 @@ namespace HelpersGUI {
 		}
 		if (bOutOfMemory) {
 			_tcscat_s(buff, BUF_LEN, _T("\n"));
-			_tcscat_s(buff, BUF_LEN, CNLS::GetString(_T("Reason: Not enough memory available")));
+			_tcscat_s(buff, BUF_LEN, CString(CNLS::GetString(_T("Reason:"))) + CNLS::GetString(_T("Not enough memory available")));
 		} else if (nFileLoadError == FileLoad_LoadError) {
 			LPCTSTR sEnding = _tcsrchr(sFailedFileName, _T('.'));
 			if (sEnding != NULL) {

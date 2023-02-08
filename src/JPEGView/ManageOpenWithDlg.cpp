@@ -212,7 +212,7 @@ void CManageOpenWithDlg::EnterEditMode(bool addNewEntry) {
 	m_btnEdit.EnableWindow(FALSE);
 	m_btnDelete.EnableWindow(FALSE);
 	if (addNewEntry) {
-		m_lbMenuEntries.AddString(CNLS::GetString(_T("[new entry]")));
+		m_lbMenuEntries.AddString(_T("[") + CString(CNLS::GetString(_T("new menu entry"))) + _T("]"));
 		m_lbMenuEntries.SetCurSel(m_lbMenuEntries.GetCount() - 1);
 		m_btnClose.EnableWindow(FALSE);
 	}

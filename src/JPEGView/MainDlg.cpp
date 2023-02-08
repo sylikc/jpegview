@@ -3101,7 +3101,7 @@ void CMainDlg::EditINIFile(bool bGlobalINI) {
 	if (!bGlobalINI) {
 		if (!CSettingsProvider::This().ExistsUserINI()) {
 			// No user INI file, ask if global INI shall be copied
-			if (IDYES == ::MessageBox(m_hWnd, CNLS::GetString(_T("No user INI file exits yet. Create user INI file from INI file template?")), _T(JPEGVIEW_TITLE), MB_YESNO | MB_ICONQUESTION)) {
+			if (IDYES == ::MessageBox(m_hWnd, CNLS::GetString(_T("No user INI file exists yet. Create user INI file from INI file template?")), _T(JPEGVIEW_TITLE), MB_YESNO | MB_ICONQUESTION)) {
 				CSettingsProvider::This().CopyUserINIFromTemplate();
 			} else {
 				return;
