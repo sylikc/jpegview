@@ -234,7 +234,7 @@ LRESULT CBatchCopyDlg::OnRename(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*/
 				if (lastError == 0) lastError = ::GetLastError();
 				CString strError;
 				strError.Format(CNLS::GetString(_T("The file '%s' could not be %s.")), iter->GetTitle(),
-					CNLS::GetString(bCopyNeeded ? _T("copied") : _T("renamed")));
+					bCopyNeeded ? CNLS::GetString(_T("copied")) : CNLS::GetString(_T("renamed")));
 				strError += _T("\n");
 				strError += CNLS::GetString(_T("Reason:")); strError += _T(" ");
 				LPTSTR lpMsgBuf = NULL;

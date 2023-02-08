@@ -8,7 +8,7 @@
 
 static void AddFlagText(CString& sText, LPCTSTR sFlagText, bool bFlag) {
 	sText += sFlagText;
-	sText += CNLS::GetString(bFlag ? _T("on") : _T("off"));
+	sText += bFlag ? CNLS::GetString(_T("on")) : CNLS::GetString(_T("off"));
 	sText += _T('\n');
 }
 
