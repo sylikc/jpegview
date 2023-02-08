@@ -184,7 +184,8 @@ namespace HelpersGUI {
 							sNewMenuText += pKeyMap->GetKeyStringForCommand(nCommand);
 						}
 					} else {
-						sNewMenuText += pTab;
+						// if the text after the \t is not a hex code, append it translated
+						sNewMenuText += CNLS::GetString(pTab);
 					}
 				} else if (!sKeyDesc.IsEmpty()) {
 					sNewMenuText += _T('\t');
