@@ -5,8 +5,8 @@
 
 ////////////////////
 // ::: Translation Info ::: //
-//: ISO 639 code: en
-//: Language: English
+//: ISO 639 code: fr
+//: Language: French
 //: Translator(s):
 //: Last Updated:
 //: Additional Notes:
@@ -534,4 +534,4 @@ Zoom to Selection	Zoom sur la sélection
 //! 100 fps
 //! Zoom
 
-// ::: STATUS: Last Checked/Updated by Script ::: 2023-02-08T22:01:06.173561+00:00 //
+// ::: STATUS: Last Checked/Updated by Script ::: 2023-02-08T22:01:53.658610+00:00 //

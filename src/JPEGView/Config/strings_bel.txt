@@ -5,12 +5,11 @@
 
 ////////////////////
 // ::: Translation Info ::: //
-//: ISO 639 code: en
-//: Language: English
-//: Translator(s):
+//: ISO 639 code: bel
+//: Language: Belarusian
+//: Translator(s): Uładzimir Panada
 //: Last Updated:
 //: Additional Notes:
-// Translation=Uładzimir Panada
 ////////////////////
 
 ////////////////////
@@ -661,4 +660,4 @@ Zoom to Selection	На ўвесь экран
 //! Set as default viewer...
 //! User commands
 
-// ::: STATUS: Last Checked/Updated by Script ::: 2023-02-08T22:01:06.053201+00:00 //
+// ::: STATUS: Last Checked/Updated by Script ::: 2023-02-08T22:01:53.627986+00:00 //

@@ -5,12 +5,11 @@
 
 ////////////////////
 // ::: Translation Info ::: //
-//: ISO 639 code: en
-//: Language: English
-//: Translator(s):
+//: ISO 639 code: cs
+//: Language: Czech
+//: Translator(s): Milos Koutny, mail:milos(dot)koutny(at)gmail(dot)com
 //: Last Updated:
 //: Additional Notes:
-// Czech traslation by Milos Koutny, mail:milos(dot)koutny(at)gmail(dot)com
 ////////////////////
 
 ////////////////////
@@ -622,4 +621,4 @@ Zoom to Selection	Zobrazit výběr
 //! Update user settings...
 //! User commands
 
-// ::: STATUS: Last Checked/Updated by Script ::: 2023-02-08T22:01:06.068392+00:00 //
+// ::: STATUS: Last Checked/Updated by Script ::: 2023-02-08T22:01:53.634142+00:00 //

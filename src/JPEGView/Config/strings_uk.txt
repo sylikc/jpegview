@@ -5,20 +5,14 @@
 
 ////////////////////
 // ::: Translation Info ::: //
-//: ISO 639 code: en
-//: Language: English
-//: Translator(s):
-//: Last Updated:
+//: ISO 639 code: uk
+//: Language: Ukrainian
+//: Translator(s): Bonsai
+//: Last Updated: Jan 2015
 //: Additional Notes:
 // Цей файл повинен мати кодування UTF-8 (підійде, наприклад, Блокнот Windows)
 // Назва файлу повинна мати вигляд 'strings_%languagecode%.txt' (де %languagecode% - код мови згідно ISO 639, приклад: strings_fr.txt - це французька)
 // Формат: Англійський рядок<tab>Перекладений рядок<cr/lf>
-//Language=Ukrainian
-//TranslatorName=Bonsai
-//Contact=none
-//TranslatorURL=none
-//LastUpdated=Jan 2015
-//
 ////////////////////
 
 ////////////////////
@@ -589,4 +583,4 @@ Zoom to Selection	Масштабувати до виділеного
 //! Update user settings...
 //! Set current parameters as default values...
 
-// ::: STATUS: Last Checked/Updated by Script ::: 2023-02-08T22:01:06.303181+00:00 //
+// ::: STATUS: Last Checked/Updated by Script ::: 2023-02-08T22:01:53.705583+00:00 //

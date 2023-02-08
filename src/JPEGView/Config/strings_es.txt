@@ -5,7 +5,7 @@
 
 ////////////////////
 // ::: Translation Info ::: //
-//: ISO 639 code: en
+//: ISO 639 code: es
 //: Language: Spanish
 //: Translator(s):
 //: Last Updated:
@@ -558,4 +558,4 @@ Zoom to Selection	Aumento en la Selección
 //! Set window always on top
 //! Update user settings...
 
-// ::: STATUS: Last Checked/Updated by Script ::: 2023-02-08T22:01:06.139172+00:00 //
+// ::: STATUS: Last Checked/Updated by Script ::: 2023-02-08T22:01:53.651337+00:00 //

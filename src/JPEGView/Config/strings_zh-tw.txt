@@ -5,13 +5,11 @@
 
 ////////////////////
 // ::: Translation Info ::: //
-//: ISO 639 code: en
-//: Language: English
-//: Translator(s):
+//: ISO 639 code: zh-tw
+//: Language: Chinese (Taiwan)
+//: Translator(s): 風逸蘭
 //: Last Updated:
 //: Additional Notes:
-//Translation Info
-//Translator:風逸蘭
 ////////////////////
 
 ////////////////////
@@ -590,4 +588,4 @@ Zoom to Selection	縮放到選擇內容
 //! Set window always on top
 //! Update user settings...
 
-// ::: STATUS: Last Checked/Updated by Script ::: 2023-02-08T22:01:06.320360+00:00 //
+// ::: STATUS: Last Checked/Updated by Script ::: 2023-02-08T22:01:53.712179+00:00 //

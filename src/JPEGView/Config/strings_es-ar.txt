@@ -5,12 +5,11 @@
 
 ////////////////////
 // ::: Translation Info ::: //
-//: ISO 639 code: en
-//: Language: English
-//: Translator(s):
+//: ISO 639 code: es-ar
+//: Language: Spanish (Argentina)
+//: Translator(s): ThecaTTony (thecattony@users.sourceforge.net - thecattony@thecattony.com.ar)
 //: Last Updated:
 //: Additional Notes:
-// Translation made by ThecaTTony (thecattony@users.sourceforge.net - thecattony@thecattony.com.ar)
 ////////////////////
 
 ////////////////////
@@ -673,4 +672,4 @@ Zoom to Selection	Zoom a selección
 //! User commands
 //! Crop Selection Lossless...
 
-// ::: STATUS: Last Checked/Updated by Script ::: 2023-02-08T22:01:06.122623+00:00 //
+// ::: STATUS: Last Checked/Updated by Script ::: 2023-02-08T22:01:53.646056+00:00 //

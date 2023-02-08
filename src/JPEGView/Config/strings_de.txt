@@ -5,8 +5,8 @@
 
 ////////////////////
 // ::: Translation Info ::: //
-//: ISO 639 code: en
-//: Language: English
+//: ISO 639 code: de
+//: Language: German
 //: Translator(s):
 //: Last Updated:
 //: Additional Notes:
@@ -562,4 +562,4 @@ Zoom to Selection	Auf Auswahl einzoomen
 //! Hide window title bar
 //! Set window always on top
 
-// ::: STATUS: Last Checked/Updated by Script ::: 2023-02-08T22:01:06.086266+00:00 //
+// ::: STATUS: Last Checked/Updated by Script ::: 2023-02-08T22:01:53.637455+00:00 //

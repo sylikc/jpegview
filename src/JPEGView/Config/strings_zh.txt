@@ -5,13 +5,11 @@
 
 ////////////////////
 // ::: Translation Info ::: //
-//: ISO 639 code: en
-//: Language: English
-//: Translator(s):
-//: Last Updated:
+//: ISO 639 code: zh
+//: Language: Chinese (Simplified)
+//: Translator(s): 风逸兰
+//: Last Updated: 2022/10/17
 //: Additional Notes:
-//Translation Info
-//Translator:风逸兰
 //Update:2021/06/28 补全翻译，调整部分原有翻译使其更符合简体中文阅读习惯 by dunkeng
 //Update:2022/10/17 by mowumo
 ////////////////////
@@ -560,4 +558,4 @@ Zoom to Selection	缩放到选择内容
 //! Hide window title bar
 //! Set window always on top
 
-// ::: STATUS: Last Checked/Updated by Script ::: 2023-02-08T22:01:06.336249+00:00 //
+// ::: STATUS: Last Checked/Updated by Script ::: 2023-02-08T22:01:53.716147+00:00 //
