@@ -48,7 +48,7 @@ Align image to horizontal or vertical line	Justera bildposition efter horisontel
 Alignment:	Justering:
 All Files	Alla filer
 All existing user settings will be preserved.	
-Alternatively, right-click an image file of the given type in Windows Explorer and select 'Open with... > Choose default program'	
+Alternatively, right-click an image file of the given type in Windows Explorer and select 'Open with... > Choose default program'	Alternativt, högerklicka på en bild i Utforskaren och välj 'Öppna med', samt välj önskat standardprogram.
 Altitude (m):	
 Amount	Mängd
 Application:	Program:
@@ -56,8 +56,8 @@ Applications	Program
 Apply	Verkställ
 Apply Unsharp Mask	Justera oskärpa
 Apply auto contrast correction using only visible section of image	Använd automatisk kontrastkorrigering med hjälp av endast synlig del av bild
-Ascending	
-Auto contrast and color correction	
+Ascending	Stigande
+Auto contrast and color correction	Automatisk kontrast- och färgkorrektion
 Auto crop corrected image (avoids black border)	Beskär korrigerad bild automatiskt (förhindrar svarat kanter)
 Auto crop rotated image (avoids black border)	Beskär roterad bild automatiskt (förebygger svart kant)
 Auto zoom mode	Auto-zoom
@@ -104,7 +104,7 @@ Decoding this format requires the Microsoft Visual C++ Redistributable.
 Deep Shadows	Djupa skuggor
 Delete	Ta bort
 Delete image file	Ta bort bildfil
-Descending	
+Descending	Fallande
 Display image (EXIF) information	Visa bildinformation (EXIF)
 Do you really want to delete the current image file on disk?	Vill du verkligen ta bort den aktuella bildfilen från disken?
 Do you really want to save the following parameters as default to the INI file	Vill du verkligen spara följande parametrar som standard?
@@ -120,7 +120,7 @@ Enable/disable landscape picture enhancement mode	Aktivera/Inaktivera optimering
 Error	Fel
 Error during rename/copy	Fel vid namnbyte/kopiering
 Error saving file	Fel! Kunde inte spara fil
-Error while writing the following registry key	
+Error while writing the following registry key	Kunde inte skriva till följande registernyckel
 Error writing file to disk!	Fel! Kunde inte skriva fil till disk
 Example:	Exempel:
 Exposure bias (EV):	 Bias:
@@ -177,7 +177,7 @@ Landscape picture enhancement mode	Optimeringsläge för liggande bild
 Last modification date/time	  Senast ändrad datum/tid
 Left	Vänster
 Left mouse & drag	Vänster musknapp & drag
-Licensed under the GNU general public license (GPL), see readme file for details	
+Licensed under the GNU general public license (GPL), see readme file for details	Licensierad under GNU general public license (GPL), se readme.txt för detaljer
 Lighten Shadows	Ljusa skuggor
 Local density correction	Lokal densitetkorrektion (LDC)
 Location:	
@@ -208,26 +208,26 @@ New size:	Ny storlek:
 New width:	Ny bredd:
 Next image	Nästa bild
 No image loaded!	Ingen bild inläst
-No user INI file exists yet. Create user INI file from INI file template?	
+No user INI file exists yet. Create user INI file from INI file template?	Det finns ännu ingen INI-fil för användarinställningar. Vill du skapa en med hjälp av standardmallen?
 None	Ingen
-Not enough memory available	
+Not enough memory available	För lite tillgängligt minne
 Note: Set the key 'TrimWithoutPromptLosslessJPEG=true' in the INI file to always trim without showing this message.	Notera! Du kan ändra värdet i nyckeln 'TrimWithoutPromptLosslessJPEG=true' i inställningsfilen 'JPEGView.ini' för att alltid beskära, utan att visa detta meddelande.
 Number (consecutively numbered)	Nummer (löpande numrering)
-Number of CPU cores used	
+Number of CPU cores used	Antal processorkärnor
 Number of JPEG files in folder: %d	Antal JPEG-filer i mappen: %d
 Number with N digits	Nummer med N-siffror
 OK	
 Old name	Tidigare namn
 Open folder containing image and select in Windows Explorer	
 Open new image or slideshow file	Öppna ny bild- eller bildspelsfil
-Order files by	
+Order files by	Sortera filer efter
 Orientation:	Orientering:
 Original file extension	 Ursprungligt filnamnstillägg
 Original file name (with extension)	 Ursprungligt filnamn (med filnamnstillägg)
 Original file name (without extension)	Ursprungligt filnamn (utan filnamnstillägg)
 Pan image	Panoramabild
 Paper:	Papper:
-Parameter DB	
+Parameter DB	Databas
 Parameter DB error	Databasfel
 Parameter DB file '%s' could not be opened!	Databasfilen '%s' kan inte öppnas!
 Parameter DB file '%s' is not valid (invalid header)!	Databasfilen '%s' är inte giltig !
@@ -239,7 +239,7 @@ Perspective Correction	Perspektivkorrigering
 Pixels	Pixel
 Placeholders:	Platshållare:
 Portrait	Porträtt
-Press 'OK' to continue with registration or 'Cancel' to abort all registrations.	
+Press 'OK' to continue with registration or 'Cancel' to abort all registrations.	Tryck 'OK' för att fortsätta med associeringen eller 'Avbryt' för att avbryta all registrering.
 Press ESC to exit...	Tryck 'ESC' för att avsluta...
 Press any key to search the subdirectories for image files.	Tryck på valfri tangent för att söka igenom undermappar efter bildfiler.
 Preview	Förhandsgranskning
@@ -248,12 +248,12 @@ Print	Skriv ut
 Print Image	Skriv ut bild
 Printer driver	Skrivardrivrutin
 Printer:	Skrivare:
-Project home page	
+Project home page	Projektets hemsida
 Radius	Radie
 Random	Slumpmässig
 Reading the JPEG file from disk failed	Kunde inte läsa in JPEG-filen
 Reason:	Orsak:
-Registering or unregistering file extensions in this registry area requires administrator privileges and cannot be done in JPEGView.	
+Registering or unregistering file extensions in this registry area requires administrator privileges and cannot be done in JPEGView.	Registrering eller avregistrering av filtillägg i den här registersektionen kräver administratörsbehörighet och kan inte utföras i JPEGView.
 Registration applies to the current user only.	Inställningen gäller endast aktuellt användarkonto
 Remove from	Ta bort från
 Rename	Byt namn
@@ -275,7 +275,7 @@ Rotate image 90 deg counter-clockwise	Rotera bilden 90 grader moturs
 Rotate image and fit to screen	Rotera bild och anpassa till skärm
 Rotate image by user-defined angle	Rotera bild till anpassad vinkel
 Rotate the image by dragging with the mouse.	Rotera bilden genom att dra med musen
-SIMD mode used	
+SIMD mode used	SIMD-läge
 Saturation	Mättnad
 Save	Spara
 Save (%s)/ delete (%s) image processing parameters in/from parameter DB	Spara(%s)/Ta bort(%s) berbetningsparametrar i/från databas (DB)
@@ -325,10 +325,10 @@ Slide from left	Skjut in från vänster
 Slide from right	Skjut in från höger
 Slide from top	Skjut in från toppen
 Slideshow	Bildspel
-Slideshow with timeout of 'n' seconds (ESC to stop)	
+Slideshow with timeout of 'n' seconds (ESC to stop)	Bildspel med n sekunders timeout (ESC för att stoppa)
 Sort images by creation date, resp. modification date, resp. file name	Sortera bilder efter respektive Skapad/Senast ändrad/Filnamn
 Source:	Källa:
-Target folders that do not yet exist are created as needed.	
+Target folders that do not yet exist are created as needed.	Målmapp som ännu inte existerar skapas vid behov
 The directory '%s' does not contain any image files!	Mappen '%s' innehåller inga bildfiler!
 The file '%s' could not be copied!	
 The file '%s' could not be read!	Filen '%s' kunde inte läsas!
@@ -461,82 +461,47 @@ Fixed size...	Fixerad storlek...
 Zoom to Selection	Zooma in markerat område
 
 // ::: INFO: Out-of-date Translations ::: (Not in use anymore, safe to delete) //
-//Parameter DB:	Databas:
-//Rename:	Byt namn:
-//No file or folder name was provided as command line parameter!	Ingen fil eller mapp angavs som kommandoradsparameter!
-//To use JPEGView, associate JPG, JPEG and BMP files with JPEGView.	För att använda JPEGView, associera JPG-, JPEG- och BMP-filer med JPEGView.
-//PgUp or Left	PgUp eller vänster
-//PgDn or Right	PgDn eller höger
-//Slide show with timeout of n seconds (ESC to stop)	Bildspel med n sekunders timeout (ESC för att stoppa)
-//up/down	upp/ner
-//Delete current file on disk permanently	Ta bort aktuell fil permanent
-//Auto contrast and color correction:	Automatisk kontrast- och färgkorrektion:
-//Local density correction:	Lokal densitetkorrektion (LDC):
-//Order files by:	Sortera filer efter:
-//Do you really want to permanently delete the file %filename%?	Vill du verkligen ta bort %filename% permanent?
-//Rotate the following file lossless by 90 deg?\n%filename%	Rotera följande bild förlustfritt 90 grader?\n%filename%
-//Rotate the following file lossless by 270 deg?\n%filename%	Rotera följande bild förlustfritt 270 grader?\n%filename%
-//Target folders that are not yet existing are created as needed.	Målmapp som ännu inte existerar skapas vid behov
-//The file '%s' could not be %s.	Filen '%s' kan inte vara %s
-//copied	kopierad
-//renamed	omdöpt
-//SIMD mode used:	SIMD-läge:
-//Number of CPU cores used:	Antal processorkärnor:
-//Licensed under the GNU general public license (GPL), see readme file for details:	Licensierad under GNU general public license (GPL), se readme.txt för detaljer:
-//Project home page:	Projektets hemsida:
 //Actual size of image	Verklig bildstorlek
-//Window mode	Fönsterläge
-//No user INI file exits yet. Create user INI file from INI file template?	Det finns ännu ingen INI-fil för användarinställningar. Vill du skapa en med hjälp av standardmallen?
-//Reason: Not enough memory available	Orsak: För lite tillgängligt minne
-//Error while writing the following registry key:	Kunde inte skriva till följande registernyckel:
-//Registering or unregistering file extensions in this registry area requires administration privileges and cannot be done in JPEGView.	Registrering eller avregistrering av filtillägg i den här registersektionen kräver administratörsbehörighet och kan inte utföras i JPEGView.
-//Press 'OK' to continue with registration or 'Cancel' to not modify any registrations.	Tryck 'OK' för att fortsätta med associeringen eller 'Avbryt' för att avbryta all registrering.
-//JPEGView can try to remove the restrictions automatically.	JPEGView kan försöka ta bort restriktionerna automatiskt.
+//Delete current file on disk permanently	Ta bort aktuell fil permanent
+//Do you really want to permanently delete the file %filename%?	Vill du verkligen ta bort %filename% permanent?
 //However this will fail if the current user has no administration privileges.	Det kommer dock att misslyckas om aktuellt användarkonto saknar administratörsrättigheter.
 //Insufficient rights to remove the restrictions. Continue?	Otillräckliga rättigheter för att ta bort restriktionerna. Vill du fortsätta?
+//JPEGView can try to remove the restrictions automatically.	JPEGView kan försöka ta bort restriktionerna automatiskt.
+//No file or folder name was provided as command line parameter!	Ingen fil eller mapp angavs som kommandoradsparameter!
+//PgDn or Right	PgDn eller höger
+//PgUp or Left	PgUp eller vänster
+//Rename:	Byt namn:
+//Rotate the following file lossless by 270 deg?\n%filename%	Rotera följande bild förlustfritt 270 grader?\n%filename%
+//Rotate the following file lossless by 90 deg?\n%filename%	Rotera följande bild förlustfritt 90 grader?\n%filename%
+//The file '%s' could not be %s.	Filen '%s' kan inte vara %s
+//To use JPEGView, associate JPG, JPEG and BMP files with JPEGView.	För att använda JPEGView, associera JPG-, JPEG- och BMP-filer med JPEGView.
+//Window mode	Fönsterläge
 //Windows 8 blocks JPEGView from changing the default program for these file endings.	Windows 8 blockerar JPEGViews försök att ändra standardprogram för dessa filändelser.
-//Alternatively, right click an image file of the given type in Windows Explorer and select 'Open with... > Choose default program'	Alternativt, högerklicka på en bild i Utforskaren och välj 'Öppna med', samt välj önskat standardprogram.
 //[new entry]	[ny post]
-//Upcounting	Stigande
-//Downcounting	Fallande
+//copied	kopierad
+//renamed	omdöpt
+//up/down	upp/ner
 
 // ::: INFO: Missing Translations ::: (Summary of all missing strings to assist translators - Auto-generated by script) //
 //! About JPEGView (32-bit version)...
 //! About JPEGView (64-bit version)...
 //! All existing user settings will be preserved.
-//! Alternatively, right-click an image file of the given type in Windows Explorer and select 'Open with... > Choose default program'
 //! Altitude (m):
-//! Ascending
-//! Auto contrast and color correction
 //! Box
 //! C - R
 //! Clipboard Image
 //! Copy file path of the image to clipboard
 //! Decoding this format requires the Microsoft Visual C++ Redistributable.
-//! Descending
-//! Error while writing the following registry key
 //! Fill paper with crop
 //! Filter:
 //! High quality resampling
 //! Insufficient rights to change the privilege (DACL) on the registry entry. Continue?
 //! Lanczos/Bicubic
-//! Licensed under the GNU general public license (GPL), see readme file for details
 //! Location:
 //! M - G
 //! Navigation
-//! No user INI file exists yet. Create user INI file from INI file template?
-//! Not enough memory available
-//! Number of CPU cores used
 //! OK
 //! Open folder containing image and select in Windows Explorer
-//! Order files by
-//! Parameter DB
-//! Press 'OK' to continue with registration or 'Cancel' to abort all registrations.
-//! Project home page
-//! Registering or unregistering file extensions in this registry area requires administrator privileges and cannot be done in JPEGView.
-//! SIMD mode used
-//! Slideshow with timeout of 'n' seconds (ESC to stop)
-//! Target folders that do not yet exist are created as needed.
 //! The file '%s' could not be copied!
 //! The file '%s' could not be renamed!
 //! Toggle window always on top mode
@@ -570,4 +535,4 @@ Zoom to Selection	Zooma in markerat område
 //! Set window always on top
 //! Update user settings...
 
-// ::: STATUS: Last Checked/Updated by Script ::: 2023-02-08T22:01:53.701668+00:00 //
+// ::: STATUS: Last Checked/Updated by Script ::: 2023-02-09T01:09:56.045161+00:00 //

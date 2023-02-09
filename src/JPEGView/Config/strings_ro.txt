@@ -57,7 +57,7 @@ Apply	Aplică
 Apply Unsharp Mask	Aplică masca de claritate
 Apply auto contrast correction using only visible section of image	Aplică autocorecţia contrastului folosind numai secţiunile vizibile ale imaginii
 Ascending	
-Auto contrast and color correction	
+Auto contrast and color correction	Autocorecţie de contrast şi culoare
 Auto crop corrected image (avoids black border)	Auto-tăierea imaginii corectate (anularea marginilor negre)
 Auto crop rotated image (avoids black border)	Tăiați automat imaginea rotită (Evitați bordura neagră)
 Auto zoom mode	Modul automărire
@@ -70,7 +70,7 @@ Brightness	Luminozitate
 Browse...	
 C - R	
 Camera model:	Modelul aparatului foto:
-Can't rename file	
+Can't rename file	Fişierul nu poate fi redenumit
 Cancel	Închide
 Cannot read from parameter DB file '%s'!	Nu poate fi citit fişierul cu Parametrii DB '%s'!
 Cannot read parameter DB file '%s' because it is too large!	Nu poate fi citit fişierul cu Parametrii DB '%s' pentru că este prea mare!
@@ -177,7 +177,7 @@ Landscape picture enhancement mode	Imagine panoramică, modul intensificat
 Last modification date/time	
 Left	
 Left mouse & drag	Stânga mouse şi trage
-Licensed under the GNU general public license (GPL), see readme file for details	
+Licensed under the GNU general public license (GPL), see readme file for details	Licenţa sub GNU,s licenţă publică generală (GPL), vezi fişierul "readme" pentru detalii
 Lighten Shadows	Luminarea Umbrelor
 Local density correction	Corectează densitatea locală
 Location:	
@@ -208,12 +208,12 @@ New size:
 New width:	
 Next image	Imaginea următoare
 No image loaded!	
-No user INI file exists yet. Create user INI file from INI file template?	
+No user INI file exists yet. Create user INI file from INI file template?	Nu există încă fişier INI al utilizatorului
 None	
-Not enough memory available	
+Not enough memory available	Nu este suficientă memorie disponibilă
 Note: Set the key 'TrimWithoutPromptLosslessJPEG=true' in the INI file to always trim without showing this message.	Notă: Setarea parametrului 'TrimWithoutPromptLosslessJPEG=true' 'DecupareJPEGFărăPiederiFărăAtenționare=adevărat' in fișierul INI tot timpul va decupa imaginea fără să arate acest mesaj.
 Number (consecutively numbered)	Numar (numerotare consecutiva)
-Number of CPU cores used	
+Number of CPU cores used	Numarul de nuclee de procesor utilizate
 Number of JPEG files in folder: %d	Numărul de fișiere JPEG din folder:
 Number with N digits	Numarul pe 'N' digiti
 OK	
@@ -227,7 +227,7 @@ Original file name (with extension)	Numele original al fisierului (cu extensie)
 Original file name (without extension)	Numele original al fisierului (fara extensie)
 Pan image	Mişcarea imaginii
 Paper:	
-Parameter DB	
+Parameter DB	Parametrul DB
 Parameter DB error	Eroare de Parametru DB
 Parameter DB file '%s' could not be opened!	Fişierul cu Parametrii DB '%s' nu poate fi deschis!
 Parameter DB file '%s' is not valid (invalid header)!	Fişierul cu Parametrii DB '%s' este invalid (antet invalid)!
@@ -248,7 +248,7 @@ Print
 Print Image	
 Printer driver	
 Printer:	
-Project home page	
+Project home page	Pagina de start a proiectului
 Radius	Raza
 Random	Aleatoriu
 Reading the JPEG file from disk failed	Citirea fișierului JPEG de pe disc a eșuat!
@@ -275,7 +275,7 @@ Rotate image 90 deg counter-clockwise	Roteşte imaginea cu 90 de grade spre stâ
 Rotate image and fit to screen	Roteşte imaginea şi o încadrează pe ecran
 Rotate image by user-defined angle	Rotiți imaginea cu unghiul definit de utilizator
 Rotate the image by dragging with the mouse.	Rotiți imaginea prin tragerea cu mouse-ul.
-SIMD mode used	
+SIMD mode used	Modul folosit SIMD
 Saturation	Saturaţie
 Save	
 Save (%s)/ delete (%s) image processing parameters in/from parameter DB	Salvează / Şterge parametrii imaginii procesate în / de la parametrul DB
@@ -325,10 +325,10 @@ Slide from left
 Slide from right	
 Slide from top	
 Slideshow	Prezentare
-Slideshow with timeout of 'n' seconds (ESC to stop)	
+Slideshow with timeout of 'n' seconds (ESC to stop)	Prezentare de imagini cu rulare la "n" secunde (apasă ESC pentru "Stop")
 Sort images by creation date, resp. modification date, resp. file name	Sortează imaginile după data de creare, după data modificării, după nume
 Source:	
-Target folders that do not yet exist are created as needed.	
+Target folders that do not yet exist are created as needed.	Directoarele tinta care nu sunt inca existente sunt create dupa cum este necesar.
 The directory '%s' does not contain any image files!	Directorul '%s' nu conţine niciun fişier imagine!
 The file '%s' could not be copied!	
 The file '%s' could not be read!	Fişierul '%s' nu poate fi citit!
@@ -364,7 +364,7 @@ Writing the resulting JPEG file to disk failed	Scrierea rezultatului fișierului
 Y - B	
 Year short form (2 digits)	Anul, forma scurta (2 digiti)
 Yellow-Blue	Galben - Albastru
-Zoom 1:1 (100 %)	
+Zoom 1:1 (100 %)	Mărime 1:1 (100%)
 Zoom in (%s)/Zoom out (%s)	Măreşte (%s)/ Micşorează (%s) imaginea
 Zoom in/out image	Măreşte / Micşorează imaginea
 Zoom mode (drag mouse to zoom)	Mărire (trageţi mouse-ul pentru a mări)
@@ -461,36 +461,23 @@ Fixed size...	Mărime fixă
 Zoom to Selection	Măreşte selecţia
 
 // ::: INFO: Out-of-date Translations ::: (Not in use anymore, safe to delete) //
-//Parameter DB:	Parametrul DB:
-//Rename:	Redenumeşte:
-//No file or folder name was provided as command line parameter!	Nici un nume de fişier sau director nu a fost furnizat ca parametru al liniei de comandă!
-//To use JPEGView, associate JPG, JPEG and BMP files with JPEGView.	Foloseşte JPEGView pentru a asocia fişiere de tip JPG, JPEG şi BMP.
-//PgUp or Left	Tasta "Săgeată stânga"
-//PgDn or Right	Tasta "Săgeată dreapta"
-//Slide show with timeout of n seconds (ESC to stop)	Prezentare de imagini cu rulare la "n" secunde (apasă ESC pentru "Stop")
-//Zoom 1:1 (100%)	Mărime 1:1 (100%)
-//up/down	sus/jos
+//Actual size of image	Mărimea actuală a imaginii
 //Delete current file on disk permanently	Şterge fişierul curent permanent de pe harddisk!
-//Can't rename file!	Fişierul nu poate fi redenumit!
-//Auto contrast and color correction:	Autocorecţie de contrast şi culoare:
-//Local density correction:	Densitatea locală de corecţie:
-//Order files by:	Ordonează fişierele după:
-//Last modification	Ultima modificare
 //Do you really want to permanently delete the file %filename%?	Sigur doriţi ştergerea permanentă a fişierului %filename%?
-//Rotate the following file lossless by 90 deg?\n%filename%	Roteşte fişier cu 90gr.?\n%filename%
+//Last modification	Ultima modificare
+//No file or folder name was provided as command line parameter!	Nici un nume de fişier sau director nu a fost furnizat ca parametru al liniei de comandă!
+//Order files by:	Ordonează fişierele după:
+//PgDn or Right	Tasta "Săgeată dreapta"
+//PgUp or Left	Tasta "Săgeată stânga"
+//Rename:	Redenumeşte:
 //Rotate the following file lossless by 270 deg?\n%filename%	Roteşte fişier cu 270gr.?\n%filename%
-//Target folders that are not yet existing are created as needed.	Directoarele tinta care nu sunt inca existente sunt create dupa cum este necesar.
+//Rotate the following file lossless by 90 deg?\n%filename%	Roteşte fişier cu 90gr.?\n%filename%
 //The file '%s' could not be %s.	Fisierul '%s' nu poate fi %s.
+//To use JPEGView, associate JPG, JPEG and BMP files with JPEGView.	Foloseşte JPEGView pentru a asocia fişiere de tip JPG, JPEG şi BMP.
+//Window mode	Modul Fereastră
 //copied	copiat
 //renamed	redenumit
-//SIMD mode used:	Modul folosit SIMD:
-//Number of CPU cores used:	Numarul de nuclee de procesor utilizate:
-//Licensed under the GNU general public license (GPL), see readme file for details:	Licenţa sub GNU,s licenţă publică generală (GPL), vezi fişierul "readme" pentru detalii:
-//Project home page:	Pagina de start a proiectului:
-//Actual size of image	Mărimea actuală a imaginii
-//Window mode	Modul Fereastră
-//No user INI file exits yet. Create user INI file from INI file template?	Nu există încă fişier INI al utilizatorului
-//Reason: Not enough memory available	Motivul: Nu este suficientă memorie disponibilă
+//up/down	sus/jos
 
 // ::: INFO: Missing Translations ::: (Summary of all missing strings to assist translators - Auto-generated by script) //
 //! %s camera raw images (embedded JPEGs only)
@@ -505,13 +492,11 @@ Zoom to Selection	Măreşte selecţia
 //! Application:
 //! Applications
 //! Ascending
-//! Auto contrast and color correction
 //! Blend
 //! Bottom
 //! Box
 //! Browse...
 //! C - R
-//! Can't rename file
 //! Clipboard Image
 //! Combine keys with '+'
 //! Contrast
@@ -541,7 +526,6 @@ Zoom to Selection	Măreşte selecţia
 //! Landscape
 //! Last modification date/time
 //! Left
-//! Licensed under the GNU general public license (GPL), see readme file for details
 //! Location:
 //! M - G
 //! Manage 'Open image with' menu...
@@ -553,23 +537,18 @@ Zoom to Selection	Măreşte selecţia
 //! New size:
 //! New width:
 //! No image loaded!
-//! No user INI file exists yet. Create user INI file from INI file template?
 //! None
-//! Not enough memory available
-//! Number of CPU cores used
 //! OK
 //! Open folder containing image and select in Windows Explorer
 //! Order files by
 //! Orientation:
 //! Paper:
-//! Parameter DB
 //! Portrait
 //! Press 'OK' to continue with registration or 'Cancel' to abort all registrations.
 //! Print
 //! Print Image
 //! Printer driver
 //! Printer:
-//! Project home page
 //! Registering or unregistering file extensions in this registry area requires administrator privileges and cannot be done in JPEGView.
 //! Registration applies to the current user only.
 //! Reset
@@ -580,7 +559,6 @@ Zoom to Selection	Măreşte selecţia
 //! Roll from left
 //! Roll from right
 //! Roll from top
-//! SIMD mode used
 //! Save
 //! Scaling mode:
 //! Scroll from bottom
@@ -599,9 +577,7 @@ Zoom to Selection	Măreşte selecţia
 //! Slide from left
 //! Slide from right
 //! Slide from top
-//! Slideshow with timeout of 'n' seconds (ESC to stop)
 //! Source:
-//! Target folders that do not yet exist are created as needed.
 //! The file '%s' could not be copied!
 //! The file '%s' could not be renamed!
 //! The following file extensions cannot be unregistered because they have been registered in the 'local machine' registry area.
@@ -618,7 +594,6 @@ Zoom to Selection	Măreşte selecţia
 //! Warning
 //! Windows 8 (and above) blocks JPEGView from changing the default program for these file extensions.
 //! Y - B
-//! Zoom 1:1 (100 %)
 //! cm
 //! in
 //! new menu entry
@@ -657,4 +632,4 @@ Zoom to Selection	Măreşte selecţia
 //! Set as default viewer...
 //! User commands
 
-// ::: STATUS: Last Checked/Updated by Script ::: 2023-02-08T22:01:53.689032+00:00 //
+// ::: STATUS: Last Checked/Updated by Script ::: 2023-02-09T01:09:56.036252+00:00 //

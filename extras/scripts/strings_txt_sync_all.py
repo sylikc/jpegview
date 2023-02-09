@@ -243,7 +243,8 @@ def sync_strings_to_reference(reference_lines, filepath):
         # dump out all remaining keys where there used to be translation but no more
         if len(file_dict) != 0:
             f.write(f"\n// ::: INFO: Out-of-date Translations ::: (Not in use anymore, safe to delete) //\n")
-        for k, v in file_dict.items():
+        for k, v in sorted(file_dict.items()):
+            # make the dictionary sorted
             f.write(f"//{k}\t{v}\n")
 
 

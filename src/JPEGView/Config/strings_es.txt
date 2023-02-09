@@ -41,14 +41,14 @@
 %s images	%s Imágenes
 %s images (processed by Window Imaging Component - WIC)	%s Imágenes (Procesadas por Windows Imaging Component - WIC)
 'My Pictures' folder	Carpeta 'Mis imágenes'
-About JPEGView (32-bit version)...	
-About JPEGView (64-bit version)...	
+About JPEGView (32-bit version)...	Acerca JPEGView (Versión 32 Bit)...
+About JPEGView (64-bit version)...	Acerca JPEGView (Versión 64 Bit)...
 Acquisition date:	Fecha de adquisición:
 Align image to horizontal or vertical line	Alinear imagen a una línea horizontal o vertical
 Alignment:	Alineamiento:
 All Files	Todos los archivos
 All existing user settings will be preserved.	
-Alternatively, right-click an image file of the given type in Windows Explorer and select 'Open with... > Choose default program'	
+Alternatively, right-click an image file of the given type in Windows Explorer and select 'Open with... > Choose default program'	Alternativamente, de un pulsado derecho en un archivo de imagen de algún tipo dado en el Explorador de Windows Explorer y elegir 'Abrir con... > Escoja el programa por defecto'
 Altitude (m):	Altitud (m):
 Amount	Cantidad
 Application:	Aplicación:
@@ -56,8 +56,8 @@ Applications	Aplicaciones
 Apply	Aplicar
 Apply Unsharp Mask	Aplicar máscara de desenfoque
 Apply auto contrast correction using only visible section of image	Aplicar corrección automática de contraste usando sólo la sección visible de la imagen
-Ascending	
-Auto contrast and color correction	
+Ascending	Contando Mas
+Auto contrast and color correction	Auto corrección de contraste y color
 Auto crop corrected image (avoids black border)	Auto corregir bordes de imagen (Evita bordes negros)
 Auto crop rotated image (avoids black border)	Eliminar automáticamente bordes en la imagen rotada (Evita bordes negros)
 Auto zoom mode	Modo de Auto-Aumento
@@ -104,7 +104,7 @@ Decoding this format requires the Microsoft Visual C++ Redistributable.
 Deep Shadows	Sombras profundas
 Delete	Eliminar
 Delete image file	Eliminar Imagen
-Descending	
+Descending	Contando Menos
 Display image (EXIF) information	Mostrar información (EXIF) de la imagen
 Do you really want to delete the current image file on disk?	¿Realmente desea eliminar la imagen actual en el disco?
 Do you really want to save the following parameters as default to the INI file	¿Realmente quiere guardar los siguientes parámetros como por defecto en el archivo INI?
@@ -120,7 +120,7 @@ Enable/disable landscape picture enhancement mode	Habilitar/Deshabilitar modo de
 Error	
 Error during rename/copy	Error durante renombrado/copia
 Error saving file	Error guardando archivo
-Error while writing the following registry key	
+Error while writing the following registry key	Error al insertar entrada de registro
 Error writing file to disk!	¡Error escribiendo el archivo al disco!
 Example:	Ejemplo:
 Exposure bias (EV):	Bias de exposición (EV):
@@ -177,7 +177,7 @@ Landscape picture enhancement mode	Modo de mejora de imagen de paisajes
 Last modification date/time	Hora/Fecha de última modificación
 Left	Izquierdo
 Left mouse & drag	Botón izquierdo y arrastrar
-Licensed under the GNU general public license (GPL), see readme file for details	
+Licensed under the GNU general public license (GPL), see readme file for details	Licenciado bajo la Licencia Pública General de GNU (GPL), vea el archivo readme para mas detalles
 Lighten Shadows	Sombras leves
 Local density correction	Corrección de densidad local
 Location:	Localidad:
@@ -208,26 +208,26 @@ New size:	Nuevo Tamaño:
 New width:	Nuevo Ancho:
 Next image	Imagen Siguiente
 No image loaded!	¡Ninguna imagen cargada!
-No user INI file exists yet. Create user INI file from INI file template?	
+No user INI file exists yet. Create user INI file from INI file template?	No existe todavía el archivo INI de usuario. ¿Crear archivo INI de usuario desde la plantilla de archivo INI?
 None	Ninguna
-Not enough memory available	
+Not enough memory available	No hay suficiente memoria disponible
 Note: Set the key 'TrimWithoutPromptLosslessJPEG=true' in the INI file to always trim without showing this message.	Atención: Establezca 'TrimWithoutPromptLosslessJPEG=true' en el archivo .INI, para siempre recortar sin mostrar este mensaje.
 Number (consecutively numbered)	Número (Enumerados consecutivamente)
-Number of CPU cores used	
+Number of CPU cores used	Número de núcleos de CPU usados
 Number of JPEG files in folder: %d	Numero de archivos JPEG en la carpeta: %d
 Number with N digits	Número con N dígitos
 OK	Aceptar
 Old name	Nombre Antiguo
 Open folder containing image and select in Windows Explorer	
 Open new image or slideshow file	Abrir nueva imagen o archivo de presentación
-Order files by	
+Order files by	Ordenar archivos por
 Orientation:	Formato:
 Original file extension	Extensión original del archivo
 Original file name (with extension)	Nombre original del archivo (Con extensión)
 Original file name (without extension)	Nombre original del archivo (Sin extensión)
 Pan image	Pan imagen
 Paper:	Papel:
-Parameter DB	
+Parameter DB	Parámetros BD
 Parameter DB error	Error de parámetros BD
 Parameter DB file '%s' could not be opened!	¡El archivo de parámetros de BD '%s' no se pudo abrir!
 Parameter DB file '%s' is not valid (invalid header)!	¡El archivo de parámetros de BD '%s' no es válido (Cabecera inválida)!
@@ -239,7 +239,7 @@ Perspective Correction	Corrección de la perspectiva
 Pixels	Píxeles
 Placeholders:	Banderas de reemplazo:
 Portrait	Retrato
-Press 'OK' to continue with registration or 'Cancel' to abort all registrations.	
+Press 'OK' to continue with registration or 'Cancel' to abort all registrations.	Presione 'Aceptar' para continuar con la registración o 'Cancelar' para no modificar algún registro.
 Press ESC to exit...	Presione ESC para salir...
 Press any key to search the subdirectories for image files.	Presione cualquier tecla para buscar imágenes en los subdirectorios.
 Preview	Pre visualizar
@@ -248,12 +248,12 @@ Print	Imprimir
 Print Image	
 Printer driver	Dispositivo
 Printer:	Impresor:
-Project home page	
+Project home page	Página de Red del proyecto
 Radius	Radio
 Random	Azar
 Reading the JPEG file from disk failed	Leer el archivo JPEG del disco falló
 Reason:	Razón:
-Registering or unregistering file extensions in this registry area requires administrator privileges and cannot be done in JPEGView.	
+Registering or unregistering file extensions in this registry area requires administrator privileges and cannot be done in JPEGView.	Registrar o desgistrar extensiones de archivos en esta área requiere derechos de y no puede hacerse con JPEGView.
 Registration applies to the current user only.	¡El registro aplica solo al usuario actual!
 Remove from	Eliminar de
 Rename	Renombrar
@@ -275,7 +275,7 @@ Rotate image 90 deg counter-clockwise	Rotar imagen 90 grados sentido contra relo
 Rotate image and fit to screen	Rotar imagen y ajustar a la pantalla
 Rotate image by user-defined angle	Rotar imagen en un ángulo definido por el usuario
 Rotate the image by dragging with the mouse.	Rotar imagen arrastrando el ratón.
-SIMD mode used	
+SIMD mode used	Modo SIMD usado
 Saturation	Saturación
 Save	Guardar
 Save (%s)/ delete (%s) image processing parameters in/from parameter DB	Guardar (%s)/ borrar (%s) parámetros de procesado de imágenes en/desde parámetros de BD
@@ -325,10 +325,10 @@ Slide from left	Deslizar desde la izquierda
 Slide from right	Deslizar desde la derecha
 Slide from top	Deslizar desde arriba
 Slideshow	Presentación
-Slideshow with timeout of 'n' seconds (ESC to stop)	
+Slideshow with timeout of 'n' seconds (ESC to stop)	Presentación con intervalos de n segundos (ESC para detener)
 Sort images by creation date, resp. modification date, resp. file name	Ordenar imágenes por fecha de creación, resp. fecha de modificación, resp. nombre de archivo
 Source:	Origen:
-Target folders that do not yet exist are created as needed.	
+Target folders that do not yet exist are created as needed.	Las carpetas de destino que no existan serán creadas si es necesario.
 The directory '%s' does not contain any image files!	¡El directorio '%s' no contiene imágenes!
 The file '%s' could not be copied!	
 The file '%s' could not be read!	¡El archivo '%s' no se pudo leer!
@@ -461,72 +461,34 @@ Fixed size...	Tamaño fijo
 Zoom to Selection	Aumento en la Selección
 
 // ::: INFO: Out-of-date Translations ::: (Not in use anymore, safe to delete) //
-//Parameter DB:	Parámetros BD:
-//Rename:	Renombrar:
-//No file or folder name was provided as command line parameter!	¡Ningún archivo o carpeta fue pasado como parámetro de la línea de comandos!
-//To use JPEGView, associate JPG, JPEG and BMP files with JPEGView.	Para usar JPEGView, asocie las extensiones JPG, JPEG y BMP con JPEGView.
-//PgUp or Left	Pág. Arriba o Izquierda
-//PgDn or Right	Pág. Abajo o Derecha
-//Slide show with timeout of n seconds (ESC to stop)	Presentación con intervalos de n segundos (ESC para detener)
-//up/down	arriba/abajo
+//Actual size of image	Tamaño actual de la imagen
 //Delete current file on disk permanently	Borrar archivo actual permanentemente
-//Auto contrast and color correction:	Auto corrección de contraste y color:
-//Local density correction:	Corrección de densidad Local:
-//Order files by:	Ordenar archivos por:
 //Do you really want to permanently delete the file %filename%?	¿Realmente quiere borrar permanentemente el archivo %filename%?
-//Rotate the following file lossless by 90 deg?\n%filename%	¿Rotar 90° sin pérdidas el siguiente archivo?\n%filename%
+//No file or folder name was provided as command line parameter!	¡Ningún archivo o carpeta fue pasado como parámetro de la línea de comandos!
+//PgDn or Right	Pág. Abajo o Derecha
+//PgUp or Left	Pág. Arriba o Izquierda
+//Rename:	Renombrar:
 //Rotate the following file lossless by 270 deg?\n%filename%	¿Rotar 270° sin pérdidas el siguiente archivo?\n%filename%
-//Target folders that are not yet existing are created as needed.	Las carpetas de destino que no existan serán creadas si es necesario.
+//Rotate the following file lossless by 90 deg?\n%filename%	¿Rotar 90° sin pérdidas el siguiente archivo?\n%filename%
 //The file '%s' could not be %s.	El archivo '%s' no pudo ser %s.
+//To use JPEGView, associate JPG, JPEG and BMP files with JPEGView.	Para usar JPEGView, asocie las extensiones JPG, JPEG y BMP con JPEGView.
+//Window mode	Modo ventana
+//Windows 8 blocks JPEGView from changing the default program for these file endings.	Windows 8 evita a JPEGView de cambiar los programas por defecto de estos terminales.
+//[new entry]	[Nueva Entrada]
 //copied	copiado
 //renamed	renombrado
-//About JPEGView (64 bit version)...	Acerca JPEGView (Versión 64 Bit)...
-//SIMD mode used:	Modo SIMD usado:
-//Number of CPU cores used:	Número de núcleos de CPU usados:
-//Licensed under the GNU general public license (GPL), see readme file for details:	Licenciado bajo la Licencia Pública General de GNU (GPL), vea el archivo readme para mas detalles:
-//Project home page:	Página de Red del proyecto:
-//Actual size of image	Tamaño actual de la imagen
-//Window mode	Modo ventana
-//No user INI file exits yet. Create user INI file from INI file template?	No existe todavía el archivo INI de usuario. ¿Crear archivo INI de usuario desde la plantilla de archivo INI?
-//Reason: Not enough memory available	Razón: No hay suficiente memoria disponible
-//Error while writing the following registry key:	Error al insertar entrada de registro:
-//Registering or unregistering file extensions in this registry area requires administration privileges and cannot be done in JPEGView.	Registrar o desgistrar extensiones de archivos en esta área requiere derechos de y no puede hacerse con JPEGView.
-//Press 'OK' to continue with registration or 'Cancel' to not modify any registrations.	Presione  'Aceptar' para continuar con la registración o 'Cancelar' para no modificar algún registro.
-//Windows 8 blocks JPEGView from changing the default program for these file endings.	Windows 8 evita a JPEGView de cambiar los programas por defecto de estos terminales.
-//Alternatively, right click an image file of the given type in Windows Explorer and select 'Open with... > Choose default program'	Alternativamente, de un pulsado derecho en un archivo de imagen de algún tipo dado en el Explorador de Windows Explorer y elegir 'Abrir con... > Escoja el programa por defecto'
-//[new entry]	[Nueva Entrada]
-//Upcounting	Contando Mas
-//Downcounting	Contando Menos
+//up/down	arriba/abajo
 
 // ::: INFO: Missing Translations ::: (Summary of all missing strings to assist translators - Auto-generated by script) //
-//! About JPEGView (32-bit version)...
-//! About JPEGView (64-bit version)...
 //! All existing user settings will be preserved.
-//! Alternatively, right-click an image file of the given type in Windows Explorer and select 'Open with... > Choose default program'
-//! Ascending
-//! Auto contrast and color correction
 //! C - R
 //! Clipboard Image
 //! Copy file path of the image to clipboard
 //! Decoding this format requires the Microsoft Visual C++ Redistributable.
-//! Descending
 //! Error
-//! Error while writing the following registry key
 //! High quality resampling
-//! Licensed under the GNU general public license (GPL), see readme file for details
-//! No user INI file exists yet. Create user INI file from INI file template?
-//! Not enough memory available
-//! Number of CPU cores used
 //! Open folder containing image and select in Windows Explorer
-//! Order files by
-//! Parameter DB
-//! Press 'OK' to continue with registration or 'Cancel' to abort all registrations.
 //! Print Image
-//! Project home page
-//! Registering or unregistering file extensions in this registry area requires administrator privileges and cannot be done in JPEGView.
-//! SIMD mode used
-//! Slideshow with timeout of 'n' seconds (ESC to stop)
-//! Target folders that do not yet exist are created as needed.
 //! The file '%s' could not be copied!
 //! The file '%s' could not be renamed!
 //! Toggle window always on top mode
@@ -558,4 +520,4 @@ Zoom to Selection	Aumento en la Selección
 //! Set window always on top
 //! Update user settings...
 
-// ::: STATUS: Last Checked/Updated by Script ::: 2023-02-08T22:01:53.651337+00:00 //
+// ::: STATUS: Last Checked/Updated by Script ::: 2023-02-09T01:09:55.970119+00:00 //

@@ -41,14 +41,14 @@
 %s images	%s irudiak
 %s images (processed by Window Imaging Component - WIC)	%s irudi (Window Imaging Component - WIC-rekin prozesatuta)
 'My Pictures' folder	'Nire Argazkiak' agiritegia
-About JPEGView (32-bit version)...	
-About JPEGView (64-bit version)...	
+About JPEGView (32-bit version)...	JPEGView-ri buruz (32 biteko bertsioa)...
+About JPEGView (64-bit version)...	JPEGView-ri buruz (64 biteko bertsioa)...
 Acquisition date:	Erosketa eguna:
 Align image to horizontal or vertical line	Lerrokatu irudia etzaneko edo zutikako lerro batera
 Alignment:	Lerrokapena:
 All Files	Agiri denak
 All existing user settings will be preserved.	Dauden erabiltzaile ezarpen guztiak gordeko dira.
-Alternatively, right-click an image file of the given type in Windows Explorer and select 'Open with... > Choose default program'	
+Alternatively, right-click an image file of the given type in Windows Explorer and select 'Open with... > Choose default program'	Aukeran, eskuin klikatu emaniko motako irudi agiri bat Windows Esploratzailean eta hautatu 'Ireki honekin... > Hautatu berezko programa'
 Altitude (m):	
 Amount	Kopurua
 Application:	Aplikazioa:
@@ -56,8 +56,8 @@ Applications	Aplikazioak
 Apply	Ezarri
 Apply Unsharp Mask	Ezarri Lausotze Mozorroa
 Apply auto contrast correction using only visible section of image	Ezarri berezgaitasunezko zuribeltztasun zuzenketa irudiaren atal ikusgarria bakarrik erabiliz
-Ascending	
-Auto contrast and color correction	
+Ascending	Gora-zenbaketa
+Auto contrast and color correction	Zuribeltztasun eta margo berez zuzenketa
 Auto crop corrected image (avoids black border)	Berez moztu zuzendutako irudia (hertz beltzak saihesten ditu)
 Auto crop rotated image (avoids black border)	Berez moztu itzulikatutako irudia (hertz beltzak saihesten ditu)
 Auto zoom mode	Berez zoom modua
@@ -104,7 +104,7 @@ Decoding this format requires the Microsoft Visual C++ Redistributable.
 Deep Shadows	Itzal sakonak
 Delete	Ezabatu
 Delete image file	Ezabatu irudi agiria
-Descending	
+Descending	Behera-zenbaketa
 Display image (EXIF) information	Erakutsi irudiaren (EXIF) argibideak
 Do you really want to delete the current image file on disk?	Egitan nahi duzu oraingo irudia diskatik ezabatzea?
 Do you really want to save the following parameters as default to the INI file	Egitan nahi duzu hurrengo parametroak berezkotzat bezala gordetzea INI agirian
@@ -120,7 +120,7 @@ Enable/disable landscape picture enhancement mode	Gaitu/Ezgaitu etzaneko argazki
 Error	Akatsa
 Error during rename/copy	Akatsa berrizendatze/kopiatzerakoan
 Error saving file	Akatsa agiria gordetzerakoan
-Error while writing the following registry key	
+Error while writing the following registry key	Akatsa hurrengo erregistro giltza idazterakoan
 Error writing file to disk!	Akatsa agiria diskan idazterakoan!
 Example:	Adibidea:
 Exposure bias (EV):	Bias jarpena (EV):
@@ -177,7 +177,7 @@ Landscape picture enhancement mode	Landargazki irudi hobekuntza modua
 Last modification date/time	Azken aldaketa eguna/ordua
 Left	Ezkerra
 Left mouse & drag	Saguaren ezker botoia eta arrastatu
-Licensed under the GNU general public license (GPL), see readme file for details	
+Licensed under the GNU general public license (GPL), see readme file for details	GNU Baimen Publiko Orokorraz (GPL) baimenduta, ikusi 'irakurri' agiria xehetasun gehiagorako
 Lighten Shadows	Itzal arinak
 Local density correction	Tokiko dentsitate zuzenketa
 Location:	
@@ -208,26 +208,26 @@ New size:	Neurri berria:
 New width:	Zabalera berria:
 Next image	Hurrengo irudia
 No image loaded!	Ez da irudirik gertatu!
-No user INI file exists yet. Create user INI file from INI file template?	
+No user INI file exists yet. Create user INI file from INI file template?	Oraindik ez dago erabiltzaile INI agiririk. Sortu erabiltzaile INI agiria INI agiri eredutik?
 None	Ezer ez
-Not enough memory available	
+Not enough memory available	Ez dago nahikoa oroimen eskuragarri
 Note: Set the key 'TrimWithoutPromptLosslessJPEG=true' in the INI file to always trim without showing this message.	Oharra: Ezarri 'TrimWithoutPromptLosslessJPEG=true' INI agirian betik mozteko mezu hau erakutsi gabe.
 Number (consecutively numbered)	Zenbakia (jarraian zenbakituta)
-Number of CPU cores used	
+Number of CPU cores used	Erabilitako CPU nukleo zenbatekoa
 Number of JPEG files in folder: %d	Agiritegiko JPEG agiri zenbatekoa: %d
 Number with N digits	N digitodun zenbakia
 OK	Ongi
 Old name	Izen zaharra
 Open folder containing image and select in Windows Explorer	
 Open new image or slideshow file	Ireki irudi berri bat edo aurkezpen agiria
-Order files by	
+Order files by	Antolatu agiriak honela
 Orientation:	Norabidea:
 Original file extension	Jatorrizko agiriaren hedapena
 Original file name (with extension)	Jatorrizko agiri izena (hedapenarekin)
 Original file name (without extension)	Jatorrizko agiri izena (hedapengabe)
 Pan image	Pan irudia
 Paper:	Papera:
-Parameter DB	
+Parameter DB	BD Parametroak
 Parameter DB error	BD parametro akatsa
 Parameter DB file '%s' could not be opened!	'%s' parametro DB agiria ezin da ireki!
 Parameter DB file '%s' is not valid (invalid header)!	'%s' parametro DB agiria ez da baliozkoa (idazburu baliogabea)!
@@ -239,7 +239,7 @@ Perspective Correction	Ikuspegi Zuzenketa
 Pixels	Pixel
 Placeholders:	Ordezte-ezarpenak:
 Portrait	Argazkia
-Press 'OK' to continue with registration or 'Cancel' to abort all registrations.	
+Press 'OK' to continue with registration or 'Cancel' to abort all registrations.	Sakatu 'Ongi' erregistratzearekin jarraitzeko edo 'Ezeztatu' erregistrorik ez aldatzeko.
 Press ESC to exit...	Sakatu ESC irtetzeko...
 Press any key to search the subdirectories for image files.	Sakatu edozein tekla azpizuzenbideetan irudi agiriak biltzeko.
 Preview	Aurreikuspena
@@ -248,12 +248,12 @@ Print	Irarkitu
 Print Image	Irarkitu Irudia
 Printer driver	Irarketa gidagailua
 Printer:	Irarkailua:
-Project home page	
+Project home page	Egitasmoaren webgunea
 Radius	Zilerdia
 Random	Zorizkoa
 Reading the JPEG file from disk failed	Hutsegitea JPEG agiria diskatik irakurtzerakoan
 Reason:	Zergaitia:
-Registering or unregistering file extensions in this registry area requires administrator privileges and cannot be done in JPEGView.	
+Registering or unregistering file extensions in this registry area requires administrator privileges and cannot be done in JPEGView.	Eremu honetan agiri hedapenak erregistratzea eta deserregistratzeak administratzaile eskubideak behar ditu eta ezin da JPEGIkusgailuan egin.
 Registration applies to the current user only.	Erregistroa oraingo erabiltzaileari bakarrik ezartzen zaio
 Remove from	Kendu hemendik
 Rename	Berrizendatu
@@ -275,7 +275,7 @@ Rotate image 90 deg counter-clockwise	Itzulikatu irudia 90 gradu ordulari orratz
 Rotate image and fit to screen	Itzulikatu irudia eta finkatu ikusleihoan
 Rotate image by user-defined angle	Itzulikatu irudia erabiltzaileak-zehaztutako angeluan
 Rotate the image by dragging with the mouse.	Itzulikatu irudia saguarekin arrastatuz.
-SIMD mode used	
+SIMD mode used	Erabilitako SIMD modua
 Saturation	Margoasetasuna
 Save	Gorde
 Save (%s)/ delete (%s) image processing parameters in/from parameter DB	Gorde (%s)/ Ezabatu (%s) irudi prozesapen parametroak DB parametroeta-n/-tik
@@ -325,10 +325,10 @@ Slide from left	Aurkeztu ezkerretik
 Slide from right	Aurkeztu eskuinetik
 Slide from top	Aurkeztu goitik
 Slideshow	Aurkezpena
-Slideshow with timeout of 'n' seconds (ESC to stop)	
+Slideshow with timeout of 'n' seconds (ESC to stop)	Argazki aurkezpen tartea 'n' segundu (ESC gelditzeko)
 Sort images by creation date, resp. modification date, resp. file name	Antolatu irudiak sortze egun, aldaketa egun, agiri izen arabera
 Source:	Iturburua
-Target folders that do not yet exist are created as needed.	
+Target folders that do not yet exist are created as needed.	Oraindik ez dauden xede agiritegiak sortu egingo dira beharrezkoa bada.
 The directory '%s' does not contain any image files!	'%s' zuzenbideak ez du irudi agiririk!
 The file '%s' could not be copied!	
 The file '%s' could not be read!	'%s' agiria ezin da irakurri!
@@ -461,75 +461,37 @@ Fixed size...	Zuzendutako neurria...
 Zoom to Selection	Zooma Hautapenean
 
 // ::: INFO: Out-of-date Translations ::: (Not in use anymore, safe to delete) //
-//Parameter DB:	BD Parametroak:
-//Rename:	Berrizendatu:
-//No file or folder name was provided as command line parameter!	Ez da agiriri edo agiritegi izenik eman komando lerro parametro bezala!
-//To use JPEGView, associate JPG, JPEG and BMP files with JPEGView.	JPEGIkusgailua erabiltzeko, elkartu JPG, JPEG eta BMP agiriak JPEGIkusgailuarekin.
-//PgUp or Left	OrrGor edo Ezker
-//PgDn or Right	OrrBeh edo Eskuin
-//Slide show with timeout of n seconds (ESC to stop)	Argazki aurkezpen tartea n segundu (ESC gelditzeko)
-//up/down	gora/behera
-//Delete current file on disk permanently	Ezabatu oraingo agiria diskatik betirako
-//Auto contrast and color correction:	Zuribeltztasun eta margo berez zuzenketa:
-//Local density correction:	Tokiko dentsitate zuzenketa:
-//Order files by:	Antolatu agiriak honela:
-//Do you really want to permanently delete the file %filename%?	Egitan nahi duzu ezabatzea %filename% agiria betirako?
-//Rotate the following file lossless by 90 deg?\n%filename%	Itzulikatu hurrengo agiria 90° galeragabe?\n%filename%
-//Rotate the following file lossless by 270 deg?\n%filename%	Itzulikatu hurrengo agiria 270° galeragabe?\n%filename%
-//Target folders that are not yet existing are created as needed.	Oraindik ez dauden xede agiritegiak sortu egingo dira beharrezkoa bada.
-//The file '%s' could not be %s.	'%s' agiria ezin da %s izan.
-//copied	kopiatuta
-//renamed	Berrizendatuta
-//About JPEGView (64 bit version)...	JPEGView-ri buruz (64 biteko bertsioa)...
-//SIMD mode used:	Erabilitako SIMD modua:
-//Number of CPU cores used:	Erabilitako CPU nukleo zenbatekoa:
-//Licensed under the GNU general public license (GPL), see readme file for details:	GNU Baimen Publiko Orokorraz (GPL) baimenduta, ikusi 'irakurri' agiria xehetasun gehiagorako:
-//Project home page:	Egitasmoaren webgunea:
 //Actual size of image	Irudiaren oraingo neurria
-//Window mode	Leiho modua
-//No user INI file exits yet. Create user INI file from INI file template?	Oraindik ez dago erabiltzaile INI agiririk. Sortu erabiltzaile INI agiria INI agiri eredutik?
-//Reason: Not enough memory available	Zergaitia: Ez dago nahikoa oroimen eskuragarri
-//Error while writing the following registry key:	Akatsa hurrengo erregistro giltza idazterakoan:
-//Registering or unregistering file extensions in this registry area requires administration privileges and cannot be done in JPEGView.	Eremu honetan agiri hedapenak erregistratzea eta deserregistratzeak administratzaile eskubideak behar ditu eta ezin da JPEGIkusgailuan egin.
-//Press 'OK' to continue with registration or 'Cancel' to not modify any registrations.	Sakatu 'Ongi' erregistratzearekin jarraitzeko edo 'Ezeztatu' erregistrorik ez aldatzeko.
-//JPEGView can try to remove the restrictions automatically.	JPEGIkusgailua murrizpenak berezgaitasunez kentzen saiatu daiteke.
+//Delete current file on disk permanently	Ezabatu oraingo agiria diskatik betirako
+//Do you really want to permanently delete the file %filename%?	Egitan nahi duzu ezabatzea %filename% agiria betirako?
 //However this will fail if the current user has no administration privileges.	Horrela ere honek huts egingo du oraingo erabiltzaileak ez baditu administratzaile pribilegioak.
 //Insufficient rights to remove the restrictions. Continue?	Ez duzu nahikoa eskubide murrizpenak kentzeko. Jarraitu?
+//JPEGView can try to remove the restrictions automatically.	JPEGIkusgailua murrizpenak berezgaitasunez kentzen saiatu daiteke.
+//No file or folder name was provided as command line parameter!	Ez da agiriri edo agiritegi izenik eman komando lerro parametro bezala!
+//PgDn or Right	OrrBeh edo Eskuin
+//PgUp or Left	OrrGor edo Ezker
+//Rename:	Berrizendatu:
+//Rotate the following file lossless by 270 deg?\n%filename%	Itzulikatu hurrengo agiria 270° galeragabe?\n%filename%
+//Rotate the following file lossless by 90 deg?\n%filename%	Itzulikatu hurrengo agiria 90° galeragabe?\n%filename%
+//The file '%s' could not be %s.	'%s' agiria ezin da %s izan.
+//To use JPEGView, associate JPG, JPEG and BMP files with JPEGView.	JPEGIkusgailua erabiltzeko, elkartu JPG, JPEG eta BMP agiriak JPEGIkusgailuarekin.
+//Window mode	Leiho modua
 //Windows 8 blocks JPEGView from changing the default program for these file endings.	Windows 8-k JPEGView blokeatzen du agiri hauentzako berezko programa aldatzeko.
-//Alternatively, right click an image file of the given type in Windows Explorer and select 'Open with... > Choose default program'	Aukeran, eskuin klikatu emaniko motako irudi agiri bat Windows Esploratzailean eta hautatu 'Ireki honekin... > Hautatu berezko programa'
 //[new entry]	[sarrera berria]
-//Upcounting	Gora-zenbaketa
-//Downcounting	Behera-zenbaketa
+//copied	kopiatuta
+//renamed	Berrizendatuta
+//up/down	gora/behera
 
 // ::: INFO: Missing Translations ::: (Summary of all missing strings to assist translators - Auto-generated by script) //
-//! About JPEGView (32-bit version)...
-//! About JPEGView (64-bit version)...
-//! Alternatively, right-click an image file of the given type in Windows Explorer and select 'Open with... > Choose default program'
 //! Altitude (m):
-//! Ascending
-//! Auto contrast and color correction
 //! Clipboard Image
 //! Copy file path of the image to clipboard
 //! Decoding this format requires the Microsoft Visual C++ Redistributable.
-//! Descending
-//! Error while writing the following registry key
 //! High quality resampling
 //! Hour / Minute (as numbers)
 //! Insufficient rights to change the privilege (DACL) on the registry entry. Continue?
-//! Licensed under the GNU general public license (GPL), see readme file for details
 //! Location:
-//! No user INI file exists yet. Create user INI file from INI file template?
-//! Not enough memory available
-//! Number of CPU cores used
 //! Open folder containing image and select in Windows Explorer
-//! Order files by
-//! Parameter DB
-//! Press 'OK' to continue with registration or 'Cancel' to abort all registrations.
-//! Project home page
-//! Registering or unregistering file extensions in this registry area requires administrator privileges and cannot be done in JPEGView.
-//! SIMD mode used
-//! Slideshow with timeout of 'n' seconds (ESC to stop)
-//! Target folders that do not yet exist are created as needed.
 //! The file '%s' could not be copied!
 //! The file '%s' could not be renamed!
 //! Toggle window always on top mode
@@ -557,4 +519,4 @@ Zoom to Selection	Zooma Hautapenean
 //! Hide window title bar
 //! Set window always on top
 
-// ::: STATUS: Last Checked/Updated by Script ::: 2023-02-08T22:01:53.653998+00:00 //
+// ::: STATUS: Last Checked/Updated by Script ::: 2023-02-09T01:09:55.976109+00:00 //

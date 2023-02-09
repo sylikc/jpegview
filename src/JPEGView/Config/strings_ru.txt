@@ -45,14 +45,14 @@
 %s images	Изображения %s
 %s images (processed by Window Imaging Component - WIC)	Изображения %s (обработка Window Imaging Component — WIC)
 'My Pictures' folder	папка 'Мои рисунки'
-About JPEGView (32-bit version)...	
-About JPEGView (64-bit version)...	
+About JPEGView (32-bit version)...	О программе JPEGView (32-разрядная версия)...
+About JPEGView (64-bit version)...	О программе JPEGView (64-разрядная версия)...
 Acquisition date:	Дата съёмки:
 Align image to horizontal or vertical line	Выравнивание изображения по горизонтальной или вертикальной линии
 Alignment:	Компоновка:
 All Files	Все файлы
 All existing user settings will be preserved.	Все имеющиеся пользовательские настройки будут сохранены.
-Alternatively, right-click an image file of the given type in Windows Explorer and select 'Open with... > Choose default program'	
+Alternatively, right-click an image file of the given type in Windows Explorer and select 'Open with... > Choose default program'	Также можно щёлкнуть правой кнопкой мыши по графическому файлу нужного типа в Проводнике и выбрать 'Открыть с помощью > Выбрать программу'.
 Altitude (m):	Высота на уровнем моря (м):
 Amount	Эффект
 Application:	Программа:
@@ -60,8 +60,8 @@ Applications	Программы
 Apply	Применить
 Apply Unsharp Mask	Применить нерезкую маску
 Apply auto contrast correction using only visible section of image	Вкл./выкл. автокоррекцию контрастности только видимой области
-Ascending	
-Auto contrast and color correction	
+Ascending	По возрастанию
+Auto contrast and color correction	Автокоррекция контрастности и цвета
 Auto crop corrected image (avoids black border)	Автообрезка при коррекции (избегать чёрных полей)
 Auto crop rotated image (avoids black border)	Автообрезка изображения при повороте (избегать чёрных полей)
 Auto zoom mode	Автомасштабирование
@@ -97,7 +97,7 @@ Copying parameter DB to file '%s' failed. Reason: %s	Ошибка копиров
 Correct converging lines (perspective correction)	Коррекция сходящихся линий (перспективы)
 Creation date/time	Дата/время создания
 Crop image	Обрезать изображение
-Ctrl + Left mouse	
+Ctrl + Left mouse	Ctrl + ЛКМ
 Current image	Текущее изображение
 Cyan-Red	Голубой-Красный
 Darken Highlights	Притемнить света
@@ -108,7 +108,7 @@ Decoding this format requires the Microsoft Visual C++ Redistributable.
 Deep Shadows	Глубокие тени
 Delete	Удалить
 Delete image file	Удалить графический файл
-Descending	
+Descending	По убыванию
 Display image (EXIF) information	Сведения об изображении (EXIF)
 Do you really want to delete the current image file on disk?	Удалить текущий графический файл?
 Do you really want to save the following parameters as default to the INI file	Хотите сохранить эти параметры в INI-файле как стандартные
@@ -124,7 +124,7 @@ Enable/disable landscape picture enhancement mode	Вкл./выкл. режим �
 Error	Ошибка
 Error during rename/copy	Ошибка при переименовании/копировании
 Error saving file	Ошибка сохранения файла
-Error while writing the following registry key	
+Error while writing the following registry key	Ошибка записи ключа реестра
 Error writing file to disk!	Ошибка записи файла на диск.
 Example:	Пример:
 Exposure bias (EV):	Экспокоррекция (EV):
@@ -181,7 +181,7 @@ Landscape picture enhancement mode	Режим улучшения пейзаже�
 Last modification date/time	Дата/время изменения
 Left	Слева
 Left mouse & drag	Перетаскивание с ЛКМ
-Licensed under the GNU general public license (GPL), see readme file for details	
+Licensed under the GNU general public license (GPL), see readme file for details	Лицензия GNU General Public License (GPL),    см. файл с документацией
 Lighten Shadows	Высветлить тени
 Local density correction	Коррекция светов/теней
 Location:	Место:
@@ -212,26 +212,26 @@ New size:	Новый размер:
 New width:	Новая ширина:
 Next image	Следующее изображение
 No image loaded!	НЕ ЗАГРУЖЕНО ИЗОБРАЖЕНИЕ
-No user INI file exists yet. Create user INI file from INI file template?	
+No user INI file exists yet. Create user INI file from INI file template?	Пользовательского INI-файла пока нет. Создать его из шаблона INI-файла?
 None	Нет
-Not enough memory available	
+Not enough memory available	недостаточно памяти
 Note: Set the key 'TrimWithoutPromptLosslessJPEG=true' in the INI file to always trim without showing this message.	* Чтобы при обрезке не было этого сообщения, установите в INI-файле ключ 'TrimWithoutPromptLosslessJPEG=true'.
 Number (consecutively numbered)	номер (последовательный)
-Number of CPU cores used	
+Number of CPU cores used	Используется ядер ЦП
 Number of JPEG files in folder: %d	Файлов JPEG в папке: %d
 Number with N digits	номер с N цифрами
 OK	
 Old name	Старое имя
 Open folder containing image and select in Windows Explorer	
 Open new image or slideshow file	Открыть изображение или файл со слайдшоу
-Order files by	
+Order files by	Сортировка файлов
 Orientation:	Ориентация:
 Original file extension	исходное расширение файла
 Original file name (with extension)	исходное имя файла (с расширением)
 Original file name (without extension)	исходное имя файла (без расширения)
 Pan image	Переместить изображение
 Paper:	Бумага:
-Parameter DB	
+Parameter DB	Параметры
 Parameter DB error	Ошибка в базе параметров
 Parameter DB file '%s' could not be opened!	Невозможно открыть файл '%s' c базой параметров.
 Parameter DB file '%s' is not valid (invalid header)!	Неверный файл '%s' с базой параметров (некорректный заголовок).
@@ -243,7 +243,7 @@ Perspective Correction	Коррекция перспективы
 Pixels	пкс
 Placeholders:	Заполнители:
 Portrait	Книжная
-Press 'OK' to continue with registration or 'Cancel' to abort all registrations.	
+Press 'OK' to continue with registration or 'Cancel' to abort all registrations.	OK — зарегистрировать, 'Отмена' — не изменять никаких регистраций файлов.
 Press ESC to exit...	ESC — выход
 Press any key to search the subdirectories for image files.	Нажмите любую клавишу для поиска графических файлов во вложенных папках.
 Preview	Предпросмотр
@@ -252,12 +252,12 @@ Print	Печать
 Print Image	Печать изображения
 Printer driver	Драйвер принтера
 Printer:	Принтер:
-Project home page	
+Project home page	Сайт проекта
 Radius	Радиус
 Random	Случайно
 Reading the JPEG file from disk failed	Ошибка чтения файла JPEG
 Reason:	Причина:
-Registering or unregistering file extensions in this registry area requires administrator privileges and cannot be done in JPEGView.	
+Registering or unregistering file extensions in this registry area requires administrator privileges and cannot be done in JPEGView.	Регистрация/дерегистрация расширений в этой области реестра требует прав администратора и не может быть выполнена в JPEGView.
 Registration applies to the current user only.	Регистрация действует только для текущего пользователя.
 Remove from	Удалить из БД
 Rename	Переименовать
@@ -279,7 +279,7 @@ Rotate image 90 deg counter-clockwise	Повернуть на 90° влево
 Rotate image and fit to screen	Повернуть изображение и вписать в экран
 Rotate image by user-defined angle	Повернуть на произвольный угол
 Rotate the image by dragging with the mouse.	Вращайте изображение, перетаскивая по нему мышь.
-SIMD mode used	
+SIMD mode used	Режим SIMD
 Saturation	Насыщенность
 Save	Сохранить
 Save (%s)/ delete (%s) image processing parameters in/from parameter DB	Сохранить (%s) / удалить (%s) параметры обработки изображения в базе данных
@@ -329,10 +329,10 @@ Slide from left	Сдвиг слева направо
 Slide from right	Сдвиг справа налево
 Slide from top	Сдвиг сверху вниз
 Slideshow	Слайдшоу
-Slideshow with timeout of 'n' seconds (ESC to stop)	
+Slideshow with timeout of 'n' seconds (ESC to stop)	Запустить слайдшоу с интервалом N сек (Esc — стоп)
 Sort images by creation date, resp. modification date, resp. file name	Сортировка изображений: по дате создания (C), изменения (M), имени файла (N), случайно (Z)
 Source:	Источник:
-Target folders that do not yet exist are created as needed.	
+Target folders that do not yet exist are created as needed.	Несуществующие папки назначения создаются по необходимости.
 The directory '%s' does not contain any image files!	В папке '%s' нет поддерживаемых графических файлов.
 The file '%s' could not be copied!	
 The file '%s' could not be read!	Невозможно прочитать файл '%s'.
@@ -465,76 +465,36 @@ Fixed size...	Фиксированный размер...
 Zoom to Selection	Масштабировать до выделенного
 
 // ::: INFO: Out-of-date Translations ::: (Not in use anymore, safe to delete) //
-//Parameter DB:	Параметры:
-//Rename:	Переименовать:
-//No file or folder name was provided as command line parameter!	Не указано имя файла или папки в командной строке
-//To use JPEGView, associate JPG, JPEG and BMP files with JPEGView.	Для удобства ассоциируйте файлы JPG, JPEG и BMP с JPEGView.
-//PgUp or Left	PgUp или стрелка влево
-//PgDn or Right	PgDn или стрелка вправо
-//Slide show with timeout of n seconds (ESC to stop)	Запустить слайдшоу с интервалом N сек (Esc — стоп)
-//up/down	Стрелки вверх/вниз
-//Ctrl + L mouse	Ctrl + ЛКМ
+//Actual size of image	Настоящий размер изображения
 //Delete current file on disk permanently	Окончательно удалить этот файл
-//Auto contrast and color correction:	Автокоррекция контрастности и цвета:
-//Local density correction:	Коррекция светов/теней:
-//Order files by:	Сортировка файлов:
 //Do you really want to permanently delete the file %filename%?	Удалить файл %filename% окончательно?
-//Rotate the following file lossless by 90 deg?\n%filename%	Повернуть без потерь на 90° вправо и сохранить в файле?\n%filename%
+//Insufficient rights to remove the restrictions. Continue?	Недостаточно прав для удаления ограничений. Продолжить?
+//No file or folder name was provided as command line parameter!	Не указано имя файла или папки в командной строке
+//PgDn or Right	PgDn или стрелка вправо
+//PgUp or Left	PgUp или стрелка влево
+//Rename:	Переименовать:
 //Rotate the following file lossless by 270 deg?\n%filename%	Повернуть без потерь на 90° влево и сохранить в файле?\n%filename%
-//Target folders that are not yet existing are created as needed.	Несуществующие папки назначения создаются по необходимости.
+//Rotate the following file lossless by 90 deg?\n%filename%	Повернуть без потерь на 90° вправо и сохранить в файле?\n%filename%
 //The file '%s' could not be %s.	Для файла '%s' невозможно выполнить операцию '%s'.
+//To use JPEGView, associate JPG, JPEG and BMP files with JPEGView.	Для удобства ассоциируйте файлы JPG, JPEG и BMP с JPEGView.
+//Window mode	Оконный режим
+//Windows 8 blocks JPEGView from changing the default program for these file endings.	Windows 8 не позволяет JPEGView изменять стандартную программу для файлов с этими расширениями.
+//[new entry]	[новый элемент]
 //copied	скопировано
 //renamed	переименовано
-//About JPEGView (64 bit version)...	О программе JPEGView (64-разрядная версия)...
-//SIMD mode used:	Режим SIMD:
-//Number of CPU cores used:	Используется ядер ЦП:
-//Licensed under the GNU general public license (GPL), see readme file for details:	Лицензия GNU General Public License (GPL),    см. файл с документацией:
-//Project home page:	Сайт проекта:
-//Actual size of image	Настоящий размер изображения
-//Window mode	Оконный режим
-//No user INI file exits yet. Create user INI file from INI file template?	Пользовательского INI-файла пока нет. Создать его из шаблона INI-файла?
-//Reason: Not enough memory available	Причина: недостаточно памяти
-//Error while writing the following registry key:	Ошибка записи ключа реестра:
-//Registering or unregistering file extensions in this registry area requires administration privileges and cannot be done in JPEGView.	Регистрация/дерегистрация расширений в этой области реестра требует прав администратора и не может быть выполнена в JPEGView.
-//Press 'OK' to continue with registration or 'Cancel' to not modify any registrations.	OK — зарегистрировать, 'Отмена' — не изменять никаких регистраций файлов.
-//Insufficient rights to remove the restrictions. Continue?	Недостаточно прав для удаления ограничений. Продолжить?
-//Windows 8 blocks JPEGView from changing the default program for these file endings.	Windows 8 не позволяет JPEGView изменять стандартную программу для файлов с этими расширениями.
-//Alternatively, right click an image file of the given type in Windows Explorer and select 'Open with... > Choose default program'	Также можно щёлкнуть правой кнопкой мыши по графическому файлу нужного типа в Проводнике и выбрать 'Открыть с помощью > Выбрать программу'.
-//[new entry]	[новый элемент]
-//Upcounting	По возрастанию
-//Downcounting	По убыванию
+//up/down	Стрелки вверх/вниз
 
 // ::: INFO: Missing Translations ::: (Summary of all missing strings to assist translators - Auto-generated by script) //
-//! About JPEGView (32-bit version)...
-//! About JPEGView (64-bit version)...
-//! Alternatively, right-click an image file of the given type in Windows Explorer and select 'Open with... > Choose default program'
-//! Ascending
-//! Auto contrast and color correction
 //! Box
 //! C - R
 //! Clipboard Image
 //! Copy file path of the image to clipboard
-//! Ctrl + Left mouse
 //! Decoding this format requires the Microsoft Visual C++ Redistributable.
-//! Descending
-//! Error while writing the following registry key
 //! High quality resampling
 //! Insufficient rights to change the privilege (DACL) on the registry entry. Continue?
-//! Licensed under the GNU general public license (GPL), see readme file for details
 //! M - G
-//! No user INI file exists yet. Create user INI file from INI file template?
-//! Not enough memory available
-//! Number of CPU cores used
 //! OK
 //! Open folder containing image and select in Windows Explorer
-//! Order files by
-//! Parameter DB
-//! Press 'OK' to continue with registration or 'Cancel' to abort all registrations.
-//! Project home page
-//! Registering or unregistering file extensions in this registry area requires administrator privileges and cannot be done in JPEGView.
-//! SIMD mode used
-//! Slideshow with timeout of 'n' seconds (ESC to stop)
-//! Target folders that do not yet exist are created as needed.
 //! The file '%s' could not be copied!
 //! The file '%s' could not be renamed!
 //! Toggle window always on top mode
@@ -563,4 +523,4 @@ Zoom to Selection	Масштабировать до выделенного
 //! Hide window title bar
 //! Set window always on top
 
-// ::: STATUS: Last Checked/Updated by Script ::: 2023-02-08T22:01:53.698291+00:00 //
+// ::: STATUS: Last Checked/Updated by Script ::: 2023-02-09T01:09:56.041333+00:00 //

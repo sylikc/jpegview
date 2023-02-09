@@ -57,7 +57,7 @@ Apply
 Apply Unsharp Mask	
 Apply auto contrast correction using only visible section of image	이미지의 보이는 부분만 자동 대비 보정을 적용
 Ascending	
-Auto contrast and color correction	
+Auto contrast and color correction	자동 대비 및 색상 보정
 Auto crop corrected image (avoids black border)	
 Auto crop rotated image (avoids black border)	
 Auto zoom mode	자동 배율 모드
@@ -177,7 +177,7 @@ Landscape picture enhancement mode	풍경 사진 향상 모드
 Last modification date/time	마지막으로 수정한 날짜/시각
 Left	
 Left mouse & drag	왼쪽 마우스 & 드래그
-Licensed under the GNU general public license (GPL), see readme file for details	
+Licensed under the GNU general public license (GPL), see readme file for details	GNU General Public License (GPL) 라이센스, 상세 내용은 readme 파일을 보십시오
 Lighten Shadows	음영 밝게
 Local density correction	부분 농도 보정
 Location:	
@@ -208,26 +208,26 @@ New size:
 New width:	
 Next image	다음
 No image loaded!	
-No user INI file exists yet. Create user INI file from INI file template?	
+No user INI file exists yet. Create user INI file from INI file template?	사용자 INI 파일이 없습니다. INI 파일 템플릿으로부터 INI 파일을 만들겠습니까?
 None	
 Not enough memory available	
 Note: Set the key 'TrimWithoutPromptLosslessJPEG=true' in the INI file to always trim without showing this message.	
 Number (consecutively numbered)	숫자 (연속)
-Number of CPU cores used	
+Number of CPU cores used	사용된 CPU 코어의 수
 Number of JPEG files in folder: %d	
 Number with N digits	N자리 숫자
 OK	
 Old name	예전 이름
 Open folder containing image and select in Windows Explorer	
 Open new image or slideshow file	새 이미지 또는 슬라이드 쇼 파일 열기
-Order files by	
+Order files by	파일 정렬
 Orientation:	
 Original file extension	원본 파일 확장자
 Original file name (with extension)	원본 파일명 (확장자 있음)
 Original file name (without extension)	원본 파일명 (확장자 없음)
 Pan image	이동
 Paper:	
-Parameter DB	
+Parameter DB	매개변수 DB
 Parameter DB error	매개변수 DB 에러
 Parameter DB file '%s' could not be opened!	매개변수 DB 파일 '%s' 을 열 수 없습니다!
 Parameter DB file '%s' is not valid (invalid header)!	매개변수 DB 파일 '%s' 이 유효하지 않습니다 (잘못된 헤더)!
@@ -248,7 +248,7 @@ Print
 Print Image	
 Printer driver	
 Printer:	
-Project home page	
+Project home page	프로젝트 홈페이지
 Radius	
 Random	
 Reading the JPEG file from disk failed	
@@ -275,7 +275,7 @@ Rotate image 90 deg counter-clockwise	반시계 방향으로 90도 회전
 Rotate image and fit to screen	회전 및 화면에 맞추기
 Rotate image by user-defined angle	
 Rotate the image by dragging with the mouse.	
-SIMD mode used	
+SIMD mode used	사용된 SIMD 모드
 Saturation	
 Save	
 Save (%s)/ delete (%s) image processing parameters in/from parameter DB	이미지 처리 매개변수 DB를 저장 (%s)/ 삭제 (%s)
@@ -325,7 +325,7 @@ Slide from left
 Slide from right	
 Slide from top	
 Slideshow	슬라이드 쇼
-Slideshow with timeout of 'n' seconds (ESC to stop)	
+Slideshow with timeout of 'n' seconds (ESC to stop)	n 초 동안 슬라이드 쇼 보기 (정지하려면 ESC)
 Sort images by creation date, resp. modification date, resp. file name	만든 날짜, 수정한 날짜, 파일명 순으로 정렬
 Source:	
 Target folders that do not yet exist are created as needed.	
@@ -461,33 +461,23 @@ Fixed size...	고정된 크기...
 Zoom to Selection	선택 영역으로 확대
 
 // ::: INFO: Out-of-date Translations ::: (Not in use anymore, safe to delete) //
-//Lighten 밝게	
-//Parameter DB:	매개변수 DB:
-//Rename:	이름 바꾸기:
-//No file or folder name was provided as command line parameter!	파일명 또는 폴더명이 명령어 매개변수로 입력되지 않았습니다!
-//To use JPEGView, associate JPG, JPEG and BMP files with JPEGView.	JPEGView를 사용하려면 JPG, JPEG, BMP 파일을 JPEGView 에 연결하십시오.
-//PgUp or Left	PgUp 또는 Left
-//PgDn or Right	PgDn 또는 Right
-//Slide show with timeout of n seconds (ESC to stop)	n 초 동안 슬라이드 쇼 보기 (정지하려면 ESC)
-//up/down	위/아래
+//Actual size of image	실제 크기
 //Delete current file on disk permanently	현재 파일을 디스크에서 영구히 삭제
-//Auto contrast and color correction:	자동 대비 및 색상 보정:
-//Local density correction:	부분 농도 보정:
-//Order files by:	파일 정렬:
 //Do you really want to permanently delete the file %filename%?	%filename% 파일을 영구히 삭제하겠습니까?
-//Rotate the following file lossless by 90 deg?\n%filename%	다음 파일을 무손실 90도 회전하겠습니까?\n%filename%
+//Lighten 밝게	
+//No file or folder name was provided as command line parameter!	파일명 또는 폴더명이 명령어 매개변수로 입력되지 않았습니다!
+//PgDn or Right	PgDn 또는 Right
+//PgUp or Left	PgUp 또는 Left
+//Rename:	이름 바꾸기:
 //Rotate the following file lossless by 270 deg?\n%filename%	다음 파일을 무손실 270도 회전하겠습니까?\n%filename%
+//Rotate the following file lossless by 90 deg?\n%filename%	다음 파일을 무손실 90도 회전하겠습니까?\n%filename%
 //Target folders that are not yet existing are created as needed.	대상 폴더가 없습니다. 생성해야 합니다.
 //The file '%s' could not be %s.	'%s' 파일은 %s일 수 없습니다.
+//To use JPEGView, associate JPG, JPEG and BMP files with JPEGView.	JPEGView를 사용하려면 JPG, JPEG, BMP 파일을 JPEGView 에 연결하십시오.
+//Window mode	창 모드
 //copied	복사됨
 //renamed	이름이 변경됨
-//SIMD mode used:	사용된 SIMD 모드:
-//Number of CPU cores used:	사용된 CPU 코어의 수:
-//Licensed under the GNU general public license (GPL), see readme file for details:	GNU General Public License (GPL) 라이센스, 상세 내용은 readme 파일을 보십시오:
-//Project home page:	프로젝트 홈페이지:
-//Actual size of image	실제 크기
-//Window mode	창 모드
-//No user INI file exits yet. Create user INI file from INI file template?	사용자 INI 파일이 없습니다. INI 파일 템플릿으로부터 INI 파일을 만들겠습니까?
+//up/down	위/아래
 
 // ::: INFO: Missing Translations ::: (Summary of all missing strings to assist translators - Auto-generated by script) //
 //! %s camera raw images (embedded JPEGs only)
@@ -506,7 +496,6 @@ Zoom to Selection	선택 영역으로 확대
 //! Apply
 //! Apply Unsharp Mask
 //! Ascending
-//! Auto contrast and color correction
 //! Auto crop corrected image (avoids black border)
 //! Auto crop rotated image (avoids black border)
 //! Blend
@@ -551,7 +540,6 @@ Zoom to Selection	선택 영역으로 확대
 //! Lanczos/Bicubic
 //! Landscape
 //! Left
-//! Licensed under the GNU general public license (GPL), see readme file for details
 //! Location:
 //! Lossless JPEG transformations
 //! M - G
@@ -565,18 +553,14 @@ Zoom to Selection	선택 영역으로 확대
 //! New size:
 //! New width:
 //! No image loaded!
-//! No user INI file exists yet. Create user INI file from INI file template?
 //! None
 //! Not enough memory available
 //! Note: Set the key 'TrimWithoutPromptLosslessJPEG=true' in the INI file to always trim without showing this message.
-//! Number of CPU cores used
 //! Number of JPEG files in folder: %d
 //! OK
 //! Open folder containing image and select in Windows Explorer
-//! Order files by
 //! Orientation:
 //! Paper:
-//! Parameter DB
 //! Performing the lossless transformation failed!
 //! Performing the transformation failed
 //! Perspective Correction
@@ -586,7 +570,6 @@ Zoom to Selection	선택 영역으로 확대
 //! Print Image
 //! Printer driver
 //! Printer:
-//! Project home page
 //! Radius
 //! Random
 //! Reading the JPEG file from disk failed
@@ -603,7 +586,6 @@ Zoom to Selection	선택 영역으로 확대
 //! Rotate Image
 //! Rotate image by user-defined angle
 //! Rotate the image by dragging with the mouse.
-//! SIMD mode used
 //! Saturation
 //! Save
 //! Save cropped image
@@ -626,7 +608,6 @@ Zoom to Selection	선택 영역으로 확대
 //! Slide from left
 //! Slide from right
 //! Slide from top
-//! Slideshow with timeout of 'n' seconds (ESC to stop)
 //! Source:
 //! Target folders that do not yet exist are created as needed.
 //! The file '%s' could not be copied!
@@ -701,4 +682,4 @@ Zoom to Selection	선택 영역으로 확대
 //! User commands
 //! Crop Selection Lossless...
 
-// ::: STATUS: Last Checked/Updated by Script ::: 2023-02-08T22:01:53.671188+00:00 //
+// ::: STATUS: Last Checked/Updated by Script ::: 2023-02-09T01:09:56.021434+00:00 //

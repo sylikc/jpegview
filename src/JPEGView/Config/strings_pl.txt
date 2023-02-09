@@ -41,14 +41,14 @@
 %s images	%s Obrazy
 %s images (processed by Window Imaging Component - WIC)	%s obrazy (otwarte przez Windows Imaging Component - WIC)
 'My Pictures' folder	Folder 'Moje obrazy'
-About JPEGView (32-bit version)...	
-About JPEGView (64-bit version)...	
+About JPEGView (32-bit version)...	O JPEGView (wersja 32 bit)...
+About JPEGView (64-bit version)...	O JPEGView (wersja 64 bit)...
 Acquisition date:	Data wykonania:
 Align image to horizontal or vertical line	Wyrównaj obraz do poziomej lub pionowej linii
 Alignment:	Wyrównanie:
 All Files	Wszystkie pliki
 All existing user settings will be preserved.	
-Alternatively, right-click an image file of the given type in Windows Explorer and select 'Open with... > Choose default program'	
+Alternatively, right-click an image file of the given type in Windows Explorer and select 'Open with... > Choose default program'	Alternatywnie możesz użyć prawego klawisza myszki na pliku w Windows Explorer i wybrać "Otwórz za pomocą...-> Wybierz program domyślny".
 Altitude (m):	
 Amount	Siła
 Application:	Aplikacja:
@@ -56,8 +56,8 @@ Applications	Aplikacja
 Apply	Zastosuj
 Apply Unsharp Mask	Zastosuj wyostrzanie
 Apply auto contrast correction using only visible section of image	Automatyczna korekcja kontrastu z użyciem tylko widocznej części obrazu
-Ascending	
-Auto contrast and color correction	
+Ascending	Rosnąco
+Auto contrast and color correction	Automatyczna korekcja kontrastu i koloru
 Auto crop corrected image (avoids black border)	Automatycznie kadruj po korekcji (zapobiega czarnemu obramowaniu)
 Auto crop rotated image (avoids black border)	Auto kadrowanie obracanego obrazu (zapobiega czarnemu obramowaniu)
 Auto zoom mode	Tryb Auto-zoom
@@ -104,7 +104,7 @@ Decoding this format requires the Microsoft Visual C++ Redistributable.
 Deep Shadows	Głębokie cienie
 Delete	Kasuj
 Delete image file	Kasuj plik obrazu
-Descending	
+Descending	Malejąco
 Display image (EXIF) information	Pokaż info o obrazie (EXIF)
 Do you really want to delete the current image file on disk?	Rzeczywiście chcesz skasować bieżący plik z dysku?
 Do you really want to save the following parameters as default to the INI file	Rzeczywiście chcesz zapisać parametry jako domyślne do pliku INI?
@@ -120,7 +120,7 @@ Enable/disable landscape picture enhancement mode	Włącz/wyłącz tryb polepsza
 Error	Błąd
 Error during rename/copy	Błąd w czasie zmiany nazwy/kopiowania
 Error saving file	Błąd zapisu pliku
-Error while writing the following registry key	
+Error while writing the following registry key	Błąd zapisu następujących kluczy rejestru
 Error writing file to disk!	Błąd zapisu pliku na dysk!
 Example:	Przykład:
 Exposure bias (EV):	Kompensacja ekspozycji (EV):
@@ -143,7 +143,7 @@ Flash fired:	Lampa błysk.:
 Focal length (mm):	Ogniskowa (mm):
 Forward mouse button	Klawisz myszy - Następny
 Goto first/last image of current folder (using sort order as defined)	Idź do pierwszego/ostatniego obrazu w bieżącym folderze (używając zdefiniowanego porządku sortowania)
-Goto next image	
+Goto next image	Pokaż następny obraz
 Goto previous image	Wróć do poprzedniego obrazu
 Height	Wysokość
 Hide histogram	Ukryj histogram
@@ -177,14 +177,14 @@ Landscape picture enhancement mode	Tryb ulepszania obrazu
 Last modification date/time	Data ostatnie modyfikacji
 Left	Lewy
 Left mouse & drag	Lewy klawisz myszy i przesuń
-Licensed under the GNU general public license (GPL), see readme file for details	
+Licensed under the GNU general public license (GPL), see readme file for details	Licencja: GNU General Public License (GPL), szczegóły - patrz plik 'readme'
 Lighten Shadows	Rozjaśnij cienie
 Local density correction	Lokalna korekcja gęstości
 Location:	
 Loop folder	Folder w pętli
 Loop recursively	Folder i podfoldery w pętli
 Loop siblings	Foldery równorzędne w pętli
-Loop through files in current directory and all sibling folders (folders on same level)	
+Loop through files in current directory and all sibling folders (folders on same level)	Pokaz w pętli w bieżącym folderze i folderach równorzędnych (na tym samym poziomie)
 Loop through files in current directory and all subfolders	Pokaz w pętli w bieżącym folderze i podfolderach
 Loop through files in current folder	Pokaz w pętli w bieżącym folderze
 Lossless JPEG transformations	Bezstratna transformacja JPEG
@@ -208,26 +208,26 @@ New size:	Nowy rozmiar:
 New width:	Nowa szerokość:
 Next image	Następny obraz
 No image loaded!	Nie załadowano żadnego obrazu!
-No user INI file exists yet. Create user INI file from INI file template?	
+No user INI file exists yet. Create user INI file from INI file template?	Brak pliku INI użytkownika. Utworzyć plik z wzorca?
 None	Brak
-Not enough memory available	
+Not enough memory available	zbyt mała ilość dostępnej pamięci
 Note: Set the key 'TrimWithoutPromptLosslessJPEG=true' in the INI file to always trim without showing this message.	Uwaga: Ustaw klucz 'TrimWithoutPromptLosslessJPEG=true' w pliku INI, aby zawsze przycinać bez wyświetlania tego komunikatu.
 Number (consecutively numbered)	Numer (ciągła numeracja)
-Number of CPU cores used	
+Number of CPU cores used	Liczba używanych rdzeni CPU
 Number of JPEG files in folder: %d	Liczba plików JPEG w folderze: %d
 Number with N digits	Numer N-cyfrowy
 OK	
 Old name	Stara nazwa
 Open folder containing image and select in Windows Explorer	
 Open new image or slideshow file	Otwórz nowy obraz lub plik pokazu
-Order files by	
+Order files by	Sortuj pliki wg
 Orientation:	Orientacja:
 Original file extension	Oryginalne rozszerzenie pliku
 Original file name (with extension)	Oryginalna nazwa pliku (z rozszerzeniem)
 Original file name (without extension)	Oryginalna nazwa pliku (bez rozszerzenia)
 Pan image	Przesuwanie obrazu (Pan)
 Paper:	Papier:
-Parameter DB	
+Parameter DB	Parametr DB
 Parameter DB error	Błąd pliku parametetrów DB
 Parameter DB file '%s' could not be opened!	Parametr pliku DB '%s' nie może być otwarty!
 Parameter DB file '%s' is not valid (invalid header)!	Parametr pliku DB '%s' jest niewłaściwy (zły nagłówek)!
@@ -239,7 +239,7 @@ Perspective Correction	Korekcja perspektywy
 Pixels	Pikseli
 Placeholders:	Ciągi zastępcze:
 Portrait	Pionowa
-Press 'OK' to continue with registration or 'Cancel' to abort all registrations.	
+Press 'OK' to continue with registration or 'Cancel' to abort all registrations.	Wybierz 'OK' aby kontynuować rejestrację lub 'Anuluj' aby nie dokonywać żadnych zmian.
 Press ESC to exit...	Wciśnij ESC aby zakończyć...
 Press any key to search the subdirectories for image files.	Wciśnij dowolny klawisz aby szukać plików obrazów w podfolderach.
 Preview	Pokaż
@@ -248,12 +248,12 @@ Print	Drukowanie
 Print Image	Drukowanie obrazu
 Printer driver	Sterownik drukarki
 Printer:	Drukarka:
-Project home page	
+Project home page	Strona domowa projektu
 Radius	Promień
 Random	Losowo
 Reading the JPEG file from disk failed	Niepowodzenie odczytu pliku z dysku
 Reason:	Powód:
-Registering or unregistering file extensions in this registry area requires administrator privileges and cannot be done in JPEGView.	
+Registering or unregistering file extensions in this registry area requires administrator privileges and cannot be done in JPEGView.	Zarejestrowanie/wyrejestrowanie rozszerzeń plików w tej sekcji rejestru wymaga uprawnień administratora i nie może być teraz wykonane.
 Registration applies to the current user only.	To ustawienie stosuje się tylko dla bieżącego użytkownika!
 Remove from	Usuń
 Rename	Zmień nazwę
@@ -275,10 +275,10 @@ Rotate image 90 deg counter-clockwise	Obrót o 90 stopni w lewo
 Rotate image and fit to screen	Obrót obrazu z dopasowaniem do ekranu
 Rotate image by user-defined angle	Obrót o zadany kąt
 Rotate the image by dragging with the mouse.	Obróć obraz przeciągając myszką.
-SIMD mode used	
+SIMD mode used	Tryb SIMD użyty
 Saturation	Nasycenie
 Save	Zapisz
-Save (%s)/ delete (%s) image processing parameters in/from parameter DB	
+Save (%s)/ delete (%s) image processing parameters in/from parameter DB	Zapisz (%s)/ kasuj (%s) parametry przetwarzania
 Save as (in screen size/resolution)	Zapisz jako (rozmiar/rozdzielczość ekranowa)
 Save as template	Zapisz jako wzorzec
 Save cropped image	Zachowaj wykadrowany obraz
@@ -325,10 +325,10 @@ Slide from left	Nasuwanie z lewej
 Slide from right	Nasuwanie z prawej
 Slide from top	Nasuwanie z góry
 Slideshow	Prezentacja
-Slideshow with timeout of 'n' seconds (ESC to stop)	
+Slideshow with timeout of 'n' seconds (ESC to stop)	Pokaz z czasem n sekund (ESC aby zakończyć)
 Sort images by creation date, resp. modification date, resp. file name	Sortuj pliki wg daty utworzenia, modyfikacji, nazwy pliku
 Source:	Źródło:
-Target folders that do not yet exist are created as needed.	
+Target folders that do not yet exist are created as needed.	Nieistniejące docelowe foldery zostaną utworzone.
 The directory '%s' does not contain any image files!	Folder '%s' nie zawiera żadnych plików obrazów!
 The file '%s' could not be copied!	
 The file '%s' could not be read!	Pliku '%s' nie można odczytać!
@@ -355,7 +355,7 @@ Trim the image and apply transformation? Trimming cannot be undone!	Czy mam przy
 Unregistering not possible	Wyrejestrowanie jest niemożliwe
 Unsharp mask...	Wyostrzanie...
 Update user settings with new settings from settings template file?	
-Use the 'Default Programs' configuration dialog from the operating system instead.	
+Use the 'Default Programs' configuration dialog from the operating system instead.	Zamiast tego użyj systemowej konfiguracji "Programów domyślnych".
 Use the mouse to draw a line that shall be horizontal or vertical.	Użyj myszki do narysowania poziomej lub pionowej linii.
 Warning	Ostrzeżenie
 Width	Szerokość
@@ -461,91 +461,45 @@ Fixed size...	Stały rozmiar...
 Zoom to Selection	Powiększ do zaznaczenia
 
 // ::: INFO: Out-of-date Translations ::: (Not in use anymore, safe to delete) //
-//Parameter DB:	Parametr DB:
-//Rename:	Zmień nazwę:
-//No file or folder name was provided as command line parameter!	Nie podano nazwy pliku ani folderu jako parametru linii komand!
-//To use JPEGView, associate JPG, JPEG and BMP files with JPEGView.	Przypisz pliki JPG, JPEG i BMP do JPGView.
-//Loop through files in current directory and all sibling folders (folders on same level) Pokaz w pętli w bieżącym folderze i folderach równorzędnych (na tym samym poziomie)	
-//Save (%s)/ delete (%s) image processing parameters in/from parameter Zapisz (%s)/ kasuj (%s) parametry przetwarzania	
-//Goto next image Pokaż następny obraz	
-//PgUp or Left	PgUp lub Lewo Poprzedni
-//PgDn or Right	PgDn lub Prawo Następny
-//Slide show with timeout of n seconds (ESC to stop)	Pokaz z czasem n sekund (ESC aby zakończyć)
-//up/down	W górę/dół
+//Actual size of image	Bieżąca wielkość obrazu
 //Delete current file on disk permanently	Kasuj bieżący plik z dysku
-//Auto contrast and color correction:	Automatyczna korekcja kontrastu i koloru:
-//Local density correction:	Lokalna korekcja gęstości:
-//Order files by:	Sortuj pliki wg:
 //Do you really want to permanently delete the file %filename%?	Czy na pewno chcesz trwale skasować plik %filename%?
-//Rotate the following file lossless by 90 deg?\n%filename%	Obrócić następujący plik bezstratnie o 90 stopni?\n%filename%
+//No file or folder name was provided as command line parameter!	Nie podano nazwy pliku ani folderu jako parametru linii komand!
+//PgDn or Right	PgDn lub Prawo Następny
+//PgUp or Left	PgUp lub Lewo Poprzedni
+//Rename:	Zmień nazwę:
 //Rotate the following file lossless by 270 deg?\n%filename%	Obrócić następujący plik bezstratnie o 270 stopni?\n%filename%
-//Target folders that are not yet existing are created as needed.	Nieistniejące docelowe foldery zostaną utworzone.
+//Rotate the following file lossless by 90 deg?\n%filename%	Obrócić następujący plik bezstratnie o 90 stopni?\n%filename%
 //The file '%s' could not be %s.	Plik '%s' nie może być %s .
+//To use JPEGView, associate JPG, JPEG and BMP files with JPEGView.	Przypisz pliki JPG, JPEG i BMP do JPGView.
+//Window mode	Tryb okienkowy
+//Windows 8 blocks JPEGView from changing the default program for these file endings.	Windows 8 blokuje JPEGView przed zmianą programu domyślnego dla tych rozszerzeń plików.
+//[new entry]	[nowy wpis]
 //copied	skopiowany
 //renamed	przemianowany
-//About JPEGView (64 bit version)...	O JPEGView (wersja 64 bit)...
-//SIMD mode used:	Tryb SIMD użyty:
-//Number of CPU cores used:	Liczba używanych rdzeni CPU:
-//Licensed under the GNU general public license (GPL), see readme file for details:	Licencja: GNU General Public License (GPL), szczegóły - patrz plik 'readme':
-//Project home page:	Strona domowa projektu:
-//Actual size of image	Bieżąca wielkość obrazu
-//Window mode	Tryb okienkowy
-//No user INI file exits yet. Create user INI file from INI file template?	Brak pliku INI użytkownika. Utworzyć plik z wzorca?
-//Reason: Not enough memory available	Powód: zbyt mała ilość dostępnej pamięci
-//Error while writing the following registry key:	Błąd zapisu następujących kluczy rejestru:
-//Registering or unregistering file extensions in this registry area requires administration privileges and cannot be done in JPEGView.	Zarejestrowanie/wyrejestrowanie rozszerzeń plików w tej sekcji rejestru wymaga uprawnień administratora i nie może być teraz wykonane.
-//Press 'OK' to continue with registration or 'Cancel' to not modify any registrations.	Wybierz 'OK' aby kontynuować rejestrację lub 'Anuluj' aby nie dokonywać żadnych zmian.
-//Windows 8 blocks JPEGView from changing the default program for these file endings.	Windows 8 blokuje JPEGView przed zmianą programu domyślnego dla tych rozszerzeń plików.
-//Use the 'Default Programs' configuration dialog from the operating system instead.Zamiast tego użyj systemowej konfiguracji "Programów domyślnych".	
-//Alternatively, right click an image file of the given type in Windows Explorer and select 'Open with... > Choose default program'	Alternatywnie możesz użyć prawego klawisza myszki na pliku w Windows Explorer i wybrać "Otwórz za pomocą...-> Wybierz program domyślny".
-//[new entry]	[nowy wpis]
-//Upcounting	Rosnąco
-//Downcounting	Malejąco
+//up/down	W górę/dół
 
 // ::: INFO: Missing Translations ::: (Summary of all missing strings to assist translators - Auto-generated by script) //
-//! About JPEGView (32-bit version)...
-//! About JPEGView (64-bit version)...
 //! All existing user settings will be preserved.
-//! Alternatively, right-click an image file of the given type in Windows Explorer and select 'Open with... > Choose default program'
 //! Altitude (m):
-//! Ascending
-//! Auto contrast and color correction
 //! Box
 //! C - R
 //! Clipboard Image
 //! Copy file path of the image to clipboard
 //! Decoding this format requires the Microsoft Visual C++ Redistributable.
-//! Descending
-//! Error while writing the following registry key
 //! Fill paper with crop
-//! Goto next image
 //! High quality resampling
 //! Lanczos/Bicubic
-//! Licensed under the GNU general public license (GPL), see readme file for details
 //! Location:
-//! Loop through files in current directory and all sibling folders (folders on same level)
 //! M - G
-//! No user INI file exists yet. Create user INI file from INI file template?
-//! Not enough memory available
-//! Number of CPU cores used
 //! OK
 //! Open folder containing image and select in Windows Explorer
-//! Order files by
-//! Parameter DB
-//! Press 'OK' to continue with registration or 'Cancel' to abort all registrations.
-//! Project home page
-//! Registering or unregistering file extensions in this registry area requires administrator privileges and cannot be done in JPEGView.
 //! Roll from left
-//! SIMD mode used
-//! Save (%s)/ delete (%s) image processing parameters in/from parameter DB
-//! Slideshow with timeout of 'n' seconds (ESC to stop)
-//! Target folders that do not yet exist are created as needed.
 //! The file '%s' could not be copied!
 //! The file '%s' could not be renamed!
 //! Toggle window always on top mode
 //! Toggle window title bar hidden mode
 //! Update user settings with new settings from settings template file?
-//! Use the 'Default Programs' configuration dialog from the operating system instead.
 //! Windows 8 (and above) blocks JPEGView from changing the default program for these file extensions.
 //! Y - B
 //! cm
@@ -572,4 +526,4 @@ Zoom to Selection	Powiększ do zaznaczenia
 //! Set window always on top
 //! Update user settings...
 
-// ::: STATUS: Last Checked/Updated by Script ::: 2023-02-08T22:01:53.675144+00:00 //
+// ::: STATUS: Last Checked/Updated by Script ::: 2023-02-09T01:09:56.025257+00:00 //

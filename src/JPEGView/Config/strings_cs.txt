@@ -40,7 +40,7 @@
 %s camera raw images (embedded JPEGs only)	%s zrojové soubory z kamery (pouze zapouzdřený JPEG)
 %s images	%s obrázky
 %s images (processed by Window Imaging Component - WIC)	%s obrázky (zpracovány Window Imaging Component - WIC)
-'My Pictures' folder	
+'My Pictures' folder	Složka mé obrázky
 About JPEGView (32-bit version)...	
 About JPEGView (64-bit version)...	
 Acquisition date:	Datum pořízení:
@@ -57,7 +57,7 @@ Apply	Použít
 Apply Unsharp Mask	Aplikovat rozostřenou masku
 Apply auto contrast correction using only visible section of image	Použít automatickou korekci kontrastu jen na viditelnou sekci obrázku
 Ascending	
-Auto contrast and color correction	
+Auto contrast and color correction	Automatická korekce kontrastu a barev
 Auto crop corrected image (avoids black border)	Korigovat obraz automatickým ostřížením (zabránit černému pozadí)
 Auto crop rotated image (avoids black border)	Automatické ostřižení otočeného obrázku (vyloučení černého pozadí)
 Auto zoom mode	Automatické přizpůsobení rozlišení
@@ -120,7 +120,7 @@ Enable/disable landscape picture enhancement mode	Povolit/zakázat rozšířený
 Error	Chyba
 Error during rename/copy	Chyba během přejmenování/kopírování
 Error saving file	Chyba ukládání souboru
-Error while writing the following registry key	
+Error while writing the following registry key	Chybe během zápisu následujícího klíče registru
 Error writing file to disk!	Chyba zápisu souboru na disk!
 Example:	
 Exposure bias (EV):	Kompenzace expozice:
@@ -177,9 +177,9 @@ Landscape picture enhancement mode	Vodorovný obrázek (krajina) rošířený m�
 Last modification date/time	Datum a čas poslední změny
 Left	
 Left mouse & drag	Levé tlačítko a posun myší
-Licensed under the GNU general public license (GPL), see readme file for details	
+Licensed under the GNU general public license (GPL), see readme file for details	Licencováno dle „GNU general public license (GPL)“,  podrobnosti obsahuje soubor readme:
 Lighten Shadows	Zjasnit stíny
-Local density correction	Lokální korekce hustoty:
+Local density correction	Lokální korekce hustoty
 Location:	
 Loop folder	Zacyklit složku
 Loop recursively	Zacyklit nekonečně
@@ -208,26 +208,26 @@ New size:
 New width:	
 Next image	Další obrázek
 No image loaded!	Obrázek nenačten!
-No user INI file exists yet. Create user INI file from INI file template?	
+No user INI file exists yet. Create user INI file from INI file template?	Uživatelský INI soubor zatím neexistuje. Vytvořit uživateský INI soubor z templatu INI souboru?
 None	Žádný
-Not enough memory available	
+Not enough memory available	Není dostupná dostatečná paměť
 Note: Set the key 'TrimWithoutPromptLosslessJPEG=true' in the INI file to always trim without showing this message.	Pozn.:Nastavením klíče 'TrimWithoutPromptLosslessJPEG=true' v INI souboru lze ostřihovat vše bez této zprávy.
 Number (consecutively numbered)	Čísla (postupně očíslované)
-Number of CPU cores used	
+Number of CPU cores used	Počet užitých jader CPU
 Number of JPEG files in folder: %d	Počet JPEG souborů ve složce: %d
 Number with N digits	Číslo s N číslicemi
 OK	
 Old name	Staré jméno
 Open folder containing image and select in Windows Explorer	
 Open new image or slideshow file	Otevřít nový obrázek nebo prezentaci
-Order files by	
+Order files by	Řadi soubory podle
 Orientation:	
 Original file extension	Původní přípona souboru
 Original file name (with extension)	Původní název souboru (s příponou)
 Original file name (without extension)	Původní název souboru (bez přípony)
 Pan image	Posunout obrázek
 Paper:	
-Parameter DB	
+Parameter DB	Parametry DB
 Parameter DB error	Chyba parametr DB
 Parameter DB file '%s' could not be opened!	Parametrový DB soubor '%s'nelze otevřít!
 Parameter DB file '%s' is not valid (invalid header)!	Parametrový DB soubor '%s' není platný (neplatná hlavička)!
@@ -239,7 +239,7 @@ Perspective Correction	Perspektivní korekce
 Pixels	Bodů
 Placeholders:	Zástupné znaky:
 Portrait	
-Press 'OK' to continue with registration or 'Cancel' to abort all registrations.	
+Press 'OK' to continue with registration or 'Cancel' to abort all registrations.	Zvolet 'OK' pro pokračování registrace nebo 'Zrušit' ke změně registrace.
 Press ESC to exit...	Ukončit ESC...
 Press any key to search the subdirectories for image files.	Stisknout nějakou klávesu na vyhledání složky s obrázky.
 Preview	Náhled
@@ -248,12 +248,12 @@ Print
 Print Image	
 Printer driver	
 Printer:	
-Project home page	
+Project home page	Domácí stránka projektu
 Radius	Poloměr
 Random	Náhodně
 Reading the JPEG file from disk failed	Chyba čtení JPEG souboru z disku!
 Reason:	Důvod:
-Registering or unregistering file extensions in this registry area requires administrator privileges and cannot be done in JPEGView.	
+Registering or unregistering file extensions in this registry area requires administrator privileges and cannot be done in JPEGView.	Registrace a odregistrace přípon souborů v registru vyžaduje administátorská práva a nemůže být provedena v JPEGView.
 Registration applies to the current user only.	Registrace platí pro právě přihlášeného uživatele
 Remove from	Odstranit z
 Rename	Přejmenovat
@@ -275,7 +275,7 @@ Rotate image 90 deg counter-clockwise	Otočit obrázek o 90 stupňů doleva (CCW
 Rotate image and fit to screen	Rotovat a přizpůsobit obrázek obrazovce
 Rotate image by user-defined angle	Otočit obrázek o uživatelem zadaný úhel
 Rotate the image by dragging with the mouse.	Otočit obrázek pomocí tažení myší.
-SIMD mode used	
+SIMD mode used	SIMD mód
 Saturation	Nasycení
 Save	
 Save (%s)/ delete (%s) image processing parameters in/from parameter DB	Uložit (%s)/vymazat (%s) parametry úprav obrázku do/z DB parametrů
@@ -325,10 +325,10 @@ Slide from left	Posun zleva
 Slide from right	Posun zprava
 Slide from top	Posun zhora
 Slideshow	Prezentace s přestávkou n sekunt (ESC ukončení)
-Slideshow with timeout of 'n' seconds (ESC to stop)	
+Slideshow with timeout of 'n' seconds (ESC to stop)	Prezetovat s přestávkou n sekunt (ESC ukončení)
 Sort images by creation date, resp. modification date, resp. file name	Řadit obrázky dle data pořízení/data úpravy/jména souboru
 Source:	
-Target folders that do not yet exist are created as needed.	
+Target folders that do not yet exist are created as needed.	Cílové složky, neexestující budou vytvořeny dle potřeby.
 The directory '%s' does not contain any image files!	Složka '%s' neobsahuje žádné soubory k zobrazení!
 The file '%s' could not be copied!	
 The file '%s' could not be read!	Soubor '%s' nemohl být přečten!
@@ -461,43 +461,26 @@ Fixed size...	Pevná velikost...
 Zoom to Selection	Zobrazit výběr
 
 // ::: INFO: Out-of-date Translations ::: (Not in use anymore, safe to delete) //
-//Parameter DB:	Parametry DB:
-//Rename:	Přejmenovat:
-//No file or folder name was provided as command line parameter!	Nebylo zadáno jméno souboru nebo složky jako parametr příkazové řádky!
-//To use JPEGView, associate JPG, JPEG and BMP files with JPEGView.	K snažšímu užití JPEGView, asociovat JPG, JPEG a BMP soubory s JPEGView.
-//PgUp or Left	PgUp nebo šipka vlevo
-//PgDn or Right	PgDn nebo šipka vpravo
-//Slide show with timeout of n seconds (ESC to stop)	Prezetovat s přestávkou n sekunt (ESC ukončení)
-//up/down	Šipka nahoru/dolů
-//Delete current file on disk permanently	Trvale vymazat aktuální soubor z disku
-//Auto contrast and color correction:	Automatická korekce kontrastu a barev:
-//Local density correction:	Lokální korekce hustoty:
-//Order files by:	Řadi soubory podle:
-//Do you really want to permanently delete the file %filename%?	Přejete si skutečně trvale vymazat soubor %filename%?
-//Rotate the following file lossless by 90 deg?\n%filename%	Otočit bezeztrátově o 90 stupňů soubor %filename% ?
-//Rotate the following file lossless by 270 deg?\n%filename%	Otočit bezeztrátově o 270 stupňů soubor %filename% ?
-//My Pictures' folder	Složka mé obrázky
-//Target folders that are not yet existing are created as needed.	Cílové složky, neexestující budou vytvořeny dle potřeby.
-//The file '%s' could not be %s.	Soubor '%s' nemohl být %s.
-//copied	zkopírován
-//renamed	přejmenován
-//SIMD mode used:	SIMD mód:
-//Number of CPU cores used:	Počet užitých jader CPU:
-//Licensed under the GNU general public license (GPL), see readme file for details:	Licencováno dle „GNU general public license (GPL)“,  podrobnosti obsahuje soubor readme:
-//Project home page:	Domácí stránka projektu:
 //Actual size of image	Aktuální rozměr obrázku
-//Window mode	Zobrazení v okně
-//No user INI file exits yet. Create user INI file from INI file template?	Uživatelský INI soubor zatím neexistuje. Vytvořit uživateský INI soubor z templatu INI souboru?
-//Reason: Not enough memory available	Důvod: Není dostupná dostatečná paměť
-//Error while writing the following registry key:	Chybe během zápisu následujícího klíče registru:
-//Registering or unregistering file extensions in this registry area requires administration privileges and cannot be done in JPEGView.	Registrace a odregistrace přípon souborů v registru vyžaduje administátorská práva a nemůže být provedena v JPEGView.
-//Press 'OK' to continue with registration or 'Cancel' to not modify any registrations.	Zvolet 'OK' pro pokračování registrace nebo 'Zrušit' ke změně registrace.
-//JPEGView can try to remove the restrictions automatically.	JPEGView může zkusit odstranit omezení automaticky.
+//Delete current file on disk permanently	Trvale vymazat aktuální soubor z disku
+//Do you really want to permanently delete the file %filename%?	Přejete si skutečně trvale vymazat soubor %filename%?
 //However this will fail if the current user has no administration privileges.	Ačkoliv toto selže pokud uživatel nemá práva administrátora.
 //Insufficient rights to remove the restrictions. Continue?	Nedostatečná práva k odstranění omezení. Pokračovat?
+//JPEGView can try to remove the restrictions automatically.	JPEGView může zkusit odstranit omezení automaticky.
+//No file or folder name was provided as command line parameter!	Nebylo zadáno jméno souboru nebo složky jako parametr příkazové řádky!
+//PgDn or Right	PgDn nebo šipka vpravo
+//PgUp or Left	PgUp nebo šipka vlevo
+//Rename:	Přejmenovat:
+//Rotate the following file lossless by 270 deg?\n%filename%	Otočit bezeztrátově o 270 stupňů soubor %filename% ?
+//Rotate the following file lossless by 90 deg?\n%filename%	Otočit bezeztrátově o 90 stupňů soubor %filename% ?
+//The file '%s' could not be %s.	Soubor '%s' nemohl být %s.
+//To use JPEGView, associate JPG, JPEG and BMP files with JPEGView.	K snažšímu užití JPEGView, asociovat JPG, JPEG a BMP soubory s JPEGView.
+//Window mode	Zobrazení v okně
+//copied	zkopírován
+//renamed	přejmenován
+//up/down	Šipka nahoru/dolů
 
 // ::: INFO: Missing Translations ::: (Summary of all missing strings to assist translators - Auto-generated by script) //
-//! 'My Pictures' folder
 //! About JPEGView (32-bit version)...
 //! About JPEGView (64-bit version)...
 //! Alignment:
@@ -507,7 +490,6 @@ Zoom to Selection	Zobrazit výběr
 //! Application:
 //! Applications
 //! Ascending
-//! Auto contrast and color correction
 //! Bottom
 //! Box
 //! Browse...
@@ -521,7 +503,6 @@ Zoom to Selection	Zobrazit výběr
 //! Descending
 //! Do you really want to delete the current image file on disk?
 //! Edit
-//! Error while writing the following registry key
 //! Example:
 //! File size
 //! Fill paper with crop
@@ -535,7 +516,6 @@ Zoom to Selection	Zobrazit výběr
 //! Lanczos/Bicubic
 //! Landscape
 //! Left
-//! Licensed under the GNU general public license (GPL), see readme file for details
 //! Location:
 //! M - G
 //! Manage 'Open image with' menu...
@@ -546,27 +526,18 @@ Zoom to Selection	Zobrazit výběr
 //! New height:
 //! New size:
 //! New width:
-//! No user INI file exists yet. Create user INI file from INI file template?
-//! Not enough memory available
-//! Number of CPU cores used
 //! OK
 //! Open folder containing image and select in Windows Explorer
-//! Order files by
 //! Orientation:
 //! Paper:
-//! Parameter DB
 //! Portrait
-//! Press 'OK' to continue with registration or 'Cancel' to abort all registrations.
 //! Print
 //! Print Image
 //! Printer driver
 //! Printer:
-//! Project home page
-//! Registering or unregistering file extensions in this registry area requires administrator privileges and cannot be done in JPEGView.
 //! Reset
 //! Resize Image
 //! Right
-//! SIMD mode used
 //! Save
 //! Scaling mode:
 //! Select Printer...
@@ -576,9 +547,7 @@ Zoom to Selection	Zobrazit výběr
 //! Shortcut Help
 //! Shortcut key:
 //! Size:
-//! Slideshow with timeout of 'n' seconds (ESC to stop)
 //! Source:
-//! Target folders that do not yet exist are created as needed.
 //! The file '%s' could not be copied!
 //! The file '%s' could not be renamed!
 //! The new size is too large - width or height is larger than 65535 or total number of pixels is too large!
@@ -621,4 +590,4 @@ Zoom to Selection	Zobrazit výběr
 //! Update user settings...
 //! User commands
 
-// ::: STATUS: Last Checked/Updated by Script ::: 2023-02-08T22:01:53.634142+00:00 //
+// ::: STATUS: Last Checked/Updated by Script ::: 2023-02-09T01:09:55.953115+00:00 //

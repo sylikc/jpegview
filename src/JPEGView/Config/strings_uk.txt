@@ -51,7 +51,7 @@ Align image to horizontal or vertical line	Вирівнювання зображ
 Alignment:	Вирівнювання
 All Files	Всі файли
 All existing user settings will be preserved.	
-Alternatively, right-click an image file of the given type in Windows Explorer and select 'Open with... > Choose default program'	
+Alternatively, right-click an image file of the given type in Windows Explorer and select 'Open with... > Choose default program'	Крім того, можна натиснути правою кнопкою миші по графічному файлу потрібного типу у Провіднику Windows і вибрати 'Відкрити за допомогою > Вибрати програму'.
 Altitude (m):	
 Amount	Величина
 Application:	Програма:
@@ -59,8 +59,8 @@ Applications	Програми
 Apply	Застосувати
 Apply Unsharp Mask	Застосувати нерізку маску
 Apply auto contrast correction using only visible section of image	Застосувати автокорекцію контрастності тільки до видимої області зображення
-Ascending	
-Auto contrast and color correction	
+Ascending	За зростанням
+Auto contrast and color correction	Автокорекція контрастності і кольору
 Auto crop corrected image (avoids black border)	Автообрізка при корекції (уникати чорних полів)
 Auto crop rotated image (avoids black border)	Автообрізка зображення при повороті (уникати чорних полів)
 Auto zoom mode	Автомасштабування
@@ -96,7 +96,7 @@ Copying parameter DB to file '%s' failed. Reason: %s	Помилка копіюв
 Correct converging lines (perspective correction)	Корекція збіжних ліній (перспективи)
 Creation date/time	Дата/час створення
 Crop image	Обрізати зображення
-Ctrl + Left mouse	
+Ctrl + Left mouse	Ctrl + ЛКМ
 Current image	Поточне зображення
 Cyan-Red	Блакитний-Червоний
 Darken Highlights	Притемнити світло
@@ -107,7 +107,7 @@ Decoding this format requires the Microsoft Visual C++ Redistributable.
 Deep Shadows	Глибокі тіні
 Delete	Видалити
 Delete image file	Видалити файл зображення
-Descending	
+Descending	За зменшенням
 Display image (EXIF) information	Відомості про зображення (EXIF)
 Do you really want to delete the current image file on disk?	
 Do you really want to save the following parameters as default to the INI file	Ви справді хочете зберегти ці параметри в INI-файлі як стандартні
@@ -123,7 +123,7 @@ Enable/disable landscape picture enhancement mode	Увімкнути/вимкн�
 Error	Помилка
 Error during rename/copy	Помилка при перейменуванні/копіюванні
 Error saving file	Помилка збереження файлу
-Error while writing the following registry key	
+Error while writing the following registry key	Помилка при записі ключа реєстру
 Error writing file to disk!	Помилка запису файлу на диск.
 Example:	Приклад:
 Exposure bias (EV):	Експокорекція (EV):
@@ -180,7 +180,7 @@ Landscape picture enhancement mode	Режим поліпшення зображ�
 Last modification date/time	Дата/час зміни
 Left	Ліве
 Left mouse & drag	Перетягування з ЛКМ
-Licensed under the GNU general public license (GPL), see readme file for details	
+Licensed under the GNU general public license (GPL), see readme file for details	Ліцензія: GNU General Public License (GPL), див. подробиці у файлі
 Lighten Shadows	Висвітлити тіні
 Local density correction	Корекція світла/тіней
 Location:	
@@ -211,26 +211,26 @@ New size:
 New width:	
 Next image	Наступне зображення
 No image loaded!	Не завантажене зображення!
-No user INI file exists yet. Create user INI file from INI file template?	
+No user INI file exists yet. Create user INI file from INI file template?	Користувацького INI-файла ще не існує. Створити його з шаблону INI-файла?
 None	Нмає
-Not enough memory available	
+Not enough memory available	недостатньо пам'яті
 Note: Set the key 'TrimWithoutPromptLosslessJPEG=true' in the INI file to always trim without showing this message.	Примітка: щоб обрізка виконувалася без показу цього повідомлення, встановіть у INI-файлі ключ 'TrimWithoutPromptLosslessJPEG=true'.
 Number (consecutively numbered)	номер (послідовний)
-Number of CPU cores used	
+Number of CPU cores used	Використовується ядер ЦП
 Number of JPEG files in folder: %d	Файлів JPEG в папці: %d
 Number with N digits	номер з N цифрами
 OK	
 Old name	Старе ім'я
 Open folder containing image and select in Windows Explorer	
 Open new image or slideshow file	Відкрити нове зображення або файл із слайдшоу
-Order files by	
+Order files by	Сортування файлів
 Orientation:	Орієнтація
 Original file extension	вихідне розширення файлу
 Original file name (with extension)	вихідне ім'я файлу (з розширенням)
 Original file name (without extension)	вихідне ім'я файлу (без розширення)
 Pan image	Перемістити зображення
 Paper:	Папір
-Parameter DB	
+Parameter DB	Параметри
 Parameter DB error	Помилка в БД параметрів
 Parameter DB file '%s' could not be opened!	Неможливо відкрити файл '%s' з БД параметрів.
 Parameter DB file '%s' is not valid (invalid header)!	Невірний файл '%s' з БД параметрів (неприпустимий заголовок).
@@ -242,7 +242,7 @@ Perspective Correction	Корекція перспективи
 Pixels	пкс
 Placeholders:	Заповнювачі:
 Portrait	Книжкова
-Press 'OK' to continue with registration or 'Cancel' to abort all registrations.	
+Press 'OK' to continue with registration or 'Cancel' to abort all registrations.	Натисніть OK, щоб виконати реєстрацію. Натисніть 'Скасування', щоб не змінювати ніяких реєстрацій файлів.
 Press ESC to exit...	Натисніть ESC для виходу...
 Press any key to search the subdirectories for image files.	Натисніть будь-яку клавішу для пошуку графічних файлів у вкладених папках.
 Preview	Попередній перегляд
@@ -251,12 +251,12 @@ Print	Друк
 Print Image	Друк Зображення
 Printer driver	Драйвер принтера
 Printer:	Принтер
-Project home page	
+Project home page	Домашня сторінка проекту
 Radius	Радіус
 Random	Випадково
 Reading the JPEG file from disk failed	Помилка читання з диска файлу JPEG
 Reason:	Причина:
-Registering or unregistering file extensions in this registry area requires administrator privileges and cannot be done in JPEGView.	
+Registering or unregistering file extensions in this registry area requires administrator privileges and cannot be done in JPEGView.	Реєстрація та скасування реєстрації файлових розширень в цій області реєстру вимагає прав адміністратора і не може бути виконана у JPEGView.
 Registration applies to the current user only.	Реєстрація діє тільки для поточного користувача.
 Remove from	Видалити з БД
 Rename	Перейменувати
@@ -278,7 +278,7 @@ Rotate image 90 deg counter-clockwise	Повернути на 90° вліво
 Rotate image and fit to screen	Повернути зображення і вписати в екран
 Rotate image by user-defined angle	Повернути на довільний кут
 Rotate the image by dragging with the mouse.	Обертайте зображення, перетягуючи по ньому мишу.
-SIMD mode used	
+SIMD mode used	Режим SIMD
 Saturation	Насиченість
 Save	Зберегти
 Save (%s)/ delete (%s) image processing parameters in/from parameter DB	Зберегти (%s) / видалити (%s) параметри обробки зображення в базі даних
@@ -328,10 +328,10 @@ Slide from left	Зсув зліва
 Slide from right	Зсув справа
 Slide from top	Зсув зверху
 Slideshow	Слайдшоу
-Slideshow with timeout of 'n' seconds (ESC to stop)	
+Slideshow with timeout of 'n' seconds (ESC to stop)	Запустити слайдшоу з інтервалом N сек (ESC - стоп)
 Sort images by creation date, resp. modification date, resp. file name	Сортування зображень: за датою створення (C), зміни (M), іменем файла (N), випадково (Z)
 Source:	Джерело
-Target folders that do not yet exist are created as needed.	
+Target folders that do not yet exist are created as needed.	Неіснуючі папки призначення створюються за потребою.
 The directory '%s' does not contain any image files!	В папці '%s' немає підтримуваних графічних файлів.
 The file '%s' could not be copied!	
 The file '%s' could not be read!	Неможливо прочитати файл '%s'.
@@ -464,92 +464,55 @@ Fixed size...	Фіксований розмір ...
 Zoom to Selection	Масштабувати до виділеного
 
 // ::: INFO: Out-of-date Translations ::: (Not in use anymore, safe to delete) //
-//Parameter DB:	Параметри:
-//Rename:	Перейменувати:
-//No file or folder name was provided as command line parameter!	У командному рядку не вказано ім'я файлу або папки
-//To use JPEGView, associate JPG, JPEG and BMP files with JPEGView.	Для зручності використання JPEGView асоціюйте програму з файлами JPG, JPEG та BMP.
-//PgUp or Left	PgUp або стрілка вліво
-//PgDn or Right	PgDn або стрілка вправо
-//Slide show with timeout of n seconds (ESC to stop)	Запустити слайдшоу з інтервалом N сек (ESC - стоп)
-//up/down	Стрілки вгору/вниз
-//Ctrl + L mouse	Ctrl + ЛКМ
-//Delete current file on disk permanently	Остаточно видалити поточний файл з диска
-//Auto contrast and color correction:	Автокорекція контрастності і кольору:
-//Local density correction:	Корекція світла/тіней:
-//Order files by:	Сортування файлів:
-//Do you really want to permanently delete the file %filename%?	Ви справді хочете видалити файл %filename%?
-//Rotate the following file lossless by 90 deg?\n%filename%	Повернути цей файл без втрат на 90° вправо?\n%filename%
-//Rotate the following file lossless by 270 deg?\n%filename%	Повернути цей файл без втрат на 90° вліво?\n%filename%
-//Save parameters to INI...	Зберегти параметри в INI-файлі...
-//Target folders that are not yet existing are created as needed.	Неіснуючі папки призначення створюються за потребою.
-//The file '%s' could not be %s.	Для файла '%s' неможливо виконати операцію %s.
-//copied	скопійовано
-//renamed	перейменовано
-//SIMD mode used:	Режим SIMD:
-//Number of CPU cores used:	Використовується ядер ЦП:
-//Licensed under the GNU general public license (GPL), see readme file for details:	Ліцензія: GNU General Public License (GPL), див. подробиці у файлі:
-//Project home page:	Домашня сторінка проекту:
 //Actual size of image	Справжній розмір зображення
-//Window mode	Віконний режим
-//No user INI file exits yet. Create user INI file from INI file template?	Користувацького INI-файла ще не існує. Створити його з шаблону INI-файла?
-//Reason: Not enough memory available	Причина: недостатньо пам'яті
-//Error while writing the following registry key:	Помилка при записі ключа реєстру:
-//Registering or unregistering file extensions in this registry area requires administration privileges and cannot be done in JPEGView.	Реєстрація та скасування реєстрації файлових розширень в цій області реєстру вимагає прав адміністратора і не може бути виконана у JPEGView.
-//Press 'OK' to continue with registration or 'Cancel' to not modify any registrations.	Натисніть OK, щоб виконати реєстрацію. Натисніть 'Скасування', щоб не змінювати ніяких реєстрацій файлів.
-//JPEGView can try to remove the restrictions automatically.	JPEGView може спробувати видалити обмеження автоматично.
+//Delete current file on disk permanently	Остаточно видалити поточний файл з диска
+//Do you really want to permanently delete the file %filename%?	Ви справді хочете видалити файл %filename%?
 //However this will fail if the current user has no administration privileges.	Проте якщо у поточного користувача немає прав адміністратора, це не спрацює.
 //Insufficient rights to remove the restrictions. Continue?	Недостатньо прав для видалення обмежень. Продовжити?
+//JPEGView can try to remove the restrictions automatically.	JPEGView може спробувати видалити обмеження автоматично.
+//No file or folder name was provided as command line parameter!	У командному рядку не вказано ім'я файлу або папки
+//PgDn or Right	PgDn або стрілка вправо
+//PgUp or Left	PgUp або стрілка вліво
+//Rename:	Перейменувати:
+//Rotate the following file lossless by 270 deg?\n%filename%	Повернути цей файл без втрат на 90° вліво?\n%filename%
+//Rotate the following file lossless by 90 deg?\n%filename%	Повернути цей файл без втрат на 90° вправо?\n%filename%
+//Save parameters to INI...	Зберегти параметри в INI-файлі...
+//The file '%s' could not be %s.	Для файла '%s' неможливо виконати операцію %s.
+//To use JPEGView, associate JPG, JPEG and BMP files with JPEGView.	Для зручності використання JPEGView асоціюйте програму з файлами JPG, JPEG та BMP.
+//Window mode	Віконний режим
 //Windows 8 blocks JPEGView from changing the default program for these file endings.	Windows 8 не дозволяє JPEGView змінювати стандартну програму для файлів з цими розширеннями.
-//Alternatively, right click an image file of the given type in Windows Explorer and select 'Open with... > Choose default program'	Крім того, можна натиснути правою кнопкою миші по графічному файлу потрібного типу у Провіднику Windows і вибрати 'Відкрити за допомогою > Вибрати програму'.
 //[new entry]	[новий елемент]
-//Upcounting	За зростанням
-//Downcounting	За зменшенням
+//copied	скопійовано
+//renamed	перейменовано
+//up/down	Стрілки вгору/вниз
 
 // ::: INFO: Missing Translations ::: (Summary of all missing strings to assist translators - Auto-generated by script) //
 //! About JPEGView (32-bit version)...
 //! About JPEGView (64-bit version)...
 //! All existing user settings will be preserved.
-//! Alternatively, right-click an image file of the given type in Windows Explorer and select 'Open with... > Choose default program'
 //! Altitude (m):
-//! Ascending
-//! Auto contrast and color correction
 //! Box
 //! C - R
 //! Clipboard Image
 //! Copy file path of the image to clipboard
-//! Ctrl + Left mouse
 //! Decoding this format requires the Microsoft Visual C++ Redistributable.
-//! Descending
 //! Do you really want to delete the current image file on disk?
-//! Error while writing the following registry key
 //! Fill paper with crop
 //! Filter:
 //! High quality resampling
 //! Insufficient rights to change the privilege (DACL) on the registry entry. Continue?
 //! JPEGView is a lean, fast and highly configurable viewer/editor for JPEG, BMP, PNG, WEBP, TGA, GIF and TIFF images with a minimal GUI.
 //! Lanczos/Bicubic
-//! Licensed under the GNU general public license (GPL), see readme file for details
 //! Location:
 //! M - G
 //! New height:
 //! New size:
 //! New width:
-//! No user INI file exists yet. Create user INI file from INI file template?
-//! Not enough memory available
-//! Number of CPU cores used
 //! OK
 //! Open folder containing image and select in Windows Explorer
-//! Order files by
-//! Parameter DB
-//! Press 'OK' to continue with registration or 'Cancel' to abort all registrations.
-//! Project home page
-//! Registering or unregistering file extensions in this registry area requires administrator privileges and cannot be done in JPEGView.
 //! Resize Image
-//! SIMD mode used
 //! Sharpen low
 //! Sharpen medium
-//! Slideshow with timeout of 'n' seconds (ESC to stop)
-//! Target folders that do not yet exist are created as needed.
 //! The file '%s' could not be copied!
 //! The file '%s' could not be renamed!
 //! The new size is too large - width or height is larger than 65535 or total number of pixels is too large!
@@ -583,4 +546,4 @@ Zoom to Selection	Масштабувати до виділеного
 //! Update user settings...
 //! Set current parameters as default values...
 
-// ::: STATUS: Last Checked/Updated by Script ::: 2023-02-08T22:01:53.705583+00:00 //
+// ::: STATUS: Last Checked/Updated by Script ::: 2023-02-09T01:09:56.050119+00:00 //

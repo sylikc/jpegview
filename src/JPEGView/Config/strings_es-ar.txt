@@ -57,7 +57,7 @@ Apply	Aplicar
 Apply Unsharp Mask	Aplicar máscara de desenfoque
 Apply auto contrast correction using only visible section of image	Aplicar corrección automática de contraste usando sólo la sección visible de la imagen
 Ascending	
-Auto contrast and color correction	
+Auto contrast and color correction	Autocorrección de contraste y color
 Auto crop corrected image (avoids black border)	
 Auto crop rotated image (avoids black border)	Eliminar automaticamente bordes en la imagen rotada (evita bordes negros)
 Auto zoom mode	Modo de autozoom
@@ -177,7 +177,7 @@ Landscape picture enhancement mode	Modo de mejora de imagen de paisajes
 Last modification date/time	Hora/fecha de última modificación
 Left	
 Left mouse & drag	Botón izquierdo y arrastrar
-Licensed under the GNU general public license (GPL), see readme file for details	
+Licensed under the GNU general public license (GPL), see readme file for details	Licenciado bajo la Licencia Pública General de GNU (GPL), vea el archivo readme para detalles
 Lighten Shadows	Sombras leves
 Local density correction	Corrección de densidad local
 Location:	
@@ -208,26 +208,26 @@ New size:
 New width:	
 Next image	Imagen siguiente
 No image loaded!	
-No user INI file exists yet. Create user INI file from INI file template?	
+No user INI file exists yet. Create user INI file from INI file template?	No existe todavia el fichero INI de usuario. Crearlo fichero INI de usuario desde la plantilla de fichero INI?
 None	
-Not enough memory available	
+Not enough memory available	No hay suficiente memoria disponible
 Note: Set the key 'TrimWithoutPromptLosslessJPEG=true' in the INI file to always trim without showing this message.	
 Number (consecutively numbered)	Número (consecutivamente enumerados)
-Number of CPU cores used	
+Number of CPU cores used	Número de núcleos de CPU usados
 Number of JPEG files in folder: %d	Numero de archivos JPEG en la carpeta: %d
 Number with N digits	Número con N dígitos
 OK	
 Old name	Nombre antiguo
 Open folder containing image and select in Windows Explorer	
 Open new image or slideshow file	Abrir nueva imagen o archivo de diapositivas
-Order files by	
+Order files by	Ordenar archivos por
 Orientation:	
 Original file extension	Extensión del archivo original
 Original file name (with extension)	Nombre original del archivo (con extensión)
 Original file name (without extension)	Nombre original del archivo (sin extensión)
 Pan image	Panear imagen
 Paper:	
-Parameter DB	
+Parameter DB	Parámetros BD
 Parameter DB error	Error de parámetros BD
 Parameter DB file '%s' could not be opened!	¡El archivo de parámetros de BD '%s' no se pudo abrir!
 Parameter DB file '%s' is not valid (invalid header)!	¡El archivo de parámetros de BD '%s' no es válido (cabecera inválida)!
@@ -248,7 +248,7 @@ Print
 Print Image	
 Printer driver	
 Printer:	
-Project home page	
+Project home page	Página principal del proyecto
 Radius	Radio
 Random	
 Reading the JPEG file from disk failed	
@@ -275,7 +275,7 @@ Rotate image 90 deg counter-clockwise	Rotar imagen 90° sentido antihorario
 Rotate image and fit to screen	Rotar imagen y acomodar a la pantalla
 Rotate image by user-defined angle	Rotar imagen en un angulo definido por el usuario
 Rotate the image by dragging with the mouse.	Rotar imagen arrastrando el raton.
-SIMD mode used	
+SIMD mode used	Modo SIMD usado
 Saturation	Saturación
 Save	
 Save (%s)/ delete (%s) image processing parameters in/from parameter DB	Guardar (%s)/ borrar (%s) parámetros de procesado de imágenes en/desde parámetros de BD
@@ -325,10 +325,10 @@ Slide from left
 Slide from right	
 Slide from top	
 Slideshow	Presentación
-Slideshow with timeout of 'n' seconds (ESC to stop)	
+Slideshow with timeout of 'n' seconds (ESC to stop)	Presentación con intervalos de n segundos (ESC para detener)
 Sort images by creation date, resp. modification date, resp. file name	Ordenar imágenes por fecha de creación, resp. fecha de modificación, resp. nombre de archivo
 Source:	
-Target folders that do not yet exist are created as needed.	
+Target folders that do not yet exist are created as needed.	Las carpetas de destino que no existan serán creadas cuando se necesiten.
 The directory '%s' does not contain any image files!	¡El directorio '%s' no contiene imágenes!
 The file '%s' could not be copied!	
 The file '%s' could not be read!	¡El archivo '%s' no se pudo leer!
@@ -461,33 +461,21 @@ Fixed size...	Tamaño fijo
 Zoom to Selection	Zoom a selección
 
 // ::: INFO: Out-of-date Translations ::: (Not in use anymore, safe to delete) //
-//Parameter DB:	Parámetros BD:
-//Rename:	Renombrar:
-//No file or folder name was provided as command line parameter!	¡Ningún nombre de archivo o carpeta fue pasado como parámetro de la línea de comandos!
-//To use JPEGView, associate JPG, JPEG and BMP files with JPEGView.	Para usar JPEGView, asocie las extensiones JPG, JPEG y BMP con JPEGView.
-//PgUp or Left	AvPag o izquierda
-//PgDn or Right	RePag o derecha
-//Slide show with timeout of n seconds (ESC to stop)	Presentación con intervalos de n segundos (ESC para detener)
-//up/down	Arriba/abajo
+//Actual size of image	Tamaño actual de la imagen
 //Delete current file on disk permanently	Borrar archivo permanentemente del disco
-//Auto contrast and color correction:	Autocorrección de contraste y color:
-//Local density correction:	Corrección de densidad local:
-//Order files by:	Ordenar archivos por:
 //Do you really want to permanently delete the file %filename%?	¿Realmente quiere borrar permanentemente el archivo %filename%?
-//Rotate the following file lossless by 90 deg?\n%filename%	Rotar 90° sin pérdidas el siguiente archivo?\n%filename%
+//No file or folder name was provided as command line parameter!	¡Ningún nombre de archivo o carpeta fue pasado como parámetro de la línea de comandos!
+//PgDn or Right	RePag o derecha
+//PgUp or Left	AvPag o izquierda
+//Rename:	Renombrar:
 //Rotate the following file lossless by 270 deg?\n%filename%	Rotar 270° sin pérdidas el siguiente archivo?\n%filename%
-//Target folders that are not yet existing are created as needed.	Las carpetas de destino que no existan serán creadas cuando se necesiten.
+//Rotate the following file lossless by 90 deg?\n%filename%	Rotar 90° sin pérdidas el siguiente archivo?\n%filename%
 //The file '%s' could not be %s.	El archivo '%s' no pudo ser %s.
+//To use JPEGView, associate JPG, JPEG and BMP files with JPEGView.	Para usar JPEGView, asocie las extensiones JPG, JPEG y BMP con JPEGView.
+//Window mode	Modo ventana
 //copied	copiado
 //renamed	renombrado
-//SIMD mode used:	Modo SIMD usado:
-//Number of CPU cores used:	Número de núcleos de CPU usados:
-//Licensed under the GNU general public license (GPL), see readme file for details:	Licenciado bajo la Licencia Pública General de GNU (GPL), vea el archivo readme para detalles:
-//Project home page:	Página principal del proyecto:
-//Window mode	Modo ventana
-//Actual size of image	Tamaño actual de la imagen
-//No user INI file exits yet. Create user INI file from INI file template?	No existe todavia el fichero INI de usuario. Crearlo fichero INI de usuario desde la plantilla de fichero INI?
-//Reason: Not enough memory available	Razon: No hay suficiente memoria disponible
+//up/down	Arriba/abajo
 
 // ::: INFO: Missing Translations ::: (Summary of all missing strings to assist translators - Auto-generated by script) //
 //! %s camera raw images (embedded JPEGs only)
@@ -502,7 +490,6 @@ Zoom to Selection	Zoom a selección
 //! Application:
 //! Applications
 //! Ascending
-//! Auto contrast and color correction
 //! Auto crop corrected image (avoids black border)
 //! Back mouse button
 //! Blend
@@ -541,7 +528,6 @@ Zoom to Selection	Zoom a selección
 //! Lanczos/Bicubic
 //! Landscape
 //! Left
-//! Licensed under the GNU general public license (GPL), see readme file for details
 //! Location:
 //! Lossless JPEG transformations
 //! Manage 'Open image with' menu...
@@ -554,17 +540,12 @@ Zoom to Selection	Zoom a selección
 //! New size:
 //! New width:
 //! No image loaded!
-//! No user INI file exists yet. Create user INI file from INI file template?
 //! None
-//! Not enough memory available
 //! Note: Set the key 'TrimWithoutPromptLosslessJPEG=true' in the INI file to always trim without showing this message.
-//! Number of CPU cores used
 //! OK
 //! Open folder containing image and select in Windows Explorer
-//! Order files by
 //! Orientation:
 //! Paper:
-//! Parameter DB
 //! Performing the lossless transformation failed!
 //! Performing the transformation failed
 //! Perspective Correction
@@ -574,7 +555,6 @@ Zoom to Selection	Zoom a selección
 //! Print Image
 //! Printer driver
 //! Printer:
-//! Project home page
 //! Random
 //! Reading the JPEG file from disk failed
 //! Registering or unregistering file extensions in this registry area requires administrator privileges and cannot be done in JPEGView.
@@ -587,7 +567,6 @@ Zoom to Selection	Zoom a selección
 //! Roll from left
 //! Roll from right
 //! Roll from top
-//! SIMD mode used
 //! Save
 //! Scaling mode:
 //! Scroll from bottom
@@ -606,9 +585,7 @@ Zoom to Selection	Zoom a selección
 //! Slide from left
 //! Slide from right
 //! Slide from top
-//! Slideshow with timeout of 'n' seconds (ESC to stop)
 //! Source:
-//! Target folders that do not yet exist are created as needed.
 //! The file '%s' could not be copied!
 //! The file '%s' could not be renamed!
 //! The following file extensions cannot be unregistered because they have been registered in the 'local machine' registry area.
@@ -672,4 +649,4 @@ Zoom to Selection	Zoom a selección
 //! User commands
 //! Crop Selection Lossless...
 
-// ::: STATUS: Last Checked/Updated by Script ::: 2023-02-08T22:01:53.646056+00:00 //
+// ::: STATUS: Last Checked/Updated by Script ::: 2023-02-09T01:09:55.966200+00:00 //

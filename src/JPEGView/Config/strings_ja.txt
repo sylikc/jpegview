@@ -44,23 +44,23 @@
 %s images	%s 個の画像
 %s images (processed by Window Imaging Component - WIC)	%s 個の画像 (Windows Imaging - WIC で処理)
 'My Pictures' folder	「ピクチャ」フォルダ
-About JPEGView (32-bit version)...	
-About JPEGView (64-bit version)...	
+About JPEGView (32-bit version)...	JPEGView (32bit版)について...
+About JPEGView (64-bit version)...	JPEGView (64bit版)について...
 Acquisition date:	撮影日時:
 Align image to horizontal or vertical line	縦/横の線に揃える
 Alignment:	整列の位置:
 All Files	すべてのファイル
 All existing user settings will be preserved.	すべての個人設定は保存されます。
-Alternatively, right-click an image file of the given type in Windows Explorer and select 'Open with... > Choose default program'	
-Altitude (m):	
+Alternatively, right-click an image file of the given type in Windows Explorer and select 'Open with... > Choose default program'	あるいは、エクスプローラーで画像ファイルを右クリックして、「プログラムから開く」から「既定のプログラム」を選択します。
+Altitude (m):	標高 (メートル):
 Amount	量
 Application:	アプリケーション:
 Applications	アプリケーション
 Apply	適用
 Apply Unsharp Mask	ぼかしマスクを適用
 Apply auto contrast correction using only visible section of image	可視部分のコントラストを自動補正
-Ascending	
-Auto contrast and color correction	
+Ascending	順増
+Auto contrast and color correction	自動でコントラストと色を補正
 Auto crop corrected image (avoids black border)	加工した画像を自動で切り取り(黒背景を除く)
 Auto crop rotated image (avoids black border)	回転した画像を自動で切り取り (黒背景を除く)
 Auto zoom mode	自動拡大の方法
@@ -96,7 +96,7 @@ Copying parameter DB to file '%s' failed. Reason: %s	ファイル %s へのパ�
 Correct converging lines (perspective correction)	消失点の調整 (遠近法)
 Creation date/time	作成日時
 Crop image	切り取り
-Ctrl + Left mouse	
+Ctrl + Left mouse	Ctrl + マウスの左クリック
 Current image	表示中の画像
 Cyan-Red	シアン/赤
 Darken Highlights	ハイライトを暗く
@@ -107,7 +107,7 @@ Decoding this format requires the Microsoft Visual C++ Redistributable.
 Deep Shadows	最も暗い部分
 Delete	削除
 Delete image file	画像ファイルを削除
-Descending	
+Descending	順減
 Display image (EXIF) information	画像情報(EXIF)を表示
 Do you really want to delete the current image file on disk?	この画像ファイルを削除しますか？
 Do you really want to save the following parameters as default to the INI file	以下のパラメーターを規定としてINIファイルに保存しますか？
@@ -123,7 +123,7 @@ Enable/disable landscape picture enhancement mode	風景画像の改善モード
 Error	エラー
 Error during rename/copy	改名/コピーのエラー
 Error saving file	ファイル保存エラー
-Error while writing the following registry key	
+Error while writing the following registry key	以下のレジストリーキーの書き込みエラーです
 Error writing file to disk!	ファイル書き込みエラー
 Example:	例:
 Exposure bias (EV):	露出補正 (EV):
@@ -180,7 +180,7 @@ Landscape picture enhancement mode	風景画像の改善モード
 Last modification date/time	最終更新日時
 Left	左
 Left mouse & drag	マウスの左クリックでドラッグ
-Licensed under the GNU general public license (GPL), see readme file for details	
+Licensed under the GNU general public license (GPL), see readme file for details	GNU general public license (GPL) に準拠、詳細は readme をお読みください:
 Lighten Shadows	シャドーを明るく
 Local density correction	色濃度の補正
 Location:	位置情報:
@@ -211,26 +211,26 @@ New size:	サイズの指定:
 New width:	幅の指定:
 Next image	次の画像
 No image loaded!	画像なし
-No user INI file exists yet. Create user INI file from INI file template?	
+No user INI file exists yet. Create user INI file from INI file template?	個人用のINIがありません。テンプレートから新規のINIファイルを作成しますか？
 None	なし
-Not enough memory available	
+Not enough memory available	メモリー不足
 Note: Set the key 'TrimWithoutPromptLosslessJPEG=true' in the INI file to always trim without showing this message.	注意: INIファイルに TrimWithoutPromptLosslessJPEG=true を設定すると、警告なしでトリミングします。
 Number (consecutively numbered)	通し番号
-Number of CPU cores used	
+Number of CPU cores used	CPUコア数
 Number of JPEG files in folder: %d	フォルダ内のJPEGファイル数: %d
 Number with N digits	N桁の番号
 OK	
 Old name	元の名前
 Open folder containing image and select in Windows Explorer	
 Open new image or slideshow file	画像またはスライドショーを開く
-Order files by	
+Order files by	ファイルの順序
 Orientation:	印刷の向き:
 Original file extension	元のファイルの拡張子
 Original file name (with extension)	元のファイル名(拡張子含む)
 Original file name (without extension)	元のファイル名(拡張子除く)
 Pan image	全画面表示
 Paper:	用紙サイズ:
-Parameter DB	
+Parameter DB	パラメーターファイル
 Parameter DB error	パラメーターファイルのエラー
 Parameter DB file '%s' could not be opened!	パラメーターファイルが開けません。 %s
 Parameter DB file '%s' is not valid (invalid header)!	パラメーターファイルが無効です。 %s
@@ -242,7 +242,7 @@ Perspective Correction	遠近法の調整
 Pixels	ピクセル
 Placeholders:	引数の使用:
 Portrait	縦
-Press 'OK' to continue with registration or 'Cancel' to abort all registrations.	
+Press 'OK' to continue with registration or 'Cancel' to abort all registrations.	関連付け実行は「OK」、変更しない場合は「キャンセル」を選択してください。
 Press ESC to exit...	F1: ヘルプ, ESC で終了...
 Press any key to search the subdirectories for image files.	サブフォルダ内の画像を探索するには何かキーを押します。
 Preview	プレビュー
@@ -251,12 +251,12 @@ Print	印刷
 Print Image	画像の印刷
 Printer driver	プリンタードライバー
 Printer:	プリンター:
-Project home page	
+Project home page	プロジェクトのホームページ
 Radius	半径
 Random	ランダム
 Reading the JPEG file from disk failed	JPEGファイル読み込み失敗
 Reason:	原因:
-Registering or unregistering file extensions in this registry area requires administrator privileges and cannot be done in JPEGView.	
+Registering or unregistering file extensions in this registry area requires administrator privileges and cannot be done in JPEGView.	この拡張子の関連付け/解除には管理者権限が必要なので、JPEGViewでは変更できません。
 Registration applies to the current user only.	関連付けは現在のユーザーのみに有効です。
 Remove from	削除
 Rename	変更を実行
@@ -278,7 +278,7 @@ Rotate image 90 deg counter-clockwise	左回り90度回転
 Rotate image and fit to screen	画像の回転と画面にフィット
 Rotate image by user-defined angle	任意の角度で画像を回転
 Rotate the image by dragging with the mouse.	マウスのドラッグで回転します。
-SIMD mode used	
+SIMD mode used	使用したSIMDの種類
 Saturation	彩度
 Save	保存
 Save (%s)/ delete (%s) image processing parameters in/from parameter DB	画像加工のパラメーターを保存(%s)/削除(%s)
@@ -328,10 +328,10 @@ Slide from left	左からスライド
 Slide from right	右からスライド
 Slide from top	上からスライド
 Slideshow	スライドショー
-Slideshow with timeout of 'n' seconds (ESC to stop)	
+Slideshow with timeout of 'n' seconds (ESC to stop)	スライドショー切り替えの秒間隔 (ESCキーで停止)
 Sort images by creation date, resp. modification date, resp. file name	作成日時/更新日時/ファイル名で画像を並び替え
 Source:	給紙方法:
-Target folders that do not yet exist are created as needed.	
+Target folders that do not yet exist are created as needed.	存在しないフォルダは作成されます。
 The directory '%s' does not contain any image files!	このフォルダに画像ファイルはありません。 %s
 The file '%s' could not be copied!	
 The file '%s' could not be read!	 このファイルを読み込めません。 %s
@@ -464,75 +464,34 @@ Fixed size...	固定サイズ...
 Zoom to Selection	選択範囲を拡大
 
 // ::: INFO: Out-of-date Translations ::: (Not in use anymore, safe to delete) //
-//Parameter DB:	パラメーターファイル:
-//Rename:	名前の変更
-//No file or folder name was provided as command line parameter!	コマンド中にファイル名かフォルダ名の指定がありません
-//To use JPEGView, associate JPG, JPEG and BMP files with JPEGView.	JPEGView を使うには、JPG、JPEG、BMPファイルを JPEGViewに 関連付けしてください
-//PgUp or Left	PgUp または 左矢印
-//PgDn or Right	PgDown または 右矢印
-//Slide show with timeout of n seconds (ESC to stop)	スライドショー切り替えの秒間隔 (ESCキーで停止)
-//up/down	上/下
-//Ctrl + L mouse	Ctrl + マウスの左クリック
+//Actual size of image	実際の画像サイズ
 //Delete current file on disk permanently	表示中の画像ファイルを完全に削除
-//Auto contrast and color correction:	自動でコントラストと色を補正:
-//Local density correction:	色濃度の補正:
-//Order files by:	ファイルの順序:
 //Do you really want to permanently delete the file %filename%?	本当に完全に削除しますか？ \n%filename%
-//Rotate the following file lossless by 90 deg?\n%filename%	画像をロスレスで90度回転しますか？ \n%filename%
+//Insufficient rights to remove the restrictions. Continue?	制限の除去に必要な権限がありません。続けますか？
+//Local density correction:	色濃度の補正:
+//No file or folder name was provided as command line parameter!	コマンド中にファイル名かフォルダ名の指定がありません
+//PgDn or Right	PgDown または 右矢印
+//PgUp or Left	PgUp または 左矢印
+//Rename:	名前の変更
 //Rotate the following file lossless by 270 deg?\n%filename%	画像をロスレスで270度回転しますか？ \n%filename%
-//Target folders that are not yet existing are created as needed.	存在しないフォルダは作成されます。
+//Rotate the following file lossless by 90 deg?\n%filename%	画像をロスレスで90度回転しますか？ \n%filename%
 //The file '%s' could not be %s.	%s ファイルは %s できません。
+//To use JPEGView, associate JPG, JPEG and BMP files with JPEGView.	JPEGView を使うには、JPG、JPEG、BMPファイルを JPEGViewに 関連付けしてください
+//Window mode	ウィンドウ表示
+//Windows 8 blocks JPEGView from changing the default program for these file endings.	Windows 8 では、これらのファイルの既定のビューアに JPEGView を指定できません。
+//[new entry]	[新しい項目]
 //copied	コピー
 //renamed	改名
-//About JPEGView (64 bit version)...	JPEGView (64bit版)について...
-//SIMD mode used:	使用したSIMDの種類:
-//Number of CPU cores used:	CPUコア数:
-//Licensed under the GNU general public license (GPL), see readme file for details:	GNU general public license (GPL) に準拠、詳細は readme をお読みください:
-//Project home page:	プロジェクトのホームページ:
-//Actual size of image	実際の画像サイズ
-//Window mode	ウィンドウ表示
-//No user INI file exits yet. Create user INI file from INI file template?	個人用のINIがありません。テンプレートから新規のINIファイルを作成しますか？
-//Reason: Not enough memory available	原因: メモリー不足
-//Error while writing the following registry key:	以下のレジストリーキーの書き込みエラーです:
-//Registering or unregistering file extensions in this registry area requires administration privileges and cannot be done in JPEGView.	この拡張子の関連付け/解除には管理者権限が必要なので、JPEGViewでは変更できません。
-//Press 'OK' to continue with registration or 'Cancel' to not modify any registrations.	関連付け実行は「OK」、変更しない場合は「キャンセル」を選択してください。
-//Insufficient rights to remove the restrictions. Continue?	制限の除去に必要な権限がありません。続けますか？
-//Windows 8 blocks JPEGView from changing the default program for these file endings.	Windows 8 では、これらのファイルの既定のビューアに JPEGView を指定できません。
-//Alternatively, right click an image file of the given type in Windows Explorer and select 'Open with... > Choose default program'	あるいは、エクスプローラーで画像ファイルを右クリックして、「プログラムから開く」から「既定のプログラム」を選択します。
-//[new entry]	[新しい項目]
-//Upcounting	順増
-//Downcounting	順減
-//Altitude (m): 標高 (メートル):	
+//up/down	上/下
 
 // ::: INFO: Missing Translations ::: (Summary of all missing strings to assist translators - Auto-generated by script) //
-//! About JPEGView (32-bit version)...
-//! About JPEGView (64-bit version)...
-//! Alternatively, right-click an image file of the given type in Windows Explorer and select 'Open with... > Choose default program'
-//! Altitude (m):
-//! Ascending
-//! Auto contrast and color correction
 //! Clipboard Image
 //! Copy file path of the image to clipboard
-//! Ctrl + Left mouse
 //! Decoding this format requires the Microsoft Visual C++ Redistributable.
-//! Descending
-//! Error while writing the following registry key
 //! High quality resampling
 //! Insufficient rights to change the privilege (DACL) on the registry entry. Continue?
-//! Licensed under the GNU general public license (GPL), see readme file for details
-//! No user INI file exists yet. Create user INI file from INI file template?
-//! Not enough memory available
-//! Number of CPU cores used
 //! OK
 //! Open folder containing image and select in Windows Explorer
-//! Order files by
-//! Parameter DB
-//! Press 'OK' to continue with registration or 'Cancel' to abort all registrations.
-//! Project home page
-//! Registering or unregistering file extensions in this registry area requires administrator privileges and cannot be done in JPEGView.
-//! SIMD mode used
-//! Slideshow with timeout of 'n' seconds (ESC to stop)
-//! Target folders that do not yet exist are created as needed.
 //! The file '%s' could not be copied!
 //! The file '%s' could not be renamed!
 //! Toggle window always on top mode
@@ -557,4 +516,4 @@ Zoom to Selection	選択範囲を拡大
 //! 50 fps
 //! 100 fps
 
-// ::: STATUS: Last Checked/Updated by Script ::: 2023-02-08T22:01:53.667243+00:00 //
+// ::: STATUS: Last Checked/Updated by Script ::: 2023-02-09T01:09:56.002366+00:00 //

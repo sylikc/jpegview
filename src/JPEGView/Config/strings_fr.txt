@@ -48,7 +48,7 @@ Align image to horizontal or vertical line	Aligner l'image avec une ligne horizo
 Alignment:	Alignement :
 All Files	Tous les fichiers
 All existing user settings will be preserved.	Tous les paramètres utilisateur existants seront préservés
-Alternatively, right-click an image file of the given type in Windows Explorer and select 'Open with... > Choose default program'	
+Alternatively, right-click an image file of the given type in Windows Explorer and select 'Open with... > Choose default program'	Ou sinon, faites clic droit sur une image dans l'Explorateur windows et choisissez 'Ouvrir avec... > Choisir le programme par défaut'.
 Altitude (m):	
 Amount	Quantité
 Application:	Application :
@@ -56,7 +56,7 @@ Applications
 Apply	Appliquer
 Apply Unsharp Mask	Appliquer le filtre de netteté
 Apply auto contrast correction using only visible section of image	Appliquer la correction automatique du contraste en utilisant uniquement la partie visible de l'image
-Ascending	
+Ascending	Ordre croissant
 Auto contrast and color correction	Corrections couleurs et contrastes
 Auto crop corrected image (avoids black border)	Rognage automatique de l'image corrigée (évite les bords noirs)
 Auto crop rotated image (avoids black border)	Rognage automatique de l'image pivotée (évite les bords noirs)
@@ -104,7 +104,7 @@ Decoding this format requires the Microsoft Visual C++ Redistributable.	Décoder
 Deep Shadows	Sombres profonds
 Delete	Supprimer
 Delete image file	Supprimer le fichier image
-Descending	
+Descending	Ordre décroissant
 Display image (EXIF) information	Afficher les infos photo (EXIF)
 Do you really want to delete the current image file on disk?	Voulez-vous vraiment supprimer ce fichier ?
 Do you really want to save the following parameters as default to the INI file	Confirmer la sauvegarde par défaut de ces réglages dans le fichier INI
@@ -195,7 +195,7 @@ Margins:	Marges :
 Mark image for toggling. Use %s to toggle between marked and current image	Marquer l'image pour la basculer. Utilisez %s pour basculer entre l'image marquée et l'image courante
 Maximize/restore to/from virtual desktop (only for multi-monitor systems)	Agrandir/Restaurer le bureau virtuel (uniquement si plusieurs écrans)
 Menu entries:	Entrées du menu :
-Modification date:	
+Modification date:	Date de modification :
 Modifier keys:	Touches de bascule :
 Month / Short form (text)	Mois / simplifié (texte)
 Mouse wheel	Molette de la souris
@@ -208,9 +208,9 @@ New size:	Nouvelle taille :
 New width:	Nouvelle largeur :
 Next image	Image suivante
 No image loaded!	Aucune image chargée !
-No user INI file exists yet. Create user INI file from INI file template?	
+No user INI file exists yet. Create user INI file from INI file template?	Le fichier INI utilisateur n'existe pas encore. En créer un depuis le fichier INI modèle ?
 None	Aucun
-Not enough memory available	
+Not enough memory available	mémoire insuffisante
 Note: Set the key 'TrimWithoutPromptLosslessJPEG=true' in the INI file to always trim without showing this message.	Note : si vous souhaitez systématiquement redécouper sans montrer ce message d'alerte, spécifiez la valeur 'TrimWithoutPromptLosslessJPEG=true' dans le fichier INI.
 Number (consecutively numbered)	Numéro
 Number of CPU cores used	Nombre de coeurs de processeur utilisés
@@ -239,7 +239,7 @@ Perspective Correction	Correction de la perspective
 Pixels	
 Placeholders:	Espaces réservés :
 Portrait	
-Press 'OK' to continue with registration or 'Cancel' to abort all registrations.	
+Press 'OK' to continue with registration or 'Cancel' to abort all registrations.	Appuyez sur 'OK' pour continuer quand même, ou sur 'Cancel' pour annuler toute modification.
 Press ESC to exit...	Appuyez sur Echap pour quitter...
 Press any key to search the subdirectories for image files.	Appuyez sur une touche pour rechercher des fichiers images dans les sous-répertoires.
 Preview	Prévisualiser
@@ -253,7 +253,7 @@ Radius	Rayon
 Random	Aléatoire
 Reading the JPEG file from disk failed	Echec de lecture du fichier JPEG
 Reason:	Raison:
-Registering or unregistering file extensions in this registry area requires administrator privileges and cannot be done in JPEGView.	
+Registering or unregistering file extensions in this registry area requires administrator privileges and cannot be done in JPEGView.	Intervenir dans cette zone demande des droits d'administrateur et ne peut pas être effectué depuis JPEGView.
 Registration applies to the current user only.	Ceci s'applique seulement à l'utilisateur en cours.
 Remove from	Supprimer
 Rename	Renommer
@@ -325,10 +325,10 @@ Slide from left	Faire glisser depuis la gauche
 Slide from right	Faire glisser depuis la droite
 Slide from top	Faire glisser depuis le haut
 Slideshow	Diaporama
-Slideshow with timeout of 'n' seconds (ESC to stop)	
+Slideshow with timeout of 'n' seconds (ESC to stop)	Diaporama avec délai de n secondes (Echap pour arrêter)
 Sort images by creation date, resp. modification date, resp. file name	Trier les images par date de création, date de modification, nom du fichier
 Source:	Source :
-Target folders that do not yet exist are created as needed.	
+Target folders that do not yet exist are created as needed.	Les dossiers cibles qui n'existent pas sont créés en cas de besoin.
 The directory '%s' does not contain any image files!	Le répertoire '%s' ne contient aucun fichier image !
 The file '%s' could not be copied!	
 The file '%s' could not be read!	Le fichier '%s' n'a pas pu être lu !
@@ -461,55 +461,35 @@ Fixed size...	Taille fixe...
 Zoom to Selection	Zoom sur la sélection
 
 // ::: INFO: Out-of-date Translations ::: (Not in use anymore, safe to delete) //
-//Rename:	Renommer :
-//No file or folder name was provided as command line parameter!	Il n'y aucun nom de fichier ou de dossier en paramètre de la ligne de commande !
-//To use JPEGView, associate JPG, JPEG and BMP files with JPEGView.	Pour utiliser JPEGView, associez les formats JPG, JPEG et BMP avec JPEGView.
-//PgUp or Left	Pg.Préc ou Gauche
-//PgDn or Right	Pg.Suiv ou Droite
-//Slide show with timeout of n seconds (ESC to stop)	Diaporama avec délai de n secondes (Echap pour arrêter)
-//up/down	haut/bas
+//Actual size of image	Taille réelle de l'image
 //Delete current file on disk permanently	Supprimer le fichier définitivement
 //Do you really want to permanently delete the file %filename%?	Confirmer la suppression définitive du fichier %filename% ?
-//Rotate the following file lossless by 90 deg?\n%filename%	Pivoter de 90° et enregistrer le fichier ?\n%filename%
+//No file or folder name was provided as command line parameter!	Il n'y aucun nom de fichier ou de dossier en paramètre de la ligne de commande !
+//PgDn or Right	Pg.Suiv ou Droite
+//PgUp or Left	Pg.Préc ou Gauche
+//Rename:	Renommer :
 //Rotate the following file lossless by 270 deg?\n%filename%	Pivoter de 270° et enregistrer le fichier ?\n%filename%
-//Target folders that are not yet existing are created as needed.	Les dossiers cibles qui n'existent pas sont créés en cas de besoin.
+//Rotate the following file lossless by 90 deg?\n%filename%	Pivoter de 90° et enregistrer le fichier ?\n%filename%
 //The file '%s' could not be %s.	Le fichier '%s' n'a pas pu être %s.
+//To use JPEGView, associate JPG, JPEG and BMP files with JPEGView.	Pour utiliser JPEGView, associez les formats JPG, JPEG et BMP avec JPEGView.
+//Window mode	Mode fenêtré
+//Windows 8 blocks JPEGView from changing the default program for these file endings.	Windows 8 empêche JPEGView de changer le programme par défaut pour ces extensions.
+//[new entry]	[nouvelle entrée]
 //copied	copié
 //renamed	renommé
-//Modification date :	Date de modification :
-//Window mode	Mode fenêtré
-//No user INI file exits yet. Create user INI file from INI file template?	Le fichier INI utilisateur n'existe pas encore. En créer un depuis le fichier INI modèle ?
-//Actual size of image	Taille réelle de l'image
-//Reason: Not enough memory available	Raison : mémoire insuffisante
-//Registering or unregistering file extensions in this registry area requires administration privileges and cannot be done in JPEGView.	Intervenir dans cette zone demande des droits d'administrateur et ne peut pas être effectué depuis JPEGView.
-//Press 'OK' to continue with registration or 'Cancel' to not modify any registrations.	Appuyez sur 'OK' pour continuer quand même, ou sur 'Cancel' pour annuler toute modification.
-//Windows 8 blocks JPEGView from changing the default program for these file endings.	Windows 8 empêche JPEGView de changer le programme par défaut pour ces extensions.
-//Alternatively, right click an image file of the given type in Windows Explorer and select 'Open with... > Choose default program'	Ou sinon, faites clic droit sur une image dans l'Explorateur windows et choisissez 'Ouvrir avec... > Choisir le programme par défaut'.
-//[new entry]	[nouvelle entrée]
-//Upcounting	Ordre croissant
-//Downcounting	Ordre décroissant
+//up/down	haut/bas
 
 // ::: INFO: Missing Translations ::: (Summary of all missing strings to assist translators - Auto-generated by script) //
 //! %s images
-//! Alternatively, right-click an image file of the given type in Windows Explorer and select 'Open with... > Choose default program'
 //! Altitude (m):
 //! Applications
-//! Ascending
 //! Date
-//! Descending
 //! Extension
 //! Images
-//! Modification date:
-//! No user INI file exists yet. Create user INI file from INI file template?
-//! Not enough memory available
 //! OK
 //! Pixels
 //! Portrait
-//! Press 'OK' to continue with registration or 'Cancel' to abort all registrations.
-//! Registering or unregistering file extensions in this registry area requires administrator privileges and cannot be done in JPEGView.
 //! Saturation
-//! Slideshow with timeout of 'n' seconds (ESC to stop)
-//! Target folders that do not yet exist are created as needed.
 //! The file '%s' could not be copied!
 //! The file '%s' could not be renamed!
 //! Windows 8 (and above) blocks JPEGView from changing the default program for these file extensions.
@@ -534,4 +514,4 @@ Zoom to Selection	Zoom sur la sélection
 //! 100 fps
 //! Zoom
 
-// ::: STATUS: Last Checked/Updated by Script ::: 2023-02-08T22:01:53.658610+00:00 //
+// ::: STATUS: Last Checked/Updated by Script ::: 2023-02-09T01:14:59.522490+00:00 //

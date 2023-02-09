@@ -57,7 +57,7 @@ Apply	Згода
 Apply Unsharp Mask	Наладка нявострай маскі
 Apply auto contrast correction using only visible section of image	Аўтакарэкцыя кантрасту толькі для бачнай часткі выявы
 Ascending	
-Auto contrast and color correction	
+Auto contrast and color correction	Аўтакарэкцыя колеру і кантрасту
 Auto crop corrected image (avoids black border)	Аўтаабрэзка скарэктаванай выявы (пазьбягаць чорных палёў)
 Auto crop rotated image (avoids black border)	Аўтаабрэзка павернутай выявы (пазьбягаць чорных палёў)
 Auto zoom mode	Аўтаматычная зьмена маштабу
@@ -93,7 +93,7 @@ Copying parameter DB to file '%s' failed. Reason: %s	Памылка пры ка�
 Correct converging lines (perspective correction)	Карэкцыя сыходжаньня (персьпектывы)
 Creation date/time	даты/часу стварэньня
 Crop image	Вылучыць частку выявы
-Ctrl + Left mouse	
+Ctrl + Left mouse	Ctrl + левая кнопка мышкі
 Current image	Аб выяве
 Cyan-Red	блакітны-чырвоны
 Darken Highlights	Сьвятло
@@ -177,7 +177,7 @@ Landscape picture enhancement mode	Рэжым паляпшэньня відар�
 Last modification date/time	даты/часу мадыфікацыі
 Left	
 Left mouse & drag	Клік і рух мышкі
-Licensed under the GNU general public license (GPL), see readme file for details	
+Licensed under the GNU general public license (GPL), see readme file for details	Ліцэнзія GNU General Public License (GPL), глядзі
 Lighten Shadows	Цень
 Local density correction	Лакальная карэкцыя шчыльнасьці
 Location:	
@@ -208,26 +208,26 @@ New size:
 New width:	
 Next image	Наступная выява
 No image loaded!	Выява не абраная!
-No user INI file exists yet. Create user INI file from INI file template?	
+No user INI file exists yet. Create user INI file from INI file template?	Карыстальніцкага INI-файла няма. Стварыць яго з шаблону INI-файла?
 None	
-Not enough memory available	
+Not enough memory available	недахоп памяці
 Note: Set the key 'TrimWithoutPromptLosslessJPEG=true' in the INI file to always trim without showing this message.	
 Number (consecutively numbered)	нумар
-Number of CPU cores used	
+Number of CPU cores used	Ужыта ядраў працэсара
 Number of JPEG files in folder: %d	Колькасць файлаў JPEG у тэчцы: %d
 Number with N digits	N-лічбавы нумар
 OK	
 Old name	Старая назва
 Open folder containing image and select in Windows Explorer	
 Open new image or slideshow file	Адкрыць новую выяву ці слайдшоў
-Order files by	
+Order files by	Парадкаваць файлы паводе
 Orientation:	
 Original file extension	першаснае пашырэньне
 Original file name (with extension)	 першасная назва з пашырэньнем
 Original file name (without extension)	першасная назва без пашырэньня
 Pan image	Рухаць павялічаную выяву
 Paper:	
-Parameter DB	
+Parameter DB	База зьвестак параметраў
 Parameter DB error	Памылка ў параметры базы зьвестак
 Parameter DB file '%s' could not be opened!	У базе зьвестак не адкрываецца файл параметраў '%s'!
 Parameter DB file '%s' is not valid (invalid header)!	У базе зьвестак няўжывальны файл параметраў '%s' (неадпаведны загаловак)!
@@ -248,7 +248,7 @@ Print
 Print Image	
 Printer driver	
 Printer:	
-Project home page	
+Project home page	Дамашняя старонка пректу
 Radius	Радыюс
 Random	выпадкова
 Reading the JPEG file from disk failed	
@@ -275,7 +275,7 @@ Rotate image 90 deg counter-clockwise	Павярнуць выяву на -90°
 Rotate image and fit to screen	Павярнуць выяву з дапасаваньнем да экрану
 Rotate image by user-defined angle	Паварот на вызначаны вугал
 Rotate the image by dragging with the mouse.	Клік і рух мышкі для павароту выявы
-SIMD mode used	
+SIMD mode used	Рэжым SIMD
 Saturation	Насычанасьць
 Save	
 Save (%s)/ delete (%s) image processing parameters in/from parameter DB	Захаваць у базе зьвестак (%s)/выдаліць з базы зьвестак (%s) параметры апрацоўкі выявы
@@ -325,10 +325,10 @@ Slide from left
 Slide from right	
 Slide from top	
 Slideshow	Слайдшоў
-Slideshow with timeout of 'n' seconds (ESC to stop)	
+Slideshow with timeout of 'n' seconds (ESC to stop)	Слайдшоў з затрымкай n сек. (n - кнопка ад 1 да 9). Esc - стоп
 Sort images by creation date, resp. modification date, resp. file name	Парадкаваць файлы паводле даты стварэньня (C)/даты мадыфікацыі (M)/назвы (N)/выпадкова (Z)
 Source:	
-Target folders that do not yet exist are created as needed.	
+Target folders that do not yet exist are created as needed.	Калі на дыску няма згаданых у спосабе перайменаваньня/шляху капіраваньня тэчак, праграма іх створыць
 The directory '%s' does not contain any image files!	У тэчцы '%s' няма файлаў выяваў!
 The file '%s' could not be copied!	
 The file '%s' could not be read!	Файл '%s' нечытэльны!
@@ -461,34 +461,21 @@ Fixed size...	вызначыць памер...
 Zoom to Selection	На ўвесь экран
 
 // ::: INFO: Out-of-date Translations ::: (Not in use anymore, safe to delete) //
-//Parameter DB:	База зьвестак параметраў:
-//Rename:	Перайменаваць:
-//No file or folder name was provided as command line parameter!	У камандынм радку няма назвы файла ці тэчкі!
-//To use JPEGView, associate JPG, JPEG and BMP files with JPEGView.	JPEGView трэба асацыяваць з файламі JPG, JPEG і BMP.
-//PgUp or Left	PgUp ці стрэлка ўлева
-//PgDn or Right	PgDn ці стрэлка ўправа
-//Slide show with timeout of n seconds (ESC to stop)	Слайдшоў з затрымкай n сек. (n - кнопка ад 1 да 9). Esc - стоп
-//up/down	стрэлка ўверх/уніз
-//Ctrl + L mouse	Ctrl + левая кнопка мышкі
+//Actual size of image	Сапраўдны памер выявы
 //Delete current file on disk permanently	Незваротна выдаліць файл
-//Auto contrast and color correction:	Аўтакарэкцыя колеру і кантрасту:
-//Local density correction:	Лакальная карэкцыя шчыльнасьці:
-//Order files by:	Парадкаваць файлы паводе:
 //Do you really want to permanently delete the file %filename%?	Незваротна выдаліць файл %filename%?
-//Rotate the following file lossless by 90 deg?\n%filename%	Павярнуць гэты файл, захаваўшы якасьць, на 90°?\n%filename%
+//No file or folder name was provided as command line parameter!	У камандынм радку няма назвы файла ці тэчкі!
+//PgDn or Right	PgDn ці стрэлка ўправа
+//PgUp or Left	PgUp ці стрэлка ўлева
+//Rename:	Перайменаваць:
 //Rotate the following file lossless by 270 deg?\n%filename%	Павярнуць гэты файл, захаваўшы якасьць, на -90°?\n%filename%
-//Target folders that are not yet existing are created as needed.	Калі на дыску няма згаданых у спосабе перайменаваньня/шляху капіраваньня тэчак, праграма іх створыць
+//Rotate the following file lossless by 90 deg?\n%filename%	Павярнуць гэты файл, захаваўшы якасьць, на 90°?\n%filename%
 //The file '%s' could not be %s.	Файл '%s' ня можа быць %s.
+//To use JPEGView, associate JPG, JPEG and BMP files with JPEGView.	JPEGView трэба асацыяваць з файламі JPG, JPEG і BMP.
+//Window mode	ваконны рэжым
 //copied	скапіраваны
 //renamed	перайменаваны
-//SIMD mode used:	Рэжым SIMD:
-//Number of CPU cores used:	Ужыта ядраў працэсара:
-//Licensed under the GNU general public license (GPL), see readme file for details:	Ліцэнзія GNU General Public License (GPL), глядзі
-//Project home page:	Дамашняя старонка пректу:
-//Actual size of image	Сапраўдны памер выявы
-//Window mode	ваконны рэжым
-//No user INI file exits yet. Create user INI file from INI file template?	Карыстальніцкага INI-файла няма. Стварыць яго з шаблону INI-файла?
-//Reason: Not enough memory available	Прычына - недахоп памяці
+//up/down	стрэлка ўверх/уніз
 
 // ::: INFO: Missing Translations ::: (Summary of all missing strings to assist translators - Auto-generated by script) //
 //! %s camera raw images (embedded JPEGs only)
@@ -503,7 +490,6 @@ Zoom to Selection	На ўвесь экран
 //! Application:
 //! Applications
 //! Ascending
-//! Auto contrast and color correction
 //! Blend
 //! Bottom
 //! Box
@@ -512,7 +498,6 @@ Zoom to Selection	На ўвесь экран
 //! Clipboard Image
 //! Combine keys with '+'
 //! Copy file path of the image to clipboard
-//! Ctrl + Left mouse
 //! Decoding this format requires the Microsoft Visual C++ Redistributable.
 //! Delete
 //! Delete image file
@@ -538,7 +523,6 @@ Zoom to Selection	На ўвесь экран
 //! Lanczos/Bicubic
 //! Landscape
 //! Left
-//! Licensed under the GNU general public license (GPL), see readme file for details
 //! Location:
 //! Lossless JPEG transformations
 //! M - G
@@ -550,17 +534,12 @@ Zoom to Selection	На ўвесь экран
 //! New height:
 //! New size:
 //! New width:
-//! No user INI file exists yet. Create user INI file from INI file template?
 //! None
-//! Not enough memory available
 //! Note: Set the key 'TrimWithoutPromptLosslessJPEG=true' in the INI file to always trim without showing this message.
-//! Number of CPU cores used
 //! OK
 //! Open folder containing image and select in Windows Explorer
-//! Order files by
 //! Orientation:
 //! Paper:
-//! Parameter DB
 //! Performing the lossless transformation failed!
 //! Performing the transformation failed
 //! Portrait
@@ -569,7 +548,6 @@ Zoom to Selection	На ўвесь экран
 //! Print Image
 //! Printer driver
 //! Printer:
-//! Project home page
 //! Reading the JPEG file from disk failed
 //! Registering or unregistering file extensions in this registry area requires administrator privileges and cannot be done in JPEGView.
 //! Registration applies to the current user only.
@@ -580,7 +558,6 @@ Zoom to Selection	На ўвесь экран
 //! Roll from left
 //! Roll from right
 //! Roll from top
-//! SIMD mode used
 //! Save
 //! Scaling mode:
 //! Scroll from bottom
@@ -599,9 +576,7 @@ Zoom to Selection	На ўвесь экран
 //! Slide from left
 //! Slide from right
 //! Slide from top
-//! Slideshow with timeout of 'n' seconds (ESC to stop)
 //! Source:
-//! Target folders that do not yet exist are created as needed.
 //! The file '%s' could not be copied!
 //! The file '%s' could not be renamed!
 //! The following file extensions cannot be unregistered because they have been registered in the 'local machine' registry area.
@@ -660,4 +635,4 @@ Zoom to Selection	На ўвесь экран
 //! Set as default viewer...
 //! User commands
 
-// ::: STATUS: Last Checked/Updated by Script ::: 2023-02-08T22:01:53.627986+00:00 //
+// ::: STATUS: Last Checked/Updated by Script ::: 2023-02-09T01:09:55.950128+00:00 //

@@ -48,7 +48,7 @@ Align image to horizontal or vertical line	圖像水平線或垂直線對齊
 Alignment:	
 All Files	所有檔案
 All existing user settings will be preserved.	
-Alternatively, right-click an image file of the given type in Windows Explorer and select 'Open with... > Choose default program'	
+Alternatively, right-click an image file of the given type in Windows Explorer and select 'Open with... > Choose default program'	或者，在 Windows 檔案總管中指定類型的圖像檔案上點選滑鼠右鍵並選擇「開啟方式... > 選擇預設程式」。
 Altitude (m):	
 Amount	數量
 Application:	應用程式:
@@ -56,8 +56,8 @@ Applications	應用程式
 Apply	套用
 Apply Unsharp Mask	套用「USM 銳化」
 Apply auto contrast correction using only visible section of image	僅可見部份圖像套用自動對比度校正
-Ascending	
-Auto contrast and color correction	
+Ascending	加計數
+Auto contrast and color correction	自動對比度和色彩校正
 Auto crop corrected image (avoids black border)	自動裁剪校正後的圖像 (避免黑邊框)
 Auto crop rotated image (avoids black border)	自動裁剪旋轉後的圖像 (避免黑邊框)
 Auto zoom mode	自動縮放模式
@@ -104,7 +104,7 @@ Decoding this format requires the Microsoft Visual C++ Redistributable.
 Deep Shadows	深陰影
 Delete	刪除
 Delete image file	刪除圖像檔案
-Descending	
+Descending	減計數
 Display image (EXIF) information	顯示圖像訊息 (EXIF)
 Do you really want to delete the current image file on disk?	您真的想要刪除磁碟上的目前圖像檔案嗎?
 Do you really want to save the following parameters as default to the INI file	您真的想要儲存以下參數作為預設的 INI 檔案?
@@ -120,7 +120,7 @@ Enable/disable landscape picture enhancement mode	啟用/停用景觀圖像增�
 Error	錯誤
 Error during rename/copy	重新命名/複製過程中發生錯誤
 Error saving file	儲存檔案錯誤
-Error while writing the following registry key	
+Error while writing the following registry key	寫入以下註冊表機碼時發生錯誤
 Error writing file to disk!	寫入檔案到磁碟錯誤!
 Example:	範例:
 Exposure bias (EV):	曝光補償 (EV):
@@ -177,7 +177,7 @@ Landscape picture enhancement mode	景觀圖像增強模式
 Last modification date/time	最後修改日期/時間
 Left	
 Left mouse & drag	滑鼠左鍵並拖動
-Licensed under the GNU general public license (GPL), see readme file for details	
+Licensed under the GNU general public license (GPL), see readme file for details	基於 GNU General Public License (GPL) 授權，請參閱自述檔案的詳細資訊
 Lighten Shadows	淺陰影
 Local density correction	局部密度校正
 Location:	
@@ -208,26 +208,26 @@ New size:	新的大小:
 New width:	新的寬度:
 Next image	下一個圖像
 No image loaded!	未載入圖像!
-No user INI file exists yet. Create user INI file from INI file template?	
+No user INI file exists yet. Create user INI file from INI file template?	尚無使用者 INI 檔案。是否從 INI 檔案範本來建立使用者 INI 檔案?
 None	無
-Not enough memory available	
+Not enough memory available	沒有足夠的可用記憶體
 Note: Set the key 'TrimWithoutPromptLosslessJPEG=true' in the INI file to always trim without showing this message.	注意: 在 INI 檔案中設定「TrimWithoutPromptLosslessJPEG=true」以便總是修剪而不顯示此消息。
 Number (consecutively numbered)	編號 (連續編號)
-Number of CPU cores used	
+Number of CPU cores used	所使用的 CPU 核心數量
 Number of JPEG files in folder: %d	該資料夾中的 JPEG 檔案數量: %d
 Number with N digits	用 N 位數編號
 OK	確定
 Old name	舊的名稱
 Open folder containing image and select in Windows Explorer	
 Open new image or slideshow file	開啟新的圖像或幻燈片檔案
-Order files by	
+Order files by	檔案排序依據
 Orientation:	
 Original file extension	原始檔案副檔名
 Original file name (with extension)	原始檔案名稱 (含副檔名)
 Original file name (without extension)	原始檔案名稱 (不含副檔名)
 Pan image	移動圖像
 Paper:	
-Parameter DB	
+Parameter DB	參數資料庫
 Parameter DB error	參數資料庫錯誤
 Parameter DB file '%s' could not be opened!	無法開啟參數資料庫檔案 '%s'!
 Parameter DB file '%s' is not valid (invalid header)!	參數資料庫檔 案'%s' 無效 (無效的頭部)!
@@ -239,7 +239,7 @@ Perspective Correction	透視校正
 Pixels	像素
 Placeholders:	替代符號:
 Portrait	
-Press 'OK' to continue with registration or 'Cancel' to abort all registrations.	
+Press 'OK' to continue with registration or 'Cancel' to abort all registrations.	按下「確定」繼續註冊或按下「取消」不修改任何註冊表內容。
 Press ESC to exit...	按下 ESC 結束...
 Press any key to search the subdirectories for image files.	按下任意按鍵來搜尋子資料夾中的圖像檔案。
 Preview	預覽
@@ -248,12 +248,12 @@ Print
 Print Image	
 Printer driver	
 Printer:	
-Project home page	
+Project home page	專案首頁
 Radius	半徑
 Random	隨機
 Reading the JPEG file from disk failed	從磁碟讀取 JPEG 檔案失敗
 Reason:	原因:
-Registering or unregistering file extensions in this registry area requires administrator privileges and cannot be done in JPEGView.	
+Registering or unregistering file extensions in this registry area requires administrator privileges and cannot be done in JPEGView.	在註冊表區域註冊或取消註冊檔案副檔名需要管理權限，無法在 JPEGView 中完成。
 Registration applies to the current user only.	註冊僅套用到目前使用者。
 Remove from	移除
 Rename	重新命名
@@ -275,7 +275,7 @@ Rotate image 90 deg counter-clockwise	逆時針旋轉 90 度
 Rotate image and fit to screen	旋轉圖像且適合螢幕
 Rotate image by user-defined angle	以使用者定義的角度旋轉圖像
 Rotate the image by dragging with the mouse.	使用滑鼠拖動來旋轉圖像。
-SIMD mode used	
+SIMD mode used	SIMD 模式下使用
 Saturation	飽和度
 Save	儲存
 Save (%s)/ delete (%s) image processing parameters in/from parameter DB	儲存 (%s)/ 刪除 (%s) 圖像處理參數在/從參數資料庫
@@ -325,10 +325,10 @@ Slide from left	從左滑動
 Slide from right	從右滑動
 Slide from top	從上滑動
 Slideshow	幻燈片
-Slideshow with timeout of 'n' seconds (ESC to stop)	
+Slideshow with timeout of 'n' seconds (ESC to stop)	n 秒逾時幻燈片放映 (ESC 停止)
 Sort images by creation date, resp. modification date, resp. file name	依據建立日期、修改日期、檔案名稱排序
 Source:	
-Target folders that do not yet exist are created as needed.	
+Target folders that do not yet exist are created as needed.	尚無目標資料夾存在需要建立。
 The directory '%s' does not contain any image files!	目錄 '%s' 不包含圖像檔案!
 The file '%s' could not be copied!	
 The file '%s' could not be read!	檔案 '%s' 無法被讀取!
@@ -431,7 +431,7 @@ Change size...	變更大小...
 Perspective correction...	透視校正...
 Mirror horizontally	水平翻轉
 Mirror vertically	垂直翻轉
-Rotate 180	
+Rotate 180	旋轉 180°
 Auto correction	自動校正
 Save parameters to DB	儲存參數到資料庫
 Clear parameters from DB	從資料庫清除參數
@@ -461,61 +461,37 @@ Fixed size...	固定大小...
 Zoom to Selection	縮放到選擇內容
 
 // ::: INFO: Out-of-date Translations ::: (Not in use anymore, safe to delete) //
-//Parameter DB:	參數資料庫:
-//Rename:	重新命名:
-//No file or folder name was provided as command line parameter!	沒有檔案或資料夾名稱被提供為指令行參數!
-//To use JPEGView, associate JPG, JPEG and BMP files with JPEGView.	要使用 JPEGView 請將 JPG, JPEG, BMP 檔案與 JPEGView 關聯。
-//PgUp or Left	PgUp 或 Left
-//PgDn or Right	PgDn 或 Right
-//Slide show with timeout of n seconds (ESC to stop)	n 秒逾時幻燈片放映 (ESC 停止)
-//up/down	向上/向下
-//Delete current file on disk permanently	從磁碟永久刪除目前檔案
-//Auto contrast and color correction:	自動對比度和色彩校正:
-//Local density correction:	局部密度校正:
-//Order files by:	檔案排序依據:
-//Do you really want to permanently delete the file %filename%?	您真的想要永久刪除檔案 %filename% 嗎?
-//Rotate the following file lossless by 90 deg?\n%filename%	您想要以下檔案無損旋轉 90 度嗎?\n%filename%
-//Rotate the following file lossless by 270 deg?\n%filename%	您想要以下檔案無損旋轉 270 度嗎?\n%filename%
-//Rotate 180      旋轉 180°	
-//Target folders that are not yet existing are created as needed.	尚無目標資料夾存在需要建立。
-//The file '%s' could not be %s.	檔案 '%s' 無法是 %s。
-//copied	已複製
-//renamed	已重新命名
-//SIMD mode used:	SIMD 模式下使用:
-//Number of CPU cores used:	所使用的 CPU 核心數量:
-//Licensed under the GNU general public license (GPL), see readme file for details:	基於 GNU General Public License (GPL) 授權，請參閱自述檔案的詳細資訊:
-//Project home page:	專案首頁:
 //Actual size of image	圖像實際大小
-//Window mode	視窗模式
-//No user INI file exits yet. Create user INI file from INI file template?	尚無使用者 INI 檔案。是否從 INI 檔案範本來建立使用者 INI 檔案?
-//Reason: Not enough memory available	原因: 沒有足夠的可用記憶體
-//Error while writing the following registry key:	寫入以下註冊表機碼時發生錯誤:
-//Registering or unregistering file extensions in this registry area requires administration privileges and cannot be done in JPEGView.	在註冊表區域註冊或取消註冊檔案副檔名需要管理權限，無法在 JPEGView 中完成。
-//Press 'OK' to continue with registration or 'Cancel' to not modify any registrations.	按下「確定」繼續註冊或按下「取消」不修改任何註冊表內容。
-//JPEGView can try to remove the restrictions automatically.	JPEGView 可以自動地嘗試移除限制。
+//Delete current file on disk permanently	從磁碟永久刪除目前檔案
+//Do you really want to permanently delete the file %filename%?	您真的想要永久刪除檔案 %filename% 嗎?
 //However this will fail if the current user has no administration privileges.	但是，如果目前使用者沒有管理員權限，本操作將失敗。
 //Insufficient rights to remove the restrictions. Continue?	權限不足以移除限制。是否繼續?
+//JPEGView can try to remove the restrictions automatically.	JPEGView 可以自動地嘗試移除限制。
+//No file or folder name was provided as command line parameter!	沒有檔案或資料夾名稱被提供為指令行參數!
+//PgDn or Right	PgDn 或 Right
+//PgUp or Left	PgUp 或 Left
+//Rename:	重新命名:
+//Rotate the following file lossless by 270 deg?\n%filename%	您想要以下檔案無損旋轉 270 度嗎?\n%filename%
+//Rotate the following file lossless by 90 deg?\n%filename%	您想要以下檔案無損旋轉 90 度嗎?\n%filename%
+//The file '%s' could not be %s.	檔案 '%s' 無法是 %s。
+//To use JPEGView, associate JPG, JPEG and BMP files with JPEGView.	要使用 JPEGView 請將 JPG, JPEG, BMP 檔案與 JPEGView 關聯。
+//Window mode	視窗模式
 //Windows 8 blocks JPEGView from changing the default program for these file endings.	Windows 8 封鎖 JPEGView 對這些檔案副檔名變更為預設程式。
-//Alternatively, right click an image file of the given type in Windows Explorer and select 'Open with... > Choose default program'	或者，在 Windows 檔案總管中指定類型的圖像檔案上點選滑鼠右鍵並選擇「開啟方式... > 選擇預設程式」。
 //[new entry]	[新增項目]
-//Upcounting	加計數
-//Downcounting	減計數
+//copied	已複製
+//renamed	已重新命名
+//up/down	向上/向下
 
 // ::: INFO: Missing Translations ::: (Summary of all missing strings to assist translators - Auto-generated by script) //
 //! About JPEGView (32-bit version)...
 //! About JPEGView (64-bit version)...
 //! Alignment:
 //! All existing user settings will be preserved.
-//! Alternatively, right-click an image file of the given type in Windows Explorer and select 'Open with... > Choose default program'
 //! Altitude (m):
-//! Ascending
-//! Auto contrast and color correction
 //! Bottom
 //! Clipboard Image
 //! Copy file path of the image to clipboard
 //! Decoding this format requires the Microsoft Visual C++ Redistributable.
-//! Descending
-//! Error while writing the following registry key
 //! Fill paper with crop
 //! Fit to paper
 //! High quality resampling
@@ -524,34 +500,22 @@ Zoom to Selection	縮放到選擇內容
 //! Lanczos/Bicubic
 //! Landscape
 //! Left
-//! Licensed under the GNU general public license (GPL), see readme file for details
 //! Location:
 //! Margins:
-//! No user INI file exists yet. Create user INI file from INI file template?
-//! Not enough memory available
-//! Number of CPU cores used
 //! Open folder containing image and select in Windows Explorer
-//! Order files by
 //! Orientation:
 //! Paper:
-//! Parameter DB
 //! Portrait
-//! Press 'OK' to continue with registration or 'Cancel' to abort all registrations.
 //! Print
 //! Print Image
 //! Printer driver
 //! Printer:
-//! Project home page
-//! Registering or unregistering file extensions in this registry area requires administrator privileges and cannot be done in JPEGView.
 //! Reset
 //! Right
-//! SIMD mode used
 //! Scaling mode:
 //! Select Printer...
 //! Size:
-//! Slideshow with timeout of 'n' seconds (ESC to stop)
 //! Source:
-//! Target folders that do not yet exist are created as needed.
 //! The file '%s' could not be copied!
 //! The file '%s' could not be renamed!
 //! Toggle window always on top mode
@@ -583,9 +547,8 @@ Zoom to Selection	縮放到選擇內容
 //! 30 fps
 //! 50 fps
 //! 100 fps
-//! Rotate 180
 //! Hide window title bar
 //! Set window always on top
 //! Update user settings...
 
-// ::: STATUS: Last Checked/Updated by Script ::: 2023-02-08T22:01:53.712179+00:00 //
+// ::: STATUS: Last Checked/Updated by Script ::: 2023-02-09T01:09:56.057406+00:00 //
