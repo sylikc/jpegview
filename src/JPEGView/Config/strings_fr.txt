@@ -7,8 +7,8 @@
 // ::: Translation Info ::: //
 //: ISO 639 code: fr
 //: Language: French
-//: Translator(s):
-//: Last Updated:
+//: Translator(s): Laurent Grenet <https://github.com/LaurentGrenet>
+//: Last Updated: 2023-02-09
 //: Additional Notes:
 ////////////////////
 
@@ -38,7 +38,7 @@
 // ::: Program Strings ::: (sorted alphabetically) //
 %d file(s) renamed, %d file(s) copied, %d folder(s) created	%d fichier(s) renommé(s), %d fichier(s) copié(s), %d dossier(s) créé(s)
 %s camera raw images (embedded JPEGs only)	%s images photo brutes (JPEGs embarqués)
-%s images	
+%s images	%s images
 %s images (processed by Window Imaging Component - WIC)	%s images (traitées avec Windows Imaging Component - WIC)
 'My Pictures' folder	Dossier 'Mes images'
 About JPEGView (32-bit version)...	A propos de JPEGView (version 32 bits)...
@@ -49,10 +49,10 @@ Alignment:	Alignement :
 All Files	Tous les fichiers
 All existing user settings will be preserved.	Tous les paramètres utilisateur existants seront préservés
 Alternatively, right-click an image file of the given type in Windows Explorer and select 'Open with... > Choose default program'	Ou sinon, faites clic droit sur une image dans l'Explorateur windows et choisissez 'Ouvrir avec... > Choisir le programme par défaut'.
-Altitude (m):	
+Altitude (m):	Altitude (m):
 Amount	Quantité
 Application:	Application :
-Applications	
+Applications	Applications
 Apply	Appliquer
 Apply Unsharp Mask	Appliquer le filtre de netteté
 Apply auto contrast correction using only visible section of image	Appliquer la correction automatique du contraste en utilisant uniquement la partie visible de l'image
@@ -97,7 +97,7 @@ Ctrl + Left mouse	Ctrl + Clic gauche
 Current image	Image courante
 Cyan-Red	Cyan-Rouge
 Darken Highlights	Assombrir les clairs
-Date	
+Date	Date
 Date placeholders use the modification date of the image.	Les éléments de date se basent sur la date de modification de l'image.
 Day / Month / Year (as numbers)	Jour / Mois / Année (en chiffres)
 Decoding this format requires the Microsoft Visual C++ Redistributable.	Décoder ce format requiert que Microsoft Visual C++ Redistributable soit installé.
@@ -125,7 +125,7 @@ Error writing file to disk!	Erreur d'écriture sur le disque !
 Example:	Exemple :
 Exposure bias (EV):	Correction d'exposition (EV) :
 Exposure time (s):	Temps de pose (s):
-Extension	
+Extension	Extension
 Extracted number from original file name	Numéro extrait du nom de fichier original
 F-Number:	Ouverture (F-number) :
 File name	Nom du fichier
@@ -155,7 +155,7 @@ Image files in folder	Images dans le dossier
 Image height:	Hauteur de l'image :
 Image width and height must be dividable by the JPEG block size (8 or 16) for lossless transformations!	Pour effectuer une transformation sans perte, la largeur et la hauteur de l'image doivent être divisibles par la taille de bloc JPEG (8 ou 16).
 Image width:	Largeur de l'image :
-Images	
+Images	Images
 Increase/decrease auto color cast correction amount	Augmenter/diminuer la correction automatique des couleurs
 Increase/decrease auto contrast correction amount	Augmenter/diminuer la correction automatique du contraste
 Increase/decrease brightness	Augmenter/diminuer le gamma
@@ -216,7 +216,7 @@ Number (consecutively numbered)	Numéro
 Number of CPU cores used	Nombre de coeurs de processeur utilisés
 Number of JPEG files in folder: %d	Nombre d'images JPEG dans le dossier : %d
 Number with N digits	Numéro à N chiffres
-OK	
+OK	OK
 Old name	Ancien nom
 Open folder containing image and select in Windows Explorer	Afficher le fichier dans l'explorateur
 Open new image or slideshow file	Ouvrir une image ou un diaporama
@@ -236,9 +236,9 @@ Pasting image from clipboard failed!	Le collage de l'image depuis le presse-papi
 Performing the lossless transformation failed!	Echec lors de la tranformation sans perte !
 Performing the transformation failed	Echec lors de la tentative de transformation
 Perspective Correction	Correction de la perspective
-Pixels	
+Pixels	Pixels
 Placeholders:	Espaces réservés :
-Portrait	
+Portrait	Portrait
 Press 'OK' to continue with registration or 'Cancel' to abort all registrations.	Appuyez sur 'OK' pour continuer quand même, ou sur 'Cancel' pour annuler toute modification.
 Press ESC to exit...	Appuyez sur Echap pour quitter...
 Press any key to search the subdirectories for image files.	Appuyez sur une touche pour rechercher des fichiers images dans les sous-répertoires.
@@ -276,7 +276,7 @@ Rotate image and fit to screen	Pivoter et ajuster l'image à la fenêtre
 Rotate image by user-defined angle	Pivoter selon un angle au choix
 Rotate the image by dragging with the mouse.	Cliquez et bougez la souris dans la direction où vous souhaitez faire pivoter l'image.
 SIMD mode used	Mode SIMD utilisé
-Saturation	
+Saturation	Saturation
 Save	Enregistrer
 Save (%s)/ delete (%s) image processing parameters in/from parameter DB	Sauvegarder (%s)/supprimer (%s) le traitement pour cette image dans la DB
 Save as (in screen size/resolution)	Enregistrer sous (à la taille / résolution de la fenêtre)
@@ -330,9 +330,9 @@ Sort images by creation date, resp. modification date, resp. file name	Trier les
 Source:	Source :
 Target folders that do not yet exist are created as needed.	Les dossiers cibles qui n'existent pas sont créés en cas de besoin.
 The directory '%s' does not contain any image files!	Le répertoire '%s' ne contient aucun fichier image !
-The file '%s' could not be copied!	
+The file '%s' could not be copied!	Le fichier '%s' n'a pas pu être copié !
 The file '%s' could not be read!	Le fichier '%s' n'a pas pu être lu !
-The file '%s' could not be renamed!	
+The file '%s' could not be renamed!	Le fichier '%s' n'a pas pu être renommé !
 The file '%s' does not contain a list of file names!	Le fichier '%s' ne contient pas de liste de noms de fichiers !
 The file is read-only!	Le fichier est en lecture seule !
 The following file extensions cannot be unregistered because they have been registered in the 'local machine' registry area.	Ces extensions ne peuvent pas être modifiées, car elles ont été définies dans la zone 'Local machine' de la base de registres.
@@ -359,7 +359,7 @@ Use the 'Default Programs' configuration dialog from the operating system instea
 Use the mouse to draw a line that shall be horizontal or vertical.	Utilisez la souris pour dessiner une ligne horizontale ou verticale.
 Warning	Alerte
 Width	Largeur
-Windows 8 (and above) blocks JPEGView from changing the default program for these file extensions.	
+Windows 8 (and above) blocks JPEGView from changing the default program for these file extensions.	Windows 8 (et suivant) empêche JPEGView de changer le programme par défaut pour ces extensions.
 Writing the resulting JPEG file to disk failed	Echec d'écriture du fichier JPEG sur le disque
 Y - B	J - B
 Year short form (2 digits)	Année forme courte (2 chiffres)
@@ -369,9 +369,9 @@ Zoom in (%s)/Zoom out (%s)	Zoom avant (%s)/Zoom arrière (%s)
 Zoom in/out image	Zoom avant/arrière sur l'image
 Zoom mode (drag mouse to zoom)	Mode zoom (déplacez la souris pour zoomer)
 and image processing (brightness/contrast/sharpen) parameters between images	et de visualisation (contraste / gamma / netteté) d'une image à l'autre
-cm	
-in	
-new menu entry	
+cm	cm
+in	in
+new menu entry	nouvelle entrée de menu
 no	non
 off	Inactif
 on	Actif
@@ -401,28 +401,28 @@ Modification date	Date de modification
 Creation date	Date de création
 Play folder as slideshow/movie	Diaporama / film
 Waiting time	Temps d'attente
-1 sec	
-2 sec	
-3 sec	
-4 sec	
-5 sec	
-7 sec	
-10 sec	
-20 sec	
+1 sec	1 sec
+2 sec	2 sec
+3 sec	3 sec
+4 sec	4 sec
+5 sec	5 sec
+7 sec	7 sec
+10 sec	10 sec
+20 sec	20 sec
 Transition Speed	Vitesse de transition
 Very fast	Très rapide
 Fast	Rapide
-Normal	
+Normal	Normal
 Slow	Lent
 Very slow	Très lent
 Movie	Film
-Playback speed	
-5 fps	
-10 fps	
-25 fps	
-30 fps	
-50 fps	
-100 fps	
+Playback speed	Vitesse d'animation
+5 fps	5 fps
+10 fps	10 fps
+25 fps	25 fps
+30 fps	30 fps
+50 fps	50 fps
+100 fps	100 fps
 Transform image	Transformations
 Rotate +90	Rotation +90
 Rotate -90	Rotation -90
@@ -435,7 +435,7 @@ Rotate 180	Rotation 180
 Auto correction	Corrections couleurs et contraste
 Save parameters to DB	Sauvegarder le traitement dans la DB
 Clear parameters from DB	Supprimer le traitement de la DB
-Zoom	
+Zoom	Zoom
 Span all screens	Couvrir tous les écrans
 Full screen mode	Plein écran
 Fit window to image	Ajuster la fenêtre à l'image
@@ -460,7 +460,7 @@ Free	Libre
 Fixed size...	Taille fixe...
 Zoom to Selection	Zoom sur la sélection
 
-// ::: INFO: Out-of-date Translations ::: (Not in use anymore, safe to delete) //
+// ::: INFO: Out-of-date Translations [17] ::: (Not in use anymore, safe to delete) //
 //Actual size of image	Taille réelle de l'image
 //Delete current file on disk permanently	Supprimer le fichier définitivement
 //Do you really want to permanently delete the file %filename%?	Confirmer la suppression définitive du fichier %filename% ?
@@ -479,39 +479,8 @@ Zoom to Selection	Zoom sur la sélection
 //renamed	renommé
 //up/down	haut/bas
 
-// ::: INFO: Missing Translations ::: (Summary of all missing strings to assist translators - Auto-generated by script) //
-//! %s images
-//! Altitude (m):
-//! Applications
-//! Date
-//! Extension
-//! Images
-//! OK
-//! Pixels
-//! Portrait
-//! Saturation
-//! The file '%s' could not be copied!
-//! The file '%s' could not be renamed!
-//! Windows 8 (and above) blocks JPEGView from changing the default program for these file extensions.
-//! cm
-//! in
-//! new menu entry
-//! 1 sec
-//! 2 sec
-//! 3 sec
-//! 4 sec
-//! 5 sec
-//! 7 sec
-//! 10 sec
-//! 20 sec
-//! Normal
-//! Playback speed
-//! 5 fps
-//! 10 fps
-//! 25 fps
-//! 30 fps
-//! 50 fps
-//! 100 fps
-//! Zoom
-
-// ::: STATUS: Last Checked/Updated by Script ::: 2023-02-09T01:14:59.522490+00:00 //
+// ::: STATUS: Last Checked/Updated by Script ::: 2023-02-09T18:39:48.033291+00:00 //
+//! Translation Progress: 100%
+//! * Total (Strings + Menu) = 421
+//! * Done = 421
+//! * Missing = 0 (0%)
