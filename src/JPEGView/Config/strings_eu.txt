@@ -1,415 +1,526 @@
-﻿// This file must be encoded with UTF-8 (e.g. with Windows Notepad)
-// Filename is 'strings_%languagecode%.txt' where %languagecode% is the ISO 639 language code e.g. 'fr' for French
-// Format is: English string<tab>Translated string<newline>
-Contrast	Zuribeltztasuna
-Brightness	Dizdira
-Sharpen	Garbitasuna
-Lighten Shadows	Itzal arinak
-Darken Highlights	Itzal ertainak
-Deep Shadows	Itzal sakonak
-Color Correction	Margo Zuzenketa
-Contrast Correction	Zuribeltztasun Zuzenketa
-Parameter DB:	BD Parametroak:
-Save to	Gorde hemen
-Remove from	Kendu hemendik
-Rename:	Berrizendatu:
-No file or folder name was provided as command line parameter!	Ez da agiriri edo agiritegi izenik eman komando lerro parametro bezala!
-To use JPEGView, associate JPG, JPEG and BMP files with JPEGView.	JPEGIkusgailua erabiltzeko, elkartu JPG, JPEG eta BMP agiriak JPEGIkusgailuarekin.
-Press ESC to exit...	Sakatu ESC irtetzeko...
-The file '%s' could not be read!	'%s' agiria ezin da irakurri!
-The file '%s' does not contain a list of file names!	'%s' agirak ez du agiri izenen zerradarik!
-The directory '%s' does not contain any image files!	'%s' zuzenbideak ez du irudi agiririk!
-Press any key to search the subdirectories for image files.	Sakatu edozein tekla azpizuzenbideetan irudi agiriak biltzeko.
-JPEGView Help	JPEGIkusgailu Laguntza
-Current image	Oraingo irudia
-Close help text display / Close JPEGView	Itxi laguntza idazki erakuspena / Itxi JPEGIkusgailua
-Show/hide this help text	Erakutsi/Ezkutatu laguntza idazki hau
-Show/hide picture information (EXIF data)	Erakutsi/Ezkutatu irudiaren argibideak (EXIF datuak)
-Show/hide file name	Erakutsi/Ezkutatu agiriaren izena
-Enable/disable high quality resampling	Gaitu/Ezgaitu ontasun handiko birlaginketa
-Enable/disable keeping of geometry related (zoom/pan/rotation)	Gaitu/Ezgaitu geometriari heustea (Zooma/Pan/Itzulikapena)
-and image processing (brightness/contrast/sharpen) parameters between images	eta irudi prozesatzea (dizdira/zuribeltztasuna/garbitasuna)
-Enable/disable automatic contrast correction (histogram equalization)	Gaitu/Ezgaitu berezgaitasunezko zuribeltztasun zuzenketa (histograma ekualizazioa)
-Apply auto contrast correction using only visible section of image	Ezarri berezgaitasunezko zuribeltztasun zuzenketa irudiaren atal ikusgarria bakarrik erabiliz
-Enable/disable automatic density correction (local brightness correction)	Gaitu/Ezgaitu berezgaitasunezko dentsitate zuzenketa (tokiko dizdira zuzenketa)
-Increase/decrease lightening of shadows (LDC must be on)	Gehitu/Gutxitu itzalen argipena (LDC eraginda egon behar da)
-Increase/decrease darkening of highlights (LDC must be on)	Gehitu/Gutxitu nabarmenen ilunpena (LDC eraginda egon behar da)
-Loop through files in current folder	Bigiztatu agirien artean oraingo agiritegian
-Loop through files in current directory and all subfolders	Bigiztatu agirien artean oraingo zuzenbidean eta azpizuzenbide guztietan
-Loop through files in current directory and all sibling folders (folders on same level)	Bigiztatu agirien artean oraingo zuzenbidean eta agiritegi kidetu guztietan (maila bereko agiritegiak)
-Maximize/restore to/from virtual desktop (only for multi-monitor systems)	Handitu/Leheneratu mahaigain birtualera/-tik (monitore-anitzeko sistematan bakarrik)
-Copy screen to clipboard/ Copy processed full size image to clipboard	Kopiatu ikusleihoa gakora/ Kopiatu prozesatutako irudia neurri osoan gakora
-Open new image or slideshow file	Ireki irudi berri bat edo aurkezpen agiria
-Save processed image to JPEG file (original size)	Gorde prozesatutako irudia JPEG agiri batean (jatorrizko neurria)
-Save (%s)/ delete (%s) image processing parameters in/from parameter DB	Gorde (%s)/ Ezabatu (%s) irudi prozesapen parametroak DB parametroeta-n/-tik
-Sort images by creation date, resp. modification date, resp. file name	Antolatu irudiak sortze egun, aldaketa egun, agiri izen arabera
-Goto previous image	Joan aurreko irudira
-Goto next image	Joan hurrengo irudira
-PgUp or Left	OrrGor edo Ezker
-PgDn or Right	OrrBeh edo Eskuin
-Goto first/last image of current folder (using sort order as defined)	Joan lehen/azken irudira oraingo agiritegian (zehaztutako antolakuntza hurrenkera jarraituz)
-Increase/decrease brightness	Gehitu/Gutxitu dizdira
-Increase/decrease contrast	Gehitu/Gutxitu zuribeltztasuna
-Increase/decrease sharpness	Gehitu/Gutxitu garbitasuna
-Increase/decrease auto color cast correction amount	Gehitu/Gutxitu berez margo zuzenketa kopurua 
-Increase/decrease auto contrast correction amount	Gehitu/Gutxitu berez zuribeltztasun zuzenketa kopurua
-Enable/disable landscape picture enhancement mode	Gaitu/Ezgaitu etzaneko argazki hobekuntza modua
-Slide show with timeout of n seconds (ESC to stop)	Argazki aurkezpen tartea n segundu (ESC gelditzeko)
-Set timeout to n/10 sec, respectively n/100 sec (Ctrl+Shift)	Ezarri tartea n/10 seg-tan, edo n/100 seg (Ktrl+Aldatu)
-Rotate image and fit to screen	Itzulikatu irudia eta finkatu ikusleihoan
-Fit image to screen	Finkatu irudia ikusleihoan
-Zoom 1:1 (100 %)	Zooma 1:1 (100 %)
-Zoom in (%s)/Zoom out (%s)	Hurbildu (%s)/Hurrundu (%s) 
-Zoom in/out image	Hurbildu/Hurrundu irudia
-Pan image	Pan irudia
-Crop image	Moztu irudia
-Next image	Hurrengo irudia
-Previous image	Aurreko irudia
-up/down	gora/behera
-Mouse wheel	Sagu gurpila
-Left mouse & drag	Saguaren ezker botoia eta arrastatu
-Ctrl + Left mouse	Ktrl + saguaren ezker botoia
-Forward mouse button	Saguaren aurrera botoia
-Back mouse button	Saguaren atzera botoia
-Delete current file on disk permanently	Ezabatu oraingo agiria diskatik betirako
-Rotate current file on disk lossless by 90 deg (W/H must be multiple of 16)	Itzulikatu oraingo agiria diskan 90° galeragabe (Zab./Gar. 16-ren biderki izan behar dute)
-Rotate current file on disk lossless by 270 deg (W/H must be multiple of 16)	Itzulikatu oraingo agiria diskan 270° galeragabe (Zab./Gar. 16-ren biderki izan behar dute)
-The file is read-only!	Agiria irakurtzeko-bakarrik da!
-Can't rename file	Ezin da agiria berrizendatu
-New name contains backslash character!	Izen berriak ezkerbarra du!
-Renaming file failed!	Hutsegitea agiria berrizendatzerakoan!
-Reason: 	Zergaitia:
-on	eraginda
-off	etenda
-Do you really want to save the following parameters as default to the INI file	Egitan nahi duzu hurrengo parametroak berezkotzat bezala gordetzea INI agirian
-Auto contrast and color correction: 	Zuribeltztasun eta margo berez zuzenketa:
-Local density correction: 	Tokiko dentsitate zuzenketa:
-Order files by: 	Antolatu agiriak honela:
-Creation date/time	Sortze eguna/ordua
-Last modification date/time	Azken aldaketa eguna/ordua
-File name	Agiri izena
-These values will override the values from the INI file located in the program folder of JPEGView!	Balio hauek ezeztatu egingo dituzte JPEGIkusgailu programaren agiritegiko INI agiriko balioak!
-Confirm save default parameters	Baieztatu berezko parametroak gordetzea
-Images	Irudiak
+﻿//! This file must be encoded with UTF-8 (e.g. with Windows Notepad)
+//! LICENSE: This localization file is part of JPEGView <https://github.com/sylikc/jpegview> and distributed under the same license.  See <https://github.com/sylikc/jpegview/blob/master/LICENSE.txt> for more info.
+
+//! Filename Convention: 'strings_%languagecode%.txt' where %languagecode% is the ISO 639 language code e.g. 'en' for English
+
+////////////////////
+// ::: Translation Info ::: //
+//: ISO 639 code: eu
+//: Language: Basque
+//: Translator(s):
+//: Last Updated:
+//: Additional Notes:
+////////////////////
+
+////////////////////
+// ::: Instructions / Help ::: //
+
+//? Line Format:    English string<tab>Translated string<newline>
+//? * Lines beginning with "//" (comments) are ignored
+//? * Blank lines are ignored
+//? * Lines without a <tab> are ignored
+//? * Lines with no text after the <tab> are ignored
+//? * Multiple tabs are permitted between English and Translated string, e.g. this is valid:    English string<tab><tab><tab>Translated string<newline>
+
+//? NOTE: %s %d have special meanings in the strings, so make sure they appear somewhere in the translated string
+
+//? For the strings below which are short and have no context:
+//?   "in" in context is shorthand for "inch"
+//?   "cm" in context is shorthand for "centimeter"
+//?   "C - R" in context is "Cyan Red" colors
+//?   "M - G" in context is "Magenta Green" colors
+//?   "Y - B" in context is "Yellow Blue" colors
+//?   "yes"/"no" in context is for showing EXIF flags
+//?   "on"/"off" in context is for showing a setting active or not
+////////////////////
+
+
+// ::: Program Strings ::: (sorted alphabetically) //
+%d file(s) renamed, %d file(s) copied, %d folder(s) created	%d agiri berrizendatuta, %d agiri kopiatuta, %d agiritegi sortuta
+%s camera raw images (embedded JPEGs only)	%s kamera raw irudiak (barneratutako JPEG-ak  bakarrik)
+%s images	%s irudiak
+%s images (processed by Window Imaging Component - WIC)	%s irudi (Window Imaging Component - WIC-rekin prozesatuta)
+'My Pictures' folder	'Nire Argazkiak' agiritegia
+About JPEGView (32-bit version)...	JPEGView-ri buruz (32 biteko bertsioa)...
+About JPEGView (64-bit version)...	JPEGView-ri buruz (64 biteko bertsioa)...
+Acquisition date:	Erosketa eguna:
+Align image to horizontal or vertical line	Lerrokatu irudia etzaneko edo zutikako lerro batera
+Alignment:	Lerrokapena:
 All Files	Agiri denak
-Parameter DB file '%s' could not be opened!	'%s' parametro DB agiria ezin da ireki!
-Parameter DB file '%s' is not valid (invalid header)!	'%s' parametro DB agiria ez da baliozkoa (idazburu baliogabea)!
-Cannot write to parameter DB file '%s'!	Ezinezkoa idaztea '%s' parametro DB agirira!
+All existing user settings will be preserved.	Dauden erabiltzaile ezarpen guztiak gordeko dira.
+Alternatively, right-click an image file of the given type in Windows Explorer and select 'Open with... > Choose default program'	Aukeran, eskuin klikatu emaniko motako irudi agiri bat Windows Esploratzailean eta hautatu 'Ireki honekin... > Hautatu berezko programa'
+Altitude (m):	
+Amount	Kopurua
+Application:	Aplikazioa:
+Applications	Aplikazioak
+Apply	Ezarri
+Apply Unsharp Mask	Ezarri Lausotze Mozorroa
+Apply auto contrast correction using only visible section of image	Ezarri berezgaitasunezko zuribeltztasun zuzenketa irudiaren atal ikusgarria bakarrik erabiliz
+Ascending	Gora-zenbaketa
+Auto contrast and color correction	Zuribeltztasun eta margo berez zuzenketa
+Auto crop corrected image (avoids black border)	Berez moztu zuzendutako irudia (hertz beltzak saihesten ditu)
+Auto crop rotated image (avoids black border)	Berez moztu itzulikatutako irudia (hertz beltzak saihesten ditu)
+Auto zoom mode	Berez zoom modua
+Back mouse button	Saguaren atzera botoia
+Batch rename/copy of files	Agirien multzokako berrizendatzea/kopiatzea
+Blend	Nahasketa
+Bottom	Behea
+Box	Kutxatila
+Brightness	Dizdira
+Browse...	Bilatu...
+C - R	Zu - Go
+Camera model:	Kamera eredua:
+Can't rename file	Ezin da agiria berrizendatu
+Cancel	Ezeztatu
 Cannot read from parameter DB file '%s'!	Ezinezkoa irakurtzea '%s' parametro DB agiritik!
 Cannot read parameter DB file '%s' because it is too large!	'%s'parametro DB agiria ezin da irakurri handiegia delako!
-The parameter DB file '%s' has been created by a newer version of JPEGView!	'%s' parametro DB agiria JPEGIKusgailu bertsio berriago batek sortua da!
-The old parameter DB file '%s' could not be renamed during conversion to new format!	'%s' parametro DB zaharra ezin izan da berrizendatu heuskarri berrira bihurtzerakoan!
-Parameter DB error	BD parametro akatsa
-Error saving file	Akatsa agiria gordetzerakoan
-Error writing file to disk!	Akatsa agiria diskan idazterakoan!
+Cannot write to parameter DB file '%s'!	Ezinezkoa idaztea '%s' parametro DB agirira!
+Click and drag the mouse vertically to correct image tilt.	Klikatu eta arrastatu sagua zutika irudi okertua zuzentzeko.
+Clipboard Image	
+Close	Itxi
+Close help text display / Close JPEGView	Itxi laguntza idazki erakuspena / Itxi JPEGIkusgailua
+Color Correction	Margo Zuzenketa
+Combine keys with '+'	Batu teklak '+'-rekin
 Confirm	Baieztatu
-Do you really want to permanently delete the file %filename%?	Egitan nahi duzu ezabatzea %filename% agiria betirako?
-Rotate the following file lossless by 90 deg?\n%filename%	Itzulikatu hurrengo agiria 90° galeragabe?\n%filename%
-Rotate the following file lossless by 270 deg?\n%filename%	Itzulikatu hurrengo agiria 270° galeragabe?\n%filename%
-Open image...	Ireki irudia...
-Save processed image...	Gorde prozesatutako irudia...
-Reload image	Birgertatu irudia
-Copy to clipboard	Kopiatu gakora
-Copy original size image	Kopiatu irudia jatorrizko neurrian
-Paste from clipboard	Itsatsi gakotik
-Batch rename/copy...	Multzoka berrizendatu/kopiatu...
-Show picture info (EXIF)	Erakutsi argazkiaren argibideak (EXIF)
-Show filename	Erakutsi agirizena
-Navigation	Nabigazioa
+Confirm save default parameters	Baieztatu berezko parametroak gordetzea
+Conflicting entries in Param DB	Sarrera gatazka Parametro DB-an
+Continue rename/copy?	Jarraitu berrizendatu/kopiaturekin?
+Contrast	Zuribeltztasuna
+Contrast Correction	Zuribeltztasun Zuzenketa
+Copy file path of the image to clipboard	
+Copy screen to clipboard/ Copy processed full size image to clipboard	Kopiatu ikusleihoa gakora/ Kopiatu prozesatutako irudia neurri osoan gakora
+Copying parameter DB to file '%s' failed. Reason: %s	Hutsegitea DB paremetroak '%s' agirira kopiatzerakoan. Zergaitia: %s
+Correct converging lines (perspective correction)	Zuzendu lerro baterakorrak (ikuspegi zuzenketa)
+Creation date/time	Sortze eguna/ordua
+Crop image	Moztu irudia
+Ctrl + Left mouse	Ktrl + saguaren ezker botoia
+Current image	Oraingo irudia
+Cyan-Red	Ziana-Gorria
+Darken Highlights	Itzal ertainak
+Date	Eguna
+Date placeholders use the modification date of the image.	Egun ordezte-ezarpenak irudiaren eguna erabiltzen du.
+Day / Month / Year (as numbers)	Eguna / Hilabetea / Urtea (zenbakietan)
+Decoding this format requires the Microsoft Visual C++ Redistributable.	
+Deep Shadows	Itzal sakonak
+Delete	Ezabatu
+Delete image file	Ezabatu irudi agiria
+Descending	Behera-zenbaketa
+Display image (EXIF) information	Erakutsi irudiaren (EXIF) argibideak
+Do you really want to delete the current image file on disk?	Egitan nahi duzu oraingo irudia diskatik ezabatzea?
+Do you really want to save the following parameters as default to the INI file	Egitan nahi duzu hurrengo parametroak berezkotzat bezala gordetzea INI agirian
+Drag at the left or right border for asymmetric correction.	Arrastatu ezker edo eskuin hertzera zuzenketa asimetrikorako
+EXIF date successfully set on %d images, failed on %d images	EXIF eguna ongi ezarri da %d iruditan, hutsegitea %d iruditan
+Edit	Editatu
+Enable/disable automatic contrast correction (histogram equalization)	Gaitu/Ezgaitu berezgaitasunezko zuribeltztasun zuzenketa (histograma ekualizazioa)
+Enable/disable automatic density correction (local brightness correction)	Gaitu/Ezgaitu berezgaitasunezko dentsitate zuzenketa (tokiko dizdira zuzenketa)
+Enable/disable full screen mode	Gaitu/Ezgaitu ikusleiho-osoko modua
+Enable/disable high quality resampling	Gaitu/Ezgaitu ontasun handiko birlaginketa
+Enable/disable keeping of geometry related (zoom/pan/rotation)	Gaitu/Ezgaitu geometriari heustea (Zooma/Pan/Itzulikapena)
+Enable/disable landscape picture enhancement mode	Gaitu/Ezgaitu etzaneko argazki hobekuntza modua
+Error	Akatsa
+Error during rename/copy	Akatsa berrizendatze/kopiatzerakoan
+Error saving file	Akatsa agiria gordetzerakoan
+Error while writing the following registry key	Akatsa hurrengo erregistro giltza idazterakoan
+Error writing file to disk!	Akatsa agiria diskan idazterakoan!
+Example:	Adibidea:
+Exposure bias (EV):	Bias jarpena (EV):
+Exposure time (s):	Jarpen denbora (s):
+Extension	Hedapena
+Extracted number from original file name	Jatorrizko agiritik ateratako zenbakia
+F-Number:	F-Zenbakia:
+File name	Agiri izena
+File size	Agiri neurria
+File type	Agiri mota
+Fill paper with crop	Bete papera mozketarekin
+Fill with crop	Bete mozkinekin
+Fill with crop (no zoom)	Bete mozkinekin (zoom gabe)
+Filter:	Iragazkia:
+Fit image to screen	Finkatu irudia ikusleihoan
+Fit to paper	Finkatu paperera
+Fit to screen	Finkatu ikusleihora
+Fit to screen (no zoom)	Finkatu ikusleihora (zoom gabe)
+Flash fired:	Flash eragiketa:
+Focal length (mm):	Foku luzera (mm):
+Forward mouse button	Saguaren aurrera botoia
+Goto first/last image of current folder (using sort order as defined)	Joan lehen/azken irudira oraingo agiritegian (zehaztutako antolakuntza hurrenkera jarraituz)
+Goto next image	Joan hurrengo irudira
+Goto previous image	Joan aurreko irudira
+Height	Garaiera
+Hide histogram	Ezkutatu histograma
+High quality resampling	
+Hour / Minute (as numbers)	
+ISO Speed:	ISO Abiadura:
+Image Pixels	Irudi Pixel
+Image files in folder	Irudi agiriak agiritegian
+Image height:	Irudiaren garaiera:
+Image width and height must be dividable by the JPEG block size (8 or 16) for lossless transformations!	Irudiaren zabalera eta garaiera JPEG bloke neurriagaitik (8 edo 16) zatikagarria izan behar da galeragabeko eraldaketetarako!
+Image width:	Irudiaren zabalera:
+Images	Irudiak
+Increase/decrease auto color cast correction amount	Gehitu/Gutxitu berez margo zuzenketa kopurua
+Increase/decrease auto contrast correction amount	Gehitu/Gutxitu berez zuribeltztasun zuzenketa kopurua
+Increase/decrease brightness	Gehitu/Gutxitu dizdira
+Increase/decrease contrast	Gehitu/Gutxitu zuribeltztasuna
+Increase/decrease darkening of highlights (LDC must be on)	Gehitu/Gutxitu nabarmenen ilunpena (LDC eraginda egon behar da)
+Increase/decrease lightening of shadows (LDC must be on)	Gehitu/Gutxitu itzalen argipena (LDC eraginda egon behar da)
+Increase/decrease sharpness	Gehitu/Gutxitu garbitasuna
+Insufficient rights to change the privilege (DACL) on the registry entry. Continue?	
+JPEGView Help	JPEGIkusgailu Laguntza
+JPEGView is a lean, fast and highly configurable viewer/editor for JPEG, BMP, PNG, WEBP, TGA, GIF and TIFF images with a minimal GUI.	JPEGView ikusgailu/editatzaile gihartsu, azkar eta oso itxuragarri bat da JPEG, BMP, PNG, WEBP, TGA, GIF eta TIFF irudientzat gutxienezko EIG batekin.
+JPEGView is registered as default viewer for the selected file formats.	JPEGIkusgailua berezko ikusgailu bezala erregistratu da hautaturiko agiri heuskarrientzat.
+Keep aspect ratio on crop	Heutsi ikuspegi mailari mozterakoan
+Keep parameters	Heutsi parametroei
+Keep processing parameters between images	Heutsi prozesapen parametroei irudi artean
+Known keys:	Tekla ezagunak:
+Lanczos/Bicubic	Lanczos/Bikubikoa
+Landscape	Landargazkia
+Landscape picture enhancement mode	Landargazki irudi hobekuntza modua
+Last modification date/time	Azken aldaketa eguna/ordua
+Left	Ezkerra
+Left mouse & drag	Saguaren ezker botoia eta arrastatu
+Licensed under the GNU general public license (GPL), see readme file for details	GNU Baimen Publiko Orokorraz (GPL) baimenduta, ikusi 'irakurri' agiria xehetasun gehiagorako
+Lighten Shadows	Itzal arinak
+Local density correction	Tokiko dentsitate zuzenketa
+Location:	
 Loop folder	Bigiztatu agiritegia
 Loop recursively	Bigiztatu etengabe
 Loop siblings	Bigiztatu kidetuak
+Loop through files in current directory and all sibling folders (folders on same level)	Bigiztatu agirien artean oraingo zuzenbidean eta agiritegi kidetu guztietan (maila bereko agiritegiak)
+Loop through files in current directory and all subfolders	Bigiztatu agirien artean oraingo zuzenbidean eta azpizuzenbide guztietan
+Loop through files in current folder	Bigiztatu agirien artean oraingo agiritegian
+Lossless JPEG transformations	Galeragabeko JPEG eraldaketak
+M - G	Mo - Og
+Magenta-Green	Magenta-Orlegia
+Manage 'Open image with' menu...	Kudeatu 'Ireki irudia honekin' menua...
+Margins:	Bazterrak:
+Mark image for toggling. Use %s to toggle between marked and current image	Markatu irudia aldaketarako. Erabili %s markatutako eta oraingo irudiaren artean aldatzeko
+Maximize/restore to/from virtual desktop (only for multi-monitor systems)	Handitu/Leheneratu mahaigain birtualera/-tik (monitore-anitzeko sistematan bakarrik)
+Menu entries:	Menuko sarrerak:
+Modification date:	Aldaketa eguna:
+Modifier keys:	Aldatzaile teklak:
+Month / Short form (text)	Hilabetea / Laburtuta (idazkia)
+Mouse wheel	Sagu gurpila
+Navigation	Nabigazioa
+New	Berria
+New height:	Garaiera berria:
+New name (>> : file gets copied)	Izen berria (>> : agiria kopiatzen da)
+New name contains backslash character!	Izen berriak ezkerbarra du!
+New size:	Neurri berria:
+New width:	Zabalera berria:
+Next image	Hurrengo irudia
+No image loaded!	Ez da irudirik gertatu!
+No user INI file exists yet. Create user INI file from INI file template?	Oraindik ez dago erabiltzaile INI agiririk. Sortu erabiltzaile INI agiria INI agiri eredutik?
+None	Ezer ez
+Not enough memory available	Ez dago nahikoa oroimen eskuragarri
+Note: Set the key 'TrimWithoutPromptLosslessJPEG=true' in the INI file to always trim without showing this message.	Oharra: Ezarri 'TrimWithoutPromptLosslessJPEG=true' INI agirian betik mozteko mezu hau erakutsi gabe.
+Number (consecutively numbered)	Zenbakia (jarraian zenbakituta)
+Number of CPU cores used	Erabilitako CPU nukleo zenbatekoa
+Number of JPEG files in folder: %d	Agiritegiko JPEG agiri zenbatekoa: %d
+Number with N digits	N digitodun zenbakia
+OK	Ongi
+Old name	Izen zaharra
+Open folder containing image and select in Windows Explorer	
+Open new image or slideshow file	Ireki irudi berri bat edo aurkezpen agiria
+Order files by	Antolatu agiriak honela
+Orientation:	Norabidea:
+Original file extension	Jatorrizko agiriaren hedapena
+Original file name (with extension)	Jatorrizko agiri izena (hedapenarekin)
+Original file name (without extension)	Jatorrizko agiri izena (hedapengabe)
+Pan image	Pan irudia
+Paper:	Papera:
+Parameter DB	BD Parametroak
+Parameter DB error	BD parametro akatsa
+Parameter DB file '%s' could not be opened!	'%s' parametro DB agiria ezin da ireki!
+Parameter DB file '%s' is not valid (invalid header)!	'%s' parametro DB agiria ez da baliozkoa (idazburu baliogabea)!
+Paste from clipboard	Itsatsi gakotik
+Pasting image from clipboard failed!	Hutsegitea irudia gakotik itsasterakoan!
+Performing the lossless transformation failed!	Hutsegitea galeragabeko eraldaketa egiterakoan!
+Performing the transformation failed	Hutsegitea eraldaketa egiterakoan
+Perspective Correction	Ikuspegi Zuzenketa
+Pixels	Pixel
+Placeholders:	Ordezte-ezarpenak:
+Portrait	Argazkia
+Press 'OK' to continue with registration or 'Cancel' to abort all registrations.	Sakatu 'Ongi' erregistratzearekin jarraitzeko edo 'Ezeztatu' erregistrorik ez aldatzeko.
+Press ESC to exit...	Sakatu ESC irtetzeko...
+Press any key to search the subdirectories for image files.	Sakatu edozein tekla azpizuzenbideetan irudi agiriak biltzeko.
+Preview	Aurreikuspena
+Previous image	Aurreko irudia
+Print	Irarkitu
+Print Image	Irarkitu Irudia
+Printer driver	Irarketa gidagailua
+Printer:	Irarkailua:
+Project home page	Egitasmoaren webgunea
+Radius	Zilerdia
+Random	Zorizkoa
+Reading the JPEG file from disk failed	Hutsegitea JPEG agiria diskatik irakurtzerakoan
+Reason:	Zergaitia:
+Registering or unregistering file extensions in this registry area requires administrator privileges and cannot be done in JPEGView.	Eremu honetan agiri hedapenak erregistratzea eta deserregistratzeak administratzaile eskubideak behar ditu eta ezin da JPEGIkusgailuan egin.
+Registration applies to the current user only.	Erregistroa oraingo erabiltzaileari bakarrik ezartzen zaio
+Remove from	Kendu hemendik
+Rename	Berrizendatu
+Rename/copy images to:	Berrizendatu/Kopiatu irudiak hona:
+Renaming file failed!	Hutsegitea agiria berrizendatzerakoan!
+Reset	Berrezarri
+Resize Image	Birneurriratu Irudia
+Right	Eskuina
+Right mouse button: Context menu	Saguaren eskuin botoia: Hitzinguru menua
+Roll from bottom	Gurpildu behetik
+Roll from left	Gurpildu ezkerretik
+Roll from right	Gurpildu eskuinetik
+Roll from top	Gurpildu goitik
+Rotate Image	Itzulikatu irudia
+Rotate current file on disk lossless by 270 deg (W/H must be multiple of 16)	Itzulikatu oraingo agiria diskan 270° galeragabe (Zab./Gar. 16-ren biderki izan behar dute)
+Rotate current file on disk lossless by 90 deg (W/H must be multiple of 16)	Itzulikatu oraingo agiria diskan 90° galeragabe (Zab./Gar. 16-ren biderki izan behar dute)
+Rotate image 90 deg clockwise	Itzulikatu irudia 90 gradu ordulari orrantzen norabidean
+Rotate image 90 deg counter-clockwise	Itzulikatu irudia 90 gradu ordulari orratzen-aurkako norabidean
+Rotate image and fit to screen	Itzulikatu irudia eta finkatu ikusleihoan
+Rotate image by user-defined angle	Itzulikatu irudia erabiltzaileak-zehaztutako angeluan
+Rotate the image by dragging with the mouse.	Itzulikatu irudia saguarekin arrastatuz.
+SIMD mode used	Erabilitako SIMD modua
+Saturation	Margoasetasuna
+Save	Gorde
+Save (%s)/ delete (%s) image processing parameters in/from parameter DB	Gorde (%s)/ Ezabatu (%s) irudi prozesapen parametroak DB parametroeta-n/-tik
+Save as (in screen size/resolution)	Gorde honela (ikusleiho neurri/bereizmenarekin)
+Save as template	Gorde eredu bezala
+Save cropped image	Gorde moztutako irudia
+Save processed image to JPEG file (original size)	Gorde prozesatutako irudia JPEG agiri batean (jatorrizko neurria)
+Save processed image to JPEG file (screen size)	Gorde prozesatutako irudia JPEG agirian (ikusleiho neurria)
+Save to	Gorde hemen
+Scaling mode:	Neurriketa modua
+Screen Pixels	Ikusleiho Pixel
+Scroll from bottom	Irristatu behetik
+Scroll from left	Irristatu ezkerretik
+Scroll from right	Irristatu eskuinetik
+Scroll from top	Irristatu goitik
+Select Printer...	Hautatu Irarkailua...
+Select all	Hautatu denak
+Select application	Hautatu aplikazioak
+Select file to display in 'File Open' dialog	Hautatu 'Ireki Agiria' elkarrizketan erakusteko agiria
+Select none	Ez hautatu ezer
+Select parameter DB to restore	Hautatu leheneratzeko DB parametroak
+Set Fixed Crop Size	Ezarri Zuzendutako Mozketa Neurria
+Set JPEGView as default image viewer	Ezarri JPEGIkusgailua berezko irudi ikusgailu bezala
+Set timeout to n/10 sec, respectively n/100 sec (Ctrl+Shift)	Ezarri tartea n/10 seg-tan, edo n/100 seg (Ktrl+Aldatu)
+Shall existing entries be preserved (Yes) or be overriden by the imported entries (No)?	Dauden sarrerei heutsi behar zaie (Bai) edo ezeztatu inportatutako sarrerekin (Ez)?
+Sharpen	Garbitasuna
+Sharpen low	Itzal apala
+Sharpen medium	Itzal ertaina
+Shortcut Help	Lastertekla Laguntza
+Shortcut key:	Lastertekla:
+Show filename	Erakutsi agirizena
+Show first image in folder	Erakutsi agiritegiko lehenengo irudia
+Show grid lines	Erakutsi saretxo lerroak
+Show histogram	Erakutsi histograma
+Show last image in folder	Erakutsi agiritegiko azken irudia
+Show navigation panel	Erakutsi nabigazio panela
+Show next image	Erakutsi hurrengo irudia
+Show picture info (EXIF)	Erakutsi argazkiaren argibideak (EXIF)
+Show previous image	Erakutsi aurreko irudia
+Show/hide file name	Erakutsi/Ezkutatu agiriaren izena
+Show/hide navigation panel	Erakutsi/Ezkutatu nabigazio panela
+Show/hide picture information (EXIF data)	Erakutsi/Ezkutatu irudiaren argibideak (EXIF datuak)
+Show/hide this help text	Erakutsi/Ezkutatu laguntza idazki hau
+Size:	Neurria:
+Slide from bottom	Aurkeztu behetik
+Slide from left	Aurkeztu ezkerretik
+Slide from right	Aurkeztu eskuinetik
+Slide from top	Aurkeztu goitik
+Slideshow	Aurkezpena
+Slideshow with timeout of 'n' seconds (ESC to stop)	Argazki aurkezpen tartea 'n' segundu (ESC gelditzeko)
+Sort images by creation date, resp. modification date, resp. file name	Antolatu irudiak sortze egun, aldaketa egun, agiri izen arabera
+Source:	Iturburua
+Target folders that do not yet exist are created as needed.	Oraindik ez dauden xede agiritegiak sortu egingo dira beharrezkoa bada.
+The directory '%s' does not contain any image files!	'%s' zuzenbideak ez du irudi agiririk!
+The file '%s' could not be copied!	
+The file '%s' could not be read!	'%s' agiria ezin da irakurri!
+The file '%s' could not be renamed!	
+The file '%s' does not contain a list of file names!	'%s' agirak ez du agiri izenen zerradarik!
+The file is read-only!	Agiria irakurtzeko-bakarrik da!
+The following file extensions cannot be unregistered because they have been registered in the 'local machine' registry area.	Hurrengo agiri hedapenak ezin dira deserregistratu 'tokiko makina' erregistro eremuan erregistraturik daudelako.
+The following image extensions are protected by the operating system.	Hurrengo irudi hedapenak sistema eragileak babesturik daude.
+The imported param DB contains entries already present in active param DB.	Inportatutako parametro DB-ak jadanik parametro DB-an badauden sarrerak ditu.
+The new size is too large - width or height is larger than 65535 or total number of pixels is too large!	Neurri berria handiegia da - zabalera edo garaiera 65535 baino handiagoa da edo pixel zenbatekoa guztira handiegia da!
+The old parameter DB file '%s' could not be renamed during conversion to new format!	'%s' parametro DB zaharra ezin izan da berrizendatu heuskarri berrira bihurtzerakoan!
+The operation failed because not enough memory is available!	Eragiketak huts egin du ez dagoelako nahikoa oroimen eskuragarri!
+The parameter DB file '%s' has been created by a newer version of JPEGView!	'%s' parametro DB agiria JPEGIKusgailu bertsio berriago batek sortua da!
+The transformation can be applied if the image is trimmed to the next matching size but this will remove some border pixels.	Eraldaketa ezarri daiteke irudia bat datorren hurrengo neurrira mozten bada baina honek hertzeko zenbait pixel kenduko ditu.
+These values will override the values from the INI file located in the program folder of JPEGView!	Balio hauek ezeztatu egingo dituzte JPEGIkusgailu programaren agiritegiko INI agiriko balioak!
+Threshold	Muga
+Title:	Izenburua:
+Toggle between screens (only for multi-monitor systems)	Aldatu ikusleiho artean (monitore-anitzeko sistematan bakarrik)
+Toggle window always on top mode	
+Toggle window title bar hidden mode	
+Top	Goia
+Transition Effect	Aldaketa Eragina
+Trim the image and apply transformation? Trimming cannot be undone!	Moztu irudia eta ezarri eraldaketa? Mozketa ezin da desegin!
+Unregistering not possible	Deserregistratzea ezinezkoa da
+Unsharp mask...	Lausotze Mozorroa
+Update user settings with new settings from settings template file?	Eguneratu erabiltzaile ezarpenak ezarpen berriekin ezarpen eredu agiritik?
+Use the 'Default Programs' configuration dialog from the operating system instead.	Erabili 'Berezko Programak' itxurapen elkarrizketa sistema eragiletik ordez.
+Use the mouse to draw a line that shall be horizontal or vertical.	Erabili sagua etzana edo zutia izango den lerro bat marrazteko.
+Warning	Kontuz
+Width	Zabalera
+Windows 8 (and above) blocks JPEGView from changing the default program for these file extensions.	
+Writing the resulting JPEG file to disk failed	Hutsegitea emaitz JPEG agiria diskara idazterakoan
+Y - B	Or - Ur
+Year short form (2 digits)	Urtea laburtuta (2 digito)
+Yellow-Blue	Oria-Urdina
+Zoom 1:1 (100 %)	Zooma 1:1 (100 %)
+Zoom in (%s)/Zoom out (%s)	Hurbildu (%s)/Hurrundu (%s)
+Zoom in/out image	Hurbildu/Hurrundu irudia
+Zoom mode (drag mouse to zoom)	Zoom modua (arrastatu sagua zooma egiteko)
+and image processing (brightness/contrast/sharpen) parameters between images	eta irudi prozesatzea (dizdira/zuribeltztasuna/garbitasuna)
+cm	me
+in	
+new menu entry	
+no	ez
+off	etenda
+on	eraginda
+yes	bai
+
+// ::: Popup Menu Strings ::: (unsorted to preserve context) //
+Stop slide show/movie	Gelditu aurkezpena/filma
+Open image...	Ireki irudia...
+Open image with	Ireki irudia honekin
+Save processed image...	Gorde prozesatutako irudia...
+Reload image	Birgertatu irudia
+Open containing folder in Explorer	
+Print image...	Irarkitu irudia...
+Batch rename/copy...	Multzoka berrizendatu/kopiatu...
+Set modification date	Ezarri aldaketa eguna
+to current date	Gaurko egunean
+to EXIF date	EXIF egunean
+to EXIF date (all files in folder)	EXIF egunera (agiritegiko agiri denak)
+Set as desktop wallpaper	Ezarri mahaigaineko hormapaper bezala
+Use original image	Erabili jatorrizko irudia
+Use processed image as displayed	Erabili prozesatutako irudia erakusten den bezala
+Copy to clipboard	Kopiatu gakora
+Copy original size image	Kopiatu irudia jatorrizko neurrian
+Copy file path	
 Display order	Erakuspen hurrenkera
 Modification date	Aldaketa eguna
 Creation date	Sortze eguna
 Play folder as slideshow/movie	Irakurri agiritegia aurkezpen/filma bezala
-Slideshow	Aurkezpena
-Movie	Filma
 Waiting time	Itxaronaldia
-Stop slide show/movie	Gelditu aurkezpena/filma
-Rotate +90	Itzulikatu +90
-Rotate -90	Itzulikatu -90
-Rotate 180	Itzulikatu 180
-Auto correction	Berez zuzenketa
-Local density correction	Tokiko dentsitate zuzenketa
-Keep parameters	Heutsi parametroei
-Set current parameters as default values...	Ezarri oraingo parametroak berezko balio bezala...
-Save parameters to DB	Gorde parametroak DB-an
-Clear parameters from DB	Garbitu DB-ko parametroak
-Zoom	Zooma
-Fit to screen	Finkatu ikusleihora
-Fill with crop	Bete mozkinekin
-Span all screens	Hedatu ikusleiho denak
-Auto zoom mode	Berez zoom modua
-Fit to screen (no zoom)	Finkatu ikusleihora (zoom gabe)
-Fill with crop (no zoom)	Bete mozkinekin (zoom gabe)
-Exit	Irten
-Cyan-Red	Ziana-Gorria
-Magenta-Green	Magenta-Orlegia
-Yellow-Blue	Oria-Urdina
-C - R	Zu - Go
-M - G	Mo - Og
-Y - B	Or - Ur
-Batch rename/copy of files	Agirien multzokako berrizendatzea/kopiatzea
-Image files in folder	Irudi agiriak agiritegian
-Placeholders:	Ordezte-ezarpenak:
-Number (consecutively numbered)	Zenbakia (jarraian zenbakituta)
-Number with N digits	N digitodun zenbakia
-Extracted number from original file name	Jatorrizko agiritik ateratako zenbakia
-Original file name (with extension)	Jatorrizko agiri izena (hedapenarekin)
-Original file name (without extension)	Jatorrizko agiri izena (hedapengabe)
-Original file extension	Jatorrizko agiriaren hedapena
-'My Pictures' folder	'Nire Argazkiak' agiritegia
-Day / Month / Year (as numbers)	Eguna / Hilabetea / Urtea (zenbakietan)
-Year short form (2 digits)	Urtea laburtuta (2 digito)
-Month / Short form (text)	Hilabetea / Laburtuta (idazkia)
-Target folders that are not yet existing are created as needed.	Oraindik ez dauden xede agiritegiak sortu egingo dira beharrezkoa bada.
-Date placeholders use the modification date of the image.	Egun ordezte-ezarpenak irudiaren eguna erabiltzen du.
-Rename/copy images to:	Berrizendatu/Kopiatu irudiak hona:
-Rename	Berrizendatu
-Preview	Aurreikuspena
-Save as template	Gorde eredu bezala
-Close	Itxi
-Old name	Izen zaharra
-Date	Eguna
-New name (>> : file gets copied)	Izen berria (>> : agiria kopiatzen da)
-Select all	Hautatu denak
-Select none	Ez hautatu ezer
-The file '%s' could not be %s.	'%s' agiria ezin da %s izan.
-copied	kopiatuta
-renamed	Berrizendatuta
-Continue rename/copy?	Jarraitu berrizendatu/kopiaturekin?
-Error during rename/copy	Akatsa berrizendatze/kopiatzerakoan
-%d file(s) renamed, %d file(s) copied, %d folder(s) created	%d agiri berrizendatuta, %d agiri kopiatuta, %d agiritegi sortuta
-Crop Selection	Moztu Hautapena
-Copy Selection to Clipboard	Kopiatu Hautapena Gakora
-Zoom to Selection	Zooma Hautapenean
-Pasting image from clipboard failed!	Hutsegitea irudia gakotik itsasterakoan!
-Image width:	Irudiaren zabalera:
-Image height:	Irudiaren garaiera:
-Acquisition date:	Erosketa eguna:
-Camera model:	Kamera eredua:
-Exposure time (s):	Jarpen denbora (s):
-Exposure bias (EV):	Bias jarpena (EV):
-Flash fired:	Flash eragiketa:
-Focal length (mm):	Foku luzera (mm):
-F-Number:	F-Zenbakia:
-ISO Speed:	ISO Abiadura:
-Modification date:	Aldaketa eguna:
-yes	bai
-no	ez
-Show navigation panel	Erakutsi nabigazio panela
-Show/hide navigation panel	Erakutsi/Ezkutatu nabigazio panela
-About JPEGView...	JPEGIkusgailuari buruz...
-About JPEGView (64 bit version)...	JPEGView-ri buruz (64 biteko bertsioa)...
-SIMD mode used:	Erabilitako SIMD modua:
-Number of CPU cores used:	Erabilitako CPU nukleo zenbatekoa:
-Licensed under the GNU general public license (GPL), see readme file for details:	GNU Baimen Publiko Orokorraz (GPL) baimenduta, ikusi 'irakurri' agiria xehetasun gehiagorako:
-Project home page:	Egitasmoaren webgunea:
-Show first image in folder	Erakutsi agiritegiko lehenengo irudia
-Show previous image	Erakutsi aurreko irudia
-Show next image	Erakutsi hurrengo irudia
-Show last image in folder	Erakutsi agiritegiko azken irudia
-Rotate image 90 deg clockwise	Itzulikatu irudia 90 gradu ordulari orrantzen norabidean
-Rotate image 90 deg counter-clockwise	Itzulikatu irudia 90 gradu ordulari orratzen-aurkako norabidean
-Landscape picture enhancement mode	Landargazki irudi hobekuntza modua
-Display image (EXIF) information	Erakutsi irudiaren (EXIF) argibideak
-Actual size of image	Irudiaren oraingo neurria
-Toggle between screens (only for multi-monitor systems)	Aldatu ikusleiho artean (monitore-anitzeko sistematan bakarrik)
-Enable/disable full screen mode	Gaitu/Ezgaitu ikusleiho-osoko modua
-Full screen mode	Ikusleiho-osoko modua
-Window mode	Leiho modua
-Save as (in screen size/resolution)	Gorde honela (ikusleiho neurri/bereizmenarekin)
-Save processed image to JPEG file (screen size)	Gorde prozesatutako irudia JPEG agirian (ikusleiho neurria)
-Settings/Admin	Ezarpenak/Administrazioa
-Edit global settings...	Editatu ezarpen orokorrak...
-Edit user settings...	Editatu erabiltzaile ezarpenak...
-Backup parameter DB...	Babeskopiatu DB parametroak...
-Restore parameter DB...	Leheneratu DB parametroak...
-No user INI file exits yet. Create user INI file from INI file template?	Oraindik ez dago erabiltzaile INI agiririk. Sortu erabiltzaile INI agiria INI agiri eredutik?
-Copying parameter DB to file '%s' failed. Reason: %s	Hutsegitea DB paremetroak '%s' agirira kopiatzerakoan. Zergaitia: %s
-Select parameter DB to restore	Hautatu leheneratzeko DB parametroak
-Conflicting entries in Param DB	Sarrera gatazka Parametro DB-an
-The imported param DB contains entries already present in active param DB.	Inportatutako parametro DB-ak jadanik parametro DB-an badauden sarrerak ditu.
-Shall existing entries be preserved (Yes) or be overriden by the imported entries (No)?	Dauden sarrerei heutsi behar zaie (Bai) edo ezeztatu inportatutako sarrerekin (Ez)?
-Select file to display in 'File Open' dialog	Hautatu 'Ireki Agiria' elkarrizketan erakusteko agiria
-Crop Mode	Mozketa Modua
-Free	Askea
-Fixed size...	Zuzendutako neurria...
-Set Fixed Crop Size	Ezarri Zuzendutako Mozketa Neurria
-Width	Zabalera
-Height	Garaiera
-Pixels	Pixel
-Screen Pixels	Ikusleiho Pixel
-Image Pixels	Irudi Pixel
-Set modification date	Ezarri aldaketa eguna
-to current date	Gaurko egunean
-to EXIF date	EXIF egunean
-Mark image for toggling. Use %s to toggle between marked and current image	Markatu irudia aldaketarako. Erabili %s markatutako eta oraingo irudiaren artean aldatzeko
-Saturation	Margoasetasuna
-Unsharp mask...	Lausotze Mozorroa
-Apply Unsharp Mask	Ezarri Lausotze Mozorroa
-Radius	Zilerdia
-Amount	Kopurua
-Threshold	Muga
-Apply	Ezarri
-Cancel	Ezeztatu
-Keep processing parameters between images	Heutsi prozesapen parametroei irudi artean
-Show histogram	Erakutsi histograma
-Hide histogram	Ezkutatu histograma
-Crop Selection Lossless...	Moztu Hautapena Galeragabe...
-Save cropped image	Gorde moztutako irudia
-Rotate image by user-defined angle	Itzulikatu irudia erabiltzaileak-zehaztutako angeluan
-Rotate Image	Itzulikatu irudia
-Show grid lines	Erakutsi saretxo lerroak
-Auto crop rotated image (avoids black border)	Berez moztu itzulikatutako irudia (hertz beltzak saihesten ditu)
-Align image to horizontal or vertical line	Lerrokatu irudia etzaneko edo zutikako lerro batera
-Use the mouse to draw a line that shall be horizontal or vertical.	Erabili sagua etzana edo zutia izango den lerro bat marrazteko.
-Rotate the image by dragging with the mouse.	Itzulikatu irudia saguarekin arrastatuz.
-The operation failed because not enough memory is available!	Eragiketak huts egin du ez dagoelako nahikoa oroimen eskuragarri!
-to EXIF date (all files in folder)	EXIF egunera (agiritegiko agiri denak)
-Number of JPEG files in folder: %d	Agiritegiko JPEG agiri zenbatekoa: %d
-EXIF date successfully set on %d images, failed on %d images	EXIF eguna ongi ezarri da %d iruditan, hutsegitea %d iruditan
-Reason: Not enough memory available	Zergaitia: Ez dago nahikoa oroimen eskuragarri
-Transform image	Eraldatu irudia
-Rotate...	Itzulikatu...
-Mirror horizontally	Etzaneko ispilua
-Mirror vertically	Zutikako ispilua
-Random	Zorizkoa
-Zoom mode (drag mouse to zoom)	Zoom modua (arrastatu sagua zooma egiteko)
-Correct converging lines (perspective correction)	Zuzendu lerro baterakorrak (ikuspegi zuzenketa)
-Perspective Correction	Ikuspegi Zuzenketa
-Perspective correction...	Ikuspegi zuzenketa...
-Auto crop corrected image (avoids black border)	Berez moztu zuzendutako irudia (hertz beltzak saihesten ditu)
-Click and drag the mouse vertically to correct image tilt.	Klikatu eta arrastatu sagua zutika irudi okertua zuzentzeko.
-Drag at the left or right border for asymmetric correction.	Arrastatu ezker edo eskuin hertzera zuzenketa asimetrikorako
-Fit window to image	Finkatu leihoa irudiari
-Keep aspect ratio on crop	Heutsi ikuspegi mailari mozterakoan
-Lossless JPEG transformations	Galeragabeko JPEG eraldaketak
-Performing the lossless transformation failed!	Hutsegitea galeragabeko eraldaketa egiterakoan!
-Image width and height must be dividable by the JPEG block size (8 or 16) for lossless transformations!	Irudiaren zabalera eta garaiera JPEG bloke neurriagaitik (8 edo 16) zatikagarria izan behar da galeragabeko eraldaketetarako!
-Reading the JPEG file from disk failed	Hutsegitea JPEG agiria diskatik irakurtzerakoan
-Writing the resulting JPEG file to disk failed	Hutsegitea emaitz JPEG agiria diskara idazterakoan
-Performing the transformation failed	Hutsegitea eraldaketa egiterakoan
-Lossless JPEG transformations	Galeragabeko JPEG eraldaketak 
-Performing the lossless transformation failed!	Galeragabeko eraldaketa egintza hutsegitea!
-Image width and height must be dividable by the JPEG block size (8 or 16) for lossless transformations!	Irudiaren zabalera eta garaiera JPEG bloke neurriarekiko (8 edo 16) zatigarria izan behar da galeragabeko eraldaketentzat!
-Reading the JPEG file from disk failed	Hutsegitea JPEG agiria diskatik irakurtzerakoan
-Writing the resulting JPEG file to disk failed	Hutsegitea emaitz JPEG agiria diskan idazterakoan
-Performing the transformation failed	Hutsegitea eraldaketa egiterakoan
-The transformation can be applied if the image is trimmed to the next matching size but this will remove some border pixels.	Eraldaketa ezarri daiteke irudia bat datorren hurrengo neurrira mozten bada baina honek hertzeko zenbait pixel kenduko ditu.
-Trim the image and apply transformation? Trimming cannot be undone!	Moztu irudia eta ezarri eraldaketa? Mozketa ezin da desegin!
-Note: Set the key 'TrimWithoutPromptLosslessJPEG=true' in the INI file to always trim without showing this message.	Oharra: Ezarri 'TrimWithoutPromptLosslessJPEG=true' INI agirian betik mozteko mezu hau erakutsi gabe.
-Transition Effect	Aldaketa Eragina
-None	Ezer ez
-Blend	Nahasketa
-Slide from right	Aurkeztu eskuinetik
-Slide from left	Aurkeztu ezkerretik
-Slide from top	Aurkeztu goitik
-Slide from bottom	Aurkeztu behetik
-Roll from right	Gurpildu eskuinetik
-Roll from left	Gurpildu ezkerretik
-Roll from top	Gurpildu goitik
-Roll from bottom	Gurpildu behetik
-Scroll from right	Irristatu eskuinetik
-Scroll from left	Irristatu ezkerretik
-Scroll from top	Irristatu goitik
-Scroll from bottom	Irristatu behetik
+1 sec	
+2 sec	
+3 sec	
+4 sec	
+5 sec	
+7 sec	
+10 sec	
+20 sec	
 Transition Speed	Aldaketa Abiadura
 Very fast	Oso azkar
 Fast	Azkara
 Normal	Arrunt
 Slow	Astiro
 Very slow	Oso astiro
-Error	Akatsa
-Warning	Kontuz
-Error while writing the following registry key:	Akatsa hurrengo erregistro giltza idazterakoan:
-Set as default viewer...	Ezarri berezko ikusgailu bezala...
-Set JPEGView as default image viewer	Ezarri JPEGIkusgailua berezko irudi ikusgailu bezala
-JPEGView is registered as default viewer for the selected file formats.	JPEGIkusgailua berezko ikusgailu bezala erregistratu da hautaturiko agiri heuskarrientzat.
-Registration applies to the current user only.	Erregistroa oraingo erabiltzaileari bakarrik ezartzen zaio
-Extension	Hedapena
-File type	Agiri mota	
-The following file extensions cannot be unregistered because they have been registered in the 'local machine' registry area.	Hurrengo agiri hedapenak ezin dira deserregistratu 'tokiko makina' erregistro eremuan erregistraturik daudelako.
-Registering or unregistering file extensions in this registry area requires administration privileges and cannot be done in JPEGView.	Eremu honetan agiri hedapenak erregistratzea eta deserregistratzeak administratzaile eskubideak behar ditu eta ezin da JPEGIkusgailuan egin.
-Press 'OK' to continue with registration or 'Cancel' to not modify any registrations.	Sakatu 'Ongi' erregistratzearekin jarraitzeko edo 'Ezeztatu' erregistrorik ez aldatzeko.
-Unregistering not possible	Deserregistratzea ezinezkoa da
-%s images	%s irudiak
-%s images (processed by Window Imaging Component - WIC)	%s irudi (Window Imaging Component - WIC-rekin prozesatuta)	
-%s camera raw images (embedded JPEGs only)	%s kamera raw irudiak (barneratutako JPEG-ak  bakarrik)
-The following image extensions are protected by the operating system.	Hurrengo irudi hedapenak sistema eragileak babesturik daude.
-JPEGView can try to remove the restrictions automatically.	JPEGIkusgailua murrizpenak berezgaitasunez kentzen saiatu daiteke.
-However this will fail if the current user has no administration privileges.	Horrela ere honek huts egingo du oraingo erabiltzaileak ez baditu administratzaile pribilegioak.
-Insufficient rights to remove the restrictions. Continue?	Ez duzu nahikoa eskubide murrizpenak kentzeko. Jarraitu?
-No image loaded!	Ez da irudirik gertatu! 
-Right mouse button: Context menu	Saguaren eskuin botoia: Hitzinguru menua
-Windows 8 blocks JPEGView from changing the default program for these file endings.	Windows 8-k JPEGView blokeatzen du agiri hauentzako berezko programa aldatzeko.
-Use the 'Default Programs' configuration dialog from the operating system instead.	Erabili 'Berezko Programak' itxurapen elkarrizketa sistema eragiletik ordez.
-Alternatively, right click an image file of the given type in Windows Explorer and select 'Open with... > Choose default program'	Aukeran, eskuin klikatu emaniko motako irudi agiri bat Windows Esploratzailean eta hautatu 'Ireki honekin... > Hautatu berezko programa'
-User commands	Erabiltzaile aginduak
-Open image with	Ireki irudia honekin
-Manage 'Open image with' menu...	Kudeatu 'Ireki irudia honekin' menua...
-Menu entries:	Menuko sarrerak:
-Title:	Izenburua:
-Application:	Aplikazioa:
-Shortcut key:	Lastertekla:
-Browse...	Bilatu...
-New	Berria
-Delete	Ezabatu
-Modifier keys:	Aldatzaile teklak:
-Known keys:	Tekla ezagunak:
-Combine keys with '+'	Batu teklak '+'-rekin
-Example:	Adibidea:
-Shortcut Help	Lastertekla Laguntza
-[new entry]	[sarrera berria]
-Applications	Aplikazioak
-Select application	Hautatu aplikazioak
-Save	Gorde
-Edit	Editatu
-Upcounting	Gora-zenbaketa
-Downcounting	Behera-zenbaketa
-File size	Agiri neurria
-Do you really want to delete the current image file on disk?	Egitan nahi duzu oraingo irudia diskatik ezabatzea?
-Delete image file	Ezabatu irudi agiria
+Movie	Filma
+Playback speed	
+5 fps	
+10 fps	
+25 fps	
+30 fps	
+50 fps	
+100 fps	
+Transform image	Eraldatu irudia
+Rotate +90	Itzulikatu +90
+Rotate -90	Itzulikatu -90
+Rotate...	Itzulikatu...
 Change size...	Aldatu neurria...
-Resize Image	Birneurriratu Irudia
-OK	Ongi
-New size:	Neurri berria:
-New width:	Zabalera berria:
-New height:	Garaiera berria:
-Filter:	Iragazkia:
-Box	Kutxatila
-Lanczos/Bicubic	Lanczos/Bikubikoa
-Sharpen low	Itzal apala
-Sharpen medium	Itzal ertaina
-The new size is too large - width or height is larger than 65535 or total number of pixels is too large!	Neurri berria handiegia da - zabalera edo garaiera 65535 baino handiagoa da edo pixel zenbatekoa guztira handiegia da!
-JPEGView is a lean, fast and highly configurable viewer/editor for JPEG, BMP, PNG, WEBP, TGA, GIF and TIFF images with a minimal GUI.	JPEGView ikusgailu/editatzaile gihartsu, azkar eta oso itxuragarri bat da JPEG, BMP, PNG, WEBP, TGA, GIF eta TIFF irudientzat gutxienezko EIG batekin.
-Set as desktop wallpaper	Ezarri mahaigaineko hormapaper bezala
-Use original image	Erabili jatorrizko irudia
-Use processed image as displayed	Erabili prozesatutako irudia erakusten den bezala
-Reset	Berrezarri
-Print image...	Irarkitu irudia...
-Print Image	Irarkitu Irudia
-Print	Irarkitu
-Select Printer...	Hautatu Irarkailua...
-Printer:	Irarkailua:
-Paper:	Papera:
-Source:	Iturburua
-Orientation:	Norabidea:
-Portrait	Argazkia
-Landscape	Landargazkia
-Size:	Neurria:
-Fit to paper	Finkatu paperera
-cm	me
-Scaling mode:	Neurriketa modua
-Printer driver	Irarketa gidagailua
-Alignment:	Lerrokapena:
-Margins:	Bazterrak:
-Left	Ezkerra
-Right	Eskuina
-Top	Goia
-Bottom	Behea
-Fill paper with crop	Bete papera mozketarekin
+Perspective correction...	Ikuspegi zuzenketa...
+Mirror horizontally	Etzaneko ispilua
+Mirror vertically	Zutikako ispilua
+Rotate 180	Itzulikatu 180
+Auto correction	Berez zuzenketa
+Save parameters to DB	Gorde parametroak DB-an
+Clear parameters from DB	Garbitu DB-ko parametroak
+Zoom	Zooma
+Span all screens	Hedatu ikusleiho denak
+Full screen mode	Ikusleiho-osoko modua
+Fit window to image	Finkatu leihoa irudiari
+Hide window title bar	
+Set window always on top	
+Settings/Admin	Ezarpenak/Administrazioa
+Edit global settings...	Editatu ezarpen orokorrak...
+Edit user settings...	Editatu erabiltzaile ezarpenak...
 Update user settings...	Eguneratu erabiltzaile ezarpenak
-Update user settings with new settings from settings template file?	Eguneratu erabiltzaile ezarpenak ezarpen berriekin ezarpen eredu agiritik?
-All existing user settings will be preserved.	Dauden erabiltzaile ezarpen guztiak gordeko dira.
+Set current parameters as default values...	Ezarri oraingo parametroak berezko balio bezala...
+Set as default viewer...	Ezarri berezko ikusgailu bezala...
+Backup parameter DB...	Babeskopiatu DB parametroak...
+Restore parameter DB...	Leheneratu DB parametroak...
+User commands	Erabiltzaile aginduak
+About JPEGView...	JPEGIkusgailuari buruz...
+Exit	Irten
+Crop Selection	Moztu Hautapena
+Crop Selection Lossless...	Moztu Hautapena Galeragabe...
+Copy Selection to Clipboard	Kopiatu Hautapena Gakora
+Crop Mode	Mozketa Modua
+Free	Askea
+Fixed size...	Zuzendutako neurria...
+Zoom to Selection	Zooma Hautapenean
+
+// ::: INFO: Out-of-date Translations [20] ::: (Not in use anymore, safe to delete) //
+//Actual size of image	Irudiaren oraingo neurria
+//Delete current file on disk permanently	Ezabatu oraingo agiria diskatik betirako
+//Do you really want to permanently delete the file %filename%?	Egitan nahi duzu ezabatzea %filename% agiria betirako?
+//However this will fail if the current user has no administration privileges.	Horrela ere honek huts egingo du oraingo erabiltzaileak ez baditu administratzaile pribilegioak.
+//Insufficient rights to remove the restrictions. Continue?	Ez duzu nahikoa eskubide murrizpenak kentzeko. Jarraitu?
+//JPEGView can try to remove the restrictions automatically.	JPEGIkusgailua murrizpenak berezgaitasunez kentzen saiatu daiteke.
+//No file or folder name was provided as command line parameter!	Ez da agiriri edo agiritegi izenik eman komando lerro parametro bezala!
+//PgDn or Right	OrrBeh edo Eskuin
+//PgUp or Left	OrrGor edo Ezker
+//Rename:	Berrizendatu:
+//Rotate the following file lossless by 270 deg?\n%filename%	Itzulikatu hurrengo agiria 270° galeragabe?\n%filename%
+//Rotate the following file lossless by 90 deg?\n%filename%	Itzulikatu hurrengo agiria 90° galeragabe?\n%filename%
+//The file '%s' could not be %s.	'%s' agiria ezin da %s izan.
+//To use JPEGView, associate JPG, JPEG and BMP files with JPEGView.	JPEGIkusgailua erabiltzeko, elkartu JPG, JPEG eta BMP agiriak JPEGIkusgailuarekin.
+//Window mode	Leiho modua
+//Windows 8 blocks JPEGView from changing the default program for these file endings.	Windows 8-k JPEGView blokeatzen du agiri hauentzako berezko programa aldatzeko.
+//[new entry]	[sarrera berria]
+//copied	kopiatuta
+//renamed	Berrizendatuta
+//up/down	gora/behera
+
+// ::: INFO: Missing Translations [35] ::: (Summary of all missing strings to assist translators - Auto-generated by script) //
+//! Altitude (m):
+//! Clipboard Image
+//! Copy file path of the image to clipboard
+//! Decoding this format requires the Microsoft Visual C++ Redistributable.
+//! High quality resampling
+//! Hour / Minute (as numbers)
+//! Insufficient rights to change the privilege (DACL) on the registry entry. Continue?
+//! Location:
+//! Open folder containing image and select in Windows Explorer
+//! The file '%s' could not be copied!
+//! The file '%s' could not be renamed!
+//! Toggle window always on top mode
+//! Toggle window title bar hidden mode
+//! Windows 8 (and above) blocks JPEGView from changing the default program for these file extensions.
+//! in
+//! new menu entry
+//! Open containing folder in Explorer
+//! Copy file path
+//! 1 sec
+//! 2 sec
+//! 3 sec
+//! 4 sec
+//! 5 sec
+//! 7 sec
+//! 10 sec
+//! 20 sec
+//! Playback speed
+//! 5 fps
+//! 10 fps
+//! 25 fps
+//! 30 fps
+//! 50 fps
+//! 100 fps
+//! Hide window title bar
+//! Set window always on top
+
+// ::: STATUS: Last Checked/Updated by Script ::: 2023-02-09T18:39:48.029926+00:00 //
+//! Translation Progress: 92%
+//! * Total (Strings + Menu) = 421
+//! * Done = 386
+//! * Missing = 35 (8%)

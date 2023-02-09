@@ -1,422 +1,523 @@
-// This file must be encoded with UTF-8 (e.g. with Windows Notepad)
-// Filename is 'strings_%languagecode%.txt' where %languagecode% is the ISO 639 language code e.g. 'fr' for French
-// Format is: English string<tab>Translated string<newline>
-// This file is distributed under the same license as the JPEGView package
-//Language=Japanese
-//TranslatorName=Hiroyuki Matenokoji, maboroshin
-//Contact=none
+﻿//! This file must be encoded with UTF-8 (e.g. with Windows Notepad)
+//! LICENSE: This localization file is part of JPEGView <https://github.com/sylikc/jpegview> and distributed under the same license.  See <https://github.com/sylikc/jpegview/blob/master/LICENSE.txt> for more info.
+
+//! Filename Convention: 'strings_%languagecode%.txt' where %languagecode% is the ISO 639 language code e.g. 'en' for English
+
+////////////////////
+// ::: Translation Info ::: //
+//: ISO 639 code: ja
+//: Language: Japanese
+//: Translator(s): Hiroyuki Matenokoji, maboroshin
+//: Last Updated: 2023-02-05
+//: Additional Notes:
 //TranslatorURL=https://pc.genkaku.in/
-//LastUpdated=2023-02-05
 // 1st Japanese translation : by Hiroyuki Matenokoji. (2015)
 // 2nd translator: Japanese by maboroshin (2019-2023, Adjustment, and translate little new part)
-Contrast	コントラスト
-Brightness	明るさ
-Sharpen	シャープ
-Lighten Shadows	シャドーを明るく
-Darken Highlights	ハイライトを暗く
-Deep Shadows	最も暗い部分
-Color Correction	色補正
-Contrast Correction	コントラストの調整
-Parameter DB:	パラメーターファイル:
-Save to	保存
-Remove from	削除
-Rename:	名前の変更
-No file or folder name was provided as command line parameter!	コマンド中にファイル名かフォルダ名の指定がありません
-To use JPEGView, associate JPG, JPEG and BMP files with JPEGView.	JPEGView を使うには、JPG、JPEG、BMPファイルを JPEGViewに 関連付けしてください
-Press ESC to exit...	F1: ヘルプ, ESC で終了...
-The file '%s' could not be read!	 このファイルを読み込めません。 %s
-The file '%s' does not contain a list of file names!	このファイル内にファイル名の一覧はありません。 %s
-The directory '%s' does not contain any image files!	このフォルダに画像ファイルはありません。 %s
-Press any key to search the subdirectories for image files.	サブフォルダ内の画像を探索するには何かキーを押します。
-JPEGView Help	JPEGView ヘルプ
-Current image	表示中の画像
-Close help text display / Close JPEGView	ヘルプを閉じる / JPEGView の終了
-Show/hide this help text	このヘルプを表示/非表示
-Show/hide picture information (EXIF data)	画像情報 (EXIF) を表示/非表示
-Show/hide file name	ファイル名を表示/非表示
-Enable/disable high quality resampling	高品質表示を有効化/無効化
-Enable/disable keeping of geometry related (zoom/pan/rotation)	拡大・縮小・回転でGPS座標情報を保持する/しない
-and image processing (brightness/contrast/sharpen) parameters between images	明るさ、コントラスト、シャープのパラメーターを保持
-Enable/disable automatic contrast correction (histogram equalization)	コントラストの自動補正 (ヒストグラム均等化) を有効化/無効化
-Apply auto contrast correction using only visible section of image	可視部分のコントラストを自動補正
-Enable/disable automatic density correction (local brightness correction)	色濃度の自動補正 (明るさ調整) を有効化/無効化
-Increase/decrease lightening of shadows (LDC must be on)	影を明るく/暗く (LDC がオンの場合)
-Increase/decrease darkening of highlights (LDC must be on)	ハイライトを暗く/明るく (LDC がオンの場合)
-Loop through files in current folder	フォルダ内を巡回
-Loop through files in current directory and all subfolders	すべての下位フォルダも巡回
-Loop through files in current directory and all sibling folders (folders on same level)	同列のフォルダも巡回
-Maximize/restore to/from virtual desktop (only for multi-monitor systems)	最大化/復元 (マルチモニター環境のみ)
-Copy screen to clipboard/ Copy processed full size image to clipboard	画面をクリップボードにコピー/加工したフルサイズ画像をクリップボードにコピー
-Open new image or slideshow file	画像またはスライドショーを開く
-Save processed image to JPEG file (original size)	加工した画像をJPEGファイルに保存
-Save (%s)/ delete (%s) image processing parameters in/from parameter DB	画像加工のパラメーターを保存(%s)/削除(%s) 
-Sort images by creation date, resp. modification date, resp. file name	作成日時/更新日時/ファイル名で画像を並び替え
-Goto previous image	前の画像
-Goto next image	次の画像
-PgUp or Left	PgUp または 左矢印
-PgDn or Right	PgDown または 右矢印
-Goto first/last image of current folder (using sort order as defined)	フォルダ内の最初/最後の画像 (表示順に従う)
-Increase/decrease brightness	明るさの増減
-Increase/decrease contrast	コントラストの増減
-Increase/decrease sharpness	シャープの増減
-Increase/decrease auto color cast correction amount	色の自動補正量の増減
-Increase/decrease auto contrast correction amount	コントラストの自動補正量の増減
-Enable/disable landscape picture enhancement mode	風景画像の改善モードを有効化/無効化
-Slide show with timeout of n seconds (ESC to stop)	スライドショー切り替えの秒間隔 (ESCキーで停止)
-Set timeout to n/10 sec, respectively n/100 sec (Ctrl+Shift)	秒間隔を 1/10秒で設定、Ctrl+Shift で 1/100秒
-Rotate image and fit to screen	画像の回転と画面にフィット
-Fit image to screen	画像を画面にフィット
-Zoom 1:1 (100 %)	実寸表示 1:1 (100%)
-Zoom in (%s)/Zoom out (%s)	拡大(%s)/縮小(%s)
-Zoom in/out image	拡大/縮小
-Pan image	全画面表示
-Crop image	切り取り
-Next image	次の画像
-Previous image	前の画像
-up/down	上/下
-Mouse wheel	マウスホイール
-Left mouse & drag	マウスの左クリックでドラッグ
-Ctrl + L mouse		Ctrl + マウスの左クリック
-Forward mouse button	マウスの進むボタン
-Back mouse button	マウスの戻るボタン
-Delete current file on disk permanently	表示中の画像ファイルを完全に削除
-Rotate current file on disk lossless by 90 deg (W/H must be multiple of 16)	表示中の画像をロスレスで90度回転 (縦横サイズは16の倍数にすべき)
-Rotate current file on disk lossless by 270 deg (W/H must be multiple of 16)	表示中の画像をロスレスで270度回転 (縦横サイズは16の倍数にすべき)
-The file is read-only!	このファイルは読み取り専用です。
-Can't rename file	名前を変更できません
-New name contains backslash character!	改名先の名前にバックスラッシュ \ が含まれています。
-Renaming file failed!	名前の変更に失敗
-Reason: 	原因: 
-on	オン
-off	オフ
-Do you really want to save the following parameters as default to the INI file	以下のパラメーターを規定としてINIファイルに保存しますか？
-Auto contrast and color correction:	自動でコントラストと色を補正:
-Local density correction:	色濃度の補正:
-Order files by:	ファイルの順序:
-Creation date/time	作成日時
-Last modification date/time	最終更新日時
-File name	ファイル名
-These values will override the values from the INI file located in the program folder of JPEGView!	このパラメーターはJPEGViewフォルダ内のINIファイルの設定よりも優先されます
-Confirm save default parameters	既定のパラメーターの保存を確認
-Images	画像
+////////////////////
+
+////////////////////
+// ::: Instructions / Help ::: //
+
+//? Line Format:    English string<tab>Translated string<newline>
+//? * Lines beginning with "//" (comments) are ignored
+//? * Blank lines are ignored
+//? * Lines without a <tab> are ignored
+//? * Lines with no text after the <tab> are ignored
+//? * Multiple tabs are permitted between English and Translated string, e.g. this is valid:    English string<tab><tab><tab>Translated string<newline>
+
+//? NOTE: %s %d have special meanings in the strings, so make sure they appear somewhere in the translated string
+
+//? For the strings below which are short and have no context:
+//?   "in" in context is shorthand for "inch"
+//?   "cm" in context is shorthand for "centimeter"
+//?   "C - R" in context is "Cyan Red" colors
+//?   "M - G" in context is "Magenta Green" colors
+//?   "Y - B" in context is "Yellow Blue" colors
+//?   "yes"/"no" in context is for showing EXIF flags
+//?   "on"/"off" in context is for showing a setting active or not
+////////////////////
+
+
+// ::: Program Strings ::: (sorted alphabetically) //
+%d file(s) renamed, %d file(s) copied, %d folder(s) created	%d個を改名 %d個をコピー %d個のフォルダを作成
+%s camera raw images (embedded JPEGs only)	%s 個のRAW画像 (埋め込みJPEGのみ)
+%s images	%s 個の画像
+%s images (processed by Window Imaging Component - WIC)	%s 個の画像 (Windows Imaging - WIC で処理)
+'My Pictures' folder	「ピクチャ」フォルダ
+About JPEGView (32-bit version)...	JPEGView (32bit版)について...
+About JPEGView (64-bit version)...	JPEGView (64bit版)について...
+Acquisition date:	撮影日時:
+Align image to horizontal or vertical line	縦/横の線に揃える
+Alignment:	整列の位置:
 All Files	すべてのファイル
-Parameter DB file '%s' could not be opened!	パラメーターファイルが開けません。 %s
-Parameter DB file '%s' is not valid (invalid header)!	パラメーターファイルが無効です。 %s
-Cannot write to parameter DB file '%s'!	パラメーターファイルに書き込めません。 %s
+All existing user settings will be preserved.	すべての個人設定は保存されます。
+Alternatively, right-click an image file of the given type in Windows Explorer and select 'Open with... > Choose default program'	あるいは、エクスプローラーで画像ファイルを右クリックして、「プログラムから開く」から「既定のプログラム」を選択します。
+Altitude (m):	標高 (メートル):
+Amount	量
+Application:	アプリケーション:
+Applications	アプリケーション
+Apply	適用
+Apply Unsharp Mask	ぼかしマスクを適用
+Apply auto contrast correction using only visible section of image	可視部分のコントラストを自動補正
+Ascending	順増
+Auto contrast and color correction	自動でコントラストと色を補正
+Auto crop corrected image (avoids black border)	加工した画像を自動で切り取り(黒背景を除く)
+Auto crop rotated image (avoids black border)	回転した画像を自動で切り取り (黒背景を除く)
+Auto zoom mode	自動拡大の方法
+Back mouse button	マウスの戻るボタン
+Batch rename/copy of files	ファイルを一括で改名/コピー
+Blend	ブレンド
+Bottom	下
+Box	ボックス
+Brightness	明るさ
+Browse...	参照...
+C - R	C - V
+Camera model:	カメラの機種:
+Can't rename file	名前を変更できません
+Cancel	キャンセル
 Cannot read from parameter DB file '%s'!	パラメーターファイルを読み込めません。 %s
 Cannot read parameter DB file '%s' because it is too large!	パラメーターファイルが大きすぎます。 %s
-The parameter DB file '%s' has been created by a newer version of JPEGView!	パラメーターファイル %s が新しいバージョンの JPEGView で作成されています。
-The old parameter DB file '%s' could not be renamed during conversion to new format!	古い形式のパラメーターファイル %s を新しい形式に変換できません。
-Parameter DB error	パラメーターファイルのエラー
-Error saving file	ファイル保存エラー
-Error writing file to disk!	ファイル書き込みエラー
+Cannot write to parameter DB file '%s'!	パラメーターファイルに書き込めません。 %s
+Click and drag the mouse vertically to correct image tilt.	縦方向にマウスでドラッグし画像の傾きを調整します、
+Clipboard Image	
+Close	閉じる
+Close help text display / Close JPEGView	ヘルプを閉じる / JPEGView の終了
+Color Correction	色補正
+Combine keys with '+'	'+'でキーの組み合わせ
 Confirm	確認
-Do you really want to permanently delete the file %filename%?	本当に完全に削除しますか？ \n%filename%
-Rotate the following file lossless by 90 deg?\n%filename%	画像をロスレスで90度回転しますか？ \n%filename%
-Rotate the following file lossless by 270 deg?\n%filename%	画像をロスレスで270度回転しますか？ \n%filename%
-Open image...	画像ファイルを開く...
-Save processed image...	加工した画像を保存...
-Reload image	画像を再読み込み
-Copy to clipboard	クリップボードにコピー
-Copy original size image	元のサイズのままコピー
-Paste from clipboard	クリップボードから貼り付け
-Batch rename/copy...	一括で改名/コピー...
-Show picture info (EXIF)	画像情報(EXIF)を表示
-Show filename	ファイル名を表示
-Navigation	巡回先
+Confirm save default parameters	既定のパラメーターの保存を確認
+Conflicting entries in Param DB	パラメーターの設定に競合があります
+Continue rename/copy?	改名/コピーを続けますか？
+Contrast	コントラスト
+Contrast Correction	コントラストの調整
+Copy file path of the image to clipboard	
+Copy screen to clipboard/ Copy processed full size image to clipboard	画面をクリップボードにコピー/加工したフルサイズ画像をクリップボードにコピー
+Copying parameter DB to file '%s' failed. Reason: %s	ファイル %s へのパラメーターのコピーが失敗しました。原因: %s
+Correct converging lines (perspective correction)	消失点の調整 (遠近法)
+Creation date/time	作成日時
+Crop image	切り取り
+Ctrl + Left mouse	Ctrl + マウスの左クリック
+Current image	表示中の画像
+Cyan-Red	シアン/赤
+Darken Highlights	ハイライトを暗く
+Date	日付
+Date placeholders use the modification date of the image.	引数の日付は画像の更新日時を使用します。
+Day / Month / Year (as numbers)	日 / 月 / 年 (数字)
+Decoding this format requires the Microsoft Visual C++ Redistributable.	
+Deep Shadows	最も暗い部分
+Delete	削除
+Delete image file	画像ファイルを削除
+Descending	順減
+Display image (EXIF) information	画像情報(EXIF)を表示
+Do you really want to delete the current image file on disk?	この画像ファイルを削除しますか？
+Do you really want to save the following parameters as default to the INI file	以下のパラメーターを規定としてINIファイルに保存しますか？
+Drag at the left or right border for asymmetric correction.	左右の辺のドラッグで非対称に調整します。
+EXIF date successfully set on %d images, failed on %d images	EXIFの日時に設定 成功:%d, 失敗:%d
+Edit	編集
+Enable/disable automatic contrast correction (histogram equalization)	コントラストの自動補正 (ヒストグラム均等化) を有効化/無効化
+Enable/disable automatic density correction (local brightness correction)	色濃度の自動補正 (明るさ調整) を有効化/無効化
+Enable/disable full screen mode	全画面表示を有効化/無効化
+Enable/disable high quality resampling	高品質表示を有効化/無効化
+Enable/disable keeping of geometry related (zoom/pan/rotation)	拡大・縮小・回転でGPS座標情報を保持する/しない
+Enable/disable landscape picture enhancement mode	風景画像の改善モードを有効化/無効化
+Error	エラー
+Error during rename/copy	改名/コピーのエラー
+Error saving file	ファイル保存エラー
+Error while writing the following registry key	以下のレジストリーキーの書き込みエラーです
+Error writing file to disk!	ファイル書き込みエラー
+Example:	例:
+Exposure bias (EV):	露出補正 (EV):
+Exposure time (s):	露出時間 (秒):
+Extension	拡張子
+Extracted number from original file name	元のファイル名中の数値 (最初の数値の連続のみ)
+F-Number:	絞り (F値):
+File name	ファイル名
+File size	ファイルサイズ
+File type	ファイルタイプ
+Fill paper with crop	用紙を満たすように拡大
+Fill with crop	黒枠を切り抜いてフィット
+Fill with crop (no zoom)	黒枠を切り抜いてフィット (拡大なし)
+Filter:	フィルター:
+Fit image to screen	画像を画面にフィット
+Fit to paper	用紙サイズに合わせる
+Fit to screen	画面にフィット
+Fit to screen (no zoom)	画面にフィット (拡大なし)
+Flash fired:	フラッシュ:
+Focal length (mm):	焦点距離 (mm):
+Forward mouse button	マウスの進むボタン
+Goto first/last image of current folder (using sort order as defined)	フォルダ内の最初/最後の画像 (表示順に従う)
+Goto next image	次の画像
+Goto previous image	前の画像
+Height	高さ
+Hide histogram	ヒストグラムを非表示
+High quality resampling	
+Hour / Minute (as numbers)	時/分 (数字)
+ISO Speed:	ISO感度:
+Image Pixels	画像のピクセル数
+Image files in folder	このフォルダ内の画像ファイル:
+Image height:	画像の高さ:
+Image width and height must be dividable by the JPEG block size (8 or 16) for lossless transformations!	ロスレス変形では縦/横サイズを8または16の倍数にしてください。
+Image width:	画像の幅:
+Images	画像
+Increase/decrease auto color cast correction amount	色の自動補正量の増減
+Increase/decrease auto contrast correction amount	コントラストの自動補正量の増減
+Increase/decrease brightness	明るさの増減
+Increase/decrease contrast	コントラストの増減
+Increase/decrease darkening of highlights (LDC must be on)	ハイライトを暗く/明るく (LDC がオンの場合)
+Increase/decrease lightening of shadows (LDC must be on)	影を明るく/暗く (LDC がオンの場合)
+Increase/decrease sharpness	シャープの増減
+Insufficient rights to change the privilege (DACL) on the registry entry. Continue?	
+JPEGView Help	JPEGView ヘルプ
+JPEGView is a lean, fast and highly configurable viewer/editor for JPEG, BMP, PNG, WEBP, TGA, GIF and TIFF images with a minimal GUI.	JPEGView は、JPEG、BMP、PNG、WEBP、TGA、GIF、TIFF に対応し、軽快・高速かつ広くカスタマイズできる余分な装飾を抑えた画像ビューア/エディターです。
+JPEGView is registered as default viewer for the selected file formats.	指定の画像形式で、JPEGView を既定のビューアに設定しました。
+Keep aspect ratio on crop	切り取りで縦横比を維持
+Keep parameters	パラメーターを保持
+Keep processing parameters between images	他の画像にも加工パラメーターを適用
+Known keys:	キー:
+Lanczos/Bicubic	ランチョス/バイキュービック
+Landscape	横
+Landscape picture enhancement mode	風景画像の改善モード
+Last modification date/time	最終更新日時
+Left	左
+Left mouse & drag	マウスの左クリックでドラッグ
+Licensed under the GNU general public license (GPL), see readme file for details	GNU general public license (GPL) に準拠、詳細は readme をお読みください:
+Lighten Shadows	シャドーを明るく
+Local density correction	色濃度の補正
+Location:	位置情報:
 Loop folder	フォルダ内を巡回
 Loop recursively	下位フォルダも巡回
 Loop siblings	同列のフォルダも巡回
+Loop through files in current directory and all sibling folders (folders on same level)	同列のフォルダも巡回
+Loop through files in current directory and all subfolders	すべての下位フォルダも巡回
+Loop through files in current folder	フォルダ内を巡回
+Lossless JPEG transformations	JPEGをロスレスで変形
+M - G	M - V
+Magenta-Green	マゼンタ/緑
+Manage 'Open image with' menu...	「プログラムから開く」メニューの管理...
+Margins:	余白:
+Mark image for toggling. Use %s to toggle between marked and current image	切り替え画像に指定。 %s で現在の画像と切り替え
+Maximize/restore to/from virtual desktop (only for multi-monitor systems)	最大化/復元 (マルチモニター環境のみ)
+Menu entries:	メニュー項目:
+Modification date:	更新日時:
+Modifier keys:	修飾キー:
+Month / Short form (text)	数字+月 / 月の数字のみ (システムの言語による)
+Mouse wheel	マウスホイール
+Navigation	巡回先
+New	新規
+New height:	高さの指定:
+New name (>> : file gets copied)	新しい名前 (>> : コピー先)
+New name contains backslash character!	改名先の名前にバックスラッシュ \ が含まれています。
+New size:	サイズの指定:
+New width:	幅の指定:
+Next image	次の画像
+No image loaded!	画像なし
+No user INI file exists yet. Create user INI file from INI file template?	個人用のINIがありません。テンプレートから新規のINIファイルを作成しますか？
+None	なし
+Not enough memory available	メモリー不足
+Note: Set the key 'TrimWithoutPromptLosslessJPEG=true' in the INI file to always trim without showing this message.	注意: INIファイルに TrimWithoutPromptLosslessJPEG=true を設定すると、警告なしでトリミングします。
+Number (consecutively numbered)	通し番号
+Number of CPU cores used	CPUコア数
+Number of JPEG files in folder: %d	フォルダ内のJPEGファイル数: %d
+Number with N digits	N桁の番号
+OK	
+Old name	元の名前
+Open folder containing image and select in Windows Explorer	
+Open new image or slideshow file	画像またはスライドショーを開く
+Order files by	ファイルの順序
+Orientation:	印刷の向き:
+Original file extension	元のファイルの拡張子
+Original file name (with extension)	元のファイル名(拡張子含む)
+Original file name (without extension)	元のファイル名(拡張子除く)
+Pan image	全画面表示
+Paper:	用紙サイズ:
+Parameter DB	パラメーターファイル
+Parameter DB error	パラメーターファイルのエラー
+Parameter DB file '%s' could not be opened!	パラメーターファイルが開けません。 %s
+Parameter DB file '%s' is not valid (invalid header)!	パラメーターファイルが無効です。 %s
+Paste from clipboard	クリップボードから貼り付け
+Pasting image from clipboard failed!	クリップボードからの貼り付けに失敗
+Performing the lossless transformation failed!	ロスレス変形に失敗
+Performing the transformation failed	変形失敗
+Perspective Correction	遠近法の調整
+Pixels	ピクセル
+Placeholders:	引数の使用:
+Portrait	縦
+Press 'OK' to continue with registration or 'Cancel' to abort all registrations.	関連付け実行は「OK」、変更しない場合は「キャンセル」を選択してください。
+Press ESC to exit...	F1: ヘルプ, ESC で終了...
+Press any key to search the subdirectories for image files.	サブフォルダ内の画像を探索するには何かキーを押します。
+Preview	プレビュー
+Previous image	前の画像
+Print	印刷
+Print Image	画像の印刷
+Printer driver	プリンタードライバー
+Printer:	プリンター:
+Project home page	プロジェクトのホームページ
+Radius	半径
+Random	ランダム
+Reading the JPEG file from disk failed	JPEGファイル読み込み失敗
+Reason:	原因:
+Registering or unregistering file extensions in this registry area requires administrator privileges and cannot be done in JPEGView.	この拡張子の関連付け/解除には管理者権限が必要なので、JPEGViewでは変更できません。
+Registration applies to the current user only.	関連付けは現在のユーザーのみに有効です。
+Remove from	削除
+Rename	変更を実行
+Rename/copy images to:	変更先のパスやファイル名:
+Renaming file failed!	名前の変更に失敗
+Reset	リセット
+Resize Image	画像サイズの変更
+Right	右
+Right mouse button: Context menu	マウスの右クリック: コンテキストメニュー
+Roll from bottom	下からロール
+Roll from left	左からロール
+Roll from right	右からロール
+Roll from top	上からロール
+Rotate Image	画像を回転
+Rotate current file on disk lossless by 270 deg (W/H must be multiple of 16)	表示中の画像をロスレスで270度回転 (縦横サイズは16の倍数にすべき)
+Rotate current file on disk lossless by 90 deg (W/H must be multiple of 16)	表示中の画像をロスレスで90度回転 (縦横サイズは16の倍数にすべき)
+Rotate image 90 deg clockwise	右回り90度回転
+Rotate image 90 deg counter-clockwise	左回り90度回転
+Rotate image and fit to screen	画像の回転と画面にフィット
+Rotate image by user-defined angle	任意の角度で画像を回転
+Rotate the image by dragging with the mouse.	マウスのドラッグで回転します。
+SIMD mode used	使用したSIMDの種類
+Saturation	彩度
+Save	保存
+Save (%s)/ delete (%s) image processing parameters in/from parameter DB	画像加工のパラメーターを保存(%s)/削除(%s)
+Save as (in screen size/resolution)	名前を付けて保存 (画面サイズ/解像度)
+Save as template	テンプレートとして保存
+Save cropped image	切り取り範囲を保存
+Save processed image to JPEG file (original size)	加工した画像をJPEGファイルに保存
+Save processed image to JPEG file (screen size)	加工した画像をJPEGに保存 (画面サイズ)
+Save to	保存
+Scaling mode:	拡大モード:
+Screen Pixels	モニターのピクセル数
+Scroll from bottom	下からスクロール
+Scroll from left	左からスクロール
+Scroll from right	右からスクロール
+Scroll from top	上からスクロール
+Select Printer...	プリンターの選択...
+Select all	すべて選択
+Select application	アプリケーションを選択
+Select file to display in 'File Open' dialog	画像ファイルを「開く」で選択
+Select none	すべて選択解除
+Select parameter DB to restore	復元するパラメーターファイルを選択
+Set Fixed Crop Size	切り取りサイズの固定
+Set JPEGView as default image viewer	JPEGView を規定の画像ビューアに設定
+Set timeout to n/10 sec, respectively n/100 sec (Ctrl+Shift)	秒間隔を 1/10秒で設定、Ctrl+Shift で 1/100秒
+Shall existing entries be preserved (Yes) or be overriden by the imported entries (No)?	現在のパラメーターを維持(Yes)、インポートを有効化(No)
+Sharpen	シャープ
+Sharpen low	シャープ 低
+Sharpen medium	シャープ 中
+Shortcut Help	ヘルプ
+Shortcut key:	ショートカットキー:
+Show filename	ファイル名を表示
+Show first image in folder	フォルダ内の最初の画像を表示
+Show grid lines	グリッドを表示
+Show histogram	ヒストグラムを表示
+Show last image in folder	フォルダ内の最後の画像を表示
+Show navigation panel	操作パネルを表示
+Show next image	次の画像を表示
+Show picture info (EXIF)	画像情報(EXIF)を表示
+Show previous image	前の画像を表示
+Show/hide file name	ファイル名を表示/非表示
+Show/hide navigation panel	操作パネルを表示/非表示
+Show/hide picture information (EXIF data)	画像情報 (EXIF) を表示/非表示
+Show/hide this help text	このヘルプを表示/非表示
+Size:	サイズ:
+Slide from bottom	下からスライド
+Slide from left	左からスライド
+Slide from right	右からスライド
+Slide from top	上からスライド
+Slideshow	スライドショー
+Slideshow with timeout of 'n' seconds (ESC to stop)	スライドショー切り替えの秒間隔 (ESCキーで停止)
+Sort images by creation date, resp. modification date, resp. file name	作成日時/更新日時/ファイル名で画像を並び替え
+Source:	給紙方法:
+Target folders that do not yet exist are created as needed.	存在しないフォルダは作成されます。
+The directory '%s' does not contain any image files!	このフォルダに画像ファイルはありません。 %s
+The file '%s' could not be copied!	
+The file '%s' could not be read!	 このファイルを読み込めません。 %s
+The file '%s' could not be renamed!	
+The file '%s' does not contain a list of file names!	このファイル内にファイル名の一覧はありません。 %s
+The file is read-only!	このファイルは読み取り専用です。
+The following file extensions cannot be unregistered because they have been registered in the 'local machine' registry area.	以下の拡張子は、レジストリの 'local machine' 内で関連付けされているので登録を解除できません。
+The following image extensions are protected by the operating system.	以下の画像用の拡張子は Windows によって保護されています。
+The imported param DB contains entries already present in active param DB.	インポートしたパラメーターが現在有効なパラメーターと競合します。
+The new size is too large - width or height is larger than 65535 or total number of pixels is too large!	指定サイズが大きすぎます。 縦か横が65535以上、または、ピクセルの総数が多すぎます。
+The old parameter DB file '%s' could not be renamed during conversion to new format!	古い形式のパラメーターファイル %s を新しい形式に変換できません。
+The operation failed because not enough memory is available!	メモリー不足で操作に失敗
+The parameter DB file '%s' has been created by a newer version of JPEGView!	パラメーターファイル %s が新しいバージョンの JPEGView で作成されています。
+The transformation can be applied if the image is trimmed to the next matching size but this will remove some border pixels.	変形は次のサイズの場合に可能です。ただし境界のピクセルはトリミングされます。
+These values will override the values from the INI file located in the program folder of JPEGView!	このパラメーターはJPEGViewフォルダ内のINIファイルの設定よりも優先されます
+Threshold	閾値
+Title:	タイトル:
+Toggle between screens (only for multi-monitor systems)	マルチモニターで別画面に表示
+Toggle window always on top mode	
+Toggle window title bar hidden mode	
+Top	上
+Transition Effect	遷移時の視覚効果
+Trim the image and apply transformation? Trimming cannot be undone!	境界をトリミングして変形しますか？ 元に戻せません。
+Unregistering not possible	解除できません
+Unsharp mask...	ぼかしマスク...
+Update user settings with new settings from settings template file?	設定用テンプレートファイルの新しい設定で個人設定を更新しますか？
+Use the 'Default Programs' configuration dialog from the operating system instead.	代わりに、Windowsの設定の「既定のプログラム」を利用してください。
+Use the mouse to draw a line that shall be horizontal or vertical.	マウスで縦か横の線を描きます。
+Warning	注意
+Width	幅
+Windows 8 (and above) blocks JPEGView from changing the default program for these file extensions.	
+Writing the resulting JPEG file to disk failed	JPEGファイル保存失敗
+Y - B	A - A
+Year short form (2 digits)	年数2桁
+Yellow-Blue	イエロー/青
+Zoom 1:1 (100 %)	実寸表示 1:1 (100%)
+Zoom in (%s)/Zoom out (%s)	拡大(%s)/縮小(%s)
+Zoom in/out image	拡大/縮小
+Zoom mode (drag mouse to zoom)	拡大モード (マウスでドラッグ)
+and image processing (brightness/contrast/sharpen) parameters between images	明るさ、コントラスト、シャープのパラメーターを保持
+cm	
+in	
+new menu entry	
+no	なし
+off	オフ
+on	オン
+yes	あり
+
+// ::: Popup Menu Strings ::: (unsorted to preserve context) //
+Stop slide show/movie	スライドショー/動画を停止
+Open image...	画像ファイルを開く...
+Open image with	プログラムで画像を開く
+Save processed image...	加工した画像を保存...
+Reload image	画像を再読み込み
+Open containing folder in Explorer	エクスプローラーでこのフォルダを開く
+Print image...	画像の印刷...
+Batch rename/copy...	一括で改名/コピー...
+Set modification date	更新日時を設定
+to current date	現在の日時
+to EXIF date	EXIFの日時
+to EXIF date (all files in folder)	EXIFの日時 (フォルダ内すべて)
+Set as desktop wallpaper	デスクトップの壁紙に設定
+Use original image	元の画像を使用
+Use processed image as displayed	表示されている加工済み画像を使用
+Copy to clipboard	クリップボードにコピー
+Copy original size image	元のサイズのままコピー
+Copy file path	ファイルのパスをコピー
 Display order	表示順
 Modification date	更新日時
 Creation date	作成日時
 Play folder as slideshow/movie	スライドショー/動画でフォルダを表示
-Slideshow	スライドショー
-Movie	動画
 Waiting time	待ち時間
-Stop slide show/movie	スライドショー/動画を停止
-Rotate +90	+90度回転
-Rotate -90	-90度回転
-Rotate 180	180度回転
-Auto correction	自動補正
-Local density correction	色濃度の補正
-Keep parameters	パラメーターを保持
-Set current parameters as default values...	現在のパラメーターを規定に設定...
-Save parameters to DB	パラメーターデータを記憶
-Clear parameters from DB	パラメーターデータの記憶を消去
-Zoom	拡大
-Fit to screen	画面にフィット
-Fill with crop	黒枠を切り抜いてフィット
-Span all screens	マルチモニター横断
-Auto zoom mode	自動拡大の方法
-Fit to screen (no zoom)	画面にフィット (拡大なし)
-Fill with crop (no zoom)	黒枠を切り抜いてフィット (拡大なし)
-Exit	終了
-Cyan-Red	シアン/赤
-Magenta-Green	マゼンタ/緑
-Yellow-Blue	イエロー/青
-C - R	C - V
-M - G	M - V
-Y - B	A - A
-Batch rename/copy of files	ファイルを一括で改名/コピー
-Image files in folder	このフォルダ内の画像ファイル: 
-Placeholders:	引数の使用:
-Number (consecutively numbered)	通し番号
-Number with N digits	N桁の番号
-Extracted number from original file name	元のファイル名中の数値 (最初の数値の連続のみ)
-Original file name (with extension)	元のファイル名(拡張子含む)
-Original file name (without extension)	元のファイル名(拡張子除く)
-Original file extension	元のファイルの拡張子
-'My Pictures' folder	「ピクチャ」フォルダ
-Day / Month / Year (as numbers)	日 / 月 / 年 (数字)
-Year short form (2 digits)	年数2桁
-Month / Short form (text)	数字+月 / 月の数字のみ (システムの言語による)
-Target folders that are not yet existing are created as needed.	存在しないフォルダは作成されます。
-Date placeholders use the modification date of the image.	引数の日付は画像の更新日時を使用します。
-Rename/copy images to:	変更先のパスやファイル名:
-Rename	変更を実行
-Preview	プレビュー
-Save as template	テンプレートとして保存
-Close	閉じる
-Old name	元の名前
-Date	日付
-New name (>> : file gets copied)	新しい名前 (>> : コピー先)
-Select all	すべて選択
-Select none	すべて選択解除
-The file '%s' could not be %s.	%s ファイルは %s できません。
-copied	コピー
-renamed	改名
-Continue rename/copy?	改名/コピーを続けますか？
-Error during rename/copy	改名/コピーのエラー
-%d file(s) renamed, %d file(s) copied, %d folder(s) created	%d個を改名 %d個をコピー %d個のフォルダを作成
-Crop Selection	選択範囲を切り取り
-Copy Selection to Clipboard	選択範囲をクリップボードにコピー
-Zoom to Selection	選択範囲を拡大
-Pasting image from clipboard failed!	クリップボードからの貼り付けに失敗
-Image width:	画像の幅:
-Image height:	画像の高さ:
-Acquisition date:	撮影日時:
-Camera model:	カメラの機種:
-Exposure time (s):	露出時間 (秒):
-Exposure bias (EV):	露出補正 (EV):
-Flash fired:	フラッシュ:
-Focal length (mm):	焦点距離 (mm):
-F-Number:	絞り (F値):
-ISO Speed:	ISO感度:
-Modification date:	更新日時:
-yes	あり
-no	なし
-Show navigation panel	操作パネルを表示
-Show/hide navigation panel	操作パネルを表示/非表示
-About JPEGView...	JPEGViewについて...
-About JPEGView (64 bit version)...	JPEGView (64bit版)について...
-SIMD mode used:	使用したSIMDの種類:
-Number of CPU cores used:	CPUコア数:
-Licensed under the GNU general public license (GPL), see readme file for details:	GNU general public license (GPL) に準拠、詳細は readme をお読みください:
-Project home page:	プロジェクトのホームページ:
-Show first image in folder	フォルダ内の最初の画像を表示
-Show previous image	前の画像を表示
-Show next image	次の画像を表示
-Show last image in folder	フォルダ内の最後の画像を表示
-Rotate image 90 deg clockwise	右回り90度回転
-Rotate image 90 deg counter-clockwise	左回り90度回転
-Landscape picture enhancement mode	風景画像の改善モード
-Display image (EXIF) information	画像情報(EXIF)を表示	
-Actual size of image	実際の画像サイズ
-Toggle between screens (only for multi-monitor systems)	マルチモニターで別画面に表示
-Enable/disable full screen mode	全画面表示を有効化/無効化
-Full screen mode	全画面表示
-Window mode	ウィンドウ表示
-Save as (in screen size/resolution)	名前を付けて保存 (画面サイズ/解像度)
-Save processed image to JPEG file (screen size)	加工した画像をJPEGに保存 (画面サイズ)
-Settings/Admin	設定/管理者
-Edit global settings...	共通設定の変更...
-Edit user settings...	個人設定の変更...
-Backup parameter DB...	パラメーターのバックアップ...
-Restore parameter DB...	バックアップしたパラメーターの復元...
-No user INI file exits yet. Create user INI file from INI file template?	個人用のINIがありません。テンプレートから新規のINIファイルを作成しますか？
-Copying parameter DB to file '%s' failed. Reason: %s	ファイル %s へのパラメーターのコピーが失敗しました。原因: %s
-Select parameter DB to restore	復元するパラメーターファイルを選択
-Conflicting entries in Param DB	パラメーターの設定に競合があります
-The imported param DB contains entries already present in active param DB.	インポートしたパラメーターが現在有効なパラメーターと競合します。
-Shall existing entries be preserved (Yes) or be overriden by the imported entries (No)?	現在のパラメーターを維持(Yes)、インポートを有効化(No)
-Select file to display in 'File Open' dialog	画像ファイルを「開く」で選択
-Crop Mode	切り取り比
-Free	自由選択
-Fixed size...	固定サイズ...
-Set Fixed Crop Size	切り取りサイズの固定
-Width	幅
-Height	高さ
-Pixels	ピクセル
-Screen Pixels	モニターのピクセル数
-Image Pixels	画像のピクセル数
-Set modification date	更新日時を設定
-to current date	現在の日時
-to EXIF date	EXIFの日時
-Mark image for toggling. Use %s to toggle between marked and current image	切り替え画像に指定。 %s で現在の画像と切り替え
-Saturation	彩度
-Unsharp mask...	ぼかしマスク...
-Apply Unsharp Mask	ぼかしマスクを適用
-Radius	半径
-Amount	量
-Threshold	閾値
-Apply	適用
-Cancel	キャンセル
-Keep processing parameters between images	他の画像にも加工パラメーターを適用
-Show histogram	ヒストグラムを表示
-Hide histogram	ヒストグラムを非表示
-Crop Selection Lossless...	選択範囲をロスレスで切り取り...
-Save cropped image	切り取り範囲を保存
-Rotate image by user-defined angle	任意の角度で画像を回転
-Rotate Image	画像を回転
-Show grid lines	グリッドを表示
-Auto crop rotated image (avoids black border)	回転した画像を自動で切り取り (黒背景を除く)
-Align image to horizontal or vertical line	縦/横の線に揃える
-Use the mouse to draw a line that shall be horizontal or vertical.	マウスで縦か横の線を描きます。
-Rotate the image by dragging with the mouse.	マウスのドラッグで回転します。
-The operation failed because not enough memory is available!	メモリー不足で操作に失敗
-to EXIF date (all files in folder)	EXIFの日時 (フォルダ内すべて)
-Number of JPEG files in folder: %d	フォルダ内のJPEGファイル数: %d
-EXIF date successfully set on %d images, failed on %d images	EXIFの日時に設定 成功:%d, 失敗:%d
-Reason: Not enough memory available	原因: メモリー不足
-Transform image	画像の変形
-Rotate...	回転...
-Mirror horizontally	横に反転
-Mirror vertically	縦に反転
-Random	ランダム
-Zoom mode (drag mouse to zoom)	拡大モード (マウスでドラッグ)
-Correct converging lines (perspective correction)	消失点の調整 (遠近法)
-Perspective Correction	遠近法の調整
-Perspective correction...	遠近法の調整...
-Auto crop corrected image (avoids black border)	加工した画像を自動で切り取り(黒背景を除く)
-Click and drag the mouse vertically to correct image tilt.	縦方向にマウスでドラッグし画像の傾きを調整します、
-Drag at the left or right border for asymmetric correction.	左右の辺のドラッグで非対称に調整します。
-Fit window to image	画像にウィンドウをフィット
-Keep aspect ratio on crop	切り取りで縦横比を維持
-Lossless JPEG transformations	JPEGをロスレスで変形
-Performing the lossless transformation failed!	ロスレス変形に失敗
-Image width and height must be dividable by the JPEG block size (8 or 16) for lossless transformations!	ロスレス変形では縦/横サイズを8または16の倍数にしてください。
-Reading the JPEG file from disk failed	JPEGファイル読み込み失敗
-Writing the resulting JPEG file to disk failed	JPEGファイル保存失敗
-Performing the transformation failed	変形失敗
-The transformation can be applied if the image is trimmed to the next matching size but this will remove some border pixels.	変形は次のサイズの場合に可能です。ただし境界のピクセルはトリミングされます。
-Trim the image and apply transformation? Trimming cannot be undone!	境界をトリミングして変形しますか？ 元に戻せません。
-Note: Set the key 'TrimWithoutPromptLosslessJPEG=true' in the INI file to always trim without showing this message.	注意: INIファイルに TrimWithoutPromptLosslessJPEG=true を設定すると、警告なしでトリミングします。
-Transition Effect	遷移時の視覚効果
-None	なし
-Blend	ブレンド
-Slide from right	右からスライド
-Slide from left	左からスライド
-Slide from top	上からスライド
-Slide from bottom	下からスライド
-Roll from right	右からロール
-Roll from left	左からロール
-Roll from top	上からロール
-Roll from bottom	下からロール
-Scroll from right	右からスクロール
-Scroll from left	左からスクロール
-Scroll from top	上からスクロール
-Scroll from bottom	下からスクロール
+1 sec	
+2 sec	
+3 sec	
+4 sec	
+5 sec	
+7 sec	
+10 sec	
+20 sec	
 Transition Speed	遷移時間
 Very fast	速い
 Fast	速め
 Normal	標準
 Slow	遅め
 Very slow	遅い
-Error	エラー
-Warning	注意
-Error while writing the following registry key:	以下のレジストリーキーの書き込みエラーです:
-Set as default viewer...	規定の画像ビューアとして設定...
-Set JPEGView as default image viewer	JPEGView を規定の画像ビューアに設定
-JPEGView is registered as default viewer for the selected file formats.	指定の画像形式で、JPEGView を既定のビューアに設定しました。
-Registration applies to the current user only.	関連付けは現在のユーザーのみに有効です。
-Extension	拡張子
-File type	ファイルタイプ
-The following file extensions cannot be unregistered because they have been registered in the 'local machine' registry area.	以下の拡張子は、レジストリの 'local machine' 内で関連付けされているので登録を解除できません。
-Registering or unregistering file extensions in this registry area requires administration privileges and cannot be done in JPEGView.	この拡張子の関連付け/解除には管理者権限が必要なので、JPEGViewでは変更できません。
-Press 'OK' to continue with registration or 'Cancel' to not modify any registrations.	関連付け実行は「OK」、変更しない場合は「キャンセル」を選択してください。
-Unregistering not possible	解除できません
-%s images	%s 個の画像
-%s images (processed by Window Imaging Component - WIC)	%s 個の画像 (Windows Imaging - WIC で処理)
-%s camera raw images (embedded JPEGs only)	%s 個のRAW画像 (埋め込みJPEGのみ)
-The following image extensions are protected by the operating system.	以下の画像用の拡張子は Windows によって保護されています。
-Insufficient rights to remove the restrictions. Continue?	制限の除去に必要な権限がありません。続けますか？
-No image loaded!	画像なし
-Right mouse button: Context menu	マウスの右クリック: コンテキストメニュー
-Windows 8 blocks JPEGView from changing the default program for these file endings.	Windows 8 では、これらのファイルの既定のビューアに JPEGView を指定できません。
-Use the 'Default Programs' configuration dialog from the operating system instead.	代わりに、Windowsの設定の「既定のプログラム」を利用してください。
-Alternatively, right click an image file of the given type in Windows Explorer and select 'Open with... > Choose default program'	あるいは、エクスプローラーで画像ファイルを右クリックして、「プログラムから開く」から「既定のプログラム」を選択します。
-User commands	ユーザーコマンド
-Open image with	プログラムで画像を開く
-Manage 'Open image with' menu...	「プログラムから開く」メニューの管理...
-Menu entries:	メニュー項目:
-Title:	タイトル:
-Application:	アプリケーション:
-Shortcut key:	ショートカットキー:
-Browse...	参照...
-New	新規
-Delete	削除
-Modifier keys:	修飾キー:
-Known keys:	キー:
-Combine keys with '+'	'+'でキーの組み合わせ
-Example:	例:
-Shortcut Help	ヘルプ
-[new entry]	[新しい項目]
-Applications	アプリケーション
-Select application	アプリケーションを選択
-Save	保存
-Edit	編集
-Upcounting	順増
-Downcounting	順減
-File size	ファイルサイズ
-Do you really want to delete the current image file on disk?	この画像ファイルを削除しますか？
-Delete image file	画像ファイルを削除
+Movie	動画
+Playback speed	
+5 fps	
+10 fps	
+25 fps	
+30 fps	
+50 fps	
+100 fps	
+Transform image	画像の変形
+Rotate +90	+90度回転
+Rotate -90	-90度回転
+Rotate...	回転...
 Change size...	サイズ変更...
-Resize Image	画像サイズの変更
-OK	OK
-New size:	サイズの指定:
-New width:	幅の指定:
-New height:	高さの指定:
-Filter:	フィルター:
-Box	ボックス
-Lanczos/Bicubic	ランチョス/バイキュービック
-Sharpen low	シャープ 低
-Sharpen medium	シャープ 中
-The new size is too large - width or height is larger than 65535 or total number of pixels is too large!	指定サイズが大きすぎます。 縦か横が65535以上、または、ピクセルの総数が多すぎます。
-JPEGView is a lean, fast and highly configurable viewer/editor for JPEG, BMP, PNG, WEBP, TGA, GIF and TIFF images with a minimal GUI.	JPEGView は、JPEG、BMP、PNG、WEBP、TGA、GIF、TIFF に対応し、軽快・高速かつ広くカスタマイズできる余分な装飾を抑えた画像ビューア/エディターです。
-Hour / Minute (as numbers)	時/分 (数字)
-Set as desktop wallpaper	デスクトップの壁紙に設定
-Use original image	元の画像を使用
-Use processed image as displayed	表示されている加工済み画像を使用
-Reset	リセット
-Print image...	画像の印刷...
-Print Image	画像の印刷
-Print	印刷
-Select Printer...	プリンターの選択...
-Printer:	プリンター:
-Paper:	用紙サイズ:
-Source:	給紙方法:
-Orientation:	印刷の向き:
-Portrait	縦
-Landscape	横
-Size:	サイズ:
-Fit to paper	用紙サイズに合わせる
-cm	cm
-Scaling mode:	拡大モード:
-Printer driver	プリンタードライバー
-Alignment:	整列の位置:
-Margins:	余白:
-Left	左
-Right	右
-Top	上
-Bottom	下
-Fill paper with crop	用紙を満たすように拡大
-Update user settings...	個人設定の更新...
-Update user settings with new settings from settings template file?	設定用テンプレートファイルの新しい設定で個人設定を更新しますか？
-All existing user settings will be preserved.	すべての個人設定は保存されます。
-Location:	位置情報:
-Altitude (m): 標高 (メートル):
-Open containing folder in Explorer	エクスプローラーでこのフォルダを開く
-Copy file path	ファイルのパスをコピー
+Perspective correction...	遠近法の調整...
+Mirror horizontally	横に反転
+Mirror vertically	縦に反転
+Rotate 180	180度回転
+Auto correction	自動補正
+Save parameters to DB	パラメーターデータを記憶
+Clear parameters from DB	パラメーターデータの記憶を消去
+Zoom	拡大
+Span all screens	マルチモニター横断
+Full screen mode	全画面表示
+Fit window to image	画像にウィンドウをフィット
 Hide window title bar	ウィンドウのタイトルバーを隠す
 Set window always on top	常に手前に表示
+Settings/Admin	設定/管理者
+Edit global settings...	共通設定の変更...
+Edit user settings...	個人設定の変更...
+Update user settings...	個人設定の更新...
+Set current parameters as default values...	現在のパラメーターを規定に設定...
+Set as default viewer...	規定の画像ビューアとして設定...
+Backup parameter DB...	パラメーターのバックアップ...
+Restore parameter DB...	バックアップしたパラメーターの復元...
+User commands	ユーザーコマンド
+About JPEGView...	JPEGViewについて...
+Exit	終了
+Crop Selection	選択範囲を切り取り
+Crop Selection Lossless...	選択範囲をロスレスで切り取り...
+Copy Selection to Clipboard	選択範囲をクリップボードにコピー
+Crop Mode	切り取り比
+Free	自由選択
+Fixed size...	固定サイズ...
+Zoom to Selection	選択範囲を拡大
+
+// ::: INFO: Out-of-date Translations [19] ::: (Not in use anymore, safe to delete) //
+//Actual size of image	実際の画像サイズ
+//Delete current file on disk permanently	表示中の画像ファイルを完全に削除
+//Do you really want to permanently delete the file %filename%?	本当に完全に削除しますか？ \n%filename%
+//Insufficient rights to remove the restrictions. Continue?	制限の除去に必要な権限がありません。続けますか？
+//Local density correction:	色濃度の補正:
+//No file or folder name was provided as command line parameter!	コマンド中にファイル名かフォルダ名の指定がありません
+//PgDn or Right	PgDown または 右矢印
+//PgUp or Left	PgUp または 左矢印
+//Rename:	名前の変更
+//Rotate the following file lossless by 270 deg?\n%filename%	画像をロスレスで270度回転しますか？ \n%filename%
+//Rotate the following file lossless by 90 deg?\n%filename%	画像をロスレスで90度回転しますか？ \n%filename%
+//The file '%s' could not be %s.	%s ファイルは %s できません。
+//To use JPEGView, associate JPG, JPEG and BMP files with JPEGView.	JPEGView を使うには、JPG、JPEG、BMPファイルを JPEGViewに 関連付けしてください
+//Window mode	ウィンドウ表示
+//Windows 8 blocks JPEGView from changing the default program for these file endings.	Windows 8 では、これらのファイルの既定のビューアに JPEGView を指定できません。
+//[new entry]	[新しい項目]
+//copied	コピー
+//renamed	改名
+//up/down	上/下
+
+// ::: INFO: Missing Translations [30] ::: (Summary of all missing strings to assist translators - Auto-generated by script) //
+//! Clipboard Image
+//! Copy file path of the image to clipboard
+//! Decoding this format requires the Microsoft Visual C++ Redistributable.
+//! High quality resampling
+//! Insufficient rights to change the privilege (DACL) on the registry entry. Continue?
+//! OK
+//! Open folder containing image and select in Windows Explorer
+//! The file '%s' could not be copied!
+//! The file '%s' could not be renamed!
+//! Toggle window always on top mode
+//! Toggle window title bar hidden mode
+//! Windows 8 (and above) blocks JPEGView from changing the default program for these file extensions.
+//! cm
+//! in
+//! new menu entry
+//! 1 sec
+//! 2 sec
+//! 3 sec
+//! 4 sec
+//! 5 sec
+//! 7 sec
+//! 10 sec
+//! 20 sec
+//! Playback speed
+//! 5 fps
+//! 10 fps
+//! 25 fps
+//! 30 fps
+//! 50 fps
+//! 100 fps
+
+// ::: STATUS: Last Checked/Updated by Script ::: 2023-02-09T18:39:48.045118+00:00 //
+//! Translation Progress: 93%
+//! * Total (Strings + Menu) = 421
+//! * Done = 391
+//! * Missing = 30 (7%)

@@ -1,409 +1,486 @@
-﻿// This file must be encoded with UTF-8 (e.g. with Windows Notepad)	
-// Filename is 'strings_%languagecode%.txt' where %languagecode% is the ISO 639 language code e.g. 'fr' for French	
-// Format is: English string<tab>Translated string<newline>	
-Contrast	Contraste
-Brightness	Gamma
-Sharpen	Netteté
-Lighten Shadows	Eclaircir les sombres
-Darken Highlights	Assombrir les clairs
-Deep Shadows	Sombres profonds
-Color Correction	Correction des couleurs
-Contrast Correction	Correction du contraste
-Parameter DB:	DB traitements :
-Save to	Enregistrer
-Remove from	Supprimer
-Rename:	Renommer :
-No file or folder name was provided as command line parameter!	Il n'y aucun nom de fichier ou de dossier en paramètre de la ligne de commande !
-To use JPEGView, associate JPG, JPEG and BMP files with JPEGView.	Pour utiliser JPEGView, associez les formats JPG, JPEG et BMP avec JPEGView.
-Press ESC to exit...	Appuyez sur Echap pour quitter...
-The file '%s' could not be read!	Le fichier '%s' n'a pas pu être lu !
-The file '%s' does not contain a list of file names!	Le fichier '%s' ne contient pas de liste de noms de fichiers !
-The directory '%s' does not contain any image files!	Le répertoire '%s' ne contient aucun fichier image !
-Press any key to search the subdirectories for image files.	Appuyez sur une touche pour rechercher des fichiers images dans les sous-répertoires.
-JPEGView Help	Aide JPEGView
-Current image	Image courante
-Close help text display / Close JPEGView	Fermer l'aide / Fermer JPEGView
-Show/hide this help text	Afficher/masquer l'aide
-Show/hide picture information (EXIF data)	Afficher/masquer les informations sur l'image (données EXIF)
-Show/hide file name	Afficher/masquer le nom du fichier
-Enable/disable high quality resampling	Activer/désactiver le rééchantillonnage haute qualité
-Enable/disable keeping of geometry related (zoom/pan/rotation)	Activer/désactiver le maintien des traitements géométriques (zoom / panoramique / rotation)
-and image processing (brightness/contrast/sharpen) parameters between images	et de visualisation (contraste / gamma / netteté) d'une image à l'autre
-Enable/disable automatic contrast correction (histogram equalization)	Activer/désactiver la correction automatique du contraste (égalisation de l'histogramme)
-Apply auto contrast correction using only visible section of image	Appliquer la correction automatique du contraste en utilisant uniquement la partie visible de l'image
-Enable/disable automatic density correction (local brightness correction)	Activer/désactiver les corrections sombres et clairs (luminosité locale)
-Increase/decrease lightening of shadows (LDC must be on)	Augmenter/diminuer l'éclaircissement des sombres (LDC doit être actif)
-Increase/decrease darkening of highlights (LDC must be on)	Augmenter/diminuer l'assombrissement des clairs (LDC doit être actif)
-Loop through files in current folder	Parcourir les fichiers du dossier courant
-Loop through files in current directory and all subfolders	Parcourir les fichiers du dossier courant et de ses sous-dossiers
-Loop through files in current directory and all sibling folders (folders on same level)	Parcourir les fichiers du dossier courant et de ses dossiers frères (dossiers au même niveau)
-Maximize/restore to/from virtual desktop (only for multi-monitor systems)	Agrandir/Restaurer le bureau virtuel (uniquement si plusieurs écrans)
-Copy screen to clipboard/ Copy processed full size image to clipboard	Copier l'image traitée (capture écran ou taille réelle)
-Open new image or slideshow file	Ouvrir une image ou un diaporama
-Save processed image to JPEG file (original size)	Enregistrer l'image traitée en JPEG (taille originale)
-Save (%s)/ delete (%s) image processing parameters in/from parameter DB	Sauvegarder (%s)/supprimer (%s) le traitement pour cette image dans la DB
-Sort images by creation date, resp. modification date, resp. file name	Trier les images par date de création, date de modification, nom du fichier
-Goto previous image	Image précédente
-Goto next image	Image suivante
-PgUp or Left	Pg.Préc ou Gauche
-PgDn or Right	Pg.Suiv ou Droite
-Goto first/last image of current folder (using sort order as defined)	Aller à la première/dernière image du dossier en cours (selon l'ordre de tri défini)
-Increase/decrease brightness	Augmenter/diminuer le gamma
-Increase/decrease contrast	Augmenter/diminuer le contraste
-Increase/decrease sharpness	Augmenter/diminuer la netteté
-Increase/decrease auto color cast correction amount	Augmenter/diminuer la correction automatique des couleurs
-Increase/decrease auto contrast correction amount	Augmenter/diminuer la correction automatique du contraste
-Enable/disable landscape picture enhancement mode	Activer/désactiver le mode LDC (amélioration des paysages)
-Slide show with timeout of n seconds (ESC to stop)	Diaporama avec délai de n secondes (Echap pour arrêter)
-Set timeout to n/10 sec, respectively n/100 sec (Ctrl+Shift)	Configurer le délai respectivement à n/10 sec, n/100 sec (Ctrl+Maj)
-Rotate image and fit to screen	Pivoter et ajuster l'image à la fenêtre
-Fit image to screen	Ajuster l'image à l'écran
-Zoom 1:1 (100 %)	Zoom 1:1 (100%)
-Zoom in (%s)/Zoom out (%s)	Zoom avant (%s)/Zoom arrière (%s)
-Zoom in/out image	Zoom avant/arrière sur l'image
-Pan image	Parcourir l'image
-Crop image	Recadrer
-Next image	Image suivante
-Previous image	Image précédente
-up/down	haut/bas
-Mouse wheel	Molette de la souris
-Left mouse & drag	Clic gauche et déplacer
-Ctrl + Left mouse	Ctrl + Clic gauche
-Forward mouse button	Bouton Avant de la souris
-Back mouse button	Bouton Arrière de la souris
-Delete current file on disk permanently	Supprimer le fichier définitivement
-Rotate current file on disk lossless by 90 deg (W/H must be multiple of 16)	Pivoter de 90° (sans perte si largeur / hauteur multiple de 16) et enregistrer le fichier
-Rotate current file on disk lossless by 270 deg (W/H must be multiple of 16)	Pivoter de 270° (sans perte si largeur / hauteur multiple de 16) et enregistrer le fichier
-The file is read-only!	Le fichier est en lecture seule !
-Can't rename file	Impossible de renommer le fichier
-New name contains backslash character!	Le nouveau nom contient un caractère anti-slash !
-Renaming file failed!	Le renommage a échoué !
-Reason: 	Raison : 
-on	marche
-off	arrêt
-Do you really want to save the following parameters as default to the INI file	Confirmer la sauvegarde par défaut de ces réglages dans le fichier INI
-Auto contrast and color correction: 	Corrections couleurs et contrastes : 
-Local density correction: 	Corrections sombres et clairs : 
-Order files by: 	Tri des fichiers par : 
-Creation date/time	Date de création
-Last modification date/time	Date de dernière modification
-File name	Nom du fichier
-These values will override the values from the INI file located in the program folder of JPEGView!	Ce fichier INI utilisateur aura priorité sur le fichier INI du dossier programme de JPEGView.
-Confirm save default parameters	Confirmer la sauvegarde des réglages dans le fichier INI
-Images	Images
+﻿//! This file must be encoded with UTF-8 (e.g. with Windows Notepad)
+//! LICENSE: This localization file is part of JPEGView <https://github.com/sylikc/jpegview> and distributed under the same license.  See <https://github.com/sylikc/jpegview/blob/master/LICENSE.txt> for more info.
+
+//! Filename Convention: 'strings_%languagecode%.txt' where %languagecode% is the ISO 639 language code e.g. 'en' for English
+
+////////////////////
+// ::: Translation Info ::: //
+//: ISO 639 code: fr
+//: Language: French
+//: Translator(s): Laurent Grenet <https://github.com/LaurentGrenet>
+//: Last Updated: 2023-02-09
+//: Additional Notes:
+////////////////////
+
+////////////////////
+// ::: Instructions / Help ::: //
+
+//? Line Format:    English string<tab>Translated string<newline>
+//? * Lines beginning with "//" (comments) are ignored
+//? * Blank lines are ignored
+//? * Lines without a <tab> are ignored
+//? * Lines with no text after the <tab> are ignored
+//? * Multiple tabs are permitted between English and Translated string, e.g. this is valid:    English string<tab><tab><tab>Translated string<newline>
+
+//? NOTE: %s %d have special meanings in the strings, so make sure they appear somewhere in the translated string
+
+//? For the strings below which are short and have no context:
+//?   "in" in context is shorthand for "inch"
+//?   "cm" in context is shorthand for "centimeter"
+//?   "C - R" in context is "Cyan Red" colors
+//?   "M - G" in context is "Magenta Green" colors
+//?   "Y - B" in context is "Yellow Blue" colors
+//?   "yes"/"no" in context is for showing EXIF flags
+//?   "on"/"off" in context is for showing a setting active or not
+////////////////////
+
+
+// ::: Program Strings ::: (sorted alphabetically) //
+%d file(s) renamed, %d file(s) copied, %d folder(s) created	%d fichier(s) renommé(s), %d fichier(s) copié(s), %d dossier(s) créé(s)
+%s camera raw images (embedded JPEGs only)	%s images photo brutes (JPEGs embarqués)
+%s images	%s images
+%s images (processed by Window Imaging Component - WIC)	%s images (traitées avec Windows Imaging Component - WIC)
+'My Pictures' folder	Dossier 'Mes images'
+About JPEGView (32-bit version)...	A propos de JPEGView (version 32 bits)...
+About JPEGView (64-bit version)...	A propos de JPEGView (version 64 bits)...
+Acquisition date:	Date d'acquisition :
+Align image to horizontal or vertical line	Aligner l'image avec une ligne horizontale ou verticale
+Alignment:	Alignement :
 All Files	Tous les fichiers
-Parameter DB file '%s' could not be opened!	Le fichier DB traitements '%s' n'a pas pu être ouvert !
-Parameter DB file '%s' is not valid (invalid header)!	Le fichier DB traitements '%s' n'est pas valide (en-tête invalide) !
-Cannot write to parameter DB file '%s'!	Impossible d'écrire dans le fichier DB traitements '%s' !
+All existing user settings will be preserved.	Tous les paramètres utilisateur existants seront préservés
+Alternatively, right-click an image file of the given type in Windows Explorer and select 'Open with... > Choose default program'	Ou sinon, faites clic droit sur une image dans l'Explorateur windows et choisissez 'Ouvrir avec... > Choisir le programme par défaut'.
+Altitude (m):	Altitude (m):
+Amount	Quantité
+Application:	Application :
+Applications	Applications
+Apply	Appliquer
+Apply Unsharp Mask	Appliquer le filtre de netteté
+Apply auto contrast correction using only visible section of image	Appliquer la correction automatique du contraste en utilisant uniquement la partie visible de l'image
+Ascending	Ordre croissant
+Auto contrast and color correction	Corrections couleurs et contrastes
+Auto crop corrected image (avoids black border)	Rognage automatique de l'image corrigée (évite les bords noirs)
+Auto crop rotated image (avoids black border)	Rognage automatique de l'image pivotée (évite les bords noirs)
+Auto zoom mode	Auto zoom
+Back mouse button	Bouton Arrière de la souris
+Batch rename/copy of files	Batch renommer / copier fichiers
+Blend	Mélanger les calques
+Bottom	Bas
+Box	Boîte
+Brightness	Gamma
+Browse...	Explorer...
+C - R	Cy - R
+Camera model:	Modèle d'appareil photo :
+Can't rename file	Impossible de renommer le fichier
+Cancel	Annuler
 Cannot read from parameter DB file '%s'!	Impossible de lire le fichier DB traitements '%s' !
 Cannot read parameter DB file '%s' because it is too large!	Impossible de lire le fichier DB traitements '%s' parce que sa taille est trop grande !
-The parameter DB file '%s' has been created by a newer version of JPEGView!	Le fichier DB traitements '%s' a été créé par une version plus récente de JPEGView !
-The old parameter DB file '%s' could not be renamed during conversion to new format!	L'ancien fichier DB traitements '%s' n'a pas pu être renommé lors de la conversion au nouveau format !
-Parameter DB error	Erreur DB traitements
-Error saving file	Erreur de sauvegarde du fichier
-Error writing file to disk!	Erreur d'écriture sur le disque !
+Cannot write to parameter DB file '%s'!	Impossible d'écrire dans le fichier DB traitements '%s' !
+Click and drag the mouse vertically to correct image tilt.	Cliquez et déplacez la souris verticalement pour corriger l'inclinaison de l'image.
+Clipboard Image	Image du Presse-Papier
+Close	Fermer
+Close help text display / Close JPEGView	Fermer l'aide / Fermer JPEGView
+Color Correction	Correction des couleurs
+Combine keys with '+'	Combiner les touches avec '+'
 Confirm	Confirmer
-Do you really want to permanently delete the file %filename%?	Confirmer la suppression définitive du fichier %filename% ?
-Rotate the following file lossless by 90 deg?\n%filename%	Pivoter de 90° et enregistrer le fichier ?\n%filename%
-Rotate the following file lossless by 270 deg?\n%filename%	Pivoter de 270° et enregistrer le fichier ?\n%filename%
-Open image...	Ouvrir...
-Save processed image...	Enregistrer l'image traitée...
-Reload image	Actualiser
-Copy to clipboard	Copier l'image traitée (capture écran)
-Copy original size image	Copier l'image traitée (taille réelle)
-Paste from clipboard	Coller
-Batch rename/copy...	Batch renommer / copier ...
-Show picture info (EXIF)	Afficher les infos photo (EXIF)
-Show filename	Afficher le nom du fichier
-Navigation	Dossiers
+Confirm save default parameters	Confirmer la sauvegarde des réglages dans le fichier INI
+Conflicting entries in Param DB	Conflit d'entrées dans la DB traitements
+Continue rename/copy?	Continuer renommage/copie?
+Contrast	Contraste
+Contrast Correction	Correction du contraste
+Copy file path of the image to clipboard	Copier le chemin complet de l'image
+Copy screen to clipboard/ Copy processed full size image to clipboard	Copier l'image traitée (capture écran ou taille réelle)
+Copying parameter DB to file '%s' failed. Reason: %s	La copie de la DB traitements vers le ficher '%s' a échoué. Raison : %s
+Correct converging lines (perspective correction)	Correction de la perspective (lignes convergentes)
+Creation date/time	Date de création
+Crop image	Recadrer
+Ctrl + Left mouse	Ctrl + Clic gauche
+Current image	Image courante
+Cyan-Red	Cyan-Rouge
+Darken Highlights	Assombrir les clairs
+Date	Date
+Date placeholders use the modification date of the image.	Les éléments de date se basent sur la date de modification de l'image.
+Day / Month / Year (as numbers)	Jour / Mois / Année (en chiffres)
+Decoding this format requires the Microsoft Visual C++ Redistributable.	Décoder ce format requiert que Microsoft Visual C++ Redistributable soit installé.
+Deep Shadows	Sombres profonds
+Delete	Supprimer
+Delete image file	Supprimer le fichier image
+Descending	Ordre décroissant
+Display image (EXIF) information	Afficher les infos photo (EXIF)
+Do you really want to delete the current image file on disk?	Voulez-vous vraiment supprimer ce fichier ?
+Do you really want to save the following parameters as default to the INI file	Confirmer la sauvegarde par défaut de ces réglages dans le fichier INI
+Drag at the left or right border for asymmetric correction.	Déplacez le bord gauche ou droit pour une correction asymétrique.
+EXIF date successfully set on %d images, failed on %d images	La date EXIF a pu être indiquée sur %d images, cela a échoué sur %d images.
+Edit	Modifier
+Enable/disable automatic contrast correction (histogram equalization)	Activer/désactiver la correction automatique du contraste (égalisation de l'histogramme)
+Enable/disable automatic density correction (local brightness correction)	Activer/désactiver les corrections sombres et clairs (luminosité locale)
+Enable/disable full screen mode	Activer/désactiver le plein écran
+Enable/disable high quality resampling	Activer/désactiver le rééchantillonnage haute qualité
+Enable/disable keeping of geometry related (zoom/pan/rotation)	Activer/désactiver le maintien des traitements géométriques (zoom / panoramique / rotation)
+Enable/disable landscape picture enhancement mode	Activer/désactiver le mode LDC (amélioration des paysages)
+Error	Erreur
+Error during rename/copy	Erreur lors du renommage/copie
+Error saving file	Erreur de sauvegarde du fichier
+Error while writing the following registry key	Erreur lors de l'écriture de la clé de registre
+Error writing file to disk!	Erreur d'écriture sur le disque !
+Example:	Exemple :
+Exposure bias (EV):	Correction d'exposition (EV) :
+Exposure time (s):	Temps de pose (s):
+Extension	Extension
+Extracted number from original file name	Numéro extrait du nom de fichier original
+F-Number:	Ouverture (F-number) :
+File name	Nom du fichier
+File size	Taille du fichier
+File type	Type de fichier
+Fill paper with crop	Remplir la page et rogner l'image
+Fill with crop	Remplir la fenêtre et rogner l'image
+Fill with crop (no zoom)	Remplir la fenêtre et rogner l'image (sans agrandir)
+Filter:	Filtre :
+Fit image to screen	Ajuster l'image à l'écran
+Fit to paper	Ajuster à la page
+Fit to screen	Ajuster l'image à la fenêtre
+Fit to screen (no zoom)	Ajuster l'image à la fenêtre (sans agrandir)
+Flash fired:	Flash utilisé :
+Focal length (mm):	Focale (mm) :
+Forward mouse button	Bouton Avant de la souris
+Goto first/last image of current folder (using sort order as defined)	Aller à la première/dernière image du dossier en cours (selon l'ordre de tri défini)
+Goto next image	Image suivante
+Goto previous image	Image précédente
+Height	Hauteur
+Hide histogram	Masquer l'histogramme
+High quality resampling	Réechantillonnage de haute qualité
+Hour / Minute (as numbers)	Heure / Minute (en chiffres)
+ISO Speed:	Vitesse ISO :
+Image Pixels	Pixels image
+Image files in folder	Images dans le dossier
+Image height:	Hauteur de l'image :
+Image width and height must be dividable by the JPEG block size (8 or 16) for lossless transformations!	Pour effectuer une transformation sans perte, la largeur et la hauteur de l'image doivent être divisibles par la taille de bloc JPEG (8 ou 16).
+Image width:	Largeur de l'image :
+Images	Images
+Increase/decrease auto color cast correction amount	Augmenter/diminuer la correction automatique des couleurs
+Increase/decrease auto contrast correction amount	Augmenter/diminuer la correction automatique du contraste
+Increase/decrease brightness	Augmenter/diminuer le gamma
+Increase/decrease contrast	Augmenter/diminuer le contraste
+Increase/decrease darkening of highlights (LDC must be on)	Augmenter/diminuer l'assombrissement des clairs (LDC doit être actif)
+Increase/decrease lightening of shadows (LDC must be on)	Augmenter/diminuer l'éclaircissement des sombres (LDC doit être actif)
+Increase/decrease sharpness	Augmenter/diminuer la netteté
+Insufficient rights to change the privilege (DACL) on the registry entry. Continue?	Droits insuffisants pour changer le contrôle d'accès (DACL) dans la base de registres. Continuer ?
+JPEGView Help	Aide JPEGView
+JPEGView is a lean, fast and highly configurable viewer/editor for JPEG, BMP, PNG, WEBP, TGA, GIF and TIFF images with a minimal GUI.	JPEGView est un visualisateur / éditeur d'images léger, rapide, très configurable et avec une interface minimale pour JPEG, BMP, PNG, WEBP, TGA, GIF et TIFF.
+JPEGView is registered as default viewer for the selected file formats.	JPEGView sera le visualisateur par défaut pour les formats sélectionnés.
+Keep aspect ratio on crop	Maintenir le ratio largeur / hauteur lors du rognage
+Keep parameters	Garder le traitement entre les images
+Keep processing parameters between images	Garder les traitements lors du changement d‘image
+Known keys:	Touches connues :
+Lanczos/Bicubic	Lanczos / Bicubique
+Landscape	Paysage
+Landscape picture enhancement mode	Mode LDC d'amélioration des paysages
+Last modification date/time	Date de dernière modification
+Left	Gauche
+Left mouse & drag	Clic gauche et déplacer
+Licensed under the GNU general public license (GPL), see readme file for details	Sous licence GNU-GPL, voir le fichier README pour plus de détails
+Lighten Shadows	Eclaircir les sombres
+Local density correction	Corrections sombres et clairs
+Location:	Localitè:
 Loop folder	Parcourir le dossier courant
 Loop recursively	Parcourir le dossier et ses sous-dossiers
 Loop siblings	Parcourir le dossier et ses dossiers frères
+Loop through files in current directory and all sibling folders (folders on same level)	Parcourir les fichiers du dossier courant et de ses dossiers frères (dossiers au même niveau)
+Loop through files in current directory and all subfolders	Parcourir les fichiers du dossier courant et de ses sous-dossiers
+Loop through files in current folder	Parcourir les fichiers du dossier courant
+Lossless JPEG transformations	Transformations JPEG sans perte
+M - G	Ma - V
+Magenta-Green	Magenta-Vert
+Manage 'Open image with' menu...	Configurer le menu 'Ouvrir avec'...
+Margins:	Marges :
+Mark image for toggling. Use %s to toggle between marked and current image	Marquer l'image pour la basculer. Utilisez %s pour basculer entre l'image marquée et l'image courante
+Maximize/restore to/from virtual desktop (only for multi-monitor systems)	Agrandir/Restaurer le bureau virtuel (uniquement si plusieurs écrans)
+Menu entries:	Entrées du menu :
+Modification date:	Date de modification :
+Modifier keys:	Touches de bascule :
+Month / Short form (text)	Mois / simplifié (texte)
+Mouse wheel	Molette de la souris
+Navigation	Dossiers
+New	Nouveau
+New height:	Nouvelle hauteur :
+New name (>> : file gets copied)	Nouveau nom (>> : le fichier est copié)
+New name contains backslash character!	Le nouveau nom contient un caractère anti-slash !
+New size:	Nouvelle taille :
+New width:	Nouvelle largeur :
+Next image	Image suivante
+No image loaded!	Aucune image chargée !
+No user INI file exists yet. Create user INI file from INI file template?	Le fichier INI utilisateur n'existe pas encore. En créer un depuis le fichier INI modèle ?
+None	Aucun
+Not enough memory available	mémoire insuffisante
+Note: Set the key 'TrimWithoutPromptLosslessJPEG=true' in the INI file to always trim without showing this message.	Note : si vous souhaitez systématiquement redécouper sans montrer ce message d'alerte, spécifiez la valeur 'TrimWithoutPromptLosslessJPEG=true' dans le fichier INI.
+Number (consecutively numbered)	Numéro
+Number of CPU cores used	Nombre de coeurs de processeur utilisés
+Number of JPEG files in folder: %d	Nombre d'images JPEG dans le dossier : %d
+Number with N digits	Numéro à N chiffres
+OK	OK
+Old name	Ancien nom
+Open folder containing image and select in Windows Explorer	Afficher le fichier dans l'explorateur
+Open new image or slideshow file	Ouvrir une image ou un diaporama
+Order files by	Tri des fichiers par
+Orientation:	Orientation :
+Original file extension	Extension du fichier original
+Original file name (with extension)	Nom du fichier original (avec extension)
+Original file name (without extension)	Nom du fichier original (sans extension)
+Pan image	Parcourir l'image
+Paper:	Papier :
+Parameter DB	DB traitements
+Parameter DB error	Erreur DB traitements
+Parameter DB file '%s' could not be opened!	Le fichier DB traitements '%s' n'a pas pu être ouvert !
+Parameter DB file '%s' is not valid (invalid header)!	Le fichier DB traitements '%s' n'est pas valide (en-tête invalide) !
+Paste from clipboard	Coller
+Pasting image from clipboard failed!	Le collage de l'image depuis le presse-papier a échoué !
+Performing the lossless transformation failed!	Echec lors de la tranformation sans perte !
+Performing the transformation failed	Echec lors de la tentative de transformation
+Perspective Correction	Correction de la perspective
+Pixels	Pixels
+Placeholders:	Espaces réservés :
+Portrait	Portrait
+Press 'OK' to continue with registration or 'Cancel' to abort all registrations.	Appuyez sur 'OK' pour continuer quand même, ou sur 'Cancel' pour annuler toute modification.
+Press ESC to exit...	Appuyez sur Echap pour quitter...
+Press any key to search the subdirectories for image files.	Appuyez sur une touche pour rechercher des fichiers images dans les sous-répertoires.
+Preview	Prévisualiser
+Previous image	Image précédente
+Print	Imprimer
+Print Image	Imprimer
+Printer driver	Pilote d'imprimante
+Printer:	Imprimante :
+Project home page	Page d'accueil du projet
+Radius	Rayon
+Random	Aléatoire
+Reading the JPEG file from disk failed	Echec de lecture du fichier JPEG
+Reason:	Raison:
+Registering or unregistering file extensions in this registry area requires administrator privileges and cannot be done in JPEGView.	Intervenir dans cette zone demande des droits d'administrateur et ne peut pas être effectué depuis JPEGView.
+Registration applies to the current user only.	Ceci s'applique seulement à l'utilisateur en cours.
+Remove from	Supprimer
+Rename	Renommer
+Rename/copy images to:	Renommer / copier les images vers :
+Renaming file failed!	Le renommage a échoué !
+Reset	Réinitialiser
+Resize Image	Redimensionner
+Right	Droite
+Right mouse button: Context menu	Clic droit : menu contextuel
+Roll from bottom	Dérouler depuis le bas
+Roll from left	Dérouler depuis la gauche
+Roll from right	Dérouler depuis la droite
+Roll from top	Dérouler depuis le haut
+Rotate Image	Pivoter
+Rotate current file on disk lossless by 270 deg (W/H must be multiple of 16)	Pivoter de 270° (sans perte si largeur / hauteur multiple de 16) et enregistrer le fichier
+Rotate current file on disk lossless by 90 deg (W/H must be multiple of 16)	Pivoter de 90° (sans perte si largeur / hauteur multiple de 16) et enregistrer le fichier
+Rotate image 90 deg clockwise	Pivoter de 90° en sens horaire
+Rotate image 90 deg counter-clockwise	Pivoter de 90° en sens anti-horaire
+Rotate image and fit to screen	Pivoter et ajuster l'image à la fenêtre
+Rotate image by user-defined angle	Pivoter selon un angle au choix
+Rotate the image by dragging with the mouse.	Cliquez et bougez la souris dans la direction où vous souhaitez faire pivoter l'image.
+SIMD mode used	Mode SIMD utilisé
+Saturation	Saturation
+Save	Enregistrer
+Save (%s)/ delete (%s) image processing parameters in/from parameter DB	Sauvegarder (%s)/supprimer (%s) le traitement pour cette image dans la DB
+Save as (in screen size/resolution)	Enregistrer sous (à la taille / résolution de la fenêtre)
+Save as template	Enregistrer comme modèle
+Save cropped image	Enregistrer l'image rognée
+Save processed image to JPEG file (original size)	Enregistrer l'image traitée en JPEG (taille originale)
+Save processed image to JPEG file (screen size)	Enregistrer l'image traitée en JPEG (capture écran)
+Save to	Enregistrer
+Scaling mode:	Mise à l'échelle par :
+Screen Pixels	Pixels écran
+Scroll from bottom	Faire défiler depuis le bas
+Scroll from left	Faire défiler depuis la gauche
+Scroll from right	Faire défiler depuis la droite
+Scroll from top	Faire défiler depuis le haut
+Select Printer...	Choisir l'imprimante...
+Select all	Sélectionner tout
+Select application	Choisir une application
+Select file to display in 'File Open' dialog	Sélectionnez le fichier à afficher dans la boîte de dialogue "Ouvrir"
+Select none	Aucune sélection
+Select parameter DB to restore	Sélectionner la DB traitements à restaurer
+Set Fixed Crop Size	Définir la taille fixe du rognage
+Set JPEGView as default image viewer	Définir JPEGView comme visualisateur d'images par défaut
+Set timeout to n/10 sec, respectively n/100 sec (Ctrl+Shift)	Configurer le délai respectivement à n/10 sec, n/100 sec (Ctrl+Maj)
+Shall existing entries be preserved (Yes) or be overriden by the imported entries (No)?	Souhaitez-vous conserver les entrées existantes (Oui) ou les écraser avec les entrées importées (Non) ?
+Sharpen	Netteté
+Sharpen low	Netteté (faible)
+Sharpen medium	Netteté (moyenne)
+Shortcut Help	Aide raccourcis
+Shortcut key:	Raccourci clavier :
+Show filename	Afficher le nom du fichier
+Show first image in folder	Première image du dossier
+Show grid lines	Afficher la grille
+Show histogram	Afficher l'histogramme
+Show last image in folder	Dernière image du dossier
+Show navigation panel	Afficher la barre de navigation
+Show next image	Image suivante
+Show picture info (EXIF)	Afficher les infos photo (EXIF)
+Show previous image	Image précédente
+Show/hide file name	Afficher/masquer le nom du fichier
+Show/hide navigation panel	Afficher/masquer la barre de navigation
+Show/hide picture information (EXIF data)	Afficher/masquer les informations sur l'image (données EXIF)
+Show/hide this help text	Afficher/masquer l'aide
+Size:	Taille :
+Slide from bottom	Faire glisser depuis le bas
+Slide from left	Faire glisser depuis la gauche
+Slide from right	Faire glisser depuis la droite
+Slide from top	Faire glisser depuis le haut
+Slideshow	Diaporama
+Slideshow with timeout of 'n' seconds (ESC to stop)	Diaporama avec délai de n secondes (Echap pour arrêter)
+Sort images by creation date, resp. modification date, resp. file name	Trier les images par date de création, date de modification, nom du fichier
+Source:	Source :
+Target folders that do not yet exist are created as needed.	Les dossiers cibles qui n'existent pas sont créés en cas de besoin.
+The directory '%s' does not contain any image files!	Le répertoire '%s' ne contient aucun fichier image !
+The file '%s' could not be copied!	Le fichier '%s' n'a pas pu être copié !
+The file '%s' could not be read!	Le fichier '%s' n'a pas pu être lu !
+The file '%s' could not be renamed!	Le fichier '%s' n'a pas pu être renommé !
+The file '%s' does not contain a list of file names!	Le fichier '%s' ne contient pas de liste de noms de fichiers !
+The file is read-only!	Le fichier est en lecture seule !
+The following file extensions cannot be unregistered because they have been registered in the 'local machine' registry area.	Ces extensions ne peuvent pas être modifiées, car elles ont été définies dans la zone 'Local machine' de la base de registres.
+The following image extensions are protected by the operating system.	Ces extensions de fichier sont protégées par le système d'exploitation.
+The imported param DB contains entries already present in active param DB.	La DB traitements importée contient des entrées déjà présentes dans la DB traitements active.
+The new size is too large - width or height is larger than 65535 or total number of pixels is too large!	La nouvelle taille est trop grande - la largeur ou la hauteur est supérieure à 65535 ou le nombre total de pixels est excessif !
+The old parameter DB file '%s' could not be renamed during conversion to new format!	L'ancien fichier DB traitements '%s' n'a pas pu être renommé lors de la conversion au nouveau format !
+The operation failed because not enough memory is available!	Mémoire insuffisante pour effectuer l'opération !
+The parameter DB file '%s' has been created by a newer version of JPEGView!	Le fichier DB traitements '%s' a été créé par une version plus récente de JPEGView !
+The transformation can be applied if the image is trimmed to the next matching size but this will remove some border pixels.	La transformation peut être effectuée en redécoupant l'image à la taille convenable la plus proche, mais quelques pixels de bord vont être perdus.
+These values will override the values from the INI file located in the program folder of JPEGView!	Ce fichier INI utilisateur aura priorité sur le fichier INI du dossier programme de JPEGView.
+Threshold	Seuil
+Title:	Titre :
+Toggle between screens (only for multi-monitor systems)	Basculer entre les écrans (seulement si plusieurs écrans)
+Toggle window always on top mode	Activer/désactiver le mode "Toujours au premier plan"
+Toggle window title bar hidden mode	Activer/désactiver le mode "Barre de titre cachée"
+Top	Haut
+Transition Effect	Effet de transition
+Trim the image and apply transformation? Trimming cannot be undone!	Redécouper l'image et effectuer la transformation ? (le redécoupage ne peut pas être annulé).
+Unregistering not possible	Modification impossible
+Unsharp mask...	Filtre de netteté...
+Update user settings with new settings from settings template file?	Mettre à jour le fichier des paramètres utilisateur avec les nouveaux paramètres issus du fichier template?
+Use the 'Default Programs' configuration dialog from the operating system instead.	Utilisez 'Programmes par défaut' dans Panneau de configuration - Programmes.
+Use the mouse to draw a line that shall be horizontal or vertical.	Utilisez la souris pour dessiner une ligne horizontale ou verticale.
+Warning	Alerte
+Width	Largeur
+Windows 8 (and above) blocks JPEGView from changing the default program for these file extensions.	Windows 8 (et suivant) empêche JPEGView de changer le programme par défaut pour ces extensions.
+Writing the resulting JPEG file to disk failed	Echec d'écriture du fichier JPEG sur le disque
+Y - B	J - B
+Year short form (2 digits)	Année forme courte (2 chiffres)
+Yellow-Blue	Jaune-Bleu
+Zoom 1:1 (100 %)	Zoom 1:1 (100%)
+Zoom in (%s)/Zoom out (%s)	Zoom avant (%s)/Zoom arrière (%s)
+Zoom in/out image	Zoom avant/arrière sur l'image
+Zoom mode (drag mouse to zoom)	Mode zoom (déplacez la souris pour zoomer)
+and image processing (brightness/contrast/sharpen) parameters between images	et de visualisation (contraste / gamma / netteté) d'une image à l'autre
+cm	cm
+in	in
+new menu entry	nouvelle entrée de menu
+no	non
+off	Inactif
+on	Actif
+yes	oui
+
+// ::: Popup Menu Strings ::: (unsorted to preserve context) //
+Stop slide show/movie	Arrêter le diaporama / film
+Open image...	Ouvrir...
+Open image with	Ouvrir avec
+Save processed image...	Enregistrer l'image traitée...
+Reload image	Recharger l'image
+Open containing folder in Explorer	Afficher le fichier dans l'explorateur
+Print image...	Imprimer...
+Batch rename/copy...	Batch renommer / copier ...
+Set modification date	Changer la date de modification
+to current date	à la date du jour
+to EXIF date	à la date EXIF
+to EXIF date (all files in folder)	à la date EXIF (tous les fichiers du dossier)
+Set as desktop wallpaper	Définir comme fond d'écran
+Use original image	L'image originale
+Use processed image as displayed	L'image traitée, telle que visible
+Copy to clipboard	Copier l'image traitée (capture écran)
+Copy original size image	Copier l'image traitée (taille réelle)
+Copy file path	Copier le chemin complet de l'image
 Display order	Tri par...
 Modification date	Date de modification
 Creation date	Date de création
 Play folder as slideshow/movie	Diaporama / film
-Slideshow	Diaporama
-Movie	Film
 Waiting time	Temps d'attente
-Stop slide show/movie	Arrêter le diaporama / film
-Rotate +90	Rotation +90
-Rotate -90	Rotation -90
-Rotate 180	Rotation 180
-Auto correction	Corrections couleurs et contraste
-Local density correction	Corrections sombres et clairs
-Keep parameters	Garder le traitement entre les images
-Set current parameters as default values...	Sauvegarder les réglages comme défaut dans le fichier INI...
-Save parameters to DB	Sauvegarder le traitement dans la DB
-Clear parameters from DB	Supprimer le traitement de la DB
-Zoom	Zoom
-Fit to screen	Ajuster l'image à la fenêtre
-Fill with crop	Remplir la fenêtre et rogner l'image
-Span all screens	Couvrir tous les écrans
-Auto zoom mode	Auto zoom
-Fit to screen (no zoom)	Ajuster l'image à la fenêtre (sans agrandir)
-Fill with crop (no zoom)	Remplir la fenêtre et rogner l'image (sans agrandir)
-Exit	Quitter
-Cyan-Red	Cyan-Rouge
-Magenta-Green	Magenta-Vert
-Yellow-Blue	Jaune-Bleu
-C - R	Cy - R
-M - G	Ma - V
-Y - B	J - B
-Batch rename/copy of files	Batch renommer / copier fichiers
-Image files in folder	Images dans le dossier
-Placeholders:	Espaces réservés :
-Number (consecutively numbered)	Numéro
-Number with N digits	Numéro à N chiffres
-Extracted number from original file name	Numéro extrait du nom de fichier original
-Original file name (with extension)	Nom du fichier original (avec extension)
-Original file name (without extension)	Nom du fichier original (sans extension)
-Original file extension	Extension du fichier original
-'My Pictures' folder	Dossier 'Mes images'
-Day / Month / Year (as numbers)	Jour / Mois / Année (en chiffres)
-Year short form (2 digits)	Année forme courte (2 chiffres)
-Month / Short form (text)	Mois / simplifié (texte)
-Target folders that are not yet existing are created as needed.	Les dossiers cibles qui n'existent pas sont créés en cas de besoin.
-Date placeholders use the modification date of the image.	Les éléments de date se basent sur la date de modification de l'image.
-Rename/copy images to:	Renommer / copier les images vers :
-Rename	Renommer
-Preview	Prévisualiser
-Save as template	Enregistrer comme modèle
-Close	Fermer
-Old name	Ancien nom
-Date	Date
-New name (>> : file gets copied)	Nouveau nom (>> : le fichier est copié)
-Select all	Sélectionner tout
-Select none	Aucune sélection
-The file '%s' could not be %s.	Le fichier '%s' n'a pas pu être %s.
-copied	copié
-renamed	renommé
-Continue rename/copy?	Continuer renommage/copie?
-Error during rename/copy	Erreur lors du renommage/copie
-%d file(s) renamed, %d file(s) copied, %d folder(s) created	%d fichier(s) renommé(s), %d fichier(s) copié(s), %d dossier(s) créé(s)
-Crop Selection	Rogner la sélection
-Copy Selection to Clipboard	Copier la sélection
-Zoom to Selection	Zoom sur la sélection
-Pasting image from clipboard failed!	Le collage de l'image depuis le presse-papier a échoué !
-Image width:	Largeur de l'image :
-Image height:	Hauteur de l'image :
-Acquisition date:	Date d'acquisition :
-Camera model:	Modèle d'appareil photo :
-Exposure time (s):	Temps de pose (s):
-Exposure bias (EV):	Correction d'exposition (EV) :
-Flash fired:	Flash utilisé :
-Focal length (mm):	Focale (mm) :
-F-Number:	Ouverture (F-number) :
-ISO Speed:	Vitesse ISO :
-Modification date:	Date de modification :
-yes	oui
-no	non
-Show navigation panel	Afficher la barre de navigation
-Show/hide navigation panel	Afficher/masquer la barre de navigation
-About JPEGView...	A propos de JPEGView...
-About JPEGView (64 bit version)...	A propos de JPEGView (version 64 bits)...
-SIMD mode used:	Mode SIMD utilisé :
-Number of CPU cores used:	Nombre de coeurs de processeur utilisés:
-Licensed under the GNU general public license (GPL), see readme file for details:	Sous licence GNU-GPL, voir le fichier README pour plus de détails :
-Project home page:	Page d'accueil du projet :
-Show first image in folder	Première image du dossier
-Show previous image	Image précédente
-Show next image	Image suivante
-Show last image in folder	Dernière image du dossier
-Rotate image 90 deg clockwise	Pivoter de 90° en sens horaire
-Rotate image 90 deg counter-clockwise	Pivoter de 90° en sens anti-horaire
-Landscape picture enhancement mode	Mode LDC d'amélioration des paysages
-Display image (EXIF) information	Afficher les infos photo (EXIF)
-Toggle between screens (only for multi-monitor systems)	Basculer entre les écrans (seulement si plusieurs écrans)
-Enable/disable full screen mode	Activer/désactiver le plein écran
-Full screen mode	Plein écran
-Window mode	Mode fenêtré
-Save as (in screen size/resolution)	Enregistrer sous (à la taille / résolution de la fenêtre)
-Save processed image to JPEG file (screen size)	Enregistrer l'image traitée en JPEG (capture écran)
-Settings/Admin	Configuration / Administration
-Edit global settings...	Editer le fichier INI de configuration générale...
-Edit user settings...	Editer le fichier INI de configuration utilisateur...
-Backup parameter DB...	Sauvegarder la DB traitements
-Restore parameter DB...	Restaurer une DB traitements
-No user INI file exits yet. Create user INI file from INI file template?	Le fichier INI utilisateur n'existe pas encore. En créer un depuis le fichier INI modèle ?
-Copying parameter DB to file '%s' failed. Reason: %s	La copie de la DB traitements vers le ficher '%s' a échoué. Raison : %s
-Select parameter DB to restore	Sélectionner la DB traitements à restaurer
-Conflicting entries in Param DB	Conflit d'entrées dans la DB traitements
-The imported param DB contains entries already present in active param DB.	La DB traitements importée contient des entrées déjà présentes dans la DB traitements active.
-Shall existing entries be preserved (Yes) or be overriden by the imported entries (No)?	Souhaitez-vous conserver les entrées existantes (Oui) ou les écraser avec les entrées importées (Non) ?
-Select file to display in 'File Open' dialog	Sélectionnez le fichier à afficher dans la boîte de dialogue "Ouvrir"
-Crop Mode	Mode rognage
-Free	Libre
-Fixed size...	Taille fixe...
-Set Fixed Crop Size	Définir la taille fixe du rognage
-Width	Largeur
-Height	Hauteur 
-Pixels	Pixels
-Screen Pixels	Pixels écran
-Image Pixels	Pixels image
-Set modification date	Changer la date de modification
-to current date	à la date du jour
-to EXIF date	à la date EXIF
-Actual size of image	Taille réelle de l'image
-Mark image for toggling. Use %s to toggle between marked and current image	Marquer l'image pour la basculer. Utilisez %s pour basculer entre l'image marquée et l'image courante
-Saturation	Saturation
-Unsharp mask...	Filtre de netteté...
-Apply Unsharp Mask	Appliquer le filtre de netteté
-Radius	Rayon
-Amount	Quantité
-Threshold	Seuil
-Apply	Appliquer
-Cancel	Annuler
-Keep processing parameters between images	Garder les traitements lors du changement d‘image
-Show histogram	Afficher l'histogramme
-Hide histogram	Masquer l'histogramme
-Crop Selection Lossless...	Rogner la sélection sans pertes...
-Save cropped image	Enregistrer l'image rognée
-Rotate image by user-defined angle	Pivoter selon un angle au choix
-Rotate Image	Pivoter
-Show grid lines	Afficher la grille
-Auto crop rotated image (avoids black border)	Rognage automatique de l'image pivotée (évite les bords noirs)
-Align image to horizontal or vertical line	Aligner l'image avec une ligne horizontale ou verticale
-Use the mouse to draw a line that shall be horizontal or vertical.	Utilisez la souris pour dessiner une ligne horizontale ou verticale.	
-Rotate the image by dragging with the mouse.	Cliquez et bougez la souris dans la direction où vous souhaitez faire pivoter l'image.
-The operation failed because not enough memory is available!	Mémoire insuffisante pour effectuer l'opération !
-to EXIF date (all files in folder)	à la date EXIF (tous les fichiers du dossier)
-Number of JPEG files in folder: %d	Nombre d'images JPEG dans le dossier : %d
-EXIF date successfully set on %d images, failed on %d images	La date EXIF a pu être indiquée sur %d images, cela a échoué sur %d images.
-Reason: Not enough memory available	Raison : mémoire insuffisante
-Transform image	Transformations
-Rotate...	Pivoter...
-Mirror horizontally	Inversion horizontale
-Mirror vertically	Inversion verticale
-Random	Aléatoire
-Zoom mode (drag mouse to zoom)	Mode zoom (déplacez la souris pour zoomer)
-Correct converging lines (perspective correction)	Correction de la perspective (lignes convergentes)
-Perspective Correction	Correction de la perspective
-Perspective correction...	Correction de la perspective...
-Auto crop corrected image (avoids black border)	Rognage automatique de l'image corrigée (évite les bords noirs)
-Click and drag the mouse vertically to correct image tilt.	Cliquez et déplacez la souris verticalement pour corriger l'inclinaison de l'image.
-Drag at the left or right border for asymmetric correction.	Déplacez le bord gauche ou droit pour une correction asymétrique.
-Fit window to image	Ajuster la fenêtre à l'image
-Keep aspect ratio on crop	Maintenir le ratio largeur / hauteur lors du rognage
-Lossless JPEG transformations	Transformations JPEG sans perte
-Performing the lossless transformation failed!	Echec lors de la tranformation sans perte !
-Image width and height must be dividable by the JPEG block size (8 or 16) for lossless transformations!	Pour effectuer une transformation sans perte, la largeur et la hauteur de l'image doivent être divisibles par la taille de bloc JPEG (8 ou 16).
-Reading the JPEG file from disk failed	Echec de lecture du fichier JPEG
-Writing the resulting JPEG file to disk failed	Echec d'écriture du fichier JPEG sur le disque
-Performing the transformation failed	Echec lors de la tentative de transformation
-The transformation can be applied if the image is trimmed to the next matching size but this will remove some border pixels.	La transformation peut être effectuée en redécoupant l'image à la taille convenable la plus proche, mais quelques pixels de bord vont être perdus.
-Trim the image and apply transformation? Trimming cannot be undone!	Redécouper l'image et effectuer la transformation ? (le redécoupage ne peut pas être annulé).
-Note: Set the key 'TrimWithoutPromptLosslessJPEG=true' in the INI file to always trim without showing this message.	Note : si vous souhaitez systématiquement redécouper sans montrer ce message d'alerte, spécifiez la valeur 'TrimWithoutPromptLosslessJPEG=true' dans le fichier INI.
-None	Aucun
-Blend	Mélanger les calques
-Slide from right	Faire glisser depuis la droite
-Slide from left	Faire glisser depuis la gauche
-Slide from top	Faire glisser depuis le haut
-Slide from bottom	Faire glisser depuis le bas
-Roll from right	Dérouler depuis la droite
-Roll from left	Dérouler depuis la gauche
-Roll from top	Dérouler depuis le haut
-Roll from bottom	Dérouler depuis le bas
-Scroll from right	Faire défiler depuis la droite
-Scroll from left	Faire défiler depuis la gauche
-Scroll from top	Faire défiler depuis le haut
-Scroll from bottom	Faire défiler depuis le bas
+1 sec	1 sec
+2 sec	2 sec
+3 sec	3 sec
+4 sec	4 sec
+5 sec	5 sec
+7 sec	7 sec
+10 sec	10 sec
+20 sec	20 sec
 Transition Speed	Vitesse de transition
 Very fast	Très rapide
 Fast	Rapide
 Normal	Normal
 Slow	Lent
 Very slow	Très lent
-Error	Erreur
-Warning	Alerte
-Error while writing the following registry key:	Erreur lors de l'écriture de la clé de registre :
-Set as default viewer...	Définir comme visualisateur par défaut...
-Set JPEGView as default image viewer	Définir JPEGView comme visualisateur d'images par défaut
-JPEGView is registered as default viewer for the selected file formats.	JPEGView sera le visualisateur par défaut pour les formats sélectionnés.
-Registration applies to the current user only.	Ceci s'applique seulement à l'utilisateur en cours.
-Extension	Extension
-File type	Type de fichier
-The following file extensions cannot be unregistered because they have been registered in the 'local machine' registry area.	Ces extensions ne peuvent pas être modifiées, car elles ont été définies dans la zone 'Local machine' de la base de registres.
-Registering or unregistering file extensions in this registry area requires administration privileges and cannot be done in JPEGView.	Intervenir dans cette zone demande des droits d'administrateur et ne peut pas être effectué depuis JPEGView.
-Press 'OK' to continue with registration or 'Cancel' to not modify any registrations.	Appuyez sur 'OK' pour continuer quand même, ou sur 'Cancel' pour annuler toute modification.
-Unregistering not possible	Modification impossible
-%s images	%s images
-%s images (processed by Window Imaging Component - WIC)	%s images (traitées avec Windows Imaging Component - WIC)
-%s camera raw images (embedded JPEGs only)	%s images photo brutes (JPEGs embarqués)
-The following image extensions are protected by the operating system.	Ces extensions de fichier sont protégées par le système d'exploitation.
-Insufficient rights to change the privilege (DACL) on the registry entry. Continue?	Droits insuffisants pour changer le contrôle d'accès (DACL) dans la base de registres. Continuer ?
-No image loaded!	Aucune image chargée !
-Right mouse button: Context menu	Clic droit : menu contextuel
-Windows 8 blocks JPEGView from changing the default program for these file endings.	Windows 8 empêche JPEGView de changer le programme par défaut pour ces extensions.
-Use the 'Default Programs' configuration dialog from the operating system instead.	Utilisez 'Programmes par défaut' dans Panneau de configuration - Programmes.
-Alternatively, right click an image file of the given type in Windows Explorer and select 'Open with... > Choose default program'	Ou sinon, faites clic droit sur une image dans l'Explorateur windows et choisissez 'Ouvrir avec... > Choisir le programme par défaut'.
-User commands	Commandes utilisateur
-Open image with	Ouvrir avec
-Manage 'Open image with' menu...	Configurer le menu 'Ouvrir avec'...
-Menu entries:	Entrées du menu :
-Title:	Titre :
-Application:	Application :
-Shortcut key:	Raccourci clavier :
-Browse...	Explorer...
-New	Nouveau
-Delete	Supprimer
-Modifier keys:	Touches de bascule :
-Known keys:	Touches connues :
-Combine keys with '+'	Combiner les touches avec '+'
-Example:	Exemple : 
-Shortcut Help	Aide raccourcis
-[new entry]	[nouvelle entrée]
-Applications	Applications
-Select application	Choisir une application
-Save	Enregistrer
-Edit	Modifier
-Upcounting	Ordre croissant
-Downcounting	Ordre décroissant
-File size	Taille du fichier
-Do you really want to delete the current image file on disk?	Voulez-vous vraiment supprimer ce fichier ?
-Delete image file	Supprimer le fichier image
+Movie	Film
+Playback speed	Vitesse d'animation
+5 fps	5 fps
+10 fps	10 fps
+25 fps	25 fps
+30 fps	30 fps
+50 fps	50 fps
+100 fps	100 fps
+Transform image	Transformations
+Rotate +90	Rotation +90
+Rotate -90	Rotation -90
+Rotate...	Pivoter...
 Change size...	Changer la taille...
-Resize Image	Redimensionner
-OK	OK
-New size:	Nouvelle taille :
-New width:	Nouvelle largeur :
-New height:	Nouvelle hauteur :
-Filter:	Filtre :
-Box	Boîte
-Lanczos/Bicubic	Lanczos / Bicubique
-Sharpen low	Netteté (faible)
-Sharpen medium	Netteté (moyenne)
-The new size is too large - width or height is larger than 65535 or total number of pixels is too large!	La nouvelle taille est trop grande - la largeur ou la hauteur est supérieure à 65535 ou le nombre total de pixels est excessif !
-JPEGView is a lean, fast and highly configurable viewer/editor for JPEG, BMP, PNG, WEBP, TGA, GIF and TIFF images with a minimal GUI.	JPEGView est un visualisateur / éditeur d'images léger, rapide, très configurable et avec une interface minimale pour JPEG, BMP, PNG, WEBP, TGA, GIF et TIFF.
-Hour / Minute (as numbers)	Heure / Minute (en chiffres)
-Set as desktop wallpaper	Définir comme fond d'écran
-Use original image	L'image originale
-Use processed image as displayed	L'image traitée, telle que visible
-Print image...	Imprimer...
-Print Image	Imprimer
-Print	Imprimer
-Select Printer...	Choisir l'imprimante...
-Printer:	Imprimante :
-Paper:	Papier :
-Source:	Source :
-Orientation:	Orientation :
-Portrait	Portrait
-Landscape	Paysage
-Size:	Taille :
-Fit to paper	Ajuster à la page
-cm	cm
-Scaling mode:	Mise à l'échelle par :
-Printer driver	Pilote d'imprimante
-Alignment:	Alignement :
-Margins:	Marges :
-Left	Gauche
-Right	Droite
-Top	Haut
-Bottom	Bas
-Fill paper with crop	Remplir la page et rogner l'image
-Location:	Localitè:
-Altitude (m):	Altitude (m):
-Open containing folder in Explorer	Afficher le fichier dans l'explorateur
+Perspective correction...	Correction de la perspective...
+Mirror horizontally	Inversion horizontale
+Mirror vertically	Inversion verticale
+Rotate 180	Rotation 180
+Auto correction	Corrections couleurs et contraste
+Save parameters to DB	Sauvegarder le traitement dans la DB
+Clear parameters from DB	Supprimer le traitement de la DB
+Zoom	Zoom
+Span all screens	Couvrir tous les écrans
+Full screen mode	Plein écran
+Fit window to image	Ajuster la fenêtre à l'image
+Hide window title bar	Cacher la barre de titre
+Set window always on top	Fenêtre toujours au premier plan
+Settings/Admin	Configuration / Administration
+Edit global settings...	Editer le fichier INI de configuration générale...
+Edit user settings...	Editer le fichier INI de configuration utilisateur...
 Update user settings...	Mettre à jour les paramètres utilisateur...
-Update user settings with new settings from settings template file?	Mettre à jour le fichier des paramètres utilisateur avec les nouveaux paramètres issus du fichier template?
-All existing user settings will be preserved.	Tous les paramètres utilisateur existants seront préservés
+Set current parameters as default values...	Sauvegarder les réglages comme défaut dans le fichier INI...
+Set as default viewer...	Définir comme visualisateur par défaut...
+Backup parameter DB...	Sauvegarder la DB traitements
+Restore parameter DB...	Restaurer une DB traitements
+User commands	Commandes utilisateur
+About JPEGView...	A propos de JPEGView...
+Exit	Quitter
+Crop Selection	Rogner la sélection
+Crop Selection Lossless...	Rogner la sélection sans pertes...
+Copy Selection to Clipboard	Copier la sélection
+Crop Mode	Mode rognage
+Free	Libre
+Fixed size...	Taille fixe...
+Zoom to Selection	Zoom sur la sélection
+
+// ::: INFO: Out-of-date Translations [17] ::: (Not in use anymore, safe to delete) //
+//Actual size of image	Taille réelle de l'image
+//Delete current file on disk permanently	Supprimer le fichier définitivement
+//Do you really want to permanently delete the file %filename%?	Confirmer la suppression définitive du fichier %filename% ?
+//No file or folder name was provided as command line parameter!	Il n'y aucun nom de fichier ou de dossier en paramètre de la ligne de commande !
+//PgDn or Right	Pg.Suiv ou Droite
+//PgUp or Left	Pg.Préc ou Gauche
+//Rename:	Renommer :
+//Rotate the following file lossless by 270 deg?\n%filename%	Pivoter de 270° et enregistrer le fichier ?\n%filename%
+//Rotate the following file lossless by 90 deg?\n%filename%	Pivoter de 90° et enregistrer le fichier ?\n%filename%
+//The file '%s' could not be %s.	Le fichier '%s' n'a pas pu être %s.
+//To use JPEGView, associate JPG, JPEG and BMP files with JPEGView.	Pour utiliser JPEGView, associez les formats JPG, JPEG et BMP avec JPEGView.
+//Window mode	Mode fenêtré
+//Windows 8 blocks JPEGView from changing the default program for these file endings.	Windows 8 empêche JPEGView de changer le programme par défaut pour ces extensions.
+//[new entry]	[nouvelle entrée]
+//copied	copié
+//renamed	renommé
+//up/down	haut/bas
+
+// ::: STATUS: Last Checked/Updated by Script ::: 2023-02-09T18:39:48.033291+00:00 //
+//! Translation Progress: 100%
+//! * Total (Strings + Menu) = 421
+//! * Done = 421
+//! * Missing = 0 (0%)
