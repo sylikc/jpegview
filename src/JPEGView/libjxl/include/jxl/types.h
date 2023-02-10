@@ -57,11 +57,11 @@ typedef enum {
 
 /* DEPRECATED: bit-packed 1-bit data type. Use JXL_TYPE_UINT8 instead.
  */
-static const int JXL_DEPRECATED JXL_TYPE_BOOLEAN = 1;
+JXL_DEPRECATED static const int JXL_TYPE_BOOLEAN = 1;
 
 /* DEPRECATED: uint32_t data type. Use JXL_TYPE_FLOAT instead.
  */
-static const int JXL_DEPRECATED JXL_TYPE_UINT32 = 4;
+JXL_DEPRECATED static const int JXL_TYPE_UINT32 = 4;
 
 /** Ordering of multi-byte data.
  */
@@ -81,7 +81,6 @@ typedef enum {
  * for pixels. This is not necessarily the same as the data type encoded in the
  * codestream. The channels are interleaved per pixel. The pixels are
  * organized row by row, left to right, top to bottom.
- * TODO(lode): implement padding / alignment (row stride)
  * TODO(lode): support different channel orders if needed (RGB, BGR, ...)
  */
 typedef struct {
@@ -110,6 +109,43 @@ typedef struct {
    */
   size_t align;
 } JxlPixelFormat;
+
+/** Settings for the interpretation of the input and output buffers.
+ */
+typedef enum {
+  /** This is the default setting, where the encoder expects the input pixels
+   * to use the full range of the pixel format data type (e.g. for UINT16, the
+   * input range is 0 .. 65535 and the value 65535 is mapped to 1.0 when
+   * converting to float), and the decoder uses the full range to output
+   * pixels. If the bit depth in the basic info is different from this, the
+   * encoder expects the values to be rescaled accordingly (e.g multiplied by
+   * 65535/4095 for a 12-bit image using UINT16 input data type). */
+  JXL_BIT_DEPTH_FROM_PIXEL_FORMAT = 0,
+
+  /** If this setting is selected, the encoder expects the input pixels to be
+   * in the range defined by the bits_per_sample value of the basic info (e.g.
+   * for 12-bit images using UINT16 input data types, the allowed range is
+   * 0 .. 4095 and the value 4095 is mapped to 1.0 when converting to float),
+   * and the decoder outputs pixels in this range. */
+  JXL_BIT_DEPTH_FROM_CODESTREAM = 1,
+
+  /** This setting can only be used in the decoder to select a custom range for
+   * pixel output */
+  JXL_BIT_DEPTH_CUSTOM = 2,
+} JxlBitDepthType;
+
+/** Data type for describing the interpretation of the input and output buffers
+ * in terms of the range of allowed input and output pixel values. */
+typedef struct {
+  /** Bit depth setting, see comment on @ref JxlBitDepthType */
+  JxlBitDepthType type;
+
+  /** Custom bits per sample */
+  uint32_t bits_per_sample;
+
+  /** Custom exponent bits per sample */
+  uint32_t exponent_bits_per_sample;
+} JxlBitDepth;
 
 /** Data type holding the 4-character type name of an ISOBMFF box.
  */
