@@ -39,7 +39,9 @@ call "%~dp0vs-init.bat" %1
 
 pushd "%XLIB_DIR%"
 
-nmake.exe /f Makefile.vc CFG=release-static RTLIBCFG=static OBJDIR="%XOUT_DIR%"
+REM ARCH= is optional, but for some reason, building with VS2017 in some instances it's needed
+::nmake.exe /f Makefile.vc CFG=release-static RTLIBCFG=static OBJDIR="%XOUT_DIR%"
+nmake.exe /f Makefile.vc ARCH=%1 CFG=release-static RTLIBCFG=static OBJDIR="%XOUT_DIR%"
 IF ERRORLEVEL 1 exit /b 1
 
 popd

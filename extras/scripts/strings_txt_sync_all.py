@@ -15,6 +15,7 @@ from pathlib import Path
 from datetime import datetime, timezone
 import pprint
 
+# https://stackoverflow.com/questions/8898294/convert-utf-8-with-bom-to-utf-8-with-no-bom-in-python
 UTF8 = 'utf-8-sig'  # UTF-8 with BOM
 
 

@@ -28,7 +28,7 @@ echo === HEADER FILES NOT MAINTAINED BY SCRIPT ===
 echo NOTE: as for the header files, copy/replace files AS NEEDED
 echo TO: src\JPEGView\libjxl\include\jxl
 echo FROM: extras\third_party\libjxl\lib\include\jxl
-echo FROM: %OUT_DIR%\[arch]\lib\include\jxl
+echo FROM: %XOUT_DIR%\[arch]\lib\include\jxl
 
 exit /b 0
 

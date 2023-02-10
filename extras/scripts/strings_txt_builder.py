@@ -26,6 +26,9 @@ from pathlib import Path
 from datetime import datetime, timezone
 import pprint
 
+from util_common import get_all_text_between
+
+
 UTF8 = 'utf-8-sig'
 # while it's not needed, all existing files have it, and I think it helps some editors, so leave it in
 # https://stackoverflow.com/questions/2223882/whats-the-difference-between-utf-8-and-utf-8-with-bom
@@ -33,25 +36,9 @@ UTF8 = 'utf-8-sig'
 
 SOURCE_DIR = Path(__file__).resolve().parent.parent.parent / r"src\JPEGView"
 
-#################################################################################################
-
-
-def get_all_text_between(filepath, pattern_begin, pattern_end):
-
-    if not filepath.exists():
-        raise FileNotFoundError
-
-    with open(filepath, 'r') as f:
-        m = re.search(f"{pattern_begin}(.*?){pattern_end}", f.read(), re.MULTILINE | re.DOTALL)
-        if m is None:
-            raise LookupError(f"ERROR: couldn't find {pattern_begin}")
-
-        # remove the len(pattern_end)
-        return m.group(0)[:-len(pattern_end)]
 
 
 #################################################################################################
-
 
 def find_all_pattern(pattern, file_list=None, use_sets=False):
     """ find all strings with some pattern like _T(""), return dict

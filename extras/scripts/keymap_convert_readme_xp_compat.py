@@ -9,6 +9,8 @@ import re
 from pathlib import Path
 import sys
 
+from util_common import get_all_text_between
+
 def keymap_readme_xp_compat(filepath):
     """
 
@@ -17,25 +19,14 @@ def keymap_readme_xp_compat(filepath):
     replace all <span class="..." /> with the content
     """
 
-    pattern_begin = "<style>"
-    pattern_end = "</style>"
-
-
     if not filepath.exists():
         raise FileNotFoundError
 
-    file_contents = ""
 
     with open(filepath, 'r') as f:
         file_contents = f.read()
 
-        m = re.search(f"{pattern_begin}(.*?){pattern_end}", file_contents, re.MULTILINE | re.DOTALL)
-        if m is None:
-            print(f"ERROR: couldn't find {pattern_begin}")
-            exit(1)
-
-        # not a perfect match but gets all the stuff within style
-        style_block = m.group(0)
+        style_block = get_all_text_between(None, "<style>", "</style>", search_str=file_contents)
         #print(style_block)
 
     # generate a list of the content strings
@@ -45,6 +36,7 @@ def keymap_readme_xp_compat(filepath):
     for idm_var, c in re.findall('\.(\w+):before\s*\{\s*content\s*:\s*"(.*?)"\s*\}', style_block):
         #print(idm_var, c)
         content[idm_var] = c
+        print(f"style {idm_var}={c}")
 
 
     # replace the <spans>
