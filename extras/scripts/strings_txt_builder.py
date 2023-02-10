@@ -80,6 +80,50 @@ def find_all_pattern(pattern, file_list=None, use_sets=False):
 
 #################################################################################################
 
+def find_ini_usercommand():
+    """ specific find function for JPEGView.ini for UserCommand... it's too much effort to try to massage find_all_pattern() into working for this specialized use case """
+
+    # UserCmd0="KeyCode: Shift+Del Cmd: 'cmd /c del %filename%' Confirm: 'Do you really want to permanently delete the file %filename%?' HelpText: 'Shift+Del\tDelete current file on disk permanently' Flags: 'WaitForTerminate ReloadFileList MoveToNext'"
+    #user_cmd = find_all_pattern(r'[^;]\s*UserCmd[0-9]+=".*?Confirm: \'(.*?)\'..........
+
+    filepath = SOURCE_DIR / "Config/JPEGView.ini"
+
+    ret = {}
+
+    with open(filepath, 'rt', encoding=UTF8) as f:
+        while True:
+            line = f.readline()
+            if not line:
+                break
+
+            # this type of matching isn't as reliable
+            #if not line.startswith("UserCmd"):
+            #    continue
+
+            # find the pattern
+            m = re.fullmatch(r'\s*UserCmd[0-9]+="(.*?)"\s*', line.strip())
+            if m:
+                cmd = m.group(1)
+                print(f"Found UserCmd: {cmd}")
+
+                m_confirm = re.search(r"Confirm:\s*'(.*?)'", cmd)
+                if m_confirm:
+                    confirm = m_confirm.group(1)
+                    ret[confirm] = [filepath]  # forget about making duplicates
+
+                m_helptext = re.search(r"HelpText:\s*'(.*?)'", cmd)
+                if m_helptext:
+                    helptext = m_helptext.group(1)
+                    if r'\t' in helptext:  # if the sequence \t, not the actual tab
+                        helptext = helptext.split(r'\t', 1)[1]
+
+                    ret[helptext] = [filepath]
+
+    return ret
+
+
+#################################################################################################
+
 
 def search_untranslated_strings(translated_t_dict):
     """
@@ -88,6 +132,8 @@ def search_untranslated_strings(translated_t_dict):
 
     # find all places where there is a string
     all_t = find_all_pattern(r'_T\s*\(\s*"(.*?)"\s*\)', use_sets=True)  # we don't need to know that it shows up multiple times in a file for this routine
+
+    all_t.update(find_ini_usercommand())  # hack it in, for searchability
 
     # remove the known translated ones from all_t
     # to show what strings are NOT translated (at least in theory, since var_cnls_no_t might do it)
@@ -338,6 +384,10 @@ if __name__ == "__main__":
     #pprint.pprint(nav_tooltip_t)
     all_cnls_t.update(nav_tooltip_t)
 
+    # user commands get translated when read.  so whatever is default, translate it.  custom-added, users are on their own
+    user_cmd = find_ini_usercommand()
+    #pprint.pprint(user_cmd)
+    all_cnls_t.update(user_cmd)
 
     # these are also special, in that it's translated by HelpersGUI.cpp =>  CNLS::GetString(menuText)
     popup_list = parse_popup_menu_resource()
