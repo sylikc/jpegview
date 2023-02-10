@@ -13,7 +13,7 @@
 ////////////////////
 
 ////////////////////
-// ::: Instructions / Help ::: //
+// ::: Instructions / Help ::: (help for translators only, does not need to be translated) //
 
 //? Line Format:    English string<tab>Translated string<newline>
 //? * Lines beginning with "//" (comments) are ignored
@@ -44,6 +44,7 @@
 About JPEGView (32-bit version)...	O JPEGView (wersja 32 bit)...
 About JPEGView (64-bit version)...	O JPEGView (wersja 64 bit)...
 Acquisition date:	Data wykonania:
+Actual size of image	Bieżąca wielkość obrazu
 Align image to horizontal or vertical line	Wyrównaj obraz do poziomej lub pionowej linii
 Alignment:	Wyrównanie:
 All Files	Wszystkie pliki
@@ -103,10 +104,12 @@ Day / Month / Year (as numbers)	Dzień / Miesiąc / Rok (jako numery)
 Decoding this format requires the Microsoft Visual C++ Redistributable.	
 Deep Shadows	Głębokie cienie
 Delete	Kasuj
+Delete current file on disk permanently	Kasuj bieżący plik z dysku
 Delete image file	Kasuj plik obrazu
 Descending	Malejąco
 Display image (EXIF) information	Pokaż info o obrazie (EXIF)
 Do you really want to delete the current image file on disk?	Rzeczywiście chcesz skasować bieżący plik z dysku?
+Do you really want to permanently delete the file %filename%?	Czy na pewno chcesz trwale skasować plik %filename%?
 Do you really want to save the following parameters as default to the INI file	Rzeczywiście chcesz zapisać parametry jako domyślne do pliku INI?
 Drag at the left or right border for asymmetric correction.	Przesuń przy lewym lub prawym brzegu przy korekcji asymetrycznej.
 EXIF date successfully set on %d images, failed on %d images	Data z EXIF ustawiona w %d obrazachn, niepowoodzenie w %d obrazach
@@ -142,6 +145,7 @@ Fit to screen (no zoom)	Dopasuj do ekranu (bez zoom)
 Flash fired:	Lampa błysk.:
 Focal length (mm):	Ogniskowa (mm):
 Forward mouse button	Klawisz myszy - Następny
+Full screen mode	Tryb pełnoekranowy
 Goto first/last image of current folder (using sort order as defined)	Idź do pierwszego/ostatniego obrazu w bieżącym folderze (używając zdefiniowanego porządku sortowania)
 Goto next image	Pokaż następny obraz
 Goto previous image	Wróć do poprzedniego obrazu
@@ -359,6 +363,7 @@ Use the 'Default Programs' configuration dialog from the operating system instea
 Use the mouse to draw a line that shall be horizontal or vertical.	Użyj myszki do narysowania poziomej lub pionowej linii.
 Warning	Ostrzeżenie
 Width	Szerokość
+Window mode	Tryb okienkowy
 Windows 8 (and above) blocks JPEGView from changing the default program for these file extensions.	
 Writing the resulting JPEG file to disk failed	Niepowodzenie zapisu pliku na dysk
 Y - B	
@@ -437,7 +442,6 @@ Save parameters to DB	Zapisz parametry w DB
 Clear parameters from DB	Usuń parametry z DB
 Zoom	Powiększenie (zoom)
 Span all screens	Rozciągnij na wszystkie ekrany
-Full screen mode	Tryb pełnoekranowy
 Fit window to image	Dopasuj okno do obrazka
 Hide window title bar	
 Set window always on top	
@@ -460,10 +464,7 @@ Free	Dowolne
 Fixed size...	Stały rozmiar...
 Zoom to Selection	Powiększ do zaznaczenia
 
-// ::: INFO: Out-of-date Translations [17] ::: (Not in use anymore, safe to delete) //
-//Actual size of image	Bieżąca wielkość obrazu
-//Delete current file on disk permanently	Kasuj bieżący plik z dysku
-//Do you really want to permanently delete the file %filename%?	Czy na pewno chcesz trwale skasować plik %filename%?
+// ::: INFO: Out-of-date Translations [13] ::: (Not in use anymore, safe to delete) //
 //No file or folder name was provided as command line parameter!	Nie podano nazwy pliku ani folderu jako parametru linii komand!
 //PgDn or Right	PgDn lub Prawo Następny
 //PgUp or Left	PgUp lub Lewo Poprzedni
@@ -472,7 +473,6 @@ Zoom to Selection	Powiększ do zaznaczenia
 //Rotate the following file lossless by 90 deg?\n%filename%	Obrócić następujący plik bezstratnie o 90 stopni?\n%filename%
 //The file '%s' could not be %s.	Plik '%s' nie może być %s .
 //To use JPEGView, associate JPG, JPEG and BMP files with JPEGView.	Przypisz pliki JPG, JPEG i BMP do JPGView.
-//Window mode	Tryb okienkowy
 //Windows 8 blocks JPEGView from changing the default program for these file endings.	Windows 8 blokuje JPEGView przed zmianą programu domyślnego dla tych rozszerzeń plików.
 //[new entry]	[nowy wpis]
 //copied	skopiowany
@@ -526,8 +526,8 @@ Zoom to Selection	Powiększ do zaznaczenia
 //! Set window always on top
 //! Update user settings...
 
-// ::: STATUS: Last Checked/Updated by Script ::: 2023-02-09T18:39:48.056866+00:00 //
+// ::: STATUS: Last Checked/Updated by Script ::: 2023-02-10T22:28:46.299947+00:00 //
 //! Translation Progress: 89%
-//! * Total (Strings + Menu) = 421
-//! * Done = 376
+//! * Total (Strings + Menu) = 425
+//! * Done = 380
 //! * Missing = 45 (11%)

@@ -13,7 +13,7 @@
 ////////////////////
 
 ////////////////////
-// ::: Instructions / Help ::: //
+// ::: Instructions / Help ::: (help for translators only, does not need to be translated) //
 
 //? Line Format:    English string<tab>Translated string<newline>
 //? * Lines beginning with "//" (comments) are ignored
@@ -44,6 +44,7 @@
 About JPEGView (32-bit version)...	Acerca JPEGView (Versión 32 Bit)...
 About JPEGView (64-bit version)...	Acerca JPEGView (Versión 64 Bit)...
 Acquisition date:	Fecha de adquisición:
+Actual size of image	Tamaño actual de la imagen
 Align image to horizontal or vertical line	Alinear imagen a una línea horizontal o vertical
 Alignment:	Alineamiento:
 All Files	Todos los archivos
@@ -103,10 +104,12 @@ Day / Month / Year (as numbers)	Día / Mes / Año (Numéricos)
 Decoding this format requires the Microsoft Visual C++ Redistributable.	
 Deep Shadows	Sombras profundas
 Delete	Eliminar
+Delete current file on disk permanently	Borrar archivo actual permanentemente
 Delete image file	Eliminar Imagen
 Descending	Contando Menos
 Display image (EXIF) information	Mostrar información (EXIF) de la imagen
 Do you really want to delete the current image file on disk?	¿Realmente desea eliminar la imagen actual en el disco?
+Do you really want to permanently delete the file %filename%?	¿Realmente quiere borrar permanentemente el archivo %filename%?
 Do you really want to save the following parameters as default to the INI file	¿Realmente quiere guardar los siguientes parámetros como por defecto en el archivo INI?
 Drag at the left or right border for asymmetric correction.	Arrastre al borde derecho o Izq.  para corrección asimétrica.
 EXIF date successfully set on %d images, failed on %d images	Fecha EXIF establecida correctamente en %d imágenes, fallado en %d imágenes
@@ -142,6 +145,7 @@ Fit to screen (no zoom)	Ajustar a la pantalla (Sin aumento)
 Flash fired:	Flash disparado:
 Focal length (mm):	Longitud focal (MM):
 Forward mouse button	Botón "Avanzar" del ratón
+Full screen mode	Modo pantalla completa
 Goto first/last image of current folder (using sort order as defined)	Ir a la primera/última imagen de la carpeta actual (Usando el ordenamiento definido)
 Goto next image	Ir a la imagen siguiente
 Goto previous image	Ir a la imagen anterior
@@ -359,6 +363,7 @@ Use the 'Default Programs' configuration dialog from the operating system instea
 Use the mouse to draw a line that shall be horizontal or vertical.	Usar el ratón para dibujar una línea que será horizontal o vertical.
 Warning	Atención
 Width	Ancho
+Window mode	Modo ventana
 Windows 8 (and above) blocks JPEGView from changing the default program for these file extensions.	
 Writing the resulting JPEG file to disk failed	Grabar el resultado del archivo JPEG al disco falló
 Y - B	Am - Az
@@ -437,7 +442,6 @@ Save parameters to DB	Guardar parámetros a BD
 Clear parameters from DB	Limpiar parámetros de BD
 Zoom	Aumento
 Span all screens	Extender a todas las pantallas
-Full screen mode	Modo pantalla completa
 Fit window to image	Ajustar la ventana a la imagen
 Hide window title bar	
 Set window always on top	
@@ -460,10 +464,7 @@ Free	Libre
 Fixed size...	Tamaño fijo
 Zoom to Selection	Aumento en la Selección
 
-// ::: INFO: Out-of-date Translations [17] ::: (Not in use anymore, safe to delete) //
-//Actual size of image	Tamaño actual de la imagen
-//Delete current file on disk permanently	Borrar archivo actual permanentemente
-//Do you really want to permanently delete the file %filename%?	¿Realmente quiere borrar permanentemente el archivo %filename%?
+// ::: INFO: Out-of-date Translations [13] ::: (Not in use anymore, safe to delete) //
 //No file or folder name was provided as command line parameter!	¡Ningún archivo o carpeta fue pasado como parámetro de la línea de comandos!
 //PgDn or Right	Pág. Abajo o Derecha
 //PgUp or Left	Pág. Arriba o Izquierda
@@ -472,7 +473,6 @@ Zoom to Selection	Aumento en la Selección
 //Rotate the following file lossless by 90 deg?\n%filename%	¿Rotar 90° sin pérdidas el siguiente archivo?\n%filename%
 //The file '%s' could not be %s.	El archivo '%s' no pudo ser %s.
 //To use JPEGView, associate JPG, JPEG and BMP files with JPEGView.	Para usar JPEGView, asocie las extensiones JPG, JPEG y BMP con JPEGView.
-//Window mode	Modo ventana
 //Windows 8 blocks JPEGView from changing the default program for these file endings.	Windows 8 evita a JPEGView de cambiar los programas por defecto de estos terminales.
 //[new entry]	[Nueva Entrada]
 //copied	copiado
@@ -520,8 +520,8 @@ Zoom to Selection	Aumento en la Selección
 //! Set window always on top
 //! Update user settings...
 
-// ::: STATUS: Last Checked/Updated by Script ::: 2023-02-09T18:39:48.025958+00:00 //
+// ::: STATUS: Last Checked/Updated by Script ::: 2023-02-10T22:28:46.196759+00:00 //
 //! Translation Progress: 91%
-//! * Total (Strings + Menu) = 421
-//! * Done = 382
+//! * Total (Strings + Menu) = 425
+//! * Done = 386
 //! * Missing = 39 (9%)

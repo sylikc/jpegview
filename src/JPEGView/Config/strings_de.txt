@@ -13,7 +13,7 @@
 ////////////////////
 
 ////////////////////
-// ::: Instructions / Help ::: //
+// ::: Instructions / Help ::: (help for translators only, does not need to be translated) //
 
 //? Line Format:    English string<tab>Translated string<newline>
 //? * Lines beginning with "//" (comments) are ignored
@@ -44,6 +44,7 @@
 About JPEGView (32-bit version)...	Über JPEGView (32 Bit-Version)...
 About JPEGView (64-bit version)...	Über JPEGView (64 Bit-Version)...
 Acquisition date:	Aufnahmedatum:
+Actual size of image	Tatsächliche Bildgrösse
 Align image to horizontal or vertical line	Bild an horizontaler oder vertikaler Linie ausrichten
 Alignment:	Ausrichtung:
 All Files	Alle Dateien
@@ -103,10 +104,12 @@ Day / Month / Year (as numbers)	Tag / Monat / Jahr (als Zahl)
 Decoding this format requires the Microsoft Visual C++ Redistributable.	
 Deep Shadows	Tiefschatten
 Delete	Löschen
+Delete current file on disk permanently	Aktuelle Bilddatei endgültig löschen
 Delete image file	Bilddatei löschen
 Descending	Absteigend
 Display image (EXIF) information	Bildinfo (EXIF) anzeigen
 Do you really want to delete the current image file on disk?	Soll die aktuelle Bilddatei wirklich gelöscht werden?
+Do you really want to permanently delete the file %filename%?	Soll die Datei %filename% wirklich permanent gelöscht werden?
 Do you really want to save the following parameters as default to the INI file	Sollen diese Parameter wirklich als Standardparameter in der INI-Datei gespeichert werden
 Drag at the left or right border for asymmetric correction.	Ziehen Sie am rechten oder linken Rand für asymmetrische Korrektur.
 EXIF date successfully set on %d images, failed on %d images	EXIF-Datum erfolgreich gesetzt auf %d Bildern, fehlgeschlagen auf %d Bildern
@@ -142,6 +145,7 @@ Fit to screen (no zoom)	Bildschirmgrösse (nie zoomen)
 Flash fired:	Blitz:
 Focal length (mm):	Brennweite (mm):
 Forward mouse button	Vorwärts Maustaste
+Full screen mode	Vollbildmodus
 Goto first/last image of current folder (using sort order as defined)	Gehe zum ersten/letzten Bild im aktuellen Ordner (gemäss definierter Sortierreihenfolge)
 Goto next image	Nächstes Bild anzeigen
 Goto previous image	Voriges Bild anzeigen
@@ -359,6 +363,7 @@ Use the 'Default Programs' configuration dialog from the operating system instea
 Use the mouse to draw a line that shall be horizontal or vertical.	Benutzen Sie die Maus, um eine Linie zu zeichnen, welche horizontal oder vertikal ausgerichtet sein soll.
 Warning	Warnung
 Width	Breite
+Window mode	Fenstermodus
 Windows 8 (and above) blocks JPEGView from changing the default program for these file extensions.	
 Writing the resulting JPEG file to disk failed	Resultierende JPEG-Datei konnte nicht geschrieben werden
 Y - B	
@@ -437,7 +442,6 @@ Save parameters to DB	In Parameter-DB speichern
 Clear parameters from DB	Aus Parameter-DB löschen
 Zoom	
 Span all screens	Alle Bildschirme
-Full screen mode	Vollbildmodus
 Fit window to image	Fenstergrösse an Bild anpassen
 Hide window title bar	
 Set window always on top	
@@ -460,10 +464,7 @@ Free	Frei
 Fixed size...	Feste Grösse...
 Zoom to Selection	Auf Auswahl einzoomen
 
-// ::: INFO: Out-of-date Translations [17] ::: (Not in use anymore, safe to delete) //
-//Actual size of image	Tatsächliche Bildgrösse
-//Delete current file on disk permanently	Aktuelle Bilddatei endgültig löschen
-//Do you really want to permanently delete the file %filename%?	Soll die Datei %filename% wirklich permanent gelöscht werden?
+// ::: INFO: Out-of-date Translations [13] ::: (Not in use anymore, safe to delete) //
 //No file or folder name was provided as command line parameter!	Es wurde kein Datei- oder Ordnername als Kommandozeilenparameter angegeben!
 //PgDn or Right	PgDn oder Pfeil rechts
 //PgUp or Left	PgUp oder Pfeil links
@@ -472,7 +473,6 @@ Zoom to Selection	Auf Auswahl einzoomen
 //Rotate the following file lossless by 90 deg?\n%filename%	Folgende Datei verlustfrei um 90 Grad drehen?\n%filename%
 //The file '%s' could not be %s.	Die Datei '%s' konnte nicht %s werden.
 //To use JPEGView, associate JPG, JPEG and BMP files with JPEGView.	Um JPEGView zu verwenden, müssen die Dateitypen JPG, JPEG und BMP mit JPEGView verknüpft werden.
-//Window mode	Fenstermodus
 //Windows 8 blocks JPEGView from changing the default program for these file endings.	Windows 8 gestattet nicht, dass JPEGView das Standardprogramm für diese Dateierweiterungen ändert.
 //[new entry]	[neuer Eintrag]
 //copied	kopiert
@@ -524,8 +524,8 @@ Zoom to Selection	Auf Auswahl einzoomen
 //! Hide window title bar
 //! Set window always on top
 
-// ::: STATUS: Last Checked/Updated by Script ::: 2023-02-09T18:39:48.012053+00:00 //
+// ::: STATUS: Last Checked/Updated by Script ::: 2023-02-10T22:28:46.139223+00:00 //
 //! Translation Progress: 90%
-//! * Total (Strings + Menu) = 421
-//! * Done = 378
+//! * Total (Strings + Menu) = 425
+//! * Done = 382
 //! * Missing = 43 (10%)

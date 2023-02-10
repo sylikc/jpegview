@@ -13,7 +13,7 @@
 ////////////////////
 
 ////////////////////
-// ::: Instructions / Help ::: //
+// ::: Instructions / Help ::: (help for translators only, does not need to be translated) //
 
 //? Line Format:    English string<tab>Translated string<newline>
 //? * Lines beginning with "//" (comments) are ignored
@@ -44,6 +44,7 @@
 About JPEGView (32-bit version)...	
 About JPEGView (64-bit version)...	
 Acquisition date:	Data di acquisizione:
+Actual size of image	Dimensione attuale dell'immagine
 Align image to horizontal or vertical line	Allinea immagine alla linea orizzontale o verticale
 Alignment:	Allineamento:
 All Files	Tutti i file
@@ -103,10 +104,12 @@ Day / Month / Year (as numbers)	Giorno / Mese / Anno (come numeri)
 Decoding this format requires the Microsoft Visual C++ Redistributable.	
 Deep Shadows	Ombre
 Delete	Cancella
+Delete current file on disk permanently	Cancella definitivamente dal disco il file attuale
 Delete image file	Cancellazione immagine
 Descending	Decrescente
 Display image (EXIF) information	Visualizza le informazioni dell’immagine (EXIF)
 Do you really want to delete the current image file on disk?	Vuoi veramente cancellare l'immagine dal disco?
+Do you really want to permanently delete the file %filename%?	Volete veramente eliminare definitivamente il file %filename%?
 Do you really want to save the following parameters as default to the INI file	Vuoi davvero salvare i seguenti parametri come default nel file INI
 Drag at the left or right border for asymmetric correction.	Trascina al bordo sinistro o al bordo destro per la correzione asimmetrica.
 EXIF date successfully set on %d images, failed on %d images	la data EXIF è stata settata correttamente a %d immagini, operazione non riuscita su %d immagini
@@ -142,6 +145,7 @@ Fit to screen (no zoom)	Adatta allo schermo (senza ingrandimento)
 Flash fired:	Flash:
 Focal length (mm):	Lunghezza focale (mm):
 Forward mouse button	Tasto avanti del mouse
+Full screen mode	Modalità tutto schermo
 Goto first/last image of current folder (using sort order as defined)	Vai alla prima/all'ultima immagine della cartella attuale (usando l'ordinamento definito)
 Goto next image	Vai all'immagine successiva
 Goto previous image	Vai all'immagine precedente
@@ -359,6 +363,7 @@ Use the 'Default Programs' configuration dialog from the operating system instea
 Use the mouse to draw a line that shall be horizontal or vertical.	Usa il mouse per disegnare una linea che dovrebbe essere orizzontale o verticale.
 Warning	Attenzione
 Width	Larghezza
+Window mode	Modalità finestra
 Windows 8 (and above) blocks JPEGView from changing the default program for these file extensions.	
 Writing the resulting JPEG file to disk failed	Scrittura sul disco del file JPEG elaborato fallita
 Y - B	
@@ -437,7 +442,6 @@ Save parameters to DB	Salva i parametri nel DB
 Clear parameters from DB	Pulisci i parametri dal DB
 Zoom	Ingrandimento
 Span all screens	Estendi a tutti gli schermi
-Full screen mode	Modalità tutto schermo
 Fit window to image	Adatta finestra all'immagine
 Hide window title bar	
 Set window always on top	
@@ -460,10 +464,7 @@ Free	Libero
 Fixed size...	Dimensione fissa
 Zoom to Selection	Ingrandimento della selezione
 
-// ::: INFO: Out-of-date Translations [20] ::: (Not in use anymore, safe to delete) //
-//Actual size of image	Dimensione attuale dell'immagine
-//Delete current file on disk permanently	Cancella definitivamente dal disco il file attuale
-//Do you really want to permanently delete the file %filename%?	Volete veramente eliminare definitivamente il file %filename%?
+// ::: INFO: Out-of-date Translations [16] ::: (Not in use anymore, safe to delete) //
 //However this will fail if the current user has no administration privileges.	Comunque l'azione non sarà possibile se l'utente non possiede i privilegi di amministratore.
 //Insufficient rights to remove the restrictions. Continue?	Permessi insufficenti per rimuovere le restrizioni. Continuare?
 //JPEGView can try to remove the restrictions automatically.	JPEGView puo' provare a rimuovere automaticamente le restrizioni.
@@ -475,7 +476,6 @@ Zoom to Selection	Ingrandimento della selezione
 //Rotate the following file lossless by 90 deg?\n%filename%	Ruotare di 90 gradi senza perdita di qualità il seguente file?\n%filename%
 //The file '%s' could not be %s.	Il file '%s' non può essere %s.
 //To use JPEGView, associate JPG, JPEG and BMP files with JPEGView.	Per usare JPEGView, associa le estensioni JPG, JPEG e BPM con JPEGView.
-//Window mode	Modalità finestra
 //Windows 8 blocks JPEGView from changing the default program for these file endings.	Windows 8 impedisce a JPEGView di cambiare il programma di default per le seguenti estensioni.
 //[new entry]	[nuova voce]
 //copied	copiato
@@ -535,8 +535,8 @@ Zoom to Selection	Ingrandimento della selezione
 //! Set window always on top
 //! Update user settings...
 
-// ::: STATUS: Last Checked/Updated by Script ::: 2023-02-09T18:39:48.041151+00:00 //
+// ::: STATUS: Last Checked/Updated by Script ::: 2023-02-10T22:28:46.245741+00:00 //
 //! Translation Progress: 88%
-//! * Total (Strings + Menu) = 421
-//! * Done = 370
+//! * Total (Strings + Menu) = 425
+//! * Done = 374
 //! * Missing = 51 (12%)

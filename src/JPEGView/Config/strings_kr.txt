@@ -13,7 +13,7 @@
 ////////////////////
 
 ////////////////////
-// ::: Instructions / Help ::: //
+// ::: Instructions / Help ::: (help for translators only, does not need to be translated) //
 
 //? Line Format:    English string<tab>Translated string<newline>
 //? * Lines beginning with "//" (comments) are ignored
@@ -44,6 +44,7 @@
 About JPEGView (32-bit version)...	
 About JPEGView (64-bit version)...	
 Acquisition date:	사진 찍은 날짜:
+Actual size of image	실제 크기
 Align image to horizontal or vertical line	
 Alignment:	
 All Files	모든 파일
@@ -103,10 +104,12 @@ Day / Month / Year (as numbers)	일 / 월 / 년 (숫자로)
 Decoding this format requires the Microsoft Visual C++ Redistributable.	
 Deep Shadows	음영 깊게
 Delete	
+Delete current file on disk permanently	현재 파일을 디스크에서 영구히 삭제
 Delete image file	
 Descending	
 Display image (EXIF) information	이미지 정보(EXIF) 표시
 Do you really want to delete the current image file on disk?	
+Do you really want to permanently delete the file %filename%?	%filename% 파일을 영구히 삭제하겠습니까?
 Do you really want to save the following parameters as default to the INI file	다음 매개변수를 INI 파일에 기본값으로 저장할 것입니까?
 Drag at the left or right border for asymmetric correction.	
 EXIF date successfully set on %d images, failed on %d images	
@@ -142,6 +145,7 @@ Fit to screen (no zoom)	화면에 맞추기 (배율 조정 없음)
 Flash fired:	플래시:
 Focal length (mm):	초점 거리 (mm):
 Forward mouse button	앞 마우스 버튼
+Full screen mode	전체 화면 모드
 Goto first/last image of current folder (using sort order as defined)	처음/마지막 이미지 또는 현재 폴더로 가기 (지정된 정렬 순서에 따라)
 Goto next image	다음
 Goto previous image	이전
@@ -359,6 +363,7 @@ Use the 'Default Programs' configuration dialog from the operating system instea
 Use the mouse to draw a line that shall be horizontal or vertical.	
 Warning	
 Width	너비
+Window mode	창 모드
 Windows 8 (and above) blocks JPEGView from changing the default program for these file extensions.	
 Writing the resulting JPEG file to disk failed	
 Y - B	
@@ -437,7 +442,6 @@ Save parameters to DB	DB에 매개변수 저장하기
 Clear parameters from DB	DB의 매개변수 지우기
 Zoom	배율
 Span all screens	모든 화면으로 늘리기
-Full screen mode	전체 화면 모드
 Fit window to image	
 Hide window title bar	
 Set window always on top	
@@ -460,10 +464,7 @@ Free	자유
 Fixed size...	고정된 크기...
 Zoom to Selection	선택 영역으로 확대
 
-// ::: INFO: Out-of-date Translations [17] ::: (Not in use anymore, safe to delete) //
-//Actual size of image	실제 크기
-//Delete current file on disk permanently	현재 파일을 디스크에서 영구히 삭제
-//Do you really want to permanently delete the file %filename%?	%filename% 파일을 영구히 삭제하겠습니까?
+// ::: INFO: Out-of-date Translations [13] ::: (Not in use anymore, safe to delete) //
 //Lighten 밝게	
 //No file or folder name was provided as command line parameter!	파일명 또는 폴더명이 명령어 매개변수로 입력되지 않았습니다!
 //PgDn or Right	PgDn 또는 Right
@@ -474,7 +475,6 @@ Zoom to Selection	선택 영역으로 확대
 //Target folders that are not yet existing are created as needed.	대상 폴더가 없습니다. 생성해야 합니다.
 //The file '%s' could not be %s.	'%s' 파일은 %s일 수 없습니다.
 //To use JPEGView, associate JPG, JPEG and BMP files with JPEGView.	JPEGView를 사용하려면 JPG, JPEG, BMP 파일을 JPEGView 에 연결하십시오.
-//Window mode	창 모드
 //copied	복사됨
 //renamed	이름이 변경됨
 //up/down	위/아래
@@ -682,8 +682,8 @@ Zoom to Selection	선택 영역으로 확대
 //! User commands
 //! Crop Selection Lossless...
 
-// ::: STATUS: Last Checked/Updated by Script ::: 2023-02-09T18:39:48.049087+00:00 //
-//! Translation Progress: 52%
-//! * Total (Strings + Menu) = 421
-//! * Done = 220
-//! * Missing = 201 (48%)
+// ::: STATUS: Last Checked/Updated by Script ::: 2023-02-10T22:28:46.280748+00:00 //
+//! Translation Progress: 53%
+//! * Total (Strings + Menu) = 425
+//! * Done = 224
+//! * Missing = 201 (47%)

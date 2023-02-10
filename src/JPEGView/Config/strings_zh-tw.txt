@@ -13,7 +13,7 @@
 ////////////////////
 
 ////////////////////
-// ::: Instructions / Help ::: //
+// ::: Instructions / Help ::: (help for translators only, does not need to be translated) //
 
 //? Line Format:    English string<tab>Translated string<newline>
 //? * Lines beginning with "//" (comments) are ignored
@@ -44,6 +44,7 @@
 About JPEGView (32-bit version)...	
 About JPEGView (64-bit version)...	
 Acquisition date:	擷取日期:
+Actual size of image	圖像實際大小
 Align image to horizontal or vertical line	圖像水平線或垂直線對齊
 Alignment:	
 All Files	所有檔案
@@ -103,10 +104,12 @@ Day / Month / Year (as numbers)	日/月/年 (同編號)
 Decoding this format requires the Microsoft Visual C++ Redistributable.	
 Deep Shadows	深陰影
 Delete	刪除
+Delete current file on disk permanently	從磁碟永久刪除目前檔案
 Delete image file	刪除圖像檔案
 Descending	減計數
 Display image (EXIF) information	顯示圖像訊息 (EXIF)
 Do you really want to delete the current image file on disk?	您真的想要刪除磁碟上的目前圖像檔案嗎?
+Do you really want to permanently delete the file %filename%?	您真的想要永久刪除檔案 %filename% 嗎?
 Do you really want to save the following parameters as default to the INI file	您真的想要儲存以下參數作為預設的 INI 檔案?
 Drag at the left or right border for asymmetric correction.	如要非對稱校正請拖動左邊或右邊的邊框。
 EXIF date successfully set on %d images, failed on %d images	%d 個圖像的 EXIF 日期設定成功，%d 個圖像失敗
@@ -142,6 +145,7 @@ Fit to screen (no zoom)	適合螢幕 (無縮放)
 Flash fired:	閃光燈:
 Focal length (mm):	焦距 (mm):
 Forward mouse button	前向滑鼠按鈕
+Full screen mode	全螢幕模式
 Goto first/last image of current folder (using sort order as defined)	移至目前資料夾的第一個/最後一個圖像 (使用所定義的排序順序)
 Goto next image	 移至下一個圖像
 Goto previous image	移至上一個圖像
@@ -359,6 +363,7 @@ Use the 'Default Programs' configuration dialog from the operating system instea
 Use the mouse to draw a line that shall be horizontal or vertical.	使用滑鼠來畫一條線，將作為水平線或垂直線。
 Warning	警告
 Width	寬度
+Window mode	視窗模式
 Windows 8 (and above) blocks JPEGView from changing the default program for these file extensions.	
 Writing the resulting JPEG file to disk failed	建立的 JPEG 檔案寫入到磁碟時失敗
 Y - B	黃色 - 藍
@@ -437,7 +442,6 @@ Save parameters to DB	儲存參數到資料庫
 Clear parameters from DB	從資料庫清除參數
 Zoom	縮放
 Span all screens	擴展到全部螢幕
-Full screen mode	全螢幕模式
 Fit window to image	視窗適合圖像
 Hide window title bar	
 Set window always on top	
@@ -460,10 +464,7 @@ Free	自由
 Fixed size...	固定大小...
 Zoom to Selection	縮放到選擇內容
 
-// ::: INFO: Out-of-date Translations [20] ::: (Not in use anymore, safe to delete) //
-//Actual size of image	圖像實際大小
-//Delete current file on disk permanently	從磁碟永久刪除目前檔案
-//Do you really want to permanently delete the file %filename%?	您真的想要永久刪除檔案 %filename% 嗎?
+// ::: INFO: Out-of-date Translations [16] ::: (Not in use anymore, safe to delete) //
 //However this will fail if the current user has no administration privileges.	但是，如果目前使用者沒有管理員權限，本操作將失敗。
 //Insufficient rights to remove the restrictions. Continue?	權限不足以移除限制。是否繼續?
 //JPEGView can try to remove the restrictions automatically.	JPEGView 可以自動地嘗試移除限制。
@@ -475,7 +476,6 @@ Zoom to Selection	縮放到選擇內容
 //Rotate the following file lossless by 90 deg?\n%filename%	您想要以下檔案無損旋轉 90 度嗎?\n%filename%
 //The file '%s' could not be %s.	檔案 '%s' 無法是 %s。
 //To use JPEGView, associate JPG, JPEG and BMP files with JPEGView.	要使用 JPEGView 請將 JPG, JPEG, BMP 檔案與 JPEGView 關聯。
-//Window mode	視窗模式
 //Windows 8 blocks JPEGView from changing the default program for these file endings.	Windows 8 封鎖 JPEGView 對這些檔案副檔名變更為預設程式。
 //[new entry]	[新增項目]
 //copied	已複製
@@ -551,8 +551,8 @@ Zoom to Selection	縮放到選擇內容
 //! Set window always on top
 //! Update user settings...
 
-// ::: STATUS: Last Checked/Updated by Script ::: 2023-02-09T18:39:48.095380+00:00 //
+// ::: STATUS: Last Checked/Updated by Script ::: 2023-02-10T22:28:46.410909+00:00 //
 //! Translation Progress: 84%
-//! * Total (Strings + Menu) = 421
-//! * Done = 354
+//! * Total (Strings + Menu) = 425
+//! * Done = 358
 //! * Missing = 67 (16%)

@@ -13,7 +13,7 @@
 ////////////////////
 
 ////////////////////
-// ::: Instructions / Help ::: //
+// ::: Instructions / Help ::: (help for translators only, does not need to be translated) //
 
 //? Line Format:    English string<tab>Translated string<newline>
 //? * Lines beginning with "//" (comments) are ignored
@@ -44,6 +44,7 @@
 About JPEGView (32-bit version)...	
 About JPEGView (64-bit version)...	
 Acquisition date:	Fecha de adquisición:
+Actual size of image	Tamaño actual de la imagen
 Align image to horizontal or vertical line	Alinear imagen a una linea horizontal o vertical
 Alignment:	
 All Files	Todos los archivos
@@ -103,10 +104,12 @@ Day / Month / Year (as numbers)	Día / Mes / Año (numéricos)
 Decoding this format requires the Microsoft Visual C++ Redistributable.	
 Deep Shadows	Sombras profundas
 Delete	
+Delete current file on disk permanently	Borrar archivo permanentemente del disco
 Delete image file	
 Descending	
 Display image (EXIF) information	Mostrar información (EXIF) de la imagen
 Do you really want to delete the current image file on disk?	
+Do you really want to permanently delete the file %filename%?	¿Realmente quiere borrar permanentemente el archivo %filename%?
 Do you really want to save the following parameters as default to the INI file	Realmente quiere guardar los siguientes parámetros como defecto en el archivo INI
 Drag at the left or right border for asymmetric correction.	
 EXIF date successfully set on %d images, failed on %d images	Fecha EXIF establecida correctamente en %d imagenes, fallado en %d imagenes
@@ -142,6 +145,7 @@ Fit to screen (no zoom)	Ajustar a la pantalla (sin zoom)
 Flash fired:	Flash disparado:
 Focal length (mm):	Longitud focal (mm):
 Forward mouse button	Fwd mouse button
+Full screen mode	Modo pantalla completa
 Goto first/last image of current folder (using sort order as defined)	Ir a primer/última imagen de la carpeta actual (usando el ordenamiento definido)
 Goto next image	Ir a la imagen siguiente
 Goto previous image	Ir a la imagen anterior
@@ -359,6 +363,7 @@ Use the 'Default Programs' configuration dialog from the operating system instea
 Use the mouse to draw a line that shall be horizontal or vertical.	Usar el raton para dibujar una linea que sera horizontal o vertical.
 Warning	
 Width	Ancho
+Window mode	Modo ventana
 Windows 8 (and above) blocks JPEGView from changing the default program for these file extensions.	
 Writing the resulting JPEG file to disk failed	
 Y - B	Am - Az
@@ -437,7 +442,6 @@ Save parameters to DB	Guardar parámetros a BD
 Clear parameters from DB	Limpiar parámetros de BD
 Zoom	
 Span all screens	Extender a todas las pantallas
-Full screen mode	Modo pantalla completa
 Fit window to image	
 Hide window title bar	
 Set window always on top	
@@ -460,10 +464,7 @@ Free	Libre
 Fixed size...	Tamaño fijo
 Zoom to Selection	Zoom a selección
 
-// ::: INFO: Out-of-date Translations [15] ::: (Not in use anymore, safe to delete) //
-//Actual size of image	Tamaño actual de la imagen
-//Delete current file on disk permanently	Borrar archivo permanentemente del disco
-//Do you really want to permanently delete the file %filename%?	¿Realmente quiere borrar permanentemente el archivo %filename%?
+// ::: INFO: Out-of-date Translations [11] ::: (Not in use anymore, safe to delete) //
 //No file or folder name was provided as command line parameter!	¡Ningún nombre de archivo o carpeta fue pasado como parámetro de la línea de comandos!
 //PgDn or Right	RePag o derecha
 //PgUp or Left	AvPag o izquierda
@@ -472,7 +473,6 @@ Zoom to Selection	Zoom a selección
 //Rotate the following file lossless by 90 deg?\n%filename%	Rotar 90° sin pérdidas el siguiente archivo?\n%filename%
 //The file '%s' could not be %s.	El archivo '%s' no pudo ser %s.
 //To use JPEGView, associate JPG, JPEG and BMP files with JPEGView.	Para usar JPEGView, asocie las extensiones JPG, JPEG y BMP con JPEGView.
-//Window mode	Modo ventana
 //copied	copiado
 //renamed	renombrado
 //up/down	Arriba/abajo
@@ -649,8 +649,8 @@ Zoom to Selection	Zoom a selección
 //! User commands
 //! Crop Selection Lossless...
 
-// ::: STATUS: Last Checked/Updated by Script ::: 2023-02-09T18:39:48.021970+00:00 //
+// ::: STATUS: Last Checked/Updated by Script ::: 2023-02-10T22:28:46.176718+00:00 //
 //! Translation Progress: 60%
-//! * Total (Strings + Menu) = 421
-//! * Done = 251
+//! * Total (Strings + Menu) = 425
+//! * Done = 255
 //! * Missing = 170 (40%)

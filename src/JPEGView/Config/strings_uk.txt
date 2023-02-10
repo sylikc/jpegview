@@ -16,7 +16,7 @@
 ////////////////////
 
 ////////////////////
-// ::: Instructions / Help ::: //
+// ::: Instructions / Help ::: (help for translators only, does not need to be translated) //
 
 //? Line Format:    English string<tab>Translated string<newline>
 //? * Lines beginning with "//" (comments) are ignored
@@ -47,6 +47,7 @@
 About JPEGView (32-bit version)...	
 About JPEGView (64-bit version)...	
 Acquisition date:	Дата зйомки:
+Actual size of image	Справжній розмір зображення
 Align image to horizontal or vertical line	Вирівнювання зображення по горизонтальній або вертикальній лінії
 Alignment:	Вирівнювання
 All Files	Всі файли
@@ -106,10 +107,12 @@ Day / Month / Year (as numbers)	день/місяць/рік (цифрами)
 Decoding this format requires the Microsoft Visual C++ Redistributable.	
 Deep Shadows	Глибокі тіні
 Delete	Видалити
+Delete current file on disk permanently	Остаточно видалити поточний файл з диска
 Delete image file	Видалити файл зображення
 Descending	За зменшенням
 Display image (EXIF) information	Відомості про зображення (EXIF)
 Do you really want to delete the current image file on disk?	
+Do you really want to permanently delete the file %filename%?	Ви справді хочете видалити файл %filename%?
 Do you really want to save the following parameters as default to the INI file	Ви справді хочете зберегти ці параметри в INI-файлі як стандартні
 Drag at the left or right border for asymmetric correction.	Перетягуйте мишу до лівого або правого краю для несиметричної корекції.
 EXIF date successfully set on %d images, failed on %d images	Установка EXIF-дати: %d - так, %d - ні
@@ -145,6 +148,7 @@ Fit to screen (no zoom)	Підгонка під екран (без збільш�
 Flash fired:	Спалах:
 Focal length (mm):	Фокусна відстань (мм):
 Forward mouse button	Кнопка миші 'Вперед'
+Full screen mode	Повноекранний режим
 Goto first/last image of current folder (using sort order as defined)	Перейти до першого/останнього зображення у поточній папці (відповідно з сортуванням)
 Goto next image	Перейти до наступного зображення
 Goto previous image	Перейти до попереднього зображення
@@ -362,6 +366,7 @@ Use the 'Default Programs' configuration dialog from the operating system instea
 Use the mouse to draw a line that shall be horizontal or vertical.	Проведіть мишею лінію, яка повинна стати горизонтальною або вертикальною.
 Warning	Увага
 Width	Ширина
+Window mode	Віконний режим
 Windows 8 (and above) blocks JPEGView from changing the default program for these file extensions.	
 Writing the resulting JPEG file to disk failed	Помилка запису на диск результуючого файлу JPEG
 Y - B	
@@ -440,7 +445,6 @@ Save parameters to DB	Зберегти параметри в базі даних
 Clear parameters from DB	Видалити параметри з бази даних
 Zoom	Масштабування
 Span all screens	На всі екрани
-Full screen mode	Повноекранний режим
 Fit window to image	Підгонка вікна по зображенню
 Hide window title bar	
 Set window always on top	
@@ -463,10 +467,7 @@ Free	Довільно
 Fixed size...	Фіксований розмір ...
 Zoom to Selection	Масштабувати до виділеного
 
-// ::: INFO: Out-of-date Translations [21] ::: (Not in use anymore, safe to delete) //
-//Actual size of image	Справжній розмір зображення
-//Delete current file on disk permanently	Остаточно видалити поточний файл з диска
-//Do you really want to permanently delete the file %filename%?	Ви справді хочете видалити файл %filename%?
+// ::: INFO: Out-of-date Translations [17] ::: (Not in use anymore, safe to delete) //
 //However this will fail if the current user has no administration privileges.	Проте якщо у поточного користувача немає прав адміністратора, це не спрацює.
 //Insufficient rights to remove the restrictions. Continue?	Недостатньо прав для видалення обмежень. Продовжити?
 //JPEGView can try to remove the restrictions automatically.	JPEGView може спробувати видалити обмеження автоматично.
@@ -479,7 +480,6 @@ Zoom to Selection	Масштабувати до виділеного
 //Save parameters to INI...	Зберегти параметри в INI-файлі...
 //The file '%s' could not be %s.	Для файла '%s' неможливо виконати операцію %s.
 //To use JPEGView, associate JPG, JPEG and BMP files with JPEGView.	Для зручності використання JPEGView асоціюйте програму з файлами JPG, JPEG та BMP.
-//Window mode	Віконний режим
 //Windows 8 blocks JPEGView from changing the default program for these file endings.	Windows 8 не дозволяє JPEGView змінювати стандартну програму для файлів з цими розширеннями.
 //[new entry]	[новий елемент]
 //copied	скопійовано
@@ -546,8 +546,8 @@ Zoom to Selection	Масштабувати до виділеного
 //! Update user settings...
 //! Set current parameters as default values...
 
-// ::: STATUS: Last Checked/Updated by Script ::: 2023-02-09T18:39:48.088768+00:00 //
+// ::: STATUS: Last Checked/Updated by Script ::: 2023-02-10T22:28:46.391724+00:00 //
 //! Translation Progress: 86%
-//! * Total (Strings + Menu) = 421
-//! * Done = 363
+//! * Total (Strings + Menu) = 425
+//! * Done = 367
 //! * Missing = 58 (14%)

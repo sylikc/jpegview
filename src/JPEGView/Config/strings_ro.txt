@@ -13,7 +13,7 @@
 ////////////////////
 
 ////////////////////
-// ::: Instructions / Help ::: //
+// ::: Instructions / Help ::: (help for translators only, does not need to be translated) //
 
 //? Line Format:    English string<tab>Translated string<newline>
 //? * Lines beginning with "//" (comments) are ignored
@@ -44,6 +44,7 @@
 About JPEGView (32-bit version)...	
 About JPEGView (64-bit version)...	
 Acquisition date:	Data fotografierii:
+Actual size of image	Mărimea actuală a imaginii
 Align image to horizontal or vertical line	Aliniați imaginea la liniile orizontale sau verticale
 Alignment:	
 All Files	Toate Fişierele
@@ -103,10 +104,12 @@ Day / Month / Year (as numbers)	Ziua / Luna / Anul (ca numar)
 Decoding this format requires the Microsoft Visual C++ Redistributable.	
 Deep Shadows	Adâncimea Umbrelor
 Delete	
+Delete current file on disk permanently	Şterge fişierul curent permanent de pe harddisk!
 Delete image file	
 Descending	
 Display image (EXIF) information	Afişează informaţiile imaginii (EXIF)
 Do you really want to delete the current image file on disk?	
+Do you really want to permanently delete the file %filename%?	Sigur doriţi ştergerea permanentă a fişierului %filename%?
 Do you really want to save the following parameters as default to the INI file	Sunteţi sigur că doriţi să salvaţi următorii parametrii ca de bază ai fişierului INI
 Drag at the left or right border for asymmetric correction.	Trage la stânga sau la dreapta bordura pentru corecţie asimetrică.
 EXIF date successfully set on %d images, failed on %d images	Datele EXIF setate cu succes la %d imagini, eroare la %d imagini
@@ -142,6 +145,7 @@ Fit to screen (no zoom)	Încadrează în ecran(fără mărire)
 Flash fired:	Bliţ:
 Focal length (mm):	Distanţa focală (mm):
 Forward mouse button	'Forward' la mouse
+Full screen mode	Modul Imagine pe tot ecranul
 Goto first/last image of current folder (using sort order as defined)	Mergi la prima/ultima imagine a directorului (folosind sortarea predefinită)
 Goto next image	Imaginea următoare
 Goto previous image	Imaginea anterioară
@@ -359,6 +363,7 @@ Use the 'Default Programs' configuration dialog from the operating system instea
 Use the mouse to draw a line that shall be horizontal or vertical.	Folosiți mouse-ul pentru a desena o linie orizontală sau verticală.
 Warning	
 Width	Lăţime
+Window mode	Modul Fereastră
 Windows 8 (and above) blocks JPEGView from changing the default program for these file extensions.	
 Writing the resulting JPEG file to disk failed	Scrierea rezultatului fișierului JPEG pe disc a eșuat!
 Y - B	
@@ -437,7 +442,6 @@ Save parameters to DB	Salvează setările în Parametrii DB
 Clear parameters from DB	Şterge setările salvate în Parametrii DB
 Zoom	Măreşte
 Span all screens	Deschide toate ecranele
-Full screen mode	Modul Imagine pe tot ecranul
 Fit window to image	Ajustează fereastra la mărimea imaginii
 Hide window title bar	
 Set window always on top	
@@ -460,10 +464,7 @@ Free	Liber
 Fixed size...	Mărime fixă
 Zoom to Selection	Măreşte selecţia
 
-// ::: INFO: Out-of-date Translations [17] ::: (Not in use anymore, safe to delete) //
-//Actual size of image	Mărimea actuală a imaginii
-//Delete current file on disk permanently	Şterge fişierul curent permanent de pe harddisk!
-//Do you really want to permanently delete the file %filename%?	Sigur doriţi ştergerea permanentă a fişierului %filename%?
+// ::: INFO: Out-of-date Translations [13] ::: (Not in use anymore, safe to delete) //
 //Last modification	Ultima modificare
 //No file or folder name was provided as command line parameter!	Nici un nume de fişier sau director nu a fost furnizat ca parametru al liniei de comandă!
 //Order files by:	Ordonează fişierele după:
@@ -474,7 +475,6 @@ Zoom to Selection	Măreşte selecţia
 //Rotate the following file lossless by 90 deg?\n%filename%	Roteşte fişier cu 90gr.?\n%filename%
 //The file '%s' could not be %s.	Fisierul '%s' nu poate fi %s.
 //To use JPEGView, associate JPG, JPEG and BMP files with JPEGView.	Foloseşte JPEGView pentru a asocia fişiere de tip JPG, JPEG şi BMP.
-//Window mode	Modul Fereastră
 //copied	copiat
 //renamed	redenumit
 //up/down	sus/jos
@@ -632,8 +632,8 @@ Zoom to Selection	Măreşte selecţia
 //! Set as default viewer...
 //! User commands
 
-// ::: STATUS: Last Checked/Updated by Script ::: 2023-02-09T18:39:48.070911+00:00 //
+// ::: STATUS: Last Checked/Updated by Script ::: 2023-02-10T22:28:46.352693+00:00 //
 //! Translation Progress: 64%
-//! * Total (Strings + Menu) = 421
-//! * Done = 270
+//! * Total (Strings + Menu) = 425
+//! * Done = 274
 //! * Missing = 151 (36%)

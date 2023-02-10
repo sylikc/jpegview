@@ -13,7 +13,7 @@
 ////////////////////
 
 ////////////////////
-// ::: Instructions / Help ::: //
+// ::: Instructions / Help ::: (help for translators only, does not need to be translated) //
 
 //? Line Format:    English string<tab>Translated string<newline>
 //? * Lines beginning with "//" (comments) are ignored
@@ -44,6 +44,7 @@
 About JPEGView (32-bit version)...	
 About JPEGView (64-bit version)...	
 Acquisition date:	Дата:
+Actual size of image	Сапраўдны памер выявы
 Align image to horizontal or vertical line	Выраўнаць адносна лініі
 Alignment:	
 All Files	Усе файлы
@@ -103,10 +104,12 @@ Day / Month / Year (as numbers)	дзень/месяц/год (лічбы)
 Decoding this format requires the Microsoft Visual C++ Redistributable.	
 Deep Shadows	Глыбокі цень
 Delete	
+Delete current file on disk permanently	Незваротна выдаліць файл
 Delete image file	
 Descending	
 Display image (EXIF) information	Паказаць інфармацыю EXIF
 Do you really want to delete the current image file on disk?	
+Do you really want to permanently delete the file %filename%?	Незваротна выдаліць файл %filename%?
 Do you really want to save the following parameters as default to the INI file	Ці захаваць гэтыя наладкі як асноўныя ў INI-файле
 Drag at the left or right border for asymmetric correction.	Клік і гарызантальны рух мышкі для несіметрычнай трансфармацыі
 EXIF date successfully set on %d images, failed on %d images	Інфармацыя EXIF удала дададзеная ў %d выяваў, няўдала ў %d
@@ -142,6 +145,7 @@ Fit to screen (no zoom)	дапасаваць (не павялічваць)
 Flash fired:	Бліц:
 Focal length (mm):	Фокусная адлегласьць (мм):
 Forward mouse button	Кнопка мышкі "наперад"
+Full screen mode	поўнаэкранны рэжым
 Goto first/last image of current folder (using sort order as defined)	Пераход да першай/апошняй (паводле сарціроўкі) выявы ў тэчцы
 Goto next image	Наступная выява
 Goto previous image	Папярэдняя выява
@@ -359,6 +363,7 @@ Use the 'Default Programs' configuration dialog from the operating system instea
 Use the mouse to draw a line that shall be horizontal or vertical.	Клік і рух мышкі для пазначэньня гарызанталі ці вертыкалі
 Warning	
 Width	Шырыня
+Window mode	ваконны рэжым
 Windows 8 (and above) blocks JPEGView from changing the default program for these file extensions.	
 Writing the resulting JPEG file to disk failed	
 Y - B	
@@ -437,7 +442,6 @@ Save parameters to DB	Захаваць параметры апрацоўкі ў 
 Clear parameters from DB	Выдаліць параметры апрацоўкі з базы зьвестак
 Zoom	Маштаб
 Span all screens	на ўсе экраны
-Full screen mode	поўнаэкранны рэжым
 Fit window to image	Дапасаваць вакно да выявы
 Hide window title bar	
 Set window always on top	
@@ -460,10 +464,7 @@ Free	адвольна
 Fixed size...	вызначыць памер...
 Zoom to Selection	На ўвесь экран
 
-// ::: INFO: Out-of-date Translations [15] ::: (Not in use anymore, safe to delete) //
-//Actual size of image	Сапраўдны памер выявы
-//Delete current file on disk permanently	Незваротна выдаліць файл
-//Do you really want to permanently delete the file %filename%?	Незваротна выдаліць файл %filename%?
+// ::: INFO: Out-of-date Translations [11] ::: (Not in use anymore, safe to delete) //
 //No file or folder name was provided as command line parameter!	У камандынм радку няма назвы файла ці тэчкі!
 //PgDn or Right	PgDn ці стрэлка ўправа
 //PgUp or Left	PgUp ці стрэлка ўлева
@@ -472,7 +473,6 @@ Zoom to Selection	На ўвесь экран
 //Rotate the following file lossless by 90 deg?\n%filename%	Павярнуць гэты файл, захаваўшы якасьць, на 90°?\n%filename%
 //The file '%s' could not be %s.	Файл '%s' ня можа быць %s.
 //To use JPEGView, associate JPG, JPEG and BMP files with JPEGView.	JPEGView трэба асацыяваць з файламі JPG, JPEG і BMP.
-//Window mode	ваконны рэжым
 //copied	скапіраваны
 //renamed	перайменаваны
 //up/down	стрэлка ўверх/уніз
@@ -635,8 +635,8 @@ Zoom to Selection	На ўвесь экран
 //! Set as default viewer...
 //! User commands
 
-// ::: STATUS: Last Checked/Updated by Script ::: 2023-02-09T18:39:48.004777+00:00 //
+// ::: STATUS: Last Checked/Updated by Script ::: 2023-02-10T22:28:46.100882+00:00 //
 //! Translation Progress: 63%
-//! * Total (Strings + Menu) = 421
-//! * Done = 265
+//! * Total (Strings + Menu) = 425
+//! * Done = 269
 //! * Missing = 156 (37%)

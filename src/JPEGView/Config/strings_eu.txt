@@ -13,7 +13,7 @@
 ////////////////////
 
 ////////////////////
-// ::: Instructions / Help ::: //
+// ::: Instructions / Help ::: (help for translators only, does not need to be translated) //
 
 //? Line Format:    English string<tab>Translated string<newline>
 //? * Lines beginning with "//" (comments) are ignored
@@ -44,6 +44,7 @@
 About JPEGView (32-bit version)...	JPEGView-ri buruz (32 biteko bertsioa)...
 About JPEGView (64-bit version)...	JPEGView-ri buruz (64 biteko bertsioa)...
 Acquisition date:	Erosketa eguna:
+Actual size of image	Irudiaren oraingo neurria
 Align image to horizontal or vertical line	Lerrokatu irudia etzaneko edo zutikako lerro batera
 Alignment:	Lerrokapena:
 All Files	Agiri denak
@@ -103,10 +104,12 @@ Day / Month / Year (as numbers)	Eguna / Hilabetea / Urtea (zenbakietan)
 Decoding this format requires the Microsoft Visual C++ Redistributable.	
 Deep Shadows	Itzal sakonak
 Delete	Ezabatu
+Delete current file on disk permanently	Ezabatu oraingo agiria diskatik betirako
 Delete image file	Ezabatu irudi agiria
 Descending	Behera-zenbaketa
 Display image (EXIF) information	Erakutsi irudiaren (EXIF) argibideak
 Do you really want to delete the current image file on disk?	Egitan nahi duzu oraingo irudia diskatik ezabatzea?
+Do you really want to permanently delete the file %filename%?	Egitan nahi duzu ezabatzea %filename% agiria betirako?
 Do you really want to save the following parameters as default to the INI file	Egitan nahi duzu hurrengo parametroak berezkotzat bezala gordetzea INI agirian
 Drag at the left or right border for asymmetric correction.	Arrastatu ezker edo eskuin hertzera zuzenketa asimetrikorako
 EXIF date successfully set on %d images, failed on %d images	EXIF eguna ongi ezarri da %d iruditan, hutsegitea %d iruditan
@@ -142,6 +145,7 @@ Fit to screen (no zoom)	Finkatu ikusleihora (zoom gabe)
 Flash fired:	Flash eragiketa:
 Focal length (mm):	Foku luzera (mm):
 Forward mouse button	Saguaren aurrera botoia
+Full screen mode	Ikusleiho-osoko modua
 Goto first/last image of current folder (using sort order as defined)	Joan lehen/azken irudira oraingo agiritegian (zehaztutako antolakuntza hurrenkera jarraituz)
 Goto next image	Joan hurrengo irudira
 Goto previous image	Joan aurreko irudira
@@ -359,6 +363,7 @@ Use the 'Default Programs' configuration dialog from the operating system instea
 Use the mouse to draw a line that shall be horizontal or vertical.	Erabili sagua etzana edo zutia izango den lerro bat marrazteko.
 Warning	Kontuz
 Width	Zabalera
+Window mode	Leiho modua
 Windows 8 (and above) blocks JPEGView from changing the default program for these file extensions.	
 Writing the resulting JPEG file to disk failed	Hutsegitea emaitz JPEG agiria diskara idazterakoan
 Y - B	Or - Ur
@@ -437,7 +442,6 @@ Save parameters to DB	Gorde parametroak DB-an
 Clear parameters from DB	Garbitu DB-ko parametroak
 Zoom	Zooma
 Span all screens	Hedatu ikusleiho denak
-Full screen mode	Ikusleiho-osoko modua
 Fit window to image	Finkatu leihoa irudiari
 Hide window title bar	
 Set window always on top	
@@ -460,10 +464,7 @@ Free	Askea
 Fixed size...	Zuzendutako neurria...
 Zoom to Selection	Zooma Hautapenean
 
-// ::: INFO: Out-of-date Translations [20] ::: (Not in use anymore, safe to delete) //
-//Actual size of image	Irudiaren oraingo neurria
-//Delete current file on disk permanently	Ezabatu oraingo agiria diskatik betirako
-//Do you really want to permanently delete the file %filename%?	Egitan nahi duzu ezabatzea %filename% agiria betirako?
+// ::: INFO: Out-of-date Translations [16] ::: (Not in use anymore, safe to delete) //
 //However this will fail if the current user has no administration privileges.	Horrela ere honek huts egingo du oraingo erabiltzaileak ez baditu administratzaile pribilegioak.
 //Insufficient rights to remove the restrictions. Continue?	Ez duzu nahikoa eskubide murrizpenak kentzeko. Jarraitu?
 //JPEGView can try to remove the restrictions automatically.	JPEGIkusgailua murrizpenak berezgaitasunez kentzen saiatu daiteke.
@@ -475,7 +476,6 @@ Zoom to Selection	Zooma Hautapenean
 //Rotate the following file lossless by 90 deg?\n%filename%	Itzulikatu hurrengo agiria 90° galeragabe?\n%filename%
 //The file '%s' could not be %s.	'%s' agiria ezin da %s izan.
 //To use JPEGView, associate JPG, JPEG and BMP files with JPEGView.	JPEGIkusgailua erabiltzeko, elkartu JPG, JPEG eta BMP agiriak JPEGIkusgailuarekin.
-//Window mode	Leiho modua
 //Windows 8 blocks JPEGView from changing the default program for these file endings.	Windows 8-k JPEGView blokeatzen du agiri hauentzako berezko programa aldatzeko.
 //[new entry]	[sarrera berria]
 //copied	kopiatuta
@@ -519,8 +519,8 @@ Zoom to Selection	Zooma Hautapenean
 //! Hide window title bar
 //! Set window always on top
 
-// ::: STATUS: Last Checked/Updated by Script ::: 2023-02-09T18:39:48.029926+00:00 //
+// ::: STATUS: Last Checked/Updated by Script ::: 2023-02-10T22:28:46.215878+00:00 //
 //! Translation Progress: 92%
-//! * Total (Strings + Menu) = 421
-//! * Done = 386
+//! * Total (Strings + Menu) = 425
+//! * Done = 390
 //! * Missing = 35 (8%)

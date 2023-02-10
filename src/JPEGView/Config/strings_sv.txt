@@ -13,7 +13,7 @@
 ////////////////////
 
 ////////////////////
-// ::: Instructions / Help ::: //
+// ::: Instructions / Help ::: (help for translators only, does not need to be translated) //
 
 //? Line Format:    English string<tab>Translated string<newline>
 //? * Lines beginning with "//" (comments) are ignored
@@ -44,6 +44,7 @@
 About JPEGView (32-bit version)...	
 About JPEGView (64-bit version)...	
 Acquisition date:	Anskaffningsdatum:
+Actual size of image	Verklig bildstorlek
 Align image to horizontal or vertical line	Justera bildposition efter horisontell eller vertikal linje
 Alignment:	Justering:
 All Files	Alla filer
@@ -103,10 +104,12 @@ Day / Month / Year (as numbers)	Dag/Månad/År (med siffror)
 Decoding this format requires the Microsoft Visual C++ Redistributable.	
 Deep Shadows	Djupa skuggor
 Delete	Ta bort
+Delete current file on disk permanently	Ta bort aktuell fil permanent
 Delete image file	Ta bort bildfil
 Descending	Fallande
 Display image (EXIF) information	Visa bildinformation (EXIF)
 Do you really want to delete the current image file on disk?	Vill du verkligen ta bort den aktuella bildfilen från disken?
+Do you really want to permanently delete the file %filename%?	Vill du verkligen ta bort %filename% permanent?
 Do you really want to save the following parameters as default to the INI file	Vill du verkligen spara följande parametrar som standard?
 Drag at the left or right border for asymmetric correction.	Dra i vänster eller höger kant för asymmetrisk korrigering
 EXIF date successfully set on %d images, failed on %d images	EXIF-data applicerat på %d bilder, misslyckades med %d bilder
@@ -142,6 +145,7 @@ Fit to screen (no zoom)	Anpassa till skärm (ingen zoom)
 Flash fired:	Blixt:
 Focal length (mm):	Brännvidd:
 Forward mouse button	Framåt-musknapp
+Full screen mode	Helskärmsläge
 Goto first/last image of current folder (using sort order as defined)	Gå till första/sista bilden i aktuell mapp (sorterat enligt specifikation)
 Goto next image	Gå till nästa bild
 Goto previous image	Gå till föregående bild
@@ -359,6 +363,7 @@ Use the 'Default Programs' configuration dialog from the operating system instea
 Use the mouse to draw a line that shall be horizontal or vertical.	Rita en horisontell eler vertikal linje med musen.
 Warning	Varning
 Width	Bredd
+Window mode	Fönsterläge
 Windows 8 (and above) blocks JPEGView from changing the default program for these file extensions.	
 Writing the resulting JPEG file to disk failed	Kunde inte skriva utdatafilen till disk
 Y - B	G - B
@@ -437,7 +442,6 @@ Save parameters to DB	Spara parametrar till databas
 Clear parameters from DB	Ta bort parametrar från databas
 Zoom	
 Span all screens	Sträck ut över alla skärmar
-Full screen mode	Helskärmsläge
 Fit window to image	Anpassa fönster efter bild
 Hide window title bar	
 Set window always on top	
@@ -460,10 +464,7 @@ Free	Flexibel storlek
 Fixed size...	Fixerad storlek...
 Zoom to Selection	Zooma in markerat område
 
-// ::: INFO: Out-of-date Translations [20] ::: (Not in use anymore, safe to delete) //
-//Actual size of image	Verklig bildstorlek
-//Delete current file on disk permanently	Ta bort aktuell fil permanent
-//Do you really want to permanently delete the file %filename%?	Vill du verkligen ta bort %filename% permanent?
+// ::: INFO: Out-of-date Translations [16] ::: (Not in use anymore, safe to delete) //
 //However this will fail if the current user has no administration privileges.	Det kommer dock att misslyckas om aktuellt användarkonto saknar administratörsrättigheter.
 //Insufficient rights to remove the restrictions. Continue?	Otillräckliga rättigheter för att ta bort restriktionerna. Vill du fortsätta?
 //JPEGView can try to remove the restrictions automatically.	JPEGView kan försöka ta bort restriktionerna automatiskt.
@@ -475,7 +476,6 @@ Zoom to Selection	Zooma in markerat område
 //Rotate the following file lossless by 90 deg?\n%filename%	Rotera följande bild förlustfritt 90 grader?\n%filename%
 //The file '%s' could not be %s.	Filen '%s' kan inte vara %s
 //To use JPEGView, associate JPG, JPEG and BMP files with JPEGView.	För att använda JPEGView, associera JPG-, JPEG- och BMP-filer med JPEGView.
-//Window mode	Fönsterläge
 //Windows 8 blocks JPEGView from changing the default program for these file endings.	Windows 8 blockerar JPEGViews försök att ändra standardprogram för dessa filändelser.
 //[new entry]	[ny post]
 //copied	kopierad
@@ -535,8 +535,8 @@ Zoom to Selection	Zooma in markerat område
 //! Set window always on top
 //! Update user settings...
 
-// ::: STATUS: Last Checked/Updated by Script ::: 2023-02-09T18:39:48.078866+00:00 //
+// ::: STATUS: Last Checked/Updated by Script ::: 2023-02-10T22:28:46.375847+00:00 //
 //! Translation Progress: 88%
-//! * Total (Strings + Menu) = 421
-//! * Done = 370
+//! * Total (Strings + Menu) = 425
+//! * Done = 374
 //! * Missing = 51 (12%)

@@ -13,7 +13,7 @@
 ////////////////////
 
 ////////////////////
-// ::: Instructions / Help ::: //
+// ::: Instructions / Help ::: (help for translators only, does not need to be translated) //
 
 //? Line Format:    English string<tab>Translated string<newline>
 //? * Lines beginning with "//" (comments) are ignored
@@ -44,6 +44,7 @@
 About JPEGView (32-bit version)...	
 About JPEGView (64-bit version)...	
 Acquisition date:	Ημερομηνία λήψης:
+Actual size of image	Πραγματικό μέγεθος
 Align image to horizontal or vertical line	Στοίχιση εικόνας στην οριζόντια ή κάθετη γραμμή
 Alignment:	
 All Files	Όλα τα αρχεία
@@ -103,10 +104,12 @@ Day / Month / Year (as numbers)	Ημέρα / Μήνας / Έτος (σαν αρ�
 Decoding this format requires the Microsoft Visual C++ Redistributable.	
 Deep Shadows	Εμβάθυνση σκιές
 Delete	
+Delete current file on disk permanently	Διαγραφή του αρχείου μόνιμα
 Delete image file	
 Descending	Φθίνουσα
 Display image (EXIF) information	Προβολή δεδομένων εικόνας (EXIF)
 Do you really want to delete the current image file on disk?	
+Do you really want to permanently delete the file %filename%?	Να διαγραφεί μονίμως το αρχείο %filename%;
 Do you really want to save the following parameters as default to the INI file	Θέλεις να αποθηκεύσεις τις ακόλουθες παραμέτρους ως προεπιλογή στο αρχείο INI
 Drag at the left or right border for asymmetric correction.	
 EXIF date successfully set on %d images, failed on %d images	Τα δεδομένα EXIF μπήκαν σε %d εικόνες, απέτυχαν σε %d εικόνες
@@ -142,6 +145,7 @@ Fit to screen (no zoom)	Προσαρμογή στην οθόνη (χωρίς ζ�
 Flash fired:	Φλας:
 Focal length (mm):	Εστιακή απόσταση (mm):
 Forward mouse button	Μπροστά πλήκτρο ποντικού
+Full screen mode	Πλήρης οθόνη
 Goto first/last image of current folder (using sort order as defined)	Μετάβαση στην πρώτη/τελευταία εικόνα του τρέχοντος φακέλου (με βάση την κατάταξη όπως ορίστηκε)
 Goto next image	Μετάβαση στην επόμενη εικόνα
 Goto previous image	Μετάβαση στην προηγούμενη εικόνα
@@ -359,6 +363,7 @@ Use the 'Default Programs' configuration dialog from the operating system instea
 Use the mouse to draw a line that shall be horizontal or vertical.	Με το ποντίκι τράβα μια γραμμή που θα είναι οριζόντια ή κάθετη.
 Warning	Προειδοποίηση
 Width	Πλάτος
+Window mode	Προβολη σε παράθυρο
 Windows 8 (and above) blocks JPEGView from changing the default program for these file extensions.	
 Writing the resulting JPEG file to disk failed	
 Y - B	
@@ -437,7 +442,6 @@ Save parameters to DB	Αποθήκευση παραμέτρων στη ΒΔ
 Clear parameters from DB	Διαγραφή παραμέτρων από τη ΒΔ
 Zoom	Ζουμ
 Span all screens	Κάλυψη όλων των οθονών
-Full screen mode	Πλήρης οθόνη
 Fit window to image	Ταίριασμα παραθύρου στην εικόνα
 Hide window title bar	
 Set window always on top	
@@ -460,10 +464,7 @@ Free	Ελεύθερη
 Fixed size...	Συγκεκριμένο μέγεθος...
 Zoom to Selection	Ζουμ στην επιλογή
 
-// ::: INFO: Out-of-date Translations [19] ::: (Not in use anymore, safe to delete) //
-//Actual size of image	Πραγματικό μέγεθος
-//Delete current file on disk permanently	Διαγραφή του αρχείου μόνιμα
-//Do you really want to permanently delete the file %filename%?	Να διαγραφεί μονίμως το αρχείο %filename%;
+// ::: INFO: Out-of-date Translations [15] ::: (Not in use anymore, safe to delete) //
 //However this will fail if the current user has no administration privileges.	Ωστόσο αυτό θα αποτύχει εάν ο παρών χρήστης δεν έχει Δικαιώματα Διαχειριστή.
 //Insufficient rights to remove the restrictions. Continue?	Ανεπαρκή δικαιώματα για αφαίρεση περιορισμών. Να συνεχίσω;
 //JPEGView can try to remove the restrictions automatically.	Το JPEGVIEW μπορεί να προσπαθήσει να αφαιρέσει τους περιορισμούς αυτόματα.
@@ -476,7 +477,6 @@ Zoom to Selection	Ζουμ στην επιλογή
 //Rotate the following file lossless by 90 deg?\n%filename%	Να περιστραφεί το αρχείο χωρίς απώλεια 90 μοίρες; \n%filename%
 //The file '%s' could not be %s.	Το αρχείο '%s' δεν μπόρεσε να %s.
 //To use JPEGView, associate JPG, JPEG and BMP files with JPEGView.	Για να χρησιμοποιήσετε το JPEGView, συσχετίστε τα αρχεία JPG, JPEG και BMP με το JPEGView.
-//Window mode	Προβολη σε παράθυρο
 //copied	αντιγραφεί
 //renamed	μετονομαστεί
 //up/down	επάνω/κάτω
@@ -598,8 +598,8 @@ Zoom to Selection	Ζουμ στην επιλογή
 //! Hide window title bar
 //! Set window always on top
 
-// ::: STATUS: Last Checked/Updated by Script ::: 2023-02-09T18:39:48.016046+00:00 //
+// ::: STATUS: Last Checked/Updated by Script ::: 2023-02-10T22:28:46.157093+00:00 //
 //! Translation Progress: 73%
-//! * Total (Strings + Menu) = 421
-//! * Done = 306
+//! * Total (Strings + Menu) = 425
+//! * Done = 310
 //! * Missing = 115 (27%)

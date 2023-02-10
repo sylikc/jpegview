@@ -16,7 +16,7 @@
 ////////////////////
 
 ////////////////////
-// ::: Instructions / Help ::: //
+// ::: Instructions / Help ::: (help for translators only, does not need to be translated) //
 
 //? Line Format:    English string<tab>Translated string<newline>
 //? * Lines beginning with "//" (comments) are ignored
@@ -47,6 +47,7 @@
 About JPEGView (32-bit version)...	JPEGView (32bit版)について...
 About JPEGView (64-bit version)...	JPEGView (64bit版)について...
 Acquisition date:	撮影日時:
+Actual size of image	実際の画像サイズ
 Align image to horizontal or vertical line	縦/横の線に揃える
 Alignment:	整列の位置:
 All Files	すべてのファイル
@@ -106,10 +107,12 @@ Day / Month / Year (as numbers)	日 / 月 / 年 (数字)
 Decoding this format requires the Microsoft Visual C++ Redistributable.	
 Deep Shadows	最も暗い部分
 Delete	削除
+Delete current file on disk permanently	表示中の画像ファイルを完全に削除
 Delete image file	画像ファイルを削除
 Descending	順減
 Display image (EXIF) information	画像情報(EXIF)を表示
 Do you really want to delete the current image file on disk?	この画像ファイルを削除しますか？
+Do you really want to permanently delete the file %filename%?	本当に完全に削除しますか？ \n%filename%
 Do you really want to save the following parameters as default to the INI file	以下のパラメーターを規定としてINIファイルに保存しますか？
 Drag at the left or right border for asymmetric correction.	左右の辺のドラッグで非対称に調整します。
 EXIF date successfully set on %d images, failed on %d images	EXIFの日時に設定 成功:%d, 失敗:%d
@@ -145,6 +148,7 @@ Fit to screen (no zoom)	画面にフィット (拡大なし)
 Flash fired:	フラッシュ:
 Focal length (mm):	焦点距離 (mm):
 Forward mouse button	マウスの進むボタン
+Full screen mode	全画面表示
 Goto first/last image of current folder (using sort order as defined)	フォルダ内の最初/最後の画像 (表示順に従う)
 Goto next image	次の画像
 Goto previous image	前の画像
@@ -362,6 +366,7 @@ Use the 'Default Programs' configuration dialog from the operating system instea
 Use the mouse to draw a line that shall be horizontal or vertical.	マウスで縦か横の線を描きます。
 Warning	注意
 Width	幅
+Window mode	ウィンドウ表示
 Windows 8 (and above) blocks JPEGView from changing the default program for these file extensions.	
 Writing the resulting JPEG file to disk failed	JPEGファイル保存失敗
 Y - B	A - A
@@ -440,7 +445,6 @@ Save parameters to DB	パラメーターデータを記憶
 Clear parameters from DB	パラメーターデータの記憶を消去
 Zoom	拡大
 Span all screens	マルチモニター横断
-Full screen mode	全画面表示
 Fit window to image	画像にウィンドウをフィット
 Hide window title bar	ウィンドウのタイトルバーを隠す
 Set window always on top	常に手前に表示
@@ -463,10 +467,7 @@ Free	自由選択
 Fixed size...	固定サイズ...
 Zoom to Selection	選択範囲を拡大
 
-// ::: INFO: Out-of-date Translations [19] ::: (Not in use anymore, safe to delete) //
-//Actual size of image	実際の画像サイズ
-//Delete current file on disk permanently	表示中の画像ファイルを完全に削除
-//Do you really want to permanently delete the file %filename%?	本当に完全に削除しますか？ \n%filename%
+// ::: INFO: Out-of-date Translations [15] ::: (Not in use anymore, safe to delete) //
 //Insufficient rights to remove the restrictions. Continue?	制限の除去に必要な権限がありません。続けますか？
 //Local density correction:	色濃度の補正:
 //No file or folder name was provided as command line parameter!	コマンド中にファイル名かフォルダ名の指定がありません
@@ -477,7 +478,6 @@ Zoom to Selection	選択範囲を拡大
 //Rotate the following file lossless by 90 deg?\n%filename%	画像をロスレスで90度回転しますか？ \n%filename%
 //The file '%s' could not be %s.	%s ファイルは %s できません。
 //To use JPEGView, associate JPG, JPEG and BMP files with JPEGView.	JPEGView を使うには、JPG、JPEG、BMPファイルを JPEGViewに 関連付けしてください
-//Window mode	ウィンドウ表示
 //Windows 8 blocks JPEGView from changing the default program for these file endings.	Windows 8 では、これらのファイルの既定のビューアに JPEGView を指定できません。
 //[new entry]	[新しい項目]
 //copied	コピー
@@ -516,8 +516,8 @@ Zoom to Selection	選択範囲を拡大
 //! 50 fps
 //! 100 fps
 
-// ::: STATUS: Last Checked/Updated by Script ::: 2023-02-09T18:39:48.045118+00:00 //
+// ::: STATUS: Last Checked/Updated by Script ::: 2023-02-10T22:28:46.264876+00:00 //
 //! Translation Progress: 93%
-//! * Total (Strings + Menu) = 421
-//! * Done = 391
+//! * Total (Strings + Menu) = 425
+//! * Done = 395
 //! * Missing = 30 (7%)
