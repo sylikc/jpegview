@@ -11,21 +11,21 @@ REM https://github.com/madler/zlib/issues/133
 
 REM https://stackoverflow.com/questions/10906554/how-do-i-revert-my-changes-to-a-git-submodule
 REM NOTE: this modifies files in the submodule... to reset do:
-REM  $ git submodule deinit -f -- extras/libpng-apng.src-patch/libpng
-REM  $ git submodule update --init -- extras/libpng-apng.src-patch/libpng
+REM  $ git submodule deinit -f -- extras/third_party/libpng-apng.src-patch/libpng
+REM  $ git submodule update --init -- extras/third_party/libpng-apng.src-patch/libpng
 
 REM if zlib gets dirty after building
-REM  $ git submodule deinit -f -- extras/libpng-apng.src-patch/zlib
-REM  $ git submodule update --init -- extras/libpng-apng.src-patch/zlib
+REM  $ git submodule deinit -f -- extras/third_party/libpng-apng.src-patch/zlib
+REM  $ git submodule update --init -- extras/third_party/libpng-apng.src-patch/zlib
 
 
 SET XSRC_DIR=%~dp0..\..\src
-SET XLIB_DIR=%~dp0..\libpng-apng.src-patch\libpng
+SET XLIB_DIR=%~dp0..\third_party\libpng-apng.src-patch\libpng
 
 SET XOUT_DIR_32=%XLIB_DIR%\projects\vstudio\Release Library
 SET XOUT_DIR_64=%XLIB_DIR%\projects\vstudio\x64\Release Library
 
-SET XPATCH_DIR=%~dp0..\libpng-apng.src-patch
+SET XPATCH_DIR=%~dp0..\third_party\libpng-apng.src-patch
 
 REM this script doesn't "clean" you do it yourself
 
@@ -64,7 +64,7 @@ IF ERRORLEVEL 1 exit /b 1
 echo === HEADER FILES NOT MAINTAINED BY SCRIPT ===
 echo NOTE: as for the header files, copy/replace files AS NEEDED
 echo TO: src\JPEGView\libpng-apng\include
-echo FROM: extras\libpng-apng.src-patch\libpng
+echo FROM: extras\third_party\libpng-apng.src-patch\libpng
 
 
 exit /b 0

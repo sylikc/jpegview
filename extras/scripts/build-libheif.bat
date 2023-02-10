@@ -4,7 +4,7 @@ setlocal
 REM this builds libheif and replaces the libs in the JPEGView src folder
 
 SET XSRC_DIR=%~dp0..\..\src\JPEGView\libheif
-SET XLIB_DIR=%~dp0..\libheif
+SET XLIB_DIR=%~dp0..\third_party\libheif
 SET XOUT_DIR=%~dp0libheif
 
 SET XVENV_DIR=%~dp0venv-meson
@@ -58,15 +58,11 @@ IF ERRORLEVEL 1 exit /b 1
 
 
 
-exit /b 0
-
-
-
 
 echo === HEADER FILES NOT MAINTAINED BY SCRIPT ===
 echo NOTE: as for the header files, copy/replace files AS NEEDED
 echo TO: src\JPEGView\libheif\include\libheif
-echo .h FROM: extras\libheif\libheif\libheif
+echo .h FROM: extras\third_party\libheif\libheif\libheif
 echo FROM: %OUT_DIR%\libheif-[arch]\libheif\heif_version.h
 
 exit /b 0

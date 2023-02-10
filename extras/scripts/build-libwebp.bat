@@ -4,7 +4,7 @@ setlocal
 REM this builds libwebp and replaces the libs in the JPEGView src folder
 
 SET XSRC_DIR=%~dp0..\..\src\JPEGView\libwebp
-SET XLIB_DIR=%~dp0..\libwebp
+SET XLIB_DIR=%~dp0..\third_party\libwebp
 SET XOUT_DIR=%~dp0libwebp
 
 IF EXIST "%XOUT_DIR%" (
@@ -20,7 +20,7 @@ IF ERRORLEVEL 1 exit /b 1
 
 echo === HEADER FILES NOT MAINTAINED BY SCRIPT ===
 echo NOTE: as for the header files, copy/replace files AS NEEDED
-echo extras\libwebp\src\webp -to- src\WEBP\include\webp
+echo extras\third_party\libwebp\src\webp -to- src\JPEGView\libwebp\include
 
 exit /b 0
 
