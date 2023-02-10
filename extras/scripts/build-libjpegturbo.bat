@@ -4,7 +4,7 @@ setlocal
 REM this builds libjpeg-turbo and replaces the libs in the JPEGView src folder
 
 SET XSRC_DIR=%~dp0..\..\src
-SET XLIB_DIR=%~dp0..\libjpeg-turbo
+SET XLIB_DIR=%~dp0..\third_party\libjpeg-turbo
 SET XOUT_DIR=%~dp0libjpeg-turbo
 
 IF EXIST "%XOUT_DIR%" (
@@ -23,25 +23,18 @@ IF ERRORLEVEL 1 (
 	)
 )
 
-call :BUILD_JPEGT x86
+call :BUILD_COPY_JPEGT x86 lib
 IF ERRORLEVEL 1 exit /b 1
-call :BUILD_JPEGT x64
+call :BUILD_COPY_JPEGT x64 lib64
 IF ERRORLEVEL 1 exit /b 1
 
 
-
-REM copy the libs over
-REM error checking if a copy fails... throws error to caller
-copy /y "%XOUT_DIR%\x86\*.lib" "%XSRC_DIR%\JPEGView\libjpeg-turbo\lib\"
-IF ERRORLEVEL 1 exit /b 1
-copy /y "%XOUT_DIR%\x64\*.lib" "%XSRC_DIR%\JPEGView\libjpeg-turbo\lib64\"
-IF ERRORLEVEL 1 exit /b 1
 
 
 echo === HEADER FILES NOT MAINTAINED BY SCRIPT ===
 echo NOTE: as for the header files, copy/replace files AS NEEDED
 echo TO: src\JPEGView\libjpeg-turbo\include
-echo FROM: extras\libjpeg-turbo
+echo FROM: extras\third_party\libjpeg-turbo
 echo FROM: jconfig.h is in output directory
 
 
@@ -51,7 +44,7 @@ exit /b 0
 
 
 
-:BUILD_JPEGT
+:BUILD_COPY_JPEGT
 
 REM so the environments don't pollute each other
 setlocal
@@ -64,10 +57,17 @@ call "%~dp0vs-init.bat" %1
 
 pushd "%XBUILD_DIR%"
 cmake.exe -G"NMake Makefiles" -DCMAKE_BUILD_TYPE=Release "%XLIB_DIR%"
+IF ERRORLEVEL 1 exit /b 1
 nmake.exe
-SET XERROR=%ERRORLEVEL%
+IF ERRORLEVEL 1 exit /b 1
 
 popd
 
+REM copy the libs over
+REM error checking if a copy fails... throws error to caller
+copy /y "%XBUILD_DIR%\turbojpeg-static.lib" "%XSRC_DIR%\JPEGView\libjpeg-turbo\%~2\"
+IF ERRORLEVEL 1 exit /b 1
 
-exit /b %XERROR%
+
+
+exit /b 0
