@@ -1,0 +1,89 @@
+// Файл с назначениями клавиш для программы JPEGView.
+// Не повредите этот файл, иначе не будут работать никакие клавиши!
+// Переименуйте этот файл в KeyMap.txt, чтобы использовать его вместо исходного (англоязычного).
+// Перед этим не забудьте сверить/синхронизировать ранее изменявшиеся вами настройки в исходном (англоязычном) файле KeyMap.txt.
+//Language=Russian
+//TranslatorName=Dmitry Yerokhin
+//Contact=erodim@mail.ru
+//TranslatorURL=none
+//LastUpdated=Jan 29, 2023
+
+// Раскомментируйте (удалите // в начале) следующую строку, чтобы немедленно прекращать работу JPEGView по Esc при анимации или слайдшоу
+//Esc                     IDM_EXIT
+PgDn                    IDM_NEXT
+Right                   IDM_NEXT
+Left                    IDM_PREV
+PgUp                    IDM_PREV
+Ctrl+Left               IDM_TOGGLE
+Ctrl+Right              IDM_TOGGLE
+Home                    IDM_FIRST
+End                     IDM_LAST
+Del                     IDM_MOVE_TO_RECYCLE_BIN_CONFIRM
+Plus                    IDM_ZOOM_INC
+Ctrl+Shift+Plus         IDM_CONTRAST_CORRECTION_INC
+Ctrl+Alt+Plus           IDM_COLOR_CORRECTION_INC
+Ctrl+Plus               IDM_CONTRAST_INC
+Shift+Plus              IDM_GAMMA_INC
+Alt+Plus                IDM_SHARPEN_INC
+Minus                   IDM_ZOOM_DEC
+Ctrl+Shift+Minus        IDM_CONTRAST_CORRECTION_DEC
+Ctrl+Alt+Minus          IDM_COLOR_CORRECTION_DEC
+Ctrl+Minus              IDM_CONTRAST_DEC
+Shift+Minus             IDM_GAMMA_DEC
+Alt+Minus               IDM_SHARPEN_DEC
+F2                      IDM_SHOW_FILEINFO
+Ctrl+F2                 IDM_SHOW_FILENAME
+F3                      IDM_TOGGLE_RESAMPLING_QUALITY
+F4                      IDM_KEEP_PARAMETERS
+F5                      IDM_AUTO_CORRECTION
+Shift+F5                IDM_AUTO_CORRECTION_SECTION
+F6                      IDM_LDC
+Ctrl+Shift+F6           IDM_LDC_HIGHLIGHTS_INC
+Ctrl+F6                 IDM_LDC_SHADOWS_INC
+Alt+Shift+F6            IDM_LDC_HIGHLIGHTS_DEC
+Alt+F6                  IDM_LDC_SHADOWS_DEC
+F7                      IDM_LOOP_FOLDER
+F8                      IDM_LOOP_RECURSIVELY
+F9                      IDM_LOOP_SIBLINGS
+F11                     IDM_FULL_SCREEN_MODE
+Shift+F11               IDM_HIDE_TITLE_BAR
+Ctrl+F11                IDM_FIT_WINDOW_TO_IMAGE
+F12                     IDM_SPAN_SCREENS
+Ctrl+F12                IDM_TOGGLE_MONITOR
+Space                   IDM_TOGGLE_FIT_TO_SCREEN_100_PERCENTS
+Return                  IDM_FIT_TO_SCREEN
+Ctrl+Return             IDM_FILL_WITH_CROP
+Down                    IDM_ROTATE_90
+Up                      IDM_ROTATE_270
+Shift+Up                IDM_PAN_UP
+Shift+Down              IDM_PAN_DOWN
+Shift+Left              IDM_PAN_LEFT
+Shift+Right             IDM_PAN_RIGHT
+Ctrl+Down               IDM_ZOOM_DEC
+Ctrl+Up                 IDM_ZOOM_INC
+Ctrl+A                  IDM_EXCHANGE_PROC_PARAMS
+Ctrl+C                  IDM_COPY
+Ctrl+Shift+C            IDM_COPY_PATH
+C                       IDM_SORT_CREATION_DATE
+Ctrl+N                  IDM_SHOW_NAVPANEL
+N                       IDM_SORT_NAME
+Ctrl+M                  IDM_MARK_FOR_TOGGLE
+Ctrl+Shift+M            IDM_TOUCH_IMAGE
+M                       IDM_SORT_MOD_DATE
+Z                       IDM_SORT_RANDOM
+Ctrl+S                  IDM_SAVE_ALLOW_NO_PROMPT
+Ctrl+Shift+S            IDM_SAVE_SCREEN
+S                       IDM_SAVE_PARAM_DB
+D                       IDM_CLEAR_PARAM_DB
+Ctrl+Shift+E            IDM_TOUCH_IMAGE_EXIF
+Ctrl+O                  IDM_OPEN
+Ctrl+P                  IDM_PRINT
+Ctrl+R                  IDM_RELOAD
+Alt+R                   IDM_SLIDESHOW_RESUME
+Ctrl+X                  IDM_COPY_FULL
+Ctrl+V                  IDM_PASTE
+Ctrl+L                  IDM_LANDSCAPE_MODE
+R                       IDM_ROTATE_90_LOSSLESS_CONFIRM
+T                       IDM_ROTATE_270_LOSSLESS_CONFIRM
+W                       IDM_EXPLORE
+Shift+F12               IDM_ALWAYS_ON_TOP
