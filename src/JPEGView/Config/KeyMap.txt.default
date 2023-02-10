@@ -3,7 +3,7 @@
 // See KeyMap-README.html for more information on how to customize this file.
 
 // Uncomment the following line if you want to exit JPEGView with the Esc key immediately when playing an animation or a slideshow (default behavior: stops animation/slideshow)
-// Esc                     IDM_EXIT
+//Esc                     IDM_EXIT
 PgDn                    IDM_NEXT
 Right                   IDM_NEXT
 Left                    IDM_PREV

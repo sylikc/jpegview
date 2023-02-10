@@ -64,11 +64,15 @@ def parse_strings_txt(filepath):
                     print(ord(line[0]))
                     raise
 
+                e_strip = e.strip()
+                t_strip = t.strip()
                 if e in file_dict:
-                    raise KeyError(f"duplicate translation string found in comments: {e}")
+                    print(f"duplicate translation string found in comments: {e}")
+                    if file_dict[e_strip] != t_strip:
+                        raise KeyError("and values don't match")  # this is an error
                 else:
                     # there should be no spaces around it
-                    file_dict[e.strip()] = t.strip()
+                    file_dict[e_strip] = t_strip
             else:
                 file_comments.append(line)  # note that this doesn't have the newline for writelines(), so we dump manually later
 
