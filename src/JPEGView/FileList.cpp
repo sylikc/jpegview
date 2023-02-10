@@ -124,6 +124,7 @@ void CFileDesc::SetModificationDate(const FILETIME& lastModDate) {
 ///////////////////////////////////////////////////////////////////////////////////
 
 // image file types supported internally (there are additional endings for RAW and WIC - these come from INI file)
+// NOTE: when adding more supported filetypes, update installer to add another extension for "SupportedTypes"
 static const int cnNumEndingsInternal = 13;
 static const TCHAR* csFileEndingsInternal[cnNumEndingsInternal] = {_T("jpg"), _T("jpeg"), _T("bmp"), _T("png"), 
 	_T("tif"), _T("tiff"), _T("gif"), _T("webp"), _T("jxl"), _T("avif"), _T("heif"), _T("heic"), _T("tga")};

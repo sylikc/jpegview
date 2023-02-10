@@ -339,8 +339,38 @@
 						-->
 
 						<!-- Extend to the "open with" list + Win7 jump menu pinning  -->
-						<RegistryValue Root="HKLM" Key="SOFTWARE\Classes\Applications\JPEGView.exe\SupportedTypes" Name=".jpg" Value="" Type="string" />
+						<!-- (The supported filetypes of JPEGView are listed in FileList.cpp: csFileEndingsInternal and csFileEndingsRAW-->
 						<RegistryValue Root="HKLM" Key="SOFTWARE\Classes\Applications\JPEGView.exe\shell\open" Name="FriendlyAppName" Value="!(loc.ApplicationName)" Type="string" />
+						<!-- csFileEndingsInternal -->
+						<RegistryValue Root="HKLM" Key="SOFTWARE\Classes\Applications\JPEGView.exe\SupportedTypes" Name=".jpg" Value="" Type="string" />
+						<RegistryValue Root="HKLM" Key="SOFTWARE\Classes\Applications\JPEGView.exe\SupportedTypes" Name=".jpeg" Value="" Type="string" />
+						<RegistryValue Root="HKLM" Key="SOFTWARE\Classes\Applications\JPEGView.exe\SupportedTypes" Name=".bmp" Value="" Type="string" />
+						<RegistryValue Root="HKLM" Key="SOFTWARE\Classes\Applications\JPEGView.exe\SupportedTypes" Name=".png" Value="" Type="string" />
+						<RegistryValue Root="HKLM" Key="SOFTWARE\Classes\Applications\JPEGView.exe\SupportedTypes" Name=".tif" Value="" Type="string" />
+						<RegistryValue Root="HKLM" Key="SOFTWARE\Classes\Applications\JPEGView.exe\SupportedTypes" Name=".tiff" Value="" Type="string" />
+						<RegistryValue Root="HKLM" Key="SOFTWARE\Classes\Applications\JPEGView.exe\SupportedTypes" Name=".gif" Value="" Type="string" />
+						<RegistryValue Root="HKLM" Key="SOFTWARE\Classes\Applications\JPEGView.exe\SupportedTypes" Name=".webp" Value="" Type="string" />
+						<RegistryValue Root="HKLM" Key="SOFTWARE\Classes\Applications\JPEGView.exe\SupportedTypes" Name=".jxl" Value="" Type="string" />
+						<RegistryValue Root="HKLM" Key="SOFTWARE\Classes\Applications\JPEGView.exe\SupportedTypes" Name=".avif" Value="" Type="string" />
+						<RegistryValue Root="HKLM" Key="SOFTWARE\Classes\Applications\JPEGView.exe\SupportedTypes" Name=".heif" Value="" Type="string" />
+						<RegistryValue Root="HKLM" Key="SOFTWARE\Classes\Applications\JPEGView.exe\SupportedTypes" Name=".heic" Value="" Type="string" />
+						<RegistryValue Root="HKLM" Key="SOFTWARE\Classes\Applications\JPEGView.exe\SupportedTypes" Name=".tga" Value="" Type="string" />
+						<!-- csFileEndingsRAW -->
+						<RegistryValue Root="HKLM" Key="SOFTWARE\Classes\Applications\JPEGView.exe\SupportedTypes" Name=".pef" Value="" Type="string" />
+						<RegistryValue Root="HKLM" Key="SOFTWARE\Classes\Applications\JPEGView.exe\SupportedTypes" Name=".dng" Value="" Type="string" />
+						<RegistryValue Root="HKLM" Key="SOFTWARE\Classes\Applications\JPEGView.exe\SupportedTypes" Name=".crw" Value="" Type="string" />
+						<RegistryValue Root="HKLM" Key="SOFTWARE\Classes\Applications\JPEGView.exe\SupportedTypes" Name=".nef" Value="" Type="string" />
+						<RegistryValue Root="HKLM" Key="SOFTWARE\Classes\Applications\JPEGView.exe\SupportedTypes" Name=".cr2" Value="" Type="string" />
+						<RegistryValue Root="HKLM" Key="SOFTWARE\Classes\Applications\JPEGView.exe\SupportedTypes" Name=".mrw" Value="" Type="string" />
+						<RegistryValue Root="HKLM" Key="SOFTWARE\Classes\Applications\JPEGView.exe\SupportedTypes" Name=".rw2" Value="" Type="string" />
+						<RegistryValue Root="HKLM" Key="SOFTWARE\Classes\Applications\JPEGView.exe\SupportedTypes" Name=".orf" Value="" Type="string" />
+						<RegistryValue Root="HKLM" Key="SOFTWARE\Classes\Applications\JPEGView.exe\SupportedTypes" Name=".x3f" Value="" Type="string" />
+						<RegistryValue Root="HKLM" Key="SOFTWARE\Classes\Applications\JPEGView.exe\SupportedTypes" Name=".arw" Value="" Type="string" />
+						<RegistryValue Root="HKLM" Key="SOFTWARE\Classes\Applications\JPEGView.exe\SupportedTypes" Name=".kdc" Value="" Type="string" />
+						<RegistryValue Root="HKLM" Key="SOFTWARE\Classes\Applications\JPEGView.exe\SupportedTypes" Name=".nrw" Value="" Type="string" />
+						<RegistryValue Root="HKLM" Key="SOFTWARE\Classes\Applications\JPEGView.exe\SupportedTypes" Name=".dcr" Value="" Type="string" />
+						<RegistryValue Root="HKLM" Key="SOFTWARE\Classes\Applications\JPEGView.exe\SupportedTypes" Name=".sr2" Value="" Type="string" />
+						<RegistryValue Root="HKLM" Key="SOFTWARE\Classes\Applications\JPEGView.exe\SupportedTypes" Name=".raf" Value="" Type="string" />
 
 						<!-- MyApp.Document ProgID -->
 						<RegistryValue Root="HKLM" Key="SOFTWARE\Classes\JPEGView.Document" Name="FriendlyTypeName" Value="!(loc.DescREG)" Type="string" />
@@ -352,8 +382,22 @@
 						</ProgId>
 
 						<!-- Optional: add an 'Edit with XYZ' to 'right click' even when not associated -->
-						<RegistryValue Root="HKLM" Key="SOFTWARE\Classes\SystemFileAssociations\.xyz\shell\edit.MyApp.exe" Value="!(loc.ExplorerMenuEditREG)" Type="string" />
-						<RegistryValue Root="HKLM" Key="SOFTWARE\Classes\SystemFileAssociations\.xyz\shell\edit.MyApp.exe\command" Value="&quot;[APPLICATIONFOLDER]MyApp.exe&quot; &quot;%1&quot;" Type="string" />
+						<!-- SaveImage.cpp :: I'm only putting extensions which can be saved in the code at the moment -->
+						<!-- Find the extensions in MainDlg.cpp (search for "Helpers::CReplacePipe") -->
+						<RegistryValue Root="HKLM" Key="SOFTWARE\Classes\SystemFileAssociations\.jpg\shell\edit.JPEGView.exe" Value="!(loc.ExplorerMenuEditREG)" Type="string" />
+						<RegistryValue Root="HKLM" Key="SOFTWARE\Classes\SystemFileAssociations\.jpg\shell\edit.JPEGView.exe\command" Value="&quot;[APPLICATIONFOLDER]JPEGView.exe&quot; &quot;%1&quot;" Type="string" />
+						<RegistryValue Root="HKLM" Key="SOFTWARE\Classes\SystemFileAssociations\.jpeg\shell\edit.JPEGView.exe" Value="!(loc.ExplorerMenuEditREG)" Type="string" />
+						<RegistryValue Root="HKLM" Key="SOFTWARE\Classes\SystemFileAssociations\.jpeg\shell\edit.JPEGView.exe\command" Value="&quot;[APPLICATIONFOLDER]JPEGView.exe&quot; &quot;%1&quot;" Type="string" />
+						<RegistryValue Root="HKLM" Key="SOFTWARE\Classes\SystemFileAssociations\.bmp\shell\edit.JPEGView.exe" Value="!(loc.ExplorerMenuEditREG)" Type="string" />
+						<RegistryValue Root="HKLM" Key="SOFTWARE\Classes\SystemFileAssociations\.bmp\shell\edit.JPEGView.exe\command" Value="&quot;[APPLICATIONFOLDER]JPEGView.exe&quot; &quot;%1&quot;" Type="string" />
+						<RegistryValue Root="HKLM" Key="SOFTWARE\Classes\SystemFileAssociations\.png\shell\edit.JPEGView.exe" Value="!(loc.ExplorerMenuEditREG)" Type="string" />
+						<RegistryValue Root="HKLM" Key="SOFTWARE\Classes\SystemFileAssociations\.png\shell\edit.JPEGView.exe\command" Value="&quot;[APPLICATIONFOLDER]JPEGView.exe&quot; &quot;%1&quot;" Type="string" />
+						<RegistryValue Root="HKLM" Key="SOFTWARE\Classes\SystemFileAssociations\.tiff\shell\edit.JPEGView.exe" Value="!(loc.ExplorerMenuEditREG)" Type="string" />
+						<RegistryValue Root="HKLM" Key="SOFTWARE\Classes\SystemFileAssociations\.tiff\shell\edit.JPEGView.exe\command" Value="&quot;[APPLICATIONFOLDER]JPEGView.exe&quot; &quot;%1&quot;" Type="string" />
+						<RegistryValue Root="HKLM" Key="SOFTWARE\Classes\SystemFileAssociations\.tif\shell\edit.JPEGView.exe" Value="!(loc.ExplorerMenuEditREG)" Type="string" />
+						<RegistryValue Root="HKLM" Key="SOFTWARE\Classes\SystemFileAssociations\.tif\shell\edit.JPEGView.exe\command" Value="&quot;[APPLICATIONFOLDER]JPEGView.exe&quot; &quot;%1&quot;" Type="string" />
+						<RegistryValue Root="HKLM" Key="SOFTWARE\Classes\SystemFileAssociations\.webp\shell\edit.JPEGView.exe" Value="!(loc.ExplorerMenuEditREG)" Type="string" />
+						<RegistryValue Root="HKLM" Key="SOFTWARE\Classes\SystemFileAssociations\.webp\shell\edit.JPEGView.exe\command" Value="&quot;[APPLICATIONFOLDER]JPEGView.exe&quot; &quot;%1&quot;" Type="string" />
 					</Component>
 
 					<!-- DLLs required for JXL support -->

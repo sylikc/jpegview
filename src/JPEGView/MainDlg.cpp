@@ -2166,6 +2166,7 @@ bool CMainDlg::SaveImage(bool bFullSize) {
 	if (sExtension.IsEmpty()) {
 		sExtension = CSettingsProvider::This().DefaultSaveFormat();
 	}
+	// NOTE: this list is used in the "Edit with" registry entry in JPEGView.Setup, update that when this updates
 	CFileDialog fileDlg(FALSE, sExtension, sCurrentFile, 
 			OFN_EXPLORER | OFN_ENABLESIZING | OFN_HIDEREADONLY | OFN_NOREADONLYRETURN | OFN_OVERWRITEPROMPT,
 			Helpers::CReplacePipe(CString(_T("JPEG (*.jpg;*.jpeg)|*.jpg;*.jpeg|BMP (*.bmp)|*.bmp|PNG (*.png)|*.png|TIFF (*.tiff;*.tif)|*.tiff;*.tif|WEBP (*.webp)|*.webp|WEBP lossless (*.webp)|*.webp|")) +
