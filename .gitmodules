@@ -2,27 +2,27 @@
 	path = deps/WTL-sf
 	url = https://git.code.sf.net/p/wtl/git
 [submodule "extras/libjpeg-turbo"]
-	path = extras/libjpeg-turbo
+	path = extras/third_party/libjpeg-turbo
 	url = https://github.com/libjpeg-turbo/libjpeg-turbo.git
 [submodule "extras/libwebp"]
-	path = extras/libwebp
+	path = extras/third_party/libwebp
 	url = https://chromium.googlesource.com/webm/libwebp
 [submodule "extras/libpng"]
-	path = extras/libpng-apng.src-patch/libpng
+	path = extras/third_party/libpng-apng.src-patch/libpng
 	url = https://github.com/glennrp/libpng
 	ignore = dirty
 [submodule "extras/zlib"]
-	path = extras/libpng-apng.src-patch/zlib
+	path = extras/third_party/libpng-apng.src-patch/zlib
 	url = https://github.com/madler/zlib
 [submodule "extras/libjxl"]
-	path = extras/libjxl
+	path = extras/third_party/libjxl
 	url = https://github.com/libjxl/libjxl/
 [submodule "extras/libheif"]
-	path = extras/libheif/libheif
+	path = extras/third_party/libheif/libheif
 	url = https://github.com/strukturag/libheif
 [submodule "extras/dav1d"]
-	path = extras/libheif/dav1d
+	path = extras/third_party/libheif/dav1d
 	url = https://code.videolan.org/videolan/dav1d
 [submodule "extras/libde265"]
-	path = extras/libheif/libde265
+	path = extras/third_party/libheif/libde265
 	url = https://github.com/strukturag/libde265
