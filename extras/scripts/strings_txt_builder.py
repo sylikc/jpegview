@@ -278,7 +278,7 @@ def dump_strings_txt(sorted_strings_dict, menu_list):
 ////////////////////
 
 ////////////////////
-// ::: Instructions / Help ::: //
+// ::: Instructions / Help ::: (help for translators only, does not need to be translated) //
 
 //? Line Format:    English string<tab>Translated string<newline>
 //? * Lines beginning with "//" (comments) are ignored
@@ -334,7 +334,9 @@ if __name__ == "__main__":
     all_cnls_t = find_all_pattern(r'CNLS::GetString\s*\(\s*_T\s*\(\s*"(.*?)"\s*\)\s*\)')
 
     # exception in this particular function call
-    all_cnls_t.update(find_all_pattern(r'GetTooltip\(\w+,\s*_T\s*\(\s*"(.*?)"\s*\)', [SOURCE_DIR / "NavigationPanel.cpp"]))
+    nav_tooltip_t = find_all_pattern(r'GetTooltip\([\w\->]+,\s*_T\s*\(\s*"(.*?)"\s*\)', [SOURCE_DIR / "NavigationPanel.cpp"])
+    #pprint.pprint(nav_tooltip_t)
+    all_cnls_t.update(nav_tooltip_t)
 
 
     # these are also special, in that it's translated by HelpersGUI.cpp =>  CNLS::GetString(menuText)
