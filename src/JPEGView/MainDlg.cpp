@@ -2443,10 +2443,21 @@ void CMainDlg::GotoImage(EImagePosition ePos, int nFlags) {
 	}
 
 	if (bCheckIfSameImage && (m_pFileList == pOldFileList && nOldFrameIndex == nFrameIndex && !m_pFileList->ChangedSinceCheckpoint())) {
-		if (m_bMovieMode && m_bAutoExit)
+		if (m_bMovieMode && m_bAutoExit) {
 			CleanupAndTerminate();
-		else
+		} else {
+			if (CSettingsProvider::This().FlashWindowAlert()) {
+				// Flash window to notify user
+				FlashWindow(TRUE);  // https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-flashwindow
+			}
+
+			if (CSettingsProvider::This().BeepSoundAlert()) {
+				// Use the system's default beep sound
+				MessageBeep(0xFFFFFFFF);  // https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-messagebeep
+			}
+
 			return; // not placed on a new image, don't do anything
+		}
 	}
 
 	if (ePos != POS_Current && ePos != POS_NextAnimation && ePos != POS_Clipboard && ePos != POS_AwayFromCurrent) {

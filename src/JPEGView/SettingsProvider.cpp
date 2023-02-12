@@ -180,6 +180,8 @@ CSettingsProvider::CSettingsProvider(void) {
 	m_sFileEndingsRAW = GetString(_T("FileEndingsRAW"), _T("*.pef;*.dng;*.crw;*.nef;*.cr2;*.mrw;*.rw2;*.orf;*.x3f;*.arw;*.kdc;*.nrw;*.dcr;*.sr2;*.raf"));
 	m_bCreateParamDBEntryOnSave = GetBool(_T("CreateParamDBEntryOnSave"), true);
 	m_bWrapAroundFolder = GetBool(_T("WrapAroundFolder"), true);
+	m_bFlashWindowAlert = GetBool(_T("FlashWindowAlert"), true);
+	m_bBeepSoundAlert = GetBool(_T("BeepSoundAlert"), false);  // don't make it default on... too much sound feedback is pretty annoying
 	m_bSaveWithoutPrompt = GetBool(_T("OverrideOriginalFileWithoutSaveDialog"), false);
 	m_bTrimWithoutPromptLosslessJPEG = GetBool(_T("TrimWithoutPromptLosslessJPEG"), false);
 	m_bAllowFileDeletion = GetBool(_T("AllowFileDeletion"), true);

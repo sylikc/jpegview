@@ -127,6 +127,8 @@ public:
 	Helpers::EIniEditor IniEditor() { return m_eIniEditor; }
 	LPCTSTR CustomIniEditor() { return m_sIniEditor; }
 	LPCTSTR GPSMapProvider() { return m_sGPSMapProvider; }
+	bool FlashWindowAlert() { return m_bFlashWindowAlert; }
+	bool BeepSoundAlert() { return m_bBeepSoundAlert; }
 
 	// Returns if a user INI file exists
 	bool ExistsUserINI();
@@ -290,6 +292,8 @@ private:
 	Helpers::EIniEditor  m_eIniEditor;
 	CString m_sIniEditor;
 	CString m_sGPSMapProvider;
+	bool m_bFlashWindowAlert;
+	bool m_bBeepSoundAlert;
 
 	std::list<CUserCommand*> m_userCommands;
 	std::list<CUserCommand*> m_openWithCommands;
