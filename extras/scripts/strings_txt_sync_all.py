@@ -14,6 +14,7 @@ import re
 from pathlib import Path
 from datetime import datetime, timezone
 import pprint
+import sys
 
 # https://stackoverflow.com/questions/8898294/convert-utf-8-with-bom-to-utf-8-with-no-bom-in-python
 UTF8 = 'utf-8-sig'  # UTF-8 with BOM
@@ -354,13 +355,31 @@ def dump_strings_txt_summary_markdown():
 
 
 if __name__ == "__main__":
+    # glob isn't a real list, but it's an iterable
+    files_iterable = None
+
+    # allow specifying languages on the command line
+    if len(sys.argv) >= 2:
+        files_iterable = []
+        for x in sys.argv[1:]:
+            #print(x)
+
+            one_file = CONFIG_DIR / f"strings_{sys.argv[1]}.txt"
+
+            if not one_file.exists():
+                raise FileNotFoundError(one_file)
+
+            files_iterable.append(one_file)
+    else:
+        files_iterable = CONFIG_DIR.glob("strings_*.txt")
+
 
     # only read the reference file once
     with open(REFERENCE_STRINGS, 'rt', encoding=UTF8) as f:
         ref_file = f.readlines()
 
     total = None
-    for p in CONFIG_DIR.glob("strings_*.txt"):
+    for p in files_iterable:
 
         print(p)
         (missing, outdated, total) = sync_strings_to_reference(ref_file, p)
