@@ -148,7 +148,8 @@ bool CCropCtl::DoCropping(int nX, int nY) {
 	return m_bTrackingMode;
 }
 
-void CCropCtl::EndCropping() {
+// show/hide popup menu, if hidden, can be used to immediately zoom
+void CCropCtl::EndCropping(bool bShowMenu) {
 	if (m_eHitHandle != HH_None) {
 		m_bDontStartCropOnNextClick = true;
 		m_bDoTracking = false;
@@ -171,7 +172,9 @@ void CCropCtl::EndCropping() {
 	}
 
 	// Display the crop menu
-	ShowCropContextMenu();
+	if (bShowMenu) {
+		ShowCropContextMenu();
+	}
 }
 
 void CCropCtl::AbortCropping() {

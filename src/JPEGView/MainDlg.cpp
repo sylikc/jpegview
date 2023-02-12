@@ -264,6 +264,7 @@ CMainDlg::CMainDlg(bool bForceFullScreen) {
 	m_autoZoomFitToScreen = Helpers::ZM_FillScreen;
 	m_bWindowBorderless = false;  // default real window with border
 	m_bAlwaysOnTop = false;  // default normal
+	m_bSelectZoom = false;  // this value is set when LButtonDown happens, to be read by LButtonUp
 
 	m_pPanelMgr = new CPanelMgr();
 	m_pZoomNavigatorCtl = NULL;
@@ -757,6 +758,7 @@ LRESULT CMainDlg::OnLButtonDown(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam,
 				m_nCapturedX = m_nMouseX; m_nCapturedY = m_nMouseY;
 			} else if ((bCtrl || bHandleByCropping || (!bDraggingRequired && m_bDefaultSelectionMode)) && !bTransformPanelShown) {
 				// always go into selection/crop when in the right state and CTRL held down, otherwise it depends on the DefaultSelectionMode setting
+				m_bSelectZoom = bShift;  // if shift, go into select-to-zoom mode (no crop popup)
 				m_pCropCtl->StartCropping(pointClicked.x, pointClicked.y);
 			} else if (bDraggingRequired && !bTransformPanelShown) {
 				StartDragging(pointClicked.x, pointClicked.y, false);
@@ -777,7 +779,13 @@ LRESULT CMainDlg::OnLButtonUp(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, B
 	} else if (m_bDragging) {
 		EndDragging();
 	} else if (m_pCropCtl->IsCropping()) {
-		m_pCropCtl->EndCropping();
+		m_pCropCtl->EndCropping(!m_bSelectZoom);
+		if (m_bSelectZoom) {
+			// select to zoom
+			m_bSelectZoom = false;
+			ZoomToSelection();
+			m_pCropCtl->AbortCropping();
+		}
 	} else {
 		m_pPanelMgr->OnMouseLButton(MouseEvent_BtnUp, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
 	}
