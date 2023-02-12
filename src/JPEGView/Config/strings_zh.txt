@@ -60,7 +60,7 @@ Applications	应用程序
 Apply	应用
 Apply Unsharp Mask	应用“USM锐化”
 Apply auto contrast correction using only visible section of image	仅可见部份图片应用自动对比度校正
-Ascending	加计数
+Ascending	升序
 Auto contrast and color correction	自动对比度和色彩校正
 Auto crop corrected image (avoids black border)	自动裁剪校正后的图片（避免黑边框）
 Auto crop rotated image (avoids black border)	自动裁剪旋转后的图片（避免黑边框）
@@ -109,7 +109,7 @@ Deep Shadows	加深阴影
 Delete	删除
 Delete current file on disk permanently	从硬盘永久删除当前文件
 Delete image file	删除图片文件
-Descending	减计数
+Descending	降序
 Display image (EXIF) information	显示图片 EXIF 信息
 Do you really want to delete the current image file on disk?	您真的想要删除硬盘上的当前图片文件吗？
 Do you really want to permanently delete the file %filename%?	您真的想要永久删除文件 %filename% 吗？
@@ -335,7 +335,7 @@ Slideshow	幻灯片
 Slideshow with timeout of 'n' seconds (ESC to stop)	n秒逾时幻灯片放映（ESC停止）
 Sort images by creation date, resp. modification date, resp. file name	依据创建日期、修改日期、文件名排序
 Source:	纸张来源：
-Target folders that are not yet existing are created as needed.	根据需要创建尚不存在的目标文件夹。
+Target folders that do not yet exist are created as needed.	根据需要创建尚不存在的目标文件夹。
 The directory '%s' does not contain any image files!	目录'%s'没有图片文件！
 The file '%s' could not be copied!	无法复制文件'%s'！
 The file '%s' could not be read!	无法读取文件'%s'！
@@ -425,12 +425,12 @@ Slow	慢
 Very slow	非常慢
 Movie	视频
 Playback speed	播放速度
-5 fps	
-10 fps	
-25 fps	
-30 fps	
-50 fps	
-100 fps	
+5 fps	5帧
+10 fps	10帧
+25 fps	25帧
+30 fps	30帧
+50 fps	50帧
+100 fps	100帧
 Transform image	转换图片
 Rotate +90	旋转 +90°
 Rotate -90	旋转 -90°
@@ -466,8 +466,6 @@ Crop Mode	裁剪模式
 Free	自由
 Fixed size...	固定大小...
 Zoom to Selection	缩放到选择内容
-Upcountdown	升序
-Downcountdown	降序
 
 // ::: INFO: Out-of-date Translations [17] ::: (Not in use anymore, safe to delete) //
 //Actual size of image (Space)	图片的实际大小
