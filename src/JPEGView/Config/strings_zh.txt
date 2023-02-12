@@ -1,4 +1,4 @@
-﻿//! This file must be encoded with UTF-8 (e.g. with Windows Notepad)
+//! This file must be encoded with UTF-8 (e.g. with Windows Notepad)
 //! LICENSE: This localization file is part of JPEGView <https://github.com/sylikc/jpegview> and distributed under the same license.  See <https://github.com/sylikc/jpegview/blob/master/LICENSE.txt> for more info.
 
 //! Filename Convention: 'strings_%languagecode%.txt' where %languagecode% is the ISO 639 language code e.g. 'en' for English
@@ -7,8 +7,7 @@
 // ::: Translation Info ::: //
 //: ISO 639 code: zh
 //: Language: Chinese (Simplified)
-//: Translator(s): 风逸兰
-//: Last Updated: 2023/02/11
+//: Translator(s): Based on the traditional Chinese version of 風逸蘭
 //: Additional Notes:
 //Update:2021/06/28 补全翻译，调整部分原有翻译使其更符合简体中文阅读习惯 by dunkeng
 //Update:2022/10/17 by mowumo
@@ -144,7 +143,7 @@ Filter:	滤镜：
 Fit image to screen	图片适应屏幕
 Fit to paper	适应纸张大小
 Fit to screen	适合屏幕
-Fit to screen (no zoom)	适合屏幕 (无缩放)
+Fit to screen (no zoom)	适合屏幕（无缩放）
 Flash fired:	闪光灯：
 Focal length (mm):	焦距（mm）：
 Forward mouse button	鼠标前进按钮
@@ -156,11 +155,11 @@ Height	高度
 Hide histogram	隐藏直方图
 High quality resampling	高质量重采样
 Hour / Minute (as numbers)	时/分（数字）
-ISO Speed:	ISO 感光度：
+ISO Speed:	ISO感光度：
 Image Pixels	图片像素
 Image files in folder	当前文件夹（仅显示支持的文件）：
 Image height:	图片高度：
-Image width and height must be dividable by the JPEG block size (8 or 16) for lossless transformations!	无损转换图片的宽度和高度必须可被 JPEG 区块大小（8 或 16）整除！
+Image width and height must be dividable by the JPEG block size (8 or 16) for lossless transformations!	无损转换图片的宽度和高度必须可被JPEG区块大小（8或16）整除！
 Image width:	图片宽度：
 Images	图片
 Increase/decrease auto color cast correction amount	增加/减少自动肤色的校正量
@@ -172,25 +171,25 @@ Increase/decrease lightening of shadows (LDC must be on)	增加/减少阴影的�
 Increase/decrease sharpness	增加/减小锐度
 Insufficient rights to change the privilege (DACL) on the registry entry. Continue?	权限不足，无法更改注册表项的权限（DACL）。继续？
 JPEGView Help	JPEGView 帮助
-JPEGView is a lean, fast and highly configurable viewer/editor for JPEG, BMP, PNG, WEBP, TGA, GIF and TIFF images with a minimal GUI.	JPEGView 是一款实用、快速及具有高度组态性的查看器/编辑器，使用最小的图形用户界面，适用于 JPEG、BMP、PNG、WEBP、TGA、GIF 和 TIFF 图片。
-JPEGView is registered as default viewer for the selected file formats.	注册 JPEGView 为选择的文件格式的默认图片查看器。
+JPEGView is a lean, fast and highly configurable viewer/editor for JPEG, BMP, PNG, WEBP, TGA, GIF and TIFF images with a minimal GUI.	JPEGView是一款实用、快速及具有高度组态性的查看器/编辑器，使用最小的图形用户界面，适用于JPEG、BMP、PNG、WEBP、TGA、GIF和TIFF图片。
+JPEGView is registered as default viewer for the selected file formats.	注册JPEGView为选择的文件格式的默认图片查看器。
 Keep aspect ratio on crop	保持画面比例裁剪
 Keep parameters	保持参数
 Keep processing parameters between images	保持相邻的两图片间的处理参数
 Known keys:	已知键：
-Lanczos/Bicubic	
-Landscape	风景
+Lanczos/Bicubic	Lanczos/Bicubic
+Landscape	横
 Landscape picture enhancement mode	风景图片增强模式
 Last modification date/time	最后修改日期/时间
 Left	左
 Left mouse & drag	鼠标左键拖动
-Licensed under the GNU general public license (GPL), see readme file for details	基于 GNU General Public License（GPL）授权，请参阅自述文件的详细信息
-Lighten Shadows	减轻阴影
+Licensed under the GNU general public license (GPL), see readme file for details	基于GNU General Public License（GPL）授权，请参阅自述文件的详细信息
+Lighten Shadows	淡化阴影
 Local density correction	局部密度校正
 Location:	地点：
-Loop folder	循环文件夹
+Loop folder	当前目录循环
 Loop recursively	递归循环
-Loop siblings	同步循环
+Loop siblings	同级目录循环
 Loop through files in current directory and all sibling folders (folders on same level)	遍历当前目录和所有同级文件夹中的文件（在同一层级上的文件夹）
 Loop through files in current directory and all subfolders	遍历当前目录和所有子目录中的文件
 Loop through files in current folder	遍历当前文件夹中的文件
@@ -311,7 +310,7 @@ Shall existing entries be preserved (Yes) or be overriden by the imported entrie
 Sharpen	锐化
 Sharpen low	低度锐化
 Sharpen medium	中度锐化
-Shortcut Help	快捷方式说明
+Shortcut Help	快捷键帮助
 Shortcut key:	快捷键：
 Show filename	显示文件名
 Show first image in folder	显示文件夹中的第一张图片
