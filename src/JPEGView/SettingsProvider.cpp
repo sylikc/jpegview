@@ -274,7 +274,7 @@ CSettingsProvider::CSettingsProvider(void) {
 	}
 
 	m_minimalWindowSize = GetSize(_T("MinimalWindowSize"), CSize(320, 240));
-	m_minimalDisplayTime = GetDouble(_T("MinimalDisplayTime"), 0.0, 0, 1000);
+	m_minimalDisplayTime = GetInt(_T("MinimalDisplayTime"), 0, 0, 1000);
 	m_userCropAspectRatio = GetSize(_T("UserCropAspectRatio"), CSize(1, 1));
 	if (m_userCropAspectRatio.cx <= 0 || m_userCropAspectRatio.cy <= 0) {
 		m_userCropAspectRatio = CSize(1, 1);
@@ -296,7 +296,7 @@ CSettingsProvider::CSettingsProvider(void) {
 
 	m_bSkipFileOpenDialogOnStartup = GetBool(_T("SkipFileOpenDialogOnStartup"), false);
 
-	m_sLanguage = GetString(_T("Language"), _T("auto")); 
+	m_sLanguage = GetString(_T("Language"), _T("auto"));
 	m_sGPSMapProvider = GetString(_T("GPSMapProvider"), _T("https://opentopomap.org/#marker=15/{lat}/{lng}"));
 
 	m_sACCExclude = GetString(_T("ACCExclude"), _T("")); 

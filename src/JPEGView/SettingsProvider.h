@@ -120,7 +120,7 @@ public:
 	double DefaultPrintWidth() { return m_dDefaultPrintWidth; }
 	Helpers::EMeasureUnits MeasureUnit() { return m_eMeasureUnit; }
 	CSize MinimalWindowSize() { return m_minimalWindowSize; }
-	double MinimalDisplayTime() { return m_minimalDisplayTime; }
+	int MinimalDisplayTime() { return m_minimalDisplayTime; }
 	CSize UserCropAspectRatio() { return m_userCropAspectRatio; }
 	LPCTSTR WallpaperPath() { return m_sWallpaperPath; }
 	bool SkipFileOpenDialogOnStartup() { return m_bSkipFileOpenDialogOnStartup; }
@@ -283,7 +283,7 @@ private:
 	double m_dDefaultPrintWidth;
 	Helpers::EMeasureUnits m_eMeasureUnit;
 	CSize m_minimalWindowSize;
-	double m_minimalDisplayTime;
+	int m_minimalDisplayTime;
 	CSize m_userCropAspectRatio;
 	CString m_sWallpaperPath;
 	bool m_bSkipFileOpenDialogOnStartup;
