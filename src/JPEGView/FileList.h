@@ -12,12 +12,12 @@ public:
 
 	// STL sort only needs this operator to order CFileDesc objects
 	bool operator < (const CFileDesc& other) const;
-	bool SortUpcounting(const CFileDesc& other) const;
+	bool SortAscending(const CFileDesc& other) const;
 
 	// Get and set the sorting method - the sorting method is global
 	static Helpers::ESorting GetSorting() { return sm_eSorting; }
-	static bool IsSortedUpcounting() { return sm_bSortUpcounting; }
-	static void SetSorting(Helpers::ESorting eSorting, bool bUpcounting) { sm_eSorting = eSorting; sm_bSortUpcounting = bUpcounting; }
+	static bool IsSortedAscending() { return sm_bSortAscending; }
+	static void SetSorting(Helpers::ESorting eSorting, bool bAscending) { sm_eSorting = eSorting; sm_bSortAscending = bAscending; }
 
 	// Full name of file
 	const CString& GetName() const { return m_sName; }
@@ -40,7 +40,7 @@ public:
 
 private:
 	static Helpers::ESorting sm_eSorting;
-	static bool sm_bSortUpcounting;
+	static bool sm_bSortAscending;
 
 	CString m_sName;
 	LPCTSTR m_sTitle;
@@ -60,7 +60,7 @@ public:
 	// Supported text file encodings are ANSI, Unicode or UTF-8.
 	// nLevel is increased when recursively create lists for sub-folders
 	CFileList(const CString & sInitialFile, CDirectoryWatcher & directoryWatcher, 
-		Helpers::ESorting eInitialSorting, bool isSortedUpcounting, bool bWrapAroundFolder, int nLevel = 0, bool forceSorting = false);
+		Helpers::ESorting eInitialSorting, bool isSortedAscending, bool bWrapAroundFolder, int nLevel = 0, bool forceSorting = false);
 	~CFileList();
 
 	// Gets a list of all supported file endings, separated by semicolon
@@ -102,10 +102,10 @@ public:
 	int CurrentIndex() const;
 
 	// Sets the sorting of the file list and resorts the list
-	void SetSorting(Helpers::ESorting eSorting, bool sortUpcounting);
+	void SetSorting(Helpers::ESorting eSorting, bool sortAscending);
 	// Gets the sorting mode
 	Helpers::ESorting GetSorting() const;
-	bool IsSortedUpcounting() const;
+	bool IsSortedAscending() const;
 
 	// Set the directory navigation mode
 	void SetNavigationMode(Helpers::ENavigationMode eMode);

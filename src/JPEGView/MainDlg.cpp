@@ -371,7 +371,7 @@ LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam
 
 	// intitialize list of files to show with startup file (and folder)
 	m_pFileList = new CFileList(m_sStartupFile, *m_pDirectoryWatcher,
-		(m_eForcedSorting == Helpers::FS_Undefined) ? sp.Sorting() : m_eForcedSorting, sp.IsSortedUpcounting(), sp.WrapAroundFolder(),
+		(m_eForcedSorting == Helpers::FS_Undefined) ? sp.Sorting() : m_eForcedSorting, sp.IsSortedAscending(), sp.WrapAroundFolder(),
 		0, m_eForcedSorting != Helpers::FS_Undefined);
 	m_pFileList->SetNavigationMode(sp.Navigation());
 
@@ -1133,10 +1133,10 @@ LRESULT CMainDlg::OnContextMenu(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam,
 		(m_pFileList->GetSorting() == Helpers::FS_FileName) ? IDM_SORT_NAME :
 		(m_pFileList->GetSorting() == Helpers::FS_Random) ? IDM_SORT_RANDOM : IDM_SORT_SIZE
 		, MF_CHECKED);
-	::CheckMenuItem(hMenuOrdering, m_pFileList->IsSortedUpcounting() ? IDM_SORT_UPCOUNTING : IDM_SORT_DOWNCOUNTING, MF_CHECKED);
+	::CheckMenuItem(hMenuOrdering, m_pFileList->IsSortedAscending() ? IDM_SORT_ASCENDING : IDM_SORT_DESCENDING, MF_CHECKED);
 	if (m_pFileList->GetSorting() == Helpers::FS_Random) {
-		::EnableMenuItem(hMenuOrdering, IDM_SORT_UPCOUNTING, MF_BYCOMMAND | MF_GRAYED);
-		::EnableMenuItem(hMenuOrdering, IDM_SORT_DOWNCOUNTING, MF_BYCOMMAND | MF_GRAYED);
+		::EnableMenuItem(hMenuOrdering, IDM_SORT_ASCENDING, MF_BYCOMMAND | MF_GRAYED);
+		::EnableMenuItem(hMenuOrdering, IDM_SORT_DESCENDING, MF_BYCOMMAND | MF_GRAYED);
 	}
 	HMENU hMenuMovie = ::GetSubMenu(hMenuTrackPopup, SUBMENU_POS_MOVIE);
 	if (!m_bMovieMode) ::EnableMenuItem(hMenuMovie, IDM_STOP_MOVIE, MF_BYCOMMAND | MF_GRAYED);
@@ -1460,14 +1460,14 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 				(nCommand == IDM_SORT_CREATION_DATE) ? Helpers::FS_CreationTime : 
 				(nCommand == IDM_SORT_MOD_DATE) ? Helpers::FS_LastModTime : 
 				(nCommand == IDM_SORT_RANDOM) ? Helpers::FS_Random : 
-				(nCommand == IDM_SORT_SIZE) ? Helpers::FS_FileSize : Helpers::FS_FileName, m_pFileList->IsSortedUpcounting());
+				(nCommand == IDM_SORT_SIZE) ? Helpers::FS_FileSize : Helpers::FS_FileName, m_pFileList->IsSortedAscending());
 			if (m_pEXIFDisplayCtl->IsActive() || m_bShowFileName) {
 				this->Invalidate(FALSE);
 			}
 			break;
-		case IDM_SORT_UPCOUNTING:
-		case IDM_SORT_DOWNCOUNTING:
-			m_pFileList->SetSorting(m_pFileList->GetSorting(), nCommand == IDM_SORT_UPCOUNTING);
+		case IDM_SORT_ASCENDING:
+		case IDM_SORT_DESCENDING:
+			m_pFileList->SetSorting(m_pFileList->GetSorting(), nCommand == IDM_SORT_ASCENDING);
 			if (m_pEXIFDisplayCtl->IsActive() || m_bShowFileName) {
 				this->Invalidate(FALSE);
 			}
@@ -2120,10 +2120,10 @@ void CMainDlg::OpenFile(LPCTSTR sFileName, bool bAfterStartup) {
 	StopAnimation();
 	// recreate file list based on image opened
 	Helpers::ESorting eOldSorting = m_pFileList->GetSorting();
-	bool oOldUpcounting = m_pFileList->IsSortedUpcounting();
+	bool oOldAscending = m_pFileList->IsSortedAscending();
 	delete m_pFileList;
 	m_sStartupFile = sFileName;
-	m_pFileList = new CFileList(m_sStartupFile, *m_pDirectoryWatcher, eOldSorting, oOldUpcounting, CSettingsProvider::This().WrapAroundFolder());
+	m_pFileList = new CFileList(m_sStartupFile, *m_pDirectoryWatcher, eOldSorting, oOldAscending, CSettingsProvider::This().WrapAroundFolder());
 	// free current image and all read ahead images
 	InitParametersForNewImage();
 	m_pJPEGProvider->NotifyNotUsed(m_pCurrentImage);
@@ -2982,11 +2982,11 @@ void CMainDlg::SaveParameters() {
 
 	EProcessingFlags eFlags = CreateDefaultProcessingFlags(m_bKeepParams);
 	CString sText = HelpersGUI::GetINIFileSaveConfirmationText(*m_pImageProcParams, eFlags,
-		m_pFileList->GetNavigationMode(), m_pFileList->GetSorting(), m_pFileList->IsSortedUpcounting(), GetAutoZoomMode(), m_pNavPanelCtl->IsActive(),
+		m_pFileList->GetNavigationMode(), m_pFileList->GetSorting(), m_pFileList->IsSortedAscending(), GetAutoZoomMode(), m_pNavPanelCtl->IsActive(),
 		m_bShowFileName, m_pEXIFDisplayCtl->IsActive(), m_eTransitionEffect);
 
 	if (IDYES == this->MessageBox(sText, CNLS::GetString(_T("Confirm save default parameters")), MB_YESNO | MB_ICONQUESTION)) {
-		CSettingsProvider::This().SaveSettings(*m_pImageProcParams, eFlags, m_pFileList->GetNavigationMode(), m_pFileList->GetSorting(), m_pFileList->IsSortedUpcounting(),
+		CSettingsProvider::This().SaveSettings(*m_pImageProcParams, eFlags, m_pFileList->GetNavigationMode(), m_pFileList->GetSorting(), m_pFileList->IsSortedAscending(),
 			m_eAutoZoomModeWindowed, m_eAutoZoomModeFullscreen, m_pNavPanelCtl->IsActive(), m_bShowFileName, m_pEXIFDisplayCtl->IsActive(), m_eTransitionEffect);
 	}
 }

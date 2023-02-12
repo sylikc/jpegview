@@ -428,7 +428,7 @@ void CSettingsProvider::ReadWriteableINISettings() {
 	else {
 		m_eSorting = Helpers::FS_LastModTime;
 	}
-	m_bIsSortedUpcounting = GetBool(_T("IsSortedUpcounting"), true);
+	m_bIsSortedAscending = GetBool(_T("FileSortAscending"), true);
 	m_eAutoZoomMode = GetAutoZoomMode(_T("AutoZoomMode"), Helpers::ZM_FitToScreenNoZoom);
 	m_eAutoZoomModeFullscreen = GetAutoZoomMode(_T("AutoZoomModeFullscreen"), m_eAutoZoomMode);
 	m_bShowNavPanel = GetBool(_T("ShowNavPanel"), true);
@@ -443,7 +443,7 @@ void CSettingsProvider::ReadWriteableINISettings() {
 
 void CSettingsProvider::SaveSettings(const CImageProcessingParams& procParams, 
 									 EProcessingFlags eProcFlags,
-									 Helpers::ENavigationMode eNavigationMode, Helpers::ESorting eFileSorting, bool isSortedUpcounting,
+									 Helpers::ENavigationMode eNavigationMode, Helpers::ESorting eFileSorting, bool isSortedAscending,
 									 Helpers::EAutoZoomMode eAutoZoomMode, Helpers::EAutoZoomMode eAutoZoomModeFullScreen,
 									 bool bShowNavPanel, bool bShowFileName, bool bShowFileInfo,
 									 Helpers::ETransitionEffect eSlideShowTransitionEffect) {
@@ -485,7 +485,7 @@ void CSettingsProvider::SaveSettings(const CImageProcessingParams& procParams,
 	}
 	WriteString(_T("FileDisplayOrder"), sSorting);
 
-	WriteBool(_T("IsSortedUpcounting"), isSortedUpcounting);
+	WriteBool(_T("FileSortAscending"), isSortedAscending);
 
 	WriteString(_T("AutoZoomMode"), GetAutoZoomModeString(eAutoZoomMode));
 	WriteString(_T("AutoZoomModeFullscreen"), GetAutoZoomModeString(eAutoZoomModeFullScreen));

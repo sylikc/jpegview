@@ -49,7 +49,7 @@ public:
 	int NumberOfCoresToUse() { return m_nNumCores; }
 	EFilterType DownsamplingFilter() { return m_eDownsamplingFilter; }
 	Helpers::ESorting Sorting() { return m_eSorting; }
-	bool IsSortedUpcounting() { return m_bIsSortedUpcounting; }
+	bool IsSortedAscending() { return m_bIsSortedAscending; }
 	Helpers::ENavigationMode Navigation() { return m_eNavigation; }
 	bool NavigateWithMouseWheel() { return m_bNavigateMouseWheel; }
 	double MouseWheelZoomSpeed() { return m_dMouseWheelZoomSpeed; }
@@ -140,7 +140,7 @@ public:
 	// Note that this INI file has precedence over the INI file at the program directory
 	void SaveSettings(const CImageProcessingParams& procParams,
 		EProcessingFlags eProcFlags,
-		Helpers::ENavigationMode eNavigationMode, Helpers::ESorting eFileSorting, bool isSortedUpcounting,
+		Helpers::ENavigationMode eNavigationMode, Helpers::ESorting eFileSorting, bool isSortedAscending,
 		Helpers::EAutoZoomMode eAutoZoomMode, Helpers::EAutoZoomMode eAutoZoomModeFullScreen,
 		bool bShowNavPanel, bool bShowFileName, bool bShowFileInfo,
 		Helpers::ETransitionEffect eSlideShowTransitionEffect);
@@ -214,7 +214,7 @@ private:
 	int m_nNumCores;
 	EFilterType m_eDownsamplingFilter;
 	Helpers::ESorting m_eSorting;
-	bool m_bIsSortedUpcounting;
+	bool m_bIsSortedAscending;
 	Helpers::ENavigationMode m_eNavigation;
 	bool m_bNavigateMouseWheel;
 	double m_dMouseWheelZoomSpeed;

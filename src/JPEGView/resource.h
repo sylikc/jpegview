@@ -177,8 +177,8 @@
 #define IDM_SORT_NAME		7020		// :KeyMap: sorting order by name
 #define IDM_SORT_RANDOM		7030		// :KeyMap: sorting order random
 #define IDM_SORT_SIZE		7040		// :KeyMap: sorting order file size in bytes
-#define IDM_SORT_UPCOUNTING	7100		// :KeyMap: sort upcounting (ascending)
-#define IDM_SORT_DOWNCOUNTING 7110		// :KeyMap: sort downcounting (descending)
+#define IDM_SORT_ASCENDING	7100		// :KeyMap: sort ascending (increasing in value, e.g. A->Z, 0->9)
+#define IDM_SORT_DESCENDING 7110		// :KeyMap: sort descending (decreasing in value, e.g. Z->A, 9->0)
 #define IDM_SLIDESHOW_RESUME 7399		// :KeyMap: resume slide show (after stop)
 #define IDM_SLIDESHOW_START 7400
 #define IDM_SLIDESHOW_1		7401

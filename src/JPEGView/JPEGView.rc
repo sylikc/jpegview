@@ -324,8 +324,8 @@ BEGIN
             MENUITEM "File size",                   IDM_SORT_SIZE
             MENUITEM "Random",                      IDM_SORT_RANDOM
             MENUITEM SEPARATOR
-            MENUITEM "Ascending",                   IDM_SORT_UPCOUNTING
-            MENUITEM "Descending",                  IDM_SORT_DOWNCOUNTING
+            MENUITEM "Ascending",                   IDM_SORT_ASCENDING
+            MENUITEM "Descending",                  IDM_SORT_DESCENDING
         END
         POPUP "Play folder as slideshow/movie"
         BEGIN

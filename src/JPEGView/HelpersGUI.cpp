@@ -264,7 +264,7 @@ namespace HelpersGUI {
 	}
 
 	CString GetINIFileSaveConfirmationText(const CImageProcessingParams& procParams, 
-		EProcessingFlags eProcFlags, Helpers::ENavigationMode eNavigationMode, Helpers::ESorting eFileSorting, bool isSortedUpcounting,
+		EProcessingFlags eProcFlags, Helpers::ENavigationMode eNavigationMode, Helpers::ESorting eFileSorting, bool isSortedAscending,
 		Helpers::EAutoZoomMode eAutoZoomMode,
 		bool bShowNavPanel, bool bShowFileName, bool bShowFileInfo,
 		Helpers::ETransitionEffect eSlideShowTransitionEffect) {
@@ -324,7 +324,7 @@ namespace HelpersGUI {
 		}
 		if (eFileSorting != Helpers::FS_Random) {
 			sText += _T(", ");
-			sText += isSortedUpcounting ? CNLS::GetString(_T("Ascending")) : CNLS::GetString(_T("Descending"));
+			sText += isSortedAscending ? CNLS::GetString(_T("Ascending")) : CNLS::GetString(_T("Descending"));
 		}
 		sText += _T("\n");
 		sText += CNLS::GetString(_T("Auto zoom mode")); sText += _T(": ");

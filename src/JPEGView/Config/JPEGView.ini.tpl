@@ -210,7 +210,7 @@ DownSamplingFilter=BestQuality
 FileDisplayOrder=LastModDate
 
 ; Sort files upcounting (ascending) or downcounting (descending)
-IsSortedUpcounting=true
+FileSortAscending=true
 
 ; Navigation within or between folders
 ; LoopFolder : Loop within the source folder and never leave this folder
