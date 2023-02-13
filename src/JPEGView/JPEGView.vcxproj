@@ -69,14 +69,14 @@
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">obj\x86\$(Configuration)\</IntDir>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkIncremental>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkIncremental>
-    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(ProjectDir)..\..\deps\WTL-sf\Include;$(ProjectDir)libpng-apng\include;$(ProjectDir)libjxl\include;$(ProjectDir)\libheif\include;$(ProjectDir)\libwebp\include;$(IncludePath)</IncludePath>
-    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(ProjectDir)..\..\deps\WTL-sf\Include;$(ProjectDir)libpng-apng\include;$(ProjectDir)libjxl\include;$(ProjectDir)\libheif\include;$(ProjectDir)\libwebp\include;$(IncludePath)</IncludePath>
-    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(ProjectDir)libjpeg-turbo\lib;$(ProjectDir)libpng-apng\lib;$(ProjectDir)libjxl\lib;$(ProjectDir)libheif\lib;$(ProjectDir)libwebp\lib;$(LibraryPath)</LibraryPath>
-    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(ProjectDir)libjpeg-turbo\lib64;$(ProjectDir)libpng-apng\lib64;$(ProjectDir)libjxl\lib64;$(ProjectDir)libheif\lib64;$(ProjectDir)libwebp\lib64;$(LibraryPath)</LibraryPath>
-    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(ProjectDir)..\..\deps\WTL-sf\Include;$(ProjectDir)libpng-apng\include;$(ProjectDir)libjxl\include;$(ProjectDir)\libheif\include;$(ProjectDir)\libwebp\include;$(IncludePath)</IncludePath>
-    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ProjectDir)..\..\deps\WTL-sf\Include;$(ProjectDir)libpng-apng\include;$(ProjectDir)libjxl\include;$(ProjectDir)\libheif\include;$(ProjectDir)\libwebp\include;$(IncludePath)</IncludePath>
-    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(ProjectDir)libjpeg-turbo\lib;$(ProjectDir)libpng-apng\lib;$(ProjectDir)libjxl\lib;$(ProjectDir)libheif\lib;$(ProjectDir)libwebp\lib;$(LibraryPath)</LibraryPath>
-    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ProjectDir)libjpeg-turbo\lib64;$(ProjectDir)libpng-apng\lib64;$(ProjectDir)libjxl\lib64;$(ProjectDir)libheif\lib64;$(ProjectDir)libwebp\lib64;$(LibraryPath)</LibraryPath>
+    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(ProjectDir)..\..\deps\WTL-sf\Include;$(ProjectDir)libpng-apng\include;$(ProjectDir)libjxl\include;$(ProjectDir)\libheif\include;$(ProjectDir)\libwebp\include;$(ProjectDir)\libavif\include;$(IncludePath)</IncludePath>
+    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(ProjectDir)..\..\deps\WTL-sf\Include;$(ProjectDir)libpng-apng\include;$(ProjectDir)libjxl\include;$(ProjectDir)\libheif\include;$(ProjectDir)\libwebp\include;$(ProjectDir)\libavif\include;$(IncludePath)</IncludePath>
+    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(ProjectDir)libjpeg-turbo\lib;$(ProjectDir)libpng-apng\lib;$(ProjectDir)libjxl\lib;$(ProjectDir)libheif\lib;$(ProjectDir)libwebp\lib;$(ProjectDir)libavif\lib;$(LibraryPath)</LibraryPath>
+    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(ProjectDir)libjpeg-turbo\lib64;$(ProjectDir)libpng-apng\lib64;$(ProjectDir)libjxl\lib64;$(ProjectDir)libheif\lib64;$(ProjectDir)libwebp\lib64;$(ProjectDir)libavif\lib64;$(LibraryPath)</LibraryPath>
+    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(ProjectDir)..\..\deps\WTL-sf\Include;$(ProjectDir)libpng-apng\include;$(ProjectDir)libjxl\include;$(ProjectDir)\libheif\include;$(ProjectDir)\libwebp\include;$(ProjectDir)\libavif\include;$(IncludePath)</IncludePath>
+    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ProjectDir)..\..\deps\WTL-sf\Include;$(ProjectDir)libpng-apng\include;$(ProjectDir)libjxl\include;$(ProjectDir)\libheif\include;$(ProjectDir)\libwebp\include;$(ProjectDir)\libavif\include;$(IncludePath)</IncludePath>
+    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(ProjectDir)libjpeg-turbo\lib;$(ProjectDir)libpng-apng\lib;$(ProjectDir)libjxl\lib;$(ProjectDir)libheif\lib;$(ProjectDir)libwebp\lib;$(ProjectDir)libavif\lib;$(LibraryPath)</LibraryPath>
+    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ProjectDir)libjpeg-turbo\lib64;$(ProjectDir)libpng-apng\lib64;$(ProjectDir)libjxl\lib64;$(ProjectDir)libheif\lib64;$(ProjectDir)libwebp\lib64;$(ProjectDir)libavif\lib64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutDir>bin\x64\$(Configuration)\</OutDir>
@@ -119,14 +119,14 @@
       <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>Dbghelp.lib;gdiplus.lib;WICLoader.lib;turbojpeg-static.lib;libpng16.lib;zlib.lib;jxl_dec.lib;jxl_threads.lib;heif.lib;libwebp.lib;libwebpdemux.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Dbghelp.lib;gdiplus.lib;WICLoader.lib;turbojpeg-static.lib;libpng16.lib;zlib.lib;jxl_dec.lib;jxl_threads.lib;heif.lib;libwebp.lib;libwebpdemux.lib;avif.lib;dav1d.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>bin\x86\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ModuleDefinitionFile>
       </ModuleDefinitionFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <TargetMachine>MachineX86</TargetMachine>
-      <DelayLoadDLLs>WICLoader.dll;jxl_dec.dll;jxl_threads.dll;heif.dll</DelayLoadDLLs>
+      <DelayLoadDLLs>WICLoader.dll;jxl_dec.dll;jxl_threads.dll;heif.dll;dav1d.dll</DelayLoadDLLs>
       <IgnoreSpecificDefaultLibraries>LIBCMT</IgnoreSpecificDefaultLibraries>
     </Link>
     <Manifest>
@@ -135,7 +135,8 @@
     <PostBuildEvent>
       <Command>xcopy "$(ProjectDir)Config\*" "$(ProjectDir)\$(OutDir)" /Y /C /D
 xcopy "$(ProjectDir)libjxl\bin\*.dll" "$(ProjectDir)$(OutDir)" /Y /D
-xcopy "$(ProjectDir)libheif\bin\*.dll" "$(ProjectDir)$(OutDir)" /Y /D</Command>
+xcopy "$(ProjectDir)libheif\bin\*.dll" "$(ProjectDir)$(OutDir)" /Y /D
+xcopy "$(ProjectDir)libavif\bin\*.dll" "$(ProjectDir)$(OutDir)" /Y /D</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -169,13 +170,13 @@ xcopy "$(ProjectDir)libheif\bin\*.dll" "$(ProjectDir)$(OutDir)" /Y /D</Command>
       <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>legacy_stdio_definitions.lib;legacy_stdio_wide_specifiers.lib;Dbghelp.lib;gdiplus.lib;WICLoader.lib;turbojpeg-static.lib;libpng16.lib;zlib.lib;jxl_dec.lib;jxl_threads.lib;heif.lib;libwebp.lib;libwebpdemux.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>legacy_stdio_definitions.lib;legacy_stdio_wide_specifiers.lib;Dbghelp.lib;gdiplus.lib;WICLoader.lib;turbojpeg-static.lib;libpng16.lib;zlib.lib;jxl_dec.lib;jxl_threads.lib;heif.lib;libwebp.lib;libwebpdemux.lib;avif.lib;dav1d.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>bin\x64\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ModuleDefinitionFile>
       </ModuleDefinitionFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
-      <DelayLoadDLLs>WICLoader.dll;jxl_dec.dll;jxl_threads.dll;heif.dll</DelayLoadDLLs>
+      <DelayLoadDLLs>WICLoader.dll;jxl_dec.dll;jxl_threads.dll;heif.dll;dav1d.dll</DelayLoadDLLs>
       <IgnoreSpecificDefaultLibraries>LIBCMT</IgnoreSpecificDefaultLibraries>
     </Link>
     <Manifest>
@@ -184,7 +185,8 @@ xcopy "$(ProjectDir)libheif\bin\*.dll" "$(ProjectDir)$(OutDir)" /Y /D</Command>
     <PostBuildEvent>
       <Command>xcopy "$(ProjectDir)Config\*" "$(ProjectDir)\$(OutDir)" /Y /C /D
 xcopy "$(ProjectDir)libjxl\bin64\*.dll" "$(ProjectDir)$(OutDir)" /Y /D
-xcopy "$(ProjectDir)libheif\bin64\*.dll" "$(ProjectDir)$(OutDir)" /Y /D</Command>
+xcopy "$(ProjectDir)libheif\bin64\*.dll" "$(ProjectDir)$(OutDir)" /Y /D
+xcopy "$(ProjectDir)libavif\bin64\*.dll" "$(ProjectDir)$(OutDir)" /Y /D</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -224,7 +226,7 @@ xcopy "$(ProjectDir)libheif\bin64\*.dll" "$(ProjectDir)$(OutDir)" /Y /D</Command
       <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>gdiplus.lib;WICLoader.lib;turbojpeg-static.lib;libpng16.lib;zlib.lib;jxl_dec.lib;jxl_threads.lib;heif.lib;libwebp.lib;libwebpdemux.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>gdiplus.lib;WICLoader.lib;turbojpeg-static.lib;libpng16.lib;zlib.lib;jxl_dec.lib;jxl_threads.lib;heif.lib;libwebp.lib;libwebpdemux.lib;avif.lib;dav1d.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>bin\x86\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
@@ -238,7 +240,8 @@ xcopy "$(ProjectDir)libheif\bin64\*.dll" "$(ProjectDir)$(OutDir)" /Y /D</Command
     <PostBuildEvent>
       <Command>xcopy "$(ProjectDir)Config\*" "$(ProjectDir)\$(OutDir)" /Y /C /D
 xcopy "$(ProjectDir)libjxl\bin\*.dll" "$(ProjectDir)$(OutDir)" /Y /D
-xcopy "$(ProjectDir)libheif\bin\*.dll" "$(ProjectDir)$(OutDir)" /Y /D</Command>
+xcopy "$(ProjectDir)libheif\bin\*.dll" "$(ProjectDir)$(OutDir)" /Y /D
+xcopy "$(ProjectDir)libavif\bin\*.dll" "$(ProjectDir)$(OutDir)" /Y /D</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -277,7 +280,7 @@ xcopy "$(ProjectDir)libheif\bin\*.dll" "$(ProjectDir)$(OutDir)" /Y /D</Command>
       <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>legacy_stdio_definitions.lib;legacy_stdio_wide_specifiers.lib;gdiplus.lib;WICLoader.lib;turbojpeg-static.lib;libpng16.lib;zlib.lib;jxl_dec.lib;jxl_threads.lib;heif.lib;libwebp.lib;libwebpdemux.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>legacy_stdio_definitions.lib;legacy_stdio_wide_specifiers.lib;gdiplus.lib;WICLoader.lib;turbojpeg-static.lib;libpng16.lib;zlib.lib;jxl_dec.lib;jxl_threads.lib;heif.lib;libwebp.lib;libwebpdemux.lib;avif.lib;dav1d.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>bin\x64\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
@@ -290,7 +293,8 @@ xcopy "$(ProjectDir)libheif\bin\*.dll" "$(ProjectDir)$(OutDir)" /Y /D</Command>
     <PostBuildEvent>
       <Command>xcopy "$(ProjectDir)Config\*" "$(ProjectDir)\$(OutDir)" /Y /C /D
 xcopy "$(ProjectDir)libjxl\bin64\*.dll" "$(ProjectDir)$(OutDir)" /Y /D
-xcopy "$(ProjectDir)libheif\bin64\*.dll" "$(ProjectDir)$(OutDir)" /Y /D</Command>
+xcopy "$(ProjectDir)libheif\bin64\*.dll" "$(ProjectDir)$(OutDir)" /Y /D
+xcopy "$(ProjectDir)libavif\bin64\*.dll" "$(ProjectDir)$(OutDir)" /Y /D</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -298,6 +302,7 @@ xcopy "$(ProjectDir)libheif\bin64\*.dll" "$(ProjectDir)$(OutDir)" /Y /D</Command
       <EnableEnhancedInstructionSet Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">AdvancedVectorExtensions</EnableEnhancedInstructionSet>
       <EnableEnhancedInstructionSet Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AdvancedVectorExtensions</EnableEnhancedInstructionSet>
     </ClCompile>
+    <ClCompile Include="AVIFWrapper.cpp" />
     <ClCompile Include="BasicProcessing.cpp" />
     <ClCompile Include="Clipboard.cpp" />
     <ClCompile Include="dcraw_mod.cpp" />
@@ -384,6 +389,7 @@ xcopy "$(ProjectDir)libheif\bin64\*.dll" "$(ProjectDir)$(OutDir)" /Y /D</Command
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ApplyFilterAVX.h" />
+    <ClInclude Include="AVIFWrapper.h" />
     <ClInclude Include="BasicProcessing.h" />
     <ClInclude Include="Clipboard.h" />
     <ClInclude Include="dcraw_mod.h" />

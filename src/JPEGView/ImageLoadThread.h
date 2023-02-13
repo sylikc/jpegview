@@ -97,6 +97,7 @@ private:
 	CString m_sLastWebpFileName; // Only for animated WebP files
 	CString m_sLastPngFileName; // Only for animated PNG files
 	CString m_sLastJxlFileName; // Only for animated JPEG XL files
+	CString m_sLastAvifFileName; // Only for animated AVIF files
 
 	virtual void ProcessRequest(CRequestBase& request);
 	virtual void AfterFinishProcess(CRequestBase& request);
@@ -104,6 +105,7 @@ private:
 	void DeleteCachedWebpDecoder();
 	void DeleteCachedPngDecoder();
 	void DeleteCachedJxlDecoder();
+	void DeleteCachedAvifDecoder();
 
 	void ProcessReadJPEGRequest(CRequest * request);
 	void ProcessReadPNGRequest(CRequest * request);
@@ -111,6 +113,7 @@ private:
 	void ProcessReadTGARequest(CRequest * request);
 	void ProcessReadWEBPRequest(CRequest * request);
 	void ProcessReadJXLRequest(CRequest* request);
+	void ProcessReadAVIFRequest(CRequest* request);
 	void ProcessReadHEIFRequest(CRequest * request);
 	void ProcessReadRAWRequest(CRequest * request);
 	void ProcessReadGDIPlusRequest(CRequest * request);
