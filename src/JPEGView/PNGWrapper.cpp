@@ -167,10 +167,12 @@ bool PngReader::BeginReading(void* buffer, size_t sizebytes, bool& outOfMemory)
 
 	png_structp png_ptr = png_create_read_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
 	png_infop   info_ptr = png_create_info_struct(png_ptr);
+	// set even if it's invalid, since even if it's valid and something's wrong with the image, it will cause a free but we don't know which ptr
+	cache.info_ptr = info_ptr;
+	cache.png_ptr = png_ptr;
+
 	if (png_ptr && info_ptr)
 	{
-		cache.info_ptr = info_ptr;
-		cache.png_ptr = png_ptr;
 		if (setjmp(png_jmpbuf(png_ptr)))
 		{
 			PngReader::DeleteCache();
@@ -204,18 +206,20 @@ bool PngReader::BeginReading(void* buffer, size_t sizebytes, bool& outOfMemory)
 		width = png_get_image_width(png_ptr, info_ptr);
 		height = png_get_image_height(png_ptr, info_ptr);
 		if (width > MAX_IMAGE_DIMENSION || height > MAX_IMAGE_DIMENSION) {
-			png_destroy_read_struct(&png_ptr, &info_ptr, NULL);
+			// destroy and set the cache ptrs to null, instead of just the local ptrs,
+			// or else causes a double-free later when destroying object in DeleteCacheInternal()
+			png_destroy_read_struct(&cache.png_ptr, &cache.info_ptr, NULL);
 			return false;
 		}
 		if (abs((double)width * height) > MAX_IMAGE_PIXELS) {
-			png_destroy_read_struct(&png_ptr, &info_ptr, NULL);
+			png_destroy_read_struct(&cache.png_ptr, &cache.info_ptr, NULL);
 			outOfMemory = true;
 			return false;
 		}
 		channels = png_get_channels(png_ptr, info_ptr);
 		if (channels != 4)
 		{
-			png_destroy_read_struct(&png_ptr, &info_ptr, NULL);
+			png_destroy_read_struct(&cache.png_ptr, &cache.info_ptr, NULL);
 			return false;
 		}
 		rowbytes = png_get_rowbytes(png_ptr, info_ptr);
@@ -280,7 +284,7 @@ bool PngReader::BeginReading(void* buffer, size_t sizebytes, bool& outOfMemory)
 		free(p_frame);
 		free(p_temp);
 	}
-	png_destroy_read_struct(&png_ptr, &info_ptr, NULL);
+	png_destroy_read_struct(&cache.png_ptr, &cache.info_ptr, NULL);
 	return false;
 }
 
