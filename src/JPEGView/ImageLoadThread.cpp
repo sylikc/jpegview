@@ -538,7 +538,7 @@ void CImageLoadThread::ProcessReadBMPRequest(CRequest * request) {
 
 void CImageLoadThread::ProcessReadTGARequest(CRequest * request) {
 	bool bOutOfMemory;
-	request->Image = CReaderTGA::ReadTgaImage(request->FileName, CSettingsProvider::This().ColorBackground(), bOutOfMemory);
+	request->Image = CReaderTGA::ReadTgaImage(request->FileName, CSettingsProvider::This().ColorTransparency(), bOutOfMemory);
 	if (bOutOfMemory) {
 		request->OutOfMemory = true;
 	}
