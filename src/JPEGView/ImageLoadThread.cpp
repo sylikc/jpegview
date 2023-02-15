@@ -464,7 +464,12 @@ void CImageLoadThread::DeleteCachedJxlDecoder() {
 
 void CImageLoadThread::DeleteCachedAvifDecoder() {
 #ifndef WINXP
-	AvifReader::DeleteCache();
+	// prevent crashing when libavif/dav1d fail or missing
+	UINT nPrevErrorMode = SetErrorMode(SEM_FAILCRITICALERRORS);
+	try {
+		AvifReader::DeleteCache();
+	} catch (...) {}
+	SetErrorMode(nPrevErrorMode);
 	m_sLastAvifFileName.Empty();
 #endif
 }
