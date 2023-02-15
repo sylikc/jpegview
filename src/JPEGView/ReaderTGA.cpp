@@ -32,27 +32,31 @@ static bool IsAlphaChannelValid(int width, int height, uint32* pImageData)
 	return pixel != 0;
 }
 
-static inline uint32 AlphaBlendBackground(uint32 pixel, uint32 backgroundColor)
+// pixel is ARGB, backgroundColor is BGR. Returns ARGB
+static inline uint32 AlphaBlendBackground(uint32 pixel, COLORREF backgroundColor)
 {
 	uint32 alpha = pixel & ALPHA_OPAQUE;
-	if (alpha == 0) {
-		return backgroundColor;
-	} else if (alpha == ALPHA_OPAQUE)
-	{
+	if (alpha == ALPHA_OPAQUE)
 		return pixel;
+
+	uint8 bg_r = GetRValue(backgroundColor);
+	uint8 bg_g = GetGValue(backgroundColor);
+	uint8 bg_b = GetBValue(backgroundColor);
+
+	if (alpha == 0) {
+		return (bg_r << 16) + (bg_g << 8) + (bg_b);
 	} else {
-		uint8 b = GetBValue(pixel);
-		uint8 g = GetGValue(pixel);
-		uint8 r = GetRValue(pixel);
-		uint8 bg_r = GetRValue(backgroundColor);
-		uint8 bg_g = GetGValue(backgroundColor);
-		uint8 bg_b = GetBValue(backgroundColor);
+		uint8 r = (pixel >> 16) & 0xFF;
+		uint8 g = (pixel >>  8) & 0xFF;
+		uint8 b = (pixel      ) & 0xFF;
 		uint8 a = alpha >> 24;
 		uint8 one_minus_a = 255 - a;
+
 		return
-			((r * a + bg_r * one_minus_a) >> 8) + 
-			(((g * a + bg_g * one_minus_a) >> 8) << 8) + 
-			(((b * a + bg_b * one_minus_a) >> 8) << 16) + ALPHA_OPAQUE;
+			ALPHA_OPAQUE +
+			(  (uint8)(((r * a + bg_r * one_minus_a) / 255.0) + 0.5) << 16) +
+			(  (uint8)(((g * a + bg_g * one_minus_a) / 255.0) + 0.5) <<  8) +
+			(  (uint8)(((b * a + bg_b * one_minus_a) / 255.0) + 0.5)      );
 	}
 }
 
