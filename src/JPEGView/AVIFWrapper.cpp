@@ -77,9 +77,12 @@ void* AvifReader::ReadImage(int& width,
 	frame_time = cache.decoder->imageTiming.duration * 1000;
 
 	uint8_t* pixels = cache.rgb.pixels;
-	cache.rgb.pixels = NULL; // must be set to NULL to avoid double free
-	cache.rgb.rowBytes = 0;
-	return pixels;
+	size_t size = width * nchannels * height;
+	pPixelData = new(std::nothrow) unsigned char[size];
+	if (pPixelData)
+		memcpy(pPixelData, cache.rgb.pixels, size);
+	avifRGBImageFreePixels(&cache.rgb);
+	return pPixelData;
 }
 
 void AvifReader::DeleteCache() {
