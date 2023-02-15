@@ -26,3 +26,6 @@
 [submodule "extras/libde265"]
 	path = extras/third_party/libheif/libde265
 	url = https://github.com/strukturag/libde265
+[submodule "extras/third_party/libavif"]
+	path = extras/third_party/libavif
+	url = https://github.com/AOMediaCodec/libavif
