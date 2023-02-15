@@ -119,7 +119,7 @@
       <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>Dbghelp.lib;gdiplus.lib;WICLoader.lib;turbojpeg-static.lib;libpng16.lib;zlib.lib;jxl_dec.lib;jxl_threads.lib;heif.lib;libwebp.lib;libwebpdemux.lib;avif.lib;dav1d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Dbghelp.lib;gdiplus.lib;WICLoader.lib;turbojpeg-static.lib;libpng16.lib;zlib.lib;jxl_dec.lib;jxl_threads.lib;heif.lib;libwebp.lib;libwebpdemux.lib;avif.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>bin\x86\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ModuleDefinitionFile>
       </ModuleDefinitionFile>
@@ -170,7 +170,7 @@ xcopy "$(ProjectDir)libavif\bin\*.dll" "$(ProjectDir)$(OutDir)" /Y /D</Command>
       <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>legacy_stdio_definitions.lib;legacy_stdio_wide_specifiers.lib;Dbghelp.lib;gdiplus.lib;WICLoader.lib;turbojpeg-static.lib;libpng16.lib;zlib.lib;jxl_dec.lib;jxl_threads.lib;heif.lib;libwebp.lib;libwebpdemux.lib;avif.lib;dav1d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>legacy_stdio_definitions.lib;legacy_stdio_wide_specifiers.lib;Dbghelp.lib;gdiplus.lib;WICLoader.lib;turbojpeg-static.lib;libpng16.lib;zlib.lib;jxl_dec.lib;jxl_threads.lib;heif.lib;libwebp.lib;libwebpdemux.lib;avif.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>bin\x64\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ModuleDefinitionFile>
       </ModuleDefinitionFile>
@@ -226,7 +226,7 @@ xcopy "$(ProjectDir)libavif\bin64\*.dll" "$(ProjectDir)$(OutDir)" /Y /D</Command
       <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>gdiplus.lib;WICLoader.lib;turbojpeg-static.lib;libpng16.lib;zlib.lib;jxl_dec.lib;jxl_threads.lib;heif.lib;libwebp.lib;libwebpdemux.lib;avif.lib;dav1d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>gdiplus.lib;WICLoader.lib;turbojpeg-static.lib;libpng16.lib;zlib.lib;jxl_dec.lib;jxl_threads.lib;heif.lib;libwebp.lib;libwebpdemux.lib;avif.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>bin\x86\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
@@ -280,7 +280,7 @@ xcopy "$(ProjectDir)libavif\bin\*.dll" "$(ProjectDir)$(OutDir)" /Y /D</Command>
       <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>legacy_stdio_definitions.lib;legacy_stdio_wide_specifiers.lib;gdiplus.lib;WICLoader.lib;turbojpeg-static.lib;libpng16.lib;zlib.lib;jxl_dec.lib;jxl_threads.lib;heif.lib;libwebp.lib;libwebpdemux.lib;avif.lib;dav1d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>legacy_stdio_definitions.lib;legacy_stdio_wide_specifiers.lib;gdiplus.lib;WICLoader.lib;turbojpeg-static.lib;libpng16.lib;zlib.lib;jxl_dec.lib;jxl_threads.lib;heif.lib;libwebp.lib;libwebpdemux.lib;avif.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>bin\x64\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
