@@ -7,7 +7,7 @@ inputs:
     description: branch to match to get all artifacts, or only some
     required: false
     default: master
-  
+
   platform-arch:
     description: The architecture for naming artifact
     required: true
@@ -17,8 +17,8 @@ inputs:
     description: The build config for naming artifact
     required: true
     type: string
-  
-  
+
+
 
 runs:
   using: composite

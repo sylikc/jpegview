@@ -26,7 +26,7 @@ runs:
     - name: Setup Python (for dav1d build)
       uses: actions/setup-python@v4
       with:
-        # any version will do for right now, just have it set fixed to a version
+        # any version will do for right now, but it's safer to just have it set fixed to a version
         python-version: '3.10'
 
     - name: BIN Cache - Restore LIBs/DLLs from previous GH Action
@@ -55,6 +55,11 @@ runs:
           src/JPEGView/libheif/lib/*.lib
           src/JPEGView/libheif/lib64/*.lib
 
+          src/JPEGView/libavif/bin/*.dll
+          src/JPEGView/libavif/bin64/*.dll
+          src/JPEGView/libavif/lib/*.lib
+          src/JPEGView/libavif/lib64/*.lib
+
           src/JPEGView/libjxl/bin/*.dll
           src/JPEGView/libjxl/bin64/*.dll
           src/JPEGView/libjxl/lib/*.lib
@@ -69,7 +74,6 @@ runs:
     - name: Setup NASM
       # https://github.com/marketplace/actions/set-up-nasm
       uses: ilammy/setup-nasm@v1
-
 
 
 
@@ -92,10 +96,10 @@ runs:
       shell: cmd
       run: call extras\scripts\build-libpng-apng.bat
 
-    - name: libheif
+    - name: libheif + libavif
       if: ${{ steps.cache-bin.outputs.cache-hit != 'true' }}
       shell: cmd
-      run: call extras\scripts\build-libheif.bat
+      run: call extras\scripts\build-libheif_libavif.bat
 
     # put this last since it takes the longest to build
     - name: libjxl
