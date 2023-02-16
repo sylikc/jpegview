@@ -143,7 +143,14 @@ bool CTextCtrl::EnterEditMode() {
 	m_pEdit->LimitText(256);
 	m_pEdit->ShowWindow(SW_SHOW);
 	m_pEdit->SetFocus();
-	m_pEdit->SetSelAll();
+	int last_dot_pos = m_sText.ReverseFind(_T('.'));
+	if (last_dot_pos == -1) {
+		// this selects the whole box
+		m_pEdit->SetSelAll();
+	} else {
+		// select up till the extension
+		m_pEdit->SetSel(0, last_dot_pos, FALSE);
+	}
 	return true;
 }
 
