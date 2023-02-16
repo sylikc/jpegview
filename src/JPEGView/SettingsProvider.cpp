@@ -711,6 +711,7 @@ void CSettingsProvider::ReadIniFile(LPCTSTR fileName, IniHashMap* keyMap, TCHAR*
 
 	int index = 0;
 	LPTSTR current = pBuffer;
+	// TODO not sure why the original author manually parses the file instead of using GetPrivateProfileString/Int APIs
 	while (*current != 0) {
 		while (*current != 0 && _istspace(*current)) current++;
 		LPCTSTR key = current;

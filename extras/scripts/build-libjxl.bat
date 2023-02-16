@@ -54,6 +54,7 @@ call "%~dp0vs-init.bat" %XBUILD_ARCH%
 pushd "%XBUILD_DIR%"
 
 cmake.exe -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=OFF -A %XPLATFORM% "%XLIB_DIR%"
+IF ERRORLEVEL 1 exit /b 1
 msbuild.exe /p:Platform=%XPLATFORM% /p:configuration="Release" LIBJXL.sln /t:jxl_dec /t:jxl_threads
 IF ERRORLEVEL 1 exit /b 1
 

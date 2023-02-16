@@ -146,6 +146,8 @@ REM ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 REM ZIP up flat from RAW OUTPUT
 pushd "%XRAW_OUT%"
 
+REM NOTE: these filenames should not change... the pattern and naming of these are expected by package managers like Scoop, and others on the web
+REM the folder names JPEGView32 and JPEGView64 are also consistent with the original author's release style, which is expected by the same package managers
 "%X7ZA%" a -tzip -mx9 ..\JPEGView_%JPV_VER%.zip .
 IF ERRORLEVEL 1 exit /b 1
 "%X7ZA%" a -t7z -mx9 ..\JPEGView_%JPV_VER%.7z .
@@ -162,6 +164,7 @@ IF ERRORLEVEL 1 exit /b 1
 popd
 
 pushd JPEGView32-WinXP
+REM intentionally not compressed max... to be the most compatible
 "%X7ZA%" a -tzip ..\..\JPEGView32_WinXP_%JPV_VER%.zip .
 IF ERRORLEVEL 1 exit /b 1
 popd
