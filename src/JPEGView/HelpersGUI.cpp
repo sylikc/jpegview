@@ -425,7 +425,7 @@ namespace HelpersGUI {
 		}
 		if (bOutOfMemory) {
 			_tcscat_s(buff, BUF_LEN, _T("\n"));
-			_tcscat_s(buff, BUF_LEN, CString(CNLS::GetString(_T("Reason:"))) + CNLS::GetString(_T("Not enough memory available")));
+			_tcscat_s(buff, BUF_LEN, CString(CNLS::GetString(_T("Reason:"))) + _T(" ") + CNLS::GetString(_T("Not enough memory available")));
 		} else if (nFileLoadError == FileLoad_LoadError) {
 			LPCTSTR sEnding = _tcsrchr(sFailedFileName, _T('.'));
 			if (sEnding != NULL) {

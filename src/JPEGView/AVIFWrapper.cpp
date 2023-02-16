@@ -35,8 +35,10 @@ void* AvifReader::ReadImage(int& width,
 	// Cache animations
 	if (cache.decoder == NULL) {
 		cache.data = (uint8_t*)malloc(sizebytes);
-		if (cache.data == NULL)
+		if (cache.data == NULL) {
+			outOfMemory = true;
 			return NULL;
+		}
 		memcpy(cache.data, buffer, sizebytes);
 		cache.decoder = avifDecoderCreate();
 		result = avifDecoderSetIOMemory(cache.decoder, cache.data, sizebytes);
