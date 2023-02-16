@@ -351,7 +351,7 @@ void* PngReader::ReadImage(int& width,
 	// "If the denominator is 0, it is to be treated as if it were 100"
 	if (!cache.delay_den)
 		cache.delay_den = 100;
-	frame_time = 1000.0 * cache.delay_num / cache.delay_den;
+	frame_time = (int)(1000.0 * cache.delay_num / cache.delay_den);
 
 	return pixels;
 }

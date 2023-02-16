@@ -104,20 +104,22 @@ static EImageFormat GetImageFormat(LPCTSTR sFileName) {
 			return IF_AVIF;
 
 		// https://github.com/strukturag/libheif/issues/83
-		if (memcmp(header+8, "heic", 4) == 0 ||
-			memcmp(header+8, "heix", 4) == 0 ||
-			memcmp(header+8, "hevc", 4) == 0 ||
-			memcmp(header+8, "hevx", 4) == 0 ||
-			memcmp(header+8, "heim", 4) == 0 ||
-			memcmp(header+8, "heis", 4) == 0 ||
-			memcmp(header+8, "hevm", 4) == 0 ||
-			memcmp(header+8, "hevs", 4) == 0 ||
-			memcmp(header+8, "mif1", 4) == 0 ||
-			memcmp(header+8, "msf1", 4) == 0)
+		if (memcmp(header + 8, "heic", 4) == 0 ||
+			memcmp(header + 8, "heix", 4) == 0 ||
+			memcmp(header + 8, "hevc", 4) == 0 ||
+			memcmp(header + 8, "hevx", 4) == 0 ||
+			memcmp(header + 8, "heim", 4) == 0 ||
+			memcmp(header + 8, "heis", 4) == 0 ||
+			memcmp(header + 8, "hevm", 4) == 0 ||
+			memcmp(header + 8, "hevs", 4) == 0 ||
+			memcmp(header + 8, "mif1", 4) == 0 ||
+			memcmp(header + 8, "msf1", 4) == 0) {
 			return IF_HEIF;
-	} else {
-		return Helpers::GetImageFormat(sFileName);
+		}
 	}
+
+	// default fallback if no matches based on magic bytes
+	return Helpers::GetImageFormat(sFileName);
 }
 
 static EImageFormat GetBitmapFormat(Gdiplus::Bitmap * pBitmap) {

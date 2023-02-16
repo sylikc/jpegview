@@ -94,7 +94,7 @@ bool JxlReader::DecodeJpegXlOneShot(const uint8_t* jxl, size_t size, std::vector
 			JxlDecoderGetFrameHeader(cache.decoder.get(), &header);
 			JxlAnimationHeader animation = cache.info.animation;
 			if (animation.tps_numerator)
-				frame_time = 1000.0 * header.duration * animation.tps_denominator / animation.tps_numerator;
+				frame_time = (int)(1000.0 * header.duration * animation.tps_denominator / animation.tps_numerator);
 			else
 				frame_time = 0;
 		} else if (status == JXL_DEC_NEED_IMAGE_OUT_BUFFER) {

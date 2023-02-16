@@ -76,7 +76,7 @@ void* AvifReader::ReadImage(int& width,
 	height = cache.rgb.height;
 	has_animation = cache.decoder->imageCount > 1;
 	frame_count = cache.decoder->imageCount;
-	frame_time = cache.decoder->imageTiming.duration * 1000;
+	frame_time = (int)(cache.decoder->imageTiming.duration * 1000.0);
 
 	uint8_t* pixels = cache.rgb.pixels;
 	size_t size = width * nchannels * height;
