@@ -2710,7 +2710,8 @@ void CMainDlg::ResetZoomToFitScreen(bool bFillWithCrop, bool bAllowEnlarge, bool
 
 void CMainDlg::ResetZoomTo100Percents(bool bZoomToMouse) {
 	if (m_pCurrentImage != NULL && fabs(m_dZoom - 1) > 0.01) {
-		PerformZoom(1.0, false, bZoomToMouse, true);
+		// the current design (unless changed) cursor always shows in windowed mode, so always zoom to cursor when not fullscreen
+		PerformZoom(1.0, false, bZoomToMouse || !m_bFullScreenMode, true);
 	}
 }
 
@@ -2857,6 +2858,7 @@ void CMainDlg::MouseOff() {
 		if (m_nMouseY < m_clientRect.bottom - m_pImageProcPanelCtl->PanelRect().Height() && 
 			!m_bInTrackPopupMenu && !m_pNavPanelCtl->PanelRect().PtInRect(CPoint(m_nMouseX, m_nMouseY))) {
 			if (m_bFullScreenMode) {
+				// cursor only hides when in full screen mode
 				while (::ShowCursor(FALSE) >= 0);
 			}
 			m_startMouse.x = m_startMouse.y = -1;
