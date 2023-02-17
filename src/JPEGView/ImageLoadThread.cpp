@@ -350,7 +350,12 @@ void CImageLoadThread::ProcessRequest(CRequestBase& request) {
 			DeleteCachedWebpDecoder();
 			DeleteCachedJxlDecoder();
 			DeleteCachedAvifDecoder();
-			ProcessReadPNGRequest(&rq);
+			if (CSettingsProvider::This().ForceGDIPlus() || CSettingsProvider::This().UseEmbeddedColorProfiles()) {
+				DeleteCachedPngDecoder();
+				ProcessReadGDIPlusRequest(&rq);
+			} else {
+				ProcessReadPNGRequest(&rq);
+			}
 			break;
 		case IF_JXL:
 			DeleteCachedGDIBitmap();
