@@ -2397,6 +2397,15 @@ void CMainDlg::GotoImage(EImagePosition ePos, int nFlags) {
 
 	m_pCropCtl->CancelCropping(); // cancel any running crop
 
+	// solving a specific "edge" case, pun intended
+	// (doesn't happen with first image, because we would be at frame 0 already)
+	// if wraparound = false,
+	// if we are at the last image,
+	// if we're at the last index of a multi-framed image (not animation)
+	// don't wrap around to index 0
+	bool bNoWrapAroundEdgeFrame = !CSettingsProvider::This().WrapAroundFolder() &&
+		(m_pCurrentImage == NULL ? false : m_pCurrentImage->NumberOfFrames() > 1 && !m_pCurrentImage->IsAnimation());
+
 	int nFrameIndex = 0;
 	bool bCheckIfSameImage = true;
 	m_pFileList->SetCheckpoint();
@@ -2414,8 +2423,11 @@ void CMainDlg::GotoImage(EImagePosition ePos, int nFlags) {
 		case POS_NextAnimation:
 			{
 				bool bGotoNextImage = true;
-				nFrameIndex = Helpers::GetFrameIndex(m_pCurrentImage, true, ePos == POS_NextAnimation,  bGotoNextImage);
-				if (bGotoNextImage) m_pFileList = m_pFileList->Next();
+				nFrameIndex = Helpers::GetFrameIndex(m_pCurrentImage, true, ePos == POS_NextAnimation, bGotoNextImage);
+				if (bGotoNextImage)
+					m_pFileList = m_pFileList->Next();
+				else
+					bNoWrapAroundEdgeFrame = false; // the "next" operation didn't request going to the next image (next frame index is not current one)
 				break;
 			}
 		case POS_NextSlideShow:
@@ -2427,6 +2439,7 @@ void CMainDlg::GotoImage(EImagePosition ePos, int nFlags) {
 				nFrameIndex = Helpers::GetFrameIndex(m_pCurrentImage, false, false, bGotoPrevImage);
 				if (bGotoPrevImage) m_pFileList = m_pFileList->Prev();
 				eDirection = CJPEGProvider::BACKWARD;
+				bNoWrapAroundEdgeFrame = false; // previous image at edge is not a wraparound
 				break;
 			}
 		case POS_Toggle:
@@ -2442,7 +2455,7 @@ void CMainDlg::GotoImage(EImagePosition ePos, int nFlags) {
 			break;
 	}
 
-	if (bCheckIfSameImage && (m_pFileList == pOldFileList && nOldFrameIndex == nFrameIndex && !m_pFileList->ChangedSinceCheckpoint())) {
+	if (bCheckIfSameImage && (m_pFileList == pOldFileList && (nOldFrameIndex == nFrameIndex || bNoWrapAroundEdgeFrame) && !m_pFileList->ChangedSinceCheckpoint())) {
 		if (m_bMovieMode && m_bAutoExit) {
 			CleanupAndTerminate();
 		} else {
