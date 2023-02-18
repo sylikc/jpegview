@@ -31,6 +31,12 @@
       <UniqueIdentifier>{037622e3-2687-46d2-8674-09ac49e504c1}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;jpg;jpeg;jpe;manifest</Extensions>
     </Filter>
+    <Filter Include="Header Files\Image Types">
+      <UniqueIdentifier>{2e9aae52-1e75-4b14-bec4-f723e808c123}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Image Types">
+      <UniqueIdentifier>{099a201d-61b0-4380-a60c-5081af3bbe23}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BasicProcessing.cpp">
@@ -85,9 +91,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ProcessingThreadPool.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ReaderBMP.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ResizeFilter.cpp">
@@ -195,9 +198,6 @@
     <ClCompile Include="MainDlg.cpp">
       <Filter>Source Files\Dialogs</Filter>
     </ClCompile>
-    <ClCompile Include="dcraw_mod.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="TransformPanel.cpp">
       <Filter>Source Files\GUI</Filter>
     </ClCompile>
@@ -209,9 +209,6 @@
     </ClCompile>
     <ClCompile Include="TiltCorrectionPanelCtl.cpp">
       <Filter>Source Files\Panels</Filter>
-    </ClCompile>
-    <ClCompile Include="TJPEGWrapper.cpp">
-      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="JPEGLosslessTransform.cpp">
       <Filter>Source Files</Filter>
@@ -229,9 +226,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="DirectoryWatcher.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ReaderTGA.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ManageOpenWithDlg.cpp">
@@ -258,20 +252,32 @@
     <ClCompile Include="HashCompareLPCTSTR.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="PNGWrapper.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="AVIFWrapper.cpp">
+      <Filter>Source Files\Image Types</Filter>
     </ClCompile>
-    <ClCompile Include="JXLWrapper.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="dcraw_mod.cpp">
+      <Filter>Source Files\Image Types</Filter>
     </ClCompile>
     <ClCompile Include="HEIFWrapper.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Image Types</Filter>
+    </ClCompile>
+    <ClCompile Include="JXLWrapper.cpp">
+      <Filter>Source Files\Image Types</Filter>
+    </ClCompile>
+    <ClCompile Include="PNGWrapper.cpp">
+      <Filter>Source Files\Image Types</Filter>
+    </ClCompile>
+    <ClCompile Include="ReaderBMP.cpp">
+      <Filter>Source Files\Image Types</Filter>
+    </ClCompile>
+    <ClCompile Include="ReaderTGA.cpp">
+      <Filter>Source Files\Image Types</Filter>
     </ClCompile>
     <ClCompile Include="WEBPWrapper.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Image Types</Filter>
     </ClCompile>
-    <ClCompile Include="AVIFWrapper.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="TJPEGWrapper.cpp">
+      <Filter>Source Files\Image Types</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -333,9 +339,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ProcessParams.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ReaderBMP.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ResizeFilter.h">
@@ -446,9 +449,6 @@
     <ClInclude Include="resource.h">
       <Filter>Header Files\Dialogs</Filter>
     </ClInclude>
-    <ClInclude Include="dcraw_mod.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="TransformPanel.h">
       <Filter>Header Files\GUI</Filter>
     </ClInclude>
@@ -460,9 +460,6 @@
     </ClInclude>
     <ClInclude Include="TransformPanelCtl.h">
       <Filter>Header Files\Panels</Filter>
-    </ClInclude>
-    <ClInclude Include="TJPEGWrapper.h">
-      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="JPEGLosslessTransform.h">
       <Filter>Header Files</Filter>
@@ -480,9 +477,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="DirectoryWatcher.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ReaderTGA.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ManageOpenWithDlg.h">
@@ -518,20 +512,32 @@
     <ClInclude Include="HashCompareLPCTSTR.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="PNGWrapper.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="AVIFWrapper.h">
+      <Filter>Header Files\Image Types</Filter>
     </ClInclude>
-    <ClInclude Include="JXLWrapper.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="dcraw_mod.h">
+      <Filter>Header Files\Image Types</Filter>
     </ClInclude>
     <ClInclude Include="HEIFWrapper.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Image Types</Filter>
+    </ClInclude>
+    <ClInclude Include="JXLWrapper.h">
+      <Filter>Header Files\Image Types</Filter>
+    </ClInclude>
+    <ClInclude Include="PNGWrapper.h">
+      <Filter>Header Files\Image Types</Filter>
+    </ClInclude>
+    <ClInclude Include="ReaderBMP.h">
+      <Filter>Header Files\Image Types</Filter>
+    </ClInclude>
+    <ClInclude Include="ReaderTGA.h">
+      <Filter>Header Files\Image Types</Filter>
+    </ClInclude>
+    <ClInclude Include="TJPEGWrapper.h">
+      <Filter>Header Files\Image Types</Filter>
     </ClInclude>
     <ClInclude Include="WEBPWrapper.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="AVIFWrapper.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Image Types</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
