@@ -2622,6 +2622,14 @@ void CMainDlg::PerformZoom(double dValue, bool bExponent, bool bZoomToMouse, boo
 		nNewYSize = (int)(m_pCurrentImage->OrigHeight() * m_dZoom + 0.5);
 	}
 
+	// because we've increased the maximum zoom allowed, only actually perform the zoom if the old and new dimensions differ
+	// the float arithmetic doesn't always come up with the same answer
+	if (nOldXSize == nNewXSize && nOldYSize == nNewYSize) {
+		m_dZoom = dOldZoom;  // restore previous zoom value, then do nothing
+		return;
+	}
+
+
 	if (bZoomToMouse) {
 		// zoom to mouse
 		int nCenterX = m_bZoomMode ? m_nCapturedX : m_nMouseX;

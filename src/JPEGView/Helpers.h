@@ -82,8 +82,8 @@ namespace Helpers {
 	};
 
 	// Maximum and minimum allowed zoom factors for images
-	const double ZoomMax = 16.0;
-	const double ZoomMin = 0.1;
+	const double ZoomMax = DBL_MAX; // unbound the maximum zoom, previously set at 16.0 (1600%)
+	const double ZoomMin = DBL_MIN; // unbound the minimum zoom, previously set at 0.1 (10%)
 
 	// Round to integer
 	inline int RoundToInt(double d) {
