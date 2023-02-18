@@ -129,6 +129,7 @@ public:
 	LPCTSTR GPSMapProvider() { return m_sGPSMapProvider; }
 	bool FlashWindowAlert() { return m_bFlashWindowAlert; }
 	bool BeepSoundAlert() { return m_bBeepSoundAlert; }
+	int ZoomPausePercent() { return m_zoomPausePercent; }  // while internally this is represented in doubles, using a whole number percent simplifies it for the user... configuring doubles is not user friendly at all
 
 	// Returns if a user INI file exists
 	bool ExistsUserINI();
@@ -294,6 +295,7 @@ private:
 	CString m_sGPSMapProvider;
 	bool m_bFlashWindowAlert;
 	bool m_bBeepSoundAlert;
+	int m_zoomPausePercent;
 
 	std::list<CUserCommand*> m_userCommands;
 	std::list<CUserCommand*> m_openWithCommands;

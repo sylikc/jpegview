@@ -2605,10 +2605,15 @@ void CMainDlg::PerformZoom(double dValue, bool bExponent, bool bZoomToMouse, boo
 	if (abs(m_dZoom - 1.0) < 0.01) {
 		m_dZoom = 1.0;
 	}
-	if ((dOldZoom - 1.0)*(m_dZoom - 1.0) <= 0 && m_bInZooming && !m_bZoomMode) {
-		// make a stop at 100 %
-		m_dZoom = 1.0;
-	} 
+
+	// only pause on some percent if enabled
+	if (CSettingsProvider::This().ZoomPausePercent() != 0) {
+		double pauseAtZoom = CSettingsProvider::This().ZoomPausePercent() / 100.0;
+		if ((dOldZoom - pauseAtZoom) * (m_dZoom - pauseAtZoom) <= 0 && m_bInZooming && !m_bZoomMode) {
+			// make a stop at 100 % (or whatever % is configured)
+			m_dZoom = pauseAtZoom;
+		}
+	}
 
 	// Never create images more than 65535 pixels wide or high - the basic processing cannot handle it
 	int nOldXSize = (int)(m_pCurrentImage->OrigWidth() * dOldZoom + 0.5);

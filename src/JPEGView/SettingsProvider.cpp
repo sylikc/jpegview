@@ -182,6 +182,7 @@ CSettingsProvider::CSettingsProvider(void) {
 	m_bWrapAroundFolder = GetBool(_T("WrapAroundFolder"), true);
 	m_bFlashWindowAlert = GetBool(_T("FlashWindowAlert"), true);
 	m_bBeepSoundAlert = GetBool(_T("BeepSoundAlert"), false);  // don't make it default on... too much sound feedback is pretty annoying
+	m_zoomPausePercent = GetInt(_T("ZoomPausePercent"), 100, 0, 6553500);  // can't have a % larger than the MAX_IMAGE_DIMENSION %
 	m_bSaveWithoutPrompt = GetBool(_T("OverrideOriginalFileWithoutSaveDialog"), false);
 	m_bTrimWithoutPromptLosslessJPEG = GetBool(_T("TrimWithoutPromptLosslessJPEG"), false);
 	m_bAllowFileDeletion = GetBool(_T("AllowFileDeletion"), true);
