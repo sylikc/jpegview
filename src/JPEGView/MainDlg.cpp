@@ -2177,7 +2177,7 @@ bool CMainDlg::SaveImage(bool bFullSize) {
 	// NOTE: this list is used in the "Edit with" registry entry in JPEGView.Setup, update that when this updates
 	CFileDialog fileDlg(FALSE, sExtension, sCurrentFile, 
 			OFN_EXPLORER | OFN_ENABLESIZING | OFN_HIDEREADONLY | OFN_NOREADONLYRETURN | OFN_OVERWRITEPROMPT,
-			Helpers::CReplacePipe(CString(_T("JPEG (*.jpg;*.jpeg)|*.jpg;*.jpeg|BMP (*.bmp)|*.bmp|PNG (*.png)|*.png|TIFF (*.tiff;*.tif)|*.tiff;*.tif|WEBP (*.webp)|*.webp|WEBP lossless (*.webp)|*.webp|")) +
+			Helpers::CReplacePipe(CString(_T("JPEG (*.jpg;*.jpeg)|*.jpg;*.jpeg|BMP (*.bmp)|*.bmp|PNG (*.png)|*.png|TIFF (*.tiff;*.tif)|*.tiff;*.tif|WEBP (*.webp)|*.webp|WEBP lossless (*.webp)|*.webp|QOI (*.qoi)|*.qoi|")) +
 			CNLS::GetString(_T("All Files")) + _T("|*.*|")), m_hWnd);
 	if (sExtension.CompareNoCase(_T("bmp")) == 0) {
 		fileDlg.m_ofn.nFilterIndex = 2;
@@ -2187,6 +2187,8 @@ bool CMainDlg::SaveImage(bool bFullSize) {
 		fileDlg.m_ofn.nFilterIndex = 4;
 	} else if (sExtension.CompareNoCase(_T("webp")) == 0) {
 		fileDlg.m_ofn.nFilterIndex = m_bUseLosslessWEBP ? 6 : 5;
+	} else if (sExtension.CompareNoCase(_T("qoi")) == 0) {
+		fileDlg.m_ofn.nFilterIndex = 7;
 	}
 	if (!bFullSize) {
 		fileDlg.m_ofn.lpstrTitle = CNLS::GetString(_T("Save as (in screen size/resolution)"));
