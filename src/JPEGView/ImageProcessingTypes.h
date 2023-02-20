@@ -39,6 +39,7 @@ enum EImageFormat {
 	IF_JXL,
 	IF_HEIF,
 	IF_AVIF,
+	IF_QOI,
 	IF_WIC,
 	IF_CLIPBOARD,
 	IF_CameraRAW,

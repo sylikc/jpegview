@@ -279,6 +279,9 @@
     <ClCompile Include="TJPEGWrapper.cpp">
       <Filter>Source Files\Image Types</Filter>
     </ClCompile>
+    <ClCompile Include="QOIWrapper.cpp">
+      <Filter>Source Files\Image Types</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BasicProcessing.h">
@@ -537,6 +540,9 @@
       <Filter>Header Files\Image Types</Filter>
     </ClInclude>
     <ClInclude Include="WEBPWrapper.h">
+      <Filter>Header Files\Image Types</Filter>
+    </ClInclude>
+    <ClInclude Include="QOIWrapper.h">
       <Filter>Header Files\Image Types</Filter>
     </ClInclude>
   </ItemGroup>

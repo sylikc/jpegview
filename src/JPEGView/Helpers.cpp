@@ -745,12 +745,14 @@ EImageFormat GetImageFormat(LPCTSTR sFileName) {
 			return IF_WEBP;
 		} else if (_tcsicmp(sEnding, _T("JXL")) == 0) {
 			return IF_JXL;
-		} else if (_tcsicmp(sEnding, _T("HEIF")) == 0) {
-			return IF_HEIF;
-		} else if (_tcsicmp(sEnding, _T("HEIC")) == 0) {
+		} else if (_tcsicmp(sEnding, _T("AVIF")) == 0) {
+			return IF_AVIF;
+		} else if (_tcsicmp(sEnding, _T("HEIF")) == 0 || _tcsicmp(sEnding, _T("HEIC")) == 0) {
 			return IF_HEIF;
 		} else if (_tcsicmp(sEnding, _T("TGA")) == 0) {
 			return IF_TGA;
+		} else if (_tcsicmp(sEnding, _T("QOI")) == 0) {
+			return IF_QOI;
 		} else if (IsInFileEndingList(CSettingsProvider::This().FilesProcessedByWIC(), sEnding)) {
 			return IF_WIC;
 		} else if (IsInFileEndingList(CSettingsProvider::This().FileEndingsRAW(), sEnding)) {

@@ -9,6 +9,7 @@
 #include "TJPEGWrapper.h"
 #include "libjpeg-turbo\include\turbojpeg.h"
 #include "WEBPWrapper.h"
+#include "QOIWrapper.h"
 #include <gdiplus.h>
 
 //////////////////////////////////////////////////////////////////////////////////////////////
@@ -255,6 +256,35 @@ static bool SaveWebP(LPCTSTR sFileName, void* pData, int nWidth, int nHeight, bo
 	return true;
 }
 
+// pData must point to 24 bit BGR DIB
+static bool SaveQOI(LPCTSTR sFileName, void* pData, int nWidth, int nHeight) {
+	FILE* fptr = _tfopen(sFileName, _T("wb"));
+	if (fptr == NULL) {
+		return false;
+	}
+
+	bool bSuccess = false;
+	try {
+		uint8* pOutput;
+		int nSize;
+		pOutput = (uint8*)QoiReaderWriter::Compress((uint8*)pData, nWidth, nHeight, nSize);
+		bSuccess = fwrite(pOutput, 1, nSize, fptr) == nSize;
+		fclose(fptr);
+		QoiReaderWriter::FreeMemory(pOutput);
+	}
+	catch (...) {
+		fclose(fptr);
+	}
+
+	// delete partial file if no success
+	if (!bSuccess) {
+		_tunlink(sFileName);
+		return false;
+	}
+
+	return true;
+}
+
 // Copied from MS sample
 static int GetEncoderClsid(const WCHAR* format, CLSID* pClsid) {
    UINT  num = 0;          // number of image encoders
@@ -367,6 +397,8 @@ bool CSaveImage::SaveImage(LPCTSTR sFileName, CJPEGImage * pImage, const CImageP
 	} else {
 		if (eFileFormat == IF_WEBP) {
 			bSuccess = SaveWebP(sFileName, pDIB24bpp, imageSize.cx, imageSize.cy, bUseLosslessWEBP);
+		} else if (eFileFormat == IF_QOI) {
+			bSuccess = SaveQOI(sFileName, pDIB24bpp, imageSize.cx, imageSize.cy);
 		} else {
 			bSuccess = SaveGDIPlus(sFileName, eFileFormat, pDIB24bpp, imageSize.cx, imageSize.cy);
 		}

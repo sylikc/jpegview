@@ -290,6 +290,7 @@ void CFileExtensionsDlg::FillFileExtensionsList() {
 	InsertExtension(_T("*.avif"), FormatHint(CNLS::GetString(_T("%s images")), _T("AV1 Image File")));
 	InsertExtension(_T("*.heif"), FormatHint(CNLS::GetString(_T("%s images")), _T("High Efficiency Image File")));
 	InsertExtension(_T("*.heic"), FormatHint(CNLS::GetString(_T("%s images")), _T("High Efficiency Image Container")));
+	InsertExtension(_T("*.qoi"), FormatHint(CNLS::GetString(_T("%s images")), _T("Quite OK Image")));
 	InsertExtensions(CSettingsProvider::This().FilesProcessedByWIC(), CNLS::GetString(_T("%s images (processed by Window Imaging Component - WIC)")));
 	InsertExtensions(CSettingsProvider::This().FileEndingsRAW(), CNLS::GetString(_T("%s camera raw images (embedded JPEGs only)")));
 }

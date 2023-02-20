@@ -29,3 +29,6 @@
 [submodule "extras/third_party/libavif"]
 	path = extras/third_party/libavif
 	url = https://github.com/AOMediaCodec/libavif
+[submodule "extras/third_party/qoi"]
+	path = extras/third_party/qoi
+	url = https://github.com/phoboslab/qoi

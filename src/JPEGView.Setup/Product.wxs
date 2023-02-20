@@ -359,6 +359,7 @@
 						<RegistryValue Root="HKLM" Key="SOFTWARE\Classes\Applications\JPEGView.exe\SupportedTypes" Name=".heif" Value="" Type="string" />
 						<RegistryValue Root="HKLM" Key="SOFTWARE\Classes\Applications\JPEGView.exe\SupportedTypes" Name=".heic" Value="" Type="string" />
 						<RegistryValue Root="HKLM" Key="SOFTWARE\Classes\Applications\JPEGView.exe\SupportedTypes" Name=".tga" Value="" Type="string" />
+						<RegistryValue Root="HKLM" Key="SOFTWARE\Classes\Applications\JPEGView.exe\SupportedTypes" Name=".qoi" Value="" Type="string" />
 						<!-- csFileEndingsRAW -->
 						<RegistryValue Root="HKLM" Key="SOFTWARE\Classes\Applications\JPEGView.exe\SupportedTypes" Name=".pef" Value="" Type="string" />
 						<RegistryValue Root="HKLM" Key="SOFTWARE\Classes\Applications\JPEGView.exe\SupportedTypes" Name=".dng" Value="" Type="string" />
@@ -402,6 +403,8 @@
 						<RegistryValue Root="HKLM" Key="SOFTWARE\Classes\SystemFileAssociations\.tif\shell\edit.JPEGView.exe\command" Value="&quot;[APPLICATIONFOLDER]JPEGView.exe&quot; &quot;%1&quot;" Type="string" />
 						<RegistryValue Root="HKLM" Key="SOFTWARE\Classes\SystemFileAssociations\.webp\shell\edit.JPEGView.exe" Value="!(loc.ExplorerMenuEditREG)" Type="string" />
 						<RegistryValue Root="HKLM" Key="SOFTWARE\Classes\SystemFileAssociations\.webp\shell\edit.JPEGView.exe\command" Value="&quot;[APPLICATIONFOLDER]JPEGView.exe&quot; &quot;%1&quot;" Type="string" />
+						<RegistryValue Root="HKLM" Key="SOFTWARE\Classes\SystemFileAssociations\.qoi\shell\edit.JPEGView.exe" Value="!(loc.ExplorerMenuEditREG)" Type="string" />
+						<RegistryValue Root="HKLM" Key="SOFTWARE\Classes\SystemFileAssociations\.qoi\shell\edit.JPEGView.exe\command" Value="&quot;[APPLICATIONFOLDER]JPEGView.exe&quot; &quot;%1&quot;" Type="string" />
 					</Component>
 
 					<!-- DLLs required for JXL support -->
