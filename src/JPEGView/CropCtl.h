@@ -20,8 +20,9 @@ public:
 
 	enum CropMode {
 		CM_Free,
+		CM_FixedSize,
 		CM_FixedAspectRatio,
-		CM_FixedSize
+		CM_FixedAspectRatioImage
 	};
 public:
 	CCropCtl(CMainDlg* pMainDlg);
@@ -29,14 +30,17 @@ public:
 	bool IsCropping() { return m_bCropping; } // during cropping
 	bool IsDoCropping() { return m_bDoCropping; } // during cropping and cropping rectangle visible
 	
-	// Get and set aspect ratio of cropping rectangle, 0 for free cropping, -1 for fixed size cropping
-	double GetCropRectAR() { return m_dCropRectAspectRatio; }
-	void SetCropRectAR(double dRatio) {  m_dCropRectAspectRatio = dRatio; }
+	// Set aspect ratio of cropping rectangle, 0 is invalid.  Only used when CM_FixedAspectRatio bits are on, both Fixed and Image
+	void SetCropRectAR(CSize sizeAR);
+	
+	// set the image size for CropCtl to calculate the ImageAR option
+	void SetImageSize(CSize sizeImage);
 
 	// Cropping rectangle in image coordinates (in original size image)
 	CRect GetImageCropRect(bool losslessCrop);
 
-	CropMode GetCropMode();
+	void SetCropMode(CropMode eMode) { m_eCropMode = eMode; }
+	//CropMode GetCropMode() { return m_eCropMode; }
 
 	void OnPaint(CPaintDC& dc); // paints cropping rectangle when in cropping
 	bool OnTimer(int nTimerId);
@@ -71,10 +75,15 @@ private:
 	bool m_bDontStartCropOnNextClick;
 	CPoint m_cropMouse;
 	CPoint m_startTrackMousePos;
-	double m_dCropRectAspectRatio;
+	
+	CSize m_sizeCropRectAspectRatio;  // used for comparisons with menu options
+	CSize m_sizeImageAspectRatio;     // set after loading image, only used when m_eCropMode == CM_FixedAspectRatioImage
+	bool m_bCropRectAspectRatioReversed; // are the crop aspect ratio x, y values reversed?
+
 	double m_dLastZoom;
 	int m_nHandleSize;
 	Handle m_eHitHandle;
+	CropMode m_eCropMode;
 
 	void TrackCroppingRect(int nX, int nY, Handle eHandle);
 	void UpdateCroppingRect(int nX, int nY, HDC hPaintDC, bool bShow);
@@ -85,4 +94,6 @@ private:
 	CPoint PreserveAspectRatio(CPoint cropStart, CPoint cropEnd, bool adjustWidth, bool bCalculateEnd);
 	void NormalizeCroppingRect();
 	void SetMouseCursor(int nX, int nY);
+
+	double GetCropRectAR(void);
 };

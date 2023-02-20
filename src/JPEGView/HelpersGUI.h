@@ -82,4 +82,7 @@ namespace HelpersGUI {
 	// Finds a open with command given the menu index in the menu as created above
 	CUserCommand* FindOpenWithCommand(int index);
 	
+	// Changes a menu's text, if success returns true, else false
+	bool SetMenuTextById(HMENU hMenu, int nMenuId, CString sText);
+
 }

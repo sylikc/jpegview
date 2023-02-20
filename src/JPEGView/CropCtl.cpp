@@ -14,9 +14,30 @@
 #include "FileList.h"
 #include <math.h>
 
+// for VS, __cplusplus is always 199711L, must read _MSVC_LANG instead https://learn.microsoft.com/en-us/cpp/preprocessor/predefined-macros?view=msvc-170
+#if _MSVC_LANG >= 201703L  // C++17 and above
+	// C++ inbuilt function for finding GCD differs depending on C++ version
+	// https://www.geeksforgeeks.org/stdgcd-c-inbuilt-function-finding-gcd/
+	// https://stackoverflow.com/questions/26089319/is-there-a-standard-definition-for-cplusplus-in-c14/56483887#56483887
+	// https://en.cppreference.com/w/cpp/preprocessor/replace#Predefined_macros
+
+	#include <numeric>
+	#define GCD(x, y) std::gcd(x, y)
+
+#else  // C++14 and below
+
+	// NOTE: for older VS versions, must write your own GCD function here and define it
+	//#define GCD(x, y) somefunction(x, y)
+
+	// signature for the gcd would be:  int somefunction(int x, int y)
+
+#endif
+
 static const int AUTOSCROLL_TIMEOUT = 20; // autoscroll time in ms
 static const int HANDLE_SIZE = 7; // Handle size in pixels
 static const int HANDLE_HIT_TOLERANCE = 12;
+
+
 
 static bool PointDifferenceSmall(const CPoint& p1, const CPoint& p2) {
 	return abs(p1.x - p2.x) < 2 && abs(p1.y - p2.y) < 2;
@@ -29,7 +50,10 @@ CCropCtl::CCropCtl(CMainDlg* pMainDlg) {
 	m_bDoTracking = false;
 	m_bTrackingMode = false;
 	m_bDontStartCropOnNextClick = false;
-	m_dCropRectAspectRatio = 0;
+	m_sizeCropRectAspectRatio = { 0 };
+	m_sizeImageAspectRatio = { 0 };
+	m_bCropRectAspectRatioReversed = false;
+	m_eCropMode = CM_Free;
 	m_nHandleSize = HANDLE_SIZE;
 	m_eHitHandle = HH_None;
 	m_cropStart = CPoint(INT_MIN, INT_MIN);
@@ -38,9 +62,43 @@ CCropCtl::CCropCtl(CMainDlg* pMainDlg) {
 	m_startTrackMousePos = CPoint(INT_MIN, INT_MIN);
 }
 
-CCropCtl::CropMode CCropCtl::GetCropMode()
-{
-	return (m_dCropRectAspectRatio > 0) ? CM_FixedAspectRatio : (m_dCropRectAspectRatio < 0) ? CM_FixedSize : CM_Free;
+
+// get the current crop rect AR in double form, based on the mode
+double CCropCtl::GetCropRectAR(void) {
+	switch (m_eCropMode) {
+		case CM_FixedAspectRatio:
+			if (m_bCropRectAspectRatioReversed)
+				return (double)m_sizeCropRectAspectRatio.cy / m_sizeCropRectAspectRatio.cx;  // reversed ratio
+			else
+				return (double)m_sizeCropRectAspectRatio.cx / m_sizeCropRectAspectRatio.cy;
+		case CM_FixedAspectRatioImage:
+			return (double)m_sizeImageAspectRatio.cx / m_sizeImageAspectRatio.cy;
+	};
+
+	return 0.0;  // invalid crop ratio
+}
+
+void CCropCtl::SetCropRectAR(CSize sizeAR) {
+	// setting the CropRectAR automatically sets the mode to FixedAR
+	m_eCropMode = CCropCtl::CM_FixedAspectRatio;
+
+	// for Crop AR, do not reduce the fraction.  16 : 10 is more commonly seen than 8 : 5
+	m_sizeCropRectAspectRatio.cx = sizeAR.cx;
+	m_sizeCropRectAspectRatio.cy = sizeAR.cy;
+}
+
+void CCropCtl::SetImageSize(CSize sizeImage) {
+	int g = GCD(sizeImage.cx, sizeImage.cy);
+
+	if (g == 1) {
+		m_sizeImageAspectRatio.cx = sizeImage.cx;
+		m_sizeImageAspectRatio.cy = sizeImage.cy;
+	} else {
+		// GCD can return 0 if one of the dimensions is 0, but that should not happen, and the program should rightfully crash
+
+		m_sizeImageAspectRatio.cx = sizeImage.cx / g;
+		m_sizeImageAspectRatio.cy = sizeImage.cy / g;
+	}
 }
 
 void CCropCtl::OnPaint(CPaintDC& dc) {
@@ -50,7 +108,7 @@ void CCropCtl::OnPaint(CPaintDC& dc) {
 		if (m_dLastZoom != dZoom)
 		{
 			m_dLastZoom = dZoom;
-			if (GetCropMode() == CM_FixedSize && CCropSizeDlg::UseScreenPixels()) {
+			if (m_eCropMode == CM_FixedSize && CCropSizeDlg::UseScreenPixels()) {
 				CSize cropSize = CCropSizeDlg::GetCropSize();
 				double dZoom = m_pMainDlg->GetZoom();
 				if (dZoom < 0.0) {
@@ -212,33 +270,37 @@ int CCropCtl::ShowCropContextMenu() {
 
 		HMENU hMenuCropMode = ::GetSubMenu(hMenuTrackPopup, nSubMenuPosCropMode);
 
+		// set string to the user configured option
 		CString userCropString;
-		userCropString.Format(_T("%d : %d"), userCrop.cx, userCrop.cy);
+		userCropString.Format(_T("%d : %d (user-defined)"), userCrop.cx, userCrop.cy);
+		HelpersGUI::SetMenuTextById(hMenuCropMode, IDM_CROPMODE_USER, userCropString);
 
-		MENUITEMINFO itemInfo;
-		memset(&itemInfo, 0, sizeof(MENUITEMINFO));
-		itemInfo.cbSize = sizeof(MENUITEMINFO);
-		itemInfo.fMask = MIIM_STRING;
-		itemInfo.dwTypeData = (LPTSTR)(LPCTSTR)userCropString;
-		itemInfo.cch = userCropString.GetLength();
-		::SetMenuItemInfo(hMenuCropMode, IDM_CROPMODE_USER, FALSE, &itemInfo);
+		// set string to the actual image AR
+		CString sImageAR;
+		sImageAR.Format(_T("Same as Image (%d : %d)"), m_sizeImageAspectRatio.cx, m_sizeImageAspectRatio.cy);
+		HelpersGUI::SetMenuTextById(hMenuCropMode, IDM_CROPMODE_IMAGE, sImageAR);
 
-		switch (GetCropMode())
+		switch (m_eCropMode)
 		{
 			case CM_FixedAspectRatio:
-				if (abs(m_dCropRectAspectRatio - 1.25) < 0.001) {
+				if (m_sizeCropRectAspectRatio.cx == 5 && m_sizeCropRectAspectRatio.cy == 4) {
 					::CheckMenuItem(hMenuCropMode,  IDM_CROPMODE_5_4, MF_CHECKED);
-				} else if (abs(m_dCropRectAspectRatio - 1.3333) < 0.001) {
+				} else if (m_sizeCropRectAspectRatio.cx == 4 && m_sizeCropRectAspectRatio.cy == 3) {
 					::CheckMenuItem(hMenuCropMode,  IDM_CROPMODE_4_3, MF_CHECKED);
-				} else if (abs(m_dCropRectAspectRatio - 1.5) < 0.001) {
+				} else if (m_sizeCropRectAspectRatio.cx == 3 && m_sizeCropRectAspectRatio.cy == 2) {
 					::CheckMenuItem(hMenuCropMode,  IDM_CROPMODE_3_2, MF_CHECKED);
-				} else if (abs(m_dCropRectAspectRatio - 1.7777) < 0.001) {
+				} else if (m_sizeCropRectAspectRatio.cx == 16 && m_sizeCropRectAspectRatio.cy == 9) {
 					::CheckMenuItem(hMenuCropMode,  IDM_CROPMODE_16_9, MF_CHECKED);
-				} else if (abs(m_dCropRectAspectRatio - 1.6) < 0.001) {
+				} else if (m_sizeCropRectAspectRatio.cx == 16 && m_sizeCropRectAspectRatio.cy == 10) {
 					::CheckMenuItem(hMenuCropMode,  IDM_CROPMODE_16_10, MF_CHECKED);
-				} else if (abs(m_dCropRectAspectRatio - userCrop.cx / (double)userCrop.cy) < 0.001) {
+				} else if (m_sizeCropRectAspectRatio.cx == 1 && m_sizeCropRectAspectRatio.cy == 1) {
+					::CheckMenuItem(hMenuCropMode,  IDM_CROPMODE_1_1, MF_CHECKED);
+				} else if (m_sizeCropRectAspectRatio.cx == userCrop.cx && m_sizeCropRectAspectRatio.cy == userCrop.cy) {
 					::CheckMenuItem(hMenuCropMode, IDM_CROPMODE_USER, MF_CHECKED);
 				}
+				break;
+			case CM_FixedAspectRatioImage:
+				::CheckMenuItem(hMenuCropMode, IDM_CROPMODE_IMAGE, MF_CHECKED);
 				break;
 			case CM_FixedSize:
 				::CheckMenuItem(hMenuCropMode,  IDM_CROPMODE_FIXED_SIZE, MF_CHECKED);
@@ -290,6 +352,19 @@ void CCropCtl::TrackCroppingRect(int nX, int nY, Handle eHandle) {
 
 	InvalidateSceenCropRect();
 
+#ifdef DEBUG
+	// dragging inversion of aspect ratio ONLY works on the TopLeft/BottomRight
+	// because the other two handles don't move both the dimensions they control
+	// aka: TopRight moves the end, but doesn't move the start
+	// aka: BottomLeft moves the end, but doesn't move the start
+
+	CString a; a.Format(_T("m_startTrackMousePos x,y: %d,%d  cropstart x,y: %d,%d  cropend x,y: %d,%d  e-s x,y: %d,%d\n"),
+		m_startTrackMousePos.x - m_cropStart.x, m_startTrackMousePos.y - m_cropStart.y,
+		m_cropStart.x, m_cropStart.y,
+		m_cropEnd.x, m_cropEnd.y,
+		m_cropEnd.x - m_cropStart.x, m_cropEnd.y - m_cropStart.y); ::OutputDebugString(a);
+#endif
+
 	switch (eHandle) {
 		case HH_Border:
 			m_cropStart = CPoint(m_cropStart.x + nDeltaX, m_cropStart.y + nDeltaY);
@@ -308,6 +383,18 @@ void CCropCtl::TrackCroppingRect(int nX, int nY, Handle eHandle) {
 			m_cropEnd = PreserveAspectRatio(m_cropStart, CPoint(m_cropEnd.x, m_cropEnd.y + nDeltaY), false, true);
 			break;
 		case HH_BottomRight:
+			if (m_eCropMode == CM_FixedAspectRatio) {
+				// in fixed aspect ratio mode
+				int nDiffFromRectY = m_startTrackMousePos.y - m_cropEnd.y;
+				int nRectH = m_cropEnd.y - m_cropStart.y;
+				if (nDiffFromRectY > nRectH) {
+					// when the drag has exceeded the height of the crop, invert the aspect ratio
+					m_bCropRectAspectRatioReversed = true;
+				} else if (nDiffFromRectY < (-nRectH / 2)) {
+					// when the drag has exceeded half the height of the rect, un-invert the aspect ratio
+					m_bCropRectAspectRatioReversed = false;
+				}
+			}
 			m_cropEnd = PreserveAspectRatio(m_cropStart, CPoint(m_cropEnd.x + nDeltaX, m_cropEnd.y + nDeltaY), true, true);
 			break;
 		case HH_TopRight:
@@ -315,6 +402,19 @@ void CCropCtl::TrackCroppingRect(int nX, int nY, Handle eHandle) {
 			m_cropEnd = PreserveAspectRatio(m_cropStart, CPoint(m_cropEnd.x + nDeltaX, m_cropEnd.y), true, true);
 			break;
 		case HH_TopLeft:
+			if (m_eCropMode == CM_FixedAspectRatio) {
+				// in fixed aspect ratio mode
+				int nDiffFromRectX = m_startTrackMousePos.x - m_cropStart.x;
+				int nRectW = m_cropEnd.x - m_cropStart.x;
+				if (nDiffFromRectX > (nRectW / 2)) {
+					// when the drag (towards the right) has exceeded more than half of the width of the crop, invert the aspect ratio
+					m_bCropRectAspectRatioReversed = true;
+				} else if (-nDiffFromRectX > nRectW) {
+					// when the drag (to the left) has exceeded the width of the rect, un-invert the aspect ratio
+					m_bCropRectAspectRatioReversed = false;
+				}
+			}
+
 			m_cropStart = PreserveAspectRatio(CPoint(m_cropStart.x + nDeltaX, m_cropStart.y + nDeltaY), m_cropEnd, false, false);
 			break;
 		case HH_BottomLeft:
@@ -332,11 +432,10 @@ void CCropCtl::UpdateCroppingRect(int nX, int nY, HDC hPaintDC, bool bShow) {
 	m_pMainDlg->ScreenToImage(fX, fY);
 
 	CPoint newCropStart = m_cropStart;
-	CPoint newCropEnd = CPoint((int)fX, (int) fY);
-	CropMode cropMode = GetCropMode();
-	if (cropMode == CM_FixedAspectRatio) {
+	CPoint newCropEnd = CPoint((int)fX, (int)fY);
+	if (m_eCropMode == CM_FixedAspectRatio || m_eCropMode == CM_FixedAspectRatioImage) {
 		newCropEnd = PreserveAspectRatio(m_cropStart, newCropEnd, false, true);
-	} else if (cropMode == CM_FixedSize) {
+	} else if (m_eCropMode == CM_FixedSize) {
 		CSize cropSize = CCropSizeDlg::GetCropSize();
 		newCropStart = CPoint((int)fX, (int) fY);
 		if (CCropSizeDlg::UseScreenPixels() && m_pMainDlg->GetCurrentImage() != NULL) {
@@ -385,7 +484,7 @@ void CCropCtl::PaintCropRect(HDC hPaintDC) {
 		::SetBkMode(hDC, TRANSPARENT);
 		::Rectangle(hDC, cropRect.left, cropRect.top, cropRect.right, cropRect.bottom);
 
-		if (GetCropMode() != CM_FixedSize) {
+		if (m_eCropMode != CM_FixedSize) {
 			if (cropRect.Width() > m_nHandleSize * 2 && cropRect.Height() > m_nHandleSize * 2) {
 				PaintHandle(hDC, cropRect.left, cropRect.top, m_nHandleSize);
 				PaintHandle(hDC, cropRect.left, cropRect.bottom, m_nHandleSize);
@@ -514,7 +613,7 @@ CCropCtl::Handle CCropCtl::HitHandle(int nX, int nY) {
 		nY > cropRect.top - HANDLE_HIT_TOLERANCE && nY < cropRect.bottom + HANDLE_HIT_TOLERANCE &&
 		(nX < cropRect.left + HANDLE_HIT_TOLERANCE || nX > cropRect.right - HANDLE_HIT_TOLERANCE ||
 		nY < cropRect.top + HANDLE_HIT_TOLERANCE || nY > cropRect.bottom - HANDLE_HIT_TOLERANCE)) {
-		if (GetCropMode() == CM_FixedSize) {
+		if (m_eCropMode == CM_FixedSize) {
 			return HH_Border;
 		}
 		int nWidth3 = cropRect.Width() / 3;
@@ -554,19 +653,19 @@ CPoint CCropCtl::ScreenToImage(int nX, int nY) {
 }
 
 CPoint CCropCtl::PreserveAspectRatio(CPoint cropStart, CPoint cropEnd, bool adjustWidth, bool bCalculateEnd) {
-	if (GetCropMode() == CM_FixedAspectRatio) {
+	if (m_eCropMode == CM_FixedAspectRatio || m_eCropMode == CM_FixedAspectRatioImage) {
 		CPoint newCropEnd;
 		int w = abs(cropStart.x - cropEnd.x);
 		int h = abs(cropStart.y - cropEnd.y);
 		if (adjustWidth) {
-			int newH = (int)(w * 1.0 / m_dCropRectAspectRatio + 0.5);
+			int newH = (int)(w * 1.0 / GetCropRectAR() + 0.5);
 			if (cropStart.y > cropEnd.y) {
 				newCropEnd = CPoint(cropEnd.x, cropStart.y - newH);
 			} else {
 				newCropEnd = CPoint(cropEnd.x, cropStart.y + newH);
 			}
 		} else {
-			int newW = (int)(h * m_dCropRectAspectRatio + 0.5);
+			int newW = (int)(h * GetCropRectAR() + 0.5);
 			if (cropStart.x > cropEnd.x) {
 				newCropEnd = CPoint(cropStart.x - newW, cropEnd.y);
 			} else {

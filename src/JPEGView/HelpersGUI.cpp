@@ -493,4 +493,17 @@ namespace HelpersGUI {
 		return FindCommand(index, CSettingsProvider::This().OpenWithCommandList());
 	}
 
+	bool SetMenuTextById(HMENU hMenu, int nMenuId, CString sText) {
+		// While ModifyMenu works... it destroys and recreates menu, so it wouldn't preserve any existing properties like disabled or checked...
+		// https://stackoverflow.com/questions/6834541/problems-with-cmenumodifymenu
+		// ::ModifyMenu(hMenuCropMode, IDM_CROPMODE_5_4, MF_CHECKED | MF_STRING, 0, _T("Test AR")) ... you would have to re-set all the previous properties
+
+		MENUITEMINFO itemInfo;
+		memset(&itemInfo, 0, sizeof(MENUITEMINFO));
+		itemInfo.cbSize = sizeof(MENUITEMINFO);
+		itemInfo.fMask = MIIM_STRING;
+		itemInfo.dwTypeData = (LPTSTR)(LPCTSTR)sText;
+		itemInfo.cch = sText.GetLength();
+		return ::SetMenuItemInfo(hMenu, nMenuId, FALSE, &itemInfo);
+	}
 }

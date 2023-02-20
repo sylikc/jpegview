@@ -298,6 +298,8 @@
 #define IDM_LOSSLESS_CROP_SEL 20010
 #define IDM_COPY_SEL		20100
 #define IDM_ZOOM_SEL		20200
+
+// all crop menu IDs must be between IDM_CROPMODE_FREE and IDM_CROPMODE_USER, as it's compared in CCropCtl::ShowCropContextMenu()
 #define IDM_CROPMODE_FREE   20300
 #define IDM_CROPMODE_FIXED_SIZE 20400
 #define IDM_CROPMODE_5_4	20450
@@ -305,6 +307,8 @@
 #define IDM_CROPMODE_3_2    20600
 #define IDM_CROPMODE_16_9   20700
 #define IDM_CROPMODE_16_10	20800
+#define IDM_CROPMODE_1_1    20801
+#define IDM_CROPMODE_IMAGE  20899
 #define IDM_CROPMODE_USER	20900
 
 #define IDM_FIRST_USER_CMD  22000

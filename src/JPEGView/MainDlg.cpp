@@ -1948,36 +1948,40 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 			}
 			break;
 		case IDM_CROPMODE_FREE:
-			m_pCropCtl->SetCropRectAR(0);
+			m_pCropCtl->SetCropMode(CCropCtl::CM_Free);
+
 			break;
 		case IDM_CROPMODE_FIXED_SIZE:
 			{
 				CCropSizeDlg dlgSetCropSize;
 				dlgSetCropSize.DoModal();
 			}
-			m_pCropCtl->SetCropRectAR(-1);
+			m_pCropCtl->SetCropMode(CCropCtl::CM_FixedSize);
 			break;
 		case IDM_CROPMODE_5_4:
-			m_pCropCtl->SetCropRectAR(1.25);
+			m_pCropCtl->SetCropRectAR(CSize(5, 4)); // 1.25
 			break;
 		case IDM_CROPMODE_4_3:
-			m_pCropCtl->SetCropRectAR(1.333333333333333333);
+			m_pCropCtl->SetCropRectAR(CSize(4, 3)); // 1.333333333333333333
 			break;
 		case IDM_CROPMODE_3_2:
-			m_pCropCtl->SetCropRectAR(1.5);
+			m_pCropCtl->SetCropRectAR(CSize(3, 2)); // 1.5
 			break;
 		case IDM_CROPMODE_16_9:
-			m_pCropCtl->SetCropRectAR(1.777777777777777778);
+			m_pCropCtl->SetCropRectAR(CSize(16, 9)); // 1.777777777777777778
 			break;
 		case IDM_CROPMODE_16_10:
-			m_pCropCtl->SetCropRectAR(1.6);
+			m_pCropCtl->SetCropRectAR(CSize(16, 10)); // 1.6
+			break;
+		case IDM_CROPMODE_1_1:
+			m_pCropCtl->SetCropRectAR(CSize(1, 1));
 			break;
 		case IDM_CROPMODE_USER:
-		{
-			CSize userCrop = sp.UserCropAspectRatio();
-			m_pCropCtl->SetCropRectAR(userCrop.cx / (double)userCrop.cy);
+			m_pCropCtl->SetCropRectAR(sp.UserCropAspectRatio());
 			break;
-		}
+		case IDM_CROPMODE_IMAGE:
+			m_pCropCtl->SetCropMode(CCropCtl::CM_FixedAspectRatioImage);
+			break;
 		case IDM_TOUCH_IMAGE:
 		case IDM_TOUCH_IMAGE_EXIF:
 			if (m_pCurrentImage != NULL) {
@@ -2941,6 +2945,7 @@ void CMainDlg::AfterNewImageLoaded(bool bSynchronize, bool bAfterStartup, bool n
 	if (!m_bIsAnimationPlaying) m_pNavPanelCtl->HideNavPanelTemporary();
 	m_pPanelMgr->AfterNewImageLoaded();
 	m_pCropCtl->AbortCropping();
+	if (m_pCurrentImage != NULL) m_pCropCtl->SetImageSize(m_pCurrentImage->OrigSize()); // inform CropCtl of the image size for CropImageAR
 	m_pPrintImage->ClearOffsets();
 	if (bSynchronize) {
 		// after loading an image, the per image processing parameters must be synchronized with
