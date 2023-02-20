@@ -40,13 +40,13 @@ void* QoiReaderWriter::ReadImage(int& width,
 		for (int i = 0; i < size; i += nchannels) {
 			int j = i / decoded_stride * padded_stride + i % decoded_stride;
 			if (desc.colorspace == QOI_LINEAR) {
-				pPixelData[j] = LINEAR_TO_SRGB(pDecodedPixels[i+2]);
-				pPixelData[j+1] = LINEAR_TO_SRGB(pDecodedPixels[i+1]);
-				pPixelData[j+2] = LINEAR_TO_SRGB(pDecodedPixels[i]);
+				pPixelData[j  ] = (unsigned char)LINEAR_TO_SRGB(pDecodedPixels[i+2]);
+				pPixelData[j+1] = (unsigned char)LINEAR_TO_SRGB(pDecodedPixels[i+1]);
+				pPixelData[j+2] = (unsigned char)LINEAR_TO_SRGB(pDecodedPixels[i  ]);
 			} else {
-				pPixelData[j] = pDecodedPixels[i+2];
+				pPixelData[j  ] = pDecodedPixels[i+2];
 				pPixelData[j+1] = pDecodedPixels[i+1];
-				pPixelData[j+2] = pDecodedPixels[i];
+				pPixelData[j+2] = pDecodedPixels[i  ];
 			}
 			if (nchannels == 4)
 				pPixelData[j+3] = pDecodedPixels[i+3];
@@ -80,9 +80,9 @@ void* QoiReaderWriter::Compress(const void* source,
 		// Copy from BGR to RGB
 		for (int i = 0; i < size; i += nchannels) {
 			int j = i / input_stride * padded_stride + i % input_stride;
-			pPixelData[i] = pSourcePixels[j+2];
+			pPixelData[i  ] = pSourcePixels[j+2];
 			pPixelData[i+1] = pSourcePixels[j+1];
-			pPixelData[i+2] = pSourcePixels[j];
+			pPixelData[i+2] = pSourcePixels[j  ];
 		}
 		pOutput = qoi_encode(pPixelData, &desc, &len);
 		delete[] pPixelData;

@@ -219,7 +219,7 @@ bool PngReader::BeginReading(void* buffer, size_t sizebytes, bool& outOfMemory)
 			png_destroy_read_struct(&png_ptr, &info_ptr, NULL);
 			return false;
 		}
-		rowbytes = png_get_rowbytes(png_ptr, info_ptr);
+		rowbytes = (unsigned int)png_get_rowbytes(png_ptr, info_ptr);
 		size = height * rowbytes;
 		p_image = (unsigned char*)malloc(size);
 		p_frame = (unsigned char*)malloc(size);
