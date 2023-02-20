@@ -160,6 +160,7 @@
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <OpenMPSupport>false</OpenMPSupport>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>_DEBUG;WINXP;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -321,6 +322,7 @@
     <ClCompile Include="PrintDlg.cpp" />
     <ClCompile Include="PrintImage.cpp" />
     <ClCompile Include="ProcessingThreadPool.cpp" />
+    <ClCompile Include="QOIWrapper.cpp" />
     <ClCompile Include="ReaderBMP.cpp" />
     <ClCompile Include="ReaderTGA.cpp" />
     <ClCompile Include="ResizeDlg.cpp" />
@@ -407,6 +409,7 @@
     <ClInclude Include="PrintImage.h" />
     <ClInclude Include="PrintParameters.h" />
     <ClInclude Include="ProcessingThreadPool.h" />
+    <ClCompile Include="QOIWrapper.h" />
     <ClInclude Include="ProcessParams.h" />
     <ClInclude Include="RawMetadata.h" />
     <ClInclude Include="ReaderBMP.h" />
