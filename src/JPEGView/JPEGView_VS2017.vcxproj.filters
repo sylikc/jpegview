@@ -455,9 +455,6 @@
     <ClInclude Include="TJPEGWrapper.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClCompile Include="QOIWrapper.h">
-      <Filter>Header Files</Filter>
-    </ClCompile>
     <ClInclude Include="JPEGLosslessTransform.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -513,6 +510,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="WEBPWrapper.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="QOIWrapper.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
