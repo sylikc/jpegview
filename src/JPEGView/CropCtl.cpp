@@ -26,9 +26,11 @@
 
 #else  // C++14 and below
 
-	// NOTE: for older VS versions, must write your own GCD function here and define it
-	//#define GCD(x, y) somefunction(x, y)
+	// for older VS versions, the UI improvement using GCD is disabled, so code will still compile
 
+	// If you wanted to keep the UI improvement, you must write your own GCD function here and define it:
+
+	//#define GCD(x, y) somefunction(x, y)
 	// signature for the gcd would be:  int somefunction(int x, int y)
 
 #endif
@@ -88,7 +90,11 @@ void CCropCtl::SetCropRectAR(CSize sizeAR) {
 }
 
 void CCropCtl::SetImageSize(CSize sizeImage) {
+#if _MSVC_LANG >= 201703L
 	int g = GCD(sizeImage.cx, sizeImage.cy);
+#else
+	int g = 1;
+#endif
 
 	if (g == 1) {
 		m_sizeImageAspectRatio.cx = sizeImage.cx;
@@ -277,7 +283,11 @@ int CCropCtl::ShowCropContextMenu() {
 
 		// set string to the actual image AR
 		CString sImageAR;
+#if _MSVC_LANG >= 201703L
 		sImageAR.Format(_T("Same as Image (%d : %d)"), m_sizeImageAspectRatio.cx, m_sizeImageAspectRatio.cy);
+#else
+		sImageAR = _T("Same as Image");
+#endif
 		HelpersGUI::SetMenuTextById(hMenuCropMode, IDM_CROPMODE_IMAGE, sImageAR);
 
 		switch (m_eCropMode)
