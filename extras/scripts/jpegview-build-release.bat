@@ -12,7 +12,11 @@ SET JPV_ROOT=%~dp0..\..
 SET XOUT_BASE=%~dp0jpegview-release
 SET XRAW_OUT=%XOUT_BASE%\raw_out
 
-
+REM so we don't end up building multiple releases together accidentally
+IF EXIST "%XOUT_BASE%" (
+	echo OUTPUT directory already exists, please delete and try again
+	exit /b 1
+)
 
 REM detect version from source
 SET JPV_VER=
@@ -233,7 +237,7 @@ move "%JPV_ROOT%\src\JPEGView\bin\%XARCH%\Release" "%XRAW_OUT%\JPEGView%XBIT%"
 IF ERRORLEVEL 1 exit /b 1
 
 REM move the wix installer
-move "%JPV_ROOT%\src\JPEGView.Setup\bin\%XARCH%\Release\en-us\JPEGView.Setup.msi" "%XRAW_OUT%\JPEGView%XBIT%_en-us_%JPV_VER%.msi"
+move "%JPV_ROOT%\src\JPEGView.Setup\bin\%XARCH%\Release\en-us\JPEGView.Setup.msi" "%XOUT_BASE%\JPEGView%XBIT%_en-us_%JPV_VER%.msi"
 IF ERRORLEVEL 1 exit /b 1
 
 exit /b 0
