@@ -468,12 +468,13 @@ BEGIN
             MENUITEM "Same as Image",               IDM_CROPMODE_IMAGE
             MENUITEM "Fixed size...",               IDM_CROPMODE_FIXED_SIZE
             MENUITEM SEPARATOR
+            MENUITEM "1 : 1",                       IDM_CROPMODE_1_1
             MENUITEM "5 : 4",                       IDM_CROPMODE_5_4
             MENUITEM "4 : 3",                       IDM_CROPMODE_4_3
+            MENUITEM "7 : 5",                       IDM_CROPMODE_7_5
             MENUITEM "3 : 2",                       IDM_CROPMODE_3_2
-            MENUITEM "16 : 9",                      IDM_CROPMODE_16_9
             MENUITEM "16 : 10",                     IDM_CROPMODE_16_10
-            MENUITEM "1 : 1",                       IDM_CROPMODE_1_1
+            MENUITEM "16 : 9",                      IDM_CROPMODE_16_9
             MENUITEM "__",                          IDM_CROPMODE_USER
         END
         MENUITEM SEPARATOR

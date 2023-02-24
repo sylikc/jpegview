@@ -297,6 +297,8 @@ int CCropCtl::ShowCropContextMenu() {
 					::CheckMenuItem(hMenuCropMode,  IDM_CROPMODE_5_4, MF_CHECKED);
 				} else if (m_sizeCropRectAspectRatio.cx == 4 && m_sizeCropRectAspectRatio.cy == 3) {
 					::CheckMenuItem(hMenuCropMode,  IDM_CROPMODE_4_3, MF_CHECKED);
+				} else if (m_sizeCropRectAspectRatio.cx == 7 && m_sizeCropRectAspectRatio.cy == 5) {
+					::CheckMenuItem(hMenuCropMode,  IDM_CROPMODE_7_5, MF_CHECKED);
 				} else if (m_sizeCropRectAspectRatio.cx == 3 && m_sizeCropRectAspectRatio.cy == 2) {
 					::CheckMenuItem(hMenuCropMode,  IDM_CROPMODE_3_2, MF_CHECKED);
 				} else if (m_sizeCropRectAspectRatio.cx == 16 && m_sizeCropRectAspectRatio.cy == 9) {

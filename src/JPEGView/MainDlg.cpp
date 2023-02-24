@@ -1964,6 +1964,9 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 		case IDM_CROPMODE_4_3:
 			m_pCropCtl->SetCropRectAR(CSize(4, 3)); // 1.333333333333333333
 			break;
+		case IDM_CROPMODE_7_5:
+			m_pCropCtl->SetCropRectAR(CSize(7, 5)); // 1.4
+			break;
 		case IDM_CROPMODE_3_2:
 			m_pCropCtl->SetCropRectAR(CSize(3, 2)); // 1.5
 			break;
