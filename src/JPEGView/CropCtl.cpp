@@ -278,15 +278,15 @@ int CCropCtl::ShowCropContextMenu() {
 
 		// set string to the user configured option
 		CString userCropString;
-		userCropString.Format(_T("%d : %d (user-defined)"), userCrop.cx, userCrop.cy);
+		userCropString.Format(_T("%d : %d (") + CString(CNLS::GetString(_T("user-defined"))) + _T(")"), userCrop.cx, userCrop.cy);
 		HelpersGUI::SetMenuTextById(hMenuCropMode, IDM_CROPMODE_USER, userCropString);
 
 		// set string to the actual image AR
 		CString sImageAR;
 #if _MSVC_LANG >= 201703L
-		sImageAR.Format(_T("Same as Image (%d : %d)"), m_sizeImageAspectRatio.cx, m_sizeImageAspectRatio.cy);
+		sImageAR.Format(CString(CNLS::GetString(_T("Same as Image"))) + _T(" (%d : %d)"), m_sizeImageAspectRatio.cx, m_sizeImageAspectRatio.cy);
 #else
-		sImageAR = _T("Same as Image");
+		sImageAR = CNLS::GetString(_T("Same as Image"));
 #endif
 		HelpersGUI::SetMenuTextById(hMenuCropMode, IDM_CROPMODE_IMAGE, sImageAR);
 
