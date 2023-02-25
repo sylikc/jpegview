@@ -286,26 +286,6 @@ bool PngReader::BeginReading(void* buffer, size_t sizebytes, bool& outOfMemory)
 	return false;
 }
 
-void PngReader::DeleteCacheInternal(bool free_buffer)
-{
-	// png_read_end(cache.png_ptr, cache.info_ptr);
-	free(cache.rows_frame);
-	free(cache.rows_image);
-	free(cache.p_temp);
-	free(cache.p_frame);
-	free(cache.p_image);
-	png_destroy_read_struct(&cache.png_ptr, &cache.info_ptr, NULL);
-	void* temp_buffer = cache.buffer;
-	size_t temp_buffer_size = cache.buffer_size;
-	cache = { 0 };
-	if (free_buffer) {
-		free(temp_buffer);
-	} else {
-		cache.buffer = temp_buffer;
-		cache.buffer_size = temp_buffer_size;
-	}
-}
-
 void* PngReader::ReadImage(int& width,
 	int& height,
 	int& nchannels,
@@ -353,7 +333,29 @@ void* PngReader::ReadImage(int& width,
 		cache.delay_den = 100;
 	frame_time = (int)(1000.0 * cache.delay_num / cache.delay_den);
 
+	if (!has_animation)
+		DeleteCache();
 	return pixels;
+}
+
+void PngReader::DeleteCacheInternal(bool free_buffer)
+{
+	// png_read_end(cache.png_ptr, cache.info_ptr);
+	free(cache.rows_frame);
+	free(cache.rows_image);
+	free(cache.p_temp);
+	free(cache.p_frame);
+	free(cache.p_image);
+	png_destroy_read_struct(&cache.png_ptr, &cache.info_ptr, NULL);
+	void* temp_buffer = cache.buffer;
+	size_t temp_buffer_size = cache.buffer_size;
+	cache = { 0 };
+	if (free_buffer) {
+		free(temp_buffer);
+	} else {
+		cache.buffer = temp_buffer;
+		cache.buffer_size = temp_buffer_size;
+	}
 }
 
 void PngReader::DeleteCache() {
