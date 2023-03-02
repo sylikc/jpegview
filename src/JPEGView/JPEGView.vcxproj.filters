@@ -282,6 +282,9 @@
     <ClCompile Include="QOIWrapper.cpp">
       <Filter>Source Files\Image Types</Filter>
     </ClCompile>
+    <ClCompile Include="ICCProfileTransform.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BasicProcessing.h">
@@ -544,6 +547,9 @@
     </ClInclude>
     <ClInclude Include="QOIWrapper.h">
       <Filter>Header Files\Image Types</Filter>
+    </ClInclude>
+    <ClInclude Include="ICCProfileTransform.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

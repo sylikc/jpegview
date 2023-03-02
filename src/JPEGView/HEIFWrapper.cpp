@@ -2,6 +2,7 @@
 
 #include "HEIFWrapper.h"
 #include "MaxImageDef.h"
+#include "ICCProfileTransform.h"
 
 void * HeifReader::ReadImage(int &width,
 					   int &height,
@@ -41,9 +42,16 @@ void * HeifReader::ReadImage(int &width,
 		return NULL;
 
 	int size = width * nchannels * height;
+	pPixelData = new(std::nothrow) unsigned char[size];
+	if (pPixelData == NULL) {
+		outOfMemory = true;
+		return NULL;
+	}
+	std::vector<uint8_t> iccp = image.get_raw_color_profile();
+	void* transform = ICCProfileTransform::CreateTransform(iccp.data(), iccp.size(), ICCProfileTransform::FORMAT_RGBA);
 	uint8_t* p;
 	size_t i, j;
-	if (pPixelData = new(std::nothrow) unsigned char[size]) {
+	if (!ICCProfileTransform::DoTransform(transform, data, pPixelData, width, height, stride=stride)) {
 		memcpy(pPixelData, data, size);
 		unsigned char* o = pPixelData;
 		for (i = 0; i < height; i++) {
@@ -59,6 +67,7 @@ void * HeifReader::ReadImage(int &width,
 			}
 		}
 	}
+	ICCProfileTransform::DeleteTransform(transform);
 
 	return (void*)pPixelData;
 }

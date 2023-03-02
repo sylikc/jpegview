@@ -6,6 +6,7 @@
 #include "jxl/resizable_parallel_runner.h"
 #include "jxl/resizable_parallel_runner_cxx.h"
 #include "MaxImageDef.h"
+#include "ICCProfileTransform.h"
 
 struct JxlReader::jxl_cache {
 	JxlDecoderPtr decoder;
@@ -16,6 +17,7 @@ struct JxlReader::jxl_cache {
 	int prev_frame_timestamp;
 	int width;
 	int height;
+	void* transform;
 };
 
 JxlReader::jxl_cache JxlReader::cache = { 0 };
@@ -167,17 +169,27 @@ void* JxlReader::ReadImage(int& width,
 		return NULL;
 	}
 	int size = width * height * nchannels;
-	if (pPixelData = new(std::nothrow) unsigned char[size]) {
+	pPixelData = new(std::nothrow) unsigned char[size];
+	if (pPixelData == NULL) {
+		outOfMemory = true;
+		return NULL;
+	}
+	if (cache.transform == NULL)
+		cache.transform = ICCProfileTransform::CreateTransform(icc_profile.data(), icc_profile.size(), ICCProfileTransform::FORMAT_RGBA);
+	if (!ICCProfileTransform::DoTransform(cache.transform, pixels.data(), pPixelData, width, height)) {
 		memcpy(pPixelData, pixels.data(), size);
 		// RGBA -> BGRA conversion (with little-endian integers)
 		for (uint32_t* i = (uint32_t*)pPixelData; (uint8_t*)i < pPixelData + size; i++)
 			*i = ((*i & 0x00FF0000) >> 16) | ((*i & 0x0000FF00)) | ((*i & 0x000000FF) << 16) | ((*i & 0xFF000000));
 	}
+	if (!has_animation)
+		DeleteCache();
 	return pPixelData;
 }
 
 void JxlReader::DeleteCache() {
 	free(cache.data);
+	ICCProfileTransform::DeleteTransform(cache.transform);
 	// Setting the decoder and runner to 0 (NULL) will automatically destroy them
 	cache = { 0 };
 }

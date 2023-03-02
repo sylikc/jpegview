@@ -6,6 +6,7 @@
 #include "webp/demux.h"
 #include "MaxImageDef.h"
 #include "Helpers.h"
+#include "ICCProfileTransform.h"
 
 struct WebpReaderWriter::webp_cache {
 	WebPAnimDecoder* decoder;
@@ -13,6 +14,7 @@ struct WebpReaderWriter::webp_cache {
 	int prev_frame_timestamp;
 	int width;
 	int height;
+	void* transform;
 };
 
 WebpReaderWriter::webp_cache WebpReaderWriter::cache = { 0 };
@@ -43,6 +45,19 @@ void* WebpReaderWriter::ReadImage(int& width,
 			outOfMemory = true;
 			return NULL;
 		}
+
+		// Check for ICCP chunk
+		WebPData data;
+		data.bytes = (const uint8_t*)buffer;
+		data.size = sizebytes;
+		WebPDemuxer* demuxer = WebPDemux(&data);
+		WebPChunkIterator chunk_iter;
+		void* transform = NULL;
+		if (WebPDemuxGetChunk(demuxer, "ICCP", 1, &chunk_iter))
+			transform = ICCProfileTransform::CreateTransform(chunk_iter.chunk.bytes, chunk_iter.chunk.size, ICCProfileTransform::FORMAT_BGRA);
+		WebPDemuxReleaseChunkIterator(&chunk_iter);
+		WebPDemuxDelete(demuxer);
+
 		has_animation = features.has_animation;
 		if (!has_animation) {
 			int nStride = width * nchannels;
@@ -53,6 +68,11 @@ void* WebpReaderWriter::ReadImage(int& width,
 				return NULL;
 			}
 			WebPDecodeBGRAInto((const uint8_t*)buffer, sizebytes, pPixelData, size, nStride);
+
+			// ICCP transform in place
+			ICCProfileTransform::DoTransform(transform, pPixelData, pPixelData, width, height);
+			ICCProfileTransform::DeleteTransform(transform);
+
 			return pPixelData;
 		}
 	
@@ -68,6 +88,7 @@ void* WebpReaderWriter::ReadImage(int& width,
 		cache.decoder = WebPAnimDecoderNew(&cache.data, &anim_config);
 		cache.width = width;
 		cache.height = height;
+		cache.transform = transform;
 	}
 	WebPAnimDecoder* decoder = cache.decoder;
 	WebPData webp_data = cache.data;
@@ -100,19 +121,21 @@ void* WebpReaderWriter::ReadImage(int& width,
 		outOfMemory = true;
 		return NULL;
 	}
-	// Copy frame to output buffer
-	memcpy(pPixelData, buf, width * height * nchannels);
+
+	// Try copying with ICCP transform
+	if (!ICCProfileTransform::DoTransform(cache.transform, buf, pPixelData, width, height)) {
+		// Copy frame to output buffer directly otherwise
+		memcpy(pPixelData, buf, width * height * nchannels);
+	}
 	return pPixelData;
 
 }
 
 void WebpReaderWriter::DeleteCache() {
 	WebPAnimDecoderDelete(cache.decoder);
-	cache.decoder = NULL;
 	WebPDataClear(&cache.data);
-	cache.prev_frame_timestamp = 0;
-	cache.width = 0;
-	cache.height = 0;
+	ICCProfileTransform::DeleteTransform(cache.transform);
+	cache = { 0 };
 }
 
 void* WebpReaderWriter::Compress(const void* source,
