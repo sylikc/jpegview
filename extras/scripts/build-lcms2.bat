@@ -7,6 +7,12 @@ SET XSRC_DIR=%~dp0..\..\src\JPEGView\lcms2
 SET XLIB_DIR=%~dp0..\third_party\Little-CMS
 SET XOUT_DIR=%~dp0lcms2
 
+SET XVS_VER=2019
+IF /I "%XVS_INIT_VER%" NEQ "" (
+	REM override the build version for the solutions provided
+	SET XVS_VER=%XVS_INIT_VER%
+)
+
 IF EXIST "%XOUT_DIR%" (
 	echo lcms2 output exists, please delete folder before trying to build
 	exit /b 1
@@ -46,7 +52,7 @@ pushd "%XLIB_DIR%"
 REM delete any previous build files, if exists
 del "bin\lcms2.*" 2>nul
 
-msbuild /t:lcms2_DLL /p:Platform=%2 /p:Configuration=Release .\Projects\VC2019\lcms2.sln
+msbuild /t:lcms2_DLL /p:Platform=%2 /p:Configuration=Release .\Projects\VC%XVS_VER%\lcms2.sln
 IF ERRORLEVEL 1 exit /b 1
 
 copy /y "bin\lcms2.lib" "%XSRC_DIR%\lib%~3"

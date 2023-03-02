@@ -46,17 +46,19 @@ void* WebpReaderWriter::ReadImage(int& width,
 			return NULL;
 		}
 
+		void* transform = NULL;
+#ifndef WINXP
 		// Check for ICCP chunk
 		WebPData data;
 		data.bytes = (const uint8_t*)buffer;
 		data.size = sizebytes;
 		WebPDemuxer* demuxer = WebPDemux(&data);
 		WebPChunkIterator chunk_iter;
-		void* transform = NULL;
 		if (WebPDemuxGetChunk(demuxer, "ICCP", 1, &chunk_iter))
 			transform = ICCProfileTransform::CreateTransform(chunk_iter.chunk.bytes, chunk_iter.chunk.size, ICCProfileTransform::FORMAT_BGRA);
 		WebPDemuxReleaseChunkIterator(&chunk_iter);
 		WebPDemuxDelete(demuxer);
+#endif
 
 		has_animation = features.has_animation;
 		if (!has_animation) {
@@ -69,9 +71,11 @@ void* WebpReaderWriter::ReadImage(int& width,
 			}
 			WebPDecodeBGRAInto((const uint8_t*)buffer, sizebytes, pPixelData, size, nStride);
 
+#ifndef WINXP
 			// ICCP transform in place
 			ICCProfileTransform::DoTransform(transform, pPixelData, pPixelData, width, height);
 			ICCProfileTransform::DeleteTransform(transform);
+#endif
 
 			return pPixelData;
 		}
@@ -122,11 +126,17 @@ void* WebpReaderWriter::ReadImage(int& width,
 		return NULL;
 	}
 
+#ifndef WINXP
 	// Try copying with ICCP transform
 	if (!ICCProfileTransform::DoTransform(cache.transform, buf, pPixelData, width, height)) {
 		// Copy frame to output buffer directly otherwise
 		memcpy(pPixelData, buf, width * height * nchannels);
 	}
+#else
+	// Copy frame to output buffer (XP does not support CMS)
+	memcpy(pPixelData, buf, width * height * nchannels);
+#endif
+
 	return pPixelData;
 
 }
@@ -134,7 +144,9 @@ void* WebpReaderWriter::ReadImage(int& width,
 void WebpReaderWriter::DeleteCache() {
 	WebPAnimDecoderDelete(cache.decoder);
 	WebPDataClear(&cache.data);
+#ifndef WINXP
 	ICCProfileTransform::DeleteTransform(cache.transform);
+#endif
 	cache = { 0 };
 }
 
