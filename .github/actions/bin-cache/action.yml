@@ -50,6 +50,11 @@ runs:
           src/JPEGView/libpng-apng/lib/*.lib
           src/JPEGView/libpng-apng/lib64/*.lib
 
+          src/JPEGView/lcms2/bin/*.dll
+          src/JPEGView/lcms2/bin64/*.dll
+          src/JPEGView/lcms2/lib/*.lib
+          src/JPEGView/lcms2/lib64/*.lib
+
           src/JPEGView/libheif/bin/*.dll
           src/JPEGView/libheif/bin64/*.dll
           src/JPEGView/libheif/lib/*.lib
@@ -95,6 +100,11 @@ runs:
       if: ${{ steps.cache-bin.outputs.cache-hit != 'true' }}
       shell: cmd
       run: call extras\scripts\build-libpng-apng.bat
+
+    - name: lcms2
+      if: ${{ steps.cache-bin.outputs.cache-hit != 'true' }}
+      shell: cmd
+      run: call extras\scripts\build-lcms2.bat
 
     - name: libheif + libavif
       if: ${{ steps.cache-bin.outputs.cache-hit != 'true' }}
