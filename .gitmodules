@@ -32,3 +32,6 @@
 [submodule "extras/third_party/qoi"]
 	path = extras/third_party/qoi
 	url = https://github.com/phoboslab/qoi
+[submodule "extras/third_party/Little-CMS"]
+	path = extras/third_party/Little-CMS
+	url = https://github.com/mm2/Little-CMS
