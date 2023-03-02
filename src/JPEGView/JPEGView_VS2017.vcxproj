@@ -313,6 +313,7 @@
     <ClCompile Include="Helpers.cpp" />
     <ClCompile Include="HelpersGUI.cpp" />
     <ClCompile Include="HistogramCorr.cpp" />
+    <ClCompile Include="ICCProfileTransform.cpp" />
     <ClCompile Include="ImageLoadThread.cpp" />
     <ClCompile Include="InfoButtonPanel.cpp" />
     <ClCompile Include="InfoButtonPanelCtl.cpp" />
@@ -397,6 +398,7 @@
     <ClInclude Include="Helpers.h" />
     <ClInclude Include="HelpersGUI.h" />
     <ClInclude Include="HistogramCorr.h" />
+    <ClInclude Include="ICCProfileTransform.h" />
     <ClInclude Include="ImageLoadThread.h" />
     <ClInclude Include="ImageProcessingTypes.h" />
     <ClInclude Include="InfoButtonPanel.h" />
