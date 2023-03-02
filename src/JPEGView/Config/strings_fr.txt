@@ -280,7 +280,7 @@ Rotate image and fit to screen	Pivoter et ajuster l'image à la fenêtre
 Rotate image by user-defined angle	Pivoter selon un angle au choix
 Rotate the image by dragging with the mouse.	Cliquez et bougez la souris dans la direction où vous souhaitez faire pivoter l'image.
 SIMD mode used	Mode SIMD utilisé
-Same as Image	
+Same as Image	Mêmes proportions que l'image
 Saturation	Saturation
 Save	Enregistrer
 Save (%s)/ delete (%s) image processing parameters in/from parameter DB	Sauvegarder (%s)/supprimer (%s) le traitement pour cette image dans la DB
@@ -381,7 +381,7 @@ new menu entry	nouvelle entrée de menu
 no	non
 off	Inactif
 on	Actif
-user-defined	
+user-defined	Défini par l'utilisateur
 yes	oui
 
 // ::: Popup Menu Strings ::: (unsorted to preserve context) //
