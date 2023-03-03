@@ -2616,13 +2616,20 @@ void CMainDlg::PerformZoom(double dValue, bool bExponent, bool bZoomToMouse, boo
 	double dZoomMin = max(0.0001, min(Helpers::ZoomMin, GetZoomFactorForFitToScreen(false, false) * 0.5));
 	m_dZoom = max(dZoomMin, min(Helpers::ZoomMax, m_dZoom));
 
+	// always try to snap to 100%... aka if within 1% of 100%, snap exactly to it
 	if (abs(m_dZoom - 1.0) < 0.01) {
 		m_dZoom = 1.0;
 	}
 
 	// only pause on some percent if enabled
-	if (CSettingsProvider::This().ZoomPausePercent() != 0) {
-		double pauseAtZoom = CSettingsProvider::This().ZoomPausePercent() / 100.0;
+	double pauseAtZoom = CSettingsProvider::This().ZoomPauseFactor();
+	if (pauseAtZoom != 0) {
+		// snap to zoom factor... aka if within 1% of the set zoom factor, snap exactly to it
+		// skip it if the zoom factor is 100% since it's already checked above - save one expensive calculation of abs()
+		if (pauseAtZoom != 1 && abs(m_dZoom - pauseAtZoom) < 0.01) {
+			m_dZoom = pauseAtZoom;
+		}
+
 		if ((dOldZoom - pauseAtZoom) * (m_dZoom - pauseAtZoom) <= 0 && m_bInZooming && !m_bZoomMode) {
 			// make a stop at 100 % (or whatever % is configured)
 			m_dZoom = pauseAtZoom;
