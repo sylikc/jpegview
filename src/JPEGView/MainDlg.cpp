@@ -453,6 +453,11 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 	CBrush backBrush;
 	backBrush.CreateSolidBrush(CSettingsProvider::This().ColorBackground());
 
+#ifdef DEBUG
+	CString a; a.Format(_T("client rect w/h pix: %d %d = %d\n"), m_clientRect.Width(), m_clientRect.Height(), m_clientRect.Width() * m_clientRect.Height());
+	::OutputDebugString(a);
+#endif
+
 	std::list<CRect> excludedClippingRects;
 
 	// Panels are handled over memory DCs to eliminate flickering

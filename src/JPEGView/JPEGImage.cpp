@@ -14,6 +14,10 @@
 #include <math.h>
 #include <assert.h>
 
+// Hacky workaround.  Look at comment block in CJPEGImage::Resample()
+// undefine this flag to investigate which optimization might cause that particular failure (TODO)
+#define AVX_SSE_FREEZE_FALLBACK
+
 ///////////////////////////////////////////////////////////////////////////////////
 // Static helpers
 ///////////////////////////////////////////////////////////////////////////////////
@@ -565,7 +569,31 @@ void CJPEGImage::ResampleWithPan(void* & pDIBPixels, void* & pDIBPixelsLUTProces
 
 void* CJPEGImage::Resample(CSize fullTargetSize, CSize clippingSize, CPoint targetOffset, 
 						  EProcessingFlags eProcFlags, double dSharpen, double dRotation, EResizeType eResizeType) {
+
 	Helpers::CPUType cpu = CSettingsProvider::This().AlgorithmImplementation();
+	// NOTE: Hacky workaround... there is probably a very obscure bug in the AVX2 implementation
+	//       which causes WaitForSingleObject to wait indefinitely on SampleUp_HQ_SIMD()
+	//       when window dimensions are > 3224 pixels wide.
+	//
+	// This obscure bug ONLY manifests itself on RELEASE builds, and not DEBUG builds, meaning
+	// it happens only when optimization is turned on.  I haven't had the chance to trial and error exactly
+	// which optimization flag causes the freeze, but that's a future TODO
+	//
+	// A lot of trial and error tests has a freeze happening at 3226 pixels wide, but not at 3224 pixels. (client rect pixels)
+	// (I was not able to test how this all behaves if it's 3224 pixels high, so, when displays get that cool, then we might have to revisit this hack)
+	// The AVX2 code is very advanced, and I don't have the expertise to debug it -sylikc
+	//
+	// The known workarounds based on GitHub issues is to either set CPUType=SSE or HighQualityResampling=false
+	//
+	// So, here, we detect and fallback to SSE when the conditions are met.  To be safe, I set the limit at 3200 pixels
+#ifdef AVX_SSE_FREEZE_FALLBACK
+	if (cpu == Helpers::CPU_AVX2 && clippingSize.cx > 3200) {
+		// only override the usage for SSE for these specific conditions
+		// AVX2 is supposed to be ~2.4x faster than SSE
+		cpu = Helpers::CPU_SSE;
+	}
+#endif
+
 	EFilterType filter = CSettingsProvider::This().DownsamplingFilter();
 
 	if (fullTargetSize.cx > 65535 || fullTargetSize.cy > 65535) return NULL;
