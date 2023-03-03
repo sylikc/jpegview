@@ -85,6 +85,10 @@ namespace Helpers {
 	const double ZoomMax = DBL_MAX; // unbound the maximum zoom, previously set at 16.0 (1600%)
 	const double ZoomMin = DBL_MIN; // unbound the minimum zoom, previously set at 0.1 (10%)
 
+	// this is specified all over the code as the maximum image dimension that one side can be
+	// this particular variable will have limited usage, but is used to reflect that limitation.  DO NOT CHANGE
+	const int MAX_IMAGE_DIMENSION = 65535;
+
 	// Round to integer
 	inline int RoundToInt(double d) {
 		return (d < 0) ? (int)(d - 0.5) : (int)(d + 0.5);

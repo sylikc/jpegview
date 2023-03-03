@@ -554,7 +554,27 @@ CRect GetWindowRectMatchingImageSize(HWND hWnd, CSize minSize, CSize maxSize, do
 	int nOrigWidth = (pImage == NULL) ? ::GetSystemMetrics(SM_CXSCREEN) / 2 : pImage->OrigWidth();
 	int nOrigWidthUnzoomed = nOrigWidth;
 	int nOrigHeight = (pImage == NULL) ? ::GetSystemMetrics(SM_CYSCREEN) / 2 : pImage->OrigHeight();
-	if (dZoom > 0) {
+	if (dZoom == ZoomMax) {
+		// NOTE: somewhat hacky, but the original code did not account for ZoomMax == DBL_MAX, causing overflows
+		//       This workaround artificially calculates an image that is == the maximum allowed dimensions,
+		//       so as to not overflow int or double
+		//
+		// when dZoom was unbounded to DBL_MAX in 1.1.44, doing any arithmetic would cause the nOrig* to overflow
+		// So just set to scaled maximum allowed image dimension on one side
+		// the math below will not overflow, and it stays within the bounds of an integer
+		if (nOrigWidth == nOrigHeight) {
+			// ratio is 1:1
+			nOrigWidth = nOrigHeight = MAX_IMAGE_DIMENSION;
+		} else if (nOrigWidth > nOrigHeight) {
+			// wider than high
+			nOrigHeight = (int)((double)nOrigHeight / nOrigWidth * MAX_IMAGE_DIMENSION);  // max * height/width ratio
+			nOrigWidth = MAX_IMAGE_DIMENSION;
+		} else {
+			// higher than wide
+			nOrigWidth = (int)((double)nOrigWidth / nOrigHeight * MAX_IMAGE_DIMENSION);  // max * width/height ratio
+			nOrigHeight = MAX_IMAGE_DIMENSION;
+		}
+	} else if (dZoom > 0) {
 		nOrigWidth = (int)(nOrigWidth * dZoom + 0.5);
 		nOrigHeight = (int)(nOrigHeight * dZoom + 0.5);
 	}
