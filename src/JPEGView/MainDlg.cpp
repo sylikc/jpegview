@@ -455,7 +455,7 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 
 #ifdef DEBUG
 	CString a; a.Format(_T("client rect w/h pix: %d %d = %d\n"), m_clientRect.Width(), m_clientRect.Height(), m_clientRect.Width() * m_clientRect.Height());
-	::OutputDebugString(a);
+	//::OutputDebugString(a);
 #endif
 
 	std::list<CRect> excludedClippingRects;
@@ -2648,11 +2648,35 @@ void CMainDlg::PerformZoom(double dValue, bool bExponent, bool bZoomToMouse, boo
 		nNewYSize = (int)(m_pCurrentImage->OrigHeight() * m_dZoom + 0.5);
 	}
 
-	// because we've increased the maximum zoom allowed, only actually perform the zoom if the old and new dimensions differ
-	// the float arithmetic doesn't always come up with the same answer
-	if (nOldXSize == nNewXSize && nOldYSize == nNewYSize) {
-		m_dZoom = dOldZoom;  // restore previous zoom value, then do nothing
+#ifdef DEBUG
+	CString a; a.Format(_T("dZoom dOldZoom: %f %f\n"), m_dZoom, dOldZoom);
+	::OutputDebugString(a);
+#endif
+
+	// because we've increased/decreased to the maximum zoom allowed,
+	// only actually perform the zoom if the old and new dimensions differ,
+	// or at the edge of allowable max dimension (maximum 65535 pixels)
+	if (nNewXSize == 65535 || nNewYSize == 65535) {
+		// zooming in does not require restoring the previous zoom value
+		// because the code which checks the 65535 will re-scale the zoom factor to ensure it never exceeds 65535
 		return;
+	}
+
+	// the float arithmetic doesn't always come up with the same answer, but the new sizes can be directly compared
+	if (nNewXSize == nOldXSize && nNewYSize == nOldYSize) {
+		// because there's rounding errors, it is possible to get stuck zooming out from fractional zoom,
+		// due to the new/old size being the same, but the zoom factor still changing
+		// hence, only reset the zoom value IF when zooming out (aka, it is getting smaller)
+		//
+		// when zooming in, do not set the old zoom value so that it can "escape" the initial few steps where
+		// the zoom ratio has changed, but the size is still the same, due to rounding errors
+		if (bExponent && dValue < 0) {
+			// zooming out
+			// NOTE: this gets triggered on pauseAtZoom
+			m_dZoom = dOldZoom;  // restore previous zoom value
+		}
+
+		return; // then do nothing
 	}
 
 
