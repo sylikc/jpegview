@@ -2654,14 +2654,7 @@ void CMainDlg::PerformZoom(double dValue, bool bExponent, bool bZoomToMouse, boo
 #endif
 
 	// because we've increased/decreased to the maximum zoom allowed,
-	// only actually perform the zoom if the old and new dimensions differ,
-	// or at the edge of allowable max dimension (maximum 65535 pixels)
-	if (nNewXSize == 65535 || nNewYSize == 65535) {
-		// zooming in does not require restoring the previous zoom value
-		// because the code which checks the 65535 will re-scale the zoom factor to ensure it never exceeds 65535
-		return;
-	}
-
+	// only actually perform the zoom if the old and new dimensions differ
 	// the float arithmetic doesn't always come up with the same answer, but the new sizes can be directly compared
 	if (nNewXSize == nOldXSize && nNewYSize == nOldYSize) {
 		// because there's rounding errors, it is possible to get stuck zooming out from fractional zoom,
@@ -2675,6 +2668,8 @@ void CMainDlg::PerformZoom(double dValue, bool bExponent, bool bZoomToMouse, boo
 			// NOTE: this gets triggered on pauseAtZoom
 			m_dZoom = dOldZoom;  // restore previous zoom value
 		}
+		// zooming in does not require restoring the previous zoom value
+		// because the code which checks the 65535 will re-scale the zoom factor to ensure it never exceeds 65535
 
 		return; // then do nothing
 	}
