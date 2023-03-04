@@ -29,6 +29,7 @@
 		<?define JxlDllFolder = "$(var.JPEGView.ProjectDir)\libjxl\bin64" ?>
 		<?define HeifDllFolder = "$(var.JPEGView.ProjectDir)\libheif\bin64" ?>
 		<?define AvifDllFolder = "$(var.JPEGView.ProjectDir)\libavif\bin64" ?>
+		<?define LcmsDllFolder = "$(var.JPEGView.ProjectDir)\lcms2\bin64" ?>
 	<?else ?>
 		<?define Win64 = "no" ?>
 		<?define PlatformProgramFilesFolder = "ProgramFilesFolder" ?>
@@ -36,6 +37,7 @@
 		<?define JxlDllFolder = "$(var.JPEGView.ProjectDir)\libjxl\bin" ?>
 		<?define HeifDllFolder = "$(var.JPEGView.ProjectDir)\libheif\bin" ?>
 		<?define AvifDllFolder = "$(var.JPEGView.ProjectDir)\libavif\bin" ?>
+		<?define LcmsDllFolder = "$(var.JPEGView.ProjectDir)\lcms2\bin" ?>
 	<?endif ?>
 
 	<!--
@@ -205,13 +207,15 @@
 				<ComponentRef Id="jxl_decDLL"/>
 				<ComponentRef Id="jxl_threadsDLL"/>
 			</Feature>
-			<Feature Id="FeatureHEIF" Title="HEIF/AVIF Support">
+			<Feature Id="FeatureHEIF" Title="HEIF/HEIC/AVIF Support">
 				<ComponentRef Id="dav1dDLL"/>
 				<ComponentRef Id="de265DLL"/>
 				<ComponentRef Id="heifDLL"/>
 				<ComponentRef Id="avifDLL"/>
 			</Feature>
-
+			<Feature Id="FeatureLCMS" Title="ICC Profile Support (WebP, JPEG XL, HEIF/HEIC/AVIF)">
+				<ComponentRef Id="lcmsDLL"/>
+			</Feature>
 
 			<Feature Id="FeatureWIC" Title="WIC Support">
 				<ComponentRef Id="WICLoaderDLL"/>
@@ -484,6 +488,13 @@
 					<Component Id="avifDLL" Guid="1597e47e-b6ae-44f4-b28a-6b7503bdd1d2">
 						<File Id="avif.dll" Name="avif.dll" Source="$(var.AvifDllFolder)\avif.dll" />
 					</Component>
+
+
+					<!-- DLLs required for ICC Profile support (WebP, JXL, HEIF/HEIC/AVIF) -->
+					<Component Id="lcmsDLL" Guid="2a7a5f9a-4100-4eee-8706-a6b9a2a8cf5c">
+						<File Id="lcms2.dll" Name="lcms2.dll" Source="$(var.LcmsDllFolder)\lcms2.dll" />
+					</Component>
+
 
 					<!-- DLL required for WIC support -->
 					<Component Id="WICLoaderDLL" Guid="742ca948-b7d3-4ca4-9aab-2592616416ed">
