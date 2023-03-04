@@ -38,7 +38,7 @@ Basic on-the-fly image processing is provided - allowing adjusting typical param
 
 ### Other Features:
 
-* Small and fast, uses SSE2 and up to 4 CPU cores
+* Small and fast, uses AVX2/SSE2 and up to 4 CPU cores
 * High quality resampling filter, preserving sharpness of images
 * Basic image processing tools can be applied realtime during viewing
 * Movie/Slideshow mode - to play folder of JPEGs as movie
@@ -126,3 +126,6 @@ Special thanks to [qbnu](https://github.com/qbnu) for adding additional codec su
 * JPEG XL with animation support
 * HEIF/HEIC/AVIF support
 * QOI support
+* ICC Profile support for WebP, JPEG XL, HEIF/HEIC, AVIF
+
+Thanks to all the translators which keep JPEGView strings up-to-date in different languages!  See [CHANGELOG.txt](https://github.com/sylikc/jpegview/blob/master/CHANGELOG.txt) to find credits for translators at each release!

@@ -1,6 +1,22 @@
 JPEGView Changelog
 ******************
 
+[1.2.45] 2023-03-04
+New features:
+- Add support for ICC Profiles embedded in WebP, JPEG XL, HEIF/HEIC and AVIF images.
+  Set option UseEmbeddedColorProfiles=true to enable.
+  NOTE: Currently, this option will disable Animated PNG due to usage of GDI+ (see 1.1.44 release notes)
+  PR #156, thanks qbnu (GH https://github.com/qbnu)
+Bugs fixed:
+- Fixed: Freeze in JPEGView when CPUType set/auto-detected as AVX2, HighQualityResampling=true, and window width is > 3200 pixels (either spanned over multi-monitor or on a single monitor).
+  (This outstanding bug had been extensively reported since v1.0.35+.  Thanks to everyone who provided samples, videos, and system configurations to help identify the specific conditions necessary to trigger this bug!)
+- Fixed: Regression introduced in 1.1.44 which caused "Fit Image to Screen" to create a tiny window
+  instead of a window which filled the screen.
+- Fixed: In certain cases with certain image, after zooming out to 0% (as far as allowed), zooming in did not work and got stuck at 0%
+- Fixed: FileNameFormat option %filesize% substitution now shows MB when exceeding 1 MB, not 100 MB
+Other changes:
+- Updated French translation, thanks LaurentGrenet (GH https://github.com/LaurentGrenet)
+
 [1.1.44] 2023-02-27
 New features:
 - Add support for Animated AVIF (AVIF Sequence)
@@ -38,9 +54,10 @@ Other changes:
 - New INI file setting: "ZoomPausePercent"
   The default behavior of JPEGview is to briefly pause at 100% when continuously zooming in or out. (This ensures you can always get to perfectly 100%)
   This new setting allows the user to configure to a different percentage, or disable to zoom continuously with no interruption
-- Reorder JPEGView.ini options gouping similar options and adding comment headers
+- Reorder JPEGView.ini options grouping similar options and adding comment headers
   Options should be easier to find and logically grouped. Previously, options were haphazardly added and weren't sorted in any particular order
   (It might be a little painful to move your existing options over to the new INI format, but future options will be much easier to find!)
+  (Your existing INI will continue to work, if you choose to continue to use it, but you'll have to add in new options manually)
 - Updated Russian translation, thanks Dmitry Yerokhin
 - Updated Japanese translation, thanks maboroshin (GH https://github.com/maboroshin)
 - Updated Chinese Simplified translation, thanks dukeng (GH https://github.com/dunkeng)

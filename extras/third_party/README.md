@@ -7,6 +7,8 @@ The compiled binaries to these sources are included in JPEGView source, so these
 To clone all the versions specified, use the following command:
 `git submodule update --init --recursive`
 
+_FYI: Each submodule depedency has a build script located in `extras\scripts`.  The build instructions below may possibly be outdated._
+
 A brief description along with the licenses for each are included below.  Some have their own submodules or linked libraries.
 
 ## libheif
@@ -130,10 +132,26 @@ License: [zlib permissive license](https://www.zlib.net/zlib_license.html)
 
 ## libwebp
 
-libwebp library is built and included by `WEBP.dll` in `src\WEBP\lib`
+libwebp library is built and included in `src\JPEGView\libwebp`
 
 License: [WebM Software Licence](https://www.webmproject.org/license/software/)
 
 While the library source code is GPL-compatible, the full source files are not necessary to compile JPEGView.
 
 The submodule indicates the version that the current *.lib and header files are from.
+
+## Little-CMS
+
+Little-CMS 2 the color management engine used to support ICC Profiles for WebP, JPEG XL, HEIF/HEIC, AVIF
+
+It is built and included in `src\JPEGView\lcms2`
+
+License: [MIT License](https://github.com/mm2/Little-CMS/blob/master/COPYING)
+
+## qoi
+
+Quite OK Image Format
+
+License: [MIT License](https://github.com/phoboslab/qoi/blob/master/LICENSE)
+
+QOI source is directly compiled into JPEGView with no binary dependencies.  This submodule indicates the version that is included in JPEGView.
