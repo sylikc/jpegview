@@ -370,12 +370,12 @@ Window mode	창 모드
 Windows 8 (and above) blocks JPEGView from changing the default program for these file extensions.	Windows 8 이상에서는 JPEG View가 이러한 파일 확장자의 기본 프로그램을 변경하지 못하도록 차단합니다.
 Writing the resulting JPEG file to disk failed	결과 JPEG 파일을 디스크에 쓰지 못했습니다
 Y - B	Y - B
-Year short form (2 digits)	연도 단축 형식 (2 자리)
+Year short form (2 digits)	연도 단축 형식 (2자리)
 Yellow-Blue	노랑-파랑
 Zoom 1:1 (100 %)	1:1 배율 (100 %)
 Zoom in (%s)/Zoom out (%s)	확대 (%s)/축소 (%s)
 Zoom in/out image	확대/축소
-Zoom mode (drag mouse to zoom)	확대/축소 모드(마우스를 끌어 확대/축소)
+Zoom mode (drag mouse to zoom)	확대/축소 모드 (마우스를 끌어 확대/축소)
 and image processing (brightness/contrast/sharpen) parameters between images	및 영상 간 영상 처리 (밝기/휘도/휘도) 매개변수
 cm	센티미터
 in	인치
@@ -433,14 +433,14 @@ Playback speed	재생 속도
 50 fps	50 fps
 100 fps	100 fps
 Transform image	이미지 변환
-Rotate +90	+90 회전
-Rotate -90	-90 회전
+Rotate +90	+90도 회전
+Rotate -90	-90도 회전
 Rotate...	회전
 Change size...	크기 변경..
 Perspective correction...	원근 보정...
 Mirror horizontally	수평으로 대칭
 Mirror vertically	수직으로 대칭
-Rotate 180	180 회전
+Rotate 180	180도 회전
 Auto correction	자동 보정
 Save parameters to DB	DB에 매개변수 저장
 Clear parameters from DB	DB에서 매개변수 지우기
