@@ -220,7 +220,7 @@ CSettingsProvider::CSettingsProvider(void) {
 	}
 
 	m_bUseZoomSteps = GetBool(_T("UseZoomSteps"), false);
-	m_sCustomZoomSteps = ParseCustomZoomSteps(GetString(_T("CustomZoomSteps"), _T("100,200,300")));
+	m_sCustomZoomSteps = ParseCustomZoomSteps(GetString(_T("CustomZoomSteps"), _T("3, 5, 10, 14, 16, 20, 25, 33, 50, 75, 100, 125, 150, 175, 200, 250, 300, 400, 600, 800, 1000, 1200, 1600, 2400, 3200, 6400")));
 
 	m_colorBackground = GetColor(_T("BackgroundColor"), 0);
 	m_colorGUI = GetColor(_T("GUIColor"), RGB(243, 242, 231));
