@@ -131,6 +131,11 @@ public:
 	bool BeepSoundAlert() { return m_bBeepSoundAlert; }
 	double ZoomPauseFactor() { return m_zoomPauseFactor; }  // while internally this is represented in doubles, using a whole number percent simplifies it for the user... configuring doubles is not user friendly at all
 
+	std::vector<double> ParseCustomZoomSteps(LPCTSTR data);
+	bool UseZoomSteps() { return m_bUseZoomSteps;  }
+	std::vector<double> CustomZoomSteps() { return m_sCustomZoomSteps; }
+	
+
 	// Returns if a user INI file exists
 	bool ExistsUserINI();
 	// Copies the user INI file (in AppData/Roaming) from the INI file template JPEGView.ini.tpl
@@ -296,6 +301,8 @@ private:
 	bool m_bFlashWindowAlert;
 	bool m_bBeepSoundAlert;
 	int m_zoomPauseFactor;
+	bool m_bUseZoomSteps;
+	std::vector<double> m_sCustomZoomSteps;
 
 	std::list<CUserCommand*> m_userCommands;
 	std::list<CUserCommand*> m_openWithCommands;

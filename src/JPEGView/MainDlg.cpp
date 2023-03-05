@@ -2607,14 +2607,18 @@ bool CMainDlg::PerformZoom(double dValue, bool bExponent, bool bZoomToMouse, boo
 	if (bExponent) {
 		m_dZoom = m_dZoom * pow(m_dZoomMult, dValue);
 
-		std::vector<double> zoomLevels = { 0.03, 0.05, 0.1, 0.14, 0.16, 0.20, 0.25, 0.33, 0.5, 0.67, 0.75, 0.8, 0.9, 1.0, 1.1, 1.25, 1.5, 1.75, 2.0, 2.5, 3.0, 4.0, 5.0 };
+		bool useZoomSteps = CSettingsProvider::This().UseZoomSteps();
 
-		if (dOldZoom > zoomLevels[0] && dOldZoom < zoomLevels.back()) {
-			if (dValue > 0) {
-				m_dZoom = zoomLevels[distance(zoomLevels.begin(), std::lower_bound(zoomLevels.begin(), zoomLevels.end(), dOldZoom + 0.01))];
-			}
-			else {
-				m_dZoom = zoomLevels[distance(zoomLevels.begin(), std::lower_bound(zoomLevels.begin(), zoomLevels.end(), dOldZoom)) - 1];
+		if (useZoomSteps) {
+			std::vector<double> zoomLevels = CSettingsProvider::This().CustomZoomSteps();
+
+			if (dOldZoom > zoomLevels[0] && dOldZoom < zoomLevels.back()) {
+				if (dValue > 0) {
+					m_dZoom = zoomLevels[distance(zoomLevels.begin(), std::lower_bound(zoomLevels.begin(), zoomLevels.end(), dOldZoom + 0.01))];
+				}
+				else {
+					m_dZoom = zoomLevels[distance(zoomLevels.begin(), std::lower_bound(zoomLevels.begin(), zoomLevels.end(), dOldZoom)) - 1];
+				}
 			}
 		}
 
