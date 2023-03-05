@@ -154,6 +154,17 @@ CSettingsProvider::CSettingsProvider(void) {
 		m_eDownsamplingFilter = Filter_Downsampling_Best_Quality;
 	}
 
+	CString sHQResampling = GetString(_T("HighQualityResampling"), _T("Both"));
+	if (sHQResampling.CompareNoCase(_T("None")) == 0) {
+		m_eHQRS = Resample_None;
+	} else if (sHQResampling.CompareNoCase(_T("DownSample")) == 0) {
+		m_eHQRS = Resample_Down;
+	} else if (sHQResampling.CompareNoCase(_T("UpSample")) == 0) {
+		m_eHQRS = Resample_Up;
+	} else {
+		m_eHQRS = Resample_Both; // default
+	}
+
 	m_bNavigateMouseWheel = GetBool(_T("NavigateWithMouseWheel"), false);
 	m_dMouseWheelZoomSpeed = GetDouble(_T("MouseWheelZoomSpeed"), 1.0, 0.1, 10);
 
@@ -436,7 +447,6 @@ void CSettingsProvider::ReadWriteableINISettings() {
 	m_eAutoZoomModeFullscreen = GetAutoZoomMode(_T("AutoZoomModeFullscreen"), m_eAutoZoomMode);
 	m_bShowNavPanel = GetBool(_T("ShowNavPanel"), true);
 
-	m_bHQRS = GetBool(_T("HighQualityResampling"), true);
 	m_bDefaultSelectionMode = GetBool(_T("DefaultSelectionMode"), true);
 	m_bShowFileName = GetBool(_T("ShowFileName"), false);
 	m_bShowFileInfo = GetBool(_T("ShowFileInfo"), false);

@@ -2,7 +2,7 @@
 
 #include "Helpers.h"
 
-// Processing flags for image processing
+// Processing flags for image processing (uses bit arithemtic)
 enum EProcessingFlags {
 	PFLAG_None = 0,
 	PFLAG_AutoContrast = 1,
@@ -11,7 +11,9 @@ enum EProcessingFlags {
 	PFLAG_HighQualityResampling = 8,
 	PFLAG_KeepParams = 16, // Keep parameters between images
 	PFLAG_LandscapeMode = 32,
-	PFLAG_NoProcessingAfterLoad = 64
+	PFLAG_NoProcessingAfterLoad = 64,
+	PFLAG_HighQualityResamplingNoUp = 128, // there are other places other than the image where resampling happens (e.g. the preview), so enable both by default and flag off (so default is on)
+	PFLAG_HighQualityResamplingNoDown = 256
 };
 
 static inline EProcessingFlags SetProcessingFlag(EProcessingFlags eFlags, EProcessingFlags eFlagToSet, bool bValue) {

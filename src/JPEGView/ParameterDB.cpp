@@ -120,6 +120,7 @@ void CParameterDBEntry::InitFromProcessParams(const CImageProcessingParams & pro
 	if (GetProcessingFlag(eFlags, PFLAG_AutoContrast)) flags |= 1;
 	if (GetProcessingFlag(eFlags, PFLAG_LDC)) flags |= 2;
 	if (GetProcessingFlag(eFlags, PFLAG_HighQualityResampling)) flags |= 4;
+	// NOTE: TODO HighQualityResampling without up or down is not supported due to all 8 bits of flags used
 
 	if (rotationParams.Rotation == 90) {
 		flags |= 8;
@@ -160,6 +161,7 @@ void CParameterDBEntry::WriteToProcessParams(CImageProcessingParams & processPar
 	eFlags = SetProcessingFlag(eFlags, PFLAG_AutoContrast, (flags & 1) != 0);
 	eFlags = SetProcessingFlag(eFlags, PFLAG_LDC, (flags & 2) != 0);
 	eFlags = SetProcessingFlag(eFlags, PFLAG_HighQualityResampling, (flags & 4) != 0);
+	// NOTE: TODO HighQualityResampling without up or down is not supported due to all 8 bits of flags used, this will enable BOTH
 
 	if ((flags & 24) == 0) {
 		rotationParams.Rotation = 0;

@@ -14,6 +14,13 @@ typedef signed int int32;
 /// unsigned 32 bit integer value
 typedef unsigned int uint32;
 
+enum EHQResampling {
+	Resample_None, // turn off HQ resampling
+	Resample_Up, // only resample Up
+	Resample_Down, // only resample Down
+	Resample_Both // resample both Up and Down
+};
+
 enum EFilterType {
 	Filter_Downsampling_Best_Quality,  // prefer this filter for sampling down
 	Filter_Downsampling_No_Aliasing, // this is a Lanczos type filter

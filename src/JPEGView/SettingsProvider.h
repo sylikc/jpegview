@@ -28,7 +28,7 @@ public:
 	double CyanRed() { return m_dCyanRed; }
 	double MagentaGreen() { return m_dMagentaGreen; }
 	double YellowBlue() { return m_dYellowBlue; }
-	bool HighQualityResampling() { return m_bHQRS; }
+	EHQResampling HighQualityResampling() { return m_eHQRS; }
 	bool DefaultSelectionMode() { return m_bDefaultSelectionMode; }
 	bool ShowFileName() { return m_bShowFileName; }
 	bool ShowFileInfo() { return m_bShowFileInfo; }
@@ -196,7 +196,7 @@ private:
 	double m_dCyanRed;
 	double m_dMagentaGreen;
 	double m_dYellowBlue;
-	bool m_bHQRS;
+	EHQResampling m_eHQRS;
 	bool m_bDefaultSelectionMode;
 	bool m_bShowFileName;
 	bool m_bShowFileInfo;

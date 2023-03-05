@@ -116,7 +116,17 @@ static CImageProcessingParams GetNoProcessingParams() {
 static EProcessingFlags GetDefaultProcessingFlags(bool bLandscapeMode) {
 	CSettingsProvider& sp = CSettingsProvider::This();
 	EProcessingFlags eProcFlags = PFLAG_None;
-	eProcFlags = SetProcessingFlag(eProcFlags, PFLAG_HighQualityResampling, sp.HighQualityResampling());
+
+	EHQResampling eHQR = sp.HighQualityResampling();
+	eProcFlags = SetProcessingFlag(eProcFlags, PFLAG_HighQualityResampling, eHQR != Resample_None);
+	if (eHQR == Resample_Down) {
+		// turn off resample up
+		eProcFlags = SetProcessingFlag(eProcFlags, PFLAG_HighQualityResamplingNoUp, true);
+	} else if (eHQR == Resample_Up) {
+		// turn off resample down
+		eProcFlags = SetProcessingFlag(eProcFlags, PFLAG_HighQualityResamplingNoDown, true);
+	}
+
 	eProcFlags = SetProcessingFlag(eProcFlags, PFLAG_AutoContrast, sp.AutoContrastCorrection());
 	eProcFlags = SetProcessingFlag(eProcFlags, PFLAG_LDC, sp.LocalDensityCorrection());
 	eProcFlags = SetProcessingFlag(eProcFlags, PFLAG_LandscapeMode, bLandscapeMode);
@@ -126,7 +136,9 @@ static EProcessingFlags GetDefaultProcessingFlags(bool bLandscapeMode) {
 // Create processing flags from literal boolean values
 static EProcessingFlags CreateProcessingFlags(bool bHQResampling, bool bAutoContrast, 
 											  bool bAutoContrastSection, bool bLDC, bool bKeepParams,
-											  bool bLandscapeMode) {
+											  bool bLandscapeMode,
+											  bool bHQResamplingNoUp = false,
+											  bool bHQResamplingNoDown = false) {
 	EProcessingFlags eProcFlags = PFLAG_None;
 	eProcFlags = SetProcessingFlag(eProcFlags, PFLAG_HighQualityResampling, bHQResampling);
 	eProcFlags = SetProcessingFlag(eProcFlags, PFLAG_AutoContrast, bAutoContrast);
@@ -134,6 +146,10 @@ static EProcessingFlags CreateProcessingFlags(bool bHQResampling, bool bAutoCont
 	eProcFlags = SetProcessingFlag(eProcFlags, PFLAG_LDC, bLDC);
 	eProcFlags = SetProcessingFlag(eProcFlags, PFLAG_KeepParams, bKeepParams);
 	eProcFlags = SetProcessingFlag(eProcFlags, PFLAG_LandscapeMode, bLandscapeMode);
+
+	eProcFlags = SetProcessingFlag(eProcFlags, PFLAG_HighQualityResamplingNoUp, bHQResamplingNoUp);
+	eProcFlags = SetProcessingFlag(eProcFlags, PFLAG_HighQualityResamplingNoDown, bHQResamplingNoDown);
+
 	return eProcFlags;
 }
 
@@ -502,9 +518,18 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 			pDIBData = m_pTiltCorrectionPanelCtl->GetDIBForPreview(newSize, clippedSize, offsetsInImage, 
 				*m_pImageProcParams, CreateProcessingFlags(false, m_bAutoContrast, m_bAutoContrastSection, m_bLDC, false, m_bLandscapeMode));
 		} else {
+			EHQResampling eHQRS = CSettingsProvider::This().HighQualityResampling();
 			pDIBData = m_pCurrentImage->GetDIB(newSize, clippedSize, offsetsInImage, 
 				*m_pImageProcParams, 
-				CreateProcessingFlags(m_bHQResampling && !m_bTemporaryLowQ && !m_bZoomMode, m_bAutoContrast, m_bAutoContrastSection, m_bLDC, false, m_bLandscapeMode));
+				CreateProcessingFlags(
+					m_bHQResampling && !m_bTemporaryLowQ && !m_bZoomMode,
+					m_bAutoContrast,
+					m_bAutoContrastSection,
+					m_bLDC,
+					false,
+					m_bLandscapeMode,
+					eHQRS == Resample_Down,
+					eHQRS == Resample_Up));
 		}
 
 		// Zoom navigator - check if visible and create exclusion rectangle
