@@ -82,7 +82,7 @@ AllowFileDeletion=true
 ; 'fr'    French
 ; 'it'    Italian
 ; 'ja'    Japanese
-; 'kr'    Korean
+; 'ko'    Korean
 ; 'pl'    Polish
 ; 'pt'    Portuguese
 ; 'pt-br' Portuguese (Brasil)
