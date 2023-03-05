@@ -202,7 +202,7 @@ Mark image for toggling. Use %s to toggle between marked and current image	전�
 Maximize/restore to/from virtual desktop (only for multi-monitor systems)	가상 데스크톱 최대화/복원(멀티 모니터 시스템에만 해당)
 Menu entries:	메뉴 항목:
 Modification date:	수정 날짜:
-Modifier keys:	
+Modifier keys:	수정자 키:
 Month / Short form (text)	월 / 단축형 (텍스트)
 Mouse wheel	마우스 휠
 Navigation	탐색
