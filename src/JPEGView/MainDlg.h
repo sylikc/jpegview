@@ -346,7 +346,7 @@ private:
 	void AdjustGamma(double dFactor);
 	void AdjustContrast(double dInc);
 	void AdjustSharpen(double dInc);
-	void PerformZoom(double dValue, bool bExponent, bool bZoomToMouse, bool bAdjustWindowToImage);
+	bool PerformZoom(double dValue, bool bExponent, bool bZoomToMouse, bool bAdjustWindowToImage);
 	void ZoomToSelection();
 	double GetZoomFactorForFitToScreen(bool bFillWithCrop, bool bAllowEnlarge);
 	CProcessParams CreateProcessParams(bool bNoProcessingAfterLoad);
