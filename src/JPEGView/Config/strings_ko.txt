@@ -1,0 +1,473 @@
+﻿//! This file must be encoded with UTF-8 (e.g. with Windows Notepad)
+//! LICENSE: This localization file is part of JPEGView <https://github.com/sylikc/jpegview> and distributed under the same license.  See <https://github.com/sylikc/jpegview/blob/master/LICENSE.txt> for more info.
+
+//! Filename Convention: 'strings_%languagecode%.txt' where %languagecode% is the ISO 639 language code e.g. 'en' for English
+
+////////////////////
+// ::: Translation Info ::: //
+//: ISO 639 code: ko
+//: Language: Korean
+//: Translator(s): VenusGirl (비너스걸)💋
+//: Last Updated: 2023-03-05
+//: Additional Notes:
+////////////////////
+
+////////////////////
+// ::: Instructions / Help ::: (help for translators only, does not need to be translated) //
+
+//? Line Format:    English string<tab>Translated string<newline>
+//? * Lines beginning with "//" (comments) are ignored
+//? * Blank lines are ignored
+//? * Lines without a <tab> are ignored
+//? * Lines with no text after the <tab> are ignored
+//? * Multiple tabs are permitted between English and Translated string, e.g. this is valid:    English string<tab><tab><tab>Translated string<newline>
+
+//? NOTE: %s %d have special meanings in the strings, so make sure they appear somewhere in the translated string
+
+//? For the strings below which are short and have no context:
+//?   "in" in context is shorthand for "inch"
+//?   "cm" in context is shorthand for "centimeter"
+//?   "C - R" in context is "Cyan Red" colors
+//?   "M - G" in context is "Magenta Green" colors
+//?   "Y - B" in context is "Yellow Blue" colors
+//?   "yes"/"no" in context is for showing EXIF flags
+//?   "on"/"off" in context is for showing a setting active or not
+////////////////////
+
+
+// ::: Program Strings ::: (sorted alphabetically) //
+%d file(s) renamed, %d file(s) copied, %d folder(s) created	d개의 파일 이름 변경, %d개의 파일 복사, %d개의 폴더 생성
+%s camera raw images (embedded JPEGs only)	%s 카메라 원시 이미지 (내장된 JPEG에만 해당)
+%s images	%s 이미지
+%s images (processed by Window Imaging Component - WIC)	%s 이미지 (Window Imaging Component - WIC에서 처리)
+'My Pictures' folder	'내 사진' 폴더
+About JPEGView (32-bit version)...	JPEGView (32비트 버전) 한국어 정보 - 번역: 비너스걸...
+About JPEGView (64-bit version)...	JPEGView (64비트 버전) 한국어 정보 - 번역: 비너스걸...
+Acquisition date:	촬영 날짜:
+Actual size of image	이미지의 실제 크기
+Align image to horizontal or vertical line	이미지를 수평선 또는 수직선에 맞추기
+Alignment:	정렬
+All Files	모든 파일
+All existing user settings will be preserved.	기존의 모든 사용자 설정이 보존됩니다.
+Alternatively, right-click an image file of the given type in Windows Explorer and select 'Open with... > Choose default program'	또는 Windows 탐색기에서 지정된 유형의 이미지 파일을 마우스 오른쪽 버튼으로 클릭하고 '다음으로 열기...'를 선택... > 기본 프로그램 선택'
+Altitude (m):	고도 (m):
+Amount	양
+Application:	응용 프로그램
+Applications	응용 프로그램
+Apply	적용
+Apply Unsharp Mask	선명하지 않은 마스크 적용
+Apply auto contrast correction using only visible section of image	이미지의 보이는 부분만 사용하여 자동 대비 보정 적용
+Ascending	오름차순
+Auto contrast and color correction	자동 대비 및 색상 보정
+Auto crop corrected image (avoids black border)	보정된 이미지 자동 자르기 (검은 테두리 방지)
+Auto crop rotated image (avoids black border)	회전된 이미지 자동 자르기 (검은색 테두리 사용 안 함)
+Auto zoom mode	자동 확대/축소 모드
+Back mouse button	마우스 뒤로 버튼
+Batch rename/copy of files	일괄 파일 이름 바꾸기/복사
+Blend	혼합
+Bottom	맨 아래
+Box	상자
+Brightness	밝기
+Browse...	찾아보기...
+C - R	C - R
+Camera model:	카메라 모델:
+Can't rename file	파일 이름을 바꿀 수 없습니다
+Cancel	취소
+Cannot read from parameter DB file '%s'!	매개변수 DB 파일 '%s'에서 읽을 수 없습니다!
+Cannot read parameter DB file '%s' because it is too large!	매개변수 DB 파일 '%s'이(가) 너무 커서 읽을 수 없습니다!
+Cannot write to parameter DB file '%s'!	매개변수 DB 파일 '%s'에 쓸 수 없습니다!
+Click and drag the mouse vertically to correct image tilt.	마우스를 클릭하고 수직으로 끌어서 이미지 기울기를 수정합니다.
+Clipboard Image	클립보드 이미지
+Close	닫기
+Close help text display / Close JPEGView	도움말 표시 닫기 / JPEGView 닫기
+Color Correction	색상 보정
+Combine keys with '+'	키를 '+'와 결합
+Confirm	확인
+Confirm save default parameters	기본 매개변수 저장 확인
+Conflicting entries in Param DB	매개변수 DB에서 충돌하는 항목
+Continue rename/copy?	이름 바꾸기/복사를 계속하시겠습니까?
+Contrast	대비
+Contrast Correction	대비 보정
+Copy file path of the image to clipboard	이미지의 파일 경로를 클립보드에 복사
+Copy screen to clipboard/ Copy processed full size image to clipboard	화면을 클립보드로 복사/처리된 전체 크기 이미지를 클립보드로 복사
+Copying parameter DB to file '%s' failed. Reason: %s	매개변수 DB를 '%s' 파일로 복사하지 못했습니다. 이유: %s
+Correct converging lines (perspective correction)	수렴 선 수정 (원근 보정)
+Creation date/time	만든 날짜/시각
+Crop image	이미지 자르기
+Ctrl + Left mouse	Ctrl + 왼쪽 마우스
+Current image	현재 이미지
+Cyan-Red	청록색-빨간색
+Darken Highlights	하이라이트 어둡게
+Date	날짜
+Date placeholders use the modification date of the image.	날짜 자리 표시자는 이미지의 수정 날짜를 사용합니다.
+Day / Month / Year (as numbers)	일 / 월 / 년 (숫자로)
+Decoding this format requires the Microsoft Visual C++ Redistributable.	이 형식을 디코딩하려면 Microsoft Visual C++ 재배포 가능 파일이 필요합니다.
+Deep Shadows	음영 깊게
+Delete	삭제
+Delete current file on disk permanently	현재 파일을 디스크에서 영구히 삭제
+Delete image file	이미지 파일 삭제
+Descending	내림차순
+Display image (EXIF) information	이미지 정보 (EXIF) 표시
+Do you really want to delete the current image file on disk?	디스크의 현재 이미지 파일을 삭제하시겠습니까?
+Do you really want to permanently delete the file %filename%?	%filename% 파일을 영구적으로 삭제하시겠습니까?
+Do you really want to save the following parameters as default to the INI file	다음 매개변수를 INI 파일에 기본값으로 저장하시겠습니까
+Drag at the left or right border for asymmetric correction.	비대칭 보정을 위해 왼쪽 또는 오른쪽 테두리에서 끕니다.
+EXIF date successfully set on %d images, failed on %d images	EXIF 날짜가 %d개 이미지에 설정되었습니다. %d개 이미지에 실패했습니다
+Edit	편집
+Enable/disable automatic contrast correction (histogram equalization)	자동 대비 보정 활성화/비활성화 (히스토그램 균등화)
+Enable/disable automatic density correction (local brightness correction)	자동 농도 보정 활성화/비활성화 (국소 밝기 보정)
+Enable/disable full screen mode	전체 화면 모드 활성화/비활성화
+Enable/disable high quality resampling	고품질 재샘플링 활성화/비활성화
+Enable/disable keeping of geometry related (zoom/pan/rotation)	지오메트리 관련 유지 활성화/비활성화 (확대/이동/회전)
+Enable/disable landscape picture enhancement mode	가로 사진 향상 모드 활성화/비활성화
+Error	오류
+Error during rename/copy	이름 바꾸기/복사 중 오류
+Error saving file	파일 저장 중 오류
+Error while writing the following registry key	다음 레지스트리 키를 쓰는 동안 오류
+Error writing file to disk!	디스크에 파일을 쓰는 동안 오류가 발생했습니다!
+Example:	예:
+Exposure bias (EV):	노출 보정 (EV):
+Exposure time (s):	노출 시간 (초):
+Extension	확장
+Extracted number from original file name	원본 파일 이름에서 추출된 번호
+F-Number:	F 번호:
+File name	파일 이름
+File size	파일 크기
+File type	파일 유형
+Fill paper with crop	자르기로 용지 채우기
+Fill with crop	자르기로 채우기
+Fill with crop (no zoom)	자르기로 채우기 (확대/축소 없음)
+Filter:	필터
+Fit image to screen	화면에 이미지 맞추기
+Fit to paper	용지에 맞추기
+Fit to screen	화면에 맞추기
+Fit to screen (no zoom)	화면에 맞추기 (확대/축소 없음)
+Flash fired:	플래시 발광:
+Focal length (mm):	초점 거리 (mm):
+Forward mouse button	마우스 앞으로 버튼
+Full screen mode	전체 화면 모드
+Goto first/last image of current folder (using sort order as defined)	현재 폴더의 첫 번째/마지막 이미지로 이동 (정의된 정렬 순서 사용)
+Goto next image	다음 이미지로 이동
+Goto previous image	이전 이미지로 이동
+Height	높이
+Hide histogram	히스토그램 숨기기
+High quality resampling	고품질 리샘플링
+Hour / Minute (as numbers)	시간/분 (숫자)
+ISO Speed:	ISO 속도:
+Image Pixels	이미지 픽셀
+Image files in folder	폴더의 이미지 파일
+Image height:	이미지 높이:
+Image width and height must be dividable by the JPEG block size (8 or 16) for lossless transformations!	무손실 변환을 위해서는 이미지 폭과 높이를 JPEG 블록 크기 (8 또는 16)로 나눌 수 있어야 합니다!
+Image width:	이미지 너비:
+Images	이미지
+Increase/decrease auto color cast correction amount	자동 색상 보정량 증가/감소
+Increase/decrease auto contrast correction amount	자동 대비 보정량 증가/감소
+Increase/decrease brightness	밝기 증가/감소
+Increase/decrease contrast	대비 증가/감소
+Increase/decrease darkening of highlights (LDC must be on)	하이라이트의 어둡기 증가/감소 (부분 농도 보정이 켜져있어야 함)
+Increase/decrease lightening of shadows (LDC must be on)	그림자의 밝기 증가/감소 (부분 농도 보정이 켜져있어야 함)
+Increase/decrease sharpness	선명하게 증가/감소
+Insufficient rights to change the privilege (DACL) on the registry entry. Continue?	레지스트리 항목에 대한 권한 (DACL)을 변경할 수 있는 권한이 부족합니다. 계속하시겠습니까?
+JPEGView Help	JPEGView 도움말
+JPEGView is a lean, fast and highly configurable viewer/editor for JPEG, BMP, PNG, WEBP, TGA, GIF and TIFF images with a minimal GUI.	JPEG View는 최소한의 GUI로 JPEG, BMP, PNG, WEBP, TGA, GIF 및 TIFF 이미지를 위한 얇고 빠르고 구성 가능한 뷰어/편집기입니다.
+JPEGView is registered as default viewer for the selected file formats.	JPEGView는 선택한 파일 형식에 대한 기본 뷰어로 등록됩니다.
+Keep aspect ratio on crop	자르기의 가로 세로 비율 유지
+Keep parameters	매개변수 유지
+Keep processing parameters between images	이미지 간 처리 매개변수 유지
+Known keys:	알려진 키:
+Lanczos/Bicubic	란초스/비큐빅
+Landscape	가로
+Landscape picture enhancement mode	가로 사진 향상 모드
+Last modification date/time	마지막 수정한 날짜/시각
+Left	왼쪽
+Left mouse & drag	왼쪽 마우스 및 끌기
+Licensed under the GNU general public license (GPL), see readme file for details	GNU 일반 공중 사용 허가서 (GPL)에 따라 라이선스가 부여되며, 자세한 내용은 readme 파일 참조
+Lighten Shadows	음영 밝게
+Local density correction	부분 밀도 보정
+Location:	위치
+Loop folder	폴더 순환
+Loop recursively	반복 순환
+Loop siblings	동기 순환
+Loop through files in current directory and all sibling folders (folders on same level)	현재 디렉터리 및 모든 형제 폴더 (동일한 수준의 폴더)에 있는 파일 순환
+Loop through files in current directory and all subfolders	현재 디렉터리 및 모든 하위 폴더의 파일 루프
+Loop through files in current folder	현재 폴더의 파일 순환
+Lossless JPEG transformations	무손실 JPEG 변환
+M - G	M - G
+Magenta-Green	자홍색-녹색
+Manage 'Open image with' menu...	''다음으로 이미지 열기' 메뉴 관리...
+Margins:	여백:
+Mark image for toggling. Use %s to toggle between marked and current image	전환할 이미지를 표시합니다. %s을(를) 사용하여 표시된 이미지와 현재 이미지 간 전환
+Maximize/restore to/from virtual desktop (only for multi-monitor systems)	가상 데스크톱 최대화/복원(멀티 모니터 시스템에만 해당)
+Menu entries:	메뉴 항목:
+Modification date:	수정 날짜:
+Modifier keys:	수정자 키:
+Month / Short form (text)	월 / 단축형 (텍스트)
+Mouse wheel	마우스 휠
+Navigation	탐색
+New	새로 만들기
+New height:	새 높이
+New name (>> : file gets copied)	새 이름 (>> : 파일이 복사됨)
+New name contains backslash character!	새 이름에 백슬래시 문자가 포함되어 있습니다!
+New size:	새 크기
+New width:	새 너비
+Next image	다음 이미지
+No image loaded!	이미지가 로드되지 않았습니다!
+No user INI file exists yet. Create user INI file from INI file template?	사용자 INI 파일이 아직 없습니다. INI 파일 템플릿에서 사용자 INI 파일을 생성하시겠습니까?
+None	없음
+Not enough memory available	사용 가능한 메모리가 부족합니다
+Note: Set the key 'TrimWithoutPromptLosslessJPEG=true' in the INI file to always trim without showing this message.	참고: 이 메시지를 표시하지 않고 항상 자르려면 INI 파일에서 'TrimWithoutPromptLosslessJPEG=true' 키를 설정하세요.
+Number (consecutively numbered)	번호 (연속 번호)
+Number of CPU cores used	사용된 CPU 코어 수
+Number of JPEG files in folder: %d	폴더에 있는 JPEG 파일 수: %d
+Number with N digits	N자리 숫자
+OK	확인
+Old name	이전 이름
+Open folder containing image and select in Windows Explorer	이미지가 포함된 폴더를 열고 Windows 탐색기에서 선택
+Open new image or slideshow file	새 이미지 또는 슬라이드 쇼 파일 열기
+Order files by	파일 정렬
+Orientation:	방향
+Original file extension	원본 파일 확장자
+Original file name (with extension)	원본 파일명 (확장자 있음)
+Original file name (without extension)	원본 파일명 (확장자 없음)
+Pan image	이미지 이동
+Paper:	용지
+Parameter DB	매개변수 DB
+Parameter DB error	매개변수 DB 오류
+Parameter DB file '%s' could not be opened!	매개변수 DB 파일 '%s'을(를) 열 수 없습니다!
+Parameter DB file '%s' is not valid (invalid header)!	'%s' 매개변수 DB 파일이 잘못되었습니다 (잘못된 헤더)!
+Paste from clipboard	클립보드에서 붙여넣기
+Pasting image from clipboard failed!	클립보드에서 이미지를 붙여넣지 못했습니다!
+Performing the lossless transformation failed!	무손실 변환을 수행하지 못했습니다!
+Performing the transformation failed	변환을 수행하지 못했습니다
+Perspective Correction	원근 보정
+Pixels	픽셀
+Placeholders:	자리 표시자:
+Portrait	세로
+Press 'OK' to continue with registration or 'Cancel' to abort all registrations.	등록을 계속하려면 '확인'을 누르고 모든 등록을 중단하려면 '취소'를 누르십시오.
+Press ESC to exit...	종료하려면 ESC를 누르십시오...
+Press any key to search the subdirectories for image files.	하위 디렉터리에서 이미지 파일을 검색하려면 아무 키나 누릅니다.
+Preview	미리보기
+Previous image	이전 이미지
+Print	인쇄
+Print Image	이미지 인쇄
+Printer driver	프린터 드라이버
+Printer:	프린터
+Project home page	프로젝트 홈페이지
+Radius	반지름
+Random	무작위
+Reading the JPEG file from disk failed	디스크에서 JPEG 파일을 읽지 못했습니다
+Reason:	이유:
+Registering or unregistering file extensions in this registry area requires administrator privileges and cannot be done in JPEGView.	이 레지스트리 영역에서 파일 확장명을 등록하거나 등록 취소하려면 관리자 권한이 필요하므로 JPEG View에서 수행할 수 없습니다.
+Registration applies to the current user only.	등록은 현재 사용자에게만 적용됩니다.
+Remove from	제거
+Rename	이름 바꾸기
+Rename/copy images to:	이미지 이름 바꾸기/복사:
+Renaming file failed!	파일 이름을 바꾸지 못했습니다!
+Reset	재설정
+Resize Image	이미지 크기 조정
+Right	오른쪽
+Right mouse button: Context menu	마우스 오른쪽 버튼: 상황에 맞는 메뉴
+Roll from bottom	아래에서 굴리기
+Roll from left	왼쪽에서 굴리기
+Roll from right	오른쪽에서 굴리기
+Roll from top	위에서 굴리기
+Rotate Image	이미지 회전
+Rotate current file on disk lossless by 270 deg (W/H must be multiple of 16)	디스크의 현재 파일을 무손실로 270도 회전 (너비/높이는 16의 배수여야 함)
+Rotate current file on disk lossless by 90 deg (W/H must be multiple of 16)	디스크의 현재 파일을 무손실로 90도 회전 (너비/높이는 16의 배수여야 함)
+Rotate image 90 deg clockwise	이미지를 시계 방향으로 90도 회전
+Rotate image 90 deg counter-clockwise	이미지를 시계 반대 방향으로 90도 회전
+Rotate image and fit to screen	이미지를 회전하고 화면에 맞추기
+Rotate image by user-defined angle	사용자 정의 각도로 이미지 회전
+Rotate the image by dragging with the mouse.	마우스로 끌어서 이미지를 회전합니다.
+SIMD mode used	사용된 SIMD 모드
+Same as Image	이미지와 동일
+Saturation	채도
+Save	저장
+Save (%s)/ delete (%s) image processing parameters in/from parameter DB	이미지 처리 매개변수를 DB에 저장/ 삭제(%s)
+Save as (in screen size/resolution)	다른 이름으로 저장 (화면 크기/해상도)
+Save as template	템플릿으로 저장
+Save cropped image	잘라낸 이미지 저장
+Save processed image to JPEG file (original size)	처리된 이미지를 JPEG 파일에 저장 (원본 크기)
+Save processed image to JPEG file (screen size)	처리된 이미지를 JPEG 파일에 저장 (화면 크기)
+Save to	다른 이름으로 저장
+Scaling mode:	배율 모드:
+Screen Pixels	화면 픽셀
+Scroll from bottom	아래에서 스크롤
+Scroll from left	왼쪽에서 스크롤
+Scroll from right	오른쪽에서 스크롤
+Scroll from top	위에서 스크롤
+Select Printer...	프린터 선택...
+Select all	모두 선택
+Select application	응용 프로그램 선택
+Select file to display in 'File Open' dialog	'파일 열기' 대화 상자에 표시할 파일 선택
+Select none	선택 없음
+Select parameter DB to restore	복원할 매개변수 DB 선택
+Set Fixed Crop Size	고정된 자르기 크기 설정
+Set JPEGView as default image viewer	JPEGView를 기본 이미지 뷰어로 설정
+Set timeout to n/10 sec, respectively n/100 sec (Ctrl+Shift)	시간 초과를 각각 n/10초, n/100초로 설정 (Ctrl+Shift)
+Shall existing entries be preserved (Yes) or be overriden by the imported entries (No)?	기존 항목을 보존해야 합니까 (예) 아니면 가져온 항목으로 재정의해야 합니까 (아니오)?
+Sharpen	선명하게
+Sharpen low	낮게 선명하게
+Sharpen medium	중간 선명하게
+Shortcut Help	바로가기 도움말
+Shortcut key:	바로가기 키
+Show filename	파일 이름 표시
+Show first image in folder	폴더에서 첫 번째 이미지 표시
+Show grid lines	안내선 표시
+Show histogram	히스토그램 표시
+Show last image in folder	폴더에서 마지막 이미지 표시
+Show navigation panel	탐색 패널 표시
+Show next image	다음 이미지 표시
+Show picture info (EXIF)	사진 정보 표시 (EXIF)
+Show previous image	이전 이미지 표시
+Show/hide file name	파일 이름 표시/숨기기
+Show/hide navigation panel	탐색 패널 표시/숨기기
+Show/hide picture information (EXIF data)	사진 정보 (EXIF) 표시/숨기기
+Show/hide this help text	이 도움말 텍스트 표시/숨기기
+Size:	크기
+Slide from bottom	아래에서 슬라이드
+Slide from left	아래에서 슬라이드
+Slide from right	오른쪽에서 슬라이드
+Slide from top	위에서 슬라이드
+Slideshow	슬라이드 쇼
+Slideshow with timeout of 'n' seconds (ESC to stop)	시간 초과가 'n'초인 슬라이드 쇼 (ESC로 중지)
+Sort images by creation date, resp. modification date, resp. file name	만든 날짜, 수정 날짜, 파일 이름 순으로 정렬
+Source:	원본
+Target folders that do not yet exist are created as needed.	아직 존재하지 않는 대상 폴더가 필요에 따라 생성됩니다.
+The directory '%s' does not contain any image files!	'%s' 디렉터리에 이미지 파일이 없습니다!
+The file '%s' could not be copied!	%s' 파일을 복사할 수 없습니다!
+The file '%s' could not be read!	'%s' 파일을 읽을 수 없습니다!
+The file '%s' could not be renamed!	'%s' 파일의 이름을 바꿀 수 없습니다!
+The file '%s' does not contain a list of file names!	''%s' 파일에 파일 이름 목록이 없습니다!
+The file is read-only!	파일이 읽기 전용입니다!
+The following file extensions cannot be unregistered because they have been registered in the 'local machine' registry area.	다음 파일 확장지는 '로컬 컴퓨터' 레지스트리 영역에 등록되어 있으므로 등록을 취소할 수 없습니다.
+The following image extensions are protected by the operating system.	다음 이미지 확장자는 운영 체제에 의해 보호됩니다
+The imported param DB contains entries already present in active param DB.	가져온 매개변수 DB에 활성 매개변수 DB에 이미 있는 항목이 있습니다.
+The new size is too large - width or height is larger than 65535 or total number of pixels is too large!	새 크기가 너무 큽니다. 너비 또는 높이가 65535보다 크거나 총 픽셀 수가 너무 큽니다!
+The old parameter DB file '%s' could not be renamed during conversion to new format!	새 형식으로 변환하는 동안 이전 매개변수 DB 파일 '%s'의 이름을 바꿀 수 없습니다!
+The operation failed because not enough memory is available!	사용 가능한 메모리가 부족하여 작업에 실패했습니다!
+The parameter DB file '%s' has been created by a newer version of JPEGView!	매개변수 DB 파일 '%s'이(가) 최신 버전의 JPEGView에서 생성되었습니다!
+The transformation can be applied if the image is trimmed to the next matching size but this will remove some border pixels.	이미지가 다음 일치 크기로 잘린 경우 변환을 적용할 수 있지만, 이렇게 하면 일부 테두리 픽셀이 제거됩니다.
+These values will override the values from the INI file located in the program folder of JPEGView!	이러한 값은 JPEG View의 프로그램 폴더에 있는 INI 파일의 값을 재정의합니다!
+Threshold	임계값
+Title:	제목
+Toggle between screens (only for multi-monitor systems)	화면 전환 (다중 모니터 사용시)
+Toggle window always on top mode	창을 항상 맨 위 모드로 전환
+Toggle window title bar hidden mode	창 제목 표시줄 숨김 모드 전환
+Top	맨 위
+Transition Effect	전환 효과
+Trim the image and apply transformation? Trimming cannot be undone!	이미지를 트리밍하고 변환을 적용하시겠습니까? 트리밍은 되돌릴 수 없습니다!
+Unregistering not possible	등록 취소할 수 없습니다
+Unsharp mask...	선명하지 않은 마스크...
+Update user settings with new settings from settings template file?	설정 템플릿 파일의 새 설정으로 사용자 설정을 업데이트하시겠습니까?
+Use the 'Default Programs' configuration dialog from the operating system instead.	대신 운영 체제의 '기본 프로그램' 구성 대화 상자를 사용하십시오.
+Use the mouse to draw a line that shall be horizontal or vertical.	마우스를 사용하여 수평 또는 수직으로 선을 그립니다.
+Warning	경고
+Width	너비
+Window mode	창 모드
+Windows 8 (and above) blocks JPEGView from changing the default program for these file extensions.	Windows 8 이상에서는 JPEG View가 이러한 파일 확장자의 기본 프로그램을 변경하지 못하도록 차단합니다.
+Writing the resulting JPEG file to disk failed	결과 JPEG 파일을 디스크에 쓰지 못했습니다
+Y - B	Y - B
+Year short form (2 digits)	연도 단축 형식 (2자리)
+Yellow-Blue	노랑-파랑
+Zoom 1:1 (100 %)	1:1 배율 (100 %)
+Zoom in (%s)/Zoom out (%s)	확대 (%s)/축소 (%s)
+Zoom in/out image	확대/축소
+Zoom mode (drag mouse to zoom)	확대/축소 모드 (마우스를 끌어 확대/축소)
+and image processing (brightness/contrast/sharpen) parameters between images	및 영상 간 영상 처리 (밝기/휘도/휘도) 매개변수
+cm	센티미터
+in	인치
+new menu entry	새 메뉴 항목
+no	아니오
+off	끄기
+on	켜기
+user-defined	사용자 정의
+yes	예
+
+// ::: Popup Menu Strings ::: (unsorted to preserve context) //
+Stop slide show/movie	슬라이드 쇼/동영상 중지
+Open image...	이미지 열기...
+Open image with	다음으로 이미지 열기
+Save processed image...	처리된 이미지 저장...
+Reload image	이미지 다시 불러오기
+Open containing folder in Explorer	탐색기에서 포함된 폴더 열기
+Print image...	이미지 인쇄
+Batch rename/copy...	일괄 이름 바꾸기/복사...
+Set modification date	수정 날짜 설정
+to current date	현재 날짜로
+to EXIF date	EXIF 날짜로
+to EXIF date (all files in folder)	EXIF 날짜 (폴더의 모든 파일)
+Set as desktop wallpaper	바탕화면 배경화면으로 설정
+Use original image	원본 이미지 사용
+Use processed image as displayed	표시된 대로 처리된 이미지 사용
+Copy to clipboard	클립보드에 복사
+Copy original size image	원본 크기 이미지 복사
+Copy file path	파일 경로 복사
+Display order	표시 순서
+Modification date	수정 날짜
+Creation date	만든 날짜
+Play folder as slideshow/movie	슬라이드 쇼/동영상으로 재생
+Waiting time	대기 시간
+1 sec	1초
+2 sec	2초
+3 sec	3초
+4 sec	4초
+5 sec	5초
+7 sec	7초
+10 sec	10초
+20 sec	20초
+Transition Speed	전환 속도
+Very fast	매우 빠름
+Fast	빠름
+Normal	보통
+Slow	느리
+Very slow	매우 느림
+Movie	동영상
+Playback speed	재생 속도
+5 fps	5 fps
+10 fps	10 fps
+25 fps	25 fps
+30 fps	30 fps
+50 fps	50 fps
+100 fps	100 fps
+Transform image	이미지 변환
+Rotate +90	+90도 회전
+Rotate -90	-90도 회전
+Rotate...	회전
+Change size...	크기 변경..
+Perspective correction...	원근 보정...
+Mirror horizontally	수평으로 대칭
+Mirror vertically	수직으로 대칭
+Rotate 180	180도 회전
+Auto correction	자동 보정
+Save parameters to DB	DB에 매개변수 저장
+Clear parameters from DB	DB에서 매개변수 지우기
+Zoom	확대/축소
+Span all screens	모든 화면으로 늘리기
+Fit window to image	이미지에 창 맞춤
+Hide window title bar	창 제목 표시줄 숨기기
+Set window always on top	창을 항상 맨 위에 설정
+Settings/Admin	설정/관리자
+Edit global settings...	전역 설정 편집...
+Edit user settings...	사용자 설정 편집...
+Update user settings...	사용자 설정 업데이트...
+Set current parameters as default values...	현재 매개변수를 기본값으로 설정...
+Set as default viewer...	기본 뷰어로 설정...
+Backup parameter DB...	매개변수 DB 백업
+Restore parameter DB...	매개변수 DB 복원
+User commands	사용자 명령
+About JPEGView...	JPEGView 정보...
+Exit	종료
+Crop Selection	선택 영역 자르기
+Crop Selection Lossless...	선택 영역 무손실 자르기
+Copy Selection to Clipboard	선택 영역을 클립보드로 복사
+Crop Mode	자르기 모드
+Free	자유
+Fixed size...	고정된 크기...
+Zoom to Selection	선택 영역으로 확대
+
+// ::: STATUS: Last Checked/Updated by Script ::: 2023-03-05T14:42:19.408005+00:00 //
+//! Translation Progress: 100%
+//! * Total (Strings + Menu) = 427
+//! * Done = 427
+//! * Missing = 0 (0%)

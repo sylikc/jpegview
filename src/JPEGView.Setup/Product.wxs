@@ -249,7 +249,7 @@
 				<ComponentRef Id="strings_fr.txt" />
 				<ComponentRef Id="strings_it.txt" />
 				<ComponentRef Id="strings_ja.txt" />
-				<ComponentRef Id="strings_kr.txt" />
+				<ComponentRef Id="strings_ko.txt" />
 				<ComponentRef Id="strings_pl.txt" />
 				<ComponentRef Id="strings_pt.txt" />
 				<ComponentRef Id="strings_ptbr.txt" />
@@ -585,8 +585,8 @@
 					<Component Id="strings_ja.txt" Guid="*">
 						<File Id="strings_ja.txt" Name="strings_ja.txt" Source="$(var.JPEGView.TargetDir)strings_ja.txt" />
 					</Component>
-					<Component Id="strings_kr.txt" Guid="*">
-						<File Id="strings_kr.txt" Name="strings_kr.txt" Source="$(var.JPEGView.TargetDir)strings_kr.txt" />
+					<Component Id="strings_ko.txt" Guid="*">
+						<File Id="strings_ko.txt" Name="strings_ko.txt" Source="$(var.JPEGView.TargetDir)strings_ko.txt" />
 					</Component>
 					<Component Id="strings_pl.txt" Guid="*">
 						<File Id="strings_pl.txt" Name="strings_pl.txt" Source="$(var.JPEGView.TargetDir)strings_pl.txt" />
