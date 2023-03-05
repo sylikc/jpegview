@@ -2598,7 +2598,8 @@ void CMainDlg::AdjustSharpen(double dInc) {
 	this->Invalidate(FALSE);
 }
 
-void CMainDlg::PerformZoom(double dValue, bool bExponent, bool bZoomToMouse, bool bAdjustWindowToImage) {
+// returns true on success, false if nothing was done
+bool CMainDlg::PerformZoom(double dValue, bool bExponent, bool bZoomToMouse, bool bAdjustWindowToImage) {
 	double dOldZoom = m_dZoom;
 	m_bUserZoom = true;
 	m_isUserFitToScreen = false;
@@ -2610,7 +2611,7 @@ void CMainDlg::PerformZoom(double dValue, bool bExponent, bool bZoomToMouse, boo
 
 	if (m_pCurrentImage == NULL) {
 		m_dZoom = max(Helpers::ZoomMin, min(Helpers::ZoomMax, m_dZoom));
-		return;
+		return true;
 	}
 
 	double dZoomMin = max(0.0001, min(Helpers::ZoomMin, GetZoomFactorForFitToScreen(false, false) * 0.5));
@@ -2671,7 +2672,7 @@ void CMainDlg::PerformZoom(double dValue, bool bExponent, bool bZoomToMouse, boo
 		// zooming in does not require restoring the previous zoom value
 		// because the code which checks the 65535 will re-scale the zoom factor to ensure it never exceeds 65535
 
-		return; // then do nothing
+		return false; // then do nothing
 	}
 
 
@@ -2699,6 +2700,8 @@ void CMainDlg::PerformZoom(double dValue, bool bExponent, bool bZoomToMouse, boo
 			AdjustWindowToImage(false);
 		}
 	}
+
+	return true;
 }
 
 bool CMainDlg::PerformPan(int dx, int dy, bool bAbsolute) {
@@ -2724,9 +2727,11 @@ void CMainDlg::ZoomToSelection() {
 		CPoint offsets;
 		Helpers::GetZoomParameters(fZoom, offsets, m_pCurrentImage->OrigSize(), m_clientRect.Size(), zoomRect);
 		if (fZoom > 0) {
-			PerformZoom(fZoom, false, m_bMouseOn, false);
-			m_offsets = offsets;
-			m_bUserPan = true;
+			// if PerformZoom returns false, the zoom rect was invalid, don't move the offsets
+			if (PerformZoom(fZoom, false, m_bMouseOn, false)) {
+				m_offsets = offsets;
+				m_bUserPan = true;
+			}
 		}
 	}
 }
