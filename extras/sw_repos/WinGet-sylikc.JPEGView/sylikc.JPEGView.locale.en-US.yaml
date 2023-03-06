@@ -1,8 +1,8 @@
-# Created using wingetcreate 1.1.2.0
-# yaml-language-server: $schema=https://aka.ms/winget-manifest.defaultLocale.1.2.0.schema.json
+# Created using wingetcreate 1.2.5.0
+# yaml-language-server: $schema=https://aka.ms/winget-manifest.defaultLocale.1.4.0.schema.json
 
 PackageIdentifier: sylikc.JPEGView
-PackageVersion: 1.1.43
+PackageVersion: 1.2.45
 PackageLocale: en-US
 Publisher: Kevin M (sylikc)
 PublisherUrl: https://github.com/sylikc/
@@ -34,7 +34,6 @@ Tags:
 - picture
 - viewer
 - viewers
-ReleaseNotesUrl: https://github.com/sylikc/jpegview/releases/tag/v1.1.43
+ReleaseNotesUrl: https://github.com/sylikc/jpegview/releases/tag/v1.2.45
 ManifestType: defaultLocale
-ManifestVersion: 1.2.0
-
+ManifestVersion: 1.4.0

@@ -22,10 +22,11 @@ JPEGView sylikc.JPEGView 1.0.39.1 winget
 
 Keep track of version submissions here:
 
-Tag		Pull Request
------		------
-v1.0.39.1-wix	https://github.com/microsoft/winget-pkgs/pull/52204
-v1.0.40	https://github.com/microsoft/winget-pkgs/pull/56349
-v1.1.41	https://github.com/microsoft/winget-pkgs/pull/92691
-v1.1.41.1	https://github.com/microsoft/winget-pkgs/pull/92841
-v1.1.43	https://github.com/microsoft/winget-pkgs/pull/95763
+Tag            Pull Request
+-----          ------
+v1.0.39.1-wix  https://github.com/microsoft/winget-pkgs/pull/52204
+v1.0.40        https://github.com/microsoft/winget-pkgs/pull/56349
+v1.1.41        https://github.com/microsoft/winget-pkgs/pull/92691
+v1.1.41.1      https://github.com/microsoft/winget-pkgs/pull/92841
+v1.1.43        https://github.com/microsoft/winget-pkgs/pull/95763
+v1.2.45        https://github.com/microsoft/winget-pkgs/pull/98629
