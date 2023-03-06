@@ -8,7 +8,7 @@
 //: ISO 639 code: ru
 //: Language: Russian
 //: Translator(s): Dmitry Yerokhin <erodim@mail.ru>
-//: Last Updated: Feb 10, 2023
+//: Last Updated: Mar 6, 2023
 //: Additional Notes:
 ////////////////////
 
@@ -32,7 +32,7 @@
 
 // ::: Program Strings ::: (sorted alphabetically) //
 %d file(s) renamed, %d file(s) copied, %d folder(s) created	Файлов переименовано: %d, скопировано: %d, создано папок: %d
-%s camera raw images (embedded JPEGs only)	Raw-изображения %s (только встроенные JPEG)
+%s camera raw images (embedded JPEGs only)	RAW-изображения %s (только встроенные JPEG)
 %s images	Изображения %s
 %s images (processed by Window Imaging Component - WIC)	Изображения %s (обработка Window Imaging Component — WIC)
 'My Pictures' folder	папка 'Мои рисунки'
@@ -164,12 +164,12 @@ Increase/decrease lightening of shadows (LDC must be on)	Регулировка 
 Increase/decrease sharpness	Регулировка резкости
 Insufficient rights to change the privilege (DACL) on the registry entry. Continue?	Недостаточно прав для изменения привилегии (DACL) в записи реестра. Продолжить?
 JPEGView Help	Справка JPEGView
-JPEGView is a lean, fast and highly configurable viewer/editor for JPEG, BMP, PNG, WEBP, TGA, GIF and TIFF images with a minimal GUI.	JPEGView — это компактная и быстрая программа для просмотра/редактирования JPEG, JPEG XR (HD Photo), BMP, PNG, WebP, TGA, GIF, TIFF и Raw с богатыми возможностями настройки и лаконичным интерфейсом.
+JPEGView is a lean, fast and highly configurable viewer/editor for JPEG, BMP, PNG, WEBP, TGA, GIF and TIFF images with a minimal GUI.	JPEGView — это компактная и быстрая программа для просмотра/редактирования JPEG, JPEG XR (HD Photo), BMP, PNG, WebP, TGA, GIF, TIFF и RAW с богатыми возможностями настройки и лаконичным интерфейсом.
 JPEGView is registered as default viewer for the selected file formats.	Установите/снимите отметки у типов файлов для регистрации/дерегистрации JPEGView как стандартной программы их просмотра.
-Keep aspect ratio on crop	Соблюдение пропорций при обрезке
+Keep aspect ratio on crop	Соблюдать пропорции при обрезке
 Keep parameters	Запоминать параметры
 Keep processing parameters between images	Помнить параметры обработки при смене изображений
-Known keys:	Известные клавиши:
+Known keys:	Распознаваемые клавиши:
 Lanczos/Bicubic	Lanczos/бикубический
 Landscape	Альбомная
 Landscape picture enhancement mode	Режим улучшения пейзажей
@@ -178,15 +178,15 @@ Left	Слева
 Left mouse & drag	Перетаскивание с ЛКМ
 Licensed under the GNU general public license (GPL), see readme file for details	Лицензия GNU General Public License (GPL),    см. файл с документацией
 Lighten Shadows	Высветлить тени
-Local density correction	Коррекция светов/теней
-Location:	Место:
+Local density correction	Автокоррекция светов/теней
+Location:	Место съёмки:
 Loop folder	Циклично в папке
 Loop recursively	Циклично с вложенными папками
 Loop siblings	Циклично с папками той же вложенности
 Loop through files in current directory and all sibling folders (folders on same level)	Цикличный просмотр файлов в текущей папке и всех папках того же уровня
 Loop through files in current directory and all subfolders	Цикличный просмотр файлов в текущей папке и её подпапках
 Loop through files in current folder	Цикличный просмотр файлов в текущей папке
-Lossless JPEG transformations	Преобразование JPEG без потерь
+Lossless JPEG transformations	Преобразовать JPEG без потерь
 M - G	M - G
 Magenta-Green	Пурпурный-Зелёный
 Manage 'Open image with' menu...	Настройка меню 'Открыть в...'
@@ -206,7 +206,7 @@ New name contains backslash character!	В новом имени содержит
 New size:	Новый размер:
 New width:	Новая ширина:
 Next image	Следующее изображение
-No image loaded!	НЕ ЗАГРУЖЕНО ИЗОБРАЖЕНИЕ
+No image loaded!	НЕ ЗАГРУЖЕНО ИЗОБРАЖЕНИЕ!
 No user INI file exists yet. Create user INI file from INI file template?	Пользовательского INI-файла пока нет. Создать его из шаблона INI-файла?
 None	Нет
 Not enough memory available	Недостаточно памяти
@@ -232,7 +232,7 @@ Parameter DB file '%s' could not be opened!	Невозможно открыть 
 Parameter DB file '%s' is not valid (invalid header)!	Неверный файл '%s' с базой параметров (некорректный заголовок).
 Paste from clipboard	Вставить из буфера обмена
 Pasting image from clipboard failed!	Ошибка при вставке изображения из буфера обмена.
-Performing the lossless transformation failed!	Ошибка преобразования без потерь данных!
+Performing the lossless transformation failed!	Ошибка преобразования без потерь!
 Performing the transformation failed	Ошибка преобразования
 Perspective Correction	Коррекция перспективы
 Pixels	пкс
@@ -275,7 +275,7 @@ Rotate image and fit to screen	Повернуть изображение и вп
 Rotate image by user-defined angle	Повернуть на произвольный угол
 Rotate the image by dragging with the mouse.	Вращайте изображение, перетаскивая по нему мышь.
 SIMD mode used	Режим SIMD
-Same as Image	
+Same as Image	Как изображение
 Saturation	Насыщенность
 Save	Сохранить
 Save (%s)/ delete (%s) image processing parameters in/from parameter DB	Сохранить (%s) / удалить (%s) параметры обработки изображения в базе данных
@@ -283,7 +283,7 @@ Save as (in screen size/resolution)	Сохранить как (в экранно
 Save as template	Сохранить как шаблон
 Save cropped image	Сохранить обрезанное изображение
 Save processed image to JPEG file (original size)	Сохранить обработанное изображение как JPEG (с исходным размером)
-Save processed image to JPEG file (screen size)	Сохранить обработанное изображение как JPEG (экранного размера)
+Save processed image to JPEG file (screen size)	Сохранить обработанное изображение как JPEG (с экранным размером)
 Save to	Сохранить в
 Scaling mode:	Масштабирование:
 Screen Pixels	Экранные пикселы
@@ -330,9 +330,9 @@ Sort images by creation date, resp. modification date, resp. file name	Сорт�
 Source:	Источник:
 Target folders that do not yet exist are created as needed.	Несуществующие папки назначения создаются по необходимости.
 The directory '%s' does not contain any image files!	В папке '%s' нет поддерживаемых графических файлов.
-The file '%s' could not be copied!	Не удалось скопировать файл '%s'.
+The file '%s' could not be copied!	Невозможно скопировать файл '%s'.
 The file '%s' could not be read!	Невозможно прочитать файл '%s'.
-The file '%s' could not be renamed!	Не удалось переименовать файл '%s'.
+The file '%s' could not be renamed!	Невозможно переименовать файл '%s'.
 The file '%s' does not contain a list of file names!	В файле '%s' нет списка имён файлов.
 The file is read-only!	Этот файл только для чтения!
 The following file extensions cannot be unregistered because they have been registered in the 'local machine' registry area.	У этих расширений нельзя снять регистрацию, так как они зарегистрированы в реестре в HKEY_LOCAL_MACHINE.
@@ -376,7 +376,7 @@ new menu entry	новый пункт меню
 no	нет
 off	выкл.
 on	вкл.
-user-defined	
+user-defined	пользовательское
 yes	да
 
 // ::: Popup Menu Strings ::: (unsorted to preserve context) //
@@ -395,8 +395,8 @@ to EXIF date (all files in folder)	по дате в EXIF (для всех фай
 Set as desktop wallpaper	Сделать рисунком рабочего стола
 Use original image	Исходное изображение
 Use processed image as displayed	Обработанное изображение (как на экране)
-Copy to clipboard	Скопировать в буфер обмена
-Copy original size image	Скопировать с исходным размером
+Copy to clipboard	Скопировать изображение в буфер обмена
+Copy original size image	Скопировать изображение с исходным размером
 Copy file path	Скопировать путь к файлу
 Display order	Сортировка при показе
 Modification date	Дата изменения
@@ -425,7 +425,7 @@ Playback speed	Скорость воспроизведения
 30 fps	30 кадров в секунду
 50 fps	50 кадров в секунду
 100 fps	100 кадров в секунду
-Transform image	Преобразование изображения
+Transform image	Преобразовать изображение
 Rotate +90	Повернуть на 90° вправо
 Rotate -90	Повернуть на 90° влево
 Rotate...	Повернуть на произвольный угол...
@@ -493,12 +493,8 @@ Zoom to Selection	Масштабировать до выделенного
 //renamed	переименовано
 //up/down	Стрелки вверх/вниз
 
-// ::: INFO: Missing Translations [2] ::: (Summary of all missing strings to assist translators - Auto-generated by script) //
-//! Same as Image
-//! user-defined
-
-// ::: STATUS: Last Checked/Updated by Script ::: 2023-02-24T18:21:42.917768+00:00 //
+// ::: STATUS: Last Checked/Updated by Script ::: 2023-03-06T19:00:43.182040+00:00 //
 //! Translation Progress: 100%
 //! * Total (Strings + Menu) = 427
-//! * Done = 425
-//! * Missing = 2 (0%)
+//! * Done = 427
+//! * Missing = 0 (0%)
