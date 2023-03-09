@@ -1,11 +1,14 @@
 ﻿//! This file must be encoded with UTF-8 (e.g. with Windows Notepad)
 //! LICENSE: This localization file is part of JPEGView <https://github.com/sylikc/jpegview> and distributed under the same license.  See <https://github.com/sylikc/jpegview/blob/master/LICENSE.txt> for more info.
 
-//! Filename Convention: 'strings_%languagecode%.txt' where %languagecode% is the ISO 639 language code e.g. 'en' for English
+//! Standard  Filename Convention: 'strings_%languagecode%.txt' where %languagecode% is the ISO 639-1 language code e.g. 'en' for English (See <https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes>)
+//! Alternate Filename Convention: 'strings_%languagecode%-%countrycode%.txt' where %countrycode% is the ISO 3166-1 country code e.g. 'US' for United States (See <https://en.wikipedia.org/wiki/List_of_ISO_3166_country_codes>)
+//!    Use the alternate filename convention only when the standard filename already exist (e.g. specifying a country-specific dialect for an existing language)
 
 ////////////////////
 // ::: Translation Info ::: //
-//: ISO 639 code: es-ar
+//: ISO 639-1 code: es
+//: ISO 3166-1 code: ar
 //: Language: Spanish (Argentina)
 //: Translator(s): ThecaTTony (thecattony@users.sourceforge.net - thecattony@thecattony.com.ar)
 //: Last Updated:
@@ -653,7 +656,7 @@ Zoom to Selection	Zoom a selección
 //! User commands
 //! Crop Selection Lossless...
 
-// ::: STATUS: Last Checked/Updated by Script ::: 2023-02-24T18:21:42.680878+00:00 //
+// ::: STATUS: Last Checked/Updated by Script ::: 2023-03-09T12:34:04.423076+00:00 //
 //! Translation Progress: 60%
 //! * Total (Strings + Menu) = 427
 //! * Done = 255

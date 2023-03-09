@@ -5,7 +5,8 @@
 
 ////////////////////
 // ::: Translation Info ::: //
-//: ISO 639 code: ru
+//: ISO 639-1 code: ru
+//: ISO 3166-1 code:
 //: Language: Russian
 //: Translator(s): Dmitry Yerokhin <erodim@mail.ru>
 //: Last Updated: Mar 6, 2023
@@ -493,7 +494,7 @@ Zoom to Selection	Масштабировать до выделенного
 //renamed	переименовано
 //up/down	Стрелки вверх/вниз
 
-// ::: STATUS: Last Checked/Updated by Script ::: 2023-03-06T19:00:43.182040+00:00 //
+// ::: STATUS: Last Checked/Updated by Script ::: 2023-03-09T12:34:04.512333+00:00 //
 //! Translation Progress: 100%
 //! * Total (Strings + Menu) = 427
 //! * Done = 427
