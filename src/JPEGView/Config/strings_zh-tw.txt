@@ -1,15 +1,19 @@
 ﻿//! This file must be encoded with UTF-8 (e.g. with Windows Notepad)
 //! LICENSE: This localization file is part of JPEGView <https://github.com/sylikc/jpegview> and distributed under the same license.  See <https://github.com/sylikc/jpegview/blob/master/LICENSE.txt> for more info.
 
-//! Filename Convention: 'strings_%languagecode%.txt' where %languagecode% is the ISO 639 language code e.g. 'en' for English
+//! Standard  Filename Convention: 'strings_%languagecode%.txt' where %languagecode% is the ISO 639-1 language code e.g. 'en' for English (See <https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes>)
+//! Alternate Filename Convention: 'strings_%languagecode%-%countrycode%.txt' where %countrycode% is the ISO 3166-1 country code e.g. 'US' for United States (See <https://en.wikipedia.org/wiki/List_of_ISO_3166_country_codes>)
+//!    Use the alternate filename convention only when the standard filename already exist (e.g. specifying a country-specific dialect for an existing language)
 
 ////////////////////
 // ::: Translation Info ::: //
-//: ISO 639 code: zh-tw
+//: ISO 639-1 code: zh
+//: ISO 3166-1 code: tw
 //: Language: Chinese (Taiwan)
 //: Translator(s): 風逸蘭
 //: Last Updated:
 //: Additional Notes:
+//Update:2023/03/09 - Based on the simplified Chinese version converted chs -> cht
 ////////////////////
 
 ////////////////////
@@ -36,401 +40,401 @@
 
 
 // ::: Program Strings ::: (sorted alphabetically) //
-%d file(s) renamed, %d file(s) copied, %d folder(s) created	已重新命名 %d 個檔案，已複製 %d 個檔案，已建立 %d 個資料夾
-%s camera raw images (embedded JPEGs only)	%s 相機原始圖像 (僅嵌入式 JPEG)
-%s images	%s 圖像
-%s images (processed by Window Imaging Component - WIC)	%s 圖像 (由 Window 圖像組件 - WIC 處理)
-'My Pictures' folder	「我的圖片」資料夾
-About JPEGView (32-bit version)...	
-About JPEGView (64-bit version)...	
-Acquisition date:	擷取日期:
-Actual size of image	圖像實際大小
-Align image to horizontal or vertical line	圖像水平線或垂直線對齊
-Alignment:	
-All Files	所有檔案
-All existing user settings will be preserved.	
-Alternatively, right-click an image file of the given type in Windows Explorer and select 'Open with... > Choose default program'	或者，在 Windows 檔案總管中指定類型的圖像檔案上點選滑鼠右鍵並選擇「開啟方式... > 選擇預設程式」。
-Altitude (m):	
+%d file(s) renamed, %d file(s) copied, %d folder(s) created	已重命名 %d 個文件，已復制 %d 個文件，已創建 %d 個文件夾
+%s camera raw images (embedded JPEGs only)	%s 相機原始圖片（僅嵌入式JPEG）
+%s images	%s 圖片
+%s images (processed by Window Imaging Component - WIC)	%s 圖片（由Windows映像組件-WIC處理）
+'My Pictures' folder	“圖片”文件夾
+About JPEGView (32-bit version)...	關於JPEGView（32位版本）...
+About JPEGView (64-bit version)...	關於JPEGView（64位版本）...
+Acquisition date:	獲取日期：
+Actual size of image	圖片實際大小
+Align image to horizontal or vertical line	圖片水平或垂直對齊
+Alignment:	對齊位置：
+All Files	所有文件
+All existing user settings will be preserved.	將保留所有現有用戶設置。
+Alternatively, right-click an image file of the given type in Windows Explorer and select 'Open with... > Choose default program'	或者，在Windows資源管理器中指定類型的圖片文件上點擊鼠標右鍵並選擇“打開方式...>選擇默認程序”。
+Altitude (m):	高度（m）：
 Amount	數量
-Application:	應用程式:
-Applications	應用程式
-Apply	套用
-Apply Unsharp Mask	套用「USM 銳化」
-Apply auto contrast correction using only visible section of image	僅可見部份圖像套用自動對比度校正
-Ascending	加計數
+Application:	應用程序：
+Applications	應用程序
+Apply	應用
+Apply Unsharp Mask	應用“USM銳化”
+Apply auto contrast correction using only visible section of image	僅可見部份圖片應用自動對比度校正
+Ascending	升序
 Auto contrast and color correction	自動對比度和色彩校正
-Auto crop corrected image (avoids black border)	自動裁剪校正後的圖像 (避免黑邊框)
-Auto crop rotated image (avoids black border)	自動裁剪旋轉後的圖像 (避免黑邊框)
+Auto crop corrected image (avoids black border)	自動裁剪校正後的圖片（避免黑邊框）
+Auto crop rotated image (avoids black border)	自動裁剪旋轉後的圖片（避免黑邊框）
 Auto zoom mode	自動縮放模式
-Back mouse button	後退滑鼠按鈕
-Batch rename/copy of files	批次重新命名/複製檔案
+Back mouse button	鼠標返回按鈕
+Batch rename/copy of files	批量重命名/複製文件
 Blend	混合
-Bottom	
-Box	方框
+Bottom	下
+Box	Box
 Brightness	亮度
 Browse...	瀏覽...
-C - R	青藍 - 紅
-Camera model:	相機型號:
-Can't rename file	無法重新命名檔案
+C - R	青-紅
+Camera model:	相機型號：
+Can't rename file	無法重命名文件
 Cancel	取消
-Cannot read from parameter DB file '%s'!	無法讀取參數資料庫檔案 '%s'!
-Cannot read parameter DB file '%s' because it is too large!	參數資料庫檔案 '%s' 過大，無法讀取!
-Cannot write to parameter DB file '%s'!	無法寫入到參數資料庫檔案 '%s'!
-Click and drag the mouse vertically to correct image tilt.	點選並垂直拖動滑鼠來校正圖像傾斜。
-Clipboard Image	
+Cannot read from parameter DB file '%s'!	無法讀取參數數據庫文件 '%s'！
+Cannot read parameter DB file '%s' because it is too large!	參數數據庫文件 '%s' 過大，無法讀取！
+Cannot write to parameter DB file '%s'!	無法寫入到參數數據庫文件 '%s'！
+Click and drag the mouse vertically to correct image tilt.	點選並垂直拖動鼠標來校正圖片傾斜。
+Clipboard Image	剪貼板的圖片
 Close	關閉
-Close help text display / Close JPEGView	關閉說明文字顯示 / 關閉 JPEGView
+Close help text display / Close JPEGView	關閉幫助文字顯示/關閉JPEGView
 Color Correction	色彩校正
-Combine keys with '+'	與 '+' 組合按鍵
+Combine keys with '+'	與 '+' 組合鍵
 Confirm	確認
-Confirm save default parameters	確認儲存預設參數
-Conflicting entries in Param DB	 參數資料庫中的項目衝突
-Continue rename/copy?	是否繼續重新命名/複製?
+Confirm save default parameters	確認保存默認參數
+Conflicting entries in Param DB	參數數據庫中的項目衝突
+Continue rename/copy?	是否繼續重命名/複製？
 Contrast	對比度
 Contrast Correction	對比度校正
-Copy file path of the image to clipboard	
-Copy screen to clipboard/ Copy processed full size image to clipboard	複製螢幕到剪貼簿/複製處理的原圖到剪貼簿
-Copying parameter DB to file '%s' failed. Reason: %s	複製參數資料庫到檔案 '%s' 失敗。原因: %s
-Correct converging lines (perspective correction)	正確的匯合線 (透視校正)
-Creation date/time	建立日期/時間
-Crop image	裁剪圖像
-Ctrl + Left mouse	按住 Ctrl + 滑鼠左鍵
-Current image	目前圖像
-Cyan-Red	青藍-紅色
-Darken Highlights	加深亮度
+Copy file path of the image to clipboard	將圖片的文件路徑複製到剪貼板
+Copy screen to clipboard/ Copy processed full size image to clipboard	將屏幕複製到剪貼板/將處理後的全尺寸圖片複製到剪貼板
+Copying parameter DB to file '%s' failed. Reason: %s	複製參數數據庫到文件 '%s' 失敗。原因: %s
+Correct converging lines (perspective correction)	正確的匯聚線（透視校正）
+Creation date/time	創建日期/時間
+Crop image	裁剪圖片
+Ctrl + Left mouse	Ctrl + 鼠標左鍵
+Current image	當前圖片
+Cyan-Red	青-紅
+Darken Highlights	高光變暗
 Date	日期
-Date placeholders use the modification date of the image.	日期的替代符號使用圖像的修改日期。
-Day / Month / Year (as numbers)	日/月/年 (同編號)
-Decoding this format requires the Microsoft Visual C++ Redistributable.	
-Deep Shadows	深陰影
+Date placeholders use the modification date of the image.	日期佔位符使用圖片的修改日期。
+Day / Month / Year (as numbers)	日/月/年（數字）
+Decoding this format requires the Microsoft Visual C++ Redistributable.	解碼此格式需要 Microsoft Visual C++ Redistributable。
+Deep Shadows	加深陰影
 Delete	刪除
-Delete current file on disk permanently	從磁碟永久刪除目前檔案
-Delete image file	刪除圖像檔案
-Descending	減計數
-Display image (EXIF) information	顯示圖像訊息 (EXIF)
-Do you really want to delete the current image file on disk?	您真的想要刪除磁碟上的目前圖像檔案嗎?
-Do you really want to permanently delete the file %filename%?	您真的想要永久刪除檔案 %filename% 嗎?
-Do you really want to save the following parameters as default to the INI file	您真的想要儲存以下參數作為預設的 INI 檔案?
+Delete current file on disk permanently	從硬盤永久刪除當前文件
+Delete image file	刪除圖片文件
+Descending	降序
+Display image (EXIF) information	顯示圖片 EXIF 信息
+Do you really want to delete the current image file on disk?	您真的想要刪除硬盤上的當前圖片文件嗎？
+Do you really want to permanently delete the file %filename%?	您真的想要永久刪除文件 %filename% 嗎？
+Do you really want to save the following parameters as default to the INI file	您真的想要將以下參數保存為默認的 INI 文件？
 Drag at the left or right border for asymmetric correction.	如要非對稱校正請拖動左邊或右邊的邊框。
-EXIF date successfully set on %d images, failed on %d images	%d 個圖像的 EXIF 日期設定成功，%d 個圖像失敗
+EXIF date successfully set on %d images, failed on %d images	%d 個圖片的 EXIF 日期設定成功，%d 個圖片失敗
 Edit	編輯
-Enable/disable automatic contrast correction (histogram equalization)	啟用/停用自動對比度校正 (直方圖均衡化)
-Enable/disable automatic density correction (local brightness correction)	啟用/停用自動的密度校正 (局部亮度校正)
-Enable/disable full screen mode	啟用/停用全螢幕模式
-Enable/disable high quality resampling	啟用/停用高品質的重新取樣
-Enable/disable keeping of geometry related (zoom/pan/rotation)	啟用/停用保持幾何相關 (縮放/平移/旋轉)
-Enable/disable landscape picture enhancement mode	啟用/停用景觀圖像增強模式
+Enable/disable automatic contrast correction (histogram equalization)	啟用/停用自動對比度校正（直方圖均衡）
+Enable/disable automatic density correction (local brightness correction)	啟用/停用自動的密度校正（局部亮度校正）
+Enable/disable full screen mode	啟用/停用全屏模式
+Enable/disable high quality resampling	啟用/停用高品質重取樣
+Enable/disable keeping of geometry related (zoom/pan/rotation)	啟用/停用保持幾何相關（縮放/平移/旋轉）
+Enable/disable landscape picture enhancement mode	啟用/停用風景圖片增強模式
 Error	錯誤
-Error during rename/copy	重新命名/複製過程中發生錯誤
-Error saving file	儲存檔案錯誤
-Error while writing the following registry key	寫入以下註冊表機碼時發生錯誤
-Error writing file to disk!	寫入檔案到磁碟錯誤!
-Example:	範例:
-Exposure bias (EV):	曝光補償 (EV):
-Exposure time (s):	曝光時間 (秒):
-Extension	副檔名
-Extracted number from original file name	從來源檔案名稱中提取編號
-F-Number:	F 值:
-File name	檔案名稱
-File size	檔案大小
-File type	檔案類型
-Fill paper with crop	
+Error during rename/copy	重命名/複製過程中發生錯誤
+Error saving file	保存文件錯誤
+Error while writing the following registry key	寫入以下註冊表鍵項出錯
+Error writing file to disk!	寫入文件到硬盤錯誤！
+Example:	範例：
+Exposure bias (EV):	曝光補償（EV）：
+Exposure time (s):	曝光時間（秒）：
+Extension	擴展名
+Extracted number from original file name	從源始文件名中提取編號
+F-Number:	F 值：
+File name	文件名
+File size	文件大小
+File type	文件類型
+Fill paper with crop	用裁剪填充紙張
 Fill with crop	用裁剪來填充
-Fill with crop (no zoom)	用裁剪來填充 (無縮放)
-Filter:	過濾器:
-Fit image to screen	圖像適合螢幕
-Fit to paper	
-Fit to screen	適合螢幕
-Fit to screen (no zoom)	適合螢幕 (無縮放)
-Flash fired:	閃光燈:
-Focal length (mm):	焦距 (mm):
-Forward mouse button	前向滑鼠按鈕
-Full screen mode	全螢幕模式
-Goto first/last image of current folder (using sort order as defined)	移至目前資料夾的第一個/最後一個圖像 (使用所定義的排序順序)
-Goto next image	 移至下一個圖像
-Goto previous image	移至上一個圖像
+Fill with crop (no zoom)	用裁剪填充（無縮放）
+Filter:	濾鏡：
+Fit image to screen	圖片適應屏幕
+Fit to paper	適應紙張大小
+Fit to screen	適合屏幕
+Fit to screen (no zoom)	適合屏幕（無縮放）
+Flash fired:	閃光燈：
+Focal length (mm):	焦距（mm）：
+Forward mouse button	鼠標前進按鈕
+Full screen mode	全屏模式
+Goto first/last image of current folder (using sort order as defined)	移至當前文件夾的第一個/最後一張圖片（使用所定義的排序順序）
+Goto next image	下一張圖片
+Goto previous image	上一張圖片
 Height	高度
 Hide histogram	隱藏直方圖
-High quality resampling	
-Hour / Minute (as numbers)	
-ISO Speed:	ISO 感光度:
-Image Pixels	圖像像素
-Image files in folder	在資料夾中的圖像檔案
-Image height:	圖像高度:
-Image width and height must be dividable by the JPEG block size (8 or 16) for lossless transformations!	無損轉換的圖片的寬度和高度必須可被 JPEG 區塊大小 (8 或 16) 整除!
-Image width:	圖像寬度:
-Images	圖像
+High quality resampling	高質量重採樣
+Hour / Minute (as numbers)	時/分（數字）
+ISO Speed:	ISO感光度：
+Image Pixels	圖片像素
+Image files in folder	當前文件夾（僅顯示支持的文件）：
+Image height:	圖片高度：
+Image width and height must be dividable by the JPEG block size (8 or 16) for lossless transformations!	無損轉換圖片的寬度和高度必須可被JPEG區塊大小（8或16）整除！
+Image width:	圖片寬度：
+Images	圖片
 Increase/decrease auto color cast correction amount	增加/減少自動膚色的校正量
 Increase/decrease auto contrast correction amount	增加/減少自動對比度的校正量
 Increase/decrease brightness	增加/減少亮度
 Increase/decrease contrast	增加/減少對比度
-Increase/decrease darkening of highlights (LDC must be on)	增加/減少亮點的暗度 (局部密度補償必須開啟)
-Increase/decrease lightening of shadows (LDC must be on)	增加/減少陰影的亮度 (局部密度補償必須開啟)
+Increase/decrease darkening of highlights (LDC must be on)	增加/減少亮點的暗度（局部密度補償必須打開）
+Increase/decrease lightening of shadows (LDC must be on)	增加/減少陰影的亮度（局部密度補償必須打開）
 Increase/decrease sharpness	增加/減小銳度
-Insufficient rights to change the privilege (DACL) on the registry entry. Continue?	
-JPEGView Help	JPEGView 說明
-JPEGView is a lean, fast and highly configurable viewer/editor for JPEG, BMP, PNG, WEBP, TGA, GIF and TIFF images with a minimal GUI.	JPEGView 是一款實用、快速及具有高度組態性的檢視器/編輯器，使用最小的圖形使用者界面，適用於 JPEG、BMP、PNG、WEBP、TGA、GIF 和 TIFF 圖像。
-JPEGView is registered as default viewer for the selected file formats.	註冊 JPEGView 為選擇的檔案格式的預設檢視工具。
+Insufficient rights to change the privilege (DACL) on the registry entry. Continue?	權限不足，無法更改註冊表項的權限（DACL）。繼續？
+JPEGView Help	JPEGView 幫助
+JPEGView is a lean, fast and highly configurable viewer/editor for JPEG, BMP, PNG, WEBP, TGA, GIF and TIFF images with a minimal GUI.	JPEGView是一款實用、快速及具有高度組態性的查看器/編輯器，使用最小的圖形用戶界面，適用於JPEG、BMP、PNG、WEBP、TGA、GIF和TIFF圖片。
+JPEGView is registered as default viewer for the selected file formats.	註冊JPEGView為選擇的文件格式的默認圖片查看器。
 Keep aspect ratio on crop	保持畫面比例裁剪
 Keep parameters	保持參數
-Keep processing parameters between images	保持相鄰的兩圖像間的處理參數
-Known keys:	已知按鍵:
-Lanczos/Bicubic	
-Landscape	
-Landscape picture enhancement mode	景觀圖像增強模式
+Keep processing parameters between images	保持相鄰的兩圖片間的處理參數
+Known keys:	已知鍵：
+Lanczos/Bicubic	Lanczos/Bicubic
+Landscape	橫
+Landscape picture enhancement mode	風景圖片增強模式
 Last modification date/time	最後修改日期/時間
-Left	
-Left mouse & drag	滑鼠左鍵並拖動
-Licensed under the GNU general public license (GPL), see readme file for details	基於 GNU General Public License (GPL) 授權，請參閱自述檔案的詳細資訊
-Lighten Shadows	淺陰影
+Left	左
+Left mouse & drag	鼠標左鍵拖動
+Licensed under the GNU general public license (GPL), see readme file for details	基於GNU General Public License（GPL）授權，請參閱自述文件的詳細信息
+Lighten Shadows	淡化陰影
 Local density correction	局部密度校正
-Location:	
-Loop folder	循環資料夾
-Loop recursively	遞迴循環
-Loop siblings	同步循環
-Loop through files in current directory and all sibling folders (folders on same level)	遍歷目前目錄和所有同級資料夾中的檔案 (在同一層級上的資料夾)
-Loop through files in current directory and all subfolders	遍歷目前目錄和所有子資料夾中的檔案
-Loop through files in current folder	遍歷目前資料夾中的檔案
-Lossless JPEG transformations	無損 JPEG 轉換
-M - G	品紅 - 綠
-Magenta-Green	品紅-綠色
-Manage 'Open image with' menu...	管理「開啟圖像方式」選單...
-Margins:	
-Mark image for toggling. Use %s to toggle between marked and current image	標示圖像切換。使用 %s 來在標示圖像和目前圖像之間切換
-Maximize/restore to/from virtual desktop (only for multi-monitor systems)	最大化/還原到/從虛擬桌面 (僅適用於多顯示器系統)
-Menu entries:	選單項目:
-Modification date:	修改日期:
-Modifier keys:	複合按鍵:
-Month / Short form (text)	月份/短格式 (文字)
-Mouse wheel	滑鼠滾輪
-Navigation	巡覽
+Location:	地點：
+Loop folder	當前目錄循環
+Loop recursively	遞歸循環
+Loop siblings	同級目錄循環
+Loop through files in current directory and all sibling folders (folders on same level)	遍歷當前目錄和所有同級文件夾中的文件（在同一層級上的文件夾）
+Loop through files in current directory and all subfolders	遍歷當前目錄和所有子目錄中的文件
+Loop through files in current folder	遍歷當前文件夾中的文件
+Lossless JPEG transformations	無損JPEG轉換
+M - G	洋紅-綠
+Magenta-Green	洋紅-綠
+Manage 'Open image with' menu...	管理“打開圖片方式”菜單...
+Margins:	邊距：
+Mark image for toggling. Use %s to toggle between marked and current image	標示圖片切換。使用 %s 來在標示圖片和當前圖片之間切換
+Maximize/restore to/from virtual desktop (only for multi-monitor systems)	最大化/還原到/從虛擬桌面（僅適用於多顯示器）
+Menu entries:	菜單項目：
+Modification date:	修改日期：
+Modifier keys:	複合鍵：
+Month / Short form (text)	月份/短格式（文字）
+Mouse wheel	鼠標滾輪
+Navigation	導航
 New	新增
-New height:	新的高度:
-New name (>> : file gets copied)	新的名稱(>> : 檔案將被複製)
-New name contains backslash character!	新名稱中包含反斜線字元!
-New size:	新的大小:
-New width:	新的寬度:
-Next image	下一個圖像
-No image loaded!	未載入圖像!
-No user INI file exists yet. Create user INI file from INI file template?	尚無使用者 INI 檔案。是否從 INI 檔案範本來建立使用者 INI 檔案?
+New height:	新的高度：
+New name (>> : file gets copied)	新名（>> : 文件將被複製）
+New name contains backslash character!	新名中包含反斜線字符！
+New size:	新的大小：
+New width:	新的寬度：
+Next image	下一張圖片
+No image loaded!	未加載圖片！
+No user INI file exists yet. Create user INI file from INI file template?	尚無用戶INI文件。是否從INI文件模板來創建用戶INI文件？
 None	無
-Not enough memory available	沒有足夠的可用記憶體
-Note: Set the key 'TrimWithoutPromptLosslessJPEG=true' in the INI file to always trim without showing this message.	注意: 在 INI 檔案中設定「TrimWithoutPromptLosslessJPEG=true」以便總是修剪而不顯示此消息。
-Number (consecutively numbered)	編號 (連續編號)
-Number of CPU cores used	所使用的 CPU 核心數量
-Number of JPEG files in folder: %d	該資料夾中的 JPEG 檔案數量: %d
-Number with N digits	用 N 位數編號
+Not enough memory available	沒有足夠的可用內存
+Note: Set the key 'TrimWithoutPromptLosslessJPEG=true' in the INI file to always trim without showing this message.	注意：在INI文件中設定“TrimWithoutPromptLosslessJPEG=true”以便總是修剪而不顯示此消息。
+Number (consecutively numbered)	編號（連續編號）
+Number of CPU cores used	所使用的CPU核心數量
+Number of JPEG files in folder: %d	該文件夾中的JPEG文件數量: %d
+Number with N digits	用N位數編號
 OK	確定
-Old name	舊的名稱
-Open folder containing image and select in Windows Explorer	
-Open new image or slideshow file	開啟新的圖像或幻燈片檔案
-Order files by	檔案排序依據
-Orientation:	
-Original file extension	原始檔案副檔名
-Original file name (with extension)	原始檔案名稱 (含副檔名)
-Original file name (without extension)	原始檔案名稱 (不含副檔名)
-Pan image	移動圖像
-Paper:	
-Parameter DB	參數資料庫
-Parameter DB error	參數資料庫錯誤
-Parameter DB file '%s' could not be opened!	無法開啟參數資料庫檔案 '%s'!
-Parameter DB file '%s' is not valid (invalid header)!	參數資料庫檔 案'%s' 無效 (無效的頭部)!
-Paste from clipboard	從剪貼簿貼上
-Pasting image from clipboard failed!	從剪貼簿貼上圖像失敗!
-Performing the lossless transformation failed!	執行無損轉換失敗!
+Old name	舊名
+Open folder containing image and select in Windows Explorer	打開包含圖片的文件夾並在Windows資源管理器中選擇
+Open new image or slideshow file	打開新的圖片或幻燈片文件
+Order files by	文件排序依據
+Orientation:	紙張方向：
+Original file extension	原始文件擴展名
+Original file name (with extension)	原始文件名（含擴展名）
+Original file name (without extension)	原始文件名（不含擴展名）
+Pan image	移動圖片
+Paper:	紙張大小：
+Parameter DB	參數數據庫
+Parameter DB error	參數數據庫錯誤
+Parameter DB file '%s' could not be opened!	無法打開參數數據庫文件 '%s'！
+Parameter DB file '%s' is not valid (invalid header)!	參數數據庫檔案'%s' 無效（無效的頭部）！
+Paste from clipboard	從剪貼板粘貼
+Pasting image from clipboard failed!	從剪貼板粘貼圖片失敗！
+Performing the lossless transformation failed!	執行無損轉換失敗！
 Performing the transformation failed	執行轉換失敗
 Perspective Correction	透視校正
 Pixels	像素
-Placeholders:	替代符號:
-Portrait	
-Press 'OK' to continue with registration or 'Cancel' to abort all registrations.	按下「確定」繼續註冊或按下「取消」不修改任何註冊表內容。
-Press ESC to exit...	按下 ESC 結束...
-Press any key to search the subdirectories for image files.	按下任意按鍵來搜尋子資料夾中的圖像檔案。
+Placeholders:	佔位符：
+Portrait	豎
+Press 'OK' to continue with registration or 'Cancel' to abort all registrations.	按下“確定”繼續註冊或按下“取消”不修改任何註冊表內容。
+Press ESC to exit...	按下ESC退出...
+Press any key to search the subdirectories for image files.	按任意鍵來查找子目錄中的圖片文件。
 Preview	預覽
-Previous image	上一個圖像
-Print	
-Print Image	
-Printer driver	
-Printer:	
-Project home page	專案首頁
+Previous image	上一張圖片
+Print	打印
+Print Image	打印圖片
+Printer driver	打印機驅動程序
+Printer:	打印機:
+Project home page	項目首頁
 Radius	半徑
 Random	隨機
-Reading the JPEG file from disk failed	從磁碟讀取 JPEG 檔案失敗
-Reason:	原因:
-Registering or unregistering file extensions in this registry area requires administrator privileges and cannot be done in JPEGView.	在註冊表區域註冊或取消註冊檔案副檔名需要管理權限，無法在 JPEGView 中完成。
-Registration applies to the current user only.	註冊僅套用到目前使用者。
-Remove from	移除
-Rename	重新命名
-Rename/copy images to:	重新命名/複製圖像到:
-Renaming file failed!	重新命名失敗!
-Reset	
-Resize Image	重新調整圖像大小
-Right	
-Right mouse button: Context menu	滑鼠右鍵: 上下文選單
-Roll from bottom	從下捲動
-Roll from left	從左捲動
-Roll from right	從右捲動
-Roll from top	從上捲動
-Rotate Image	旋轉圖像
-Rotate current file on disk lossless by 270 deg (W/H must be multiple of 16)	在磁碟上無損旋轉目前檔案 270 度 (寬度/高度必須是 16 的倍數)
-Rotate current file on disk lossless by 90 deg (W/H must be multiple of 16)	在磁碟上無損旋轉目前檔案 90 度 (寬度/高度必須是 16 的倍數)
-Rotate image 90 deg clockwise	順時針旋轉 90 度
-Rotate image 90 deg counter-clockwise	逆時針旋轉 90 度
-Rotate image and fit to screen	旋轉圖像且適合螢幕
-Rotate image by user-defined angle	以使用者定義的角度旋轉圖像
-Rotate the image by dragging with the mouse.	使用滑鼠拖動來旋轉圖像。
+Reading the JPEG file from disk failed	從硬盤讀取JPEG文件失敗
+Reason:	原因：
+Registering or unregistering file extensions in this registry area requires administrator privileges and cannot be done in JPEGView.	在註冊表區域註冊或取消註冊文件擴展名需要管理員權限，無法在JPEGView中完成。
+Registration applies to the current user only.	註冊僅應用到當前用戶。
+Remove from	刪除
+Rename	重命名
+Rename/copy images to:	重命名/複製圖片到：
+Renaming file failed!	重命名失敗！
+Reset	重置
+Resize Image	重新調整圖片大小
+Right	右
+Right mouse button: Context menu	鼠標右鍵：上下文菜單
+Roll from bottom	從下側捲動
+Roll from left	從左側捲動
+Roll from right	從右側捲動
+Roll from top	從上側捲動
+Rotate Image	旋轉圖片
+Rotate current file on disk lossless by 270 deg (W/H must be multiple of 16)	在硬盤上無損旋轉當前文件270度（寬度/高度必須是16的倍數）
+Rotate current file on disk lossless by 90 deg (W/H must be multiple of 16)	在硬盤上無損旋轉當前文件90度（寬度/高度必須是16的倍數）
+Rotate image 90 deg clockwise	順時針旋轉90度
+Rotate image 90 deg counter-clockwise	逆時針旋轉90度
+Rotate image and fit to screen	旋轉圖片且適應屏幕
+Rotate image by user-defined angle	以用戶定義的角度旋轉圖片
+Rotate the image by dragging with the mouse.	使用鼠標拖動來旋轉圖片。
 SIMD mode used	SIMD 模式下使用
 Same as Image	
 Saturation	飽和度
-Save	儲存
-Save (%s)/ delete (%s) image processing parameters in/from parameter DB	儲存 (%s)/ 刪除 (%s) 圖像處理參數在/從參數資料庫
-Save as (in screen size/resolution)	另存為 (在螢幕大小/解析度)
-Save as template	另存為範本
-Save cropped image	儲存裁剪後的圖像
-Save processed image to JPEG file (original size)	儲存處理後的圖像為 JPEG 檔案 (原始大小)
-Save processed image to JPEG file (screen size)	儲存處理後的圖像為 JPEG 檔案 (螢幕大小)
-Save to	儲存為
-Scaling mode:	
-Screen Pixels	螢幕像素
-Scroll from bottom	從下滾動
-Scroll from left	從左滾動
-Scroll from right	從右滾動
-Scroll from top	從上滾動
-Select Printer...	
-Select all	全部選擇
-Select application	選擇應用程式
-Select file to display in 'File Open' dialog	選擇要在「檔案開啟」對話框中顯示的檔案
+Save	保存
+Save (%s)/ delete (%s) image processing parameters in/from parameter DB	保存（%s）/刪除（%s）圖片處理參數在/從參數數據庫
+Save as (in screen size/resolution)	另存為（在屏幕大小/解析度）
+Save as template	另存為模板
+Save cropped image	保存裁剪後的圖片
+Save processed image to JPEG file (original size)	保存處理後的圖片為JPEG文件（原始大小）
+Save processed image to JPEG file (screen size)	保存處理後的圖片為JPEG文件（屏幕大小）
+Save to	保存
+Scaling mode:	放大模式：
+Screen Pixels	屏幕像素
+Scroll from bottom	從下側滾動
+Scroll from left	從左側滾動
+Scroll from right	從右側滾動
+Scroll from top	從上側滾動
+Select Printer...	選擇打印機...
+Select all	選擇全部
+Select application	選擇應用程序
+Select file to display in 'File Open' dialog	選擇要在“打開文件”對話框中顯示的文件
 Select none	取消選擇
-Select parameter DB to restore	選擇要還原的參數資料庫
+Select parameter DB to restore	選擇要還原的參數數據庫
 Set Fixed Crop Size	設定固定裁剪尺寸
-Set JPEGView as default image viewer	將 JPEGView 設為預設圖像檢視工具
-Set timeout to n/10 sec, respectively n/100 sec (Ctrl+Shift)	設定逾時為 n/10 秒，分別為 n/100 秒 (Ctrl + Shift)
-Shall existing entries be preserved (Yes) or be overriden by the imported entries (No)?	您想要保留現有項目 (是) 或是以匯入的項目覆寫現有項目 (否)?
+Set JPEGView as default image viewer	將JPEGView設為默認圖片查看器
+Set timeout to n/10 sec, respectively n/100 sec (Ctrl+Shift)	設定逾時為n/10秒，分別為n/100秒（Ctrl+Shift）
+Shall existing entries be preserved (Yes) or be overriden by the imported entries (No)?	您想要保留現有項目（是）或是以導入的項目覆蓋現有項目（否）？
 Sharpen	銳化
 Sharpen low	低度銳化
 Sharpen medium	中度銳化
-Shortcut Help	捷徑說明
-Shortcut key:	捷徑按鍵:
-Show filename	顯示檔案名稱
-Show first image in folder	顯示資料夾中的第一個圖像
+Shortcut Help	快捷鍵幫助
+Shortcut key:	快捷鍵：
+Show filename	顯示文件名
+Show first image in folder	顯示文件夾中的第一張圖片
 Show grid lines	顯示網格
 Show histogram	顯示直方圖
-Show last image in folder	顯示資料夾中的最後一個圖像
-Show navigation panel	顯示巡覽面板
-Show next image	顯示下一個圖像
-Show picture info (EXIF)	顯示圖片訊息 (EXIF)
-Show previous image	顯示上一個圖像
-Show/hide file name	顯示/隱藏檔案名稱
-Show/hide navigation panel	顯示/隱藏巡覽面板
-Show/hide picture information (EXIF data)	顯示/隱藏圖片訊息 (EXIF 資料)
+Show last image in folder	顯示文件夾中的最後一張圖片
+Show navigation panel	顯示導航面板
+Show next image	顯示下一張圖片
+Show picture info (EXIF)	顯示圖片信息（EXIF）
+Show previous image	顯示上一張圖片
+Show/hide file name	顯示/隱藏文件名
+Show/hide navigation panel	顯示/隱藏導航面板
+Show/hide picture information (EXIF data)	顯示/隱藏圖片信息（EXIF數據）
 Show/hide this help text	顯示/隱藏說明文字
-Size:	
-Slide from bottom	從下滑動
-Slide from left	從左滑動
-Slide from right	從右滑動
-Slide from top	從上滑動
+Size:	大小：
+Slide from bottom	從下側滑動
+Slide from left	從左側滑動
+Slide from right	從右側滑動
+Slide from top	從上側滑動
 Slideshow	幻燈片
-Slideshow with timeout of 'n' seconds (ESC to stop)	n 秒逾時幻燈片放映 (ESC 停止)
-Sort images by creation date, resp. modification date, resp. file name	依據建立日期、修改日期、檔案名稱排序
-Source:	
-Target folders that do not yet exist are created as needed.	尚無目標資料夾存在需要建立。
-The directory '%s' does not contain any image files!	目錄 '%s' 不包含圖像檔案!
-The file '%s' could not be copied!	
-The file '%s' could not be read!	檔案 '%s' 無法被讀取!
-The file '%s' could not be renamed!	
-The file '%s' does not contain a list of file names!	檔案 '%s' 不包含檔案名稱清單!
-The file is read-only!	唯讀檔案!
-The following file extensions cannot be unregistered because they have been registered in the 'local machine' registry area.	無法註冊以下檔案副檔名，因為在「本機」註冊表區域中已註冊它們。
-The following image extensions are protected by the operating system.	以下圖像副檔名被作業系統保護。
-The imported param DB contains entries already present in active param DB.	匯入的參數資料庫包含已經存在於作用中參數資料庫的項目。
-The new size is too large - width or height is larger than 65535 or total number of pixels is too large!	新的圖像大小太大 - 寬度或高度大於 65536 或是總像素數太大!
-The old parameter DB file '%s' could not be renamed during conversion to new format!	在轉換為新的格式的過程中無法重新命名舊的參數資料庫檔案 '%s'!
-The operation failed because not enough memory is available!	操作失敗，因為沒有足夠的可用記憶體!
-The parameter DB file '%s' has been created by a newer version of JPEGView!	較新版本的 JPEGView 已建立參數資料庫檔案 '%s'!
-The transformation can be applied if the image is trimmed to the next matching size but this will remove some border pixels.	假如圖像被裁剪，可以套用到下一個符合的大小，但是這將消除一些邊框像素的轉換。
-These values will override the values from the INI file located in the program folder of JPEGView!	這些值將覆寫 JPEGView 程式資料夾中 INI 檔案的值!
+Slideshow with timeout of 'n' seconds (ESC to stop)	n秒逾時幻燈片放映（ESC停止）
+Sort images by creation date, resp. modification date, resp. file name	依據創建日期、修改日期、文件名排序
+Source:	紙張來源：
+Target folders that do not yet exist are created as needed.	根據需要創建尚不存在的目標文件夾。
+The directory '%s' does not contain any image files!	目錄'%s'沒有圖片文件！
+The file '%s' could not be copied!	無法複製文件'%s'！
+The file '%s' could not be read!	無法讀取文件'%s'！
+The file '%s' could not be renamed!	無法重命名文件'%s'！
+The file '%s' does not contain a list of file names!	文件'%s'不包含文件名列表！
+The file is read-only!	只讀文件！
+The following file extensions cannot be unregistered because they have been registered in the 'local machine' registry area.	無法註冊以下文件擴展名，因為在“本機”註冊表區域中已註冊它們。
+The following image extensions are protected by the operating system.	以下圖片擴展名被操作系統保護。
+The imported param DB contains entries already present in active param DB.	導入的參數數據庫包含已經存在於活動參數數據庫的項目。
+The new size is too large - width or height is larger than 65535 or total number of pixels is too large!	新的圖片大小太大-寬度或高度大於65536或是總像素數太大！
+The old parameter DB file '%s' could not be renamed during conversion to new format!	在轉換為新的格式的過程中無法重命名舊的參數數據庫文件'%s'！
+The operation failed because not enough memory is available!	操作失敗，沒有足夠的可用內存！
+The parameter DB file '%s' has been created by a newer version of JPEGView!	較新版本的JPEGView已創建參數數據庫文件'%s'！
+The transformation can be applied if the image is trimmed to the next matching size but this will remove some border pixels.	假如圖片被裁剪，可以應用到下一個符合的大小，但是這將消除一些邊框像素的轉換。
+These values will override the values from the INI file located in the program folder of JPEGView!	這些值將覆蓋JPEGView程序文件夾中INI文件的值！
 Threshold	閾值
-Title:	標題:
-Toggle between screens (only for multi-monitor systems)	螢幕之間切換 (僅適用於多顯示器系統)
-Toggle window always on top mode	
-Toggle window title bar hidden mode	
-Top	
-Transition Effect	轉場效果
-Trim the image and apply transformation? Trimming cannot be undone!	是否裁切圖像並套用轉換? 裁剪無法被復原!
+Title:	標題：
+Toggle between screens (only for multi-monitor systems)	屏幕之間切換（僅適用於多顯示器）
+Toggle window always on top mode	切換窗口始終在頂部模式
+Toggle window title bar hidden mode	切換窗口標題欄隱藏模式
+Top	上
+Transition Effect	過度效果
+Trim the image and apply transformation? Trimming cannot be undone!	是否裁剪圖片並應用轉換？裁剪無法被復原！
 Unregistering not possible	無法取消註冊
-Unsharp mask...	USM 銳化
-Update user settings with new settings from settings template file?	
-Use the 'Default Programs' configuration dialog from the operating system instead.	使用作業系統的「預設程式」組態對話框替代。
-Use the mouse to draw a line that shall be horizontal or vertical.	使用滑鼠來畫一條線，將作為水平線或垂直線。
+Unsharp mask...	USM銳化
+Update user settings with new settings from settings template file?	使用設置模板文件中的新設置更新用戶設置？
+Use the 'Default Programs' configuration dialog from the operating system instead.	使用操作系統的“默認程序”組態對話框替代。
+Use the mouse to draw a line that shall be horizontal or vertical.	使用鼠標來畫一條線，將作為水平線或垂直線。
 Warning	警告
 Width	寬度
-Window mode	視窗模式
-Windows 8 (and above) blocks JPEGView from changing the default program for these file extensions.	
-Writing the resulting JPEG file to disk failed	建立的 JPEG 檔案寫入到磁碟時失敗
-Y - B	黃色 - 藍
-Year short form (2 digits)	年份短格式 (2 位數)
-Yellow-Blue	黃色-藍色
-Zoom 1:1 (100 %)	1:1 縮放 (100%)
-Zoom in (%s)/Zoom out (%s)	放大 (%s)/縮小 (%s)
-Zoom in/out image	放大/縮小圖像
-Zoom mode (drag mouse to zoom)	縮放模式 (拖動滑鼠來縮放)
-and image processing (brightness/contrast/sharpen) parameters between images	和圖像之間的圖像處理參數 (亮度/對比度/銳化)
-cm	
-in	
-new menu entry	
+Window mode	窗口模式
+Windows 8 (and above) blocks JPEGView from changing the default program for these file extensions.	Windows8(及更高版本)阻止JPEGView更改這些文件擴展名的默認程序。
+Writing the resulting JPEG file to disk failed	創建的JPEG文件寫入到硬盤時失敗
+Y - B	黃-藍
+Year short form (2 digits)	年份短格式（2位數）
+Yellow-Blue	黃-藍
+Zoom 1:1 (100 %)	1:1縮放（100%）
+Zoom in (%s)/Zoom out (%s)	放大（%s）/縮小（%s）
+Zoom in/out image	放大/縮小圖片
+Zoom mode (drag mouse to zoom)	縮放模式（拖動鼠標來縮放）
+and image processing (brightness/contrast/sharpen) parameters between images	與圖片之間的圖片處理參數（亮度/對比度/銳化）
+cm	厘米
+in	英寸
+new menu entry	新菜單項
 no	否
 off	關閉
-on	開啟
+on	打開
 user-defined	
 yes	是
 
 // ::: Popup Menu Strings ::: (unsorted to preserve context) //
-Stop slide show/movie	停止幻燈片/視訊
-Open image...	開啟圖像...
-Open image with	開啟圖像方式
-Save processed image...	儲存處理後的圖像...
-Reload image	重新載入圖像
-Open containing folder in Explorer	
-Print image...	
-Batch rename/copy...	批次重新命名/複製...
+Stop slide show/movie	停止幻燈片/視頻
+Open image...	打開圖片...
+Open image with	打開圖片方式
+Save processed image...	保存處理後的圖片...
+Reload image	重新加載圖片
+Open containing folder in Explorer	打開圖片所在文件夾
+Print image...	打印圖片...
+Batch rename/copy...	批量重命名/複製...
 Set modification date	設定修改日期
-to current date	為目前日期
-to EXIF date	為 EXIF 日期
-to EXIF date (all files in folder)	為 EXIF 日期 (該資料夾中的所有檔案)
-Set as desktop wallpaper	
-Use original image	
-Use processed image as displayed	
-Copy to clipboard	複製到剪貼簿
-Copy original size image	複製原始大小圖像
-Copy file path	
+to current date	為當前日期
+to EXIF date	為EXIF日期
+to EXIF date (all files in folder)	為EXIF日期（該文件夾中的所有文件）
+Set as desktop wallpaper	設置為桌面壁紙
+Use original image	使用原始圖片
+Use processed image as displayed	使用處理後的圖片
+Copy to clipboard	複製到剪貼板
+Copy original size image	複製原始大小圖片
+Copy file path	複製文件路徑
 Display order	顯示順序
 Modification date	修改日期
-Creation date	建立日期
-Play folder as slideshow/movie	幻燈片/視訊播放資料夾
+Creation date	創建日期
+Play folder as slideshow/movie	幻燈片/視頻文件夾
 Waiting time	等待時間
-1 sec	
-2 sec	
-3 sec	
-4 sec	
-5 sec	
-7 sec	
-10 sec	
-20 sec	
-Transition Speed	轉場速度
+1 sec	1秒
+2 sec	2秒
+3 sec	3秒
+4 sec	4秒
+5 sec	5秒
+7 sec	7秒
+10 sec	10秒
+20 sec	20秒
+Transition Speed	轉換速度
 Very fast	非常快
 Fast	快
 Normal	一般
 Slow	慢
 Very slow	非常慢
-Movie	視訊
-Playback speed	
-5 fps	
-10 fps	
-25 fps	
-30 fps	
-50 fps	
-100 fps	
-Transform image	轉換圖像
+Movie	視頻
+Playback speed	播放速度
+5 fps	5幀
+10 fps	10幀
+25 fps	25幀
+30 fps	30幀
+50 fps	50幀
+100 fps	100幀
+Transform image	轉換圖片
 Rotate +90	旋轉 +90°
 Rotate -90	旋轉 -90°
 Rotate...	旋轉...
@@ -438,125 +442,59 @@ Change size...	變更大小...
 Perspective correction...	透視校正...
 Mirror horizontally	水平翻轉
 Mirror vertically	垂直翻轉
-Rotate 180	旋轉 180°
+Rotate 180	旋轉180°
 Auto correction	自動校正
-Save parameters to DB	儲存參數到資料庫
-Clear parameters from DB	從資料庫清除參數
+Save parameters to DB	保存參數到數據庫
+Clear parameters from DB	從數據庫清除參數
 Zoom	縮放
-Span all screens	擴展到全部螢幕
-Fit window to image	視窗適合圖像
-Hide window title bar	
-Set window always on top	
+Span all screens	擴展到全部屏幕
+Fit window to image	使窗口適合圖片
+Hide window title bar	隱藏窗口標題欄
+Set window always on top	將窗口設置為始終在頂部
 Settings/Admin	設定/管理
-Edit global settings...	編輯全局設定...
-Edit user settings...	編輯使用者設定...
-Update user settings...	
-Set current parameters as default values...	設定目前參數為預設值...
-Set as default viewer...	設為預設檢視工具...
-Backup parameter DB...	備份參數資料庫...
-Restore parameter DB...	還原參數資料庫...
-User commands	使用者指令
-About JPEGView...	關於 JPEGView...
-Exit	結束
+Edit global settings...	編輯全局設置...
+Edit user settings...	編輯用戶設置...
+Update user settings...	更新用戶設置...
+Set current parameters as default values...	設置當前參數為默認值...
+Set as default viewer...	設為默認圖片查看器...
+Backup parameter DB...	備份參數數據庫...
+Restore parameter DB...	還原參數數據庫...
+User commands	用戶命令
+About JPEGView...	關於JPEGView...
+Exit	退出
 Crop Selection	裁剪選擇內容
 Crop Selection Lossless...	無損裁剪選擇內容...
-Copy Selection to Clipboard	複製選擇內容到剪貼簿
-Crop Mode	裁切模式
+Copy Selection to Clipboard	複製選擇內容到剪貼板
+Crop Mode	裁剪模式
 Free	自由
 Fixed size...	固定大小...
 Zoom to Selection	縮放到選擇內容
 
-// ::: INFO: Out-of-date Translations [16] ::: (Not in use anymore, safe to delete) //
-//However this will fail if the current user has no administration privileges.	但是，如果目前使用者沒有管理員權限，本操作將失敗。
-//Insufficient rights to remove the restrictions. Continue?	權限不足以移除限制。是否繼續?
-//JPEGView can try to remove the restrictions automatically.	JPEGView 可以自動地嘗試移除限制。
-//No file or folder name was provided as command line parameter!	沒有檔案或資料夾名稱被提供為指令行參數!
-//PgDn or Right	PgDn 或 Right
-//PgUp or Left	PgUp 或 Left
-//Rename:	重新命名:
-//Rotate the following file lossless by 270 deg?\n%filename%	您想要以下檔案無損旋轉 270 度嗎?\n%filename%
-//Rotate the following file lossless by 90 deg?\n%filename%	您想要以下檔案無損旋轉 90 度嗎?\n%filename%
-//The file '%s' could not be %s.	檔案 '%s' 無法是 %s。
-//To use JPEGView, associate JPG, JPEG and BMP files with JPEGView.	要使用 JPEGView 請將 JPG, JPEG, BMP 檔案與 JPEGView 關聯。
-//Windows 8 blocks JPEGView from changing the default program for these file endings.	Windows 8 封鎖 JPEGView 對這些檔案副檔名變更為預設程式。
+// ::: INFO: Out-of-date Translations [17] ::: (Not in use anymore, safe to delete) //
+//Actual size of image (Space)	圖片的實際大小
+//However this will fail if the current user has no administration privileges.	但是，如果當前用戶沒有管理員權限，本操作將失敗。
+//Insufficient rights to remove the restrictions. Continue?	權限不足以移除限制。是否繼續？
+//JPEGView can try to remove the restrictions automatically.	JPEGView可以自動嘗試移除限制。
+//No file or folder name was provided as command line parameter!	沒有提供文件或文件夾名作為命令行參數！
+//PgDn or Right	PgDn或Right
+//PgUp or Left	PgUp或Left
+//Rename:	重命名：
+//Rotate the following file lossless by 270 deg?\n%filename%	您想要以下文件無損旋轉270度嗎?\n%filename%
+//Rotate the following file lossless by 90 deg?\n%filename%	您想要以下文件無損旋轉90度嗎?\n%filename%
+//The file '%s' could not be %s.	文件 '%s' 無法是 %s。
+//To use JPEGView, associate JPG, JPEG and BMP files with JPEGView.	要使用JPEGView請將JPG, JPEG, BMP文件與JPEGView關聯。
+//Windows 8 blocks JPEGView from changing the default program for these file endings.	Windows8限制JPEGView對這些文件擴展名變更為默認程序。
 //[new entry]	[新增項目]
-//copied	已複製
-//renamed	已重新命名
+//copied	已復制
+//renamed	已重命名
 //up/down	向上/向下
 
-// ::: INFO: Missing Translations [69] ::: (Summary of all missing strings to assist translators - Auto-generated by script) //
-//! About JPEGView (32-bit version)...
-//! About JPEGView (64-bit version)...
-//! Alignment:
-//! All existing user settings will be preserved.
-//! Altitude (m):
-//! Bottom
-//! Clipboard Image
-//! Copy file path of the image to clipboard
-//! Decoding this format requires the Microsoft Visual C++ Redistributable.
-//! Fill paper with crop
-//! Fit to paper
-//! High quality resampling
-//! Hour / Minute (as numbers)
-//! Insufficient rights to change the privilege (DACL) on the registry entry. Continue?
-//! Lanczos/Bicubic
-//! Landscape
-//! Left
-//! Location:
-//! Margins:
-//! Open folder containing image and select in Windows Explorer
-//! Orientation:
-//! Paper:
-//! Portrait
-//! Print
-//! Print Image
-//! Printer driver
-//! Printer:
-//! Reset
-//! Right
+// ::: INFO: Missing Translations [2] ::: (Summary of all missing strings to assist translators - Auto-generated by script) //
 //! Same as Image
-//! Scaling mode:
-//! Select Printer...
-//! Size:
-//! Source:
-//! The file '%s' could not be copied!
-//! The file '%s' could not be renamed!
-//! Toggle window always on top mode
-//! Toggle window title bar hidden mode
-//! Top
-//! Update user settings with new settings from settings template file?
-//! Windows 8 (and above) blocks JPEGView from changing the default program for these file extensions.
-//! cm
-//! in
-//! new menu entry
 //! user-defined
-//! Open containing folder in Explorer
-//! Print image...
-//! Set as desktop wallpaper
-//! Use original image
-//! Use processed image as displayed
-//! Copy file path
-//! 1 sec
-//! 2 sec
-//! 3 sec
-//! 4 sec
-//! 5 sec
-//! 7 sec
-//! 10 sec
-//! 20 sec
-//! Playback speed
-//! 5 fps
-//! 10 fps
-//! 25 fps
-//! 30 fps
-//! 50 fps
-//! 100 fps
-//! Hide window title bar
-//! Set window always on top
-//! Update user settings...
 
-// ::: STATUS: Last Checked/Updated by Script ::: 2023-02-24T18:21:42.982843+00:00 //
-//! Translation Progress: 84%
+// ::: STATUS: Last Checked/Updated by Script ::: 2023-03-09T12:47:31.968850+00:00 //
+//! Translation Progress: 100%
 //! * Total (Strings + Menu) = 427
-//! * Done = 358
-//! * Missing = 69 (16%)
+//! * Done = 425
+//! * Missing = 2 (0%)
