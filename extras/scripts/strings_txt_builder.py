@@ -321,7 +321,7 @@ def dump_strings_txt(sorted_strings_dict, menu_list):
 //: ISO 639-1 code: en
 //: ISO 3166-1 code:
 //: Language: English
-//: Translator(s):
+//: Translator(s) - Name <Contact Info/URL>:
 //: Last Updated:
 //: Additional Notes:
 ////////////////////
