@@ -1,0 +1,476 @@
+﻿//! This file must be encoded with UTF-8 (e.g. with Windows Notepad)
+//! LICENSE: This localization file is part of JPEGView <https://github.com/sylikc/jpegview> and distributed under the same license.  See <https://github.com/sylikc/jpegview/blob/master/LICENSE.txt> for more info.
+
+//! Standard  Filename Convention: 'strings_%languagecode%.txt' where %languagecode% is the ISO 639-1 language code e.g. 'en' for English (See <https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes>)
+//! Alternate Filename Convention: 'strings_%languagecode%-%countrycode%.txt' where %countrycode% is the ISO 3166-1 country code e.g. 'US' for United States (See <https://en.wikipedia.org/wiki/List_of_ISO_3166_country_codes>)
+//!    Use the alternate filename convention only when the standard filename already exist (e.g. specifying a country-specific dialect for an existing language)
+
+////////////////////
+// ::: Translation Info ::: //
+//: ISO 639-1 code: tr
+//: ISO 3166-1 code: TR
+//: Language: Turkish (Türkçe)
+//: Translator(s) - Name <Contact Info/URL>: Kaya Zeren <translator@zeron.net>
+//: Last Updated: 2023-03-11
+//: Additional Notes:
+////////////////////
+
+////////////////////
+// ::: Instructions / Help ::: (help for translators only, does not need to be translated) //
+
+//? Line Format:    English string<tab>Translated string<newline>
+//? * Lines beginning with "//" (comments) are ignored
+//? * Blank lines are ignored
+//? * Lines without a <tab> are ignored
+//? * Lines with no text after the <tab> are ignored
+//? * Multiple tabs are permitted between English and Translated string, e.g. this is valid:    English string<tab><tab><tab>Translated string<newline>
+
+//? NOTE: %s %d have special meanings in the strings, so make sure they appear somewhere in the translated string
+
+//? For the strings below which are short and have no context:
+//?   "in" in context is shorthand for "inch"
+//?   "cm" in context is shorthand for "centimeter"
+//?   "C - R" in context is "Cyan Red" colors
+//?   "M - G" in context is "Magenta Green" colors
+//?   "Y - B" in context is "Yellow Blue" colors
+//?   "yes"/"no" in context is for showing EXIF flags
+//?   "on"/"off" in context is for showing a setting active or not
+////////////////////
+
+
+// ::: Program Strings ::: (sorted alphabetically) //
+%d file(s) renamed, %d file(s) copied, %d folder(s) created	%d dosya yeniden adlandırıldı, %d dosya kopyalandı, %d klasör oluşturuldu
+%s camera raw images (embedded JPEGs only)	%s raw kamera görselleri (yalnızca gömülü JPEG)
+%s images	%s görsel
+%s images (processed by Window Imaging Component - WIC)	%s görsel (Window Imaging Component - WIC tarafından işlenmiş)
+'My Pictures' folder	'Resimlerim' klasörü
+About JPEGView (32-bit version)...	JPEGView hakkında (32-bit sürümü)...
+About JPEGView (64-bit version)...	JPEGView hakkında (64-bit sürümü)...
+Acquisition date:	Oluşturulma tarihi:
+Actual size of image	Gerçek boyuta dön
+Align image to horizontal or vertical line	Görseli yatay ya da dikey çizgiye hizala
+Alignment:	Hizalama:
+All Files	Tüm dosyalar
+All existing user settings will be preserved.	Var olan tüm kullanıcı ayarları korunacak.
+Alternatively, right-click an image file of the given type in Windows Explorer and select 'Open with... > Choose default program'	Alternatif olarak belirtilen türdeki bir görsel dosyasına Dosya Gezgini içinde sağ tıklayıp 'Birlikte aç... > Varsayılan programı seç' komutunu kullanabilirsiniz
+Altitude (m):	Yükseklik (m)
+Amount	Miktar
+Application:	Uygulama
+Applications	Uygulamalar
+Apply	Uygula
+Apply Unsharp Mask	Keskinlik azaltma maskesi uygula
+Apply auto contrast correction using only visible section of image	Otomatik karşıtlık düzeltme görselin yalnızca görülebilen kısımlarına uygulansın
+Ascending	Artan
+Auto contrast and color correction	Otomatik karşıtlık ve renk düzeltme
+Auto crop corrected image (avoids black border)	Düzeltilen görselin otomatik kırpılmasını aç/kapat (siyah kenar oluşmasını engeller)
+Auto crop rotated image (avoids black border)	Döndürülen görselin otomatik otomatik kırpılmasını aç/kapat (siyah kenar oluşmasını engeller)
+Auto zoom mode	Otomatik yakınlaştırma kipi
+Back mouse button	Geri fare tuşu
+Batch rename/copy of files	Toplu dosya adlandırma ya da kopyalama
+Blend	Karıştır
+Bottom	Alt
+Box	Kutu
+Brightness	Parlaklık
+Browse...	Göz at...
+C - R	M - K
+Camera model:	Kamera modeli:
+Can't rename file	Dosya yeniden adlandırılamadı
+Cancel	İptal
+Cannot read from parameter DB file '%s'!	Parametre '%s' veri tabanı dosyasından okunamadı!
+Cannot read parameter DB file '%s' because it is too large!	Parametre '%s' veri tabanı dosyası çok büyük olduğundan okunamadı!
+Cannot write to parameter DB file '%s'!	Parametre '%s' veri tabanı dosyasına yazılamadı!
+Click and drag the mouse vertically to correct image tilt.	Fareyi sol tuşa basılı tutup dikey yönde hareket ettirerek görsel doğrultusunu düzeltin.
+Clipboard Image	Panodaki görsel
+Close	Kapat
+Close help text display / Close JPEGView	Yardım metnini kapat / JPEGView kapat
+Color Correction	Rengi düzelt
+Combine keys with '+'	Tuşlar '+' ile birleştirilsin
+Confirm	Onayla
+Confirm save default parameters	Varsayılan parametreleri kaydetmek istediğinizi onaylayın
+Conflicting entries in Param DB	Parametre veri tabanında çakışan kayıtlar var
+Continue rename/copy?	Yeniden adlandırma ya da kopyalama işlemi sürdürülsün mü?
+Contrast	Karşıtlık
+Contrast Correction	Karşıtlığı düzelt
+Copy file path of the image to clipboard	Görselin dosya yolunu panoya kopyala
+Copy screen to clipboard/ Copy processed full size image to clipboard	Ekranı panoya kopyala/ İşleniş tam boyutlu görseli panoya kopyala
+Copying parameter DB to file '%s' failed. Reason: %s	Parametre veri tabanı '%s' dosyasına kopyalanamadı. Nedeni: %s
+Correct converging lines (perspective correction)	Yakınsama çizgilerini düzelt (perspektifi düzelt)
+Creation date/time	Oluşturulma tarih ve saati
+Crop image	Görseli kırp
+Ctrl + Left mouse	Ctrl + Sol fare tuşu
+Current image	Geçerli görsel
+Cyan-Red	Mavi-Kırmızı
+Darken Highlights	Vurguları koyulaştır
+Date	Tarih
+Date placeholders use the modification date of the image.	Tarih kodlarında görselin değiştirilme tarihi kullanılır.
+Day / Month / Year (as numbers)	Gün / Ay / Yıl (rakamlar ile)
+Decoding this format requires the Microsoft Visual C++ Redistributable.	Bu biçim kodunun çözülebilmesi için Microsoft Visual C++ Redistributable gereklidir.
+Deep Shadows	Koyu gölgeler
+Delete	Sil
+Delete current file on disk permanently	Geçerli dosyayı diskten kalıcı olarak sil
+Delete image file	Görseli sil
+Descending	Azalan
+Display image (EXIF) information	Görsel bilgilerini (EXIF) görüntüle/gizle
+Do you really want to delete the current image file on disk?	Geçerli görsel dosyasını diskten silmek istediğinize emin misiniz?
+Do you really want to permanently delete the file %filename%?	%filename% dosyasını kalıcı olarak silmek istediğinize emin misiniz?
+Do you really want to save the following parameters as default to the INI file	Bu parametreleri varsayılan değerler olarak INI dosyasına kaydetmek istediğinize emin misiniz?
+Drag at the left or right border for asymmetric correction.	Fareyi sol tuşa basılı tutup sol ya da sağ kenara sürükleyerek asimetrik olarak düzeltin.
+EXIF date successfully set on %d images, failed on %d images	EXIF tarihleri %d görsel için ayarlandı %d görsel için ayarlanamadı.
+Edit	Düzenle
+Enable/disable automatic contrast correction (histogram equalization)	Otomatik karşıtlık düzeltmeyi aç/kapat (histogram dengeleme)
+Enable/disable automatic density correction (local brightness correction)	Otomatik yoğunluk düzeltmeyi aç/kapat (yerel parlaklık düzeltme)
+Enable/disable full screen mode	Tam ekran kipini aç/kapat
+Enable/disable high quality resampling	Yüksek kaliteli yeniden örneklemeyi aç/kapat
+Enable/disable keeping of geometry related (zoom/pan/rotation)	Geometri ilişkisi tutmayı aç/kapat (yakınlaştırma/kaydırma/döndürme)
+Enable/disable landscape picture enhancement mode	Yatay görsel zenginleştirmeyi aç/kapat
+Error	Sorun
+Error during rename/copy	Yeniden adlandırma ya da kopyalama sırasında sorun çıktı
+Error saving file	Dosya kaydedilirken sorun çıktı
+Error while writing the following registry key	Şu kayıt anahtarı yazılırken sorun çıktı
+Error writing file to disk!	Dosya diske yazılırken sorun çıktı!
+Example:	Örnek:
+Exposure bias (EV):	Pozlama telafisi (EV):
+Exposure time (s):	Pozlama süresi (s):
+Extension	Uzatma
+Extracted number from original file name	Özgün dosya adından ayıklanan sayı
+F-Number:	F-sayısı:
+File name	Dosya adı
+File size	Dosya boyutu
+File type	Dosya türü
+Fill paper with crop	Kırparak sayfayı doldur
+Fill with crop	Kırparak doldur
+Fill with crop (no zoom)	Kırparak doldur (yakınlaştırmadan)
+Filter:	Süzgeç:
+Fit image to screen	Ekrana sığdır
+Fit to paper	Kağıda sığdır
+Fit to screen	Ekrana sığdır
+Fit to screen (no zoom)	Ekrana sığdır (yakınlaştırmadan)
+Flash fired:	Flaş çakma:
+Focal length (mm):	Odak uzaklığı (mm):
+Forward mouse button	İleri fare tuşu
+Full screen mode	Tam ekrana büyüt
+Goto first/last image of current folder (using sort order as defined)	Gçeerli klasördeki ilk ya da son görsele git (sıralamaya göre)
+Goto next image	Sonraki görsele git
+Goto previous image	Önceki görsele git
+Height	Yükseklik
+Hide histogram	Histogramı gizle
+High quality resampling	Yüksek kaliteli yeniden örnekleme
+Hour / Minute (as numbers)	Saat / Dakika (rakam olarak)
+ISO Speed:	ISO hızı:
+Image Pixels	Görsel piksel sayısı
+Image files in folder	Klasördeki görsel dosyaları
+Image height:	Görsel yüksekliği:
+Image width and height must be dividable by the JPEG block size (8 or 16) for lossless transformations!	Kayıpsız dönüştürme için görsel genişliği ve yüksekliğiJPEG blok boyutuna (8 ya da 16) bölünebilir olmalıdır
+Image width:	Görsel genişliği:
+Images	Görseller
+Increase/decrease auto color cast correction amount	Otomatik renk tonu düzeltme miktarını artır/azalt
+Increase/decrease auto contrast correction amount	Otomatik karşıtlık düzeltme miktarını artır/azalt
+Increase/decrease brightness	Parlaklığı artır/azalt
+Increase/decrease contrast	Karşıtlığı artır/azalt
+Increase/decrease darkening of highlights (LDC must be on)	Vurguların koyuluğunu artır/azalt (LDC açık olmalı)
+Increase/decrease lightening of shadows (LDC must be on)	Gölgelerin açıklığını artır/azalt (LDC açık olmalı)
+Increase/decrease sharpness	Keskinliği artır/azalt
+Insufficient rights to change the privilege (DACL) on the registry entry. Continue?	Kayıt defteri kaydında izni değiştirme izni (DACL) yok.
+JPEGView Help	JPEGView yardımı
+JPEGView is a lean, fast and highly configurable viewer/editor for JPEG, BMP, PNG, WEBP, TGA, GIF and TIFF images with a minimal GUI.	JPEGView sade bir kullanıcı arayüzü ile JPEG, BMP, PNG, WEBP, TGA, GIF ve TIFF görselleri için küçük, hızlı ve geniş yapılandırma özellikleri olan bir görüntüleme ve düzenleme uygulamasıdır.
+JPEGView is registered as default viewer for the selected file formats.	JPEGView seçilmiş dosya biçimleri için varsayılan görüntüleyici olarak ayarlanmış.
+Keep aspect ratio on crop	Kırpma sırasında en/boy oranı korumasını aç/kapat
+Keep parameters	Parametreleri koru
+Keep processing parameters between images	Görseller arasında geçerken işlem parametrelerini koru
+Known keys:	Bilinen anahtarlar
+Lanczos/Bicubic	Lanczos/Bikübik
+Landscape	Yatay
+Landscape picture enhancement mode	Yatay görsel zenginleştirmeyi aç/kapat
+Last modification date/time	Son değiştirilme tarih ve saati
+Left	Sol
+Left mouse & drag	Sol fare tuşu ile sürükleme
+Licensed under the GNU general public license (GPL), see readme file for details	GNU genel kamu lisansı (GPL) koşulları altında dağıtılmaktadır. Ayrıntılı bilgi almak için readme dosyasına bakabilirsiniz
+Lighten Shadows	Gölgeleri aydınlat
+Local density correction	Yerel yoğunluğu düzelt
+Location:	Konum:
+Loop folder	Geçerli klasörde kal
+Loop recursively	Alt düzeydeki klasörleri kat
+Loop siblings	Aynı düzeydeki klasörleri kat
+Loop through files in current directory and all sibling folders (folders on same level)	Geçerli klasör ve alt klasörlerindeki (aynı düzeydeki) dosyalar katılsın
+Loop through files in current directory and all subfolders	Geçerli klasör ve alt klasörlerindeki dosyalar katılsın
+Loop through files in current folder	Geçerli klasördeki dosyalar katılsın
+Lossless JPEG transformations	Kayıpsız JPEG dönüşümü
+M - G	E - Y
+Magenta-Green	Eflatun-Yeşil
+Manage 'Open image with' menu...	'Görseli şununla aç' menüsünü düzenle
+Margins:	Kenar boşlukları:
+Mark image for toggling. Use %s to toggle between marked and current image	Görseli işaretle. İşaretlenmiş ve geçerli görsel arasında geçmek için %s kullanın
+Maximize/restore to/from virtual desktop (only for multi-monitor systems)	Sanal masaüstünde büyüt ya da önceki boyutuna döndür (yalnızca birden çok ekranlı sistemlerde)
+Menu entries:	Menü kayıtları:
+Modification date:	Değiştirilme tarihi:
+Modifier keys:	Değiştirme tuşları:
+Month / Short form (text)	Ay / Kısa biçim (metin)
+Mouse wheel	Fare tekerleği
+Navigation	Gezinme
+New	Yeni
+New height:	Yeni yükseklik
+New name (>> : file gets copied)	Yeni ad (>> : kopyalanacak dosya)
+New name contains backslash character!	Yeni adın içinde ters bölü karakteri var!
+New size:	Yeni boyut:
+New width:	Yeni genişlik:
+Next image	Sonraki görsel
+No image loaded!	Herhangi bir görsel yüklenmemiş!
+No user INI file exists yet. Create user INI file from INI file template?	Henüz bir kullanıcı INI dosyası yok. INI dosyası kalıbından bir kullanıcı INI dosyası oluşturulmasını ister misiniz?
+None	Yok
+Not enough memory available	Yeterli bellek yok
+Note: Set the key 'TrimWithoutPromptLosslessJPEG=true' in the INI file to always trim without showing this message.	Not: Her defasında bu ileti görüntülenmeden düzeltme yapılması için INI dosyasında 'TrimWithoutPromptLosslessJPEG=true' ayarını yapabilirsiniz.
+Number (consecutively numbered)	Sayı (ardışık numaralandırılmış)
+Number of CPU cores used	Kullanılan işlemci çekirdeği sayısı
+Number of JPEG files in folder: %d	Klasördeki JPEG dosyalarının sayısı: %d
+Number with N digits	N haneli sayı
+OK	Tamam
+Old name	Eski ad
+Open folder containing image and select in Windows Explorer	Görselin bulunduğu klasörü açın ve Dosya Gezgini içinde seçin
+Open new image or slideshow file	Yeni görsel ya da sunum dosyası aç
+Order files by	Dosya sıralaması
+Orientation:	Doğrultu:
+Original file extension	Özgün dosya uzantısı
+Original file name (with extension)	Özgün dosya adı (uzantı ile)
+Original file name (without extension)	Özgün dosya adı (uzantı olmadan)
+Pan image	Görseli kaydır
+Paper:	Kağıt:
+Parameter DB	Parametre veri tabanı
+Parameter DB error	Parametre veri tabanı sorunu
+Parameter DB file '%s' could not be opened!	'%s' parametre veri tabanı açılamadı!
+Parameter DB file '%s' is not valid (invalid header)!	'%s' parametre veri tabanı geçersiz (üst bilgiler geçersiz)!
+Paste from clipboard	Panodan yapıştır
+Pasting image from clipboard failed!	Görsel panodan yapıştırılamadı!
+Performing the lossless transformation failed!	Kayıpsız dönüşüm yapılamadı!
+Performing the transformation failed	Dönüşüm yapılamadı
+Perspective Correction	Perspektifi düzelt
+Pixels	Piksel
+Placeholders:	Kullanılabilecek kodlar:
+Portrait	Dikey
+Press 'OK' to continue with registration or 'Cancel' to abort all registrations.	Kaydı yapmak için 'Tamam' tüm kayıtları iptal etmek için 'İptal' üzerine tıklayın.
+Press ESC to exit...	Çıkmak için ESC tuşunba basın...
+Press any key to search the subdirectories for image files.	Alt klasörlerdeki görsel dosyalarını aramak için bir tuşa basın.
+Preview	Ön izleme
+Previous image	Önceki görsel
+Print	Yazdır
+Print Image	Görseli yazdır
+Printer driver	Yazıcı sürücüsü
+Printer:	Yazıcı:
+Project home page	Proje web sitesi
+Radius	Çap
+Random	Rastgele
+Reading the JPEG file from disk failed	JPEG dosyası diskten okunamadı
+Reason:	Nedeni:
+Registering or unregistering file extensions in this registry area requires administrator privileges and cannot be done in JPEGView.	Kayıt defterinin bu bölümündeki dosya uzantılarını kaydetmek ya da kaldırmak için yönetici izinleri gerekli olduğundan bu işlem JPEGView içinden yapılamaz.
+Registration applies to the current user only.	Kayıt yalnızca geçerli kullanıcı için geçerli olur.
+Remove from	Kaldır
+Rename	Yeniden adlandır
+Rename/copy images to:	Görselleri yeniden adlandır ya da kopyala:
+Renaming file failed!	Dosya yeniden adlandırılamadı!
+Reset	Sıfırla
+Resize Image	Görsel boyutunu değiştir
+Right	Sağ
+Right mouse button: Context menu	Sağ fare düğmesi: Sağ tık menüsü
+Roll from bottom	Alttan üstüne yuvarla
+Roll from left	Soldan üstüne yuvarla
+Roll from right	Sağdan üstüne yuvarla
+Roll from top	Üstten üstüne yuvarla
+Rotate Image	Görseli döndür
+Rotate current file on disk lossless by 270 deg (W/H must be multiple of 16)	Dosyayı disk üzerinde kayıpsız olarak 270 derece döndür (genişlik/yükseklik 16'nın katı olmalı)
+Rotate current file on disk lossless by 90 deg (W/H must be multiple of 16)	Dosyayı disk üzerinde kayıpsız olarak 90 derece döndür (genişlik/yükseklik 16'nın katı olmalı)
+Rotate image 90 deg clockwise	Saat yönünde 90 derece döndür
+Rotate image 90 deg counter-clockwise	Saat yönünün tersine 90 derece döndür
+Rotate image and fit to screen	Döndür ve ekrana sığdır
+Rotate image by user-defined angle	Açıyla döndür
+Rotate the image by dragging with the mouse.	Fareyi sol tuşa basılı tutup sürükleyerek görseli döndürün.
+SIMD mode used	Kullanılacak SIMD kipi
+Same as Image	Görsel ile aynı
+Saturation	Doygunluk
+Save	Kaydet
+Save (%s)/ delete (%s) image processing parameters in/from parameter DB	Parametre veri tabanı üzerinde görsel işleme parametrelerinden (%s) tanesini kaydet ya da (%s) tanesini sil
+Save as (in screen size/resolution)	Farklı kaydet (ekran boyutu/çözünürlük olarak)
+Save as template	Kalıp olarak kaydet
+Save cropped image	Kırpılmış görseli kaydet
+Save processed image to JPEG file (original size)	İşlenmiş görseli JPEG olarak kaydet (özgün boyutta)
+Save processed image to JPEG file (screen size)	İşlennmiş görseli JPEG olarak kaydet (ekran boyutunda)
+Save to	Kaydet
+Scaling mode:	Ölçekleme kipi:
+Screen Pixels	Ekran piksel sayısı
+Scroll from bottom	Alttan üste kaydır
+Scroll from left	Soldan sağa kaydır
+Scroll from right	Sağdan sola kaydır
+Scroll from top	Üstten alta kaydır
+Select Printer...	Yazıcı seçin...
+Select all	Tümünü seç
+Select application	Uygulamayı seçin
+Select file to display in 'File Open' dialog	'Dosya aç' penceresinde görüntülenecek dosyayı seçin
+Select none	Tümünü bırak
+Select parameter DB to restore	Geri yüklenecek parametre veri tabanını seçin
+Set Fixed Crop Size	Sabit kırpma boyutunu seçin
+Set JPEGView as default image viewer	JPEGView varsayılan görsel görüntüleyici olsun
+Set timeout to n/10 sec, respectively n/100 sec (Ctrl+Shift)	Zaman aşımını n/10, n/100 saniye olarak değiştir (Ctrl+Shift)
+Shall existing entries be preserved (Yes) or be overriden by the imported entries (No)?	Var olan kayıtlar korunsun mu (Evet) ya da içe aktarılan kayıtlar ile değiştirilsin mi (Hayır)?
+Sharpen	Keskinleştir
+Sharpen low	Düşük keskinleştirme
+Sharpen medium	Orta keskinleştirme
+Shortcut Help	Kısayol yardımı
+Shortcut key:	Kısayol tuşu:
+Show filename	Dosya adını görüntüle
+Show first image in folder	Klasördeki ilk görseli görüntüle
+Show grid lines	Izgara çizgilerini gizle/görüntüle
+Show histogram	Histogramı görüntüle
+Show last image in folder	Klasördeki son görseli görüntüle
+Show navigation panel	Gezinme çubuğunu görüntüle
+Show next image	Sonraki görseli görüntüle
+Show picture info (EXIF)	Görsel bilgilerini (EXIF) görüntüle
+Show previous image	Önceki görseli görüntüle
+Show/hide file name	Dosya adını görüntüle/gizle
+Show/hide navigation panel	Gezinme çubuğunu görüntüle/gizle
+Show/hide picture information (EXIF data)	Görsel bilgilerini (EXIF) görüntüle/gizle
+Show/hide this help text	Bu yardım metnini görüntüle/gizle
+Size:	Boyut:
+Slide from bottom	Alttan üstüne kaydır
+Slide from left	Soldan üstüne kaydır
+Slide from right	Sağdan üstüne kaydır
+Slide from top	Üstten üstüne kaydır
+Slideshow	Sunum
+Slideshow with timeout of 'n' seconds (ESC to stop)	'n' saniye zaman aşımı ile sunum (durdurmak için ESC)
+Sort images by creation date, resp. modification date, resp. file name	Görselleri oluşturulma  tarihi, değiştirilme tarihi ya da dosya adına göre sıralar
+Source:	Kaynak:
+Target folders that do not yet exist are created as needed.	Var olmayan hedef klasörler oluşturulur.
+The directory '%s' does not contain any image files!	'%s' klasöründe herhangi bir görsel dosyası yok!
+The file '%s' could not be copied!	'%s' dosyası kopyalanamadı!
+The file '%s' could not be read!	'%s' dosyası okunamadı!
+The file '%s' could not be renamed!	'%s' dosyası yeniden adlandırılamadı!
+The file '%s' does not contain a list of file names!	'%s'dosyasında dosya adları listesi bulunamadı!
+The file is read-only!	Dosya salt okunur!
+The following file extensions cannot be unregistered because they have been registered in the 'local machine' registry area.	Şu dosya uzantıları 'local machine' kayıt defteri bölgesinde kayıtlı olduğundan kayıtları kaldırılamadı.
+The following image extensions are protected by the operating system.	Şu görsel uzantıları işletim sistemi tarafından korunuyor.
+The imported param DB contains entries already present in active param DB.	İçe aktarılan parametre veri tabanında, etkin veritabanında zaten olan kayıtlar var.
+The new size is too large - width or height is larger than 65535 or total number of pixels is too large!	Yeni boyut çok büyük. Genişlik ya da yükseklik 65535 değerinden büyük ya da toplam piksel sayısı çok büyük!
+The old parameter DB file '%s' could not be renamed during conversion to new format!	'%s' eski parametre veri tabanı dosyası yeni biçime dönüştürülürken yeniden adlandırılamadı!
+The operation failed because not enough memory is available!	Yeterli bellek olmadığından işlem tamamlanamadı!
+The parameter DB file '%s' has been created by a newer version of JPEGView!	'%s' parametre veri tabanı dosyası daha yeni bir JPEGView sürümü tarafından oluşturulmuş!
+The transformation can be applied if the image is trimmed to the next matching size but this will remove some border pixels.	Görsel bir sonraki eşleşen boyuta kırpılırsa dönüşüm yapılabilir. Ancak bu durumda bazı kenar pikselleri silinir.
+These values will override the values from the INI file located in the program folder of JPEGView!	Bu değerler JPEGView uygulamasının klasöründe bulunan INI dosyası tarafından değiştirilecek!
+Threshold	Eşik
+Title:	Başlık:
+Toggle between screens (only for multi-monitor systems)	Ekran değiştir (yalnızca birden fazla ekran varsa)
+Toggle window always on top mode	Pencere üstte kalsın kipini aç/kapat
+Toggle window title bar hidden mode	Pencere başlığını gizle/görüntüle
+Top	Üst
+Transition Effect	Geçiş etkisi
+Trim the image and apply transformation? Trimming cannot be undone!	Görsel kırpılıp dönüşüm yapılsın mı?
+Unregistering not possible	Kayıt kaldırılamadı
+Unsharp mask...	Keskinlik azaltma maskesi...
+Update user settings with new settings from settings template file?	Kullanıcı ayarları, ayar kalıbı dosyasındaki değerlere güncellensin mi?
+Use the 'Default Programs' configuration dialog from the operating system instead.	İşletim sisteminin 'Varsayılan programlar' yapılandırma penceresi kullanılsın.
+Use the mouse to draw a line that shall be horizontal or vertical.	Fareyi sol tuşa basılı tutup sürükleyerek yatay ya da dikey hizalama doğrultusu için bir çizgi çizin.
+Warning	Uyarı
+Width	Genişlik
+Window mode	Pencereye küçült
+Windows 8 (and above) blocks JPEGView from changing the default program for these file extensions.	Windows 8 (ve üzeri) sürümünde JPEGView uygulamasının şu dosya uzantıları için  varsayılan uygulamayı değiştirmesine izin verilmiyor.
+Writing the resulting JPEG file to disk failed	Sonuç JPEG dosyası diske yazılamadı
+Y - B	S - M
+Year short form (2 digits)	Kısa yıl biçimi (2 hane)
+Yellow-Blue	Sarı-Mavi
+Zoom 1:1 (100 %)	Yakınlaştır 1:1 (%100)
+Zoom in (%s)/Zoom out (%s)	Yakınlatır (%s)/Uzaklaştır (%s)
+Zoom in/out image	Görseli yakınlaştır/uzaklaştır
+Zoom mode (drag mouse to zoom)	Yakınlaştırma kipi (fareyi sol tuşa basılı tutup sürükleyerek yakınlaştırın)
+and image processing (brightness/contrast/sharpen) parameters between images	ve görseller arasında görsel işleme parametreleri (parlaklık/karşıtlık/keskinlik)
+cm	cm
+in	in
+new menu entry	yeni menü kaydı
+no	hayır
+off	kapalı
+on	açık
+user-defined	kullanıcı tanımlı
+yes	evet
+
+// ::: Popup Menu Strings ::: (unsorted to preserve context) //
+Stop slide show/movie	Sunumu/filmi durdur
+Open image...	Görsel aç...
+Open image with	Görseli şununla aç
+Save processed image...	İşlenmiş görseli kaydet
+Reload image	Görseli yeniden yükle
+Open containing folder in Explorer	Bulunduğu klasörü aç
+Print image...	Görseli yazdır...
+Batch rename/copy...	Toplu yeniden adlandır/kopyala
+Set modification date	Değiştirilme tarihini ayarla
+to current date	Bugüne
+to EXIF date	EXIF tarihine
+to EXIF date (all files in folder)	EXIF tarihine (klasördeki tüm dosyalar)
+Set as desktop wallpaper	Masaüstü arka planı olarak ayarla
+Use original image	Özgün görseli kullan
+Use processed image as displayed	Görüntülenen işlenmiş görseli kullan
+Copy to clipboard	Panoya kopyala
+Copy original size image	Özgün boyutlu görseli kopyala
+Copy file path	Dosya yolunu kopyala
+Display order	Görünüm sıralaması
+Modification date	Değiştirilme tarihi
+Creation date	Oluşturulma tarihi
+Play folder as slideshow/movie	Klasörü sunum/film olarak oynat
+Waiting time	Bekleme süresi
+1 sec	1 s
+2 sec	2 s
+3 sec	3 s
+4 sec	4 s
+5 sec	5 s
+7 sec	7 s
+10 sec	10 s
+20 sec	20 s
+Transition Speed	Geçiş hızı
+Very fast	Çok hızlı
+Fast	Hızlı
+Normal	Normal
+Slow	Yavaş
+Very slow	Çok yavaş
+Movie	Film
+Playback speed	Oynatma hızı
+5 fps	5 kare/s
+10 fps	10 kare/s
+25 fps	25 kare/s
+30 fps	30 kare/s
+50 fps	50 kare/s
+100 fps	100 kare/s
+Transform image	Görseli dönüştür
+Rotate +90	+90 derece döndür
+Rotate -90	-90 derece döndür
+Rotate...	Döndür...
+Change size...	Boyutu değiştir...
+Perspective correction...	Perspektifi düzelt...
+Mirror horizontally	Yatay yansıt
+Mirror vertically	Dikey yansıt
+Rotate 180	180 derece döndür
+Auto correction	Otomatik düzelt
+Save parameters to DB	Parametreleri veri tabanına kaydet
+Clear parameters from DB	Veri tabanındaki parametreleri temizle
+Zoom	Yakınlaştır
+Span all screens	Tüm ekranlara yay
+Fit window to image	Görseli pencereye sığdır
+Hide window title bar	Pencere başlık çubuğunu gizle
+Set window always on top	Pencere üstte kalsın
+Settings/Admin	Ayarlar/Yönetim
+Edit global settings...	Genel ayarları düzenle...
+Edit user settings...	Kullanıcı ayarlarını düzenle...
+Update user settings...	Kullanıcı ayarlarını güncelle...
+Set current parameters as default values...	Geçerli parametreleri varsayılan değerler yap...
+Set as default viewer...	Varsayılan görüntüleyici olarak ayarla...
+Backup parameter DB...	Parametre veri tabanını yedekle...
+Restore parameter DB...	Parametre veri tabanını geri yükle...
+User commands	Kullanıcı komutları
+About JPEGView...	JPEGView hakkında...
+Exit	Çık
+Crop Selection	Seçimi kırp
+Crop Selection Lossless...	Seçimi kayıpsız kırp...
+Copy Selection to Clipboard	Seçimi panoya kopyala
+Crop Mode	Kırpma kipi
+Free	Serbest
+Fixed size...	Sabit boyutlu...
+Zoom to Selection	Seçime yakınlaştır
+
+// ::: STATUS: Last Checked/Updated by Script ::: 2023-03-12T12:57:00.700326+00:00 //
+//! Translation Progress: 100%
+//! * Total (Strings + Menu) = 427
+//! * Done = 427
+//! * Missing = 0 (0%)
