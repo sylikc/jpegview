@@ -7,8 +7,8 @@
 // ::: Translation Info ::: //
 //: ISO 639-1 code: ru
 //: ISO 3166-1 code:
-//: Language: Russian
-//: Translator(s): Dmitry Yerokhin <erodim@mail.ru>
+//: Language: Русский (Russian)
+//: Translator(s) - Name <Contact Info/URL>: Dmitry Yerokhin <erodim@mail.ru>
 //: Last Updated: Mar 6, 2023
 //: Additional Notes:
 ////////////////////
@@ -494,7 +494,7 @@ Zoom to Selection	Масштабировать до выделенного
 //renamed	переименовано
 //up/down	Стрелки вверх/вниз
 
-// ::: STATUS: Last Checked/Updated by Script ::: 2023-03-09T12:34:04.512333+00:00 //
+// ::: STATUS: Last Checked/Updated by Script ::: 2023-03-13T06:33:02.772922+00:00 //
 //! Translation Progress: 100%
 //! * Total (Strings + Menu) = 427
 //! * Done = 427

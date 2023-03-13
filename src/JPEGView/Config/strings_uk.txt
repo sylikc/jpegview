@@ -9,8 +9,8 @@
 // ::: Translation Info ::: //
 //: ISO 639-1 code: uk
 //: ISO 3166-1 code:
-//: Language: Ukrainian
-//: Translator(s): Bonsai
+//: Language: Ukrainian (Українська)
+//: Translator(s) - Name <Contact Info/URL>: Bonsai
 //: Last Updated: Jan 2015
 //: Additional Notes:
 // Цей файл повинен мати кодування UTF-8 (підійде, наприклад, Блокнот Windows)
@@ -553,7 +553,7 @@ Zoom to Selection	Масштабувати до виділеного
 //! Update user settings...
 //! Set current parameters as default values...
 
-// ::: STATUS: Last Checked/Updated by Script ::: 2023-03-09T12:34:04.526222+00:00 //
+// ::: STATUS: Last Checked/Updated by Script ::: 2023-03-13T06:34:33.362411+00:00 //
 //! Translation Progress: 86%
 //! * Total (Strings + Menu) = 427
 //! * Done = 367

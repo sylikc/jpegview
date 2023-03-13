@@ -9,8 +9,8 @@
 // ::: Translation Info ::: //
 //: ISO 639-1 code: zh
 //: ISO 3166-1 code: tw
-//: Language: Chinese (Taiwan)
-//: Translator(s): 風逸蘭
+//: Language: Chinese, Traditional (繁體中文)
+//: Translator(s) - Name <Contact Info/URL>: 風逸蘭
 //: Last Updated:
 //: Additional Notes:
 //Update:2023/03/09 - Based on the simplified Chinese version converted chs -> cht
@@ -493,7 +493,7 @@ Zoom to Selection	縮放到選擇內容
 //! Same as Image
 //! user-defined
 
-// ::: STATUS: Last Checked/Updated by Script ::: 2023-03-09T12:47:31.968850+00:00 //
+// ::: STATUS: Last Checked/Updated by Script ::: 2023-03-13T06:36:14.789551+00:00 //
 //! Translation Progress: 100%
 //! * Total (Strings + Menu) = 427
 //! * Done = 425

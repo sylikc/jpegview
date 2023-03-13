@@ -9,8 +9,8 @@
 // ::: Translation Info ::: //
 //: ISO 639-1 code: ja
 //: ISO 3166-1 code:
-//: Language: Japanese
-//: Translator(s): Hiroyuki Matenokoji, maboroshin
+//: Language: Japanese (日本語)
+//: Translator(s) - Name <Contact Info/URL>: Hiroyuki Matenokoji, maboroshin
 //: Last Updated: 2023-03-04
 //: Additional Notes:
 //TranslatorURL=https://pc.genkaku.in/
@@ -489,7 +489,7 @@ Zoom to Selection	選択範囲を拡大
 //renamed	改名
 //up/down	上/下
 
-// ::: STATUS: Last Checked/Updated by Script ::: 2023-03-09T12:34:04.466039+00:00 //
+// ::: STATUS: Last Checked/Updated by Script ::: 2023-03-13T06:30:45.374881+00:00 //
 //! Translation Progress: 100%
 //! * Total (Strings + Menu) = 427
 //! * Done = 427

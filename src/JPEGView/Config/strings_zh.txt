@@ -9,8 +9,8 @@
 // ::: Translation Info ::: //
 //: ISO 639-1 code: zh
 //: ISO 3166-1 code:
-//: Language: Chinese (Simplified)
-//: Translator(s): Based on the traditional Chinese version of 風逸蘭
+//: Language: Chinese, Simplified (简体中文)
+//: Translator(s) - Name <Contact Info/URL>: Based on the traditional Chinese version of 風逸蘭
 //: Last Updated:
 //: Additional Notes:
 //Update:2021/06/28 补全翻译，调整部分原有翻译使其更符合简体中文阅读习惯 by dunkeng
@@ -495,7 +495,7 @@ Zoom to Selection	缩放到选择内容
 //! Same as Image
 //! user-defined
 
-// ::: STATUS: Last Checked/Updated by Script ::: 2023-03-09T12:34:04.551040+00:00 //
+// ::: STATUS: Last Checked/Updated by Script ::: 2023-03-13T06:36:16.889076+00:00 //
 //! Translation Progress: 100%
 //! * Total (Strings + Menu) = 427
 //! * Done = 425
