@@ -81,7 +81,7 @@ public:
 	void AddTemporaryRAWFileEnding(LPCTSTR sEnding) { m_sFileEndingsRAW += CString(_T(";*.")) + sEnding; }
 	bool CreateParamDBEntryOnSave() { return m_bCreateParamDBEntryOnSave; }
 	bool SaveWithoutPrompt() { return m_bSaveWithoutPrompt; }
-	bool TrimWithoutPromptLosslessJPEG() { return m_bTrimWithoutPromptLosslessJPEG; }
+	bool CropWithoutPromptLosslessJPEG() { return m_bCropWithoutPromptLosslessJPEG; }
 	Helpers::EDeleteConfirmation DeleteConfirmation() { return m_eDeleteConfirmation; }
 	bool AllowFileDeletion() { return m_bAllowFileDeletion; }
 	bool WrapAroundFolder() { return m_bWrapAroundFolder && m_eNavigation == Helpers::NM_LoopDirectory; }
@@ -250,7 +250,7 @@ private:
 	bool m_bSaveWithoutPrompt;
 	Helpers::EDeleteConfirmation m_eDeleteConfirmation;
 	bool m_bAllowFileDeletion;
-	bool m_bTrimWithoutPromptLosslessJPEG;
+	bool m_bCropWithoutPromptLosslessJPEG;
 	bool m_bExchangeXButtons;
 	bool m_bAutoRotateEXIF;
 	bool m_bUseEmbeddedColorProfiles;

@@ -8,7 +8,7 @@ bool _WriteFile(LPCTSTR sFileName, unsigned char* pBuffer, unsigned int nLengthB
 int _TransformationEnumToOpCode(CJPEGLosslessTransform::ETransformation transformation);
 
 // Performs a lossless JPEG transformation, transforming the input file and writing the result to the output file.
-// Input and output file can be identical, then the input file is overriden by the resulting output file.
+// Input and output file can be identical, then the input file is overwritten by the resulting output file.
 CJPEGLosslessTransform::EResult CJPEGLosslessTransform::PerformTransformation(LPCTSTR sInputFile, LPCTSTR sOutputFile, 
 	CJPEGLosslessTransform::ETransformation transformation, bool bAllowTrim) {
 	tjtransform transform;
@@ -20,7 +20,7 @@ CJPEGLosslessTransform::EResult CJPEGLosslessTransform::PerformTransformation(LP
 }
 
 // Performs a lossless JPEG crop, using the input file and writing the result to the output file.
-// Input and output file can be identical, then the input file is overriden by the resulting output file.
+// Input and output file can be identical, then the input file is overwritten by the resulting output file.
 CJPEGLosslessTransform::EResult CJPEGLosslessTransform::PerformCrop(LPCTSTR sInputFile, LPCTSTR sOutputFile, const CRect& cropRect) {
 	tjtransform transform;
 	memset(&transform, 0, sizeof(tjtransform));

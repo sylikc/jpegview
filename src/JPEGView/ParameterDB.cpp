@@ -421,7 +421,7 @@ bool CParameterDB::MergeParamDB(LPCTSTR sParamDBName) {
 				// Entry to be merged already in parameter DB
 				if (!bAlreadyAsked) {
 					bPreserve = IDYES == ::MessageBox(NULL, CString(CNLS::GetString(_T("The imported param DB contains entries already present in active param DB."))) + _T("\n") +
-						CNLS::GetString(_T("Shall existing entries be preserved (Yes) or be overriden by the imported entries (No)?")),
+						CNLS::GetString(_T("Shall existing entries be preserved (Yes) or be overwritten by the imported entries (No)?")),
 						CNLS::GetString(_T("Conflicting entries in Param DB")), MB_YESNO | MB_ICONQUESTION);
 					bAlreadyAsked = true;
 				}
@@ -618,7 +618,7 @@ bool CParameterDB::SaveToFile(int nIndex, const CParameterDBEntry & dbEntry) {
 		return false;
 	}
 
-	// Check header, do not override unknown files or versions
+	// Check header, do not overwrite unknown files or versions
 	__int64 nFileSize;
 	::GetFileSizeEx(hFile, (PLARGE_INTEGER)&nFileSize);
 	if (nFileSize >= sizeof(ParameterDBHeader)) {

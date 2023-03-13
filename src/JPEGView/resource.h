@@ -143,9 +143,9 @@
 #define IDM_MINIMIZE		1010		// :KeyMap: minimize window
 #define IDM_OPEN			1100		// :KeyMap: open file
 #define IDM_EXPLORE			1101		// :KeyMap: open and select file in Explorer
-#define IDM_SAVE			1500		// :KeyMap: save to file in original size, don't allow override without prompt
+#define IDM_SAVE			1500		// :KeyMap: save to file in original size, don't allow overwrite without prompt
 #define IDM_SAVE_SCREEN		1501		// :KeyMap: save to file in screen size
-#define IDM_SAVE_ALLOW_NO_PROMPT	1502		// :KeyMap: save to file in original size, allow override without prompt when enabled in INI
+#define IDM_SAVE_ALLOW_NO_PROMPT	1502		// :KeyMap: save to file in original size, allow overwrite without prompt when option 'OverwriteOriginalFileWithoutSaveDialog=true' is enabled in INI
 #define IDM_RELOAD			1600		// :KeyMap: reload image
 #define IDM_PRINT			1700		// :KeyMap: print image
 #define IDM_COPY			2000		// :KeyMap: copy image to clipboard in screen size
@@ -208,7 +208,7 @@
 #define IDM_EFFECTTIME_NORMAL 7472
 #define IDM_EFFECTTIME_SLOW  7473
 #define IDM_EFFECTTIME_VERY_SLOW  7474
-#define IDM_MOVIE_START_FPS 7500 // Pseudo entry
+#define IDM_MOVIE_START_FPS 7500 // Pseudo entry (diff of the rest of the IDM_MOVIE_* values used to calculate actual FPS)
 #define IDM_MOVIE_5_FPS		7505
 #define IDM_MOVIE_10_FPS	7510
 #define IDM_MOVIE_25_FPS	7525

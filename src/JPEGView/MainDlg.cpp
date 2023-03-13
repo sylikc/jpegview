@@ -1624,20 +1624,20 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 		case IDM_MIRROR_H_LOSSLESS:
 		case IDM_MIRROR_V_LOSSLESS:
 			if (m_pCurrentImage != NULL && m_pCurrentImage->GetImageFormat() == IF_JPEG) {
-				bool bCanTransformWithoutTrim = m_pCurrentImage->CanUseLosslessJPEGTransformations();
-				bool bAskIfToTrim = !(bCanTransformWithoutTrim ||sp.TrimWithoutPromptLosslessJPEG());
+				bool bCanTransformWithoutCrop = m_pCurrentImage->CanUseLosslessJPEGTransformations();
+				bool bAskIfToCrop = !(bCanTransformWithoutCrop ||sp.CropWithoutPromptLosslessJPEG());
 				bool bPerformTransformation = true;
-				bool bTrim = false;
+				bool bCrop = false;
 				MouseOn();
-				if (bAskIfToTrim) {
-					bTrim = IDYES == ::MessageBox(m_hWnd, CString(CNLS::GetString(_T("Image width and height must be dividable by the JPEG block size (8 or 16) for lossless transformations!"))) + _T("\n") +
-						CNLS::GetString(_T("The transformation can be applied if the image is trimmed to the next matching size but this will remove some border pixels.")) + _T("\n") +
-						CNLS::GetString(_T("Trim the image and apply transformation? Trimming cannot be undone!")) + _T("\n\n") +
-						CNLS::GetString(_T("Note: Set the key 'TrimWithoutPromptLosslessJPEG=true' in the INI file to always trim without showing this message.")), 
+				if (bAskIfToCrop) {
+					bCrop = IDYES == ::MessageBox(m_hWnd, CString(CNLS::GetString(_T("Image width and height must be dividable by the JPEG block size (8 or 16) for lossless transformations!"))) + _T("\n") +
+						CNLS::GetString(_T("The transformation can be applied if the image is cropped to the next matching size but this will remove some border pixels.")) + _T("\n") +
+						CNLS::GetString(_T("Crop the image and apply transformation? Cropping cannot be undone!")) + _T("\n\n") +
+						CNLS::GetString(_T("Note: Set the key 'CropWithoutPromptLosslessJPEG=true' in the INI file to always crop without showing this message.")), 
 						CNLS::GetString(_T("Lossless JPEG transformations")), MB_YESNO | MB_ICONEXCLAMATION | MB_DEFBUTTON2);
 				}
-				if (!bAskIfToTrim || bTrim) {
-					if (!bAskIfToTrim && (nCommand == IDM_ROTATE_90_LOSSLESS_CONFIRM || nCommand == IDM_ROTATE_270_LOSSLESS_CONFIRM)) {
+				if (!bAskIfToCrop || bCrop) {
+					if (!bAskIfToCrop && (nCommand == IDM_ROTATE_90_LOSSLESS_CONFIRM || nCommand == IDM_ROTATE_270_LOSSLESS_CONFIRM)) {
 						LPCTSTR sConfirmMsg = (nCommand == IDM_ROTATE_90_LOSSLESS_CONFIRM) ?
 							CNLS::GetString(_T("Rotate current file on disk lossless by 90 deg (W/H must be multiple of 16)")) :
 							CNLS::GetString(_T("Rotate current file on disk lossless by 270 deg (W/H must be multiple of 16)"));
@@ -1646,7 +1646,7 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 					}
 					if (bPerformTransformation) {
 						CJPEGLosslessTransform::EResult eResult =
-							CJPEGLosslessTransform::PerformTransformation(m_pFileList->Current(), m_pFileList->Current(), HelpersGUI::CommandIdToLosslessTransformation(nCommand), bTrim || sp.TrimWithoutPromptLosslessJPEG());
+							CJPEGLosslessTransform::PerformTransformation(m_pFileList->Current(), m_pFileList->Current(), HelpersGUI::CommandIdToLosslessTransformation(nCommand), bCrop || sp.CropWithoutPromptLosslessJPEG());
 						if (eResult != CJPEGLosslessTransform::Success) {
 							::MessageBox(m_hWnd, CString(CNLS::GetString(_T("Performing the lossless transformation failed!"))) +
 								_T("\n") + CNLS::GetString(_T("Reason:")) + _T(" ") + HelpersGUI::LosslessTransformationResultToString(eResult),

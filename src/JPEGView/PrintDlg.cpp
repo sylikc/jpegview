@@ -111,12 +111,12 @@ LRESULT CPrintDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lPara
 	m_btnChangePrinter.SetWindowText(CNLS::GetString(_T("Select Printer...")));
 
 	m_lblPrinterTitle.SetWindowText(CNLS::GetString(_T("Printer:")));
-	m_lblPaper.SetWindowText(CNLS::GetString(_T("Paper:")));
+	m_lblPaper.SetWindowText(CNLS::GetString(_T("Paper size:")));
 	m_lblPaperTray.SetWindowText(CNLS::GetString(_T("Source:")));
 	m_lblPaperOrientation.SetWindowText(CNLS::GetString(_T("Orientation:")));
 	m_lblSize.SetWindowText(CNLS::GetString(_T("Size:")));
-	m_rbFitToPaper.SetWindowText(CNLS::GetString(_T("Fit to paper")));
-	m_rbFillWithCrop.SetWindowText(CNLS::GetString(_T("Fill paper with crop")));
+	m_rbFitToPaper.SetWindowText(CNLS::GetString(_T("Fit to page")));
+	m_rbFillWithCrop.SetWindowText(CNLS::GetString(_T("Fill page with crop")));
 	m_lblCM.SetWindowText(m_useInches ? CNLS::GetString(_T("in")) : CNLS::GetString(_T("cm")));
 	m_lblScalingMode.SetWindowText(CNLS::GetString(_T("Scaling mode:")));
 	m_rbScalingModePrinterDriver.SetWindowText(CNLS::GetString(_T("Printer driver")));
