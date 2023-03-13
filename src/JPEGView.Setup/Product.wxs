@@ -239,7 +239,7 @@
 			</Feature>
 			<Feature Id="Localization" Title="Localization Strings">
 				<ComponentRef Id="strings.txt" />
-				<ComponentRef Id="strings_bel.txt" />
+				<ComponentRef Id="strings_be.txt" />
 				<ComponentRef Id="strings_cs.txt" />
 				<ComponentRef Id="strings_de.txt" />
 				<ComponentRef Id="strings_el.txt" />
@@ -247,6 +247,7 @@
 				<ComponentRef Id="strings_esar.txt" />
 				<ComponentRef Id="strings_eu.txt" />
 				<ComponentRef Id="strings_fr.txt" />
+				<ComponentRef Id="strings_hu.txt" />
 				<ComponentRef Id="strings_it.txt" />
 				<ComponentRef Id="strings_ja.txt" />
 				<ComponentRef Id="strings_ko.txt" />
@@ -255,7 +256,10 @@
 				<ComponentRef Id="strings_ptbr.txt" />
 				<ComponentRef Id="strings_ro.txt" />
 				<ComponentRef Id="strings_ru.txt" />
+				<ComponentRef Id="strings_sl.txt" />
+				<ComponentRef Id="strings_sr.txt" />
 				<ComponentRef Id="strings_sv.txt" />
+				<ComponentRef Id="strings_tr.txt" />
 				<ComponentRef Id="strings_uk.txt" />
 				<ComponentRef Id="strings_zh.txt" />
 				<ComponentRef Id="strings_zhtw.txt" />
@@ -555,8 +559,8 @@
 					<Component Id="strings.txt" Guid="*">
 						<File Id="strings.txt" Name="strings.txt" Source="$(var.JPEGView.TargetDir)strings.txt" />
 					</Component>
-					<Component Id="strings_bel.txt" Guid="*">
-						<File Id="strings_bel.txt" Name="strings_bel.txt" Source="$(var.JPEGView.TargetDir)strings_bel.txt" />
+					<Component Id="strings_be.txt" Guid="*">
+						<File Id="strings_be.txt" Name="strings_be.txt" Source="$(var.JPEGView.TargetDir)strings_be.txt" />
 					</Component>
 					<Component Id="strings_cs.txt" Guid="*">
 						<File Id="strings_cs.txt" Name="strings_cs.txt" Source="$(var.JPEGView.TargetDir)strings_cs.txt" />
@@ -578,6 +582,9 @@
 					</Component>
 					<Component Id="strings_fr.txt" Guid="*">
 						<File Id="strings_fr.txt" Name="strings_fr.txt" Source="$(var.JPEGView.TargetDir)strings_fr.txt" />
+					</Component>
+					<Component Id="strings_hu.txt" Guid="*">
+						<File Id="strings_hu.txt" Name="strings_hu.txt" Source="$(var.JPEGView.TargetDir)strings_hu.txt" />
 					</Component>
 					<Component Id="strings_it.txt" Guid="*">
 						<File Id="strings_it.txt" Name="strings_it.txt" Source="$(var.JPEGView.TargetDir)strings_it.txt" />
@@ -603,8 +610,17 @@
 					<Component Id="strings_ru.txt" Guid="*">
 						<File Id="strings_ru.txt" Name="strings_ru.txt" Source="$(var.JPEGView.TargetDir)strings_ru.txt" />
 					</Component>
+					<Component Id="strings_sl.txt" Guid="*">
+						<File Id="strings_sl.txt" Name="strings_sl.txt" Source="$(var.JPEGView.TargetDir)strings_sl.txt" />
+					</Component>
+					<Component Id="strings_sr.txt" Guid="*">
+						<File Id="strings_sr.txt" Name="strings_sr.txt" Source="$(var.JPEGView.TargetDir)strings_sr.txt" />
+					</Component>
 					<Component Id="strings_sv.txt" Guid="*">
 						<File Id="strings_sv.txt" Name="strings_sv.txt" Source="$(var.JPEGView.TargetDir)strings_sv.txt" />
+					</Component>
+					<Component Id="strings_tr.txt" Guid="*">
+						<File Id="strings_tr.txt" Name="strings_tr.txt" Source="$(var.JPEGView.TargetDir)strings_tr.txt" />
 					</Component>
 					<Component Id="strings_uk.txt" Guid="*">
 						<File Id="strings_uk.txt" Name="strings_uk.txt" Source="$(var.JPEGView.TargetDir)strings_uk.txt" />
