@@ -1,0 +1,476 @@
+﻿//! This file must be encoded with UTF-8 (e.g. with Windows Notepad)
+//! LICENSE: This localization file is part of JPEGView <https://github.com/sylikc/jpegview> and distributed under the same license.  See <https://github.com/sylikc/jpegview/blob/master/LICENSE.txt> for more info.
+
+//! Standard  Filename Convention: 'strings_%languagecode%.txt' where %languagecode% is the ISO 639-1 language code e.g. 'en' for English (See <https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes>)
+//! Alternate Filename Convention: 'strings_%languagecode%-%countrycode%.txt' where %countrycode% is the ISO 3166-1 country code e.g. 'US' for United States (See <https://en.wikipedia.org/wiki/List_of_ISO_3166_country_codes>)
+//!    Use the alternate filename convention only when the standard filename already exist (e.g. specifying a country-specific dialect for an existing language)
+
+////////////////////
+// ::: Translation Info ::: //
+//: ISO 639-1 code: sr
+//: ISO 3166-1 code:
+//: Language: Serbian (српски)
+//: Translator(s) - Name <Contact Info/URL>: Ljuba Cirovic <ljuba.cirovic@gmail.com>
+//: Last Updated: 2023-03-12
+//: Additional Notes:
+////////////////////
+
+////////////////////
+// ::: Instructions / Help ::: (help for translators only, does not need to be translated) //
+
+//? Line Format:    English string<tab>Translated string<newline>
+//? * Lines beginning with "//" (comments) are ignored
+//? * Blank lines are ignored
+//? * Lines without a <tab> are ignored
+//? * Lines with no text after the <tab> are ignored
+//? * Multiple tabs are permitted between English and Translated string, e.g. this is valid:    English string<tab><tab><tab>Translated string<newline>
+
+//? NOTE: %s %d have special meanings in the strings, so make sure they appear somewhere in the translated string
+
+//? For the strings below which are short and have no context:
+//?   "in" in context is shorthand for "inch"
+//?   "cm" in context is shorthand for "centimeter"
+//?   "C - R" in context is "Cyan Red" colors
+//?   "M - G" in context is "Magenta Green" colors
+//?   "Y - B" in context is "Yellow Blue" colors
+//?   "yes"/"no" in context is for showing EXIF flags
+//?   "on"/"off" in context is for showing a setting active or not
+////////////////////
+
+
+// ::: Program Strings ::: (sorted alphabetically) //
+%d file(s) renamed, %d file(s) copied, %d folder(s) created	%d datoteka(e) preimenovano, %d datoteka(e) kopirano, %d folder(a) kreirano
+%s camera raw images (embedded JPEGs only)	%s snimaka kamere (samo ugnežđeni JPEG-ovi)
+%s images	%s slike
+%s images (processed by Window Imaging Component - WIC)	%s slika (obrađeno pomoću Window Imaging Component - WIC)
+'My Pictures' folder	Folder 'My Pictures'
+About JPEGView (32-bit version)...	O JPEGView programu (32-bitna verzija)...
+About JPEGView (64-bit version)...	O JPEGView programu (64-bitna verzija)...
+Acquisition date:	Datum pribavljanja:
+Actual size of image	Stvarna veličina slike
+Align image to horizontal or vertical line	Poravnaj sliku po horizontalnoj ili vertikalnoj liniji
+Alignment:	Poravnanje:
+All Files	Sve datoteke
+All existing user settings will be preserved.	Sva postojeća korisnička podešavanja će biti očuvana.
+Alternatively, right-click an image file of the given type in Windows Explorer and select 'Open with... > Choose default program'	Alternativno, desni klik na datoteku sa slikom datog tipa u Windows Explorer-u i izaberi 'Open with...> Odaberite podrazumevani program'
+Altitude (m):	Visina (m)
+Amount	Iznos
+Application:	Aplikacija:
+Applications	Aplikacije
+Apply	Primeni
+Apply Unsharp Mask	Primeni masku za zamućivanje
+Apply auto contrast correction using only visible section of image	Primeni automatsku ispravku kontrasta koristeći samo vidljivi deo slike
+Ascending	Rastuće
+Auto contrast and color correction	Automatska ispravka kontrasta i boje
+Auto crop corrected image (avoids black border)	Automatski opseci ispravljenu sliku (izbegavanje crnog okvira)
+Auto crop rotated image (avoids black border)	Automatski opseci rotiranu sliku (izbegavanje crnog okvira)
+Auto zoom mode	Mod automatskog zumiranja
+Back mouse button	Dugme na mišu za nazadovanje
+Batch rename/copy of files	Paketno preimenovanje/kopiranje datoteka
+Blend	Stopi
+Bottom	Dno
+Box	Kutija
+Brightness	Osvetljenje
+Browse...	Pregledanje...
+C - R	C - R
+Camera model:	Model kamere
+Can't rename file	Ne mogu da promenim ime datoteke
+Cancel	Otkaži
+Cannot read from parameter DB file '%s'!	Ne mogu da učitam iz parametarske DB datoteke '%s'!
+Cannot read parameter DB file '%s' because it is too large!	Ne mogu da učitam parametarsku DB datoteku '%s' jer je prevelika!
+Cannot write to parameter DB file '%s'!	Ne mogu da upišem u parametarsku DB datoteku '%s'!
+Click and drag the mouse vertically to correct image tilt.	Klikni i prevuci mišem vertikalno da ispraviš nagib slike,
+Clipboard Image	Slika sa radne table (Clipboard-a)
+Close	Zatvori
+Close help text display / Close JPEGView	Zatvori prikaz teksta uputstva / Zatvori JPEGView
+Color Correction	Ispravka boje
+Combine keys with '+'	Kombinuj tastere sa '+'
+Confirm	Potvrdi
+Confirm save default parameters	Potvrdi čuvanje podrazumevanih parametara
+Conflicting entries in Param DB	Konfliktni unosi u Param DB
+Continue rename/copy?	Nastavi preimenovanje/kopiranje?
+Contrast	Kontrast
+Contrast Correction	Ispravka kontrasta
+Copy file path of the image to clipboard	Prepiši putanju datoteke sa slikom na radnu tablu (Clipboard)
+Copy screen to clipboard/ Copy processed full size image to clipboard	Kopiraj ekran na radnu tablu/Kopiraj obrađenu celu sliku na radnu tablu (Clipboard)
+Copying parameter DB to file '%s' failed. Reason: %s	Kopiranje parametarske DB u datoteku '%s' nije uspelo. Razlog: %s
+Correct converging lines (perspective correction)	Ispravi linije koje konvergiraju (ispravka perspektive)
+Creation date/time	Datum/vreme kreiranja
+Crop image	Opseci sliku
+Ctrl + Left mouse	Ctrl + Levo miš
+Current image	Trenutna slika
+Cyan-Red	Svetlo plavo-Crveno
+Darken Highlights	Potamni preosvetljene delove
+Date	Datum
+Date placeholders use the modification date of the image.	Datumski čuvari mesta (placeholders) koriste datum izmene slike.
+Day / Month / Year (as numbers)	Dan / Mesec / Godina (kao brojevi)
+Decoding this format requires the Microsoft Visual C++ Redistributable.	Dekodiranje ovog formata zahteva Microsoft Visual C++ Redistributable.
+Deep Shadows	Produbi senke
+Delete	Izbriši
+Delete current file on disk permanently	Trajno izbriši trenutnu datoteku sa diska
+Delete image file	Izbriši datoteku sa slikom
+Descending	Opadajuće
+Display image (EXIF) information	Prikaži (EXIF) informacije slike
+Do you really want to delete the current image file on disk?	Da li stvarno želiš da obrišeš sa diska datoteku trenutne slike?
+Do you really want to permanently delete the file %filename%?	Da li stvarno želiš da trajno izbrišeš datoteku %filename%?
+Do you really want to save the following parameters as default to the INI file	Da li stvarno želiš da sledeće parametre sačuvaš u INI datoteku kao podrazumevane?
+Drag at the left or right border for asymmetric correction.	Prevuci ka levoj ili desnoj ivici radi asimetrične ispravke.
+EXIF date successfully set on %d images, failed on %d images	EXIF datum uspešno postavljen na %d slika, neuspešno na %d slika
+Edit	Uredi
+Enable/disable automatic contrast correction (histogram equalization)	Uključi/isključi automatsku ispravku kontrasta (ujednačavanje histograma)
+Enable/disable automatic density correction (local brightness correction)	Uključi/isključi automatsku ispravku gustine (ispravka lokalne osvetljenosti)
+Enable/disable full screen mode	Uključi/isključi mod punog ekrana
+Enable/disable high quality resampling	Uključi/isključi visoko kvalitetno ponovno uzorkovanje
+Enable/disable keeping of geometry related (zoom/pan/rotation)	Uključi/isključi održavanje povezanosti geometrije (zumiranje/okretanje/obrtanje)
+Enable/disable landscape picture enhancement mode	Uključi/isključi mod automatskog poboljšanja pejzažne slike
+Error	Greška
+Error during rename/copy	Greška tokom preimenovanja/kopiranja
+Error saving file	Greška pri snimanju datoteke
+Error while writing the following registry key	Greška prilikom upisivanja sledećeg ključa u registar (registry key)
+Error writing file to disk!	Greška prilikom upisivanja datoteke na disk!
+Example:	Primer:
+Exposure bias (EV):	Ispravka ekspozicije (EV):
+Exposure time (s):	Vreme ekspozicije (s):
+Extension	Ekstenzija
+Extracted number from original file name	Izdvojeni broj iz izvornog imena datoteke
+F-Number:	F-Broj:
+File name	Ime datoteke
+File size	Veličina datoteke
+File type	Tip datoteke
+Fill paper with crop	Ispuni papir isečkom
+Fill with crop	Ispuni isečkom
+Fill with crop (no zoom)	Ispuni isečkom (bez zuma)
+Filter:	Filter:
+Fit image to screen	Uklopi sliku sa ekranom
+Fit to paper	Uklopi sa papirom
+Fit to screen	Uklopi sa ekranom
+Fit to screen (no zoom)	Uklopi sa ekranom (bez zuma)
+Flash fired:	Blic okinut:
+Focal length (mm):	Žižna daljina (mm)
+Forward mouse button	Dugme miša za napredovanje
+Full screen mode	Mod punog ekrana
+Goto first/last image of current folder (using sort order as defined)	Idi na prvu/poslednju sliku trenutnog foldera (koristeći poredak sortiranja kako je određen)
+Goto next image	Idi na sledeću sliku
+Goto previous image	Idi na prethodnu sliku
+Height	Visina
+Hide histogram	Sakrij histogram
+High quality resampling	Visoko kvalitetno ponovno uzorkovanje
+Hour / Minute (as numbers)	Sat / Minut (kao brojevi)
+ISO Speed:	ISO brzina:
+Image Pixels	Pikseli slike
+Image files in folder	Datoteke slika u folderu
+Image height:	Visina slike:
+Image width and height must be dividable by the JPEG block size (8 or 16) for lossless transformations!	Širina i visina slike moraju biti deljive sa veličinom JPEG bloka (8 ili 16) za transformacije bez gubitka!
+Image width:	Širina slike:
+Images	Slike
+Increase/decrease auto color cast correction amount	Uvećaj/umanji iznos automatskog ispravljanja postavke boje
+Increase/decrease auto contrast correction amount	Uvećaj/umanji iznos automatskog ispravljanja kontrasta
+Increase/decrease brightness	Uvećaj/umanji osvetljenje
+Increase/decrease contrast	Uvećaj/umanji kontrast
+Increase/decrease darkening of highlights (LDC must be on)	Uvećaj/umanji potamnjivanje preosvetljenih delova (LDC mora biti uključen)
+Increase/decrease lightening of shadows (LDC must be on)	Uvećaj/umanji osvetljavanje senki (LDC mora biti uključen)
+Increase/decrease sharpness	Uvećaj/umanji oštrinu
+Insufficient rights to change the privilege (DACL) on the registry entry. Continue?	Nedovoljna prava za izmenu ovlašćenja (DACL) u zapisu registra. Nastaviti?
+JPEGView Help	Pomoć za JPEGView
+JPEGView is a lean, fast and highly configurable viewer/editor for JPEG, BMP, PNG, WEBP, TGA, GIF and TIFF images with a minimal GUI.	JPEGView je mali, brz i visoko podesiv pregledač/uređivač sa minimalnim GUI-jem za slike formata JPEG, BMP, PNG, WEBP, TGA, GIF i TIFF.
+JPEGView is registered as default viewer for the selected file formats.	JPEGView je registrovan kao podrazumevani pregledač za odabrane formate datoteka.
+Keep aspect ratio on crop	Zadrži odnos aspekta kod opsecanja
+Keep parameters	Očuvaj parametre
+Keep processing parameters between images	Očuvaj parametre obrade između slika
+Known keys:	Poznati tasteri:
+Lanczos/Bicubic	Lanczos/Bicubic
+Landscape	Pejzaž
+Landscape picture enhancement mode	Pejzažni mod poboljšanja slike
+Last modification date/time	Datum/vreme poslednje izmene
+Left	Levo
+Left mouse & drag	Levo miš & prevuci
+Licensed under the GNU general public license (GPL), see readme file for details	Licencirano pod GNU opštom javnom licencom (GPL), za detalje pogledati datoteku readme.
+Lighten Shadows	Osvetli senke
+Local density correction	Lokalna ispravka gustine
+Location:	Lokacija:
+Loop folder	Prođi kroz folder
+Loop recursively	Prođi rekurzivno
+Loop siblings	Prođi kroz srodne
+Loop through files in current directory and all sibling folders (folders on same level)	Prođi kroz datoteke u trenutnom direktorijumu i sve srodne foldere (foldere na istom nivou)
+Loop through files in current directory and all subfolders	Prođi kroz datoteke u trenutnom direktorijumu i sve podfoldere
+Loop through files in current folder	Prođi kroz datoteke u trenutnom direktorijumu
+Lossless JPEG transformations	JPEG transformacije bez gubitaka
+M - G	M - G
+Magenta-Green	Ljubičasto-Zeleno
+Manage 'Open image with' menu...	Upravljaj menijem 'Open image with'...
+Margins:	Margine:
+Mark image for toggling. Use %s to toggle between marked and current image	Označi sliku za prelazak. Koristi %s da menjaš prikaz ozmeđu označene i trenutne slike.
+Maximize/restore to/from virtual desktop (only for multi-monitor systems)	Maksimiziraj/obnovi na/sa virtuelne radne površine (samo za sisteme sa više monitora)
+Menu entries:	Stavke menija:
+Modification date:	Datum izmene:
+Modifier keys:	Ključevi izmene
+Month / Short form (text)	Mesec / kratki oblik (tekst)
+Mouse wheel	Točkić miša
+Navigation	Navigacija
+New	Novo
+New height:	Nova visina
+New name (>> : file gets copied)	Novo ime (>> : datoteka se kopira)
+New name contains backslash character!	Novo ime sadrži znak \ (backslash)!
+New size:	Nova veličina
+New width:	Nova širina:
+Next image	Naredna slika
+No image loaded!	Slika nije učitana!
+No user INI file exists yet. Create user INI file from INI file template?	Ne postoji korisnička INI datoteka. Kreirati INI datoteku iz šablona za INI datoteku?
+None	Nijedna
+Not enough memory available	Nedovoljno raspoložive memorije
+Note: Set the key 'TrimWithoutPromptLosslessJPEG=true' in the INI file to always trim without showing this message.	Napomena: Podesi ključ 'TrimWithoutPromptLosslessJPEG=true' u INI datoteci da se uvek skraćuje bez prikazivanja ove poruke.
+Number (consecutively numbered)	Broj (uzastopno nabrajanje)
+Number of CPU cores used	Broj korišćenih jezgara CPU
+Number of JPEG files in folder: %d	Broj JPEG datoteka u folderu: %d
+Number with N digits	Broj od N cifara
+OK	OK
+Old name	Staro ime
+Open folder containing image and select in Windows Explorer	Otvori folder koji sadrži sliku i izaberi u Windows Explorer-u
+Open new image or slideshow file	Otvori novu datoteku sa slikom ili slajdovima
+Order files by	Pređaj datoteke po
+Orientation:	Orijentacija:
+Original file extension	Originalna ekstenzija datoteke
+Original file name (with extension)	Originalno ime datoteke (sa ekstenzijom)
+Original file name (without extension)	Originalno ime datoteke (bez ekstenzije)
+Pan image	Zakreni sliku
+Paper:	Papir:
+Parameter DB	Parametarska DB
+Parameter DB error	Greška parametarske DB
+Parameter DB file '%s' could not be opened!	Datoteka Parametarska DB '%s' nije mogla biti otvorena!
+Parameter DB file '%s' is not valid (invalid header)!	Datoteka Parametarske DB '%s' nije valjana (neispravno zaglavlje)!
+Paste from clipboard	Nalepi sa radne table (Clipboard-a)
+Pasting image from clipboard failed!	Nalepljivanje slike sa radne table nije uspelo!
+Performing the lossless transformation failed!	Neuspelo izvođenje transformacije bez gubitaka!
+Performing the transformation failed	Neuspelo izvođenje transformacije
+Perspective Correction	Ispravka perspektive
+Pixels	Pikseli
+Placeholders:	Čuvari mesta:
+Portrait	Portret
+Press 'OK' to continue with registration or 'Cancel' to abort all registrations.	Pritisni 'OK' da nastaviš registraciju ili 'Cancel' (Poništi) da prekineš sve registracije.
+Press ESC to exit...	Pritisni Esc za izlaz...
+Press any key to search the subdirectories for image files.	Pritisni bilo koji taster za pretragu poddirektorijuma za datotekama sa slikama
+Preview	Pregled
+Previous image	Prethodna slika
+Print	Štampaj
+Print Image	Štampaj sliku
+Printer driver	Upravljač (drajver) štampača
+Printer:	Štampač:
+Project home page	Početna stranica projekta
+Radius	Prečnik
+Random	Nasumično
+Reading the JPEG file from disk failed	Neuspešno čitanje JPEG datoteke sa diska
+Reason:	Razlog:
+Registering or unregistering file extensions in this registry area requires administrator privileges and cannot be done in JPEGView.	Registrovanje ili uklanjanje registracije ekstenzija datoteka u ovoj oblasti registra zahteva administratorska ovlašćenja i ne može se izvesti kroz JPEGView.
+Registration applies to the current user only.	Registracija se primenjuje samo na trenutnog korisnika.
+Remove from	Ukloni iz
+Rename	Preimenuj
+Rename/copy images to:	Preimenuj/kopiraj slike u:
+Renaming file failed!	Neuspešna promena imena datoteke!
+Reset	Reset
+Resize Image	Promeni veličinu slike
+Right	Desno
+Right mouse button: Context menu	Desno dugme miša: Kontekstni meni
+Roll from bottom	Odvij sa dna
+Roll from left	Odvij s leva
+Roll from right	Odvij s desna
+Roll from top	Odvij s vrha
+Rotate Image	Rotiraj sliku
+Rotate current file on disk lossless by 270 deg (W/H must be multiple of 16)	Rotiraj trenutnu datoteku na disku za 270 stepeni, bez gubitaka (Š/V mora biti umnožak od 16)
+Rotate current file on disk lossless by 90 deg (W/H must be multiple of 16)	Rotiraj trenutnu datoteku na disku za 90 stepeni, bez gubitaka (Š/V mora biti umnožak od 16)
+Rotate image 90 deg clockwise	Rotiraj sliku 90 stepeni u smeru kazaljke na satu
+Rotate image 90 deg counter-clockwise	Rotiraj sliku 90 stepeni u suprotnom smeru kazaljke na satu
+Rotate image and fit to screen	Rotiraj sliku i uklopi je na ekran
+Rotate image by user-defined angle	Rotiraj sliku za korisnički definisan ugao
+Rotate the image by dragging with the mouse.	Rotiraj sliku prevlačenjem mišem.
+SIMD mode used	Korišćen SIMD mod
+Same as Image	Isto kao slika
+Saturation	Zasićenost
+Save	Sačuvaj
+Save (%s)/ delete (%s) image processing parameters in/from parameter DB	Sačuvaj (%s)/ izbriši (%s) parametre obrade slike u/iz parametarske DB
+Save as (in screen size/resolution)	Sačuvaj kao (u veličini ekrana/rezoluciji)
+Save as template	Sačuvaj kao šablon
+Save cropped image	Sačuvaj opsečenu sliku
+Save processed image to JPEG file (original size)	Sačuvaj obrađenu sliku u JPEG datoteku (originalna veličina)
+Save processed image to JPEG file (screen size)	Sačuvaj obrađenu sliku u JPEG datoteku (veličina ekrana)
+Save to	Sačuvaj u
+Scaling mode:	Mod skaliranja
+Screen Pixels	Ekranski pikseli
+Scroll from bottom	Odmotaj sa dna
+Scroll from left	Odmotaj s leva
+Scroll from right	Odmotaj s desna
+Scroll from top	Odmotaj s vrha
+Select Printer...	Izaberi štampač...
+Select all	Izaberi sve
+Select application	Izaberi aplikaciju
+Select file to display in 'File Open' dialog	Izaberi datoteku za prikaz u dijalogu 'File Open'
+Select none	Izaberi nijednu
+Select parameter DB to restore	Izaberi parametarsku DB za obnovu
+Set Fixed Crop Size	Postavi fiksnu veličinu opsecanja
+Set JPEGView as default image viewer	Postavi JPEGView kao podrazumevani pregledač slika
+Set timeout to n/10 sec, respectively n/100 sec (Ctrl+Shift)	Postavi istek vremena (timeout) na n/10 sekundi, respektivno n/100 sekundi (Ctrl+Shift)
+Shall existing entries be preserved (Yes) or be overriden by the imported entries (No)?	Da li treba sačuvati postojeće postavke (Yes) ili ih poništiti uvezenim postavkama (No)?
+Sharpen	Izoštri
+Sharpen low	Slabo izoštravanje
+Sharpen medium	Srednje izoštravanje
+Shortcut Help	Prečica za pomoć
+Shortcut key:	Taster za prečicu:
+Show filename	Prikaži ime datoteke
+Show first image in folder	Prikaži prvu sliku u folderu
+Show grid lines	Prikaži linije mreže
+Show histogram	Prikaži histogram
+Show last image in folder	Prikaži poslednju sliku u folderu
+Show navigation panel	Prikaži navigacioni panel
+Show next image	Prikaži narednu sliku
+Show picture info (EXIF)	Prikaži informacije o slici (EXIF)
+Show previous image	Prikaži prethodnu sliku
+Show/hide file name	Prikaži/sakrij ime datoteke
+Show/hide navigation panel	Prikaži/sakrij navigacioni panel
+Show/hide picture information (EXIF data)	Prikaži/sakrij informacije o slici (EXIF podatke)
+Show/hide this help text	Prikaži/sakrij ovaj pomoćni tekst
+Size:	Veličina
+Slide from bottom	Pokreni slajdove sa dna
+Slide from left	Pokreni slajdove s leva
+Slide from right	Pokreni slajdove s desna
+Slide from top	Pokreni slajdove s vrha
+Slideshow	Prikaz slajdova
+Slideshow with timeout of 'n' seconds (ESC to stop)	Prikaz slajdova sa istekom vremena od 'n' sekundi (ESC za prestanak)
+Sort images by creation date, resp. modification date, resp. file name	Sortiraj slike po datumu kreiranja, resp. datumu izmene, resp imenu datoteke
+Source:	Izvor:
+Target folders that do not yet exist are created as needed.	Ciljani folderi koji još ne postoje kreiraju se po potrebi.
+The directory '%s' does not contain any image files!	Direktorijum '%s' ne sadrži nijednu datoteku sa slikama!
+The file '%s' could not be copied!	Datoteka '%s' se ne može kopirati!
+The file '%s' could not be read!	Datoteka '%s' se ne može pročitati!
+The file '%s' could not be renamed!	Datoteka '%s' se ne može preimenovati!
+The file '%s' does not contain a list of file names!	Datoteka '%s' ne sadrži listu sa imenima datoteka!
+The file is read-only!	Datoteka je samo za čitanje!
+The following file extensions cannot be unregistered because they have been registered in the 'local machine' registry area.	Sledeće ekstenzije datoteka se ne mogu ukloniti iz registra zato što su registrovane u oblasti 'local machine'.
+The following image extensions are protected by the operating system.	Sledeće ekstenzije slika su zaštićene operativnim sistemom.
+The imported param DB contains entries already present in active param DB.	Uvezena parametarska DB sadrži stavke koje su već prisutne u aktivnoj parametarskoj DB.
+The new size is too large - width or height is larger than 65535 or total number of pixels is too large!	Nova veličina je prevelika - širina ili visina je veća od 65535 ili je ukupan broj piksela prevelik!
+The old parameter DB file '%s' could not be renamed during conversion to new format!	Stara parametarska DB datoteka '%s' ne može biti preimenovana tokom konverzije u novi format!
+The operation failed because not enough memory is available!	Operacija nije uspela jer nema dovoljno raspoložive memorije!
+The parameter DB file '%s' has been created by a newer version of JPEGView!	Parametarska DB datoteka je kreirana novijom verzijom JPEGView-a!
+The transformation can be applied if the image is trimmed to the next matching size but this will remove some border pixels.	Transformacija se može primeniti ako je slika skraćena na narednu odgovarajuću veličinu ali će nešto ivičnih piksela biti uklonjeno.
+These values will override the values from the INI file located in the program folder of JPEGView!	Ove vrednosti će poništiti vrednosti INI datoteke smeštene u programskom folderu JPEGView-a!
+Threshold	Prag
+Title:	Naslov:
+Toggle between screens (only for multi-monitor systems)	Prebacivanje sa ekrana na ekran (samo za sisteme sa više monitora)
+Toggle window always on top mode	Mod prebacivanja sa prozorom uvek na vrhu
+Toggle window title bar hidden mode	Mod prebacivanja sa skrivenom trakom naslova prozora
+Top	Vrh
+Transition Effect	Efekat tranzicije
+Trim the image and apply transformation? Trimming cannot be undone!	Skratiti sliku i primeniti transformaciju? Skraćivanje se ne može poništiti!
+Unregistering not possible	Nije moguće ukloniti registraciju
+Unsharp mask...	Maska zamućenja...
+Update user settings with new settings from settings template file?	Ažurirati korisnička podešavanja novima iz datoteke sa šablonom podešavanja?
+Use the 'Default Programs' configuration dialog from the operating system instead.	Upotrebiti 'Default Programs' konfiguracioni dijalog iz operativnog sistema.
+Use the mouse to draw a line that shall be horizontal or vertical.	Upotrebi miša da iscrtaš liniju koja će biti horizontalna ili vertikalna.
+Warning	Upozorenje
+Width	Širina
+Window mode	Mod prozora
+Windows 8 (and above) blocks JPEGView from changing the default program for these file extensions.	Windows 8 (i više verzije) ne dopušta da JPEGView promeni podrazumevani program za ove ekstenzije datoteka.
+Writing the resulting JPEG file to disk failed	Neuspelo upisivanje rezultujuće JPEG datoteke na disk
+Y - B	Y - B
+Year short form (2 digits)	Kratki oblik godine (2 cifre)
+Yellow-Blue	Žuto-Plavo
+Zoom 1:1 (100 %)	Zum 1:1 (100%)
+Zoom in (%s)/Zoom out (%s)	Zum u (%s)/Zum iz (%s)
+Zoom in/out image	Zum u/iz slike
+Zoom mode (drag mouse to zoom)	Zum mod (prevuci mišem da zumiraš)
+and image processing (brightness/contrast/sharpen) parameters between images	i parametri obrade slike (osvetljenje/kontrast/oštrina) između slika
+cm	cm
+in	in
+new menu entry	nova stavka menija
+no	ne
+off	isključi
+on	uključi
+user-defined	korisnički definisano
+yes	da
+
+// ::: Popup Menu Strings ::: (unsorted to preserve context) //
+Stop slide show/movie	Zaustavi slajdove/film
+Open image...	Otvori sliku...
+Open image with	Otvori sliku pomoću
+Save processed image...	Sačuvaj obrađenu sliku...
+Reload image	Ponovo učitaj sliku
+Open containing folder in Explorer	Otvori folder u Explorer-u
+Print image...	Štampaj sliku...
+Batch rename/copy...	Paketno preimenuj/kopraj...
+Set modification date	Postavi datum izmene
+to current date	na trenutni datum
+to EXIF date	na EXIF datum
+to EXIF date (all files in folder)	na EXIF datum (sve datoteke u folderu)
+Set as desktop wallpaper	Postavi kao pozadinu radne površine (desktop-a)
+Use original image	Upotrebi originalnu sliku
+Use processed image as displayed	Upotrebi obrađenu sliku kako je prikazana
+Copy to clipboard	Prepiši na radnu tablu (Clipboard)
+Copy original size image	Kopiraj originalnu veličinu slike
+Copy file path	Kopiraj putanju datoteke
+Display order	Redosled prikaza
+Modification date	Datum izmene
+Creation date	Datum kreiranja
+Play folder as slideshow/movie	Reprodukuj sadržaj foldera kao slajdove/film
+Waiting time	Vreme čekanja
+1 sec	1 sek
+2 sec	2 sek
+3 sec	3 sek
+4 sec	4 sek
+5 sec	5 sek
+7 sec	7 sek
+10 sec	10 sek
+20 sec	20 sek
+Transition Speed	Brzina prelaza
+Very fast	Vrlo brzo
+Fast	Brzo
+Normal	Normalno
+Slow	Sporo
+Very slow	Vrlo sporo
+Movie	Film
+Playback speed	Brzina reprodukcije
+5 fps	5 fps
+10 fps	10 fps
+25 fps	25 fps
+30 fps	30 fps
+50 fps	50 fps
+100 fps	100
+Transform image	Transformiši sliku
+Rotate +90	Rotiraj +90
+Rotate -90	Rotiraj -90
+Rotate...	Rotiraj...
+Change size...	Promeni veličinu...
+Perspective correction...	Ispravka perspektive...
+Mirror horizontally	Horizontalno ogledanje
+Mirror vertically	Vertikalno ogledanje
+Rotate 180	Rotiraj 180
+Auto correction	Automatska ispravka
+Save parameters to DB	Sačuvaj parametre u DB
+Clear parameters from DB	Izbriši parametre iz DB
+Zoom	Zum
+Span all screens	Rasprostri po svim ekranima
+Fit window to image	Uskladi prozor sa slikom
+Hide window title bar	Sakrij traku sa imenom prozora
+Set window always on top	Podesi prozor uvek na vrhu
+Settings/Admin	Podešavanja/Admin
+Edit global settings...	Uredi globalna podešavanja...
+Edit user settings...	Uredi korisnička podešavanja...
+Update user settings...	Ažuriraj korisnička podešavanja...
+Set current parameters as default values...	Postavi trenutne parametre kao podrazumevane vrednosti...
+Set as default viewer...	Podesi kao podrazumevani pregledač...
+Backup parameter DB...	Napravi rezervnu kopiju parametarske DB...
+Restore parameter DB...	Obnovi parametarsku DB...
+User commands	Korisničke komande
+About JPEGView...	O JPEGView...
+Exit	Izlaz
+Crop Selection	Opseci izabrano
+Crop Selection Lossless...	Opseci izabrano bez gubitaka...
+Copy Selection to Clipboard	Kopiraj izabrano na radnu tablu (Clipboard)
+Crop Mode	Mod opsecanja
+Free	Slobodno
+Fixed size...	Fiksna veličina...
+Zoom to Selection	Zumiraj u izabrano
+
+// ::: STATUS: Last Checked/Updated by Script ::: 2023-03-13T06:20:35.728401+00:00 //
+//! Translation Progress: 100%
+//! * Total (Strings + Menu) = 427
+//! * Done = 427
+//! * Missing = 0 (0%)
