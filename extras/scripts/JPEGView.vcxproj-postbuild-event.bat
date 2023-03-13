@@ -40,10 +40,14 @@ echo %% OUT_DIR_FULL_PATH=%OUT_DIR_FULL_PATH%
 
 
 
-REM ----------- COPY CONFIG FILES -----------
+REM ----------- COPY COMMON CONFIG FILES -----------
 REM these are common across all builds, regardless of architecture or version
 echo + XCopy Config\* ...
 xcopy "%PROJECT_DIR%Config\*" "%OUT_DIR_FULL_PATH%" /Y /C /D
+echo ~ ErrorLevel: %ErrorLevel%
+
+echo + XCopy LICENSE.txt ...
+xcopy "%PROJECT_DIR%..\..\LICENSE.txt" "%OUT_DIR_FULL_PATH%" /Y /D
 echo ~ ErrorLevel: %ErrorLevel%
 
 
