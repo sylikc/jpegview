@@ -351,7 +351,6 @@ popd
 REM clean intermediates
 pushd "%JPV_ROOT%\src\JPEGView\bin\x86\Release"
 
-ren JPEGView_VS2017.exe JPEGView.exe
 del *.lib *.pdb *.ipdb *.iobj *.exp
 
 

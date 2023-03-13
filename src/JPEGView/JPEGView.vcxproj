@@ -135,11 +135,7 @@
       <EnableDPIAwareness>true</EnableDPIAwareness>
     </Manifest>
     <PostBuildEvent>
-      <Command>xcopy "$(ProjectDir)Config\*" "$(ProjectDir)\$(OutDir)" /Y /C /D
-xcopy "$(ProjectDir)libjxl\bin\*.dll" "$(ProjectDir)$(OutDir)" /Y /D
-xcopy "$(ProjectDir)libheif\bin\*.dll" "$(ProjectDir)$(OutDir)" /Y /D
-xcopy "$(ProjectDir)libavif\bin\*.dll" "$(ProjectDir)$(OutDir)" /Y /D
-xcopy "$(ProjectDir)lcms2\bin\*.dll" "$(ProjectDir)$(OutDir)" /Y /D</Command>
+      <Command>call "$(SolutionDir)..\extras\scripts\JPEGView.vcxproj-postbuild-event.bat" "$(PlatformArchitecture)" "$(ProjectName)" "$(ProjectDir)" "$(OutDirFullPath)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -188,11 +184,7 @@ xcopy "$(ProjectDir)lcms2\bin\*.dll" "$(ProjectDir)$(OutDir)" /Y /D</Command>
       <EnableDPIAwareness>true</EnableDPIAwareness>
     </Manifest>
     <PostBuildEvent>
-      <Command>xcopy "$(ProjectDir)Config\*" "$(ProjectDir)\$(OutDir)" /Y /C /D
-xcopy "$(ProjectDir)libjxl\bin64\*.dll" "$(ProjectDir)$(OutDir)" /Y /D
-xcopy "$(ProjectDir)libheif\bin64\*.dll" "$(ProjectDir)$(OutDir)" /Y /D
-xcopy "$(ProjectDir)libavif\bin64\*.dll" "$(ProjectDir)$(OutDir)" /Y /D
-xcopy "$(ProjectDir)lcms2\bin64\*.dll" "$(ProjectDir)$(OutDir)" /Y /D</Command>
+      <Command>call "$(SolutionDir)..\extras\scripts\JPEGView.vcxproj-postbuild-event.bat" "$(PlatformArchitecture)" "$(ProjectName)" "$(ProjectDir)" "$(OutDirFullPath)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -247,11 +239,7 @@ xcopy "$(ProjectDir)lcms2\bin64\*.dll" "$(ProjectDir)$(OutDir)" /Y /D</Command>
       <EnableDPIAwareness>true</EnableDPIAwareness>
     </Manifest>
     <PostBuildEvent>
-      <Command>xcopy "$(ProjectDir)Config\*" "$(ProjectDir)\$(OutDir)" /Y /C /D
-xcopy "$(ProjectDir)libjxl\bin\*.dll" "$(ProjectDir)$(OutDir)" /Y /D
-xcopy "$(ProjectDir)libheif\bin\*.dll" "$(ProjectDir)$(OutDir)" /Y /D
-xcopy "$(ProjectDir)libavif\bin\*.dll" "$(ProjectDir)$(OutDir)" /Y /D
-xcopy "$(ProjectDir)lcms2\bin\*.dll" "$(ProjectDir)$(OutDir)" /Y /D</Command>
+      <Command>call "$(SolutionDir)..\extras\scripts\JPEGView.vcxproj-postbuild-event.bat" "$(PlatformArchitecture)" "$(ProjectName)" "$(ProjectDir)" "$(OutDirFullPath)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -304,11 +292,7 @@ xcopy "$(ProjectDir)lcms2\bin\*.dll" "$(ProjectDir)$(OutDir)" /Y /D</Command>
       <EnableDPIAwareness>true</EnableDPIAwareness>
     </Manifest>
     <PostBuildEvent>
-      <Command>xcopy "$(ProjectDir)Config\*" "$(ProjectDir)\$(OutDir)" /Y /C /D
-xcopy "$(ProjectDir)libjxl\bin64\*.dll" "$(ProjectDir)$(OutDir)" /Y /D
-xcopy "$(ProjectDir)libheif\bin64\*.dll" "$(ProjectDir)$(OutDir)" /Y /D
-xcopy "$(ProjectDir)libavif\bin64\*.dll" "$(ProjectDir)$(OutDir)" /Y /D
-xcopy "$(ProjectDir)lcms2\bin64\*.dll" "$(ProjectDir)$(OutDir)" /Y /D</Command>
+      <Command>call "$(SolutionDir)..\extras\scripts\JPEGView.vcxproj-postbuild-event.bat" "$(PlatformArchitecture)" "$(ProjectName)" "$(ProjectDir)" "$(OutDirFullPath)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
