@@ -7,10 +7,10 @@
 
 ////////////////////
 // ::: Translation Info ::: //
-//: ISO 639-1 code: bel
+//: ISO 639-1 code: be
 //: ISO 3166-1 code:
 //: Language: Belarusian
-//: Translator(s): Uładzimir Panada
+//: Translator(s) - Name <Contact Info/URL>: Uładzimir Panada
 //: Last Updated:
 //: Additional Notes:
 ////////////////////
@@ -642,7 +642,7 @@ Zoom to Selection	На ўвесь экран
 //! Set as default viewer...
 //! User commands
 
-// ::: STATUS: Last Checked/Updated by Script ::: 2023-03-09T12:34:04.405196+00:00 //
+// ::: STATUS: Last Checked/Updated by Script ::: 2023-03-13T06:28:03.730621+00:00 //
 //! Translation Progress: 63%
 //! * Total (Strings + Menu) = 427
 //! * Done = 269
