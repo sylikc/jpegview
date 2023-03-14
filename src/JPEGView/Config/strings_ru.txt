@@ -1,13 +1,15 @@
-﻿//! Этот файл должен иметь кодировку UTF-8 (для редактирования подойдёт, например, Блокнот Windows)
+﻿//! This file must be encoded with UTF-8 (e.g. with Windows Notepad)
 //! LICENSE: This localization file is part of JPEGView <https://github.com/sylikc/jpegview> and distributed under the same license.  See <https://github.com/sylikc/jpegview/blob/master/LICENSE.txt> for more info.
 
-//! Имя файла должно иметь вид 'strings_%languagecode%.txt' (где %languagecode% – код языка согласно ISO 639, пример: 'fr' –  французский)
+//! Standard  Filename Convention: 'strings_%languagecode%.txt' where %languagecode% is the ISO 639-1 language code e.g. 'en' for English (See <https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes>)
+//! Alternate Filename Convention: 'strings_%languagecode%-%countrycode%.txt' where %countrycode% is the ISO 3166-1 country code e.g. 'US' for United States (See <https://en.wikipedia.org/wiki/List_of_ISO_3166_country_codes>)
+//!    Use the alternate filename convention only when the standard filename already exist (e.g. specifying a country-specific dialect for an existing language)
 
 ////////////////////
 // ::: Translation Info ::: //
 //: ISO 639-1 code: ru
 //: ISO 3166-1 code:
-//: Language: Русский (Russian)
+//: Language: Russian (Русский)
 //: Translator(s) - Name <Contact Info/URL>: Dmitry Yerokhin <erodim@mail.ru>
 //: Last Updated: Mar 6, 2023
 //: Additional Notes:
@@ -16,18 +18,25 @@
 ////////////////////
 // ::: Instructions / Help ::: (help for translators only, does not need to be translated) //
 
-//? Формат: Английская строка<tab>Переведённая строка<cr/lf>
+//? Line Format:    English string<tab>Translated string<newline>
+//? * Lines beginning with "//" (comments) are ignored
+//? * Blank lines are ignored
+//? * Lines without a <tab> are ignored
+//? * Lines with no text after the <tab> are ignored
+//? * Multiple tabs are permitted between English and Translated string, e.g. this is valid:    English string<tab><tab><tab>Translated string<newline>
 
-//? ПРИМЕЧАНИЕ: %s %d имеют особое значение в строках, поэтому убедитесь, что они присутствуют в переведённой строке
+//? NOTE: %s %d have special meanings in the strings, so make sure they appear somewhere in the translated string!
 
-//? Для коротких строк и не имеющих контекста:
-//?   "in" в контексте это сокращение от "дюйм"
-//?   "cm" в контексте это сокращение от "сантиметр"
-//?   "C - R" в контексте это цвета "Cyan Red"
-//?   "M - G" в контексте это цвета "Magenta Green"
-//?   "Y - B" в контексте это цвета "Yellow Blue"
-//?   "yes"/"no" в контексте для показа флагов EXIF
-//?   "on"/"off" в контексте для показа, активен параметр или нет
+//? For the strings below which are short and have no context:
+//?   "in"        in context: is shorthand for "inch"
+//?   "cm"        in context: is shorthand for "centimeter"
+//?   "C - R"     in context: is "Cyan Red" colors
+//?   "M - G"     in context: is "Magenta Green" colors
+//?   "Y - B"     in context: is "Yellow Blue" colors
+//?   "yes"/"no"  in context: is for showing EXIF flags
+//?   "on"/"off"  in context: is for showing a setting active or not
+//?   "Filter"    in context: is used in Resize image, "sampling filter"
+//?   "Box"       in context: is used in Resize image sampling filter "Box filter"
 ////////////////////
 
 
@@ -85,11 +94,12 @@ Continue rename/copy?	Продолжить переименование/копи
 Contrast	Контрастность
 Contrast Correction	Коррекция контрастности
 Copy file path of the image to clipboard	Скопировать путь к файлу с изображением в буфер обмена
-Copy screen to clipboard/ Copy processed full size image to clipboard	Скопировать в буфер обмена экран/обработанное полноразмерное изображение
+Copy screen to clipboard / Copy processed full size image to clipboard	Скопировать в буфер обмена экран/обработанное полноразмерное изображение
 Copying parameter DB to file '%s' failed. Reason: %s	Ошибка копирования базы параметров в файл '%s'. Причина: %s
 Correct converging lines (perspective correction)	Коррекция сходящихся линий (перспективы)
 Creation date/time	Дата/время создания
 Crop image	Обрезать изображение
+Crop the image and apply transformation? Cropping cannot be undone!	Обрезать и преобразовать изображение? Обрезка не может быть отменена!
 Ctrl + Left mouse	Ctrl + ЛКМ
 Current image	Текущее изображение
 Cyan-Red	Голубой-Красный
@@ -130,12 +140,12 @@ F-Number:	Диафрагма:
 File name	Имя файла
 File size	Размер файла
 File type	Тип файла
-Fill paper with crop	Заполнить лист с обрезкой
+Fill page with crop	Заполнить лист с обрезкой
 Fill with crop	Заполнение с обрезкой
 Fill with crop (no zoom)	Заполнение с обрезкой (без увеличения)
 Filter:	Фильтр
 Fit image to screen	Вписать изображение в экран
-Fit to paper	Вписать в лист
+Fit to page	Вписать в лист
 Fit to screen	Подгонка под экран
 Fit to screen (no zoom)	Подгонка под экран (без увеличения)
 Flash fired:	Вспышка:
@@ -211,7 +221,7 @@ No image loaded!	НЕ ЗАГРУЖЕНО ИЗОБРАЖЕНИЕ!
 No user INI file exists yet. Create user INI file from INI file template?	Пользовательского INI-файла пока нет. Создать его из шаблона INI-файла?
 None	Нет
 Not enough memory available	Недостаточно памяти
-Note: Set the key 'TrimWithoutPromptLosslessJPEG=true' in the INI file to always trim without showing this message.	* Чтобы при обрезке не было этого сообщения, установите в INI-файле ключ 'TrimWithoutPromptLosslessJPEG=true'.
+Note: Set the key 'CropWithoutPromptLosslessJPEG=true' in the INI file to always crop without showing this message.	* Чтобы при обрезке не было этого сообщения, установите в INI-файле ключ 'CropWithoutPromptLosslessJPEG=true'.
 Number (consecutively numbered)	номер (последовательный)
 Number of CPU cores used	Используется ядер ЦП
 Number of JPEG files in folder: %d	Файлов JPEG в папке: %d
@@ -226,7 +236,7 @@ Original file extension	исходное расширение файла
 Original file name (with extension)	исходное имя файла (с расширением)
 Original file name (without extension)	исходное имя файла (без расширения)
 Pan image	Переместить изображение
-Paper:	Бумага:
+Paper size:	Бумага:
 Parameter DB	Параметры БД
 Parameter DB error	Ошибка в базе параметров
 Parameter DB file '%s' could not be opened!	Невозможно открыть файл '%s' c базой параметров.
@@ -279,7 +289,7 @@ SIMD mode used	Режим SIMD
 Same as Image	Как изображение
 Saturation	Насыщенность
 Save	Сохранить
-Save (%s)/ delete (%s) image processing parameters in/from parameter DB	Сохранить (%s) / удалить (%s) параметры обработки изображения в базе данных
+Save (%s) / delete (%s) image processing parameters into/from parameter DB	Сохранить (%s) / удалить (%s) параметры обработки изображения в базе данных
 Save as (in screen size/resolution)	Сохранить как (в экранном размере/разрешении)
 Save as template	Сохранить как шаблон
 Save cropped image	Сохранить обрезанное изображение
@@ -301,7 +311,7 @@ Select parameter DB to restore	Выберите базу параметров д
 Set Fixed Crop Size	Выбрать размер обрезки
 Set JPEGView as default image viewer	Назначить JPEGView стандартной программой просмотра графики
 Set timeout to n/10 sec, respectively n/100 sec (Ctrl+Shift)	Задать интервал N/10 сек или N/100 сек (Ctrl+Shift)
-Shall existing entries be preserved (Yes) or be overriden by the imported entries (No)?	Сохранить имеющиеся записи ('Да') или перезаписать их импортированными ('Нет')?
+Shall existing entries be preserved (Yes) or be overwritten by the imported entries (No)?	Сохранить имеющиеся записи ('Да') или перезаписать их импортированными ('Нет')?
 Sharpen	Резкость
 Sharpen low	Резкость слабо
 Sharpen medium	Резкость средне
@@ -343,7 +353,7 @@ The new size is too large - width or height is larger than 65535 or total number
 The old parameter DB file '%s' could not be renamed during conversion to new format!	Не удалось переименовать старый файл '%s' с базой параметров при преобразовании в новый формат.
 The operation failed because not enough memory is available!	Операция не выполнена: недостаточно памяти.
 The parameter DB file '%s' has been created by a newer version of JPEGView!	Файл '%s' с базой параметров создан в более новой версии JPEGView.
-The transformation can be applied if the image is trimmed to the next matching size but this will remove some border pixels.	Преобразование возможно, если обрезать изображение до ближайшего кратного блоку значения (и потерять некоторое количество пикселов с краёв).
+The transformation can be applied if the image is cropped to the next matching size but this will remove some border pixels.	Преобразование возможно, если обрезать изображение до ближайшего кратного блоку значения (и потерять некоторое количество пикселов с краёв).
 These values will override the values from the INI file located in the program folder of JPEGView!	Эти значения будут иметь приоритет перед установками в INI-файле в папке с JPEGView.
 Threshold	Порог
 Title:	Название:
@@ -352,7 +362,6 @@ Toggle window always on top mode	Вкл./выкл. режим вывода по�
 Toggle window title bar hidden mode	Вкл./выкл. режим скрытия заголовка окна
 Top	Сверху
 Transition Effect	Эффект смены изображений
-Trim the image and apply transformation? Trimming cannot be undone!	Обрезать и преобразовать изображение? Обрезка не может быть отменена!
 Unregistering not possible	Отмена регистрации невозможна
 Unsharp mask...	Нерезкая маска...
 Update user settings with new settings from settings template file?	Обновить пользовательские настройки, взяв их из файла с шаблонами?
@@ -462,7 +471,7 @@ Free	Произвольно
 Fixed size...	Фиксированный размер...
 Zoom to Selection	Масштабировать до выделенного
 
-// ::: INFO: Out-of-date Translations [30] ::: (Not in use anymore, safe to delete) //
+// ::: INFO: Out-of-date Translations [28] ::: (Not in use anymore, safe to delete) //
 //Auto contrast and color correction:	Автокоррекция контрастности и цвета:
 //Downcounting	По убыванию
 //Error while writing the following registry key:	Ошибка записи ключа реестра:
@@ -476,8 +485,6 @@ Zoom to Selection	Масштабировать до выделенного
 //PgDn or Right	PgDn или стрелка вправо
 //PgUp or Left	PgUp или стрелка влево
 //Press 'OK' to continue with registration or 'Cancel' to not modify any registrations.	OK — зарегистрировать, 'Отмена' — не изменять никаких регистраций файлов.
-//Project home page:	Сайт проекта:
-//Reason: Not enough memory available	Причина: недостаточно памяти
 //Registering or unregistering file extensions in this registry area requires administration privileges and cannot be done in JPEGView.	Регистрация/дерегистрация расширений в этой области реестра требует прав администратора и не может быть выполнена в JPEGView.
 //Rename:	Переименовать:
 //Rotate the following file lossless by 270 deg?\n%filename%	Повернуть без потерь на 90° влево и сохранить в файле?\n%filename%
@@ -494,7 +501,7 @@ Zoom to Selection	Масштабировать до выделенного
 //renamed	переименовано
 //up/down	Стрелки вверх/вниз
 
-// ::: STATUS: Last Checked/Updated by Script ::: 2023-03-13T06:33:02.772922+00:00 //
+// ::: STATUS: Last Checked/Updated by Script ::: 2023-03-14T00:34:40.509588+00:00 //
 //! Translation Progress: 100%
 //! * Total (Strings + Menu) = 427
 //! * Done = 427

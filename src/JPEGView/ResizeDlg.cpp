@@ -42,10 +42,10 @@ LRESULT CResizeDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lPar
 
 	m_btnOk.SetWindowText(CNLS::GetString(_T("OK")));
 	m_btnCancel.SetWindowText(CNLS::GetString(_T("Cancel")));
-	m_lblPercents.SetWindowText(CNLS::GetString(_T("New size")) + CString(_T(":")));
-	m_lblWidth.SetWindowText(CNLS::GetString(_T("New width")) + CString(_T(":")));
-	m_lblHeight.SetWindowText(CNLS::GetString(_T("New height")) + CString(_T(":")));
-	m_lblFilter.SetWindowText(CNLS::GetString(_T("Filter")) + CString(_T(":")));
+	m_lblPercents.SetWindowText(CNLS::GetString(_T("New size:")));
+	m_lblWidth.SetWindowText(CNLS::GetString(_T("New width:")));
+	m_lblHeight.SetWindowText(CNLS::GetString(_T("New height:")));
+	m_lblFilter.SetWindowText(CNLS::GetString(_T("Filter:")));
 	m_lblPixel.SetWindowText(CNLS::GetString(_T("Pixels")));
 	m_lblPixel2.SetWindowText(CNLS::GetString(_T("Pixels")));
 

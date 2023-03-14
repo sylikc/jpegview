@@ -26,16 +26,18 @@
 //? * Lines with no text after the <tab> are ignored
 //? * Multiple tabs are permitted between English and Translated string, e.g. this is valid:    English string<tab><tab><tab>Translated string<newline>
 
-//? NOTE: %s %d have special meanings in the strings, so make sure they appear somewhere in the translated string
+//? NOTE: %s %d have special meanings in the strings, so make sure they appear somewhere in the translated string!
 
 //? For the strings below which are short and have no context:
-//?   "in" in context is shorthand for "inch"
-//?   "cm" in context is shorthand for "centimeter"
-//?   "C - R" in context is "Cyan Red" colors
-//?   "M - G" in context is "Magenta Green" colors
-//?   "Y - B" in context is "Yellow Blue" colors
-//?   "yes"/"no" in context is for showing EXIF flags
-//?   "on"/"off" in context is for showing a setting active or not
+//?   "in"        in context: is shorthand for "inch"
+//?   "cm"        in context: is shorthand for "centimeter"
+//?   "C - R"     in context: is "Cyan Red" colors
+//?   "M - G"     in context: is "Magenta Green" colors
+//?   "Y - B"     in context: is "Yellow Blue" colors
+//?   "yes"/"no"  in context: is for showing EXIF flags
+//?   "on"/"off"  in context: is for showing a setting active or not
+//?   "Filter"    in context: is used in Resize image, "sampling filter"
+//?   "Box"       in context: is used in Resize image sampling filter "Box filter"
 ////////////////////
 
 
@@ -93,11 +95,12 @@ Continue rename/copy?	是否繼續重命名/複製？
 Contrast	對比度
 Contrast Correction	對比度校正
 Copy file path of the image to clipboard	將圖片的文件路徑複製到剪貼板
-Copy screen to clipboard/ Copy processed full size image to clipboard	將屏幕複製到剪貼板/將處理後的全尺寸圖片複製到剪貼板
+Copy screen to clipboard / Copy processed full size image to clipboard	將屏幕複製到剪貼板/將處理後的全尺寸圖片複製到剪貼板
 Copying parameter DB to file '%s' failed. Reason: %s	複製參數數據庫到文件 '%s' 失敗。原因: %s
 Correct converging lines (perspective correction)	正確的匯聚線（透視校正）
 Creation date/time	創建日期/時間
 Crop image	裁剪圖片
+Crop the image and apply transformation? Cropping cannot be undone!	是否裁剪圖片並應用轉換？裁剪無法被復原！
 Ctrl + Left mouse	Ctrl + 鼠標左鍵
 Current image	當前圖片
 Cyan-Red	青-紅
@@ -138,12 +141,12 @@ F-Number:	F 值：
 File name	文件名
 File size	文件大小
 File type	文件類型
-Fill paper with crop	用裁剪填充紙張
+Fill page with crop	用裁剪填充紙張
 Fill with crop	用裁剪來填充
 Fill with crop (no zoom)	用裁剪填充（無縮放）
 Filter:	濾鏡：
 Fit image to screen	圖片適應屏幕
-Fit to paper	適應紙張大小
+Fit to page	適應紙張大小
 Fit to screen	適合屏幕
 Fit to screen (no zoom)	適合屏幕（無縮放）
 Flash fired:	閃光燈：
@@ -219,7 +222,7 @@ No image loaded!	未加載圖片！
 No user INI file exists yet. Create user INI file from INI file template?	尚無用戶INI文件。是否從INI文件模板來創建用戶INI文件？
 None	無
 Not enough memory available	沒有足夠的可用內存
-Note: Set the key 'TrimWithoutPromptLosslessJPEG=true' in the INI file to always trim without showing this message.	注意：在INI文件中設定“TrimWithoutPromptLosslessJPEG=true”以便總是修剪而不顯示此消息。
+Note: Set the key 'CropWithoutPromptLosslessJPEG=true' in the INI file to always crop without showing this message.	注意：在INI文件中設定“CropWithoutPromptLosslessJPEG=true”以便總是修剪而不顯示此消息。
 Number (consecutively numbered)	編號（連續編號）
 Number of CPU cores used	所使用的CPU核心數量
 Number of JPEG files in folder: %d	該文件夾中的JPEG文件數量: %d
@@ -234,7 +237,7 @@ Original file extension	原始文件擴展名
 Original file name (with extension)	原始文件名（含擴展名）
 Original file name (without extension)	原始文件名（不含擴展名）
 Pan image	移動圖片
-Paper:	紙張大小：
+Paper size:	紙張大小：
 Parameter DB	參數數據庫
 Parameter DB error	參數數據庫錯誤
 Parameter DB file '%s' could not be opened!	無法打開參數數據庫文件 '%s'！
@@ -287,7 +290,7 @@ SIMD mode used	SIMD 模式下使用
 Same as Image	
 Saturation	飽和度
 Save	保存
-Save (%s)/ delete (%s) image processing parameters in/from parameter DB	保存（%s）/刪除（%s）圖片處理參數在/從參數數據庫
+Save (%s) / delete (%s) image processing parameters into/from parameter DB	保存（%s）/刪除（%s）圖片處理參數在/從參數數據庫
 Save as (in screen size/resolution)	另存為（在屏幕大小/解析度）
 Save as template	另存為模板
 Save cropped image	保存裁剪後的圖片
@@ -309,7 +312,7 @@ Select parameter DB to restore	選擇要還原的參數數據庫
 Set Fixed Crop Size	設定固定裁剪尺寸
 Set JPEGView as default image viewer	將JPEGView設為默認圖片查看器
 Set timeout to n/10 sec, respectively n/100 sec (Ctrl+Shift)	設定逾時為n/10秒，分別為n/100秒（Ctrl+Shift）
-Shall existing entries be preserved (Yes) or be overriden by the imported entries (No)?	您想要保留現有項目（是）或是以導入的項目覆蓋現有項目（否）？
+Shall existing entries be preserved (Yes) or be overwritten by the imported entries (No)?	您想要保留現有項目（是）或是以導入的項目覆蓋現有項目（否）？
 Sharpen	銳化
 Sharpen low	低度銳化
 Sharpen medium	中度銳化
@@ -351,7 +354,7 @@ The new size is too large - width or height is larger than 65535 or total number
 The old parameter DB file '%s' could not be renamed during conversion to new format!	在轉換為新的格式的過程中無法重命名舊的參數數據庫文件'%s'！
 The operation failed because not enough memory is available!	操作失敗，沒有足夠的可用內存！
 The parameter DB file '%s' has been created by a newer version of JPEGView!	較新版本的JPEGView已創建參數數據庫文件'%s'！
-The transformation can be applied if the image is trimmed to the next matching size but this will remove some border pixels.	假如圖片被裁剪，可以應用到下一個符合的大小，但是這將消除一些邊框像素的轉換。
+The transformation can be applied if the image is cropped to the next matching size but this will remove some border pixels.	假如圖片被裁剪，可以應用到下一個符合的大小，但是這將消除一些邊框像素的轉換。
 These values will override the values from the INI file located in the program folder of JPEGView!	這些值將覆蓋JPEGView程序文件夾中INI文件的值！
 Threshold	閾值
 Title:	標題：
@@ -360,7 +363,6 @@ Toggle window always on top mode	切換窗口始終在頂部模式
 Toggle window title bar hidden mode	切換窗口標題欄隱藏模式
 Top	上
 Transition Effect	過度效果
-Trim the image and apply transformation? Trimming cannot be undone!	是否裁剪圖片並應用轉換？裁剪無法被復原！
 Unregistering not possible	無法取消註冊
 Unsharp mask...	USM銳化
 Update user settings with new settings from settings template file?	使用設置模板文件中的新設置更新用戶設置？
@@ -493,7 +495,7 @@ Zoom to Selection	縮放到選擇內容
 //! Same as Image
 //! user-defined
 
-// ::: STATUS: Last Checked/Updated by Script ::: 2023-03-13T06:36:14.789551+00:00 //
+// ::: STATUS: Last Checked/Updated by Script ::: 2023-03-14T00:34:40.597544+00:00 //
 //! Translation Progress: 100%
 //! * Total (Strings + Menu) = 427
 //! * Done = 425

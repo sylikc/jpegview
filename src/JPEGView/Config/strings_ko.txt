@@ -25,21 +25,23 @@
 //? * Lines with no text after the <tab> are ignored
 //? * Multiple tabs are permitted between English and Translated string, e.g. this is valid:    English string<tab><tab><tab>Translated string<newline>
 
-//? NOTE: %s %d have special meanings in the strings, so make sure they appear somewhere in the translated string
+//? NOTE: %s %d have special meanings in the strings, so make sure they appear somewhere in the translated string!
 
 //? For the strings below which are short and have no context:
-//?   "in" in context is shorthand for "inch"
-//?   "cm" in context is shorthand for "centimeter"
-//?   "C - R" in context is "Cyan Red" colors
-//?   "M - G" in context is "Magenta Green" colors
-//?   "Y - B" in context is "Yellow Blue" colors
-//?   "yes"/"no" in context is for showing EXIF flags
-//?   "on"/"off" in context is for showing a setting active or not
+//?   "in"        in context: is shorthand for "inch"
+//?   "cm"        in context: is shorthand for "centimeter"
+//?   "C - R"     in context: is "Cyan Red" colors
+//?   "M - G"     in context: is "Magenta Green" colors
+//?   "Y - B"     in context: is "Yellow Blue" colors
+//?   "yes"/"no"  in context: is for showing EXIF flags
+//?   "on"/"off"  in context: is for showing a setting active or not
+//?   "Filter"    in context: is used in Resize image, "sampling filter"
+//?   "Box"       in context: is used in Resize image sampling filter "Box filter"
 ////////////////////
 
 
 // ::: Program Strings ::: (sorted alphabetically) //
-%d file(s) renamed, %d file(s) copied, %d folder(s) created	d개의 파일 이름 변경, %d개의 파일 복사, %d개의 폴더 생성
+%d file(s) renamed, %d file(s) copied, %d folder(s) created	%d개의 파일 이름 변경, %d개의 파일 복사, %d개의 폴더 생성
 %s camera raw images (embedded JPEGs only)	%s 카메라 원시 이미지 (내장된 JPEG에만 해당)
 %s images	%s 이미지
 %s images (processed by Window Imaging Component - WIC)	%s 이미지 (Window Imaging Component - WIC에서 처리)
@@ -92,11 +94,12 @@ Continue rename/copy?	이름 바꾸기/복사를 계속하시겠습니까?
 Contrast	대비
 Contrast Correction	대비 보정
 Copy file path of the image to clipboard	이미지의 파일 경로를 클립보드에 복사
-Copy screen to clipboard/ Copy processed full size image to clipboard	화면을 클립보드로 복사/처리된 전체 크기 이미지를 클립보드로 복사
+Copy screen to clipboard / Copy processed full size image to clipboard	화면을 클립보드로 복사/처리된 전체 크기 이미지를 클립보드로 복사
 Copying parameter DB to file '%s' failed. Reason: %s	매개변수 DB를 '%s' 파일로 복사하지 못했습니다. 이유: %s
 Correct converging lines (perspective correction)	수렴 선 수정 (원근 보정)
 Creation date/time	만든 날짜/시각
 Crop image	이미지 자르기
+Crop the image and apply transformation? Cropping cannot be undone!	이미지를 트리밍하고 변환을 적용하시겠습니까? 트리밍은 되돌릴 수 없습니다!
 Ctrl + Left mouse	Ctrl + 왼쪽 마우스
 Current image	현재 이미지
 Cyan-Red	청록색-빨간색
@@ -137,12 +140,12 @@ F-Number:	F 번호:
 File name	파일 이름
 File size	파일 크기
 File type	파일 유형
-Fill paper with crop	자르기로 용지 채우기
+Fill page with crop	자르기로 용지 채우기
 Fill with crop	자르기로 채우기
 Fill with crop (no zoom)	자르기로 채우기 (확대/축소 없음)
 Filter:	필터
 Fit image to screen	화면에 이미지 맞추기
-Fit to paper	용지에 맞추기
+Fit to page	용지에 맞추기
 Fit to screen	화면에 맞추기
 Fit to screen (no zoom)	화면에 맞추기 (확대/축소 없음)
 Flash fired:	플래시 발광:
@@ -218,7 +221,7 @@ No image loaded!	이미지가 로드되지 않았습니다!
 No user INI file exists yet. Create user INI file from INI file template?	사용자 INI 파일이 아직 없습니다. INI 파일 템플릿에서 사용자 INI 파일을 생성하시겠습니까?
 None	없음
 Not enough memory available	사용 가능한 메모리가 부족합니다
-Note: Set the key 'TrimWithoutPromptLosslessJPEG=true' in the INI file to always trim without showing this message.	참고: 이 메시지를 표시하지 않고 항상 자르려면 INI 파일에서 'TrimWithoutPromptLosslessJPEG=true' 키를 설정하세요.
+Note: Set the key 'CropWithoutPromptLosslessJPEG=true' in the INI file to always crop without showing this message.	참고: 이 메시지를 표시하지 않고 항상 자르려면 INI 파일에서 'CropWithoutPromptLosslessJPEG=true' 키를 설정하세요.
 Number (consecutively numbered)	번호 (연속 번호)
 Number of CPU cores used	사용된 CPU 코어 수
 Number of JPEG files in folder: %d	폴더에 있는 JPEG 파일 수: %d
@@ -233,7 +236,7 @@ Original file extension	원본 파일 확장자
 Original file name (with extension)	원본 파일명 (확장자 있음)
 Original file name (without extension)	원본 파일명 (확장자 없음)
 Pan image	이미지 이동
-Paper:	용지
+Paper size:	용지
 Parameter DB	매개변수 DB
 Parameter DB error	매개변수 DB 오류
 Parameter DB file '%s' could not be opened!	매개변수 DB 파일 '%s'을(를) 열 수 없습니다!
@@ -286,7 +289,7 @@ SIMD mode used	사용된 SIMD 모드
 Same as Image	이미지와 동일
 Saturation	채도
 Save	저장
-Save (%s)/ delete (%s) image processing parameters in/from parameter DB	이미지 처리 매개변수를 DB에 저장/ 삭제(%s)
+Save (%s) / delete (%s) image processing parameters into/from parameter DB	이미지 처리 매개변수를 DB에 저장(%s)/ 삭제(%s)
 Save as (in screen size/resolution)	다른 이름으로 저장 (화면 크기/해상도)
 Save as template	템플릿으로 저장
 Save cropped image	잘라낸 이미지 저장
@@ -308,7 +311,7 @@ Select parameter DB to restore	복원할 매개변수 DB 선택
 Set Fixed Crop Size	고정된 자르기 크기 설정
 Set JPEGView as default image viewer	JPEGView를 기본 이미지 뷰어로 설정
 Set timeout to n/10 sec, respectively n/100 sec (Ctrl+Shift)	시간 초과를 각각 n/10초, n/100초로 설정 (Ctrl+Shift)
-Shall existing entries be preserved (Yes) or be overriden by the imported entries (No)?	기존 항목을 보존해야 합니까 (예) 아니면 가져온 항목으로 재정의해야 합니까 (아니오)?
+Shall existing entries be preserved (Yes) or be overwritten by the imported entries (No)?	기존 항목을 보존해야 합니까 (예) 아니면 가져온 항목으로 재정의해야 합니까 (아니오)?
 Sharpen	선명하게
 Sharpen low	낮게 선명하게
 Sharpen medium	중간 선명하게
@@ -350,7 +353,7 @@ The new size is too large - width or height is larger than 65535 or total number
 The old parameter DB file '%s' could not be renamed during conversion to new format!	새 형식으로 변환하는 동안 이전 매개변수 DB 파일 '%s'의 이름을 바꿀 수 없습니다!
 The operation failed because not enough memory is available!	사용 가능한 메모리가 부족하여 작업에 실패했습니다!
 The parameter DB file '%s' has been created by a newer version of JPEGView!	매개변수 DB 파일 '%s'이(가) 최신 버전의 JPEGView에서 생성되었습니다!
-The transformation can be applied if the image is trimmed to the next matching size but this will remove some border pixels.	이미지가 다음 일치 크기로 잘린 경우 변환을 적용할 수 있지만, 이렇게 하면 일부 테두리 픽셀이 제거됩니다.
+The transformation can be applied if the image is cropped to the next matching size but this will remove some border pixels.	이미지가 다음 일치 크기로 잘린 경우 변환을 적용할 수 있지만, 이렇게 하면 일부 테두리 픽셀이 제거됩니다.
 These values will override the values from the INI file located in the program folder of JPEGView!	이러한 값은 JPEG View의 프로그램 폴더에 있는 INI 파일의 값을 재정의합니다!
 Threshold	임계값
 Title:	제목
@@ -359,7 +362,6 @@ Toggle window always on top mode	창을 항상 맨 위 모드로 전환
 Toggle window title bar hidden mode	창 제목 표시줄 숨김 모드 전환
 Top	맨 위
 Transition Effect	전환 효과
-Trim the image and apply transformation? Trimming cannot be undone!	이미지를 트리밍하고 변환을 적용하시겠습니까? 트리밍은 되돌릴 수 없습니다!
 Unregistering not possible	등록 취소할 수 없습니다
 Unsharp mask...	선명하지 않은 마스크...
 Update user settings with new settings from settings template file?	설정 템플릿 파일의 새 설정으로 사용자 설정을 업데이트하시겠습니까?
@@ -469,7 +471,7 @@ Free	자유
 Fixed size...	고정된 크기...
 Zoom to Selection	선택 영역으로 확대
 
-// ::: STATUS: Last Checked/Updated by Script ::: 2023-03-13T06:31:19.346660+00:00 //
+// ::: STATUS: Last Checked/Updated by Script ::: 2023-03-14T00:37:50.465480+00:00 //
 //! Translation Progress: 100%
 //! * Total (Strings + Menu) = 427
 //! * Done = 427

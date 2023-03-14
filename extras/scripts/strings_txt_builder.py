@@ -336,16 +336,18 @@ def dump_strings_txt(sorted_strings_dict, menu_list):
 //? * Lines with no text after the <tab> are ignored
 //? * Multiple tabs are permitted between English and Translated string, e.g. this is valid:    English string<tab><tab><tab>Translated string<newline>
 
-//? NOTE: %s %d have special meanings in the strings, so make sure they appear somewhere in the translated string
+//? NOTE: %s %d have special meanings in the strings, so make sure they appear somewhere in the translated string!
 
 //? For the strings below which are short and have no context:
-//?   "in" in context is shorthand for "inch"
-//?   "cm" in context is shorthand for "centimeter"
-//?   "C - R" in context is "Cyan Red" colors
-//?   "M - G" in context is "Magenta Green" colors
-//?   "Y - B" in context is "Yellow Blue" colors
-//?   "yes"/"no" in context is for showing EXIF flags
-//?   "on"/"off" in context is for showing a setting active or not
+//?   "in"        in context: is shorthand for "inch"
+//?   "cm"        in context: is shorthand for "centimeter"
+//?   "C - R"     in context: is "Cyan Red" colors
+//?   "M - G"     in context: is "Magenta Green" colors
+//?   "Y - B"     in context: is "Yellow Blue" colors
+//?   "yes"/"no"  in context: is for showing EXIF flags
+//?   "on"/"off"  in context: is for showing a setting active or not
+//?   "Filter"    in context: is used in Resize image, "sampling filter"
+//?   "Box"       in context: is used in Resize image sampling filter "Box filter"
 ////////////////////
 
 

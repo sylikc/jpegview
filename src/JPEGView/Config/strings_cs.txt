@@ -10,7 +10,7 @@
 //: ISO 639-1 code: cs
 //: ISO 3166-1 code:
 //: Language: Czech
-//: Translator(s): Milos Koutny, mail:milos(dot)koutny(at)gmail(dot)com
+//: Translator(s) - Name <Contact Info/URL>: Milos Koutny, mail:<milos(dot)koutny(at)gmail(dot)com>
 //: Last Updated:
 //: Additional Notes:
 ////////////////////
@@ -25,16 +25,18 @@
 //? * Lines with no text after the <tab> are ignored
 //? * Multiple tabs are permitted between English and Translated string, e.g. this is valid:    English string<tab><tab><tab>Translated string<newline>
 
-//? NOTE: %s %d have special meanings in the strings, so make sure they appear somewhere in the translated string
+//? NOTE: %s %d have special meanings in the strings, so make sure they appear somewhere in the translated string!
 
 //? For the strings below which are short and have no context:
-//?   "in" in context is shorthand for "inch"
-//?   "cm" in context is shorthand for "centimeter"
-//?   "C - R" in context is "Cyan Red" colors
-//?   "M - G" in context is "Magenta Green" colors
-//?   "Y - B" in context is "Yellow Blue" colors
-//?   "yes"/"no" in context is for showing EXIF flags
-//?   "on"/"off" in context is for showing a setting active or not
+//?   "in"        in context: is shorthand for "inch"
+//?   "cm"        in context: is shorthand for "centimeter"
+//?   "C - R"     in context: is "Cyan Red" colors
+//?   "M - G"     in context: is "Magenta Green" colors
+//?   "Y - B"     in context: is "Yellow Blue" colors
+//?   "yes"/"no"  in context: is for showing EXIF flags
+//?   "on"/"off"  in context: is for showing a setting active or not
+//?   "Filter"    in context: is used in Resize image, "sampling filter"
+//?   "Box"       in context: is used in Resize image sampling filter "Box filter"
 ////////////////////
 
 
@@ -92,11 +94,12 @@ Continue rename/copy?	Pokračovat přejmenování/kopírování?
 Contrast	Kontrast
 Contrast Correction	Korekce kontrastu
 Copy file path of the image to clipboard	
-Copy screen to clipboard/ Copy processed full size image to clipboard	Kopírovat obrazovku/obraz v původním rozlišení do schránky
+Copy screen to clipboard / Copy processed full size image to clipboard	Kopírovat obrazovku/obraz v původním rozlišení do schránky
 Copying parameter DB to file '%s' failed. Reason: %s	Kopírování DB parametrů do soubrou '%s' selhalo. Důvod: %s
 Correct converging lines (perspective correction)	Korekce konvergujicích čar (pespektivní korekce)
 Creation date/time	Datum a čas pořízení
 Crop image	Zastřihnout obrázek
+Crop the image and apply transformation? Cropping cannot be undone!	Ostřihnou obrázek a provést transformaci? Ostřižení nelze vrátit!
 Ctrl + Left mouse	Ctrl + levé tlačítko myši
 Current image	Tento obrázek
 Cyan-Red	Azurová(C)-Červená(R)
@@ -137,12 +140,12 @@ F-Number:	Clona-číslo:
 File name	Jméno souboru
 File size	
 File type	Typ souboru
-Fill paper with crop	
+Fill page with crop	
 Fill with crop	Vyplnit se zastřihnutím
 Fill with crop (no zoom)	Vyplnit s ostřižením (bez změny rozlišení)
 Filter:	
 Fit image to screen	Přizpůsobit obrázek obrazovce
-Fit to paper	
+Fit to page	
 Fit to screen	Přizpůsobit obrazovce
 Fit to screen (no zoom)	Přizpůsobit obrazovce (bez změny rozlišení)
 Flash fired:	Užit blesk:
@@ -218,7 +221,7 @@ No image loaded!	Obrázek nenačten!
 No user INI file exists yet. Create user INI file from INI file template?	Uživatelský INI soubor zatím neexistuje. Vytvořit uživateský INI soubor z templatu INI souboru?
 None	Žádný
 Not enough memory available	Není dostupná dostatečná paměť
-Note: Set the key 'TrimWithoutPromptLosslessJPEG=true' in the INI file to always trim without showing this message.	Pozn.:Nastavením klíče 'TrimWithoutPromptLosslessJPEG=true' v INI souboru lze ostřihovat vše bez této zprávy.
+Note: Set the key 'CropWithoutPromptLosslessJPEG=true' in the INI file to always crop without showing this message.	Pozn.:Nastavením klíče 'CropWithoutPromptLosslessJPEG=true' v INI souboru lze ostřihovat vše bez této zprávy.
 Number (consecutively numbered)	Čísla (postupně očíslované)
 Number of CPU cores used	Počet užitých jader CPU
 Number of JPEG files in folder: %d	Počet JPEG souborů ve složce: %d
@@ -233,7 +236,7 @@ Original file extension	Původní přípona souboru
 Original file name (with extension)	Původní název souboru (s příponou)
 Original file name (without extension)	Původní název souboru (bez přípony)
 Pan image	Posunout obrázek
-Paper:	
+Paper size:	
 Parameter DB	Parametry DB
 Parameter DB error	Chyba parametr DB
 Parameter DB file '%s' could not be opened!	Parametrový DB soubor '%s'nelze otevřít!
@@ -286,7 +289,7 @@ SIMD mode used	SIMD mód
 Same as Image	
 Saturation	Nasycení
 Save	
-Save (%s)/ delete (%s) image processing parameters in/from parameter DB	Uložit (%s)/vymazat (%s) parametry úprav obrázku do/z DB parametrů
+Save (%s) / delete (%s) image processing parameters into/from parameter DB	Uložit (%s)/vymazat (%s) parametry úprav obrázku do/z DB parametrů
 Save as (in screen size/resolution)	Uložit jako (ve velikosti/rozlišení obrazovky)
 Save as template	Uložit jako vzor (template)
 Save cropped image	Uložit zastřižený obrázek
@@ -308,7 +311,7 @@ Select parameter DB to restore	Vybrat DB parametrů DB k obnovení
 Set Fixed Crop Size	Nastavit pevnou velikost zastřižení
 Set JPEGView as default image viewer	Nastavit JPEGView jako výchozí prohlížeč
 Set timeout to n/10 sec, respectively n/100 sec (Ctrl+Shift)	Nastavit přestávku na n/10 sekund, příp. n/100 sekund (Ctrl+Shift)
-Shall existing entries be preserved (Yes) or be overriden by the imported entries (No)?	Mají být existující položky být chráněný (Ano) nebo přepsány importovanými položkami (Ne)?
+Shall existing entries be preserved (Yes) or be overwritten by the imported entries (No)?	Mají být existující položky být chráněný (Ano) nebo přepsány importovanými položkami (Ne)?
 Sharpen	Ostrost
 Sharpen low	
 Sharpen medium	
@@ -350,7 +353,7 @@ The new size is too large - width or height is larger than 65535 or total number
 The old parameter DB file '%s' could not be renamed during conversion to new format!	Starý parametrový DB soubor '%s' nemohl být přejmenován během konverze do novějšího formátu!
 The operation failed because not enough memory is available!	Operace selhala pro nedostatek paměti k provedení!
 The parameter DB file '%s' has been created by a newer version of JPEGView!	Parametrový DB soubor '%s' byl vytvořen novější verzí JPEGView!
-The transformation can be applied if the image is trimmed to the next matching size but this will remove some border pixels.	Transformace muže být provedena jen s ostřižením obrázku na nejbližší vhodný rozměr, to způsobí odstranění některých bodů na krajích.
+The transformation can be applied if the image is cropped to the next matching size but this will remove some border pixels.	Transformace muže být provedena jen s ostřižením obrázku na nejbližší vhodný rozměr, to způsobí odstranění některých bodů na krajích.
 These values will override the values from the INI file located in the program folder of JPEGView!	Tyto hodnoty nahradí hodnoty z INI souboru v adresáři JPEGView!
 Threshold	Bod zlomu
 Title:	
@@ -359,7 +362,6 @@ Toggle window always on top mode
 Toggle window title bar hidden mode	
 Top	
 Transition Effect	Přechodový efekt
-Trim the image and apply transformation? Trimming cannot be undone!	Ostřihnou obrázek a provést transformaci? Ostřižení nelze vrátit!
 Unregistering not possible	Odregistrace není možná.
 Unsharp mask...	Rozostřit masku
 Update user settings with new settings from settings template file?	
@@ -510,9 +512,9 @@ Zoom to Selection	Zobrazit výběr
 //! Edit
 //! Example:
 //! File size
-//! Fill paper with crop
+//! Fill page with crop
 //! Filter:
-//! Fit to paper
+//! Fit to page
 //! High quality resampling
 //! Hour / Minute (as numbers)
 //! Insufficient rights to change the privilege (DACL) on the registry entry. Continue?
@@ -534,7 +536,7 @@ Zoom to Selection	Zobrazit výběr
 //! OK
 //! Open folder containing image and select in Windows Explorer
 //! Orientation:
-//! Paper:
+//! Paper size:
 //! Portrait
 //! Print
 //! Print Image
@@ -597,7 +599,7 @@ Zoom to Selection	Zobrazit výběr
 //! Update user settings...
 //! User commands
 
-// ::: STATUS: Last Checked/Updated by Script ::: 2023-03-09T12:34:04.409166+00:00 //
+// ::: STATUS: Last Checked/Updated by Script ::: 2023-03-14T00:34:40.306549+00:00 //
 //! Translation Progress: 74%
 //! * Total (Strings + Menu) = 427
 //! * Done = 317

@@ -10,7 +10,7 @@
 //: ISO 639-1 code: it
 //: ISO 3166-1 code:
 //: Language: Italian
-//: Translator(s):
+//: Translator(s) - Name <Contact Info/URL>:
 //: Last Updated:
 //: Additional Notes:
 ////////////////////
@@ -25,16 +25,18 @@
 //? * Lines with no text after the <tab> are ignored
 //? * Multiple tabs are permitted between English and Translated string, e.g. this is valid:    English string<tab><tab><tab>Translated string<newline>
 
-//? NOTE: %s %d have special meanings in the strings, so make sure they appear somewhere in the translated string
+//? NOTE: %s %d have special meanings in the strings, so make sure they appear somewhere in the translated string!
 
 //? For the strings below which are short and have no context:
-//?   "in" in context is shorthand for "inch"
-//?   "cm" in context is shorthand for "centimeter"
-//?   "C - R" in context is "Cyan Red" colors
-//?   "M - G" in context is "Magenta Green" colors
-//?   "Y - B" in context is "Yellow Blue" colors
-//?   "yes"/"no" in context is for showing EXIF flags
-//?   "on"/"off" in context is for showing a setting active or not
+//?   "in"        in context: is shorthand for "inch"
+//?   "cm"        in context: is shorthand for "centimeter"
+//?   "C - R"     in context: is "Cyan Red" colors
+//?   "M - G"     in context: is "Magenta Green" colors
+//?   "Y - B"     in context: is "Yellow Blue" colors
+//?   "yes"/"no"  in context: is for showing EXIF flags
+//?   "on"/"off"  in context: is for showing a setting active or not
+//?   "Filter"    in context: is used in Resize image, "sampling filter"
+//?   "Box"       in context: is used in Resize image sampling filter "Box filter"
 ////////////////////
 
 
@@ -92,11 +94,12 @@ Continue rename/copy?	Continuare rinomina/copia?
 Contrast	Contrasto
 Contrast Correction	Correzione contrasto
 Copy file path of the image to clipboard	
-Copy screen to clipboard/ Copy processed full size image to clipboard	Copia la schermata negli Appunti/ Copia l’immagine elaborata delle dimensioni originali negli Appunti
+Copy screen to clipboard / Copy processed full size image to clipboard	Copia la schermata negli Appunti / Copia l’immagine elaborata delle dimensioni originali negli Appunti
 Copying parameter DB to file '%s' failed. Reason: %s	La copia del paramentro '%s' del DB è fallita. Motivo: %s
 Correct converging lines (perspective correction)	Correggi linee convergenti (correzione prospettiva)
 Creation date/time	Data/ora di creazione
 Crop image	Ritaglia l’immagine
+Crop the image and apply transformation? Cropping cannot be undone!	Ritagliare l'immagine e applicare le trasformazioni? ATTENZIONE, l'azione non può essere annullata!
 Ctrl + Left mouse	Ctrl + Tasto sinistro del mouse
 Current image	Immagine attuale
 Cyan-Red	Ciano-Rosso
@@ -137,12 +140,12 @@ F-Number:	Numero F:
 File name	Nome file
 File size	Dimensione file
 File type	Tipo di file
-Fill paper with crop	
+Fill page with crop	
 Fill with crop	Riempi con il ritaglio
 Fill with crop (no zoom)	Riempi con il ritaglio (senza ingrandimento)
 Filter:	Filtro:
 Fit image to screen	Adatta allo schermo
-Fit to paper	Adatta alla pagina
+Fit to page	Adatta alla pagina
 Fit to screen	Adatta allo schermo
 Fit to screen (no zoom)	Adatta allo schermo (senza ingrandimento)
 Flash fired:	Flash:
@@ -218,7 +221,7 @@ No image loaded!	Nessuna immagine caricata!
 No user INI file exists yet. Create user INI file from INI file template?	Non esiste ancora nessun file INI per l'utente. Creare un file INI per l'utente partendo da un modello?
 None	Nessuno
 Not enough memory available	memoria disponibile insufficiente
-Note: Set the key 'TrimWithoutPromptLosslessJPEG=true' in the INI file to always trim without showing this message.	Nota: impostare la voce 'TrimWithoutPromptLosslessJPEG=true' nel file INI per ritagliare senza mostrare di nuovo questo messaggio.
+Note: Set the key 'CropWithoutPromptLosslessJPEG=true' in the INI file to always crop without showing this message.	Nota: impostare la voce 'CropWithoutPromptLosslessJPEG=true' nel file INI per ritagliare senza mostrare di nuovo questo messaggio.
 Number (consecutively numbered)	Numero (numerazione consecutiva)
 Number of CPU cores used	Numero di Core CPU usate
 Number of JPEG files in folder: %d	Numero di files JPEG nella cartella: %d
@@ -233,7 +236,7 @@ Original file extension	Estensione originale del file
 Original file name (with extension)	Nome originale del file (con estensione)
 Original file name (without extension)	Nome originale del file (senza estensione)
 Pan image	Riquadra l’immagine (Pan)
-Paper:	Carta:
+Paper size:	Carta:
 Parameter DB	Parametri DB
 Parameter DB error	Errore nei Parametri del DB
 Parameter DB file '%s' could not be opened!	Il file dei parametri del DB '%s' non può essere aperto!
@@ -286,7 +289,7 @@ SIMD mode used	Modalità SIMD in uso
 Same as Image	
 Saturation	Saturazione
 Save	Salva
-Save (%s)/ delete (%s) image processing parameters in/from parameter DB	Salva (%s)/ cancella (%s) i parametri di modifica dell'immagine in/da parametri del DB
+Save (%s) / delete (%s) image processing parameters into/from parameter DB	Salva (%s) / cancella (%s) i parametri di modifica dell'immagine in/da parametri del DB
 Save as (in screen size/resolution)	Salva come (in dimensioni/risoluzione schermo)
 Save as template	Salva come modello
 Save cropped image	Salva immagine ritagliata
@@ -308,7 +311,7 @@ Select parameter DB to restore	Seleziona il parametro di DB da ripristinare
 Set Fixed Crop Size	Setta la dimensione fissa di ritaglio
 Set JPEGView as default image viewer	Imposta JPEGView come visualizzatore di default per le immagini
 Set timeout to n/10 sec, respectively n/100 sec (Ctrl+Shift)	Imposta l'intervallo a n/10 sec, rispettivamente a n/100 sec (Ctrl+Maiusc)
-Shall existing entries be preserved (Yes) or be overriden by the imported entries (No)?	I dati estitenti devono essere mantenuti (Si) o devono essere sovrascritti dai dati importati (No)?
+Shall existing entries be preserved (Yes) or be overwritten by the imported entries (No)?	I dati estitenti devono essere mantenuti (Si) o devono essere sovrascritti dai dati importati (No)?
 Sharpen	Nitidezza
 Sharpen low	Contrasto basso
 Sharpen medium	Contrasto medio
@@ -350,7 +353,7 @@ The new size is too large - width or height is larger than 65535 or total number
 The old parameter DB file '%s' could not be renamed during conversion to new format!	Il vecchio file dei parametri del DB '%s' non può essere rinominato durante la conversione nel nuovo formato!
 The operation failed because not enough memory is available!	L'operazione fallita a causa di memoria disponibile insufficiente
 The parameter DB file '%s' has been created by a newer version of JPEGView!	Il file dei parametri del DB '%s' è stato creato da una versione più recente di JPEGView!
-The transformation can be applied if the image is trimmed to the next matching size but this will remove some border pixels.	La trasformazione può essere applicata se l'immagine è ritagliata alle dimensioni corrispondenti ma questo eliminerà qualche pixel perimetrale
+The transformation can be applied if the image is cropped to the next matching size but this will remove some border pixels.	La trasformazione può essere applicata se l'immagine è ritagliata alle dimensioni corrispondenti ma questo eliminerà qualche pixel perimetrale
 These values will override the values from the INI file located in the program folder of JPEGView!	Questi valori sovrascriveranno i valori del file INI nella cartella di JPEGView!
 Threshold	Soglia
 Title:	Titolo:
@@ -359,7 +362,6 @@ Toggle window always on top mode
 Toggle window title bar hidden mode	
 Top	Superiore
 Transition Effect	Effetto di transizione
-Trim the image and apply transformation? Trimming cannot be undone!	Ritagliare l'immagine e applicare le trasformazioni? ATTENZIONE, l'azione non può essere annullata!
 Unregistering not possible	Annullamento della registrazione impossibile
 Unsharp mask...	Maschera di contrasto
 Update user settings with new settings from settings template file?	
@@ -496,7 +498,7 @@ Zoom to Selection	Ingrandimento della selezione
 //! Clipboard Image
 //! Copy file path of the image to clipboard
 //! Decoding this format requires the Microsoft Visual C++ Redistributable.
-//! Fill paper with crop
+//! Fill page with crop
 //! High quality resampling
 //! Insufficient rights to change the privilege (DACL) on the registry entry. Continue?
 //! JPEGView is a lean, fast and highly configurable viewer/editor for JPEG, BMP, PNG, WEBP, TGA, GIF and TIFF images with a minimal GUI.
@@ -542,7 +544,7 @@ Zoom to Selection	Ingrandimento della selezione
 //! Set window always on top
 //! Update user settings...
 
-// ::: STATUS: Last Checked/Updated by Script ::: 2023-03-09T12:34:04.452151+00:00 //
+// ::: STATUS: Last Checked/Updated by Script ::: 2023-03-14T00:34:40.413693+00:00 //
 //! Translation Progress: 88%
 //! * Total (Strings + Menu) = 427
 //! * Done = 374

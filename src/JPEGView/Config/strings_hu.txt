@@ -25,16 +25,18 @@
 //? * Lines with no text after the <tab> are ignored
 //? * Multiple tabs are permitted between English and Translated string, e.g. this is valid:    English string<tab><tab><tab>Translated string<newline>
 
-//? NOTE: %s %d have special meanings in the strings, so make sure they appear somewhere in the translated string
+//? NOTE: %s %d have special meanings in the strings, so make sure they appear somewhere in the translated string!
 
 //? For the strings below which are short and have no context:
-//?   "in" in context is shorthand for "inch"
-//?   "cm" in context is shorthand for "centimeter"
-//?   "C - R" in context is "Cyan Red" colors
-//?   "M - G" in context is "Magenta Green" colors
-//?   "Y - B" in context is "Yellow Blue" colors
-//?   "yes"/"no" in context is for showing EXIF flags
-//?   "on"/"off" in context is for showing a setting active or not
+//?   "in"        in context: is shorthand for "inch"
+//?   "cm"        in context: is shorthand for "centimeter"
+//?   "C - R"     in context: is "Cyan Red" colors
+//?   "M - G"     in context: is "Magenta Green" colors
+//?   "Y - B"     in context: is "Yellow Blue" colors
+//?   "yes"/"no"  in context: is for showing EXIF flags
+//?   "on"/"off"  in context: is for showing a setting active or not
+//?   "Filter"    in context: is used in Resize image, "sampling filter"
+//?   "Box"       in context: is used in Resize image sampling filter "Box filter"
 ////////////////////
 
 
@@ -92,11 +94,12 @@ Continue rename/copy?	Folytatja az átnevezést/másolást?
 Contrast	Kontraszt
 Contrast Correction	Kontraszt korrekció
 Copy file path of the image to clipboard	Másolja a fájl elérési útját a vágólapra
-Copy screen to clipboard/ Copy processed full size image to clipboard	Képernyő másolása vágólapra/ Feldolgozott teljes méretű kép másolása a vágólapra
+Copy screen to clipboard / Copy processed full size image to clipboard	Képernyő másolása vágólapra / Feldolgozott teljes méretű kép másolása a vágólapra
 Copying parameter DB to file '%s' failed. Reason: %s	A paraméteradatbázis másolása a '%s' fájlba nem sikerült. Ok: %s
 Correct converging lines (perspective correction)	Konvergáló vonalak helyesbítése (perspektivikus korrekció)
 Creation date/time	Létrehozás dátuma/időpontja
 Crop image	Kép körbevágása
+Crop the image and apply transformation? Cropping cannot be undone!	Vágja le a képet és alkalmazza az átalakítást? A vágás nem vonható vissza!
 Ctrl + Left mouse	Ctrl + bal egér
 Current image	Aktuális kép
 Cyan-Red	Cián-piros
@@ -137,12 +140,12 @@ F-Number:	F-szám:
 File name	Fájl név
 File size	Fájl méret
 File type	Fájltípus
-Fill paper with crop	Papír kitöltése a kivágással
+Fill page with crop	Papír kitöltése a kivágással
 Fill with crop	Töltsük fel a kivágással
 Fill with crop (no zoom)	Kivágás kivágással (nincs nagyítás)
 Filter:	Szűrő:
 Fit image to screen	Kép illesztése a képernyőhöz
-Fit to paper	Papír mérethez igazítás
+Fit to page	Papír mérethez igazítás
 Fit to screen	Képernyőhöz igazítva
 Fit to screen (no zoom)	Képernyőhöz igazítás (nincs nagyítás)
 Flash fired:	Vaku:
@@ -218,7 +221,7 @@ No image loaded!	Nincs kép betöltve!
 No user INI file exists yet. Create user INI file from INI file template?	Nincs felhasználói INI-fájl. Hozzon létre felhasználói INI-fájlt sablonból?
 None	Egyik sem
 Not enough memory available	Nincs elég memória
-Note: Set the key 'TrimWithoutPromptLosslessJPEG=true' in the INI file to always trim without showing this message.	Megjegyzés: Állítsa be az INI-fájlban a „TrimWithoutPromptLosslessJPEG=true” kulcsot ha nem akarja hogy megjelenejen ez az üzenet.
+Note: Set the key 'CropWithoutPromptLosslessJPEG=true' in the INI file to always crop without showing this message.	Megjegyzés: Állítsa be az INI-fájlban a „CropWithoutPromptLosslessJPEG=true” kulcsot ha nem akarja hogy megjelenejen ez az üzenet.
 Number (consecutively numbered)	Szám (sorszám)
 Number of CPU cores used	A felhasznált CPU magok száma
 Number of JPEG files in folder: %d	JPEG fájlok száma a mappában: %d
@@ -233,7 +236,7 @@ Original file extension	Az eredeti fájl kiterjesztése
 Original file name (with extension)	Az eredeti fájlnév (kiterjesztéssel)
 Original file name (without extension)	Az eredeti fájlnév (kiterjesztés nélkül)
 Pan image	Pásztázási kép
-Paper:	Papír:
+Paper size:	Papír:
 Parameter DB	Paraméteradatbázis
 Parameter DB error	Paraméteradatbázis hiba
 Parameter DB file '%s' could not be opened!	A '%s' paraméteradatbázis-fájl nem nyitható meg!
@@ -286,7 +289,7 @@ SIMD mode used	Használt SIMD mód
 Same as Image	Ugyanaz mint a kép
 Saturation	Telítettség
 Save	Mentés
-Save (%s)/ delete (%s) image processing parameters in/from parameter DB	(%s) képfeldolgozási paraméterek mentése/törlése a DB paraméteradatbázisba/-ből
+Save (%s) / delete (%s) image processing parameters into/from parameter DB	(%s) képfeldolgozási paraméterek mentése/(%s) törlése a DB paraméteradatbázisba/-ből
 Save as (in screen size/resolution)	Mentés másként (képernyőméretben/felbontásban)
 Save as template	Mentés sablonként
 Save cropped image	Vágott kép mentése
@@ -308,7 +311,7 @@ Select parameter DB to restore	Válassza ki a visszaállítandó paraméteradatb
 Set Fixed Crop Size	Állítsa be a rögzített vágásméretet
 Set JPEGView as default image viewer	Állítsa be a JPEGView-t alapértelmezett képnézegetőként
 Set timeout to n/10 sec, respectively n/100 sec (Ctrl+Shift)	Állítsa be az kép vetítési idjét n/10 mp-re, illetve n/100 mp-re (Ctrl+Shift)
-Shall existing entries be preserved (Yes) or be overriden by the imported entries (No)?	A meglévő bejegyzéseket meg kell őrizni (Igen), vagy felül kell írni az importált bejegyzéseket (Nem)?
+Shall existing entries be preserved (Yes) or be overwritten by the imported entries (No)?	A meglévő bejegyzéseket meg kell őrizni (Igen), vagy felül kell írni az importált bejegyzéseket (Nem)?
 Sharpen	Élesítés
 Sharpen low	Alacsony élesség
 Sharpen medium	Közepes élesség
@@ -350,7 +353,7 @@ The new size is too large - width or height is larger than 65535 or total number
 The old parameter DB file '%s' could not be renamed during conversion to new format!	A régi '%s' paraméteradatbázis-fájlt nem sikerült átnevezni az új formátumra való átalakítás során!
 The operation failed because not enough memory is available!	A művelet meghiúsult, mert nincs elég memória!
 The parameter DB file '%s' has been created by a newer version of JPEGView!	A '%s' paraméteradatbázis-fájlt a JPEGView újabb verziója hozta létre!
-The transformation can be applied if the image is trimmed to the next matching size but this will remove some border pixels.	Az átalakítás akkor alkalmazható, ha a képet a legközelebbi egyező méretre vágja, de ez eltávolít néhány csíkot a széléről.
+The transformation can be applied if the image is cropped to the next matching size but this will remove some border pixels.	Az átalakítás akkor alkalmazható, ha a képet a legközelebbi egyező méretre vágja, de ez eltávolít néhány csíkot a széléről.
 These values will override the values from the INI file located in the program folder of JPEGView!	Ezek az értékek felülírják a JPEGView program mappájában található INI fájl értékeit!
 Threshold	Küszöb
 Title:	Cím:
@@ -359,7 +362,6 @@ Toggle window always on top mode	Az ablak mindig felül van mód váltása
 Toggle window title bar hidden mode	Az ablak címsor rejtett módjának váltása
 Top	Felső
 Transition Effect	Átmenet hatás
-Trim the image and apply transformation? Trimming cannot be undone!	Vágja le a képet és alkalmazza az átalakítást? A vágás nem vonható vissza!
 Unregistering not possible	A regisztráció törlése nem lehetséges
 Unsharp mask...	Homályosító maszk...
 Update user settings with new settings from settings template file?	Frissíti a felhasználói beállításokat új beállításokkal a beállítássablonfájlból?
@@ -469,7 +471,7 @@ Free	Ingyenes
 Fixed size...	Fix méret...
 Zoom to Selection	Kijelölés nagyítása
 
-// ::: STATUS: Last Checked/Updated by Script ::: 2023-03-13T08:57:34.103251+00:00 //
+// ::: STATUS: Last Checked/Updated by Script ::: 2023-03-14T00:35:46.722032+00:00 //
 //! Translation Progress: 100%
 //! * Total (Strings + Menu) = 427
 //! * Done = 427

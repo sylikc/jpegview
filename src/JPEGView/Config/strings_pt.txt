@@ -10,7 +10,7 @@
 //: ISO 639-1 code: pt
 //: ISO 3166-1 code:
 //: Language: Portuguese
-//: Translator(s): Sérgio Marques, 2011-2015
+//: Translator(s) - Name <Contact Info/URL>: Sérgio Marques, 2011-2015
 //: Last Updated:
 //: Additional Notes:
 ////////////////////
@@ -25,16 +25,18 @@
 //? * Lines with no text after the <tab> are ignored
 //? * Multiple tabs are permitted between English and Translated string, e.g. this is valid:    English string<tab><tab><tab>Translated string<newline>
 
-//? NOTE: %s %d have special meanings in the strings, so make sure they appear somewhere in the translated string
+//? NOTE: %s %d have special meanings in the strings, so make sure they appear somewhere in the translated string!
 
 //? For the strings below which are short and have no context:
-//?   "in" in context is shorthand for "inch"
-//?   "cm" in context is shorthand for "centimeter"
-//?   "C - R" in context is "Cyan Red" colors
-//?   "M - G" in context is "Magenta Green" colors
-//?   "Y - B" in context is "Yellow Blue" colors
-//?   "yes"/"no" in context is for showing EXIF flags
-//?   "on"/"off" in context is for showing a setting active or not
+//?   "in"        in context: is shorthand for "inch"
+//?   "cm"        in context: is shorthand for "centimeter"
+//?   "C - R"     in context: is "Cyan Red" colors
+//?   "M - G"     in context: is "Magenta Green" colors
+//?   "Y - B"     in context: is "Yellow Blue" colors
+//?   "yes"/"no"  in context: is for showing EXIF flags
+//?   "on"/"off"  in context: is for showing a setting active or not
+//?   "Filter"    in context: is used in Resize image, "sampling filter"
+//?   "Box"       in context: is used in Resize image sampling filter "Box filter"
 ////////////////////
 
 
@@ -92,11 +94,12 @@ Continue rename/copy?	Continuar a copiar/mudar nome?
 Contrast	Contraste
 Contrast Correction	Correção de contraste
 Copy file path of the image to clipboard	
-Copy screen to clipboard/ Copy processed full size image to clipboard	Copiar ecrã para a área de transferência/Copiar imagem processada para a área de transferência
+Copy screen to clipboard / Copy processed full size image to clipboard	Copiar ecrã para a área de transferência/Copiar imagem processada para a área de transferência
 Copying parameter DB to file '%s' failed. Reason: %s	Falha ao copiar os parâmetros da BD para %s. Motivo: %s
 Correct converging lines (perspective correction)	Corrigir linhas de convergência (correção de perspetiva)
 Creation date/time	Data/hora de criação
 Crop image	Recortar imagem
+Crop the image and apply transformation? Cropping cannot be undone!	Ajustar imagem e transformar? Esta operação não pode ser desfeita!
 Ctrl + Left mouse	Ctrl + botão esquerdo do rato
 Current image	Imagem atual
 Cyan-Red	Ciano Vermelho
@@ -137,12 +140,12 @@ F-Number:	Número F:
 File name	Nome do ficheiro
 File size	Tamanho do ficheiro
 File type	Tipo de ficheiro
-Fill paper with crop	
+Fill page with crop	
 Fill with crop	Preencher com recortes
 Fill with crop (no zoom)	Preencher com recortes (sem ampliação)
 Filter:	Filtro:
 Fit image to screen	Ajustar imagem ao ecrã
-Fit to paper	Ajustar ao papel
+Fit to page	Ajustar ao papel
 Fit to screen	Ajustar ao ecrã
 Fit to screen (no zoom)	Ajustar ao ecrã (sem ampliação)
 Flash fired:	Flash disparado:
@@ -218,7 +221,7 @@ No image loaded!	Nenhuma imagem carregada!
 No user INI file exists yet. Create user INI file from INI file template?	Não existe qualquer ficheiro INI. Criar ficheiro INI com base no modelo de ficheiros INI?
 None	Nenhum
 Not enough memory available	a memória disponível não é suficiente
-Note: Set the key 'TrimWithoutPromptLosslessJPEG=true' in the INI file to always trim without showing this message.	Nota: defina a chave 'TrimWithoutPromptLosslessJPEG=true' no ficheiro INI se quiser utilizar esta ação sem comfirmação.
+Note: Set the key 'CropWithoutPromptLosslessJPEG=true' in the INI file to always crop without showing this message.	Nota: defina a chave 'CropWithoutPromptLosslessJPEG=true' no ficheiro INI se quiser utilizar esta ação sem comfirmação.
 Number (consecutively numbered)	Número (consecutivo)
 Number of CPU cores used	Número de CPUs utilizados
 Number of JPEG files in folder: %d	Número de ficheiros JPEG na pasta: %d
@@ -233,7 +236,7 @@ Original file extension	Extensão do ficheiro
 Original file name (with extension)	Nome do ficheiro (com extensão)
 Original file name (without extension)	Nome do ficheiro (sem extensão)
 Pan image	Expandir imagem
-Paper:	Papel:
+Paper size:	Papel:
 Parameter DB	BD de parâmetros
 Parameter DB error	Erro de parâmetros da BD
 Parameter DB file '%s' could not be opened!	O ficheiro de parâmetros da BD "%s" não pode ser aberto!
@@ -286,7 +289,7 @@ SIMD mode used	Modo SIMD utilizado
 Same as Image	
 Saturation	Saturação
 Save	Gravar
-Save (%s)/ delete (%s) image processing parameters in/from parameter DB	Gravar (%s)/Eliminar (%s) parâmetros de processamento de imagem no/do ficheiro de parâmetros da BD
+Save (%s) / delete (%s) image processing parameters into/from parameter DB	Gravar (%s)/Eliminar (%s) parâmetros de processamento de imagem no/do ficheiro de parâmetros da BD
 Save as (in screen size/resolution)	Gravar como (no tamanho/resolução do ecrã)
 Save as template	Gravar como modelo
 Save cropped image	Gravar imagem recortada
@@ -308,7 +311,7 @@ Select parameter DB to restore	Selecione o ficheiro de parâmetros de BD a resta
 Set Fixed Crop Size	Definir tamanho fixo de recorte
 Set JPEGView as default image viewer	Definir o JPEGView como visualizador padrão
 Set timeout to n/10 sec, respectively n/100 sec (Ctrl+Shift)	Definir tempo limite para n/10 seg., respetivamente n/100 seg. (Ctrl+Shift)
-Shall existing entries be preserved (Yes) or be overriden by the imported entries (No)?	Manter entradas existentes (Sim) ou substituir pelas importadas (Não)?
+Shall existing entries be preserved (Yes) or be overwritten by the imported entries (No)?	Manter entradas existentes (Sim) ou substituir pelas importadas (Não)?
 Sharpen	Nitidez
 Sharpen low	Acentuação ligeira
 Sharpen medium	Acentuação média
@@ -350,7 +353,7 @@ The new size is too large - width or height is larger than 65535 or total number
 The old parameter DB file '%s' could not be renamed during conversion to new format!	O nome do ficheiro de parâmetros da BD "%s" não foi alterado ao converter para o novo formato!
 The operation failed because not enough memory is available!	A operação falhou porque a memória disponível não é suficiente!
 The parameter DB file '%s' has been created by a newer version of JPEGView!	O ficheiro de parâmetros da BD "%s" foi  criado por uma versão mais recente do JPEGView!
-The transformation can be applied if the image is trimmed to the next matching size but this will remove some border pixels.	A transformação pode ser aplicada de ajustar a imagem ao tamanho mais próximo mas alguns pixeis serão removidos.
+The transformation can be applied if the image is cropped to the next matching size but this will remove some border pixels.	A transformação pode ser aplicada de ajustar a imagem ao tamanho mais próximo mas alguns pixeis serão removidos.
 These values will override the values from the INI file located in the program folder of JPEGView!	Estes valores vão substituir os valores do ficheiro INI, existente na pasta do JPEGView!
 Threshold	Limite
 Title:	Título:
@@ -359,7 +362,6 @@ Toggle window always on top mode
 Toggle window title bar hidden mode	
 Top	Superior
 Transition Effect	Efeito de transição
-Trim the image and apply transformation? Trimming cannot be undone!	Ajustar imagem e transformar? Esta operação não pode ser desfeita!
 Unregistering not possible	Não foi possível remover a associação
 Unsharp mask...	Máscara de desfocagem...
 Update user settings with new settings from settings template file?	
@@ -497,7 +499,7 @@ Zoom to Selection	Ampliar seleção
 //! Copy file path of the image to clipboard
 //! Decoding this format requires the Microsoft Visual C++ Redistributable.
 //! Delete current file on disk permanently
-//! Fill paper with crop
+//! Fill page with crop
 //! High quality resampling
 //! Insufficient rights to change the privilege (DACL) on the registry entry. Continue?
 //! Location:
@@ -536,7 +538,7 @@ Zoom to Selection	Ampliar seleção
 //! Set window always on top
 //! Update user settings...
 
-// ::: STATUS: Last Checked/Updated by Script ::: 2023-03-09T12:34:04.500429+00:00 //
+// ::: STATUS: Last Checked/Updated by Script ::: 2023-03-14T00:34:40.484408+00:00 //
 //! Translation Progress: 89%
 //! * Total (Strings + Menu) = 427
 //! * Done = 381

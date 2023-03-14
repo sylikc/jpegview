@@ -10,7 +10,7 @@
 //: ISO 639-1 code: eu
 //: ISO 3166-1 code:
 //: Language: Basque
-//: Translator(s):
+//: Translator(s) - Name <Contact Info/URL>:
 //: Last Updated:
 //: Additional Notes:
 ////////////////////
@@ -25,16 +25,18 @@
 //? * Lines with no text after the <tab> are ignored
 //? * Multiple tabs are permitted between English and Translated string, e.g. this is valid:    English string<tab><tab><tab>Translated string<newline>
 
-//? NOTE: %s %d have special meanings in the strings, so make sure they appear somewhere in the translated string
+//? NOTE: %s %d have special meanings in the strings, so make sure they appear somewhere in the translated string!
 
 //? For the strings below which are short and have no context:
-//?   "in" in context is shorthand for "inch"
-//?   "cm" in context is shorthand for "centimeter"
-//?   "C - R" in context is "Cyan Red" colors
-//?   "M - G" in context is "Magenta Green" colors
-//?   "Y - B" in context is "Yellow Blue" colors
-//?   "yes"/"no" in context is for showing EXIF flags
-//?   "on"/"off" in context is for showing a setting active or not
+//?   "in"        in context: is shorthand for "inch"
+//?   "cm"        in context: is shorthand for "centimeter"
+//?   "C - R"     in context: is "Cyan Red" colors
+//?   "M - G"     in context: is "Magenta Green" colors
+//?   "Y - B"     in context: is "Yellow Blue" colors
+//?   "yes"/"no"  in context: is for showing EXIF flags
+//?   "on"/"off"  in context: is for showing a setting active or not
+//?   "Filter"    in context: is used in Resize image, "sampling filter"
+//?   "Box"       in context: is used in Resize image sampling filter "Box filter"
 ////////////////////
 
 
@@ -92,11 +94,12 @@ Continue rename/copy?	Jarraitu berrizendatu/kopiaturekin?
 Contrast	Zuribeltztasuna
 Contrast Correction	Zuribeltztasun Zuzenketa
 Copy file path of the image to clipboard	
-Copy screen to clipboard/ Copy processed full size image to clipboard	Kopiatu ikusleihoa gakora/ Kopiatu prozesatutako irudia neurri osoan gakora
+Copy screen to clipboard / Copy processed full size image to clipboard	Kopiatu ikusleihoa gakora/ Kopiatu prozesatutako irudia neurri osoan gakora
 Copying parameter DB to file '%s' failed. Reason: %s	Hutsegitea DB paremetroak '%s' agirira kopiatzerakoan. Zergaitia: %s
 Correct converging lines (perspective correction)	Zuzendu lerro baterakorrak (ikuspegi zuzenketa)
 Creation date/time	Sortze eguna/ordua
 Crop image	Moztu irudia
+Crop the image and apply transformation? Cropping cannot be undone!	Moztu irudia eta ezarri eraldaketa? Mozketa ezin da desegin!
 Ctrl + Left mouse	Ktrl + saguaren ezker botoia
 Current image	Oraingo irudia
 Cyan-Red	Ziana-Gorria
@@ -137,12 +140,12 @@ F-Number:	F-Zenbakia:
 File name	Agiri izena
 File size	Agiri neurria
 File type	Agiri mota
-Fill paper with crop	Bete papera mozketarekin
+Fill page with crop	Bete papera mozketarekin
 Fill with crop	Bete mozkinekin
 Fill with crop (no zoom)	Bete mozkinekin (zoom gabe)
 Filter:	Iragazkia:
 Fit image to screen	Finkatu irudia ikusleihoan
-Fit to paper	Finkatu paperera
+Fit to page	Finkatu paperera
 Fit to screen	Finkatu ikusleihora
 Fit to screen (no zoom)	Finkatu ikusleihora (zoom gabe)
 Flash fired:	Flash eragiketa:
@@ -218,7 +221,7 @@ No image loaded!	Ez da irudirik gertatu!
 No user INI file exists yet. Create user INI file from INI file template?	Oraindik ez dago erabiltzaile INI agiririk. Sortu erabiltzaile INI agiria INI agiri eredutik?
 None	Ezer ez
 Not enough memory available	Ez dago nahikoa oroimen eskuragarri
-Note: Set the key 'TrimWithoutPromptLosslessJPEG=true' in the INI file to always trim without showing this message.	Oharra: Ezarri 'TrimWithoutPromptLosslessJPEG=true' INI agirian betik mozteko mezu hau erakutsi gabe.
+Note: Set the key 'CropWithoutPromptLosslessJPEG=true' in the INI file to always crop without showing this message.	Oharra: Ezarri 'CropWithoutPromptLosslessJPEG=true' INI agirian betik mozteko mezu hau erakutsi gabe.
 Number (consecutively numbered)	Zenbakia (jarraian zenbakituta)
 Number of CPU cores used	Erabilitako CPU nukleo zenbatekoa
 Number of JPEG files in folder: %d	Agiritegiko JPEG agiri zenbatekoa: %d
@@ -233,7 +236,7 @@ Original file extension	Jatorrizko agiriaren hedapena
 Original file name (with extension)	Jatorrizko agiri izena (hedapenarekin)
 Original file name (without extension)	Jatorrizko agiri izena (hedapengabe)
 Pan image	Pan irudia
-Paper:	Papera:
+Paper size:	Papera:
 Parameter DB	BD Parametroak
 Parameter DB error	BD parametro akatsa
 Parameter DB file '%s' could not be opened!	'%s' parametro DB agiria ezin da ireki!
@@ -286,7 +289,7 @@ SIMD mode used	Erabilitako SIMD modua
 Same as Image	
 Saturation	Margoasetasuna
 Save	Gorde
-Save (%s)/ delete (%s) image processing parameters in/from parameter DB	Gorde (%s)/ Ezabatu (%s) irudi prozesapen parametroak DB parametroeta-n/-tik
+Save (%s) / delete (%s) image processing parameters into/from parameter DB	Gorde (%s)/ Ezabatu (%s) irudi prozesapen parametroak DB parametroeta-n/-tik
 Save as (in screen size/resolution)	Gorde honela (ikusleiho neurri/bereizmenarekin)
 Save as template	Gorde eredu bezala
 Save cropped image	Gorde moztutako irudia
@@ -308,7 +311,7 @@ Select parameter DB to restore	Hautatu leheneratzeko DB parametroak
 Set Fixed Crop Size	Ezarri Zuzendutako Mozketa Neurria
 Set JPEGView as default image viewer	Ezarri JPEGIkusgailua berezko irudi ikusgailu bezala
 Set timeout to n/10 sec, respectively n/100 sec (Ctrl+Shift)	Ezarri tartea n/10 seg-tan, edo n/100 seg (Ktrl+Aldatu)
-Shall existing entries be preserved (Yes) or be overriden by the imported entries (No)?	Dauden sarrerei heutsi behar zaie (Bai) edo ezeztatu inportatutako sarrerekin (Ez)?
+Shall existing entries be preserved (Yes) or be overwritten by the imported entries (No)?	Dauden sarrerei heutsi behar zaie (Bai) edo ezeztatu inportatutako sarrerekin (Ez)?
 Sharpen	Garbitasuna
 Sharpen low	Itzal apala
 Sharpen medium	Itzal ertaina
@@ -350,7 +353,7 @@ The new size is too large - width or height is larger than 65535 or total number
 The old parameter DB file '%s' could not be renamed during conversion to new format!	'%s' parametro DB zaharra ezin izan da berrizendatu heuskarri berrira bihurtzerakoan!
 The operation failed because not enough memory is available!	Eragiketak huts egin du ez dagoelako nahikoa oroimen eskuragarri!
 The parameter DB file '%s' has been created by a newer version of JPEGView!	'%s' parametro DB agiria JPEGIKusgailu bertsio berriago batek sortua da!
-The transformation can be applied if the image is trimmed to the next matching size but this will remove some border pixels.	Eraldaketa ezarri daiteke irudia bat datorren hurrengo neurrira mozten bada baina honek hertzeko zenbait pixel kenduko ditu.
+The transformation can be applied if the image is cropped to the next matching size but this will remove some border pixels.	Eraldaketa ezarri daiteke irudia bat datorren hurrengo neurrira mozten bada baina honek hertzeko zenbait pixel kenduko ditu.
 These values will override the values from the INI file located in the program folder of JPEGView!	Balio hauek ezeztatu egingo dituzte JPEGIkusgailu programaren agiritegiko INI agiriko balioak!
 Threshold	Muga
 Title:	Izenburua:
@@ -359,7 +362,6 @@ Toggle window always on top mode
 Toggle window title bar hidden mode	
 Top	Goia
 Transition Effect	Aldaketa Eragina
-Trim the image and apply transformation? Trimming cannot be undone!	Moztu irudia eta ezarri eraldaketa? Mozketa ezin da desegin!
 Unregistering not possible	Deserregistratzea ezinezkoa da
 Unsharp mask...	Lausotze Mozorroa
 Update user settings with new settings from settings template file?	Eguneratu erabiltzaile ezarpenak ezarpen berriekin ezarpen eredu agiritik?
@@ -526,7 +528,7 @@ Zoom to Selection	Zooma Hautapenean
 //! Hide window title bar
 //! Set window always on top
 
-// ::: STATUS: Last Checked/Updated by Script ::: 2023-03-09T12:34:04.435617+00:00 //
+// ::: STATUS: Last Checked/Updated by Script ::: 2023-03-14T00:34:40.368717+00:00 //
 //! Translation Progress: 91%
 //! * Total (Strings + Menu) = 427
 //! * Done = 390

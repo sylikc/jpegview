@@ -25,16 +25,18 @@
 //? * Lines with no text after the <tab> are ignored
 //? * Multiple tabs are permitted between English and Translated string, e.g. this is valid:    English string<tab><tab><tab>Translated string<newline>
 
-//? NOTE: %s %d have special meanings in the strings, so make sure they appear somewhere in the translated string
+//? NOTE: %s %d have special meanings in the strings, so make sure they appear somewhere in the translated string!
 
 //? For the strings below which are short and have no context:
-//?   "in" in context is shorthand for "inch"
-//?   "cm" in context is shorthand for "centimeter"
-//?   "C - R" in context is "Cyan Red" colors
-//?   "M - G" in context is "Magenta Green" colors
-//?   "Y - B" in context is "Yellow Blue" colors
-//?   "yes"/"no" in context is for showing EXIF flags
-//?   "on"/"off" in context is for showing a setting active or not
+//?   "in"        in context: is shorthand for "inch"
+//?   "cm"        in context: is shorthand for "centimeter"
+//?   "C - R"     in context: is "Cyan Red" colors
+//?   "M - G"     in context: is "Magenta Green" colors
+//?   "Y - B"     in context: is "Yellow Blue" colors
+//?   "yes"/"no"  in context: is for showing EXIF flags
+//?   "on"/"off"  in context: is for showing a setting active or not
+//?   "Filter"    in context: is used in Resize image, "sampling filter"
+//?   "Box"       in context: is used in Resize image sampling filter "Box filter"
 ////////////////////
 
 
@@ -92,11 +94,12 @@ Continue rename/copy?	Yeniden adlandırma ya da kopyalama işlemi sürdürülsü
 Contrast	Karşıtlık
 Contrast Correction	Karşıtlığı düzelt
 Copy file path of the image to clipboard	Görselin dosya yolunu panoya kopyala
-Copy screen to clipboard/ Copy processed full size image to clipboard	Ekranı panoya kopyala/ İşleniş tam boyutlu görseli panoya kopyala
+Copy screen to clipboard / Copy processed full size image to clipboard	Ekranı panoya kopyala/ İşleniş tam boyutlu görseli panoya kopyala
 Copying parameter DB to file '%s' failed. Reason: %s	Parametre veri tabanı '%s' dosyasına kopyalanamadı. Nedeni: %s
 Correct converging lines (perspective correction)	Yakınsama çizgilerini düzelt (perspektifi düzelt)
 Creation date/time	Oluşturulma tarih ve saati
 Crop image	Görseli kırp
+Crop the image and apply transformation? Cropping cannot be undone!	Görsel kırpılıp dönüşüm yapılsın mı?
 Ctrl + Left mouse	Ctrl + Sol fare tuşu
 Current image	Geçerli görsel
 Cyan-Red	Mavi-Kırmızı
@@ -137,12 +140,12 @@ F-Number:	F-sayısı:
 File name	Dosya adı
 File size	Dosya boyutu
 File type	Dosya türü
-Fill paper with crop	Kırparak sayfayı doldur
+Fill page with crop	Kırparak sayfayı doldur
 Fill with crop	Kırparak doldur
 Fill with crop (no zoom)	Kırparak doldur (yakınlaştırmadan)
 Filter:	Süzgeç:
 Fit image to screen	Ekrana sığdır
-Fit to paper	Kağıda sığdır
+Fit to page	Kağıda sığdır
 Fit to screen	Ekrana sığdır
 Fit to screen (no zoom)	Ekrana sığdır (yakınlaştırmadan)
 Flash fired:	Flaş çakma:
@@ -218,7 +221,7 @@ No image loaded!	Herhangi bir görsel yüklenmemiş!
 No user INI file exists yet. Create user INI file from INI file template?	Henüz bir kullanıcı INI dosyası yok. INI dosyası kalıbından bir kullanıcı INI dosyası oluşturulmasını ister misiniz?
 None	Yok
 Not enough memory available	Yeterli bellek yok
-Note: Set the key 'TrimWithoutPromptLosslessJPEG=true' in the INI file to always trim without showing this message.	Not: Her defasında bu ileti görüntülenmeden düzeltme yapılması için INI dosyasında 'TrimWithoutPromptLosslessJPEG=true' ayarını yapabilirsiniz.
+Note: Set the key 'CropWithoutPromptLosslessJPEG=true' in the INI file to always crop without showing this message.	Not: Her defasında bu ileti görüntülenmeden düzeltme yapılması için INI dosyasında 'CropWithoutPromptLosslessJPEG=true' ayarını yapabilirsiniz.
 Number (consecutively numbered)	Sayı (ardışık numaralandırılmış)
 Number of CPU cores used	Kullanılan işlemci çekirdeği sayısı
 Number of JPEG files in folder: %d	Klasördeki JPEG dosyalarının sayısı: %d
@@ -233,7 +236,7 @@ Original file extension	Özgün dosya uzantısı
 Original file name (with extension)	Özgün dosya adı (uzantı ile)
 Original file name (without extension)	Özgün dosya adı (uzantı olmadan)
 Pan image	Görseli kaydır
-Paper:	Kağıt:
+Paper size:	Kağıt:
 Parameter DB	Parametre veri tabanı
 Parameter DB error	Parametre veri tabanı sorunu
 Parameter DB file '%s' could not be opened!	'%s' parametre veri tabanı açılamadı!
@@ -286,7 +289,7 @@ SIMD mode used	Kullanılacak SIMD kipi
 Same as Image	Görsel ile aynı
 Saturation	Doygunluk
 Save	Kaydet
-Save (%s)/ delete (%s) image processing parameters in/from parameter DB	Parametre veri tabanı üzerinde görsel işleme parametrelerinden (%s) tanesini kaydet ya da (%s) tanesini sil
+Save (%s) / delete (%s) image processing parameters into/from parameter DB	Parametre veri tabanı üzerinde görsel işleme parametrelerinden (%s) tanesini kaydet ya da (%s) tanesini sil
 Save as (in screen size/resolution)	Farklı kaydet (ekran boyutu/çözünürlük olarak)
 Save as template	Kalıp olarak kaydet
 Save cropped image	Kırpılmış görseli kaydet
@@ -308,7 +311,7 @@ Select parameter DB to restore	Geri yüklenecek parametre veri tabanını seçin
 Set Fixed Crop Size	Sabit kırpma boyutunu seçin
 Set JPEGView as default image viewer	JPEGView varsayılan görsel görüntüleyici olsun
 Set timeout to n/10 sec, respectively n/100 sec (Ctrl+Shift)	Zaman aşımını n/10, n/100 saniye olarak değiştir (Ctrl+Shift)
-Shall existing entries be preserved (Yes) or be overriden by the imported entries (No)?	Var olan kayıtlar korunsun mu (Evet) ya da içe aktarılan kayıtlar ile değiştirilsin mi (Hayır)?
+Shall existing entries be preserved (Yes) or be overwritten by the imported entries (No)?	Var olan kayıtlar korunsun mu (Evet) ya da içe aktarılan kayıtlar ile değiştirilsin mi (Hayır)?
 Sharpen	Keskinleştir
 Sharpen low	Düşük keskinleştirme
 Sharpen medium	Orta keskinleştirme
@@ -350,7 +353,7 @@ The new size is too large - width or height is larger than 65535 or total number
 The old parameter DB file '%s' could not be renamed during conversion to new format!	'%s' eski parametre veri tabanı dosyası yeni biçime dönüştürülürken yeniden adlandırılamadı!
 The operation failed because not enough memory is available!	Yeterli bellek olmadığından işlem tamamlanamadı!
 The parameter DB file '%s' has been created by a newer version of JPEGView!	'%s' parametre veri tabanı dosyası daha yeni bir JPEGView sürümü tarafından oluşturulmuş!
-The transformation can be applied if the image is trimmed to the next matching size but this will remove some border pixels.	Görsel bir sonraki eşleşen boyuta kırpılırsa dönüşüm yapılabilir. Ancak bu durumda bazı kenar pikselleri silinir.
+The transformation can be applied if the image is cropped to the next matching size but this will remove some border pixels.	Görsel bir sonraki eşleşen boyuta kırpılırsa dönüşüm yapılabilir. Ancak bu durumda bazı kenar pikselleri silinir.
 These values will override the values from the INI file located in the program folder of JPEGView!	Bu değerler JPEGView uygulamasının klasöründe bulunan INI dosyası tarafından değiştirilecek!
 Threshold	Eşik
 Title:	Başlık:
@@ -359,7 +362,6 @@ Toggle window always on top mode	Pencere üstte kalsın kipini aç/kapat
 Toggle window title bar hidden mode	Pencere başlığını gizle/görüntüle
 Top	Üst
 Transition Effect	Geçiş etkisi
-Trim the image and apply transformation? Trimming cannot be undone!	Görsel kırpılıp dönüşüm yapılsın mı?
 Unregistering not possible	Kayıt kaldırılamadı
 Unsharp mask...	Keskinlik azaltma maskesi...
 Update user settings with new settings from settings template file?	Kullanıcı ayarları, ayar kalıbı dosyasındaki değerlere güncellensin mi?
@@ -469,7 +471,7 @@ Free	Serbest
 Fixed size...	Sabit boyutlu...
 Zoom to Selection	Seçime yakınlaştır
 
-// ::: STATUS: Last Checked/Updated by Script ::: 2023-03-12T12:57:00.700326+00:00 //
+// ::: STATUS: Last Checked/Updated by Script ::: 2023-03-14T00:34:40.570429+00:00 //
 //! Translation Progress: 100%
 //! * Total (Strings + Menu) = 427
 //! * Done = 427

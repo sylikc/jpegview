@@ -26,16 +26,18 @@
 //? * Lines with no text after the <tab> are ignored
 //? * Multiple tabs are permitted between English and Translated string, e.g. this is valid:    English string<tab><tab><tab>Translated string<newline>
 
-//? NOTE: %s %d have special meanings in the strings, so make sure they appear somewhere in the translated string
+//? NOTE: %s %d have special meanings in the strings, so make sure they appear somewhere in the translated string!
 
 //? For the strings below which are short and have no context:
-//?   "in" in context is shorthand for "inch"
-//?   "cm" in context is shorthand for "centimeter"
-//?   "C - R" in context is "Cyan Red" colors
-//?   "M - G" in context is "Magenta Green" colors
-//?   "Y - B" in context is "Yellow Blue" colors
-//?   "yes"/"no" in context is for showing EXIF flags
-//?   "on"/"off" in context is for showing a setting active or not
+//?   "in"        in context: is shorthand for "inch"
+//?   "cm"        in context: is shorthand for "centimeter"
+//?   "C - R"     in context: is "Cyan Red" colors
+//?   "M - G"     in context: is "Magenta Green" colors
+//?   "Y - B"     in context: is "Yellow Blue" colors
+//?   "yes"/"no"  in context: is for showing EXIF flags
+//?   "on"/"off"  in context: is for showing a setting active or not
+//?   "Filter"    in context: is used in Resize image, "sampling filter"
+//?   "Box"       in context: is used in Resize image sampling filter "Box filter"
 ////////////////////
 
 
@@ -93,11 +95,12 @@ Continue rename/copy?	Continuer renommage/copie ?
 Contrast	Contraste
 Contrast Correction	Correction du contraste
 Copy file path of the image to clipboard	Copier le chemin complet de l'image vers le presse-papiers
-Copy screen to clipboard/ Copy processed full size image to clipboard	Copier l'image traitée (capture écran ou taille réelle) vers le presse-papiers
+Copy screen to clipboard / Copy processed full size image to clipboard	Copier l'image traitée (capture écran ou taille réelle) vers le presse-papiers
 Copying parameter DB to file '%s' failed. Reason: %s	La copie de la BdD de poaramètre vers le ficher '%s' a échoué. Raison : %s
 Correct converging lines (perspective correction)	Correction des lignes convergentes (correction de la perspective)
 Creation date/time	Date de création
 Crop image	Recadrer
+Crop the image and apply transformation? Cropping cannot be undone!	Redécouper l'image et effectuer la transformation ? (le redécoupage ne peut pas être annulé).
 Ctrl + Left mouse	Ctrl + Clic gauche
 Current image	Image courante
 Cyan-Red	Cyan-Rouge
@@ -138,12 +141,12 @@ F-Number:	Ouverture (F-number) :
 File name	Nom du fichier
 File size	Taille du fichier
 File type	Type de fichier
-Fill paper with crop	Remplir la page et rogner l'image
+Fill page with crop	Remplir la page et rogner l'image
 Fill with crop	Remplir la fenêtre et rogner l'image
 Fill with crop (no zoom)	Remplir la fenêtre et rogner l'image (sans agrandir)
 Filter:	Filtre :
 Fit image to screen	Ajuster l'image à l'écran
-Fit to paper	Ajuster à la page
+Fit to page	Ajuster à la page
 Fit to screen	Ajuster l'image à l'écran
 Fit to screen (no zoom)	Ajuster l'image à l'écran (sans agrandir)
 Flash fired:	Flash utilisé :
@@ -219,7 +222,7 @@ No image loaded!	Aucune image chargée !
 No user INI file exists yet. Create user INI file from INI file template?	Le fichier INI utilisateur n'existe pas encore. En créer un depuis le fichier INI modèle ?
 None	Aucun
 Not enough memory available	mémoire insuffisante
-Note: Set the key 'TrimWithoutPromptLosslessJPEG=true' in the INI file to always trim without showing this message.	Note : si vous souhaitez systématiquement redécouper sans montrer ce message d'alerte, spécifiez la valeur 'TrimWithoutPromptLosslessJPEG=true' dans le fichier INI.
+Note: Set the key 'CropWithoutPromptLosslessJPEG=true' in the INI file to always crop without showing this message.	Note : si vous souhaitez systématiquement redécouper sans montrer ce message d'alerte, spécifiez la valeur 'CropWithoutPromptLosslessJPEG=true' dans le fichier INI.
 Number (consecutively numbered)	Numéro (numéroté consécutivement)
 Number of CPU cores used	Nombre de coeurs de processeur utilisés
 Number of JPEG files in folder: %d	Nombre d'images JPEG dans le dossier : %d
@@ -234,7 +237,7 @@ Original file extension	Extension du fichier original
 Original file name (with extension)	Nom du fichier original (avec extension)
 Original file name (without extension)	Nom du fichier original (sans extension)
 Pan image	Parcourir l'image
-Paper:	Papier :
+Paper size:	Papier :
 Parameter DB	Paramètre BdD
 Parameter DB error	Erreur de paramètre de BdD
 Parameter DB file '%s' could not be opened!	Le fichier BdD du paramètre '%s' n'a pas pu être ouvert !
@@ -287,7 +290,7 @@ SIMD mode used	Mode SIMD utilisé
 Same as Image	Mêmes proportions que l'image
 Saturation	Saturation
 Save	Enregistrer
-Save (%s)/ delete (%s) image processing parameters in/from parameter DB	Sauvegarder (%s)/supprimer (%s) les paramètres de traitement dans/depuis cette image dans la BdD
+Save (%s) / delete (%s) image processing parameters into/from parameter DB	Sauvegarder (%s)/supprimer (%s) les paramètres de traitement dans/depuis cette image dans la BdD
 Save as (in screen size/resolution)	Enregistrer sous (à la taille/résolution de l'écran)
 Save as template	Enregistrer comme modèle
 Save cropped image	Enregistrer l'image rognée
@@ -309,7 +312,7 @@ Select parameter DB to restore	Sélectionner la BdD de paramètres à restaurer
 Set Fixed Crop Size	Définir la taille fixe du rognage
 Set JPEGView as default image viewer	Définir JPEGView comme visionneuse d'images par défaut
 Set timeout to n/10 sec, respectively n/100 sec (Ctrl+Shift)	Configurer le délai respectivement à n/10 s, n/100 s (Ctrl+Maj)
-Shall existing entries be preserved (Yes) or be overriden by the imported entries (No)?	Souhaitez-vous conserver les entrées existantes (Oui) ou les écraser avec les entrées importées (Non) ?
+Shall existing entries be preserved (Yes) or be overwritten by the imported entries (No)?	Souhaitez-vous conserver les entrées existantes (Oui) ou les écraser avec les entrées importées (Non) ?
 Sharpen	Netteté
 Sharpen low	Netteté (faible)
 Sharpen medium	Netteté (moyenne)
@@ -351,7 +354,7 @@ The new size is too large - width or height is larger than 65535 or total number
 The old parameter DB file '%s' could not be renamed during conversion to new format!	L'ancien fichier BdD de paramètres '%s' n'a pas pu être renommé lors de la conversion au nouveau format !
 The operation failed because not enough memory is available!	Mémoire insuffisante pour effectuer l'opération !
 The parameter DB file '%s' has been created by a newer version of JPEGView!	Le fichier BdD de paramètres '%s' a été créé par une version plus récente de JPEGView !
-The transformation can be applied if the image is trimmed to the next matching size but this will remove some border pixels.	La transformation peut être effectuée en redécoupant l'image à la taille convenable la plus proche, mais quelques pixels de bord vont être perdus.
+The transformation can be applied if the image is cropped to the next matching size but this will remove some border pixels.	La transformation peut être effectuée en redécoupant l'image à la taille convenable la plus proche, mais quelques pixels de bord vont être perdus.
 These values will override the values from the INI file located in the program folder of JPEGView!	Ce fichier INI utilisateur aura priorité sur le fichier INI du dossier programme de JPEGView !
 Threshold	Seuil
 Title:	Titre :
@@ -360,7 +363,6 @@ Toggle window always on top mode	Activer/désactiver le mode "Toujours au premie
 Toggle window title bar hidden mode	Activer/désactiver le mode "Barre de titre cachée"
 Top	Haut
 Transition Effect	Effet de transition
-Trim the image and apply transformation? Trimming cannot be undone!	Redécouper l'image et effectuer la transformation ? (le redécoupage ne peut pas être annulé).
 Unregistering not possible	Modification impossible
 Unsharp mask...	Filtre de netteté...
 Update user settings with new settings from settings template file?	Souhaitez-vous mettre à jour le fichier des paramètres utilisateur avec les nouveaux paramètres issus du fichier modèle ?
@@ -485,7 +487,7 @@ Zoom to Selection	Zoom sur la sélection
 //renamed	renommé
 //up/down	haut/bas
 
-// ::: STATUS: Last Checked/Updated by Script ::: 2023-03-12T12:36:08.180020+00:00 //
+// ::: STATUS: Last Checked/Updated by Script ::: 2023-03-14T00:34:40.384606+00:00 //
 //! Translation Progress: 100%
 //! * Total (Strings + Menu) = 427
 //! * Done = 427

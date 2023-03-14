@@ -25,16 +25,18 @@
 //? * Lines with no text after the <tab> are ignored
 //? * Multiple tabs are permitted between English and Translated string, e.g. this is valid:    English string<tab><tab><tab>Translated string<newline>
 
-//? NOTE: %s %d have special meanings in the strings, so make sure they appear somewhere in the translated string
+//? NOTE: %s %d have special meanings in the strings, so make sure they appear somewhere in the translated string!
 
 //? For the strings below which are short and have no context:
-//?   "in" in context is shorthand for "inch"
-//?   "cm" in context is shorthand for "centimeter"
-//?   "C - R" in context is "Cyan Red" colors
-//?   "M - G" in context is "Magenta Green" colors
-//?   "Y - B" in context is "Yellow Blue" colors
-//?   "yes"/"no" in context is for showing EXIF flags
-//?   "on"/"off" in context is for showing a setting active or not
+//?   "in"        in context: is shorthand for "inch"
+//?   "cm"        in context: is shorthand for "centimeter"
+//?   "C - R"     in context: is "Cyan Red" colors
+//?   "M - G"     in context: is "Magenta Green" colors
+//?   "Y - B"     in context: is "Yellow Blue" colors
+//?   "yes"/"no"  in context: is for showing EXIF flags
+//?   "on"/"off"  in context: is for showing a setting active or not
+//?   "Filter"    in context: is used in Resize image, "sampling filter"
+//?   "Box"       in context: is used in Resize image sampling filter "Box filter"
 ////////////////////
 
 
@@ -92,11 +94,12 @@ Continue rename/copy?	Nastavi preimenovanje/kopiranje?
 Contrast	Kontrast
 Contrast Correction	Ispravka kontrasta
 Copy file path of the image to clipboard	Prepiši putanju datoteke sa slikom na radnu tablu (Clipboard)
-Copy screen to clipboard/ Copy processed full size image to clipboard	Kopiraj ekran na radnu tablu/Kopiraj obrađenu celu sliku na radnu tablu (Clipboard)
+Copy screen to clipboard / Copy processed full size image to clipboard	Kopiraj ekran na radnu tablu/Kopiraj obrađenu celu sliku na radnu tablu (Clipboard)
 Copying parameter DB to file '%s' failed. Reason: %s	Kopiranje parametarske DB u datoteku '%s' nije uspelo. Razlog: %s
 Correct converging lines (perspective correction)	Ispravi linije koje konvergiraju (ispravka perspektive)
 Creation date/time	Datum/vreme kreiranja
 Crop image	Opseci sliku
+Crop the image and apply transformation? Cropping cannot be undone!	Skratiti sliku i primeniti transformaciju? Skraćivanje se ne može poništiti!
 Ctrl + Left mouse	Ctrl + Levo miš
 Current image	Trenutna slika
 Cyan-Red	Svetlo plavo-Crveno
@@ -137,12 +140,12 @@ F-Number:	F-Broj:
 File name	Ime datoteke
 File size	Veličina datoteke
 File type	Tip datoteke
-Fill paper with crop	Ispuni papir isečkom
+Fill page with crop	Ispuni papir isečkom
 Fill with crop	Ispuni isečkom
 Fill with crop (no zoom)	Ispuni isečkom (bez zuma)
 Filter:	Filter:
 Fit image to screen	Uklopi sliku sa ekranom
-Fit to paper	Uklopi sa papirom
+Fit to page	Uklopi sa papirom
 Fit to screen	Uklopi sa ekranom
 Fit to screen (no zoom)	Uklopi sa ekranom (bez zuma)
 Flash fired:	Blic okinut:
@@ -218,7 +221,7 @@ No image loaded!	Slika nije učitana!
 No user INI file exists yet. Create user INI file from INI file template?	Ne postoji korisnička INI datoteka. Kreirati INI datoteku iz šablona za INI datoteku?
 None	Nijedna
 Not enough memory available	Nedovoljno raspoložive memorije
-Note: Set the key 'TrimWithoutPromptLosslessJPEG=true' in the INI file to always trim without showing this message.	Napomena: Podesi ključ 'TrimWithoutPromptLosslessJPEG=true' u INI datoteci da se uvek skraćuje bez prikazivanja ove poruke.
+Note: Set the key 'CropWithoutPromptLosslessJPEG=true' in the INI file to always crop without showing this message.	Napomena: Podesi ključ 'CropWithoutPromptLosslessJPEG=true' u INI datoteci da se uvek skraćuje bez prikazivanja ove poruke.
 Number (consecutively numbered)	Broj (uzastopno nabrajanje)
 Number of CPU cores used	Broj korišćenih jezgara CPU
 Number of JPEG files in folder: %d	Broj JPEG datoteka u folderu: %d
@@ -233,7 +236,7 @@ Original file extension	Originalna ekstenzija datoteke
 Original file name (with extension)	Originalno ime datoteke (sa ekstenzijom)
 Original file name (without extension)	Originalno ime datoteke (bez ekstenzije)
 Pan image	Zakreni sliku
-Paper:	Papir:
+Paper size:	Papir:
 Parameter DB	Parametarska DB
 Parameter DB error	Greška parametarske DB
 Parameter DB file '%s' could not be opened!	Datoteka Parametarska DB '%s' nije mogla biti otvorena!
@@ -286,7 +289,7 @@ SIMD mode used	Korišćen SIMD mod
 Same as Image	Isto kao slika
 Saturation	Zasićenost
 Save	Sačuvaj
-Save (%s)/ delete (%s) image processing parameters in/from parameter DB	Sačuvaj (%s)/ izbriši (%s) parametre obrade slike u/iz parametarske DB
+Save (%s) / delete (%s) image processing parameters into/from parameter DB	Sačuvaj (%s)/ izbriši (%s) parametre obrade slike u/iz parametarske DB
 Save as (in screen size/resolution)	Sačuvaj kao (u veličini ekrana/rezoluciji)
 Save as template	Sačuvaj kao šablon
 Save cropped image	Sačuvaj opsečenu sliku
@@ -308,7 +311,7 @@ Select parameter DB to restore	Izaberi parametarsku DB za obnovu
 Set Fixed Crop Size	Postavi fiksnu veličinu opsecanja
 Set JPEGView as default image viewer	Postavi JPEGView kao podrazumevani pregledač slika
 Set timeout to n/10 sec, respectively n/100 sec (Ctrl+Shift)	Postavi istek vremena (timeout) na n/10 sekundi, respektivno n/100 sekundi (Ctrl+Shift)
-Shall existing entries be preserved (Yes) or be overriden by the imported entries (No)?	Da li treba sačuvati postojeće postavke (Yes) ili ih poništiti uvezenim postavkama (No)?
+Shall existing entries be preserved (Yes) or be overwritten by the imported entries (No)?	Da li treba sačuvati postojeće postavke (Yes) ili ih poništiti uvezenim postavkama (No)?
 Sharpen	Izoštri
 Sharpen low	Slabo izoštravanje
 Sharpen medium	Srednje izoštravanje
@@ -349,8 +352,8 @@ The imported param DB contains entries already present in active param DB.	Uveze
 The new size is too large - width or height is larger than 65535 or total number of pixels is too large!	Nova veličina je prevelika - širina ili visina je veća od 65535 ili je ukupan broj piksela prevelik!
 The old parameter DB file '%s' could not be renamed during conversion to new format!	Stara parametarska DB datoteka '%s' ne može biti preimenovana tokom konverzije u novi format!
 The operation failed because not enough memory is available!	Operacija nije uspela jer nema dovoljno raspoložive memorije!
-The parameter DB file '%s' has been created by a newer version of JPEGView!	Parametarska DB datoteka je kreirana novijom verzijom JPEGView-a!
-The transformation can be applied if the image is trimmed to the next matching size but this will remove some border pixels.	Transformacija se može primeniti ako je slika skraćena na narednu odgovarajuću veličinu ali će nešto ivičnih piksela biti uklonjeno.
+The parameter DB file '%s' has been created by a newer version of JPEGView!	Parametarska DB datoteka '%s' je kreirana novijom verzijom JPEGView-a!
+The transformation can be applied if the image is cropped to the next matching size but this will remove some border pixels.	Transformacija se može primeniti ako je slika skraćena na narednu odgovarajuću veličinu ali će nešto ivičnih piksela biti uklonjeno.
 These values will override the values from the INI file located in the program folder of JPEGView!	Ove vrednosti će poništiti vrednosti INI datoteke smeštene u programskom folderu JPEGView-a!
 Threshold	Prag
 Title:	Naslov:
@@ -359,7 +362,6 @@ Toggle window always on top mode	Mod prebacivanja sa prozorom uvek na vrhu
 Toggle window title bar hidden mode	Mod prebacivanja sa skrivenom trakom naslova prozora
 Top	Vrh
 Transition Effect	Efekat tranzicije
-Trim the image and apply transformation? Trimming cannot be undone!	Skratiti sliku i primeniti transformaciju? Skraćivanje se ne može poništiti!
 Unregistering not possible	Nije moguće ukloniti registraciju
 Unsharp mask...	Maska zamućenja...
 Update user settings with new settings from settings template file?	Ažurirati korisnička podešavanja novima iz datoteke sa šablonom podešavanja?
@@ -469,7 +471,7 @@ Free	Slobodno
 Fixed size...	Fiksna veličina...
 Zoom to Selection	Zumiraj u izabrano
 
-// ::: STATUS: Last Checked/Updated by Script ::: 2023-03-13T06:20:35.728401+00:00 //
+// ::: STATUS: Last Checked/Updated by Script ::: 2023-03-14T00:40:53.298042+00:00 //
 //! Translation Progress: 100%
 //! * Total (Strings + Menu) = 427
 //! * Done = 427

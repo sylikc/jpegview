@@ -10,7 +10,7 @@
 //: ISO 639-1 code: pt
 //: ISO 3166-1 code: br
 //: Language: Portuguese (Brazilian)
-//: Translator(s): Carpegieri Torezan
+//: Translator(s) - Name <Contact Info/URL>: Carpegieri Torezan
 //: Last Updated:
 //: Additional Notes:
 ////////////////////
@@ -25,16 +25,18 @@
 //? * Lines with no text after the <tab> are ignored
 //? * Multiple tabs are permitted between English and Translated string, e.g. this is valid:    English string<tab><tab><tab>Translated string<newline>
 
-//? NOTE: %s %d have special meanings in the strings, so make sure they appear somewhere in the translated string
+//? NOTE: %s %d have special meanings in the strings, so make sure they appear somewhere in the translated string!
 
 //? For the strings below which are short and have no context:
-//?   "in" in context is shorthand for "inch"
-//?   "cm" in context is shorthand for "centimeter"
-//?   "C - R" in context is "Cyan Red" colors
-//?   "M - G" in context is "Magenta Green" colors
-//?   "Y - B" in context is "Yellow Blue" colors
-//?   "yes"/"no" in context is for showing EXIF flags
-//?   "on"/"off" in context is for showing a setting active or not
+//?   "in"        in context: is shorthand for "inch"
+//?   "cm"        in context: is shorthand for "centimeter"
+//?   "C - R"     in context: is "Cyan Red" colors
+//?   "M - G"     in context: is "Magenta Green" colors
+//?   "Y - B"     in context: is "Yellow Blue" colors
+//?   "yes"/"no"  in context: is for showing EXIF flags
+//?   "on"/"off"  in context: is for showing a setting active or not
+//?   "Filter"    in context: is used in Resize image, "sampling filter"
+//?   "Box"       in context: is used in Resize image sampling filter "Box filter"
 ////////////////////
 
 
@@ -76,9 +78,9 @@ C - R
 Camera model:	Modelo da câmera:
 Can't rename file	Não é possível renomear arquivo
 Cancel	Cancelar
-Cannot read from parameter DB file '%s'!	Não é possível ler parâmetro DB arquivo '% s'!
-Cannot read parameter DB file '%s' because it is too large!	Não é possível ler parâmetro DB arquivo '% s', pois é muito grande!
-Cannot write to parameter DB file '%s'!	 Não é possível escrever para o parâmetro DB arquivo '% s'!
+Cannot read from parameter DB file '%s'!	Não é possível ler parâmetro DB arquivo '%s'!
+Cannot read parameter DB file '%s' because it is too large!	Não é possível ler parâmetro DB arquivo '%s', pois é muito grande!
+Cannot write to parameter DB file '%s'!	 Não é possível escrever para o parâmetro DB arquivo '%s'!
 Click and drag the mouse vertically to correct image tilt.	Clique e arraste o rato na vertical para corrigir a inclinação
 Clipboard Image	
 Close	Sair
@@ -92,11 +94,12 @@ Continue rename/copy?	Continuar renomear/copia?
 Contrast	Contraste
 Contrast Correction	Correção de Contraste
 Copy file path of the image to clipboard	
-Copy screen to clipboard/ Copy processed full size image to clipboard	Copiar Tela para Área de Tranferência/Copiar imagem processada de tamanho completo para Área de Tranferência
+Copy screen to clipboard / Copy processed full size image to clipboard	Copiar Tela para Área de Tranferência/Copiar imagem processada de tamanho completo para Área de Tranferência
 Copying parameter DB to file '%s' failed. Reason: %s	Copiar arquivo DB de parametro '%s' falho. Razão: %s
 Correct converging lines (perspective correction)	Corrigir linhas de convergência (correção de perspetiva)
 Creation date/time	Criação de data/hora
 Crop image	Cortar imagem
+Crop the image and apply transformation? Cropping cannot be undone!	Recortar a imagem e aplicar a transformação? Operação não poderá ser desfeita!
 Ctrl + Left mouse	Ctrl + botão esquerdo
 Current image	Imagem atual
 Cyan-Red	Ciano-vermelho
@@ -137,12 +140,12 @@ F-Number:	Número F:
 File name	Nome do arquivo
 File size	Tamanho do ficheiro
 File type	Tipo de ficheiro
-Fill paper with crop	
+Fill page with crop	
 Fill with crop	Preencha com bordas recortadas
 Fill with crop (no zoom)	Preencha com bordas recortadas (sem zoom)
 Filter:	Filtro:
 Fit image to screen	Ajustar imagem a tela
-Fit to paper	Ajustar ao papel
+Fit to page	Ajustar ao papel
 Fit to screen	Ajustar a Tela
 Fit to screen (no zoom)	Ajustar a tela (sem zoom)
 Flash fired:	Flash disparado:
@@ -199,7 +202,7 @@ M - G	M - V
 Magenta-Green	Magenta-Verde
 Manage 'Open image with' menu...	Gerir menu 'Abrir imagem com'...
 Margins:	Margens:
-Mark image for toggling. Use %s to toggle between marked and current image	Marcar imagem para alternância.
+Mark image for toggling. Use %s to toggle between marked and current image	Marcar imagem para alternância. Use %s to toggle between marked and current image
 Maximize/restore to/from virtual desktop (only for multi-monitor systems)	Maximizar / restaurar de / para desktop virtual (apenas para sistemas multi-monitor)
 Menu entries:	Entradas de menu:
 Modification date:	Data de modificação:
@@ -218,7 +221,7 @@ No image loaded!	Nenhuma imagem carregada!
 No user INI file exists yet. Create user INI file from INI file template?	Não existe nenhum arquivo INI de usuário. Criar arquivo INI do usuário a partir de modelo de arquivo INI?
 None	Nenhum
 Not enough memory available	Não existe memória suficiente disponível
-Note: Set the key 'TrimWithoutPromptLosslessJPEG=true' in the INI file to always trim without showing this message.	Nota: Defina 'TrimWithoutPromptLosslessJPEG = true' a chave no arquivo INI para sempre aparar sem mostrar esta mensagem.
+Note: Set the key 'CropWithoutPromptLosslessJPEG=true' in the INI file to always crop without showing this message.	Nota: Defina 'CropWithoutPromptLosslessJPEG = true' a chave no arquivo INI para sempre aparar sem mostrar esta mensagem.
 Number (consecutively numbered)	Número (consecutivamente enumerados)
 Number of CPU cores used	Número de núcleos da CPU usados
 Number of JPEG files in folder: %d	Número de arquivos JPEG na pasta: %d
@@ -233,11 +236,11 @@ Original file extension	Extensão de arquivo original
 Original file name (with extension)	Nome original de arquivo (com extensão)
 Original file name (without extension)	Nome original de arquivo (sen extensão)
 Pan image	Pan imagem
-Paper:	Papel:
+Paper size:	Papel:
 Parameter DB	Parámetros BD
 Parameter DB error	Erro de Parâmetro DB
 Parameter DB file '%s' could not be opened!	Parâmetro do arquivo DB '%s' não pôde ser aberto!
-Parameter DB file '%s' is not valid (invalid header)!	Arquivo de parâmetro DB '% s' não é válido (cabeçalho inválido)!
+Parameter DB file '%s' is not valid (invalid header)!	Arquivo de parâmetro DB '%s' não é válido (cabeçalho inválido)!
 Paste from clipboard	Colar na Área de Transferência
 Pasting image from clipboard failed!	Colar imagem da área de transferência falhou!
 Performing the lossless transformation failed!	Falha ao realizar a transformação sem perdas!
@@ -286,7 +289,7 @@ SIMD mode used	SIMD modo usado
 Same as Image	
 Saturation	Saturação
 Save	Gravar
-Save (%s)/ delete (%s) image processing parameters in/from parameter DB	Salvar (%s) / delete (%s) os parâmetros de processamento de imagem em / de DB parâmetro
+Save (%s) / delete (%s) image processing parameters into/from parameter DB	Salvar (%s) / delete (%s) os parâmetros de processamento de imagem em / de DB parâmetro
 Save as (in screen size/resolution)	Salvar como (no tamanho de tela / resolução)
 Save as template	Salvar como modelo
 Save cropped image	Salvar imagem recortada
@@ -308,7 +311,7 @@ Select parameter DB to restore	Selecione BD de parametros a restaurar
 Set Fixed Crop Size	Establecer tamanho fixo de corte
 Set JPEGView as default image viewer	Definir o JPEGView como visualizador padrão
 Set timeout to n/10 sec, respectively n/100 sec (Ctrl+Shift)	Definir tempo limite para N/10 seg, respectivamente N/100 seg (Ctrl + Shift)
-Shall existing entries be preserved (Yes) or be overriden by the imported entries (No)?	Entradas existentes devem ser preservadas (Sim) ou ser anulado pelos itens importados (não)?
+Shall existing entries be preserved (Yes) or be overwritten by the imported entries (No)?	Entradas existentes devem ser preservadas (Sim) ou ser anulado pelos itens importados (não)?
 Sharpen	Nitidez
 Sharpen low	Acentuação ligeira
 Sharpen medium	Acentuação média
@@ -347,10 +350,10 @@ The following file extensions cannot be unregistered because they have been regi
 The following image extensions are protected by the operating system.	Estes tipos de ficheiro estão protegidos pelo sistema operativo.
 The imported param DB contains entries already present in active param DB.	O DB de parametros importados contém entradas já presentes no parametro DB ativo.
 The new size is too large - width or height is larger than 65535 or total number of pixels is too large!	O novo tamanho é muito grande. A largura ou a altura é superior a 65535 ou o número total de pixeis é muito grande!
-The old parameter DB file '%s' could not be renamed during conversion to new format!	O parâmetro do arquivo de DB '% s' não podia ser renomeados durante a conversão para o novo formato!
+The old parameter DB file '%s' could not be renamed during conversion to new format!	O parâmetro do arquivo de DB '%s' não podia ser renomeados durante a conversão para o novo formato!
 The operation failed because not enough memory is available!	A operação falhou porque não existe memória suficiente disponível!
-The parameter DB file '%s' has been created by a newer version of JPEGView!	O arquivo de parâmetro DB '% s' foi criado por uma versão mais recente do JPEGView!
-The transformation can be applied if the image is trimmed to the next matching size but this will remove some border pixels.	A transformação pode ser aplicada se a imagem é cortada para o tamanho de correspondência seguinte, mas isso irá remover alguns pixels da borda.
+The parameter DB file '%s' has been created by a newer version of JPEGView!	O arquivo de parâmetro DB '%s' foi criado por uma versão mais recente do JPEGView!
+The transformation can be applied if the image is cropped to the next matching size but this will remove some border pixels.	A transformação pode ser aplicada se a imagem é cortada para o tamanho de correspondência seguinte, mas isso irá remover alguns pixels da borda.
 These values will override the values from the INI file located in the program folder of JPEGView!	Data da última alteração Esses valores irão substituir os valores do arquivo INI localizado na pasta programa de JPEGView!
 Threshold	Limite
 Title:	Título:
@@ -359,7 +362,6 @@ Toggle window always on top mode
 Toggle window title bar hidden mode	
 Top	Superior
 Transition Effect	Efeito de transição
-Trim the image and apply transformation? Trimming cannot be undone!	Recortar a imagem e aplicar a transformação? Operação não poderá ser desfeita!
 Unregistering not possible	Não foi possível remover a associação
 Unsharp mask...	Desfocar máscara
 Update user settings with new settings from settings template file?	
@@ -497,7 +499,7 @@ Zoom to Selection	Zoom na Seleção
 //! Copy file path of the image to clipboard
 //! Decoding this format requires the Microsoft Visual C++ Redistributable.
 //! Delete current file on disk permanently
-//! Fill paper with crop
+//! Fill page with crop
 //! High quality resampling
 //! Insufficient rights to change the privilege (DACL) on the registry entry. Continue?
 //! Location:
@@ -540,7 +542,7 @@ Zoom to Selection	Zoom na Seleção
 //! Set window always on top
 //! Update user settings...
 
-// ::: STATUS: Last Checked/Updated by Script ::: 2023-03-09T12:34:04.495022+00:00 //
+// ::: STATUS: Last Checked/Updated by Script ::: 2023-03-14T00:34:40.471882+00:00 //
 //! Translation Progress: 88%
 //! * Total (Strings + Menu) = 427
 //! * Done = 376

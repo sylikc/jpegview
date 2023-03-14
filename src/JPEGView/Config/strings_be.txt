@@ -25,16 +25,18 @@
 //? * Lines with no text after the <tab> are ignored
 //? * Multiple tabs are permitted between English and Translated string, e.g. this is valid:    English string<tab><tab><tab>Translated string<newline>
 
-//? NOTE: %s %d have special meanings in the strings, so make sure they appear somewhere in the translated string
+//? NOTE: %s %d have special meanings in the strings, so make sure they appear somewhere in the translated string!
 
 //? For the strings below which are short and have no context:
-//?   "in" in context is shorthand for "inch"
-//?   "cm" in context is shorthand for "centimeter"
-//?   "C - R" in context is "Cyan Red" colors
-//?   "M - G" in context is "Magenta Green" colors
-//?   "Y - B" in context is "Yellow Blue" colors
-//?   "yes"/"no" in context is for showing EXIF flags
-//?   "on"/"off" in context is for showing a setting active or not
+//?   "in"        in context: is shorthand for "inch"
+//?   "cm"        in context: is shorthand for "centimeter"
+//?   "C - R"     in context: is "Cyan Red" colors
+//?   "M - G"     in context: is "Magenta Green" colors
+//?   "Y - B"     in context: is "Yellow Blue" colors
+//?   "yes"/"no"  in context: is for showing EXIF flags
+//?   "on"/"off"  in context: is for showing a setting active or not
+//?   "Filter"    in context: is used in Resize image, "sampling filter"
+//?   "Box"       in context: is used in Resize image sampling filter "Box filter"
 ////////////////////
 
 
@@ -92,11 +94,12 @@ Continue rename/copy?	Працягнуць перайменаваньне/кап
 Contrast	Кантраст
 Contrast Correction	Карэкцыя кантрасту
 Copy file path of the image to clipboard	
-Copy screen to clipboard/ Copy processed full size image to clipboard	Капіраваць у буфер абмену выяву з экрану/апрацаваную выяву поўнага памеру
+Copy screen to clipboard / Copy processed full size image to clipboard	Капіраваць у буфер абмену выяву з экрану/апрацаваную выяву поўнага памеру
 Copying parameter DB to file '%s' failed. Reason: %s	Памылка пры капіраваньні параметра базы зьвестак у файл '%s'. Прычына: %s
 Correct converging lines (perspective correction)	Карэкцыя сыходжаньня (персьпектывы)
 Creation date/time	даты/часу стварэньня
 Crop image	Вылучыць частку выявы
+Crop the image and apply transformation? Cropping cannot be undone!	
 Ctrl + Left mouse	Ctrl + левая кнопка мышкі
 Current image	Аб выяве
 Cyan-Red	блакітны-чырвоны
@@ -137,12 +140,12 @@ F-Number:	Дыяфрагма:
 File name	назваў
 File size	
 File type	
-Fill paper with crop	
+Fill page with crop	
 Fill with crop	запоўніць з абрэзкай
 Fill with crop (no zoom)	запоўніць з абрэзкай (не павялічваць)
 Filter:	
 Fit image to screen	Дапасаваць выяву да экрану
-Fit to paper	
+Fit to page	
 Fit to screen	дапасаваць
 Fit to screen (no zoom)	дапасаваць (не павялічваць)
 Flash fired:	Бліц:
@@ -218,7 +221,7 @@ No image loaded!	Выява не абраная!
 No user INI file exists yet. Create user INI file from INI file template?	Карыстальніцкага INI-файла няма. Стварыць яго з шаблону INI-файла?
 None	
 Not enough memory available	недахоп памяці
-Note: Set the key 'TrimWithoutPromptLosslessJPEG=true' in the INI file to always trim without showing this message.	
+Note: Set the key 'CropWithoutPromptLosslessJPEG=true' in the INI file to always crop without showing this message.	
 Number (consecutively numbered)	нумар
 Number of CPU cores used	Ужыта ядраў працэсара
 Number of JPEG files in folder: %d	Колькасць файлаў JPEG у тэчцы: %d
@@ -233,7 +236,7 @@ Original file extension	першаснае пашырэньне
 Original file name (with extension)	 першасная назва з пашырэньнем
 Original file name (without extension)	першасная назва без пашырэньня
 Pan image	Рухаць павялічаную выяву
-Paper:	
+Paper size:	
 Parameter DB	База зьвестак параметраў
 Parameter DB error	Памылка ў параметры базы зьвестак
 Parameter DB file '%s' could not be opened!	У базе зьвестак не адкрываецца файл параметраў '%s'!
@@ -286,7 +289,7 @@ SIMD mode used	Рэжым SIMD
 Same as Image	
 Saturation	Насычанасьць
 Save	
-Save (%s)/ delete (%s) image processing parameters in/from parameter DB	Захаваць у базе зьвестак (%s)/выдаліць з базы зьвестак (%s) параметры апрацоўкі выявы
+Save (%s) / delete (%s) image processing parameters into/from parameter DB	Захаваць у базе зьвестак (%s)/выдаліць з базы зьвестак (%s) параметры апрацоўкі выявы
 Save as (in screen size/resolution)	Захаваць як (адпаведна памеру/разьдзельнасьці экрану)
 Save as template	Захаваць як шаблон
 Save cropped image	Захаваць абрэзаную выяву
@@ -308,7 +311,7 @@ Select parameter DB to restore	Выбраць з базы зьвестак па�
 Set Fixed Crop Size	Памеры поля
 Set JPEGView as default image viewer	
 Set timeout to n/10 sec, respectively n/100 sec (Ctrl+Shift)	Слайдшоў з затрымкай ад n/10 сек. да n/100 сек. (n - Ctrl+Shift+кнопка ад 1 да 9). Esc - стоп
-Shall existing entries be preserved (Yes) or be overriden by the imported entries (No)?	Захаваць прысутныя запісы (Так) ці замяніць імпартаванымі (Не)?
+Shall existing entries be preserved (Yes) or be overwritten by the imported entries (No)?	Захаваць прысутныя запісы (Так) ці замяніць імпартаванымі (Не)?
 Sharpen	Вострасьць
 Sharpen low	
 Sharpen medium	
@@ -350,7 +353,7 @@ The new size is too large - width or height is larger than 65535 or total number
 The old parameter DB file '%s' could not be renamed during conversion to new format!	У базе зьвестак немагчыма перайменаваць стары файл параметраў '%s' падчас канвертацыі ў новы фармат!
 The operation failed because not enough memory is available!	Памылка аперацыі з-за недахопу памяці!
 The parameter DB file '%s' has been created by a newer version of JPEGView!	Файл параметраў у базе зьвестак '%s' створаны навейшай версіяй JPEGView!
-The transformation can be applied if the image is trimmed to the next matching size but this will remove some border pixels.	
+The transformation can be applied if the image is cropped to the next matching size but this will remove some border pixels.	
 These values will override the values from the INI file located in the program folder of JPEGView!	Гэтыя наладкі будуць захаваныя ў INI-файле JPEGView!
 Threshold	Парог
 Title:	
@@ -359,7 +362,6 @@ Toggle window always on top mode
 Toggle window title bar hidden mode	
 Top	
 Transition Effect	
-Trim the image and apply transformation? Trimming cannot be undone!	
 Unregistering not possible	
 Unsharp mask...	Нявострая маска...
 Update user settings with new settings from settings template file?	
@@ -503,6 +505,7 @@ Zoom to Selection	На ўвесь экран
 //! Clipboard Image
 //! Combine keys with '+'
 //! Copy file path of the image to clipboard
+//! Crop the image and apply transformation? Cropping cannot be undone!
 //! Decoding this format requires the Microsoft Visual C++ Redistributable.
 //! Delete
 //! Delete image file
@@ -515,9 +518,9 @@ Zoom to Selection	На ўвесь экран
 //! Extension
 //! File size
 //! File type
-//! Fill paper with crop
+//! Fill page with crop
 //! Filter:
-//! Fit to paper
+//! Fit to page
 //! High quality resampling
 //! Hour / Minute (as numbers)
 //! Image width and height must be dividable by the JPEG block size (8 or 16) for lossless transformations!
@@ -540,11 +543,11 @@ Zoom to Selection	На ўвесь экран
 //! New size:
 //! New width:
 //! None
-//! Note: Set the key 'TrimWithoutPromptLosslessJPEG=true' in the INI file to always trim without showing this message.
+//! Note: Set the key 'CropWithoutPromptLosslessJPEG=true' in the INI file to always crop without showing this message.
 //! OK
 //! Open folder containing image and select in Windows Explorer
 //! Orientation:
-//! Paper:
+//! Paper size:
 //! Performing the lossless transformation failed!
 //! Performing the transformation failed
 //! Portrait
@@ -588,13 +591,12 @@ Zoom to Selection	На ўвесь экран
 //! The following file extensions cannot be unregistered because they have been registered in the 'local machine' registry area.
 //! The following image extensions are protected by the operating system.
 //! The new size is too large - width or height is larger than 65535 or total number of pixels is too large!
-//! The transformation can be applied if the image is trimmed to the next matching size but this will remove some border pixels.
+//! The transformation can be applied if the image is cropped to the next matching size but this will remove some border pixels.
 //! Title:
 //! Toggle window always on top mode
 //! Toggle window title bar hidden mode
 //! Top
 //! Transition Effect
-//! Trim the image and apply transformation? Trimming cannot be undone!
 //! Unregistering not possible
 //! Update user settings with new settings from settings template file?
 //! Use the 'Default Programs' configuration dialog from the operating system instead.
@@ -642,7 +644,7 @@ Zoom to Selection	На ўвесь экран
 //! Set as default viewer...
 //! User commands
 
-// ::: STATUS: Last Checked/Updated by Script ::: 2023-03-13T06:28:03.730621+00:00 //
+// ::: STATUS: Last Checked/Updated by Script ::: 2023-03-14T00:34:40.295312+00:00 //
 //! Translation Progress: 63%
 //! * Total (Strings + Menu) = 427
 //! * Done = 269

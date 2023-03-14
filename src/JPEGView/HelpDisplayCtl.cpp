@@ -65,13 +65,13 @@ void CHelpDisplayCtl::GenerateHelpDisplay() {
 	TCHAR buffMI[256]; _stprintf_s(buffMI, 256, CNLS::GetString(_T("Mark image for toggling. Use %s to toggle between marked and current image")), _KeyDesc(IDM_TOGGLE));
 	m_pHelpDisplay->AddLine(_KeyDesc(IDM_MARK_FOR_TOGGLE), buffMI);
 	m_pHelpDisplay->AddLineInfo(_KeyDesc(IDM_SHOW_NAVPANEL), m_pMainDlg->GetNavPanelCtl()->IsActive(), CNLS::GetString(_T("Show/hide navigation panel")));
-	m_pHelpDisplay->AddLine(_KeyDesc(IDM_COPY, IDM_COPY_FULL), CNLS::GetString(_T("Copy screen to clipboard/ Copy processed full size image to clipboard")));
+	m_pHelpDisplay->AddLine(_KeyDesc(IDM_COPY, IDM_COPY_FULL), CNLS::GetString(_T("Copy screen to clipboard / Copy processed full size image to clipboard")));
 	m_pHelpDisplay->AddLine(_KeyDesc(IDM_COPY_PATH), CNLS::GetString(_T("Copy file path of the image to clipboard")));
 	m_pHelpDisplay->AddLine(_KeyDesc(IDM_OPEN), CNLS::GetString(_T("Open new image or slideshow file")));
 	m_pHelpDisplay->AddLine(_KeyDesc(IDM_EXPLORE), CNLS::GetString(_T("Open folder containing image and select in Windows Explorer")));
 	m_pHelpDisplay->AddLine(_KeyDesc(IDM_SAVE_ALLOW_NO_PROMPT), CNLS::GetString(_T("Save processed image to JPEG file (original size)")));
 	m_pHelpDisplay->AddLine(_KeyDesc(IDM_SAVE_SCREEN), CNLS::GetString(_T("Save processed image to JPEG file (screen size)")));
-	_stprintf_s(buffMI, 256, CNLS::GetString(_T("Save (%s)/ delete (%s) image processing parameters in/from parameter DB")), _KeyDesc(IDM_SAVE_PARAM_DB), _KeyDesc(IDM_CLEAR_PARAM_DB));
+	_stprintf_s(buffMI, 256, CNLS::GetString(_T("Save (%s) / delete (%s) image processing parameters into/from parameter DB")), _KeyDesc(IDM_SAVE_PARAM_DB), _KeyDesc(IDM_CLEAR_PARAM_DB));
 	m_pHelpDisplay->AddLine(_KeyDesc(IDM_SAVE_PARAM_DB, IDM_CLEAR_PARAM_DB), buffMI);
 	m_pHelpDisplay->AddLineInfo(_KeyDesc(IDM_SORT_CREATION_DATE, IDM_SORT_MOD_DATE, IDM_SORT_NAME, IDM_SORT_RANDOM), 
 		(m_pMainDlg->GetFileList()->GetSorting() == Helpers::FS_LastModTime) ? _KeyDesc(IDM_SORT_MOD_DATE) :

@@ -10,7 +10,7 @@
 //: ISO 639-1 code: es
 //: ISO 3166-1 code: ar
 //: Language: Spanish (Argentina)
-//: Translator(s): ThecaTTony (thecattony@users.sourceforge.net - thecattony@thecattony.com.ar)
+//: Translator(s) - Name <Contact Info/URL>: ThecaTTony (thecattony@users.sourceforge.net - thecattony@thecattony.com.ar)
 //: Last Updated:
 //: Additional Notes:
 ////////////////////
@@ -25,16 +25,18 @@
 //? * Lines with no text after the <tab> are ignored
 //? * Multiple tabs are permitted between English and Translated string, e.g. this is valid:    English string<tab><tab><tab>Translated string<newline>
 
-//? NOTE: %s %d have special meanings in the strings, so make sure they appear somewhere in the translated string
+//? NOTE: %s %d have special meanings in the strings, so make sure they appear somewhere in the translated string!
 
 //? For the strings below which are short and have no context:
-//?   "in" in context is shorthand for "inch"
-//?   "cm" in context is shorthand for "centimeter"
-//?   "C - R" in context is "Cyan Red" colors
-//?   "M - G" in context is "Magenta Green" colors
-//?   "Y - B" in context is "Yellow Blue" colors
-//?   "yes"/"no" in context is for showing EXIF flags
-//?   "on"/"off" in context is for showing a setting active or not
+//?   "in"        in context: is shorthand for "inch"
+//?   "cm"        in context: is shorthand for "centimeter"
+//?   "C - R"     in context: is "Cyan Red" colors
+//?   "M - G"     in context: is "Magenta Green" colors
+//?   "Y - B"     in context: is "Yellow Blue" colors
+//?   "yes"/"no"  in context: is for showing EXIF flags
+//?   "on"/"off"  in context: is for showing a setting active or not
+//?   "Filter"    in context: is used in Resize image, "sampling filter"
+//?   "Box"       in context: is used in Resize image sampling filter "Box filter"
 ////////////////////
 
 
@@ -92,11 +94,12 @@ Continue rename/copy?	Continuar renombrado/copiando?
 Contrast	Contraste
 Contrast Correction	Corrección de contraste
 Copy file path of the image to clipboard	
-Copy screen to clipboard/ Copy processed full size image to clipboard	Copiar pantalla al portapapeles/ Copiar imagen procesada de tamaño completo al portapapeles
+Copy screen to clipboard / Copy processed full size image to clipboard	Copiar pantalla al portapapeles/ Copiar imagen procesada de tamaño completo al portapapeles
 Copying parameter DB to file '%s' failed. Reason: %s	La copia de la BD de parametros en el fichero '%s' falló. Razón: %s
 Correct converging lines (perspective correction)	
 Creation date/time	Hora/fecha de creación
 Crop image	Cortar bordes de imagen
+Crop the image and apply transformation? Cropping cannot be undone!	
 Ctrl + Left mouse	Ctrl + botón izquierdo
 Current image	Imagen actual
 Cyan-Red	Cyan-Rojo
@@ -137,12 +140,12 @@ F-Number:	Relación focal:
 File name	Nombre de archivo
 File size	
 File type	
-Fill paper with crop	
+Fill page with crop	
 Fill with crop	Ajustar todas las imagenes con bordes cortados
 Fill with crop (no zoom)	Ajustar con bordes cortados (sin zoom)
 Filter:	
 Fit image to screen	Acomodar imagen a la pantalla
-Fit to paper	
+Fit to page	
 Fit to screen	Ajustar todas las imagenes a la pantalla
 Fit to screen (no zoom)	Ajustar a la pantalla (sin zoom)
 Flash fired:	Flash disparado:
@@ -218,7 +221,7 @@ No image loaded!
 No user INI file exists yet. Create user INI file from INI file template?	No existe todavia el fichero INI de usuario. Crearlo fichero INI de usuario desde la plantilla de fichero INI?
 None	
 Not enough memory available	No hay suficiente memoria disponible
-Note: Set the key 'TrimWithoutPromptLosslessJPEG=true' in the INI file to always trim without showing this message.	
+Note: Set the key 'CropWithoutPromptLosslessJPEG=true' in the INI file to always crop without showing this message.	
 Number (consecutively numbered)	Número (consecutivamente enumerados)
 Number of CPU cores used	Número de núcleos de CPU usados
 Number of JPEG files in folder: %d	Numero de archivos JPEG en la carpeta: %d
@@ -233,7 +236,7 @@ Original file extension	Extensión del archivo original
 Original file name (with extension)	Nombre original del archivo (con extensión)
 Original file name (without extension)	Nombre original del archivo (sin extensión)
 Pan image	Panear imagen
-Paper:	
+Paper size:	
 Parameter DB	Parámetros BD
 Parameter DB error	Error de parámetros BD
 Parameter DB file '%s' could not be opened!	¡El archivo de parámetros de BD '%s' no se pudo abrir!
@@ -286,7 +289,7 @@ SIMD mode used	Modo SIMD usado
 Same as Image	
 Saturation	Saturación
 Save	
-Save (%s)/ delete (%s) image processing parameters in/from parameter DB	Guardar (%s)/ borrar (%s) parámetros de procesado de imágenes en/desde parámetros de BD
+Save (%s) / delete (%s) image processing parameters into/from parameter DB	Guardar (%s)/ borrar (%s) parámetros de procesado de imágenes en/desde parámetros de BD
 Save as (in screen size/resolution)	Guardar como (con el tamaño/resolución de la pantalla)
 Save as template	Guardar como plantilla
 Save cropped image	Guardar imagen sin bordes
@@ -308,7 +311,7 @@ Select parameter DB to restore	Seleccionar BD de parametros a restaurar
 Set Fixed Crop Size	Establecer tamaño de corte de bordes fijo
 Set JPEGView as default image viewer	
 Set timeout to n/10 sec, respectively n/100 sec (Ctrl+Shift)	Establecer tiempo de salida a  n/10 seg, respectivamente n/100 sec (Ctrl+Shift)
-Shall existing entries be preserved (Yes) or be overriden by the imported entries (No)?	¿Conservar los registros existentes (Si) o sobreescribirlos por los registros importados (No)?
+Shall existing entries be preserved (Yes) or be overwritten by the imported entries (No)?	¿Conservar los registros existentes (Si) o sobreescribirlos por los registros importados (No)?
 Sharpen	Nitidez
 Sharpen low	
 Sharpen medium	
@@ -350,7 +353,7 @@ The new size is too large - width or height is larger than 65535 or total number
 The old parameter DB file '%s' could not be renamed during conversion to new format!	¡El antiguo archivo de parámetros de BD '%s' no se pudo renombrar durante la conversión al nuevo formato!
 The operation failed because not enough memory is available!	¡La operacion fallo porque no habia suficiente memoria disponible!
 The parameter DB file '%s' has been created by a newer version of JPEGView!	¡El archivo de parámetros de BD '%s' ha sido creado por una versión más nueva de JPEGView!
-The transformation can be applied if the image is trimmed to the next matching size but this will remove some border pixels.	
+The transformation can be applied if the image is cropped to the next matching size but this will remove some border pixels.	
 These values will override the values from the INI file located in the program folder of JPEGView!	¡Estos valores sobrescribirán los valores del archivo INI en la carpeta de JPEGView!
 Threshold	Umbral
 Title:	
@@ -359,7 +362,6 @@ Toggle window always on top mode
 Toggle window title bar hidden mode	
 Top	
 Transition Effect	
-Trim the image and apply transformation? Trimming cannot be undone!	
 Unregistering not possible	
 Unsharp mask...	Máscara de desenfoque
 Update user settings with new settings from settings template file?	
@@ -469,8 +471,9 @@ Free	Libre
 Fixed size...	Tamaño fijo
 Zoom to Selection	Zoom a selección
 
-// ::: INFO: Out-of-date Translations [11] ::: (Not in use anymore, safe to delete) //
+// ::: INFO: Out-of-date Translations [13] ::: (Not in use anymore, safe to delete) //
 //No file or folder name was provided as command line parameter!	¡Ningún nombre de archivo o carpeta fue pasado como parámetro de la línea de comandos!
+//Note: Set the key 'TrimWithoutPromptLosslessJPEG=true' in the INI file to always trim without showing this message.	
 //PgDn or Right	RePag o derecha
 //PgUp or Left	AvPag o izquierda
 //Rename:	Renombrar:
@@ -478,6 +481,7 @@ Zoom to Selection	Zoom a selección
 //Rotate the following file lossless by 90 deg?\n%filename%	Rotar 90° sin pérdidas el siguiente archivo?\n%filename%
 //The file '%s' could not be %s.	El archivo '%s' no pudo ser %s.
 //To use JPEGView, associate JPG, JPEG and BMP files with JPEGView.	Para usar JPEGView, asocie las extensiones JPG, JPEG y BMP con JPEGView.
+//Trim the image and apply transformation? Trimming cannot be undone!	
 //copied	copiado
 //renamed	renombrado
 //up/down	Arriba/abajo
@@ -506,6 +510,7 @@ Zoom to Selection	Zoom a selección
 //! Combine keys with '+'
 //! Copy file path of the image to clipboard
 //! Correct converging lines (perspective correction)
+//! Crop the image and apply transformation? Cropping cannot be undone!
 //! Decoding this format requires the Microsoft Visual C++ Redistributable.
 //! Delete
 //! Delete image file
@@ -519,9 +524,9 @@ Zoom to Selection	Zoom a selección
 //! Extension
 //! File size
 //! File type
-//! Fill paper with crop
+//! Fill page with crop
 //! Filter:
-//! Fit to paper
+//! Fit to page
 //! High quality resampling
 //! Hour / Minute (as numbers)
 //! Image width and height must be dividable by the JPEG block size (8 or 16) for lossless transformations!
@@ -546,11 +551,11 @@ Zoom to Selection	Zoom a selección
 //! New width:
 //! No image loaded!
 //! None
-//! Note: Set the key 'TrimWithoutPromptLosslessJPEG=true' in the INI file to always trim without showing this message.
+//! Note: Set the key 'CropWithoutPromptLosslessJPEG=true' in the INI file to always crop without showing this message.
 //! OK
 //! Open folder containing image and select in Windows Explorer
 //! Orientation:
-//! Paper:
+//! Paper size:
 //! Performing the lossless transformation failed!
 //! Performing the transformation failed
 //! Perspective Correction
@@ -597,13 +602,12 @@ Zoom to Selection	Zoom a selección
 //! The following file extensions cannot be unregistered because they have been registered in the 'local machine' registry area.
 //! The following image extensions are protected by the operating system.
 //! The new size is too large - width or height is larger than 65535 or total number of pixels is too large!
-//! The transformation can be applied if the image is trimmed to the next matching size but this will remove some border pixels.
+//! The transformation can be applied if the image is cropped to the next matching size but this will remove some border pixels.
 //! Title:
 //! Toggle window always on top mode
 //! Toggle window title bar hidden mode
 //! Top
 //! Transition Effect
-//! Trim the image and apply transformation? Trimming cannot be undone!
 //! Unregistering not possible
 //! Update user settings with new settings from settings template file?
 //! Use the 'Default Programs' configuration dialog from the operating system instead.
@@ -656,7 +660,7 @@ Zoom to Selection	Zoom a selección
 //! User commands
 //! Crop Selection Lossless...
 
-// ::: STATUS: Last Checked/Updated by Script ::: 2023-03-09T12:34:04.423076+00:00 //
+// ::: STATUS: Last Checked/Updated by Script ::: 2023-03-14T00:34:40.343365+00:00 //
 //! Translation Progress: 60%
 //! * Total (Strings + Menu) = 427
 //! * Done = 255

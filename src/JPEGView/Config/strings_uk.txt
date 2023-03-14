@@ -28,16 +28,18 @@
 //? * Lines with no text after the <tab> are ignored
 //? * Multiple tabs are permitted between English and Translated string, e.g. this is valid:    English string<tab><tab><tab>Translated string<newline>
 
-//? NOTE: %s %d have special meanings in the strings, so make sure they appear somewhere in the translated string
+//? NOTE: %s %d have special meanings in the strings, so make sure they appear somewhere in the translated string!
 
 //? For the strings below which are short and have no context:
-//?   "in" in context is shorthand for "inch"
-//?   "cm" in context is shorthand for "centimeter"
-//?   "C - R" in context is "Cyan Red" colors
-//?   "M - G" in context is "Magenta Green" colors
-//?   "Y - B" in context is "Yellow Blue" colors
-//?   "yes"/"no" in context is for showing EXIF flags
-//?   "on"/"off" in context is for showing a setting active or not
+//?   "in"        in context: is shorthand for "inch"
+//?   "cm"        in context: is shorthand for "centimeter"
+//?   "C - R"     in context: is "Cyan Red" colors
+//?   "M - G"     in context: is "Magenta Green" colors
+//?   "Y - B"     in context: is "Yellow Blue" colors
+//?   "yes"/"no"  in context: is for showing EXIF flags
+//?   "on"/"off"  in context: is for showing a setting active or not
+//?   "Filter"    in context: is used in Resize image, "sampling filter"
+//?   "Box"       in context: is used in Resize image sampling filter "Box filter"
 ////////////////////
 
 
@@ -95,11 +97,12 @@ Continue rename/copy?	Продовжити перейменування/копі
 Contrast	Контрастність
 Contrast Correction	Корекція контрастності
 Copy file path of the image to clipboard	
-Copy screen to clipboard/ Copy processed full size image to clipboard	Скопіювати в буфер обміну екран/оброблене повнорозмірне зображення
+Copy screen to clipboard / Copy processed full size image to clipboard	Скопіювати в буфер обміну екран/оброблене повнорозмірне зображення
 Copying parameter DB to file '%s' failed. Reason: %s	Помилка копіювання БД параметрів у файл '%s'. Причина: %s
 Correct converging lines (perspective correction)	Корекція збіжних ліній (перспективи)
 Creation date/time	Дата/час створення
 Crop image	Обрізати зображення
+Crop the image and apply transformation? Cropping cannot be undone!	Обрізати зображення і виконати перетворення? Обрізка не може бути скасована!
 Ctrl + Left mouse	Ctrl + ЛКМ
 Current image	Поточне зображення
 Cyan-Red	Блакитний-Червоний
@@ -140,12 +143,12 @@ F-Number:	Діафрагма:
 File name	Ім'я файла
 File size	Розмір файла
 File type	Тип файла
-Fill paper with crop	
+Fill page with crop	
 Fill with crop	Заповнення з обрізкою
 Fill with crop (no zoom)	Заповнення з обрізкою (без збільшення)
 Filter:	
 Fit image to screen	Вписати зображення в екран
-Fit to paper	За розміром паперу
+Fit to page	За розміром паперу
 Fit to screen	Підгонка під екран
 Fit to screen (no zoom)	Підгонка під екран (без збільшення)
 Flash fired:	Спалах:
@@ -221,7 +224,7 @@ No image loaded!	Не завантажене зображення!
 No user INI file exists yet. Create user INI file from INI file template?	Користувацького INI-файла ще не існує. Створити його з шаблону INI-файла?
 None	Нмає
 Not enough memory available	недостатньо пам'яті
-Note: Set the key 'TrimWithoutPromptLosslessJPEG=true' in the INI file to always trim without showing this message.	Примітка: щоб обрізка виконувалася без показу цього повідомлення, встановіть у INI-файлі ключ 'TrimWithoutPromptLosslessJPEG=true'.
+Note: Set the key 'CropWithoutPromptLosslessJPEG=true' in the INI file to always crop without showing this message.	Примітка: щоб обрізка виконувалася без показу цього повідомлення, встановіть у INI-файлі ключ 'CropWithoutPromptLosslessJPEG=true'.
 Number (consecutively numbered)	номер (послідовний)
 Number of CPU cores used	Використовується ядер ЦП
 Number of JPEG files in folder: %d	Файлів JPEG в папці: %d
@@ -236,7 +239,7 @@ Original file extension	вихідне розширення файлу
 Original file name (with extension)	вихідне ім'я файлу (з розширенням)
 Original file name (without extension)	вихідне ім'я файлу (без розширення)
 Pan image	Перемістити зображення
-Paper:	Папір
+Paper size:	Папір
 Parameter DB	Параметри
 Parameter DB error	Помилка в БД параметрів
 Parameter DB file '%s' could not be opened!	Неможливо відкрити файл '%s' з БД параметрів.
@@ -289,7 +292,7 @@ SIMD mode used	Режим SIMD
 Same as Image	
 Saturation	Насиченість
 Save	Зберегти
-Save (%s)/ delete (%s) image processing parameters in/from parameter DB	Зберегти (%s) / видалити (%s) параметри обробки зображення в базі даних
+Save (%s) / delete (%s) image processing parameters into/from parameter DB	Зберегти (%s) / видалити (%s) параметри обробки зображення в базі даних
 Save as (in screen size/resolution)	Зберегти як (в екранному розмірі/розд. здатності)
 Save as template	Зберегти як шаблон
 Save cropped image	Зберегти обрізане зображення
@@ -311,7 +314,7 @@ Select parameter DB to restore	Виберіть БД параметрів для
 Set Fixed Crop Size	Вибрати розмір обрізки
 Set JPEGView as default image viewer	Призначити JPEGView стандартною програмою перегляду графіки
 Set timeout to n/10 sec, respectively n/100 sec (Ctrl+Shift)	Задати інтервал N/10 сек або N/100 сек (Ctrl+Shift)
-Shall existing entries be preserved (Yes) or be overriden by the imported entries (No)?	Наявні записи слід зберегти (Так), чи перезаписати їх імпортованими (Ні)?
+Shall existing entries be preserved (Yes) or be overwritten by the imported entries (No)?	Наявні записи слід зберегти (Так), чи перезаписати їх імпортованими (Ні)?
 Sharpen	Різкість
 Sharpen low	
 Sharpen medium	
@@ -353,7 +356,7 @@ The new size is too large - width or height is larger than 65535 or total number
 The old parameter DB file '%s' could not be renamed during conversion to new format!	Не вдалося перейменувати старий файл '%s' з БД параметрів при перетворенні в новий формат.
 The operation failed because not enough memory is available!	Помилка операції: недостатньо пам'яті.
 The parameter DB file '%s' has been created by a newer version of JPEGView!	Файл '%s' з БД параметрів створений більш новою версією JPEGView.
-The transformation can be applied if the image is trimmed to the next matching size but this will remove some border pixels.	Перетворення можна виконати, якщо обрізати зображення до найближчого кратного блоку значення. При цьому деяка кількість пікселів з країв зображення буде видалена
+The transformation can be applied if the image is cropped to the next matching size but this will remove some border pixels.	Перетворення можна виконати, якщо обрізати зображення до найближчого кратного блоку значення. При цьому деяка кількість пікселів з країв зображення буде видалена
 These values will override the values from the INI file located in the program folder of JPEGView!	Ці значення перевизначать установки в INI-файлі в папці з JPEGView.
 Threshold	Поріг
 Title:	Назва:
@@ -362,7 +365,6 @@ Toggle window always on top mode
 Toggle window title bar hidden mode	
 Top	Верхнє
 Transition Effect	Ефект зміни слайдів
-Trim the image and apply transformation? Trimming cannot be undone!	Обрізати зображення і виконати перетворення? Обрізка не може бути скасована!
 Unregistering not possible	Скасування реєстрації неможливе
 Unsharp mask...	Нерізка маска...
 Update user settings with new settings from settings template file?	
@@ -502,7 +504,7 @@ Zoom to Selection	Масштабувати до виділеного
 //! Copy file path of the image to clipboard
 //! Decoding this format requires the Microsoft Visual C++ Redistributable.
 //! Do you really want to delete the current image file on disk?
-//! Fill paper with crop
+//! Fill page with crop
 //! Filter:
 //! High quality resampling
 //! Insufficient rights to change the privilege (DACL) on the registry entry. Continue?
@@ -553,7 +555,7 @@ Zoom to Selection	Масштабувати до виділеного
 //! Update user settings...
 //! Set current parameters as default values...
 
-// ::: STATUS: Last Checked/Updated by Script ::: 2023-03-13T06:34:33.362411+00:00 //
+// ::: STATUS: Last Checked/Updated by Script ::: 2023-03-14T00:34:40.584337+00:00 //
 //! Translation Progress: 86%
 //! * Total (Strings + Menu) = 427
 //! * Done = 367

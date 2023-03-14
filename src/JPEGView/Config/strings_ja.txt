@@ -28,16 +28,18 @@
 //? * Lines with no text after the <tab> are ignored
 //? * Multiple tabs are permitted between English and Translated string, e.g. this is valid:    English string<tab><tab><tab>Translated string<newline>
 
-//? NOTE: %s %d have special meanings in the strings, so make sure they appear somewhere in the translated string
+//? NOTE: %s %d have special meanings in the strings, so make sure they appear somewhere in the translated string!
 
 //? For the strings below which are short and have no context:
-//?   "in" in context is shorthand for "inch"
-//?   "cm" in context is shorthand for "centimeter"
-//?   "C - R" in context is "Cyan Red" colors
-//?   "M - G" in context is "Magenta Green" colors
-//?   "Y - B" in context is "Yellow Blue" colors
-//?   "yes"/"no" in context is for showing EXIF flags
-//?   "on"/"off" in context is for showing a setting active or not
+//?   "in"        in context: is shorthand for "inch"
+//?   "cm"        in context: is shorthand for "centimeter"
+//?   "C - R"     in context: is "Cyan Red" colors
+//?   "M - G"     in context: is "Magenta Green" colors
+//?   "Y - B"     in context: is "Yellow Blue" colors
+//?   "yes"/"no"  in context: is for showing EXIF flags
+//?   "on"/"off"  in context: is for showing a setting active or not
+//?   "Filter"    in context: is used in Resize image, "sampling filter"
+//?   "Box"       in context: is used in Resize image sampling filter "Box filter"
 ////////////////////
 
 
@@ -95,11 +97,12 @@ Continue rename/copy?	改名/コピーを続けますか？
 Contrast	コントラスト
 Contrast Correction	コントラストの調整
 Copy file path of the image to clipboard	画像のファイルパスをクリップボードにコピー
-Copy screen to clipboard/ Copy processed full size image to clipboard	画面をクリップボードにコピー/加工したフルサイズ画像をクリップボードにコピー
+Copy screen to clipboard / Copy processed full size image to clipboard	画面をクリップボードにコピー/加工したフルサイズ画像をクリップボードにコピー
 Copying parameter DB to file '%s' failed. Reason: %s	ファイル %s へのパラメーターのコピーが失敗しました。原因: %s
 Correct converging lines (perspective correction)	消失点の調整 (遠近法)
 Creation date/time	作成日時
 Crop image	切り取り
+Crop the image and apply transformation? Cropping cannot be undone!	境界をトリミングして変形しますか？ 元に戻せません。
 Ctrl + Left mouse	Ctrl + マウスの左クリック
 Current image	表示中の画像
 Cyan-Red	シアン/赤
@@ -140,12 +143,12 @@ F-Number:	絞り (F値):
 File name	ファイル名
 File size	ファイルサイズ
 File type	ファイルタイプ
-Fill paper with crop	用紙を満たすように拡大
+Fill page with crop	用紙を満たすように拡大
 Fill with crop	黒枠を切り抜いてフィット
 Fill with crop (no zoom)	黒枠を切り抜いてフィット (拡大なし)
 Filter:	フィルター:
 Fit image to screen	画像を画面にフィット
-Fit to paper	用紙サイズに合わせる
+Fit to page	用紙サイズに合わせる
 Fit to screen	画面にフィット
 Fit to screen (no zoom)	画面にフィット (拡大なし)
 Flash fired:	フラッシュ:
@@ -221,7 +224,7 @@ No image loaded!	画像なし
 No user INI file exists yet. Create user INI file from INI file template?	個人用のINIがありません。テンプレートから新規のINIファイルを作成しますか？
 None	なし
 Not enough memory available	メモリー不足
-Note: Set the key 'TrimWithoutPromptLosslessJPEG=true' in the INI file to always trim without showing this message.	注意: INIファイルに TrimWithoutPromptLosslessJPEG=true を設定すると、警告なしでトリミングします。
+Note: Set the key 'CropWithoutPromptLosslessJPEG=true' in the INI file to always crop without showing this message.	注意: INIファイルに CropWithoutPromptLosslessJPEG=true を設定すると、警告なしでトリミングします。
 Number (consecutively numbered)	通し番号
 Number of CPU cores used	CPUコア数
 Number of JPEG files in folder: %d	フォルダ内のJPEGファイル数: %d
@@ -236,7 +239,7 @@ Original file extension	元のファイルの拡張子
 Original file name (with extension)	元のファイル名(拡張子含む)
 Original file name (without extension)	元のファイル名(拡張子除く)
 Pan image	全画面表示
-Paper:	用紙サイズ:
+Paper size:	用紙サイズ:
 Parameter DB	パラメーターファイル
 Parameter DB error	パラメーターファイルのエラー
 Parameter DB file '%s' could not be opened!	パラメーターファイルが開けません。 %s
@@ -289,7 +292,7 @@ SIMD mode used	使用したSIMDの種類
 Same as Image	画像と同じ
 Saturation	彩度
 Save	保存
-Save (%s)/ delete (%s) image processing parameters in/from parameter DB	画像加工のパラメーターを保存(%s)/削除(%s)
+Save (%s) / delete (%s) image processing parameters into/from parameter DB	画像加工のパラメーターを保存(%s)/削除(%s)
 Save as (in screen size/resolution)	名前を付けて保存 (画面サイズ/解像度)
 Save as template	テンプレートとして保存
 Save cropped image	切り取り範囲を保存
@@ -311,7 +314,7 @@ Select parameter DB to restore	復元するパラメーターファイルを選�
 Set Fixed Crop Size	切り取りサイズの固定
 Set JPEGView as default image viewer	JPEGView を規定の画像ビューアに設定
 Set timeout to n/10 sec, respectively n/100 sec (Ctrl+Shift)	秒間隔を 1/10秒で設定、Ctrl+Shift で 1/100秒
-Shall existing entries be preserved (Yes) or be overriden by the imported entries (No)?	現在のパラメーターを維持(Yes)、インポートを有効化(No)
+Shall existing entries be preserved (Yes) or be overwritten by the imported entries (No)?	現在のパラメーターを維持(Yes)、インポートを有効化(No)
 Sharpen	シャープ
 Sharpen low	シャープ 低
 Sharpen medium	シャープ 中
@@ -353,7 +356,7 @@ The new size is too large - width or height is larger than 65535 or total number
 The old parameter DB file '%s' could not be renamed during conversion to new format!	古い形式のパラメーターファイル %s を新しい形式に変換できません。
 The operation failed because not enough memory is available!	メモリー不足で操作に失敗
 The parameter DB file '%s' has been created by a newer version of JPEGView!	パラメーターファイル %s が新しいバージョンの JPEGView で作成されています。
-The transformation can be applied if the image is trimmed to the next matching size but this will remove some border pixels.	変形は次のサイズの場合に可能です。ただし境界のピクセルはトリミングされます。
+The transformation can be applied if the image is cropped to the next matching size but this will remove some border pixels.	変形は次のサイズの場合に可能です。ただし境界のピクセルはトリミングされます。
 These values will override the values from the INI file located in the program folder of JPEGView!	このパラメーターはJPEGViewフォルダ内のINIファイルの設定よりも優先されます
 Threshold	閾値
 Title:	タイトル:
@@ -362,7 +365,6 @@ Toggle window always on top mode	ウィンドウを常に手前に表示する�
 Toggle window title bar hidden mode	ウィンドウのタイトルバーを表示/隠すを切り替え
 Top	上
 Transition Effect	遷移時の視覚効果
-Trim the image and apply transformation? Trimming cannot be undone!	境界をトリミングして変形しますか？ 元に戻せません。
 Unregistering not possible	解除できません
 Unsharp mask...	ぼかしマスク...
 Update user settings with new settings from settings template file?	設定用テンプレートファイルの新しい設定で個人設定を更新しますか？
@@ -489,7 +491,7 @@ Zoom to Selection	選択範囲を拡大
 //renamed	改名
 //up/down	上/下
 
-// ::: STATUS: Last Checked/Updated by Script ::: 2023-03-13T06:30:45.374881+00:00 //
+// ::: STATUS: Last Checked/Updated by Script ::: 2023-03-14T00:34:40.428909+00:00 //
 //! Translation Progress: 100%
 //! * Total (Strings + Menu) = 427
 //! * Done = 427

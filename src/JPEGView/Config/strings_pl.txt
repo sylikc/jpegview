@@ -10,7 +10,7 @@
 //: ISO 639-1 code: pl
 //: ISO 3166-1 code:
 //: Language: Polish
-//: Translator(s):
+//: Translator(s) - Name <Contact Info/URL>:
 //: Last Updated:
 //: Additional Notes:
 ////////////////////
@@ -25,16 +25,18 @@
 //? * Lines with no text after the <tab> are ignored
 //? * Multiple tabs are permitted between English and Translated string, e.g. this is valid:    English string<tab><tab><tab>Translated string<newline>
 
-//? NOTE: %s %d have special meanings in the strings, so make sure they appear somewhere in the translated string
+//? NOTE: %s %d have special meanings in the strings, so make sure they appear somewhere in the translated string!
 
 //? For the strings below which are short and have no context:
-//?   "in" in context is shorthand for "inch"
-//?   "cm" in context is shorthand for "centimeter"
-//?   "C - R" in context is "Cyan Red" colors
-//?   "M - G" in context is "Magenta Green" colors
-//?   "Y - B" in context is "Yellow Blue" colors
-//?   "yes"/"no" in context is for showing EXIF flags
-//?   "on"/"off" in context is for showing a setting active or not
+//?   "in"        in context: is shorthand for "inch"
+//?   "cm"        in context: is shorthand for "centimeter"
+//?   "C - R"     in context: is "Cyan Red" colors
+//?   "M - G"     in context: is "Magenta Green" colors
+//?   "Y - B"     in context: is "Yellow Blue" colors
+//?   "yes"/"no"  in context: is for showing EXIF flags
+//?   "on"/"off"  in context: is for showing a setting active or not
+//?   "Filter"    in context: is used in Resize image, "sampling filter"
+//?   "Box"       in context: is used in Resize image sampling filter "Box filter"
 ////////////////////
 
 
@@ -92,11 +94,12 @@ Continue rename/copy?	Kontynuować zmianę nazwy/kopiowanie?
 Contrast	Kontrast
 Contrast Correction	Korekcja kontrastu
 Copy file path of the image to clipboard	
-Copy screen to clipboard/ Copy processed full size image to clipboard	Kopiuj ekran do schowka/ Kopiuj cały przetworzony obraz do schowka
+Copy screen to clipboard / Copy processed full size image to clipboard	Kopiuj ekran do schowka/ Kopiuj cały przetworzony obraz do schowka
 Copying parameter DB to file '%s' failed. Reason: %s	Kopiowanie parametru z DB do pliku %s nie powiodło się! Powód: %s
 Correct converging lines (perspective correction)	Korekcja linii zbieżności (Korekcja perspektywy)
 Creation date/time	Data utworzenia
 Crop image	Kadrowanie (Crop)
+Crop the image and apply transformation? Cropping cannot be undone!	Czy mam przyciąć obrazek i przeprowadzić transformację? Przycięcie jest nieodwracalne!
 Ctrl + Left mouse	Ctrl + Lewy klawisz myszy
 Current image	Aktualny obraz
 Cyan-Red	Cyjan-Czerwony
@@ -137,12 +140,12 @@ F-Number:	Przesłona:
 File name	Nazwa pliku
 File size	Wielkość pliku
 File type	Typ pliku
-Fill paper with crop	
+Fill page with crop	
 Fill with crop	Wypełnij kadrem
 Fill with crop (no zoom)	Wypełnij kadrem (bez zoom)
 Filter:	Filtr:
 Fit image to screen	Dopasuj do ekranu
-Fit to paper	Dopasuj do papieru
+Fit to page	Dopasuj do papieru
 Fit to screen	Dopasuj do ekranu
 Fit to screen (no zoom)	Dopasuj do ekranu (bez zoom)
 Flash fired:	Lampa błysk.:
@@ -218,7 +221,7 @@ No image loaded!	Nie załadowano żadnego obrazu!
 No user INI file exists yet. Create user INI file from INI file template?	Brak pliku INI użytkownika. Utworzyć plik z wzorca?
 None	Brak
 Not enough memory available	zbyt mała ilość dostępnej pamięci
-Note: Set the key 'TrimWithoutPromptLosslessJPEG=true' in the INI file to always trim without showing this message.	Uwaga: Ustaw klucz 'TrimWithoutPromptLosslessJPEG=true' w pliku INI, aby zawsze przycinać bez wyświetlania tego komunikatu.
+Note: Set the key 'CropWithoutPromptLosslessJPEG=true' in the INI file to always crop without showing this message.	Uwaga: Ustaw klucz 'CropWithoutPromptLosslessJPEG=true' w pliku INI, aby zawsze przycinać bez wyświetlania tego komunikatu.
 Number (consecutively numbered)	Numer (ciągła numeracja)
 Number of CPU cores used	Liczba używanych rdzeni CPU
 Number of JPEG files in folder: %d	Liczba plików JPEG w folderze: %d
@@ -233,7 +236,7 @@ Original file extension	Oryginalne rozszerzenie pliku
 Original file name (with extension)	Oryginalna nazwa pliku (z rozszerzeniem)
 Original file name (without extension)	Oryginalna nazwa pliku (bez rozszerzenia)
 Pan image	Przesuwanie obrazu (Pan)
-Paper:	Papier:
+Paper size:	Papier:
 Parameter DB	Parametr DB
 Parameter DB error	Błąd pliku parametetrów DB
 Parameter DB file '%s' could not be opened!	Parametr pliku DB '%s' nie może być otwarty!
@@ -286,7 +289,7 @@ SIMD mode used	Tryb SIMD użyty
 Same as Image	
 Saturation	Nasycenie
 Save	Zapisz
-Save (%s)/ delete (%s) image processing parameters in/from parameter DB	Zapisz (%s)/ kasuj (%s) parametry przetwarzania
+Save (%s) / delete (%s) image processing parameters into/from parameter DB	Zapisz (%s)/ kasuj (%s) parametry przetwarzania
 Save as (in screen size/resolution)	Zapisz jako (rozmiar/rozdzielczość ekranowa)
 Save as template	Zapisz jako wzorzec
 Save cropped image	Zachowaj wykadrowany obraz
@@ -308,7 +311,7 @@ Select parameter DB to restore	Wybierz parameter DB do odtworzenia
 Set Fixed Crop Size	Ustaw stały rozmiar kadrowania
 Set JPEGView as default image viewer	Ustaw JPEGView jako domyślną przeglądarkę obrazów
 Set timeout to n/10 sec, respectively n/100 sec (Ctrl+Shift)	Ustaw czas na n/10 sekund, lub n/100 sekund (Ctrl+Shift)
-Shall existing entries be preserved (Yes) or be overriden by the imported entries (No)?	Zachować istniejące wpisy (Tak) Czy zastąpić je importowanymi (Nie)?
+Shall existing entries be preserved (Yes) or be overwritten by the imported entries (No)?	Zachować istniejące wpisy (Tak) Czy zastąpić je importowanymi (Nie)?
 Sharpen	Ostrość
 Sharpen low	Wyostrz (mniej)
 Sharpen medium	Wyostrz (więcej)
@@ -350,7 +353,7 @@ The new size is too large - width or height is larger than 65535 or total number
 The old parameter DB file '%s' could not be renamed during conversion to new format!	Stary parameter w pliku DB '%s' nie może być zmieniony w czasie konwersji na nowy format!
 The operation failed because not enough memory is available!	Operacja nie powiodła się - zbyt mała ilość dostępnej pamięci!
 The parameter DB file '%s' has been created by a newer version of JPEGView!	Plik parametrów DB '%s' został utworzony przez nowszą wersję JPEGView!
-The transformation can be applied if the image is trimmed to the next matching size but this will remove some border pixels.	Transformacja może być wykonana jeśli obrazek zostanie przycięty do najbliższego pasującego wymiaru, ale to usunie niektóre piksele z brzegów obrazu.
+The transformation can be applied if the image is cropped to the next matching size but this will remove some border pixels.	Transformacja może być wykonana jeśli obrazek zostanie przycięty do najbliższego pasującego wymiaru, ale to usunie niektóre piksele z brzegów obrazu.
 These values will override the values from the INI file located in the program folder of JPEGView!	Te ustawienia będą miały pierwszeństwo nad ustawieniami w pliku INI w folderze programu JPEGView!
 Threshold	Próg
 Title:	Tytuł:
@@ -359,7 +362,6 @@ Toggle window always on top mode
 Toggle window title bar hidden mode	
 Top	Górny
 Transition Effect	Efekt przejścia
-Trim the image and apply transformation? Trimming cannot be undone!	Czy mam przyciąć obrazek i przeprowadzić transformację? Przycięcie jest nieodwracalne!
 Unregistering not possible	Wyrejestrowanie jest niemożliwe
 Unsharp mask...	Wyostrzanie...
 Update user settings with new settings from settings template file?	
@@ -492,7 +494,7 @@ Zoom to Selection	Powiększ do zaznaczenia
 //! Clipboard Image
 //! Copy file path of the image to clipboard
 //! Decoding this format requires the Microsoft Visual C++ Redistributable.
-//! Fill paper with crop
+//! Fill page with crop
 //! High quality resampling
 //! Lanczos/Bicubic
 //! Location:
@@ -533,7 +535,7 @@ Zoom to Selection	Powiększ do zaznaczenia
 //! Set window always on top
 //! Update user settings...
 
-// ::: STATUS: Last Checked/Updated by Script ::: 2023-03-09T12:34:04.489191+00:00 //
+// ::: STATUS: Last Checked/Updated by Script ::: 2023-03-14T00:34:40.458655+00:00 //
 //! Translation Progress: 89%
 //! * Total (Strings + Menu) = 427
 //! * Done = 380

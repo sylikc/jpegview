@@ -10,7 +10,7 @@
 //: ISO 639-1 code: ro
 //: ISO 3166-1 code:
 //: Language: Romanian
-//: Translator(s):
+//: Translator(s) - Name <Contact Info/URL>:
 //: Last Updated:
 //: Additional Notes:
 ////////////////////
@@ -25,16 +25,18 @@
 //? * Lines with no text after the <tab> are ignored
 //? * Multiple tabs are permitted between English and Translated string, e.g. this is valid:    English string<tab><tab><tab>Translated string<newline>
 
-//? NOTE: %s %d have special meanings in the strings, so make sure they appear somewhere in the translated string
+//? NOTE: %s %d have special meanings in the strings, so make sure they appear somewhere in the translated string!
 
 //? For the strings below which are short and have no context:
-//?   "in" in context is shorthand for "inch"
-//?   "cm" in context is shorthand for "centimeter"
-//?   "C - R" in context is "Cyan Red" colors
-//?   "M - G" in context is "Magenta Green" colors
-//?   "Y - B" in context is "Yellow Blue" colors
-//?   "yes"/"no" in context is for showing EXIF flags
-//?   "on"/"off" in context is for showing a setting active or not
+//?   "in"        in context: is shorthand for "inch"
+//?   "cm"        in context: is shorthand for "centimeter"
+//?   "C - R"     in context: is "Cyan Red" colors
+//?   "M - G"     in context: is "Magenta Green" colors
+//?   "Y - B"     in context: is "Yellow Blue" colors
+//?   "yes"/"no"  in context: is for showing EXIF flags
+//?   "on"/"off"  in context: is for showing a setting active or not
+//?   "Filter"    in context: is used in Resize image, "sampling filter"
+//?   "Box"       in context: is used in Resize image sampling filter "Box filter"
 ////////////////////
 
 
@@ -92,11 +94,12 @@ Continue rename/copy?	Continua redenumirea / copierea?
 Contrast	
 Contrast Correction	Corectează Contrastul
 Copy file path of the image to clipboard	
-Copy screen to clipboard/ Copy processed full size image to clipboard	Copiază imaginea de pe ecran în clipboard / Copiază imaginea procesată cu mărime originală în clipboard
-Copying parameter DB to file '%s' failed. Reason: %s	Copierea Parametrilor DB în fişierul '%s' nu a reuşit.
+Copy screen to clipboard / Copy processed full size image to clipboard	Copiază imaginea de pe ecran în clipboard / Copiază imaginea procesată cu mărime originală în clipboard
+Copying parameter DB to file '%s' failed. Reason: %s	Copierea Parametrilor DB în fişierul '%s' nu a reuşit. Cauza: %s
 Correct converging lines (perspective correction)	Corectează liniile convergente (corectează perspectiva)
 Creation date/time	Data producerii / timpul
 Crop image	Taie imaginea
+Crop the image and apply transformation? Cropping cannot be undone!	Decupează imaginea și aplică transformarea? Decuparea nu poate fi făcută!
 Ctrl + Left mouse	Ctrl + Butonul stâng al mouse-ului
 Current image	Imaginea curentă
 Cyan-Red	Verde-Albăstrui - Roşu
@@ -137,12 +140,12 @@ F-Number:	Numărul F:
 File name	Numele fişierului
 File size	
 File type	
-Fill paper with crop	
+Fill page with crop	
 Fill with crop	Adaptează imaginea la lăţimea ecranului
 Fill with crop (no zoom)	Umplere ecran (fără mărire)
 Filter:	
 Fit image to screen	Încadrează imaginea pe ecran
-Fit to paper	
+Fit to page	
 Fit to screen	Încadrează imaginea în ecran
 Fit to screen (no zoom)	Încadrează în ecran(fără mărire)
 Flash fired:	Bliţ:
@@ -218,10 +221,10 @@ No image loaded!
 No user INI file exists yet. Create user INI file from INI file template?	Nu există încă fişier INI al utilizatorului
 None	
 Not enough memory available	Nu este suficientă memorie disponibilă
-Note: Set the key 'TrimWithoutPromptLosslessJPEG=true' in the INI file to always trim without showing this message.	Notă: Setarea parametrului 'TrimWithoutPromptLosslessJPEG=true' 'DecupareJPEGFărăPiederiFărăAtenționare=adevărat' in fișierul INI tot timpul va decupa imaginea fără să arate acest mesaj.
+Note: Set the key 'CropWithoutPromptLosslessJPEG=true' in the INI file to always crop without showing this message.	Notă: Setarea parametrului 'CropWithoutPromptLosslessJPEG=true' 'DecupareJPEGFărăPiederiFărăAtenționare=adevărat' in fișierul INI tot timpul va decupa imaginea fără să arate acest mesaj.
 Number (consecutively numbered)	Numar (numerotare consecutiva)
 Number of CPU cores used	Numarul de nuclee de procesor utilizate
-Number of JPEG files in folder: %d	Numărul de fișiere JPEG din folder:
+Number of JPEG files in folder: %d	Numărul de fișiere JPEG din folder: %d
 Number with N digits	Numarul pe 'N' digiti
 OK	
 Old name	Nume vechi
@@ -233,7 +236,7 @@ Original file extension	Extensia originala a fisierului
 Original file name (with extension)	Numele original al fisierului (cu extensie)
 Original file name (without extension)	Numele original al fisierului (fara extensie)
 Pan image	Mişcarea imaginii
-Paper:	
+Paper size:	
 Parameter DB	Parametrul DB
 Parameter DB error	Eroare de Parametru DB
 Parameter DB file '%s' could not be opened!	Fişierul cu Parametrii DB '%s' nu poate fi deschis!
@@ -286,7 +289,7 @@ SIMD mode used	Modul folosit SIMD
 Same as Image	
 Saturation	Saturaţie
 Save	
-Save (%s)/ delete (%s) image processing parameters in/from parameter DB	Salvează / Şterge parametrii imaginii procesate în / de la parametrul DB
+Save (%s) / delete (%s) image processing parameters into/from parameter DB	Salvează (%s) / Şterge (%s) parametrii imaginii procesate în / de la parametrul DB
 Save as (in screen size/resolution)	Salvează ca (mărime a ecranului / rezoluţiei)
 Save as template	Salveaza ca sablon
 Save cropped image	Salvați imaginea tăiată
@@ -308,7 +311,7 @@ Select parameter DB to restore	Selectează Parametrii DB pentru refacere
 Set Fixed Crop Size	Setează mărime fixă de tăiere
 Set JPEGView as default image viewer	
 Set timeout to n/10 sec, respectively n/100 sec (Ctrl+Shift)	Setează timpul de rulare la 'n/10' sec (Ctrl+Shift)
-Shall existing entries be preserved (Yes) or be overriden by the imported entries (No)?	Înscrierile existente să fie conservate (Da) sau să fie suprascrise de intrările importate (Nu)?
+Shall existing entries be preserved (Yes) or be overwritten by the imported entries (No)?	Înscrierile existente să fie conservate (Da) sau să fie suprascrise de intrările importate (Nu)?
 Sharpen	Claritate
 Sharpen low	
 Sharpen medium	
@@ -350,7 +353,7 @@ The new size is too large - width or height is larger than 65535 or total number
 The old parameter DB file '%s' could not be renamed during conversion to new format!	Vechiul fişier cu Parametrii DB '%s' nu poate fi redenumit în timpul conversiei la noul format!
 The operation failed because not enough memory is available!	Operațiunea a eșuat datorită faptului că nu este suficientă memorie disponibilă!
 The parameter DB file '%s' has been created by a newer version of JPEGView!	Fişierul cu Parametrii DB '%s' a fost creat de o nouă versiune JPEGView!
-The transformation can be applied if the image is trimmed to the next matching size but this will remove some border pixels.	Transformarea poate fi aplicată doar dacă imaginea este tăiată la dimensiunea potrivită dar acet lucru va tăia pixeli din marginile imaginii.
+The transformation can be applied if the image is cropped to the next matching size but this will remove some border pixels.	Transformarea poate fi aplicată doar dacă imaginea este tăiată la dimensiunea potrivită dar acet lucru va tăia pixeli din marginile imaginii.
 These values will override the values from the INI file located in the program folder of JPEGView!	Aceste valori vor fi trecute peste valorile din fişierul INI aflat în directorul programului JPEGView!
 Threshold	Pragul
 Title:	
@@ -359,7 +362,6 @@ Toggle window always on top mode
 Toggle window title bar hidden mode	
 Top	
 Transition Effect	
-Trim the image and apply transformation? Trimming cannot be undone!	Decupează imaginea și aplică transformarea? Decuparea nu poate fi făcută!
 Unregistering not possible	
 Unsharp mask...	Mască de claritate...
 Update user settings with new settings from settings template file?	
@@ -518,9 +520,9 @@ Zoom to Selection	Măreşte selecţia
 //! Extension
 //! File size
 //! File type
-//! Fill paper with crop
+//! Fill page with crop
 //! Filter:
-//! Fit to paper
+//! Fit to page
 //! High quality resampling
 //! Hour / Minute (as numbers)
 //! Insufficient rights to change the privilege (DACL) on the registry entry. Continue?
@@ -547,7 +549,7 @@ Zoom to Selection	Măreşte selecţia
 //! Open folder containing image and select in Windows Explorer
 //! Order files by
 //! Orientation:
-//! Paper:
+//! Paper size:
 //! Portrait
 //! Press 'OK' to continue with registration or 'Cancel' to abort all registrations.
 //! Print
@@ -639,7 +641,7 @@ Zoom to Selection	Măreşte selecţia
 //! Set as default viewer...
 //! User commands
 
-// ::: STATUS: Last Checked/Updated by Script ::: 2023-03-09T12:34:04.509034+00:00 //
+// ::: STATUS: Last Checked/Updated by Script ::: 2023-03-14T00:39:11.442158+00:00 //
 //! Translation Progress: 64%
 //! * Total (Strings + Menu) = 427
 //! * Done = 274

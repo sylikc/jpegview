@@ -10,7 +10,7 @@
 //: ISO 639-1 code: el
 //: ISO 3166-1 code:
 //: Language: Greek, Modern
-//: Translator(s):
+//: Translator(s) - Name <Contact Info/URL>:
 //: Last Updated:
 //: Additional Notes:
 ////////////////////
@@ -25,16 +25,18 @@
 //? * Lines with no text after the <tab> are ignored
 //? * Multiple tabs are permitted between English and Translated string, e.g. this is valid:    English string<tab><tab><tab>Translated string<newline>
 
-//? NOTE: %s %d have special meanings in the strings, so make sure they appear somewhere in the translated string
+//? NOTE: %s %d have special meanings in the strings, so make sure they appear somewhere in the translated string!
 
 //? For the strings below which are short and have no context:
-//?   "in" in context is shorthand for "inch"
-//?   "cm" in context is shorthand for "centimeter"
-//?   "C - R" in context is "Cyan Red" colors
-//?   "M - G" in context is "Magenta Green" colors
-//?   "Y - B" in context is "Yellow Blue" colors
-//?   "yes"/"no" in context is for showing EXIF flags
-//?   "on"/"off" in context is for showing a setting active or not
+//?   "in"        in context: is shorthand for "inch"
+//?   "cm"        in context: is shorthand for "centimeter"
+//?   "C - R"     in context: is "Cyan Red" colors
+//?   "M - G"     in context: is "Magenta Green" colors
+//?   "Y - B"     in context: is "Yellow Blue" colors
+//?   "yes"/"no"  in context: is for showing EXIF flags
+//?   "on"/"off"  in context: is for showing a setting active or not
+//?   "Filter"    in context: is used in Resize image, "sampling filter"
+//?   "Box"       in context: is used in Resize image sampling filter "Box filter"
 ////////////////////
 
 
@@ -92,11 +94,12 @@ Continue rename/copy?	Να συνεχιστεί η μετονομασία/αντ
 Contrast	Αντίθεση
 Contrast Correction	Διόρθωση αντίθεσης
 Copy file path of the image to clipboard	
-Copy screen to clipboard/ Copy processed full size image to clipboard	Αντιγραφή οθόνης στο πρόχειρο/ Αντιγραφή επεξεργασμένης εικόνας στο πρόχειρο
+Copy screen to clipboard / Copy processed full size image to clipboard	Αντιγραφή οθόνης στο πρόχειρο/ Αντιγραφή επεξεργασμένης εικόνας στο πρόχειρο
 Copying parameter DB to file '%s' failed. Reason: %s	Η αντιγραφή της ΒΔ παραμέτρων στο αρχείο %s απέτυχε! Αιτία: %s
 Correct converging lines (perspective correction)	
 Creation date/time	Ημερομηνία δημιουργίας
 Crop image	Περικοπή (Crop)
+Crop the image and apply transformation? Cropping cannot be undone!	
 Ctrl + Left mouse	Ctrl + αριστερό πλήκτρο ποντικού
 Current image	Παρούσα εικόνα
 Cyan-Red	Κυάν-Κόκκινο
@@ -137,12 +140,12 @@ F-Number:	F-αριθμός:
 File name	Όνομα αρχείου
 File size	Μέγεθος αρχείου
 File type	Τύπος αρχείων
-Fill paper with crop	
+Fill page with crop	
 Fill with crop	Γέμισμα με περικοπή
 Fill with crop (no zoom)	Γέμισμα με περικοπή (χωρίς ζουμ)
 Filter:	
 Fit image to screen	Ταίριασμα μεγέθους στην οθόνη
-Fit to paper	
+Fit to page	
 Fit to screen	Προσαρμογή στην οθόνη
 Fit to screen (no zoom)	Προσαρμογή στην οθόνη (χωρίς ζουμ)
 Flash fired:	Φλας:
@@ -218,7 +221,7 @@ No image loaded!	Δεν έχει φορτωθεί εικόνα!
 No user INI file exists yet. Create user INI file from INI file template?	Δεν υπάρχει αρχείο INI για το χρήστη. Να δημιουργήσω ένα από το πρότυπο;
 None	Κανένα
 Not enough memory available	Δεν υπάρχει αρκετή μνήμη διαθέσιμη
-Note: Set the key 'TrimWithoutPromptLosslessJPEG=true' in the INI file to always trim without showing this message.	
+Note: Set the key 'CropWithoutPromptLosslessJPEG=true' in the INI file to always crop without showing this message.	
 Number (consecutively numbered)	Αριθμός (συνεχής αρίθμηση)
 Number of CPU cores used	Αριθμός των CPU
 Number of JPEG files in folder: %d	Αριθμός αρχείων JPEG στο φάκελο: %d
@@ -233,7 +236,7 @@ Original file extension	Αρχική επέκταση ονομασίας αρχ�
 Original file name (with extension)	Αρχικό όνομα αρχείου (με επέκταση)
 Original file name (without extension)	Αρχικό όνομα αρχείου (χωρίς επέκταση)
 Pan image	Πανάρισμα (Pan)
-Paper:	
+Paper size:	
 Parameter DB	
 Parameter DB error	Σφάλμα στη Παράμετρο ΒΔ
 Parameter DB file '%s' could not be opened!	Η ΒΔ παραμέτρων '%s' δεν ανοίχτηκε!
@@ -286,7 +289,7 @@ SIMD mode used	Χρήση SIMD mode
 Same as Image	
 Saturation	Κορεσμός
 Save	
-Save (%s)/ delete (%s) image processing parameters in/from parameter DB	Αποθήκευση (%s) ή διαγραφή (%s) των παραμέτροων επεξεργασίας της εικόνας στη parameter DB
+Save (%s) / delete (%s) image processing parameters into/from parameter DB	Αποθήκευση (%s) ή διαγραφή (%s) των παραμέτροων επεξεργασίας της εικόνας στη parameter DB
 Save as (in screen size/resolution)	Αποθήκευση (σε ανάλυση οθόνης)
 Save as template	Αποθήκευση ως πρότυπο
 Save cropped image	Αποθήκευση περικομένης εικόνας
@@ -308,7 +311,7 @@ Select parameter DB to restore	Επιλέξτε ΒΔ παραμέτρων για
 Set Fixed Crop Size	Ορισμός μεγέθους περικοπής
 Set JPEGView as default image viewer	Ορισμός του JPEGVIEW ως προεπιλεγμένου προβολέα εικόνων...
 Set timeout to n/10 sec, respectively n/100 sec (Ctrl+Shift)	Διάμεσο timeout n/10 δευτ., αντιστοίχως n/100 δευτ. (Ctrl+Shift)
-Shall existing entries be preserved (Yes) or be overriden by the imported entries (No)?	Να διατηρηθούν οι υπάρχουσες εγγραφές (Ναι) ή να αντικατασταθούν από τις νέες (Όχι)?
+Shall existing entries be preserved (Yes) or be overwritten by the imported entries (No)?	Να διατηρηθούν οι υπάρχουσες εγγραφές (Ναι) ή να αντικατασταθούν από τις νέες (Όχι)?
 Sharpen	Όξυνση
 Sharpen low	
 Sharpen medium	
@@ -350,7 +353,7 @@ The new size is too large - width or height is larger than 65535 or total number
 The old parameter DB file '%s' could not be renamed during conversion to new format!	Η παλιά ΒΔ παραμέτρων '%s' δεν μετονομάστηκε κατά τη μετατροπή στο νέο φορμά!
 The operation failed because not enough memory is available!	Αποτυχία λόγω περιορισμένης μνήμης του συστήματος!
 The parameter DB file '%s' has been created by a newer version of JPEGView!	Η ΒΔ παραμέτρων '%s' έγινε με νεότερη έκδοση του JPEGView!
-The transformation can be applied if the image is trimmed to the next matching size but this will remove some border pixels.	
+The transformation can be applied if the image is cropped to the next matching size but this will remove some border pixels.	
 These values will override the values from the INI file located in the program folder of JPEGView!	Αυτές οι τιμές θα εγγραφούν στη θέση των τιμών στο αρχείο ΙΝΙ στο φάκελο του JPEGView!
 Threshold	Κατώφλι
 Title:	
@@ -359,7 +362,6 @@ Toggle window always on top mode
 Toggle window title bar hidden mode	
 Top	
 Transition Effect	Εφέ μετάβασης
-Trim the image and apply transformation? Trimming cannot be undone!	
 Unregistering not possible	Η αποκαταχώρηση δεν είναι δυνατή.
 Unsharp mask...	Όξυνση...
 Update user settings with new settings from settings template file?	
@@ -469,12 +471,11 @@ Free	Ελεύθερη
 Fixed size...	Συγκεκριμένο μέγεθος...
 Zoom to Selection	Ζουμ στην επιλογή
 
-// ::: INFO: Out-of-date Translations [15] ::: (Not in use anymore, safe to delete) //
+// ::: INFO: Out-of-date Translations [14] ::: (Not in use anymore, safe to delete) //
 //However this will fail if the current user has no administration privileges.	Ωστόσο αυτό θα αποτύχει εάν ο παρών χρήστης δεν έχει Δικαιώματα Διαχειριστή.
 //Insufficient rights to remove the restrictions. Continue?	Ανεπαρκή δικαιώματα για αφαίρεση περιορισμών. Να συνεχίσω;
 //JPEGView can try to remove the restrictions automatically.	Το JPEGVIEW μπορεί να προσπαθήσει να αφαιρέσει τους περιορισμούς αυτόματα.
 //No file or folder name was provided as command line parameter!	Δεν δόθηκε όνομα αρχείου ή φακέλου ως παράμετρος γραμμής εντολών!
-//Parameter DB:	
 //PgDn or Right	Πλήκτρο PgDn ή δεξί βέλος
 //PgUp or Left	Πλήκτρο PgUp ή αριστερό βέλος
 //Rename:	Μετονομασία:
@@ -505,6 +506,7 @@ Zoom to Selection	Ζουμ στην επιλογή
 //! Combine keys with '+'
 //! Copy file path of the image to clipboard
 //! Correct converging lines (perspective correction)
+//! Crop the image and apply transformation? Cropping cannot be undone!
 //! Decoding this format requires the Microsoft Visual C++ Redistributable.
 //! Delete
 //! Delete image file
@@ -512,9 +514,9 @@ Zoom to Selection	Ζουμ στην επιλογή
 //! Drag at the left or right border for asymmetric correction.
 //! Edit
 //! Example:
-//! Fill paper with crop
+//! Fill page with crop
 //! Filter:
-//! Fit to paper
+//! Fit to page
 //! High quality resampling
 //! Hour / Minute (as numbers)
 //! Image width and height must be dividable by the JPEG block size (8 or 16) for lossless transformations!
@@ -534,11 +536,11 @@ Zoom to Selection	Ζουμ στην επιλογή
 //! New height:
 //! New size:
 //! New width:
-//! Note: Set the key 'TrimWithoutPromptLosslessJPEG=true' in the INI file to always trim without showing this message.
+//! Note: Set the key 'CropWithoutPromptLosslessJPEG=true' in the INI file to always crop without showing this message.
 //! OK
 //! Open folder containing image and select in Windows Explorer
 //! Orientation:
-//! Paper:
+//! Paper size:
 //! Parameter DB
 //! Performing the lossless transformation failed!
 //! Performing the transformation failed
@@ -566,12 +568,11 @@ Zoom to Selection	Ζουμ στην επιλογή
 //! The file '%s' could not be copied!
 //! The file '%s' could not be renamed!
 //! The new size is too large - width or height is larger than 65535 or total number of pixels is too large!
-//! The transformation can be applied if the image is trimmed to the next matching size but this will remove some border pixels.
+//! The transformation can be applied if the image is cropped to the next matching size but this will remove some border pixels.
 //! Title:
 //! Toggle window always on top mode
 //! Toggle window title bar hidden mode
 //! Top
-//! Trim the image and apply transformation? Trimming cannot be undone!
 //! Update user settings with new settings from settings template file?
 //! Use the 'Default Programs' configuration dialog from the operating system instead.
 //! Windows 8 (and above) blocks JPEGView from changing the default program for these file extensions.
@@ -605,7 +606,7 @@ Zoom to Selection	Ζουμ στην επιλογή
 //! Hide window title bar
 //! Set window always on top
 
-// ::: STATUS: Last Checked/Updated by Script ::: 2023-03-09T12:34:04.419084+00:00 //
+// ::: STATUS: Last Checked/Updated by Script ::: 2023-03-14T00:34:40.332340+00:00 //
 //! Translation Progress: 73%
 //! * Total (Strings + Menu) = 427
 //! * Done = 310

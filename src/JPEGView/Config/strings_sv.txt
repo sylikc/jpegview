@@ -10,7 +10,7 @@
 //: ISO 639-1 code: sv
 //: ISO 3166-1 code:
 //: Language: Swedish
-//: Translator(s): Åke Engelbrektson <eson57@gmail.com> http://svenskasprakfiler.se
+//: Translator(s) - Name <Contact Info/URL>: Åke Engelbrektson <eson57@gmail.com> http://svenskasprakfiler.se
 //: Last Updated: 2013-12-08
 //: Additional Notes:
 ////////////////////
@@ -25,21 +25,23 @@
 //? * Lines with no text after the <tab> are ignored
 //? * Multiple tabs are permitted between English and Translated string, e.g. this is valid:    English string<tab><tab><tab>Translated string<newline>
 
-//? NOTE: %s %d have special meanings in the strings, so make sure they appear somewhere in the translated string
+//? NOTE: %s %d have special meanings in the strings, so make sure they appear somewhere in the translated string!
 
 //? For the strings below which are short and have no context:
-//?   "in" in context is shorthand for "inch"
-//?   "cm" in context is shorthand for "centimeter"
-//?   "C - R" in context is "Cyan Red" colors
-//?   "M - G" in context is "Magenta Green" colors
-//?   "Y - B" in context is "Yellow Blue" colors
-//?   "yes"/"no" in context is for showing EXIF flags
-//?   "on"/"off" in context is for showing a setting active or not
+//?   "in"        in context: is shorthand for "inch"
+//?   "cm"        in context: is shorthand for "centimeter"
+//?   "C - R"     in context: is "Cyan Red" colors
+//?   "M - G"     in context: is "Magenta Green" colors
+//?   "Y - B"     in context: is "Yellow Blue" colors
+//?   "yes"/"no"  in context: is for showing EXIF flags
+//?   "on"/"off"  in context: is for showing a setting active or not
+//?   "Filter"    in context: is used in Resize image, "sampling filter"
+//?   "Box"       in context: is used in Resize image sampling filter "Box filter"
 ////////////////////
 
 
 // ::: Program Strings ::: (sorted alphabetically) //
-%d file(s) renamed, %d file(s) copied, %d folder(s) created	%d  %d fil(er) omdöpt(a), %d fil(er) kopierad(e), %d mapp(ar) skapad(e)	%d
+%d file(s) renamed, %d file(s) copied, %d folder(s) created	%d fil(er) omdöpt(a), %d fil(er) kopierad(e), %d mapp(ar) skapad(e)
 %s camera raw images (embedded JPEGs only)	%s rå-bilder (endast inbäddad JPEG)
 %s images	%s bilder
 %s images (processed by Window Imaging Component - WIC)	%s bilder (bearbetade av Window Imaging Component - WIC)
@@ -92,11 +94,12 @@ Continue rename/copy?	Fortsätta byta namn/kopiera?
 Contrast	Kontrast
 Contrast Correction	Kontrastjustering
 Copy file path of the image to clipboard	
-Copy screen to clipboard/ Copy processed full size image to clipboard	Kopiera skärmbild till urklipp/Kopiera bearbetad fullstorleksbild till urklipp
+Copy screen to clipboard / Copy processed full size image to clipboard	Kopiera skärmbild till urklipp/Kopiera bearbetad fullstorleksbild till urklipp
 Copying parameter DB to file '%s' failed. Reason: %s	Kopiering av databas till '%s' misslyckades. Orsak: %s
 Correct converging lines (perspective correction)	Korrigera konvergerande linjer (perspektivkorrigering)
 Creation date/time	Skapad datum/tid
 Crop image	Beskär
+Crop the image and apply transformation? Cropping cannot be undone!	Vill du beskära bilden och slutföra transformeringen? Beskärningen kan inte ångras!
 Ctrl + Left mouse	Ctrl + Vänster musknapp
 Current image	Aktuell bild
 Cyan-Red	Cyan-Röd
@@ -137,12 +140,12 @@ F-Number:	F-Nummer:
 File name	Filnamn
 File size	Filstorlek
 File type	Filtyp
-Fill paper with crop	
+Fill page with crop	
 Fill with crop	Fyll ut med beskuren bild
 Fill with crop (no zoom)	Sträck ut över alla skärmar (ingen zoom)
 Filter:	
 Fit image to screen	Anpassa bild till skärm
-Fit to paper	Anpassa till papper
+Fit to page	Anpassa till papper
 Fit to screen	Anpassa till skärm
 Fit to screen (no zoom)	Anpassa till skärm (ingen zoom)
 Flash fired:	Blixt:
@@ -218,7 +221,7 @@ No image loaded!	Ingen bild inläst
 No user INI file exists yet. Create user INI file from INI file template?	Det finns ännu ingen INI-fil för användarinställningar. Vill du skapa en med hjälp av standardmallen?
 None	Ingen
 Not enough memory available	För lite tillgängligt minne
-Note: Set the key 'TrimWithoutPromptLosslessJPEG=true' in the INI file to always trim without showing this message.	Notera! Du kan ändra värdet i nyckeln 'TrimWithoutPromptLosslessJPEG=true' i inställningsfilen 'JPEGView.ini' för att alltid beskära, utan att visa detta meddelande.
+Note: Set the key 'CropWithoutPromptLosslessJPEG=true' in the INI file to always crop without showing this message.	Notera! Du kan ändra värdet i nyckeln 'CropWithoutPromptLosslessJPEG=true' i inställningsfilen 'JPEGView.ini' för att alltid beskära, utan att visa detta meddelande.
 Number (consecutively numbered)	Nummer (löpande numrering)
 Number of CPU cores used	Antal processorkärnor
 Number of JPEG files in folder: %d	Antal JPEG-filer i mappen: %d
@@ -233,7 +236,7 @@ Original file extension	 Ursprungligt filnamnstillägg
 Original file name (with extension)	 Ursprungligt filnamn (med filnamnstillägg)
 Original file name (without extension)	Ursprungligt filnamn (utan filnamnstillägg)
 Pan image	Panoramabild
-Paper:	Papper:
+Paper size:	Papper:
 Parameter DB	Databas
 Parameter DB error	Databasfel
 Parameter DB file '%s' could not be opened!	Databasfilen '%s' kan inte öppnas!
@@ -286,7 +289,7 @@ SIMD mode used	SIMD-läge
 Same as Image	
 Saturation	Mättnad
 Save	Spara
-Save (%s)/ delete (%s) image processing parameters in/from parameter DB	Spara(%s)/Ta bort(%s) berbetningsparametrar i/från databas (DB)
+Save (%s) / delete (%s) image processing parameters into/from parameter DB	Spara(%s)/Ta bort(%s) berbetningsparametrar i/från databas (DB)
 Save as (in screen size/resolution)	Spara som (i skärmstorlek/-upplösning
 Save as template	Spara som mall
 Save cropped image	Spara beskuren bild
@@ -308,7 +311,7 @@ Select parameter DB to restore	Välj databas att återställa
 Set Fixed Crop Size	Bestäm fixerad beskärningsstorlek
 Set JPEGView as default image viewer	Ange JPEGView som standardbildvisare
 Set timeout to n/10 sec, respectively n/100 sec (Ctrl+Shift)	Bestäm timeout till n/10 sek, respektive n/100 sek (Ctrl+Shift)
-Shall existing entries be preserved (Yes) or be overriden by the imported entries (No)?	Skall dom nuvarande posterna bevaras (Ja) eller skrivas över av importerade poster (Nej)?
+Shall existing entries be preserved (Yes) or be overwritten by the imported entries (No)?	Skall dom nuvarande posterna bevaras (Ja) eller skrivas över av importerade poster (Nej)?
 Sharpen	Skärpa
 Sharpen low	Låg skärpa
 Sharpen medium	Medium skärpa
@@ -350,7 +353,7 @@ The new size is too large - width or height is larger than 65535 or total number
 The old parameter DB file '%s' could not be renamed during conversion to new format!	Den gamla databasfilen '%s' kunde inte döpas om under konvertering till nytt format!
 The operation failed because not enough memory is available!	Åtgärden misslyckades, eftersom det inte finns tillräckligt med ledigt minne tillgängligt.
 The parameter DB file '%s' has been created by a newer version of JPEGView!	Databasfilen '%s' har skapats av en nyare version av JPEGView!
-The transformation can be applied if the image is trimmed to the next matching size but this will remove some border pixels.	Transformering kan utföras om bilden beskärs till närmast matchande storlek, men bilden blir alltså något beskuren.
+The transformation can be applied if the image is cropped to the next matching size but this will remove some border pixels.	Transformering kan utföras om bilden beskärs till närmast matchande storlek, men bilden blir alltså något beskuren.
 These values will override the values from the INI file located in the program folder of JPEGView!	Dessa värden kommer att åsidosätta värdena från ini-filen i JPEGView-programmappen!
 Threshold	Tröskelvärde
 Title:	Namn:
@@ -359,7 +362,6 @@ Toggle window always on top mode
 Toggle window title bar hidden mode	
 Top	Överkant
 Transition Effect	Övergångseffekt
-Trim the image and apply transformation? Trimming cannot be undone!	Vill du beskära bilden och slutföra transformeringen? Beskärningen kan inte ångras!
 Unregistering not possible	Avregistrering är inte möjlig
 Unsharp mask...	Oskärpa...
 Update user settings with new settings from settings template file?	
@@ -497,7 +499,7 @@ Zoom to Selection	Zooma in markerat område
 //! Clipboard Image
 //! Copy file path of the image to clipboard
 //! Decoding this format requires the Microsoft Visual C++ Redistributable.
-//! Fill paper with crop
+//! Fill page with crop
 //! Filter:
 //! High quality resampling
 //! Insufficient rights to change the privilege (DACL) on the registry entry. Continue?
@@ -542,7 +544,7 @@ Zoom to Selection	Zooma in markerat område
 //! Set window always on top
 //! Update user settings...
 
-// ::: STATUS: Last Checked/Updated by Script ::: 2023-03-09T12:34:04.516306+00:00 //
+// ::: STATUS: Last Checked/Updated by Script ::: 2023-03-14T00:42:03.648318+00:00 //
 //! Translation Progress: 88%
 //! * Total (Strings + Menu) = 427
 //! * Done = 374
