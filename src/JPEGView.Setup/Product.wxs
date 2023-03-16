@@ -246,6 +246,7 @@
 				<ComponentRef Id="strings_es.txt" />
 				<ComponentRef Id="strings_esar.txt" />
 				<ComponentRef Id="strings_eu.txt" />
+				<ComponentRef Id="strings_fi.txt" />
 				<ComponentRef Id="strings_fr.txt" />
 				<ComponentRef Id="strings_hu.txt" />
 				<ComponentRef Id="strings_it.txt" />
@@ -579,6 +580,9 @@
 					</Component>
 					<Component Id="strings_eu.txt" Guid="*">
 						<File Id="strings_eu.txt" Name="strings_eu.txt" Source="$(var.JPEGView.TargetDir)strings_eu.txt" />
+					</Component>
+					<Component Id="strings_fi.txt" Guid="*">
+						<File Id="strings_fi.txt" Name="strings_fi.txt" Source="$(var.JPEGView.TargetDir)strings_fi.txt" />
 					</Component>
 					<Component Id="strings_fr.txt" Guid="*">
 						<File Id="strings_fr.txt" Name="strings_fr.txt" Source="$(var.JPEGView.TargetDir)strings_fr.txt" />

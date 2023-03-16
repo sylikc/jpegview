@@ -1,0 +1,478 @@
+﻿//! This file must be encoded with UTF-8 (e.g. with Windows Notepad)
+//! LICENSE: This localization file is part of JPEGView <https://github.com/sylikc/jpegview> and distributed under the same license.  See <https://github.com/sylikc/jpegview/blob/master/LICENSE.txt> for more info.
+
+//! Standard  Filename Convention: 'strings_%languagecode%.txt' where %languagecode% is the ISO 639-1 language code e.g. 'en' for English (See <https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes>)
+//! Alternate Filename Convention: 'strings_%languagecode%-%countrycode%.txt' where %countrycode% is the ISO 3166-1 country code e.g. 'US' for United States (See <https://en.wikipedia.org/wiki/List_of_ISO_3166_country_codes>)
+//!    Use the alternate filename convention only when the standard filename already exist (e.g. specifying a country-specific dialect for an existing language)
+
+////////////////////
+// ::: Translation Info ::: //
+//: ISO 639-1 code: fi
+//: ISO 3166-1 code:
+//: Language: Finnish
+//: Translator(s) - Name <Contact Info/URL>: Kari Eveli <lexitec@lexitec.fi>
+//: Last Updated: 2023-03-16
+//: Additional Notes:
+////////////////////
+
+////////////////////
+// ::: Instructions / Help ::: (help for translators only, does not need to be translated) //
+
+//? Line Format:    English string<tab>Translated string<newline>
+//? * Lines beginning with "//" (comments) are ignored
+//? * Blank lines are ignored
+//? * Lines without a <tab> are ignored
+//? * Lines with no text after the <tab> are ignored
+//? * Multiple tabs are permitted between English and Translated string, e.g. this is valid:    English string<tab><tab><tab>Translated string<newline>
+
+//? NOTE: %s %d have special meanings in the strings, so make sure they appear somewhere in the translated string!
+
+//? For the strings below which are short and have no context:
+//?   "in"        in context: is shorthand for "inch"
+//?   "cm"        in context: is shorthand for "centimeter"
+//?   "C - R"     in context: is "Cyan Red" colors
+//?   "M - G"     in context: is "Magenta Green" colors
+//?   "Y - B"     in context: is "Yellow Blue" colors
+//?   "yes"/"no"  in context: is for showing EXIF flags
+//?   "on"/"off"  in context: is for showing a setting active or not
+//?   "Filter"    in context: is used in Resize image, "sampling filter"
+//?   "Box"       in context: is used in Resize image sampling filter "Box filter"
+////////////////////
+
+
+// ::: Program Strings ::: (sorted alphabetically) //
+%d file(s) renamed, %d file(s) copied, %d folder(s) created	%d tiedosto(a) nimetty uudelleen, %d tiedosto(a) kopioitu, %d kansio(ta) luotu
+%s camera raw images (embedded JPEGs only)	%s kameran raakakuvia (vain upotetut JPEG-kuvat)
+%s images	%s kuvia
+%s images (processed by Window Imaging Component - WIC)	%s kuvia (käsitelty Window Imaging -komponentilla)
+'My Pictures' folder	'Kuvat' -kansio
+About JPEGView (32-bit version)...	Tietoja JPEGViewista (32-bittinen versio)...
+About JPEGView (64-bit version)...	Tietoja JPEGViewista (64-bittinen versio)...
+Acquisition date:	Kuvauspäivämäärä:
+Actual size of image	Kuvan todellinen koko
+Align image to horizontal or vertical line	Kohdista kuva vaaka- tai pystylinjan mukaan
+Alignment:	Kohdistus:
+All Files	Kaikki tiedostot
+All existing user settings will be preserved.	Kaikki nykyiset käyttäjäasetukset säilyvät.
+Alternatively, right-click an image file of the given type in Windows Explorer and select 'Open with... > Choose default program'	Vaihtoehtoisesti napsauta hiiren kakkospainikkeella tietyntyyppistä kuvatiedostoa resurssienhallinnassa ja mene kohtaan 'Avaa sovelluksessa > Valitse oletusohjelma...'
+Altitude (m):	Korkeus (m):
+Amount	Määrä
+Application:	Sovellus:
+Applications	Sovellukset
+Apply	Käytä
+Apply Unsharp Mask	Käytä epäterävää maskia
+Apply auto contrast correction using only visible section of image	Käytä kontrastin automaattikorjausta perustuen vain kuvan näkyvään osaan
+Ascending	Nouseva
+Auto contrast and color correction	Kontrastin ja värien automaattikorjaus
+Auto crop corrected image (avoids black border)	Korjatun kuvan automaattirajaus (ei mustia reunoja)
+Auto crop rotated image (avoids black border)	Kierretyn kuvan automaattirajaus (ei mustia reunoja)
+Auto zoom mode	Automaattizoomaus
+Back mouse button	Hiiren taakse-nappi
+Batch rename/copy of files	Usean tiedoston uudelleennimeäminen/kopiointi kerralla
+Blend	Sekoitus (blendaus)
+Bottom	Ala
+Box	Laatikko
+Brightness	Kirkkaus
+Browse...	Selaa...
+C - R	S - P
+Camera model:	Kameran malli:
+Can't rename file	Tiedostoa ei voi nimetä uudelleen
+Cancel	Peruuta
+Cannot read from parameter DB file '%s'!	Parametritietokantatiedostoa '%s' ei voi lukea!
+Cannot read parameter DB file '%s' because it is too large!	Parametritietokantatiedostoa '%s' ei voi lukea, koska se on liian suuri!
+Cannot write to parameter DB file '%s'!	Parametritietokantatiedostoon '%s' ei voi kirjoittaa!
+Click and drag the mouse vertically to correct image tilt.	Vedä hiirellä pystysuoraan kuvan keskeltä kallistuskulman korjaamiseksi.
+Clipboard Image	Leikepöydän kuva
+Close	Sulje
+Close help text display / Close JPEGView	Sulje ohjetekstinäyttö / Sulje JPEGView
+Color Correction	Värien korjaus
+Combine keys with '+'	Yhdistä avainsanat '+' -merkillä
+Confirm	Vahvista
+Confirm save default parameters	Vahvista oletusparametrien tallennus
+Conflicting entries in Param DB	Ristiriitaisia tietueita parametritietokannassa
+Continue rename/copy?	Jatketaanko uudelleennimeämistä/kopiointia?
+Contrast	Kontrasti
+Contrast Correction	Kontrastin korjaus
+Copy file path of the image to clipboard	Kopioi kuvan tiedostopolku leikepöydälle
+Copy screen to clipboard / Copy processed full size image to clipboard	Kopioi näyttö leikepöydälle/ Kopioi käsitelty täysikokoinen kuva leikepöydälle
+Copying parameter DB to file '%s' failed. Reason: %s	Parametritietokannan kopiointi tiedostoon '%s' epäonnistui. Syy: %s
+Correct converging lines (perspective correction)	Perspektiivikorjaus
+Creation date/time	Luontipäivä/-aika
+Crop image	Rajaa kuva
+Crop the image and apply transformation? Cropping cannot be undone!	Leikataanko kuva pienemmäksi ja toteutetaan muunnos? Pienennöstä ei voi perua!
+Ctrl + Left mouse	Ctrl + vasen hiiren nappi
+Current image	Tämä kuva
+Cyan-Red	Syaani-punainen
+Darken Highlights	Tummenna kohokohtia
+Date	Päiväys
+Date placeholders use the modification date of the image.	Päiväystä hyödyntävät paikanvaraajat korvataan kuvan muuttamispäivän tiedoilla.
+Day / Month / Year (as numbers)	päivä/kuu/vuosi (numeroina)
+Decoding this format requires the Microsoft Visual C++ Redistributable.	Tämän koodausmuodon purku edellyttää Microsoft Visual C++ Redistributable -ohjelman asentamista.
+Deep Shadows	Syvät varjot
+Delete	Poista
+Delete current file on disk permanently	Poista nykyinen tiedosto levyltä pysyvästi
+Delete image file	Poista kuvatiedosto
+Descending	Laskeva
+Display image (EXIF) information	Näytä kuvan metatiedot (EXIF)
+Do you really want to delete the current image file on disk?	Haluatko todella poistaa nykyisen kuvatiedoston levyltä?
+Do you really want to permanently delete the file %filename%?	Haluatko todella poistaa %filename%-nimisen tiedoston pysyvästi?
+Do you really want to save the following parameters as default to the INI file	Haluatko todella tallentaa seuraavat parametrit oletusarvoina INI-tiedostoon?
+Drag at the left or right border for asymmetric correction.	Vedä kuvan vasenta tai oikeaa reunaa hiirellä muuttaaksesi sitä epäsymmetrisesti.
+EXIF date successfully set on %d images, failed on %d images	EXIF-päiväyksen asetus onnistui %d kuvan osalta ja epäonnistui %d kuvan osalta
+Edit	Muokkaa
+Enable/disable automatic contrast correction (histogram equalization)	Ota käyttöön/poista käytöstä automaattinen kontrastikorjaus (histogrammin tasaus)
+Enable/disable automatic density correction (local brightness correction)	Ota käyttöön/poista käytöstä automaattinen tiheyden korjaus (paikallinen kirkkauden korjaus)
+Enable/disable full screen mode	Ota käyttöön/poista käytöstä koko näytön tila
+Enable/disable high quality resampling	Ota käyttöön/poista käytöstä korkealaatuinen interpolointi
+Enable/disable keeping of geometry related (zoom/pan/rotation)	Ota käyttöön/poista käytöstä geometristen ominaisuuksien säilyttäminen (zoomaus/panorointi/pyöritys)
+Enable/disable landscape picture enhancement mode	Ota käyttöön/poista käytöstä maisemakuvan parannustila
+Error	Virhe
+Error during rename/copy	Uudelleennimeämis-/kopiointivirhe
+Error saving file	Tiedoston tallennusvirhe
+Error while writing the following registry key	Virhe seuraavaa rekisteriavainta kirjoitettaessa
+Error writing file to disk!	Virhe tiedostoa kirjoitettaessa levylle!
+Example:	Esimerkki:
+Exposure bias (EV):	Valotuksen korjaus (EV):
+Exposure time (s):	Valotusaika (s):
+Extension	Laajennus
+Extracted number from original file name	alkuperäisestä tiedostonimestä poimittu numero
+F-Number:	F-numero:
+File name	Tiedostonimi
+File size	Tiedoston koko
+File type	Tiedostotyyppi
+Fill page with crop	Täytä paperi rajauksella
+Fill with crop	Täytä rajauksella
+Fill with crop (no zoom)	Täytä rajauksella (ei zoomausta)
+Filter:	Suodatin:
+Fit image to screen	Sovita kuva näytölle
+Fit to page	Sovita paperille
+Fit to screen	Sovita kuvaruutuun
+Fit to screen (no zoom)	Sovita kuvaruutuun (ei zoomausta)
+Flash fired:	Salama laukaistu:
+Focal length (mm):	Polttoväli (mm):
+Forward mouse button	Hiiren eteenpäin-painike
+Full screen mode	Koko näytön tila
+Goto first/last image of current folder (using sort order as defined)	Siirry tämän kansion ensimmäiseen/viimeiseen kuvaan (määritetyn lajittelun mukaan)
+Goto next image	Siirry seuraavaan kuvaan
+Goto previous image	Siirry edelliseen kuvaan
+Height	Korkeus
+Hide histogram	Piilota histogrammi
+High quality resampling	Korkealaatuinen interpolointi
+Hour / Minute (as numbers)	tunti/minuutti (numeroina)
+ISO Speed:	ISO-nopeus:
+Image Pixels	Kuvan pikselit
+Image files in folder	Kuvatiedostot kansiossa
+Image height:	Kuvan korkeus:
+Image width and height must be dividable by the JPEG block size (8 or 16) for lossless transformations!	Kuvan leveyden ja korkeuden on oltava jaettavissa JPEG-lohkokoolla (8 tai 16), jotta muunnos on häviötön!
+Image width:	Kuvan leveys:
+Images	Kuvat
+Increase/decrease auto color cast correction amount	Lisää/vähennä yleisvärityksen automaattikorjausta
+Increase/decrease auto contrast correction amount	Lisää/vähennä kontrastin automaattikorjausta
+Increase/decrease brightness	Lisää/vähennä kirkkautta
+Increase/decrease contrast	Lisää/vähennä kontrastia
+Increase/decrease darkening of highlights (LDC must be on)	Lisää/vähennä korostusten tummuutta (kun paikallistiheyden korjaus on päällä)
+Increase/decrease lightening of shadows (LDC must be on)	Lisää/vähennä varjojen vaalennusta (kun paikallistiheyden korjaus on päällä)
+Increase/decrease sharpness	Lisää/vähennä terävyyttä
+Insufficient rights to change the privilege (DACL) on the registry entry. Continue?	Oikeudet eivät riitä rekisterimerkinnän DACL-oikeuksien muuttamiseen. Jatketaanko?
+JPEGView Help	JPEGViewin ohje
+JPEGView is a lean, fast and highly configurable viewer/editor for JPEG, BMP, PNG, WEBP, TGA, GIF and TIFF images with a minimal GUI.	JPEGView on kevyt, nopea ja eri käyttötarkoituksiin sopiva JPEG-, BMP-, PNG-, WEBP-, TGA-, GIF- ja TIFF-kuvien katselin/muokkain yksinkertaisella käyttöliittymällä.
+JPEGView is registered as default viewer for the selected file formats.	JPEGView on rekisteröity oletuskatselimeksi tässä valituille tiedostomuodoille.
+Keep aspect ratio on crop	Säilytä kuvasuhde rajattaessa
+Keep parameters	Säilytä parametrit
+Keep processing parameters between images	Älä muuta käsittelyparametrejä kuvasta toiseen siirryttäessä
+Known keys:	Tunnetut näppäimet:
+Lanczos/Bicubic	Lanczos/Bicubic
+Landscape	Vaaka
+Landscape picture enhancement mode	Maisemakuvan parannustila
+Last modification date/time	Viimeisimmän muutoksen päiväys/aika
+Left	Vasen
+Left mouse & drag	Vasen hiiren nappi ja veto
+Licensed under the GNU general public license (GPL), see readme file for details	Lisensoitu GNU general public license (GPL) lisenssillä. Lisää tietoja readme-tiedostossa
+Lighten Shadows	Vaalenna varjoja
+Local density correction	Paikallistiheyden korjaus
+Location:	Sijainti:
+Loop folder	Käy läpi tämä kansio
+Loop recursively	Käy läpi myös alikansiot
+Loop siblings	Käy läpi tämä ja saman tason kansiot
+Loop through files in current directory and all sibling folders (folders on same level)	Käy läpi tämän kansion tiedostot ja kaikki saman kansiohierarkiatason kansiot
+Loop through files in current directory and all subfolders	Käy läpi tämän kansion tiedostot ja kaikki alikansiot
+Loop through files in current folder	Käy läpi tämän kansion tiedostot
+Lossless JPEG transformations	Häviöttömät JPEG-muunnokset
+M - G	M - V
+Magenta-Green	Magenta-Vihreä
+Manage 'Open image with' menu...	Hallitse 'Avaa kuva sovelluksella' -valikkoa...
+Margins:	Marginaalit:
+Mark image for toggling. Use %s to toggle between marked and current image	Merkitse kuva vaihtamista varten. %s vaihtaa merkityn ja nykyisen kuvan välillä
+Maximize/restore to/from virtual desktop (only for multi-monitor systems)	Suurenna/palauta virtuaaliselle työpöydälle ja takaisin (vain monen näytön järjestelmissä)
+Menu entries:	Valikkokohdat:
+Modification date:	Muutospäivä:
+Modifier keys:	Vaihtonäppäimet:
+Month / Short form (text)	kuukausi/lyhytmuoto (tekstinä)
+Mouse wheel	Hiiren pyörä
+Navigation	Navigointi
+New	Uusi
+New height:	Uusi korkeus:
+New name (>> : file gets copied)	Uusi nimi (>> näkyy esikatselussa, jos tiedosto kopioidaan toisaalle)
+New name contains backslash character!	Uudessa nimessä on takakenomerkki (\)!
+New size:	Uusi koko:
+New width:	Uusi leveys:
+Next image	Seuraava kuva
+No image loaded!	Kuvaa ei ole ladattu!
+No user INI file exists yet. Create user INI file from INI file template?	Käyttäjän INI-tiedostoa ei vielä ole. Luodaanko se INI-tiedostomallista?
+None	Ei ole
+Not enough memory available	Muistia ei ole riittävästi
+Note: Set the key 'CropWithoutPromptLosslessJPEG=true' in the INI file to always crop without showing this message.	Huomautus: Jos lisäätä avaimen 'CropWithoutPromptLosslessJPEG=true' INI-tiedostoon, voit aina leikata ilman tätän viestiä.
+Number (consecutively numbered)	numero (juokseva numero)
+Number of CPU cores used	Käytettyjen prosessoriytimien määrä
+Number of JPEG files in folder: %d	JPEG-tiedostojen määrä kansiossa: %d
+Number with N digits	N-numeroinen luku
+OK	OK
+Old name	Vanha nimi
+Open folder containing image and select in Windows Explorer	Avaa kuvan sisältävä kansio ja valitse se resurssienhallinnassa
+Open new image or slideshow file	Avaa uusi kuva- tai diaesitystiedosto
+Order files by	Järjestä tiedostot
+Orientation:	Suunta:
+Original file extension	alkuperäinen tiedostopääte
+Original file name (with extension)	alkuperäinen tiedostonimi (ja tiedostopääte)
+Original file name (without extension)	alkuperäinen tiedostonimi (ilman tiedostopäätettä)
+Pan image	Panoroi kuva
+Paper size:	Paperi:
+Parameter DB	Parametritietokanta
+Parameter DB error	Parametritietokantavirhe
+Parameter DB file '%s' could not be opened!	Parametritietokantatiedostoa '%s' ei voitu avata!
+Parameter DB file '%s' is not valid (invalid header)!	Parametritietokantatiedosto '%s' ei ole kelvollinen (virhe tiedoston alkuosassa)!
+Paste from clipboard	Liitä leikepöydältä
+Pasting image from clipboard failed!	Kuvan liittäminen leikepöydältä epäonnistui!
+Performing the lossless transformation failed!	Häviöttömän muunnoksen suorittaminen epäonnistui!
+Performing the transformation failed	Muunnoksen suorittaminen epäonnistui
+Perspective Correction	Perspektiivikorjaus
+Pixels	Pikselit
+Placeholders:	Paikanvaraajat:
+Portrait	Pysty
+Press 'OK' to continue with registration or 'Cancel' to abort all registrations.	Jatka rekisteröintiä painamalla 'OK' tai keskeytä kaikki rekisteröinnit painamalla 'Peruuta'.
+Press ESC to exit...	Paina ESC poistuaksesi...
+Press any key to search the subdirectories for image files.	Paina mitä tahansa näppäintä etsiäksesi kuvatiedostoja alihakemistoista.
+Preview	Esikatselu
+Previous image	Edellinen kuva
+Print	Tulosta
+Print Image	Tulosta kuva
+Printer driver	Tulostinohjain
+Printer:	Tulostin:
+Project home page	Projektin etusivu
+Radius	Säde
+Random	Satunnainen
+Reading the JPEG file from disk failed	JPEG-tiedoston lukeminen levyltä epäonnistui
+Reason:	Syy:
+Registering or unregistering file extensions in this registry area requires administrator privileges and cannot be done in JPEGView.	Tiedostopäätteiden rekisteröinti tai sen poisto tällä rekisterialueella edellyttää järjestelmänvalvojan oikeuksia, eikä sitä voi tehdä JPEGView:ssa.
+Registration applies to the current user only.	Rekisteröinti koskee vain nykyistä käyttäjää.
+Remove from	Poista tietokannasta
+Rename	Nimeä uudelleen
+Rename/copy images to:	Kuvien uudet nimet/kopioinnin kohteet:
+Renaming file failed!	Tiedoston uudelleennimeäminen epäonnistui!
+Reset	Nollaa
+Resize Image	Kuvan koon muuttaminen
+Right	Oikea
+Right mouse button: Context menu	Hiiren oikea nappi: kontekstivalikko
+Roll from bottom	Rullaa alhaalta
+Roll from left	Rullaa vasemmalta
+Roll from right	Rullaa oikealta
+Roll from top	Rullaa ylhäältä
+Rotate Image	Kierrä kuvaa
+Rotate current file on disk lossless by 270 deg (W/H must be multiple of 16)	Kierrä tätä tiedostoa levyllä häviöttömästi 270° (L/K:n on oltava 16 monikerta)
+Rotate current file on disk lossless by 90 deg (W/H must be multiple of 16)	Kierrä tätä tiedostoa levyllä häviöttömästi 90° (L/K:n on oltava 16 monikerta)
+Rotate image 90 deg clockwise	Käännä kuvaa 90° myötäpäivään
+Rotate image 90 deg counter-clockwise	Käännä kuvaa 90° vastapäivään
+Rotate image and fit to screen	Kierrä kuvaa ja sovita se näytölle
+Rotate image by user-defined angle	Kierrä kuvaa käyttäjän määrittelemällä kulmalla
+Rotate the image by dragging with the mouse.	Kierrä kuvaa hiirellä vetämällä.
+SIMD mode used	Käytetty SIMD-tila
+Same as Image	Sama kuin kuva
+Saturation	Värikylläisyys
+Save	Tallenna
+Save (%s) / delete (%s) image processing parameters into/from parameter DB	Tallenna (%s)/poista (%s) parametritietokannan kuvankäsittelyparametrejä
+Save as (in screen size/resolution)	Tallenna nimellä (näytön koko/resoluutio)
+Save as template	Tallenna mallina
+Save cropped image	Tallenna rajattu kuva
+Save processed image to JPEG file (original size)	Tallenna käsitelty kuva JPEG-tiedostoon (alkuperäinen koko)
+Save processed image to JPEG file (screen size)	Tallenna käsitelty kuva JPEG-tiedostoon (näytön koko)
+Save to	Lisää tietokantaan
+Scaling mode:	Skaalaustila:
+Screen Pixels	Näytön pikselit
+Scroll from bottom	Vieritä alhaalta
+Scroll from left	Vieritä vasemmalta
+Scroll from right	Vieritä oikealta
+Scroll from top	Vieritä ylhäältä
+Select Printer...	Valitse tulostin...
+Select all	Valitse kaikki
+Select application	Valitse sovellus
+Select file to display in 'File Open' dialog	Valitse tiedosto, joka näytetään "Tiedosto, Avaa" -valintaikkunassa.
+Select none	Älä valitse mitään
+Select parameter DB to restore	Valitse palautettava parametritietokanta
+Set Fixed Crop Size	Aseta kiinteä rajauskoko
+Set JPEGView as default image viewer	Aseta JPEGView oletuskuvankatseluohjelmaksi
+Set timeout to n/10 sec, respectively n/100 sec (Ctrl+Shift)	Aseta aikakatkaisu n/10 sekunniksi tai n/100 sekunniksi (Ctrl+Shift).
+Shall existing entries be preserved (Yes) or be overwritten by the imported entries (No)?	Säilytetäänkö nykyiset tietueet (Kyllä) vai korvataanko ne tuoduilla tietueilla (Ei)?
+Sharpen	Terävöitä
+Sharpen low	Terävöitä hieman
+Sharpen medium	Terävöitä aika paljon
+Shortcut Help	Pikanäppäinten ohje
+Shortcut key:	Pikanäppäin:
+Show filename	Näytä tiedostonimi
+Show first image in folder	Näytä kansion ensimmäinen kuva
+Show grid lines	Näytä ruudukkoviivat
+Show histogram	Näytä histogrammi
+Show last image in folder	Näytä kansion viimeinen kuva
+Show navigation panel	Näytä navigointipaneeli
+Show next image	Näytä seuraava kuva
+Show picture info (EXIF)	Näytä kuvan tiedot (EXIF)
+Show previous image	Näytä edellinen kuva
+Show/hide file name	Näytä/piilota tiedostonimi
+Show/hide navigation panel	Näytä/piilota navigointipaneeli
+Show/hide picture information (EXIF data)	Näytä/piilota kuvan tiedot (EXIF-tiedot)
+Show/hide this help text	Näytä/piilota tämä ohjeteksti
+Size:	Koko:
+Slide from bottom	Dia alhaalta
+Slide from left	Dia vasemmalta
+Slide from right	Dia oikealta
+Slide from top	Dia ylhäältä
+Slideshow	Diaesitys
+Slideshow with timeout of 'n' seconds (ESC to stop)	Diaesitys, jonka aikakatkaisu on 'n' sekuntia (ESC pysäyttää)
+Sort images by creation date, resp. modification date, resp. file name	Kuvien lajittelu luonti- tai muutospäivän tai tiedostonimen mukaan
+Source:	Lähde:
+Target folders that do not yet exist are created as needed.	Kohdekansioita luodaan tarpeen mukaan.
+The directory '%s' does not contain any image files!	Hakemisto '%s' ei sisällä kuvatiedostoja!
+The file '%s' could not be copied!	Tiedostoa '%s' ei voitu kopioida!
+The file '%s' could not be read!	Tiedostoa '%s' ei voitu lukea!
+The file '%s' could not be renamed!	Tiedostoa '%s' ei voitu nimetä uudelleen!
+The file '%s' does not contain a list of file names!	Tiedosto '%s' ei sisällä luetteloa tiedostonimistä!
+The file is read-only!	Tiedosto on 'vain luku'!
+The following file extensions cannot be unregistered because they have been registered in the 'local machine' registry area.	Seuraavien tiedostopäätteiden rekisterimerkintöjä ei voi poistaa, koska ne kuuluvat HKEY_LOCAL_MACHINE -haaraan.
+The following image extensions are protected by the operating system.	Seuraavat kuvatiedostojen tiedostopäätteet ovat käyttöjärjestelmän suojaamia.
+The imported param DB contains entries already present in active param DB.	Tuodussa parametritietokannassa on merkintöjä, jotka ovat jo aktiivisessa parametritietokannassa.
+The new size is too large - width or height is larger than 65535 or total number of pixels is too large!	Uusi koko on liian suuri - leveys tai korkeus on suurempi kuin 65535 tai pikselien kokonaismäärä on liian suuri!
+The old parameter DB file '%s' could not be renamed during conversion to new format!	Vanhaa parametritietokantatiedostoa '%s' ei voitu nimetä uudelleen uuteen muotoon muunnettaessa!
+The operation failed because not enough memory is available!	Toimenpide epäonnistui, koska käytettävissä ei ole riittävästi muistia!
+The parameter DB file '%s' has been created by a newer version of JPEGView!	Parametrintietokantatiedosto '%s' on luotu JPEGView:n uudemmalla versiolla!
+The transformation can be applied if the image is cropped to the next matching size but this will remove some border pixels.	Muunnos voidaan toteuttaa, jos kuvaa pienennetään seuraavaan vastaavaan kokoon, mutta silloin joitakin reunapikseleitä jää pois.
+These values will override the values from the INI file located in the program folder of JPEGView!	Nämä arvot syrjäyttävät JPEGView:n ohjelmakansiossa olevan INI-tiedoston arvot!
+Threshold	Kynnysarvo
+Title:	Otsikko:
+Toggle between screens (only for multi-monitor systems)	Vaihda näyttöjen välillä (vain moninäyttöjärjestelmissä).
+Toggle window always on top mode	Vaihda 'sovellusikkuna aina ylimpänä' -tilaan
+Toggle window title bar hidden mode	Vaihda 'sovellusikkunan otsikkopalkki piilotettuna' -tilaan
+Top	Ylä
+Transition Effect	Siirtymäefekti
+Unregistering not possible	Rekisteröinnin poistaminen ei ole mahdollista
+Unsharp mask...	Epäterävä maski...
+Update user settings with new settings from settings template file?	Päivitetäänkö käyttäjän asetukset lisäämällä uudet asetusten mallitiedostoon kuuluvat asetukset?
+Use the 'Default Programs' configuration dialog from the operating system instead.	Käytä käyttöjärjestelmän 'Oletusohjelmat'-valintaikkunaa tämän asemesta.
+Use the mouse to draw a line that shall be horizontal or vertical.	Piirrä hiirellä vaaka- tai pystyviiva.
+Warning	Varoitus
+Width	Leveys
+Window mode	Ikkunatila
+Windows 8 (and above) blocks JPEGView from changing the default program for these file extensions.	JPEGView ei voi vaihtaa näiden tiedostopäätteiden oletusohjelmaa Windows 8:ssa (ja uudemmissa).
+Writing the resulting JPEG file to disk failed	Tuloksena syntyneen JPEG-tiedoston kirjoittaminen levylle epäonnistui
+Y - B	K - S
+Year short form (2 digits)	vuoden lyhyt muoto (2 numeroa)
+Yellow-Blue	Keltainen-sininen
+Zoom 1:1 (100 %)	Zoomaus 1:1 (100 %)
+Zoom in (%s)/Zoom out (%s)	Suurenna (%s)/pienennä (%s)
+Zoom in/out image	Suurenna/pienennä kuvaa
+Zoom mode (drag mouse to zoom)	Zoomaustila (zoomaa vetämällä hiirellä)
+and image processing (brightness/contrast/sharpen) parameters between images	ja kuvankäsittelyparametrit (kirkkaus/kontrasti/terävöitys) kuvien välillä
+cm	cm
+in	in
+new menu entry	uusi valikkokohta
+no	ei
+off	off
+on	on
+user-defined	käyttäjän määrittelemä
+yes	kyllä
+
+// ::: Popup Menu Strings ::: (unsorted to preserve context) //
+Stop slide show/movie	Pysäytä diaesitys/elokuva
+Open image...	Avaa kuva...
+Open image with	Avaa kuva sovelluksella
+Save processed image...	Tallenna käsitelty kuva...
+Reload image	Lataa kuva uudelleen
+Open containing folder in Explorer	Avaa kuvan kansio resurssienhallinnassa
+Print image...	Tulosta kuva...
+Batch rename/copy...	Uudelleennimeä/kopioi useita...
+Set modification date	Aseta muutospäivä
+to current date	täksi päiväksi
+to EXIF date	EXIFin päiväykseksi
+to EXIF date (all files in folder)	EXIFin päiväykseksi (kaikki kansion tiedostot)
+Set as desktop wallpaper	Aseta työpöydän taustakuvaksi
+Use original image	Käytä alkuperäistä kuvaa
+Use processed image as displayed	Käytä käsiteltyä kuvaa näytön mukaisena
+Copy to clipboard	Kopioi leikepöydälle
+Copy original size image	Kopioi alkuperäisen kokoinen kuva
+Copy file path	Kopioi tiedostopolku
+Display order	Näyttöjärjestys
+Modification date	Muokkauspäivä
+Creation date	Luontipäivä
+Play folder as slideshow/movie	Toista kansio diaesityksenä/elokuvana
+Waiting time	Odotusaika
+1 sec	1 sekunti
+2 sec	2 sekuntia
+3 sec	3 sekuntia
+4 sec	4 sekuntia
+5 sec	5 sekuntia
+7 sec	7 sekuntia
+10 sec	10 sekuntia
+20 sec	20 sekuntia
+Transition Speed	Siirtymisnopeus
+Very fast	Hyvin nopea
+Fast	Nopea
+Normal	Normaali
+Slow	Hidas
+Very slow	Hyvin hidas
+Movie	Elokuva
+Playback speed	Toistonopeus
+5 fps	5 fps
+10 fps	10 fps
+25 fps	25 fps
+30 fps	30 fps
+50 fps	50 fps
+100 fps	100 fps
+Transform image	Muunna kuvaa
+Rotate +90	Kierrä 90° myötäpäivään
+Rotate -90	Kierrä 90° vastapäivään
+Rotate...	Kierrä...
+Change size...	Muuta kokoa...
+Perspective correction...	Perspektiivikorjaus...
+Mirror horizontally	Peilaa vaakasuunnassa
+Mirror vertically	Peilaa pystysuunnassa
+Rotate 180	Kierrä 180°
+Auto correction	Automaattikorjaus
+Save parameters to DB	Tallenna parametrit tietokantaan
+Clear parameters from DB	Poista parametrit tietokannasta
+Zoom	Zoomaa
+Span all screens	Levitä kaikille näytöille
+Fit window to image	Sovita ikkuna kuvaan
+Hide window title bar	Piilota ikkunan otsikkorivi
+Set window always on top	Sovellusikkuna aina ylimpänä
+Settings/Admin	Asetukset/Admin
+Edit global settings...	Muokkaa yleisiä asetuksia...
+Edit user settings...	Muokkaa käyttäjän asetuksia...
+Update user settings...	Päivitä käyttäjän asetukset mallitiedostosta...
+Set current parameters as default values...	Aseta nykyiset parametrit oletusarvoiksi...
+Set as default viewer...	Aseta oletuskatselinsovellukseksi...
+Backup parameter DB...	Varmuuskopioi parametritietokanta...
+Restore parameter DB...	Palauta parametritietokanta...
+User commands	Käyttäjän komennot
+About JPEGView...	Tietoja JPEGViewista...
+Exit	Sulje
+Crop Selection	Rajausvalinta
+Crop Selection Lossless...	Häviötön rajausvalinta...
+Copy Selection to Clipboard	Kopioi valinta leikepöydälle
+Crop Mode	Rajaustila
+Free	Vapaa
+Fixed size...	Kiinteä koko...
+Zoom to Selection	Zoomaa valintaan
+
+// ::: STATUS: Last Checked/Updated by Script ::: 2023-03-16T13:07:00.290289+00:00 //
+//! Translation Progress: 100%
+//! * Total (Strings + Menu) = 427
+//! * Done = 427
+//! * Missing = 0 (0%)
