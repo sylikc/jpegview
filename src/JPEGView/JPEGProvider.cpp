@@ -123,6 +123,7 @@ void CJPEGProvider::NotifyNotUsed(CJPEGImage* pImage) {
 	if (pImage != NULL) delete pImage;
 }
 
+// Only used for startup, to avoid accessing m_fileList.
 CJPEGImage* CJPEGProvider::RequestImage(EReadAheadDirection eDirection,
 	LPCTSTR strFileName, int nFrameIndex, const CProcessParams& processParams,
 	bool& bOutOfMemory, bool& bExceptionError) {
@@ -142,11 +143,6 @@ CJPEGImage* CJPEGProvider::RequestImage(EReadAheadDirection eDirection,
 	if (pRequest == NULL) {
 		// no request pending for this file, add to request queue and start async
 		pRequest = StartNewRequest(strFileName, nFrameIndex, processParams);
-		// wait with read ahead when direction changed - maybe user just wants to re-see last image
-		//if (!bDirectionChanged && eDirection != NONE) {
-		//	// start parallel if more than one thread
-		//	StartNewRequestBundle(pFileList, eDirection, processParams, m_nNumThread - 1, NULL);
-		//}
 	}
 
 	// wait for request if not yet ready

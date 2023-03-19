@@ -52,7 +52,6 @@
 #include "DirectoryWatcher.h"
 #include "DesktopWallpaper.h"
 #include "PrintImage.h"
-#include <future>
 
 //////////////////////////////////////////////////////////////////////////////////////////////
 // Constants
@@ -285,8 +284,6 @@ CMainDlg::CMainDlg(bool bForceFullScreen) {
 
 CMainDlg::~CMainDlg() {
 	delete m_pDirectoryWatcher;
-	if (isDone_future_m_pFileList)
-		delete m_pFileList;
 	if (m_pJPEGProvider != NULL) delete m_pJPEGProvider;
 	delete m_pImageProcParams;
 	delete m_pImageProcParamsKept;
@@ -383,14 +380,10 @@ LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam
 	//	m_pFileList->SetNavigationMode(sp.Navigation());
 	//	}).detach();
 
-	isDone_future_m_pFileList = false;
-	future_m_pFileList = std::async(std::launch::async, [this, &sp]() {
-		m_pFileList = new CFileList(m_sStartupFile, *m_pDirectoryWatcher,
-					(m_eForcedSorting == Helpers::FS_Undefined) ? sp.Sorting() : m_eForcedSorting, sp.IsSortedAscending(), sp.WrapAroundFolder(),
-					0, m_eForcedSorting != Helpers::FS_Undefined);
-		m_pFileList->SetNavigationMode(sp.Navigation());
-		isDone_future_m_pFileList = true;
-		});
+	m_pFileList = new CFileList(m_sStartupFile, *m_pDirectoryWatcher,
+				(m_eForcedSorting == Helpers::FS_Undefined) ? sp.Sorting() : m_eForcedSorting, sp.IsSortedAscending(), sp.WrapAroundFolder(),
+				0, m_eForcedSorting != Helpers::FS_Undefined);
+	m_pFileList->SetNavigationMode(sp.Navigation());
 	
 	// create thread pool for processing requests on multiple CPU cores
 	CProcessingThreadPool::This().CreateThreadPoolThreads();
@@ -405,7 +398,7 @@ LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam
 	}
 	m_nLastLoadError = GetLoadErrorAfterOpenFile();
 	CheckIfApplyAutoFitWndToImage(true);
-	AfterNewImageLoaded(true, true, false, m_sStartupFile); // synchronize to per image parameters
+	AfterNewImageLoaded(true, true, false); // synchronize to per image parameters
 
 	if (!m_bFullScreenMode) {
 		// Window mode, set correct window size
@@ -667,10 +660,6 @@ void CMainDlg::DisplayErrors(CJPEGImage* pCurrentImage, const CRect& clientRect,
 				CNLS::GetString(_T("Press ESC to exit...")), -1, &rectText, DT_CENTER | DT_WORDBREAK | DT_NOPREFIX);
 	   }
 	} else if (pCurrentImage == NULL) {
-		// Access to m_pFileList is needed in this case, wait until initialized:
-		if (!isDone_future_m_pFileList)
-			future_m_pFileList.wait();
-
 		HelpersGUI::DrawImageLoadErrorText(dc, clientRect,
 			(m_nLastLoadError == HelpersGUI::FileLoad_SlideShowListInvalid) ? m_sStartupFile :
 			(m_nLastLoadError == HelpersGUI::FileLoad_NoFilesInDirectory) ? m_pFileList->CurrentDirectory() : CurrentFileName(false),
@@ -976,8 +965,6 @@ LRESULT CMainDlg::OnKeyDown(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOO
 		m_pCropCtl->AbortCropping();
 	} else if (!bCtrl && wParam != VK_ESCAPE && m_nLastLoadError == HelpersGUI::FileLoad_NoFilesInDirectory && !m_sStartupFile.IsEmpty()) {
 		// search in subfolders if initial directory has no images
-		if (!isDone_future_m_pFileList)
-			future_m_pFileList.wait(); // Check if m_pFileList is available first before using.
 		bHandled = true;
 		m_pFileList->SetNavigationMode(Helpers::NM_LoopSubDirectories);
 		GotoImage(POS_Next);
@@ -1006,8 +993,6 @@ LRESULT CMainDlg::OnKeyDown(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOO
 
 	if (!bHandled) {
 		// look if any of the user commands wants to handle this key
-		if (!isDone_future_m_pFileList)
-			future_m_pFileList.wait(); // Check if m_pFileList is available first before using.
 		if (m_pFileList->Current() != NULL) {
 			HandleUserCommands(CKeyMap::GetCombinedKeyCode((int)wParam, bAlt, bCtrl, bShift));
 		}
@@ -1359,15 +1344,11 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 			MouseOn();
 			break;
 		case IDM_TOGGLE:
-			if (!isDone_future_m_pFileList)
-				future_m_pFileList.wait();
 			if (m_pFileList->FileMarkedForToggle()) {
 				GotoImage(POS_Toggle);
 			}
 			break;
 		case IDM_MARK_FOR_TOGGLE:
-			if (!isDone_future_m_pFileList)
-				future_m_pFileList.wait();
 			if (m_pFileList->Current() != NULL && m_pCurrentImage != NULL && !m_pCurrentImage->IsClipboardImage()) {
 				m_pFileList->MarkCurrentFile();
 			}
@@ -1403,8 +1384,6 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 		case IDM_PRINT:
 			if (m_pCurrentImage != NULL) {
 				StopAnimation(); // stop any running animation
-				if (!isDone_future_m_pFileList)
-					future_m_pFileList.wait();
 				if (m_pPrintImage->Print(this->m_hWnd, m_pCurrentImage, *m_pImageProcParams, CreateDefaultProcessingFlags(), m_pFileList->Current())) {
 					this->Invalidate(FALSE);
 				}
@@ -1412,23 +1391,17 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 			break;
 		case IDM_COPY:
 			if (m_pCurrentImage != NULL) {
-				if (!isDone_future_m_pFileList)
-					future_m_pFileList.wait();
 				CClipboard::CopyImageToClipboard(this->m_hWnd, m_pCurrentImage, m_pFileList->Current());
 			}
 			break;
 		case IDM_COPY_FULL:
 			if (m_pCurrentImage != NULL) {
-				if (!isDone_future_m_pFileList)
-					future_m_pFileList.wait();
 				CClipboard::CopyFullImageToClipboard(this->m_hWnd, m_pCurrentImage, *m_pImageProcParams, CreateDefaultProcessingFlags(), m_pFileList->Current());
 				this->Invalidate(FALSE);
 			}
 			break;
 		case IDM_COPY_PATH:
 			if (m_pCurrentImage != NULL && !m_pCurrentImage->IsClipboardImage()) {
-				if (!isDone_future_m_pFileList)
-					future_m_pFileList.wait();
 				CClipboard::CopyPathToClipboard(this->m_hWnd, m_pCurrentImage, m_pFileList->Current());
 			}
 			break;
@@ -1449,8 +1422,6 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 		case IDM_MOVE_TO_RECYCLE_BIN_CONFIRM:
 		case IDM_MOVE_TO_RECYCLE_BIN_CONFIRM_PERMANENT_DELETE:
 			MouseOn();
-			if (!isDone_future_m_pFileList)
-				future_m_pFileList.wait();
 			if (m_pCurrentImage != NULL && m_pFileList != NULL && !m_pCurrentImage->IsClipboardImage() && sp.AllowFileDeletion()) {
 				LPCTSTR currentFileName = CurrentFileName(false);
 				bool noConfirmation = nCommand == IDM_MOVE_TO_RECYCLE_BIN ||
@@ -1484,30 +1455,20 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 			m_pNavPanelCtl->SetActive(!m_pNavPanelCtl->IsActive());
 			break;
 		case IDM_NEXT:
-			if (!isDone_future_m_pFileList)
-				future_m_pFileList.wait(); // Check if m_pFileList is available first before using.
 			GotoImage(POS_Next);
 			break;
 		case IDM_PREV:
-			if (!isDone_future_m_pFileList)
-				future_m_pFileList.wait(); // Check if m_pFileList is available first before using.
 			GotoImage(POS_Previous);
 			break;
 		case IDM_FIRST:
-			if (!isDone_future_m_pFileList)
-				future_m_pFileList.wait(); // Check if m_pFileList is available first before using.
 			GotoImage(POS_First);
 			break;
 		case IDM_LAST:
-			if (!isDone_future_m_pFileList)
-				future_m_pFileList.wait(); // Check if m_pFileList is available first before using.
 			GotoImage(POS_Last);
 			break;
 		case IDM_LOOP_FOLDER:
 		case IDM_LOOP_RECURSIVELY:
 		case IDM_LOOP_SIBLINGS:
-			if (!isDone_future_m_pFileList)
-				future_m_pFileList.wait();
 			m_pFileList->SetNavigationMode(
 				(nCommand == IDM_LOOP_FOLDER) ? Helpers::NM_LoopDirectory :
 				(nCommand == IDM_LOOP_RECURSIVELY) ? Helpers::NM_LoopSubDirectories : 
@@ -1518,8 +1479,6 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 		case IDM_SORT_NAME:
 		case IDM_SORT_RANDOM:
 		case IDM_SORT_SIZE:
-			if (!isDone_future_m_pFileList)
-				future_m_pFileList.wait();
 			m_pFileList->SetSorting(
 				(nCommand == IDM_SORT_CREATION_DATE) ? Helpers::FS_CreationTime : 
 				(nCommand == IDM_SORT_MOD_DATE) ? Helpers::FS_LastModTime : 
@@ -1531,8 +1490,6 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 			break;
 		case IDM_SORT_ASCENDING:
 		case IDM_SORT_DESCENDING:
-			if (!isDone_future_m_pFileList)
-				future_m_pFileList.wait();
 			m_pFileList->SetSorting(m_pFileList->GetSorting(), nCommand == IDM_SORT_ASCENDING);
 			if (m_pEXIFDisplayCtl->IsActive() || m_bShowFileName) {
 				this->Invalidate(FALSE);
@@ -1608,8 +1565,6 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 				if (CParameterDB::This().DeleteEntry(m_pCurrentImage->GetPixelHash())) {
 					// restore initial parameters and realize the parameters
 					EProcessingFlags procFlags = GetDefaultProcessingFlags(m_bLandscapeMode);
-					if (!isDone_future_m_pFileList)
-						future_m_pFileList.wait();
 					m_pCurrentImage->RestoreInitialParameters(m_pFileList->Current(), 
 						GetDefaultProcessingParams(), procFlags, 0, -1, CPoint(0, 0), CSize(0, 0), CSize(0, 0));
 					*m_pImageProcParams = GetDefaultProcessingParams();
@@ -1700,8 +1655,6 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 							sConfirmMsg, CNLS::GetString(_T("Confirm")), MB_YESNOCANCEL | MB_ICONWARNING);
 					}
 					if (bPerformTransformation) {
-						if (!isDone_future_m_pFileList)
-							future_m_pFileList.wait();
 						CJPEGLosslessTransform::EResult eResult =
 							CJPEGLosslessTransform::PerformTransformation(m_pFileList->Current(), m_pFileList->Current(), HelpersGUI::CommandIdToLosslessTransformation(nCommand), bCrop || sp.CropWithoutPromptLosslessJPEG());
 						if (eResult != CJPEGLosslessTransform::Success) {
@@ -1743,8 +1696,6 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 				EProcessingFlags eProcFlags = GetDefaultProcessingFlags(false);
 				CImageProcessingParams ipa = GetDefaultProcessingParams();
 				if (m_pCurrentImage != NULL) {
-					if (!isDone_future_m_pFileList)
-						future_m_pFileList.wait();
 					m_pCurrentImage->GetFileParams(m_pFileList->Current(), eProcFlags, ipa);
 				}
 				m_bLDC = GetProcessingFlag(eProcFlags, PFLAG_LDC);
@@ -2062,8 +2013,6 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 					bOk = EXIFHelpers::SetModificationDate(strFileName, st);
 				}
 				if (bOk) {
-					if (!isDone_future_m_pFileList)
-						future_m_pFileList.wait();
 					m_pFileList->ModificationTimeChanged();
 					if (m_pEXIFDisplayCtl->IsActive()) {
 						this->Invalidate(FALSE);
@@ -2200,18 +2149,11 @@ void CMainDlg::OpenFile(LPCTSTR sFileName, bool bAfterStartup) {
 	StopMovieMode();
 	StopAnimation();
 	// recreate file list based on image opened
-	if (!isDone_future_m_pFileList)
-		future_m_pFileList.wait();
 	Helpers::ESorting eOldSorting = m_pFileList->GetSorting();
 	bool oOldAscending = m_pFileList->IsSortedAscending();
 	delete m_pFileList;
 	m_sStartupFile = sFileName;
-	//m_pFileList = new CFileList(m_sStartupFile, *m_pDirectoryWatcher, eOldSorting, oOldAscending, CSettingsProvider::This().WrapAroundFolder());
-	isDone_future_m_pFileList = false;
-	future_m_pFileList = std::async(std::launch::async, [this, eOldSorting, oOldAscending]() {
-		m_pFileList = new CFileList(m_sStartupFile, *m_pDirectoryWatcher, eOldSorting, oOldAscending, CSettingsProvider::This().WrapAroundFolder());
-		isDone_future_m_pFileList = true;
-		});
+	m_pFileList = new CFileList(m_sStartupFile, *m_pDirectoryWatcher, eOldSorting, oOldAscending, CSettingsProvider::This().WrapAroundFolder());
 	
 	// free current image and all read ahead images
 	InitParametersForNewImage();
@@ -2222,7 +2164,7 @@ void CMainDlg::OpenFile(LPCTSTR sFileName, bool bAfterStartup) {
 		m_bOutOfMemoryLastImage, m_bExceptionErrorLastImage);
 	m_nLastLoadError = GetLoadErrorAfterOpenFile();
 	if (bAfterStartup) CheckIfApplyAutoFitWndToImage(false);
-	AfterNewImageLoaded(true, false, false, m_sStartupFile);
+	AfterNewImageLoaded(true, false, false);
 	if (m_pCurrentImage != NULL && m_pCurrentImage->IsAnimation()) {
 		StartAnimation();
 	}
@@ -3087,59 +3029,6 @@ void CMainDlg::AfterNewImageLoaded(bool bSynchronize, bool bAfterStartup, bool n
 				// set this factor, no matter if we keep parameters
 				m_pImageProcParams->LightenShadows = m_pCurrentImage->GetInitialProcessParams().LightenShadows;
 			} else if (bLastWasSpecialProcessing && m_bKeepParams) {
-				// take kept value when last was special processing as the special processing value is not usable
-				m_pImageProcParams->LightenShadows = m_pImageProcParamsKept->LightenShadows;
-			}
-			if (m_bKeepParams) {
-				m_nRotation = m_pCurrentImage->GetInitialRotation() + m_nUserRotation;
-			}
-		}
-		if (!bAfterStartup && !m_bIsAnimationPlaying && !noAdjustWindow) {
-			AdjustWindowToImage(false);
-		}
-	}
-}
-
-void CMainDlg::AfterNewImageLoaded(bool bSynchronize, bool bAfterStartup, bool noAdjustWindow, LPCTSTR fileName) {
-	UpdateWindowTitle(fileName);
-	InvalidateHelpDlg();
-	m_pDirectoryWatcher->SetCurrentFile(fileName);
-	if (!m_bIsAnimationPlaying) m_pNavPanelCtl->HideNavPanelTemporary();
-	//m_pPanelMgr->AfterNewImageLoaded();
-	m_pCropCtl->AbortCropping();
-	if (m_pCurrentImage != NULL) m_pCropCtl->SetImageSize(m_pCurrentImage->OrigSize()); // inform CropCtl of the image size for CropImageAR
-	m_pPrintImage->ClearOffsets();
-	if (bSynchronize) {
-		// after loading an image, the per image processing parameters must be synchronized with
-		// the current processing parameters
-		bool bLastWasSpecialProcessing = m_bCurrentImageIsSpecialProcessing;
-		bool bLastWasInParamDB = m_bCurrentImageInParamDB;
-		m_bCurrentImageInParamDB = false;
-		m_bCurrentImageIsSpecialProcessing = false;
-		if (m_pCurrentImage != NULL) {
-			m_dCurrentInitialLightenShadows = m_pCurrentImage->GetInitialProcessParams().LightenShadows;
-			m_bCurrentImageInParamDB = m_pCurrentImage->IsInParamDB();
-			m_bCurrentImageIsSpecialProcessing = m_pCurrentImage->GetLightenShadowFactor() != 1.0f;
-			if (!m_bKeepParams) {
-				m_bHQResampling = GetProcessingFlag(m_pCurrentImage->GetInitialProcessFlags(), PFLAG_HighQualityResampling);
-				m_bAutoContrast = GetProcessingFlag(m_pCurrentImage->GetInitialProcessFlags(), PFLAG_AutoContrast);
-				m_bLDC = GetProcessingFlag(m_pCurrentImage->GetInitialProcessFlags(), PFLAG_LDC);
-
-				m_nRotation = m_pCurrentImage->GetInitialRotation();
-				m_dZoom = m_pCurrentImage->GetInititialZoom();
-				m_offsets = m_pCurrentImage->GetInitialOffsets();
-
-				if (m_pCurrentImage->HasZoomStoredInParamDB()) {
-					m_bUserZoom = m_bUserPan = true;
-				}
-
-				*m_pImageProcParams = m_pCurrentImage->GetInitialProcessParams();
-			}
-			else if (m_bCurrentImageIsSpecialProcessing && m_bKeepParams) {
-				// set this factor, no matter if we keep parameters
-				m_pImageProcParams->LightenShadows = m_pCurrentImage->GetInitialProcessParams().LightenShadows;
-			}
-			else if (bLastWasSpecialProcessing && m_bKeepParams) {
 				// take kept value when last was special processing as the special processing value is not usable
 				m_pImageProcParams->LightenShadows = m_pImageProcParamsKept->LightenShadows;
 			}
