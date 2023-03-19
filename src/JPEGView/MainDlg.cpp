@@ -284,6 +284,7 @@ CMainDlg::CMainDlg(bool bForceFullScreen) {
 
 CMainDlg::~CMainDlg() {
 	delete m_pDirectoryWatcher;
+	delete m_pFileList;
 	if (m_pJPEGProvider != NULL) delete m_pJPEGProvider;
 	delete m_pImageProcParams;
 	delete m_pImageProcParamsKept;
@@ -370,8 +371,8 @@ LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam
 	::ShowCursor(m_bMouseOn);
 
 	m_pFileList = new CFileList(m_sStartupFile, *m_pDirectoryWatcher,
-				(m_eForcedSorting == Helpers::FS_Undefined) ? sp.Sorting() : m_eForcedSorting, sp.IsSortedAscending(), sp.WrapAroundFolder(),
-				0, m_eForcedSorting != Helpers::FS_Undefined);
+			(m_eForcedSorting == Helpers::FS_Undefined) ? sp.Sorting() : m_eForcedSorting, sp.IsSortedAscending(), sp.WrapAroundFolder(),
+			0, m_eForcedSorting != Helpers::FS_Undefined);
 	m_pFileList->SetNavigationMode(sp.Navigation());
 	
 	// create thread pool for processing requests on multiple CPU cores
@@ -2161,9 +2162,6 @@ void CMainDlg::OpenFile(LPCTSTR sFileName, bool bAfterStartup) {
 	m_sSaveDirectory = _T("");
 	MouseOff();
 	this->Invalidate(FALSE);
-	//std::thread([&, this]() {
-	//	m_pFileList = new CFileList(m_sStartupFile, *m_pDirectoryWatcher, eOldSorting, oOldAscending, CSettingsProvider::This().WrapAroundFolder());
-	//	}).detach();
 }
 
 bool CMainDlg::SaveImage(bool bFullSize) {
@@ -3264,9 +3262,9 @@ int CMainDlg::TrackPopupMenu(CPoint pos, HMENU hMenu) {
 int CMainDlg::GetLoadErrorAfterOpenFile() {
 	if (m_pCurrentImage == NULL) {
 		if (CurrentFileName(false) == NULL) {
-			//if (m_pFileList->IsSlideShowList()) {
-			//	return HelpersGUI::FileLoad_SlideShowListInvalid;
-			//}
+			if (m_pFileList->IsSlideShowList()) {
+				return HelpersGUI::FileLoad_SlideShowListInvalid;
+			}
 			return HelpersGUI::FileLoad_NoFilesInDirectory;
 		}
 		return HelpersGUI::FileLoad_LoadError;
