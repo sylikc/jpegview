@@ -52,6 +52,7 @@
 #include "DirectoryWatcher.h"
 #include "DesktopWallpaper.h"
 #include "PrintImage.h"
+#include <future>
 
 //////////////////////////////////////////////////////////////////////////////////////////////
 // Constants
@@ -371,24 +372,39 @@ LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam
 	::ShowCursor(m_bMouseOn);
 
 	// intitialize list of files to show with startup file (and folder)
-	m_pFileList = new CFileList(m_sStartupFile, *m_pDirectoryWatcher,
-		(m_eForcedSorting == Helpers::FS_Undefined) ? sp.Sorting() : m_eForcedSorting, sp.IsSortedAscending(), sp.WrapAroundFolder(),
-		0, m_eForcedSorting != Helpers::FS_Undefined);
-	m_pFileList->SetNavigationMode(sp.Navigation());
+	//m_pFileList = new CFileList(m_sStartupFile, *m_pDirectoryWatcher,
+	//	(m_eForcedSorting == Helpers::FS_Undefined) ? sp.Sorting() : m_eForcedSorting, sp.IsSortedAscending(), sp.WrapAroundFolder(),
+	//	0, m_eForcedSorting != Helpers::FS_Undefined);
+	//std::thread([&, this]() {
+	//	m_pFileList = new CFileList(m_sStartupFile, *m_pDirectoryWatcher,
+	//		(m_eForcedSorting == Helpers::FS_Undefined) ? sp.Sorting() : m_eForcedSorting, sp.IsSortedAscending(), sp.WrapAroundFolder(),
+	//		0, m_eForcedSorting != Helpers::FS_Undefined);
+	//	m_pFileList->SetNavigationMode(sp.Navigation());
+	//	}).detach();
 
+	isDone_future_m_pFileList = false;
+	future_m_pFileList = std::async(std::launch::async, [this, &sp]() {
+		m_pFileList = new CFileList(m_sStartupFile, *m_pDirectoryWatcher,
+					(m_eForcedSorting == Helpers::FS_Undefined) ? sp.Sorting() : m_eForcedSorting, sp.IsSortedAscending(), sp.WrapAroundFolder(),
+					0, m_eForcedSorting != Helpers::FS_Undefined);
+		m_pFileList->SetNavigationMode(sp.Navigation());
+		isDone_future_m_pFileList = true;
+		});
+	
 	// create thread pool for processing requests on multiple CPU cores
 	CProcessingThreadPool::This().CreateThreadPoolThreads();
 
 	// create JPEG provider and request first image - do no processing yet if not in fullscreen mode (as we do not know the size yet)
-	m_pJPEGProvider = new CJPEGProvider(m_hWnd, NUM_THREADS, READ_AHEAD_BUFFERS);	
-	m_pCurrentImage = m_pJPEGProvider->RequestImage(m_pFileList, CJPEGProvider::FORWARD,
-		m_pFileList->Current(), 0, CreateProcessParams(!m_bFullScreenMode), m_bOutOfMemoryLastImage, m_bExceptionErrorLastImage);
+	m_pJPEGProvider = new CJPEGProvider(m_hWnd, NUM_THREADS, READ_AHEAD_BUFFERS);
+	if (!m_sStartupFile.IsEmpty())
+	m_pCurrentImage = m_pJPEGProvider->RequestImage(CJPEGProvider::FORWARD,
+		m_sStartupFile, 0, CreateProcessParams(!m_bFullScreenMode), m_bOutOfMemoryLastImage, m_bExceptionErrorLastImage);
 	if (m_pCurrentImage != NULL && m_pCurrentImage->IsAnimation()) {
 		StartAnimation();
 	}
 	m_nLastLoadError = GetLoadErrorAfterOpenFile();
 	CheckIfApplyAutoFitWndToImage(true);
-	AfterNewImageLoaded(true, true, false); // synchronize to per image parameters
+	AfterNewImageLoaded(true, true, false, m_sStartupFile); // synchronize to per image parameters
 
 	if (!m_bFullScreenMode) {
 		// Window mode, set correct window size
@@ -955,6 +971,8 @@ LRESULT CMainDlg::OnKeyDown(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOO
 		m_pCropCtl->AbortCropping();
 	} else if (!bCtrl && wParam != VK_ESCAPE && m_nLastLoadError == HelpersGUI::FileLoad_NoFilesInDirectory && !m_sStartupFile.IsEmpty()) {
 		// search in subfolders if initial directory has no images
+		if (!isDone_future_m_pFileList)
+			future_m_pFileList.wait(); // Check if m_pFileList is available first before using.
 		bHandled = true;
 		m_pFileList->SetNavigationMode(Helpers::NM_LoopSubDirectories);
 		GotoImage(POS_Next);
@@ -2143,17 +2161,23 @@ void CMainDlg::OpenFile(LPCTSTR sFileName, bool bAfterStartup) {
 	bool oOldAscending = m_pFileList->IsSortedAscending();
 	delete m_pFileList;
 	m_sStartupFile = sFileName;
-	m_pFileList = new CFileList(m_sStartupFile, *m_pDirectoryWatcher, eOldSorting, oOldAscending, CSettingsProvider::This().WrapAroundFolder());
+	//m_pFileList = new CFileList(m_sStartupFile, *m_pDirectoryWatcher, eOldSorting, oOldAscending, CSettingsProvider::This().WrapAroundFolder());
+	isDone_future_m_pFileList = false;
+	future_m_pFileList = std::async(std::launch::async, [this, eOldSorting, oOldAscending]() {
+		m_pFileList = new CFileList(m_sStartupFile, *m_pDirectoryWatcher, eOldSorting, oOldAscending, CSettingsProvider::This().WrapAroundFolder());
+		isDone_future_m_pFileList = true;
+		});
+	
 	// free current image and all read ahead images
 	InitParametersForNewImage();
 	m_pJPEGProvider->NotifyNotUsed(m_pCurrentImage);
 	m_pJPEGProvider->ClearAllRequests();
-	m_pCurrentImage = m_pJPEGProvider->RequestImage(m_pFileList, CJPEGProvider::FORWARD,
-		m_pFileList->Current(), 0, CreateProcessParams(!m_bFullScreenMode && (bAfterStartup || IsAdjustWindowToImage())),
+	m_pCurrentImage = m_pJPEGProvider->RequestImage(CJPEGProvider::FORWARD,
+		m_sStartupFile, 0, CreateProcessParams(!m_bFullScreenMode && (bAfterStartup || IsAdjustWindowToImage())),
 		m_bOutOfMemoryLastImage, m_bExceptionErrorLastImage);
 	m_nLastLoadError = GetLoadErrorAfterOpenFile();
 	if (bAfterStartup) CheckIfApplyAutoFitWndToImage(false);
-	AfterNewImageLoaded(true, false, false);
+	AfterNewImageLoaded(true, false, false, m_sStartupFile);
 	if (m_pCurrentImage != NULL && m_pCurrentImage->IsAnimation()) {
 		StartAnimation();
 	}
@@ -2161,6 +2185,9 @@ void CMainDlg::OpenFile(LPCTSTR sFileName, bool bAfterStartup) {
 	m_sSaveDirectory = _T("");
 	MouseOff();
 	this->Invalidate(FALSE);
+	//std::thread([&, this]() {
+	//	m_pFileList = new CFileList(m_sStartupFile, *m_pDirectoryWatcher, eOldSorting, oOldAscending, CSettingsProvider::This().WrapAroundFolder());
+	//	}).detach();
 }
 
 bool CMainDlg::SaveImage(bool bFullSize) {
@@ -2398,6 +2425,9 @@ void CMainDlg::GotoImage(EImagePosition ePos) {
 }
 
 void CMainDlg::GotoImage(EImagePosition ePos, int nFlags) {
+	if (!isDone_future_m_pFileList)
+		future_m_pFileList.wait(); // Check if m_pFileList is available first before using.
+
 	// Timer handling for slideshows
 	if (ePos == POS_Next || ePos == POS_NextSlideShow) {
 		if (m_nCurrentTimeout > 0) {
@@ -3028,6 +3058,59 @@ void CMainDlg::AfterNewImageLoaded(bool bSynchronize, bool bAfterStartup, bool n
 	}
 }
 
+void CMainDlg::AfterNewImageLoaded(bool bSynchronize, bool bAfterStartup, bool noAdjustWindow, LPCTSTR fileName) {
+	UpdateWindowTitle(fileName);
+	InvalidateHelpDlg();
+	m_pDirectoryWatcher->SetCurrentFile(fileName);
+	if (!m_bIsAnimationPlaying) m_pNavPanelCtl->HideNavPanelTemporary();
+	//m_pPanelMgr->AfterNewImageLoaded();
+	m_pCropCtl->AbortCropping();
+	if (m_pCurrentImage != NULL) m_pCropCtl->SetImageSize(m_pCurrentImage->OrigSize()); // inform CropCtl of the image size for CropImageAR
+	m_pPrintImage->ClearOffsets();
+	if (bSynchronize) {
+		// after loading an image, the per image processing parameters must be synchronized with
+		// the current processing parameters
+		bool bLastWasSpecialProcessing = m_bCurrentImageIsSpecialProcessing;
+		bool bLastWasInParamDB = m_bCurrentImageInParamDB;
+		m_bCurrentImageInParamDB = false;
+		m_bCurrentImageIsSpecialProcessing = false;
+		if (m_pCurrentImage != NULL) {
+			m_dCurrentInitialLightenShadows = m_pCurrentImage->GetInitialProcessParams().LightenShadows;
+			m_bCurrentImageInParamDB = m_pCurrentImage->IsInParamDB();
+			m_bCurrentImageIsSpecialProcessing = m_pCurrentImage->GetLightenShadowFactor() != 1.0f;
+			if (!m_bKeepParams) {
+				m_bHQResampling = GetProcessingFlag(m_pCurrentImage->GetInitialProcessFlags(), PFLAG_HighQualityResampling);
+				m_bAutoContrast = GetProcessingFlag(m_pCurrentImage->GetInitialProcessFlags(), PFLAG_AutoContrast);
+				m_bLDC = GetProcessingFlag(m_pCurrentImage->GetInitialProcessFlags(), PFLAG_LDC);
+
+				m_nRotation = m_pCurrentImage->GetInitialRotation();
+				m_dZoom = m_pCurrentImage->GetInititialZoom();
+				m_offsets = m_pCurrentImage->GetInitialOffsets();
+
+				if (m_pCurrentImage->HasZoomStoredInParamDB()) {
+					m_bUserZoom = m_bUserPan = true;
+				}
+
+				*m_pImageProcParams = m_pCurrentImage->GetInitialProcessParams();
+			}
+			else if (m_bCurrentImageIsSpecialProcessing && m_bKeepParams) {
+				// set this factor, no matter if we keep parameters
+				m_pImageProcParams->LightenShadows = m_pCurrentImage->GetInitialProcessParams().LightenShadows;
+			}
+			else if (bLastWasSpecialProcessing && m_bKeepParams) {
+				// take kept value when last was special processing as the special processing value is not usable
+				m_pImageProcParams->LightenShadows = m_pImageProcParamsKept->LightenShadows;
+			}
+			if (m_bKeepParams) {
+				m_nRotation = m_pCurrentImage->GetInitialRotation() + m_nUserRotation;
+			}
+		}
+		if (!bAfterStartup && !m_bIsAnimationPlaying && !noAdjustWindow) {
+			AdjustWindowToImage(false);
+		}
+	}
+}
+
 bool CMainDlg::IsAdjustWindowToImage() {
 	return !m_bFullScreenMode && !::IsZoomed(m_hWnd) && m_bAutoFitWndToImage;
 }
@@ -3240,6 +3323,26 @@ void CMainDlg::UpdateWindowTitle() {
 	}
 }
 
+void CMainDlg::UpdateWindowTitle(LPCTSTR sCurrentFileName) {
+	bool bShowFullPathInTitle = CSettingsProvider::This().ShowFullPathInTitle();
+
+	if (sCurrentFileName == NULL || m_pCurrentImage == NULL) {
+		this->SetWindowText(_T(JPEGVIEW_TITLE));
+	}
+	else {
+		CString sWindowText = sCurrentFileName;
+		sWindowText += Helpers::GetMultiframeIndex(m_pCurrentImage);
+		if (CSettingsProvider::This().ShowEXIFDateInTitle()) {
+			CEXIFReader* pEXIF = m_pCurrentImage->GetEXIFReader();
+			if (pEXIF != NULL && pEXIF->GetAcquisitionTime().wYear > 1600) {
+				sWindowText += " - " + Helpers::SystemTimeToString(pEXIF->GetAcquisitionTime());
+			}
+		}
+		sWindowText += " - " + CString(JPEGVIEW_TITLE);
+		this->SetWindowText(sWindowText);
+	}
+}
+
 bool CMainDlg::PrepareForModalPanel() {
 	m_pImageProcPanelCtl->SetVisible(false);
 	bool bOldShowNavPanel = m_pNavPanelCtl->IsActive();
@@ -3261,9 +3364,9 @@ int CMainDlg::TrackPopupMenu(CPoint pos, HMENU hMenu) {
 int CMainDlg::GetLoadErrorAfterOpenFile() {
 	if (m_pCurrentImage == NULL) {
 		if (CurrentFileName(false) == NULL) {
-			if (m_pFileList->IsSlideShowList()) {
-				return HelpersGUI::FileLoad_SlideShowListInvalid;
-			}
+			//if (m_pFileList->IsSlideShowList()) {
+			//	return HelpersGUI::FileLoad_SlideShowListInvalid;
+			//}
 			return HelpersGUI::FileLoad_NoFilesInDirectory;
 		}
 		return HelpersGUI::FileLoad_LoadError;

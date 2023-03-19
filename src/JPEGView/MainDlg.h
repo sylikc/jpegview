@@ -7,6 +7,7 @@
 #include "ProcessParams.h"
 #include "Helpers.h"
 #include "CropCtl.h"
+#include <future>
 
 class CFileList;
 class CJPEGProvider;
@@ -194,6 +195,7 @@ public:
 	void BlendBlackRect(CDC & targetDC, CPanel& panel, float fBlendFactor);
 
 	void UpdateWindowTitle();
+	void UpdateWindowTitle(LPCTSTR fileName);
 	void MouseOff();
 	void MouseOn();
 	void GotoImage(EImagePosition ePos);
@@ -228,7 +230,11 @@ private:
 	int m_nAutoStartSlideShow; // if positive: Auto start slide show with given interval in seconds, passed on command line
 	bool m_bAutoExit;
 	Helpers::ESorting m_eForcedSorting; // forced sorting mode on command line
+
 	CFileList* m_pFileList; // used for navigation
+	std::future<void> future_m_pFileList; // check if m_pFileList loaded successfully before accessing the original variable.
+	std::atomic<bool> isDone_future_m_pFileList = true;
+
 	CDirectoryWatcher* m_pDirectoryWatcher; // notifies the main window when the current file changed or a file in the current directory was added or deleted
 	CJPEGProvider * m_pJPEGProvider; // reads image (of any format, not only JPEGs) files, using read ahead
 	CJPEGImage * m_pCurrentImage; // currently displayed image
@@ -360,6 +366,7 @@ private:
 	void ExchangeProcessingParams();
 	void SaveParameters();
 	void AfterNewImageLoaded(bool bSynchronize, bool bAfterStartup, bool noAdjustWindow);
+	void AfterNewImageLoaded(bool bSynchronize, bool bAfterStartup, bool noAdjustWindow, LPCTSTR fileName);
 	CRect ScreenToDIB(const CSize& sizeDIB, const CRect& rect);
 	void ToggleMonitor();
 	CRect GetZoomTextRect(CRect imageProcessingArea);
@@ -379,4 +386,6 @@ private:
 	void StartAnimation();
 	void AdjustAnimationFrameTime();
 	void StopAnimation();
+
+	// Wait for future to finish function
 };

@@ -123,6 +123,85 @@ void CJPEGProvider::NotifyNotUsed(CJPEGImage* pImage) {
 	if (pImage != NULL) delete pImage;
 }
 
+CJPEGImage* CJPEGProvider::RequestImage(EReadAheadDirection eDirection,
+	LPCTSTR strFileName, int nFrameIndex, const CProcessParams& processParams,
+	bool& bOutOfMemory, bool& bExceptionError) {
+	if (strFileName == NULL) {
+		bOutOfMemory = false;
+		bExceptionError = false;
+		return NULL;
+	}
+
+	// Search if we have the requested image already present or in progress
+	CImageRequest* pRequest = FindRequest(strFileName, nFrameIndex);
+	bool bDirectionChanged = eDirection != m_eOldDirection || eDirection == TOGGLE;
+	bool bRemoveAlsoActiveRequests = bDirectionChanged; // if direction changed, all read-ahead requests are wrongly guessed
+	bool bWasOutOfMemory = false;
+	m_eOldDirection = eDirection;
+
+	if (pRequest == NULL) {
+		// no request pending for this file, add to request queue and start async
+		pRequest = StartNewRequest(strFileName, nFrameIndex, processParams);
+		// wait with read ahead when direction changed - maybe user just wants to re-see last image
+		//if (!bDirectionChanged && eDirection != NONE) {
+		//	// start parallel if more than one thread
+		//	StartNewRequestBundle(pFileList, eDirection, processParams, m_nNumThread - 1, NULL);
+		//}
+	}
+
+	// wait for request if not yet ready
+	if (!pRequest->Ready) {
+#ifdef DEBUG
+		::OutputDebugString(_T("Waiting for request: ")); ::OutputDebugString(pRequest->FileName); ::OutputDebugString(_T("\n"));
+#endif
+		::WaitForSingleObject(pRequest->EventFinished, INFINITE);
+		GetLoadedImageFromWorkThread(pRequest);
+	}
+	else {
+		CJPEGImage* pImage = pRequest->Image;
+		if (pImage != NULL) {
+			// make sure the initial parameters are reset as when keep params was on before they are wrong
+			EProcessingFlags procFlags = processParams.ProcFlags;
+			pImage->RestoreInitialParameters(strFileName, processParams.ImageProcParams, procFlags,
+				processParams.RotationParams.Rotation, processParams.Zoom, processParams.Offsets,
+				CSize(processParams.TargetWidth, processParams.TargetHeight), processParams.MonitorSize);
+		}
+#ifdef DEBUG
+		::OutputDebugString(_T("Found in cache: ")); ::OutputDebugString(pRequest->FileName); ::OutputDebugString(_T("\n"));
+#endif
+	}
+
+	// set before removing unused images!
+	pRequest->InUse = true;
+	pRequest->AccessTimeStamp = m_nCurrentTimeStamp++;
+
+	if (pRequest->OutOfMemory) {
+		// The request could not be satisfied because the system is out of memory.
+		// Clear all memory and try again - maybe some readahead requests can be deleted
+#ifdef DEBUG
+		::OutputDebugString(_T("Retrying request because out of memory: ")); ::OutputDebugString(pRequest->FileName); ::OutputDebugString(_T("\n"));
+#endif
+		bWasOutOfMemory = true;
+		if (FreeAllPossibleMemory()) {
+			DeleteElement(pRequest);
+			pRequest = StartRequestAndWaitUntilReady(strFileName, nFrameIndex, processParams);
+		}
+	}
+
+	// cleanup stuff no longer used
+	RemoveUnusedImages(bRemoveAlsoActiveRequests);
+	ClearOldestInactiveRequest();
+
+	// check if we shall start new requests (don't start another request if we are short of memory!)
+	//if (m_requestList.size() < (unsigned int)m_nNumBuffers && !bDirectionChanged && !bWasOutOfMemory && eDirection != NONE) {
+	//	StartNewRequestBundle(pFileList, eDirection, processParams, m_nNumThread, pRequest);
+	//}
+
+	bOutOfMemory = pRequest->OutOfMemory;
+	bExceptionError = pRequest->ExceptionError;
+	return pRequest->Image;
+}
+
 void CJPEGProvider::ClearAllRequests() {
 	std::list<CImageRequest*>::iterator iter;
 	for (iter = m_requestList.begin( ); iter != m_requestList.end( ); iter++ ) {
