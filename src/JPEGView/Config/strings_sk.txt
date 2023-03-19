@@ -56,7 +56,7 @@ All Files	Všetky súbory
 All existing user settings will be preserved.	Všetky existujúce používateľské nastavenia budú zachované.
 Alternatively, right-click an image file of the given type in Windows Explorer and select 'Open with... > Choose default program'	Alternatívne môžete kliknúť na súbor s obrázkom pravým tlačidlom myši v Prieskumníkovi a vybrať voľbu 'Otvoriť s... > Vybrať predvolený program'
 Altitude (m):	Nadmorská výška (m):
-Amount	Suma/množstvo
+Amount	Množstvo
 Application:	Aplikácia:
 Applications	Aplikácie
 Apply	Použiť
