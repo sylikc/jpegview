@@ -369,17 +369,6 @@ LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam
 	m_bMouseOn = !m_bFullScreenMode;
 	::ShowCursor(m_bMouseOn);
 
-	// intitialize list of files to show with startup file (and folder)
-	//m_pFileList = new CFileList(m_sStartupFile, *m_pDirectoryWatcher,
-	//	(m_eForcedSorting == Helpers::FS_Undefined) ? sp.Sorting() : m_eForcedSorting, sp.IsSortedAscending(), sp.WrapAroundFolder(),
-	//	0, m_eForcedSorting != Helpers::FS_Undefined);
-	//std::thread([&, this]() {
-	//	m_pFileList = new CFileList(m_sStartupFile, *m_pDirectoryWatcher,
-	//		(m_eForcedSorting == Helpers::FS_Undefined) ? sp.Sorting() : m_eForcedSorting, sp.IsSortedAscending(), sp.WrapAroundFolder(),
-	//		0, m_eForcedSorting != Helpers::FS_Undefined);
-	//	m_pFileList->SetNavigationMode(sp.Navigation());
-	//	}).detach();
-
 	m_pFileList = new CFileList(m_sStartupFile, *m_pDirectoryWatcher,
 				(m_eForcedSorting == Helpers::FS_Undefined) ? sp.Sorting() : m_eForcedSorting, sp.IsSortedAscending(), sp.WrapAroundFolder(),
 				0, m_eForcedSorting != Helpers::FS_Undefined);
@@ -392,7 +381,7 @@ LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam
 	m_pJPEGProvider = new CJPEGProvider(m_hWnd, NUM_THREADS, READ_AHEAD_BUFFERS);
 	if (!m_sStartupFile.IsEmpty())
 	m_pCurrentImage = m_pJPEGProvider->RequestImage(CJPEGProvider::FORWARD,
-		m_sStartupFile, 0, CreateProcessParams(!m_bFullScreenMode), m_bOutOfMemoryLastImage, m_bExceptionErrorLastImage);
+		m_pFileList->Current(), 0, CreateProcessParams(!m_bFullScreenMode), m_bOutOfMemoryLastImage, m_bExceptionErrorLastImage);
 	if (m_pCurrentImage != NULL && m_pCurrentImage->IsAnimation()) {
 		StartAnimation();
 	}
@@ -3242,26 +3231,6 @@ void CMainDlg::UpdateWindowTitle() {
 		this->SetWindowText(_T(JPEGVIEW_TITLE));
 	} else {
 		CString sWindowText =  sCurrentFileName;
-		sWindowText += Helpers::GetMultiframeIndex(m_pCurrentImage);
-		if (CSettingsProvider::This().ShowEXIFDateInTitle()) {
-			CEXIFReader* pEXIF = m_pCurrentImage->GetEXIFReader();
-			if (pEXIF != NULL && pEXIF->GetAcquisitionTime().wYear > 1600) {
-				sWindowText += " - " + Helpers::SystemTimeToString(pEXIF->GetAcquisitionTime());
-			}
-		}
-		sWindowText += " - " + CString(JPEGVIEW_TITLE);
-		this->SetWindowText(sWindowText);
-	}
-}
-
-void CMainDlg::UpdateWindowTitle(LPCTSTR sCurrentFileName) {
-	bool bShowFullPathInTitle = CSettingsProvider::This().ShowFullPathInTitle();
-
-	if (sCurrentFileName == NULL || m_pCurrentImage == NULL) {
-		this->SetWindowText(_T(JPEGVIEW_TITLE));
-	}
-	else {
-		CString sWindowText = sCurrentFileName;
 		sWindowText += Helpers::GetMultiframeIndex(m_pCurrentImage);
 		if (CSettingsProvider::This().ShowEXIFDateInTitle()) {
 			CEXIFReader* pEXIF = m_pCurrentImage->GetEXIFReader();

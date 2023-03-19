@@ -194,7 +194,6 @@ public:
 	void BlendBlackRect(CDC & targetDC, CPanel& panel, float fBlendFactor);
 
 	void UpdateWindowTitle();
-	void UpdateWindowTitle(LPCTSTR fileName);
 	void MouseOff();
 	void MouseOn();
 	void GotoImage(EImagePosition ePos);
@@ -229,9 +228,7 @@ private:
 	int m_nAutoStartSlideShow; // if positive: Auto start slide show with given interval in seconds, passed on command line
 	bool m_bAutoExit;
 	Helpers::ESorting m_eForcedSorting; // forced sorting mode on command line
-
 	CFileList* m_pFileList; // used for navigation
-
 	CDirectoryWatcher* m_pDirectoryWatcher; // notifies the main window when the current file changed or a file in the current directory was added or deleted
 	CJPEGProvider * m_pJPEGProvider; // reads image (of any format, not only JPEGs) files, using read ahead
 	CJPEGImage * m_pCurrentImage; // currently displayed image
@@ -382,6 +379,4 @@ private:
 	void StartAnimation();
 	void AdjustAnimationFrameTime();
 	void StopAnimation();
-
-	// Wait for future to finish function
 };
