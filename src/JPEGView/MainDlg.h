@@ -233,7 +233,7 @@ private:
 
 	CFileList* m_pFileList; // used for navigation
 	std::future<void> future_m_pFileList; // check if m_pFileList loaded successfully before accessing the original variable.
-	std::atomic<bool> isDone_future_m_pFileList = true;
+	bool isDone_future_m_pFileList = true;
 
 	CDirectoryWatcher* m_pDirectoryWatcher; // notifies the main window when the current file changed or a file in the current directory was added or deleted
 	CJPEGProvider * m_pJPEGProvider; // reads image (of any format, not only JPEGs) files, using read ahead

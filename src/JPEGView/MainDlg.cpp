@@ -285,7 +285,8 @@ CMainDlg::CMainDlg(bool bForceFullScreen) {
 
 CMainDlg::~CMainDlg() {
 	delete m_pDirectoryWatcher;
-	delete m_pFileList;
+	if (isDone_future_m_pFileList)
+		delete m_pFileList;
 	if (m_pJPEGProvider != NULL) delete m_pJPEGProvider;
 	delete m_pImageProcParams;
 	delete m_pImageProcParamsKept;
@@ -1001,6 +1002,8 @@ LRESULT CMainDlg::OnKeyDown(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOO
 
 	if (!bHandled) {
 		// look if any of the user commands wants to handle this key
+		if (!isDone_future_m_pFileList)
+			future_m_pFileList.wait(); // Check if m_pFileList is available first before using.
 		if (m_pFileList->Current() != NULL) {
 			HandleUserCommands(CKeyMap::GetCombinedKeyCode((int)wParam, bAlt, bCtrl, bShift));
 		}
@@ -1352,11 +1355,15 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 			MouseOn();
 			break;
 		case IDM_TOGGLE:
+			if (!isDone_future_m_pFileList)
+				future_m_pFileList.wait();
 			if (m_pFileList->FileMarkedForToggle()) {
 				GotoImage(POS_Toggle);
 			}
 			break;
 		case IDM_MARK_FOR_TOGGLE:
+			if (!isDone_future_m_pFileList)
+				future_m_pFileList.wait();
 			if (m_pFileList->Current() != NULL && m_pCurrentImage != NULL && !m_pCurrentImage->IsClipboardImage()) {
 				m_pFileList->MarkCurrentFile();
 			}
@@ -1392,6 +1399,8 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 		case IDM_PRINT:
 			if (m_pCurrentImage != NULL) {
 				StopAnimation(); // stop any running animation
+				if (!isDone_future_m_pFileList)
+					future_m_pFileList.wait();
 				if (m_pPrintImage->Print(this->m_hWnd, m_pCurrentImage, *m_pImageProcParams, CreateDefaultProcessingFlags(), m_pFileList->Current())) {
 					this->Invalidate(FALSE);
 				}
@@ -1399,17 +1408,23 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 			break;
 		case IDM_COPY:
 			if (m_pCurrentImage != NULL) {
+				if (!isDone_future_m_pFileList)
+					future_m_pFileList.wait();
 				CClipboard::CopyImageToClipboard(this->m_hWnd, m_pCurrentImage, m_pFileList->Current());
 			}
 			break;
 		case IDM_COPY_FULL:
 			if (m_pCurrentImage != NULL) {
+				if (!isDone_future_m_pFileList)
+					future_m_pFileList.wait();
 				CClipboard::CopyFullImageToClipboard(this->m_hWnd, m_pCurrentImage, *m_pImageProcParams, CreateDefaultProcessingFlags(), m_pFileList->Current());
 				this->Invalidate(FALSE);
 			}
 			break;
 		case IDM_COPY_PATH:
 			if (m_pCurrentImage != NULL && !m_pCurrentImage->IsClipboardImage()) {
+				if (!isDone_future_m_pFileList)
+					future_m_pFileList.wait();
 				CClipboard::CopyPathToClipboard(this->m_hWnd, m_pCurrentImage, m_pFileList->Current());
 			}
 			break;
@@ -1430,6 +1445,8 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 		case IDM_MOVE_TO_RECYCLE_BIN_CONFIRM:
 		case IDM_MOVE_TO_RECYCLE_BIN_CONFIRM_PERMANENT_DELETE:
 			MouseOn();
+			if (!isDone_future_m_pFileList)
+				future_m_pFileList.wait();
 			if (m_pCurrentImage != NULL && m_pFileList != NULL && !m_pCurrentImage->IsClipboardImage() && sp.AllowFileDeletion()) {
 				LPCTSTR currentFileName = CurrentFileName(false);
 				bool noConfirmation = nCommand == IDM_MOVE_TO_RECYCLE_BIN ||
@@ -1463,20 +1480,30 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 			m_pNavPanelCtl->SetActive(!m_pNavPanelCtl->IsActive());
 			break;
 		case IDM_NEXT:
+			if (!isDone_future_m_pFileList)
+				future_m_pFileList.wait(); // Check if m_pFileList is available first before using.
 			GotoImage(POS_Next);
 			break;
 		case IDM_PREV:
+			if (!isDone_future_m_pFileList)
+				future_m_pFileList.wait(); // Check if m_pFileList is available first before using.
 			GotoImage(POS_Previous);
 			break;
 		case IDM_FIRST:
+			if (!isDone_future_m_pFileList)
+				future_m_pFileList.wait(); // Check if m_pFileList is available first before using.
 			GotoImage(POS_First);
 			break;
 		case IDM_LAST:
+			if (!isDone_future_m_pFileList)
+				future_m_pFileList.wait(); // Check if m_pFileList is available first before using.
 			GotoImage(POS_Last);
 			break;
 		case IDM_LOOP_FOLDER:
 		case IDM_LOOP_RECURSIVELY:
 		case IDM_LOOP_SIBLINGS:
+			if (!isDone_future_m_pFileList)
+				future_m_pFileList.wait();
 			m_pFileList->SetNavigationMode(
 				(nCommand == IDM_LOOP_FOLDER) ? Helpers::NM_LoopDirectory :
 				(nCommand == IDM_LOOP_RECURSIVELY) ? Helpers::NM_LoopSubDirectories : 
@@ -1487,6 +1514,8 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 		case IDM_SORT_NAME:
 		case IDM_SORT_RANDOM:
 		case IDM_SORT_SIZE:
+			if (!isDone_future_m_pFileList)
+				future_m_pFileList.wait();
 			m_pFileList->SetSorting(
 				(nCommand == IDM_SORT_CREATION_DATE) ? Helpers::FS_CreationTime : 
 				(nCommand == IDM_SORT_MOD_DATE) ? Helpers::FS_LastModTime : 
@@ -1498,6 +1527,8 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 			break;
 		case IDM_SORT_ASCENDING:
 		case IDM_SORT_DESCENDING:
+			if (!isDone_future_m_pFileList)
+				future_m_pFileList.wait();
 			m_pFileList->SetSorting(m_pFileList->GetSorting(), nCommand == IDM_SORT_ASCENDING);
 			if (m_pEXIFDisplayCtl->IsActive() || m_bShowFileName) {
 				this->Invalidate(FALSE);
@@ -1573,6 +1604,8 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 				if (CParameterDB::This().DeleteEntry(m_pCurrentImage->GetPixelHash())) {
 					// restore initial parameters and realize the parameters
 					EProcessingFlags procFlags = GetDefaultProcessingFlags(m_bLandscapeMode);
+					if (!isDone_future_m_pFileList)
+						future_m_pFileList.wait();
 					m_pCurrentImage->RestoreInitialParameters(m_pFileList->Current(), 
 						GetDefaultProcessingParams(), procFlags, 0, -1, CPoint(0, 0), CSize(0, 0), CSize(0, 0));
 					*m_pImageProcParams = GetDefaultProcessingParams();
@@ -1663,6 +1696,8 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 							sConfirmMsg, CNLS::GetString(_T("Confirm")), MB_YESNOCANCEL | MB_ICONWARNING);
 					}
 					if (bPerformTransformation) {
+						if (!isDone_future_m_pFileList)
+							future_m_pFileList.wait();
 						CJPEGLosslessTransform::EResult eResult =
 							CJPEGLosslessTransform::PerformTransformation(m_pFileList->Current(), m_pFileList->Current(), HelpersGUI::CommandIdToLosslessTransformation(nCommand), bCrop || sp.CropWithoutPromptLosslessJPEG());
 						if (eResult != CJPEGLosslessTransform::Success) {
@@ -1704,6 +1739,8 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 				EProcessingFlags eProcFlags = GetDefaultProcessingFlags(false);
 				CImageProcessingParams ipa = GetDefaultProcessingParams();
 				if (m_pCurrentImage != NULL) {
+					if (!isDone_future_m_pFileList)
+						future_m_pFileList.wait();
 					m_pCurrentImage->GetFileParams(m_pFileList->Current(), eProcFlags, ipa);
 				}
 				m_bLDC = GetProcessingFlag(eProcFlags, PFLAG_LDC);
@@ -2021,6 +2058,8 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 					bOk = EXIFHelpers::SetModificationDate(strFileName, st);
 				}
 				if (bOk) {
+					if (!isDone_future_m_pFileList)
+						future_m_pFileList.wait();
 					m_pFileList->ModificationTimeChanged();
 					if (m_pEXIFDisplayCtl->IsActive()) {
 						this->Invalidate(FALSE);
@@ -2157,6 +2196,8 @@ void CMainDlg::OpenFile(LPCTSTR sFileName, bool bAfterStartup) {
 	StopMovieMode();
 	StopAnimation();
 	// recreate file list based on image opened
+	if (!isDone_future_m_pFileList)
+		future_m_pFileList.wait();
 	Helpers::ESorting eOldSorting = m_pFileList->GetSorting();
 	bool oOldAscending = m_pFileList->IsSortedAscending();
 	delete m_pFileList;
@@ -2425,9 +2466,6 @@ void CMainDlg::GotoImage(EImagePosition ePos) {
 }
 
 void CMainDlg::GotoImage(EImagePosition ePos, int nFlags) {
-	if (!isDone_future_m_pFileList)
-		future_m_pFileList.wait(); // Check if m_pFileList is available first before using.
-
 	// Timer handling for slideshows
 	if (ePos == POS_Next || ePos == POS_NextSlideShow) {
 		if (m_nCurrentTimeout > 0) {
