@@ -667,6 +667,10 @@ void CMainDlg::DisplayErrors(CJPEGImage* pCurrentImage, const CRect& clientRect,
 				CNLS::GetString(_T("Press ESC to exit...")), -1, &rectText, DT_CENTER | DT_WORDBREAK | DT_NOPREFIX);
 	   }
 	} else if (pCurrentImage == NULL) {
+		// Access to m_pFileList is needed in this case, wait until initialized:
+		if (!isDone_future_m_pFileList)
+			future_m_pFileList.wait();
+
 		HelpersGUI::DrawImageLoadErrorText(dc, clientRect,
 			(m_nLastLoadError == HelpersGUI::FileLoad_SlideShowListInvalid) ? m_sStartupFile :
 			(m_nLastLoadError == HelpersGUI::FileLoad_NoFilesInDirectory) ? m_pFileList->CurrentDirectory() : CurrentFileName(false),
