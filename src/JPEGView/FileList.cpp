@@ -373,8 +373,6 @@ void CFileList::ModificationTimeChanged() {
 
 CFileList* CFileList::Next() {
 	m_nMarkedIndexShow = -1;
-	WaitIfNotReady(); // If async is still processing, then wait.
-
 	if (m_fileList.size() > 0) {
 		std::list<CFileDesc>::iterator iterTemp = m_iter;
 		if (iterTemp == m_fileList.end())
@@ -415,8 +413,6 @@ CFileList* CFileList::Next() {
 
 CFileList* CFileList::Prev() {
 	m_nMarkedIndexShow = -1;
-	WaitIfNotReady(); // If async is still processing, then wait.
-
 	if (m_iter == m_iterStart) {
 		if (sm_eMode == Helpers::NM_LoopDirectory) {
 			if (!m_bWrapAroundFolder) {
@@ -444,15 +440,11 @@ CFileList* CFileList::Prev() {
 }
 
 void CFileList::First() {
-	WaitIfNotReady(); // If async is still processing, then wait.
-
 	m_nMarkedIndexShow = -1;
 	m_iter = m_iterStart = m_fileList.begin();
 }
 
 void CFileList::Last() {
-	WaitIfNotReady(); // If async is still processing, then wait.
-
 	m_nMarkedIndexShow = -1;
 	MoveIterToLast();
 	m_iterStart = m_fileList.begin();
@@ -529,7 +521,6 @@ LPCTSTR CFileList::PeekNextPrev(int nIndex, bool bForward, bool bToggle) {
 	if (bToggle) {
 		return (m_nMarkedIndexShow == 0) ? m_sMarkedFile : m_sMarkedFileCurrent;
 	} else {
-		WaitIfNotReady(); // If async is still processing, then wait.
 
 		std::list<CFileDesc>::iterator thisIter = m_iter;
 		LPCTSTR sFileName;
