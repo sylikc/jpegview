@@ -190,7 +190,7 @@ static LPCTSTR* GetSupportedFileEndingList() {
 CFileList::CFileList(const CString & sInitialFile, CDirectoryWatcher & directoryWatcher, 
 	Helpers::ESorting eInitialSorting, bool isSortedAscending, bool bWrapAroundFolder, int nLevel, bool forceSorting)
 	: m_directoryWatcher(directoryWatcher) {
-	m_isProcessing = true;
+	m_isProcessing = false;
 	CFileDesc::SetSorting(eInitialSorting, isSortedAscending);
 	m_bDeleteHistory = true;
 	m_bWrapAroundFolder = bWrapAroundFolder;
@@ -218,6 +218,7 @@ CFileList::CFileList(const CString & sInitialFile, CDirectoryWatcher & directory
 	if (!m_bIsSlideShowList) {
 		if (bImageFile || bIsDirectory) {
 			// Expensive operation, it will be run asynchronously to avoid blocking the main thread.
+			m_isProcessing = true;
 			m_future_fileList = std::async(std::launch::async, [this, &sInitialFile, &bWrapAroundFolder]() {
 				FindFiles();
 				m_iter = FindFile(sInitialFile);
