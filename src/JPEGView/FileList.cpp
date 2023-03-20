@@ -1023,8 +1023,3 @@ bool CFileList::TryReadingSlideShowList(const CString & sSlideShowFile) {
 	delete[] fileBuffOrig;
 	return true;
 }
-
-void CFileList::WaitIfNotReady() {
-	if (m_isProcessing)
-		m_future_fileList.wait();
-}

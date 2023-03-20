@@ -149,7 +149,10 @@ public:
 	// delete the chain of CFileLists forward and backward and only leave the current node alive
 	void DeleteHistory(bool onlyForward = false);
 
-	void WaitIfNotReady();
+	inline void CFileList::WaitIfNotReady() {
+		if (m_isProcessing)
+			m_future_fileList.wait();
+	}
 
 private:
 	static Helpers::ENavigationMode sm_eMode;

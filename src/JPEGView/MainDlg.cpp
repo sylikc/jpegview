@@ -370,19 +370,20 @@ LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam
 	m_bMouseOn = !m_bFullScreenMode;
 	::ShowCursor(m_bMouseOn);
 
+	// intitialize list of files to show with startup file (and folder)
 	m_pFileList = new CFileList(m_sStartupFile, *m_pDirectoryWatcher,
-			(m_eForcedSorting == Helpers::FS_Undefined) ? sp.Sorting() : m_eForcedSorting, sp.IsSortedAscending(), sp.WrapAroundFolder(),
-			0, m_eForcedSorting != Helpers::FS_Undefined);
+		(m_eForcedSorting == Helpers::FS_Undefined) ? sp.Sorting() : m_eForcedSorting, sp.IsSortedAscending(), sp.WrapAroundFolder(),
+		0, m_eForcedSorting != Helpers::FS_Undefined);
 	m_pFileList->SetNavigationMode(sp.Navigation());
-	
+
 	// create thread pool for processing requests on multiple CPU cores
 	CProcessingThreadPool::This().CreateThreadPoolThreads();
 
 	// create JPEG provider and request first image - do no processing yet if not in fullscreen mode (as we do not know the size yet)
 	m_pJPEGProvider = new CJPEGProvider(m_hWnd, NUM_THREADS, READ_AHEAD_BUFFERS);
 	if (!m_sStartupFile.IsEmpty())
-	m_pCurrentImage = m_pJPEGProvider->RequestImage(CJPEGProvider::FORWARD,
-		m_pFileList->Current(), 0, CreateProcessParams(!m_bFullScreenMode), m_bOutOfMemoryLastImage, m_bExceptionErrorLastImage);
+		m_pCurrentImage = m_pJPEGProvider->RequestImage(CJPEGProvider::FORWARD,
+			m_pFileList->Current(), 0, CreateProcessParams(!m_bFullScreenMode), m_bOutOfMemoryLastImage, m_bExceptionErrorLastImage);
 	if (m_pCurrentImage != NULL && m_pCurrentImage->IsAnimation()) {
 		StartAnimation();
 	}
