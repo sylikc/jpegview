@@ -1,0 +1,478 @@
+﻿//! This file must be encoded with UTF-8 (e.g. with Windows Notepad)
+//! LICENSE: This localization file is part of JPEGView <https://github.com/sylikc/jpegview> and distributed under the same license.  See <https://github.com/sylikc/jpegview/blob/master/LICENSE.txt> for more info.
+
+//! Standard  Filename Convention: 'strings_%languagecode%.txt' where %languagecode% is the ISO 639-1 language code e.g. 'en' for English (See <https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes>)
+//! Alternate Filename Convention: 'strings_%languagecode%-%countrycode%.txt' where %countrycode% is the ISO 3166-1 country code e.g. 'US' for United States (See <https://en.wikipedia.org/wiki/List_of_ISO_3166_country_codes>)
+//!    Use the alternate filename convention only when the standard filename already exist (e.g. specifying a country-specific dialect for an existing language)
+
+////////////////////
+// ::: Translation Info ::: //
+//: ISO 639-1 code: sk
+//: ISO 3166-1 code:
+//: Language: Slovak
+//: Translator(s) - Name <Contact Info/URL>: Marián Hikaník <www.mojepreklady.net>
+//: Last Updated: 19.03.2023
+//: Additional Notes:
+////////////////////
+
+////////////////////
+// ::: Instructions / Help ::: (help for translators only, does not need to be translated) //
+
+//? Line Format:    English string<tab>Translated string<newline>
+//? * Lines beginning with "//" (comments) are ignored
+//? * Blank lines are ignored
+//? * Lines without a <tab> are ignored
+//? * Lines with no text after the <tab> are ignored
+//? * Multiple tabs are permitted between English and Translated string, e.g. this is valid:    English string<tab><tab><tab>Translated string<newline>
+
+//? NOTE: %s %d have special meanings in the strings, so make sure they appear somewhere in the translated string!
+
+//? For the strings below which are short and have no context:
+//?   "in"        in context: is shorthand for "inch"
+//?   "cm"        in context: is shorthand for "centimeter"
+//?   "C - R"     in context: is "Cyan Red" colors
+//?   "M - G"     in context: is "Magenta Green" colors
+//?   "Y - B"     in context: is "Yellow Blue" colors
+//?   "yes"/"no"  in context: is for showing EXIF flags
+//?   "on"/"off"  in context: is for showing a setting active or not
+//?   "Filter"    in context: is used in Resize image, "sampling filter"
+//?   "Box"       in context: is used in Resize image sampling filter "Box filter"
+////////////////////
+
+
+// ::: Program Strings ::: (sorted alphabetically) //
+%d file(s) renamed, %d file(s) copied, %d folder(s) created	premenovaných súborov: %d, skopírovaných súborov: %d, vytvorených priečinkov: %d
+%s camera raw images (embedded JPEGs only)	%s neupravených (raw) obrázkov z fotoaparátu (len vložené súbory JPEG)
+%s images	%s obrázkov
+%s images (processed by Window Imaging Component - WIC)	%s obrázkov (spracovaných súčasťou Window Imaging Component - WIC)
+'My Pictures' folder	Priečinok 'Moje obrázky'
+About JPEGView (32-bit version)...	O programe JPEGView (32-bitovej verzii)...
+About JPEGView (64-bit version)...	O programe JPEGView (64-bitovej verzii)...
+Acquisition date:	Dátum získania:
+Actual size of image	Aktuálna veľkosť obrázka
+Align image to horizontal or vertical line	Zarovnať obrázok na horizontálnu alebo vertikálnu líniu
+Alignment:	Zarovnanie:
+All Files	Všetky súbory
+All existing user settings will be preserved.	Všetky existujúce používateľské nastavenia budú zachované.
+Alternatively, right-click an image file of the given type in Windows Explorer and select 'Open with... > Choose default program'	Alternatívne môžete kliknúť na súbor s obrázkom pravým tlačidlom myši v Prieskumníkovi a vybrať voľbu 'Otvoriť s... > Vybrať predvolený program'
+Altitude (m):	Nadmorská výška (m):
+Amount	Množstvo
+Application:	Aplikácia:
+Applications	Aplikácie
+Apply	Použiť
+Apply Unsharp Mask	Aplikovať masku rozostrenia
+Apply auto contrast correction using only visible section of image	Aplikovať automatickú korekciu kontrastu s použitím len viditeľnej sekcie obrázka
+Ascending	Vzostupne
+Auto contrast and color correction	Automatická korekcia kontrastu a farieb
+Auto crop corrected image (avoids black border)	Automaticky orezať upravený obrázok (zabráni čiernemu okraju)
+Auto crop rotated image (avoids black border)	Automaticky orezať otočený obrázok (zabráni čiernemu okraju)
+Auto zoom mode	Automatický režim priblíženia
+Back mouse button	Tlačidlo myši späť
+Batch rename/copy of files	Dávkové premenovanie/kopírovanie súborov
+Blend	Zmiešať
+Bottom	Dole
+Box	Box
+Brightness	Jas
+Browse...	Prehľadávať...
+C - R	Azúrová - Červená
+Camera model:	Model fotoaparátu:
+Can't rename file	Nemožno premenovať súbor
+Cancel	Zrušiť
+Cannot read from parameter DB file '%s'!	Nemožno čítať zo súboru DB s parametrami '%s'!
+Cannot read parameter DB file '%s' because it is too large!	Nemožno čítať zo súboru DB s parametrami '%s', pretože je príliš veľký!
+Cannot write to parameter DB file '%s'!	Nemožno zapisovať do súboru DB s parametrami '%s'!
+Click and drag the mouse vertically to correct image tilt.	Náklon obrázka upravíte kliknutím a ťahaním myšou vertikálne.
+Clipboard Image	Obrázok v schránke
+Close	Zavrieť
+Close help text display / Close JPEGView	Zavrieť zobrazenie pomocného textu / Zavrieť JPEGView
+Color Correction	Korekcia farby
+Combine keys with '+'	Klávesy môžete kombinovať pomocou '+'
+Confirm	Potvrdiť
+Confirm save default parameters	Potvrdiť uloženie predvolených parametrov
+Conflicting entries in Param DB	Konfliktné záznamy v DB parametrov
+Continue rename/copy?	Chcete pokračovať v premenovávaní/kopírovaní?
+Contrast	Kontrast
+Contrast Correction	Korekcia kontrastu
+Copy file path of the image to clipboard	Kopírovať cestu k obrázku v schránke
+Copy screen to clipboard / Copy processed full size image to clipboard	Kopírovať obrazovku do schránky/Kopírovať spracovaný obrázok v plnej veľkosti do schránky
+Copying parameter DB to file '%s' failed. Reason: %s	Kopírovanie DB s parametrami do súboru '%s' zlyhalo. Dôvod: %s
+Correct converging lines (perspective correction)	Upraviť línie približovania (korekcia perspektívy)
+Creation date/time	Dátum/čas vytvorenia
+Crop image	Orezať obrázok
+Crop the image and apply transformation? Cropping cannot be undone!	Orezať obrázok a aplikovať transformáciu? Orezanie nemožno vrátiť späť!
+Ctrl + Left mouse	Ctrl + ľavé tlačidlo myši
+Current image	Aktuálny obrázok
+Cyan-Red	Azúrová-červená
+Darken Highlights	Stmaviť zvýraznené
+Date	Dátum
+Date placeholders use the modification date of the image.	Rezervovače miesta pre dátum sa používajú pri dátume úpravy obrázka.
+Day / Month / Year (as numbers)	Deň/mesiac/rok (ako čísla)
+Decoding this format requires the Microsoft Visual C++ Redistributable.	Dekódovanie tohto formátu si vyžaduje Microsoft Visual C++ Redistributable.
+Deep Shadows	Hlboké tiene
+Delete	Vymazať
+Delete current file on disk permanently	Natrvalo vymazať aktuálny súbor z disku
+Delete image file	Vymazať súbor s obrázkom
+Descending	Zostupne
+Display image (EXIF) information	Zobraziť (EXIF) informáciu obrázka
+Do you really want to delete the current image file on disk?	Naozaj chcete vymazať aktuálny súbor obrázka z disku?
+Do you really want to permanently delete the file %filename%?	Naozaj chcete natrvalo vymazať súbor %filename%?
+Do you really want to save the following parameters as default to the INI file	Naozaj chcete uložiť nasledujúce parametre ako predvolené, do súboru INI?
+Drag at the left or right border for asymmetric correction.	Pre asymetrickú korekciu ťahajte na ľavom alebo pravom okraji.
+EXIF date successfully set on %d images, failed on %d images	EXIF dátum bol úspešne nastavený pre %d obrázkov, nastavenie nebolo úspešné pri %d obrázkoch
+Edit	Úpravy
+Enable/disable automatic contrast correction (histogram equalization)	Zapnúť/vypnúť automatickú korekciu kontrasu (vyrovnanie histogramu)
+Enable/disable automatic density correction (local brightness correction)	Zapnúť/vypnúť automatickú korekciu hustoty (úprava lokálneho jasu)
+Enable/disable full screen mode	Zapnúť/vypnúť režim zobrazenia na celú obrazovku
+Enable/disable high quality resampling	Zapnúť/vypnúť veľmi kvalitné prevzorkovanie
+Enable/disable keeping of geometry related (zoom/pan/rotation)	Zapnúť/vypnúť zachovávanie príslušnej geometrie (priblíženia/otočenia fotoaparátu/rotácie)
+Enable/disable landscape picture enhancement mode	Zapnúť/vypnúť režim rozšírenia obrázka na šírku
+Error	Chyba
+Error during rename/copy	Chyba počas premenovávania/kopírovania
+Error saving file	Chyba pri ukladaní súboru
+Error while writing the following registry key	Chyba počas zápisu do nasledujúceho kľúča registrov
+Error writing file to disk!	Chyba počas zápisu na disk!
+Example:	Príklad:
+Exposure bias (EV):	Kompenzácia expozície (EV):
+Exposure time (s):	Čas expozície (s):
+Extension	Koncovka
+Extracted number from original file name	Extrahované číslo z pôvodného názvu súboru
+F-Number:	F-číslo:
+File name	Názov súboru
+File size	Veľkosť súboru
+File type	Typ súboru
+Fill page with crop	Vyplniť stranu s orezom
+Fill with crop	Vyplniť s orezom
+Fill with crop (no zoom)	Vyplniť s orezom (bez priblíženia)
+Filter:	Filter:
+Fit image to screen	Prispôsobiť obrázok obrazovke
+Fit to page	Prispôsobiť strane
+Fit to screen	Prispôsobiť obrazovke
+Fit to screen (no zoom)	Prispôsobiť obrazovke (bez priblíženia)
+Flash fired:	Aktivovaný blesk:
+Focal length (mm):	Ohnisková vzdialenosť (mm):
+Forward mouse button	Tlačidlo myši dopredu
+Full screen mode	Režim zobrazenia na celú obrazovku
+Goto first/last image of current folder (using sort order as defined)	Prejsť na prvý/posledný obrázok aktuálneho priečinka (s použitím definovaného poradia zoraďovania)
+Goto next image	Prejsť na ďalší obrázok
+Goto previous image	Prejsť na predchádzajúci obrázok
+Height	Výška
+Hide histogram	Skryť histogram
+High quality resampling	Prevzorkovanie s vysokou kvalitou
+Hour / Minute (as numbers)	Hodina/minúta (ako čísla)
+ISO Speed:	Rýchlosť ISO:
+Image Pixels	Pixely obrázka
+Image files in folder	Obrázkové súbory v priečinku
+Image height:	Výška obrázka
+Image width and height must be dividable by the JPEG block size (8 or 16) for lossless transformations!	Pre vykonávanie bezstratových transformácií sa musí dať šírka a výška obrázka deliť veľkosťou bloku JPEG (8 alebo 16)!
+Image width:	Šírka obrázka:
+Images	Obrázky
+Increase/decrease auto color cast correction amount	Zvýšiť/znížiť množstvo automatickej korekcie farebného nádychu
+Increase/decrease auto contrast correction amount	Zvýšiť/znížiť intenzitu automatickej korekcie kontrastu
+Increase/decrease brightness	Zvýšiť/znížiť jas
+Increase/decrease contrast	Zvýšiť/znížiť kontrast
+Increase/decrease darkening of highlights (LDC must be on)	Zvýšiť/znížiť intenzitu stmavenia zvýraznených častí (LDC musí byť zapnuté)
+Increase/decrease lightening of shadows (LDC must be on)	Zvýšiť/znížiť zosvetlenie tieňov (LDC musí byť zapnuté)
+Increase/decrease sharpness	Zvýšiť/znížiť ostrosť
+Insufficient rights to change the privilege (DACL) on the registry entry. Continue?	Nedostatočné oprávnenia na zmenu výhradného práva (DACL) pri zázname registra. Chcete pokračovať?
+JPEGView Help	Pomocník JPEGView
+JPEGView is a lean, fast and highly configurable viewer/editor for JPEG, BMP, PNG, WEBP, TGA, GIF and TIFF images with a minimal GUI.	JPEGView je malý, rýchly a veľmi dobre konfigurovateľný prehliadač/editor obrázkových súborov vo formáte JPEG, MBP, PNG, WEBP, TGA, GIF a TIFF, s minimalistickým používateľským rozhraním.
+JPEGView is registered as default viewer for the selected file formats.	JPEGView je zaregistrovaný ako predvolený prehliadač pre vybrané formáty súborov.
+Keep aspect ratio on crop	Zachovať pomer strán pri orezaní
+Keep parameters	Zachovať parametre
+Keep processing parameters between images	Zachovať parametre spracovávania medzi obrázkami
+Known keys:	Známe klávesy:
+Lanczos/Bicubic	Lanczos/bikubicky
+Landscape	Na šírku
+Landscape picture enhancement mode	Režim rozšírenia obrázka na šírku
+Last modification date/time	Dátum/čas poslednej úpravy
+Left	Doľava
+Left mouse & drag	Ľavé tlačidlo myši a ťahanie
+Licensed under the GNU general public license (GPL), see readme file for details	Licencované pod GNU general public license (GPL), podrobnosti nájdete v súbore readme
+Lighten Shadows	Zosvetliť tiene
+Local density correction	Korekcia lokálnej hustoty
+Location:	Lokalita:
+Loop folder	Slučka opakovania v priečinku
+Loop recursively	Opakovať rekurzívne
+Loop siblings	Opakovať príbuzné
+Loop through files in current directory and all sibling folders (folders on same level)	Vytvoriť slučku opakovania súborov v aktuálnom priečinku a všetkých príbuzných priečinkoch (priečinkoch na rovnakej úrovni)
+Loop through files in current directory and all subfolders	Vytvoriť slučku opakovania súborov v aktuálnom priečinku a všetkých podpriečinkoch
+Loop through files in current folder	Vytvoriť slučku opakovania súborov v aktuálnom priečinku
+Lossless JPEG transformations	Bezstratové transformácie JPEG
+M - G	Purpurová - zelená
+Magenta-Green	Purpurová - zelená
+Manage 'Open image with' menu...	Spravovať menu 'Otvoriť obrázok s'...
+Margins:	Okraje:
+Mark image for toggling. Use %s to toggle between marked and current image	Označiť obrázok pre prepnutie. Použite %s na prepnutie medzi označeným a aktuálnym obrázkom
+Maximize/restore to/from virtual desktop (only for multi-monitor systems)	Maximalizovať/obnoviť do/z virtuálnej pracovnej plochy (len pre systémy s viacerými monitormi)
+Menu entries:	Záznamy menu:
+Modification date:	Dátum úpravy:
+Modifier keys:	Klávesy modifikátora:
+Month / Short form (text)	Mesiac/krátka forma (text)
+Mouse wheel	Koliesko myši
+Navigation	Navigácia
+New	Nové
+New height:	Nová výška:
+New name (>> : file gets copied)	Nový názov (>> : súbor sa skopíruje)
+New name contains backslash character!	Nový názov obsahuje znak spätnej lomky!
+New size:	Nová veľkosť:
+New width:	Nová šírka:
+Next image	Ďalší obrázok
+No image loaded!	Nie je načítaný žiadny obrázok!
+No user INI file exists yet. Create user INI file from INI file template?	Ešte neexistuje žiadny používateľský súbor INI. Chcete vytvoriť používateľský súbor INI zo šablóny pre súbor INI?
+None	Žiadny
+Not enough memory available	Nie je dostupný dostatok pamäte
+Note: Set the key 'CropWithoutPromptLosslessJPEG=true' in the INI file to always crop without showing this message.	Poznámka: Nastavte parameter 'CropWithoutPromptLosslessJPEG=true' v súbore INI na orezanie vždy, bez zobrazovania tejto správy.
+Number (consecutively numbered)	Číslo (číslované postupne)
+Number of CPU cores used	Počet využívaných jadier procesora
+Number of JPEG files in folder: %d	Počet súborov JPEG v priečinku: %d
+Number with N digits	Počet s N číslicami
+OK	OK
+Old name	Pôvodný názov
+Open folder containing image and select in Windows Explorer	Otvoriť priečinok obsahujúci obrázok a vybrať ho v Prieskumníkovi
+Open new image or slideshow file	Otvoriť nový obrázok alebo súbor s prezentáciou
+Order files by	Zoradiť súbory podľa
+Orientation:	Orientácia:
+Original file extension	Pôvodná koncovka súboru
+Original file name (with extension)	Pôvodný názov súboru (s koncovkou)
+Original file name (without extension)	Pôvodný názov súboru (bez koncovky)
+Pan image	Posunutie výrezu obrázka (Pan)
+Paper size:	Veľkosť papiera:
+Parameter DB	DB s parametrami
+Parameter DB error	Chyba v DB s parametrami
+Parameter DB file '%s' could not be opened!	Súbor DB s parametrami '%s' sa nepodarilo otvoriť!
+Parameter DB file '%s' is not valid (invalid header)!	Súbor DB s parametrami '%s' nie je platný (neplatná hlavička)!
+Paste from clipboard	Vložiť zo schránky
+Pasting image from clipboard failed!	Vkladanie obrázka zo schránky bolo neúspešné!
+Performing the lossless transformation failed!	Vykonávanie bezstratovej transformácie bolo neúspešné!
+Performing the transformation failed	Vykonávanie transformácie bolo neúspešné
+Perspective Correction	Korekcia perspektívy
+Pixels	Pixely
+Placeholders:	Rezervovače miesta:
+Portrait	Portrét
+Press 'OK' to continue with registration or 'Cancel' to abort all registrations.	Pre pokračovanie s registrovaním stlačte 'OK', stlačením tlačidla 'Zrušiť' prerušíte všetky procesy registrovania.
+Press ESC to exit...	Ukončite stlačením klávesy ESC...
+Press any key to search the subdirectories for image files.	Ak chcete vyhľadať podpriečinky pre obrázky, stlačte akúkoľvek klávesu.
+Preview	Náhľad
+Previous image	Predchádzajúci obrázok
+Print	Tlač
+Print Image	Vytlačiť obrázok
+Printer driver	Ovládač tlačiarne
+Printer:	Tlačiareň:
+Project home page	Domovská stránka projektu
+Radius	Polomer
+Random	Náhodne
+Reading the JPEG file from disk failed	Čítanie súboru JPEG z disku bolo neúspešné
+Reason:	Dôvod:
+Registering or unregistering file extensions in this registry area requires administrator privileges and cannot be done in JPEGView.	Zaregistrovanie alebo zrušenie registrácie koncoviek v tejto oblasti registrov si vyžaduje administrátorské oprávnenia a nemožno ho vykonať v programe JPEGView.
+Registration applies to the current user only.	Registrácia bude použitá iba pre aktuálneho používateľa.
+Remove from	Odstrániť z
+Rename	Premenovať
+Rename/copy images to:	Premenovať/kopírovať obrázky do:
+Renaming file failed!	Premenovávanie súboru bolo neúspešné!
+Reset	Reset
+Resize Image	Zmeniť veľkosť obrázka
+Right	Doprava
+Right mouse button: Context menu	Pravé tlačidlo myši: kontextové menu
+Roll from bottom	Rolovať zdola
+Roll from left	Rolovať zľava
+Roll from right	Rolovať sprava
+Roll from top	Rolovať zhora
+Rotate Image	Otočiť obrázok
+Rotate current file on disk lossless by 270 deg (W/H must be multiple of 16)	Bezstratovo otočiť aktuálny súbor na disku o 270 stupňov (šírka/výška musí byť násobkom 16)
+Rotate current file on disk lossless by 90 deg (W/H must be multiple of 16)	Bezstratovo otočiť aktuálny súbor na disku o 90 stupňov (šírka/výška musí byť násobkom 16)
+Rotate image 90 deg clockwise	Otočiť obrázok o 90 stupňov v smere pohybu hodinových ručičiek
+Rotate image 90 deg counter-clockwise	Otočiť obrázok o 90 stupňov proti smeru pohybu hodinových ručičiek
+Rotate image and fit to screen	Otočiť obrázok a prispôsobiť ho obrazovke
+Rotate image by user-defined angle	Otočiť obrázok o uhol definovaný používateľom
+Rotate the image by dragging with the mouse.	Otočiť obrázok ťahaním myšou.
+SIMD mode used	Použitý režim SIMD
+Same as Image	Rovnaké ako obrázok
+Saturation	Sýtosť
+Save	Uložiť
+Save (%s) / delete (%s) image processing parameters into/from parameter DB	Uložiť (%s)/vymazať (%s) parametre spracovávania obrázka do/z DB s parametrami
+Save as (in screen size/resolution)	Uložiť ako (vo veľkosti obrazovky/rozlíšení)
+Save as template	Uložiť ako šablónu
+Save cropped image	Uložiť orezaný obrázok
+Save processed image to JPEG file (original size)	Uložiť spracovaný obrázok do súboru JPEG (pôvodná veľkosť)
+Save processed image to JPEG file (screen size)	Uložiť spracovaný obrázok do súboru JPEG (veľkosť obrazovky)
+Save to	Uložiť do
+Scaling mode:	Režim škálovania:
+Screen Pixels	Pixely obrazovky
+Scroll from bottom	Rolovať zdola
+Scroll from left	Rolovať zľava
+Scroll from right	Rolovať sprava
+Scroll from top	Rolovať zhora
+Select Printer...	Vybrať tlačiareň...
+Select all	Vybrať všetko
+Select application	Vybrať aplikáciu
+Select file to display in 'File Open' dialog	Vyberte súbor na zobrazenie v dialógu 'Otvoriť súbor'
+Select none	Nevybrať nič
+Select parameter DB to restore	Vybrať DB s parametrami na obnovenie
+Set Fixed Crop Size	Nastaviť veľkosť fixného orezania
+Set JPEGView as default image viewer	Nastaviť JPEGView ako predvolený prehliadač obrázkov
+Set timeout to n/10 sec, respectively n/100 sec (Ctrl+Shift)	Nastaviť časový limit na n/10 sek. resp. n/100 sek. (Ctrl+Shift)
+Shall existing entries be preserved (Yes) or be overwritten by the imported entries (No)?	Chcete zachovať existujúce záznamy (Áno), alebo ich prepísať importovanými záznamami (Nie)?
+Sharpen	Zaostriť
+Sharpen low	Zaostriť mierne
+Sharpen medium	Zaostriť - stredná úroveň
+Shortcut Help	Pomocník pre skratku
+Shortcut key:	Klávesová skratka:
+Show filename	Zobraziť názov súboru
+Show first image in folder	Zobraziť prvý obrázok v priečinku
+Show grid lines	Zobraziť čiary mriežky
+Show histogram	Zobraziť histogram
+Show last image in folder	Zobraziť posledný obrázok v priečinku
+Show navigation panel	Zobraziť panel navigácie
+Show next image	Zobraziť ďalší obrázok
+Show picture info (EXIF)	Zobraziť informáciu o obrázku (EXIF)
+Show previous image	Zobraziť predchádzajúci obrázok
+Show/hide file name	Zobraziť/skryť názov súboru
+Show/hide navigation panel	Zobraziť/skryť panel navigácie
+Show/hide picture information (EXIF data)	Zobraziť/skryť informáciu o obrázku (údaje EXIF)
+Show/hide this help text	Zobraziť/skryť tento text pomocníka
+Size:	Veľkosť:
+Slide from bottom	Posúvať zdola
+Slide from left	Posúvať zľava
+Slide from right	Posúvať sprava
+Slide from top	Posúvať zvrchu
+Slideshow	Prezentácia
+Slideshow with timeout of 'n' seconds (ESC to stop)	Prezentácia s časovým limitom 'n' sekúnd (zastavíte stlačením ESC)
+Sort images by creation date, resp. modification date, resp. file name	Zoradiť obrázky podľa dátumu vytvorenia alebo úpravy, alebo podľa názvu súboru
+Source:	Zdroj:
+Target folders that do not yet exist are created as needed.	Cieľové priečinky, ktoré nie sú vytvorené, sa vytvoria podľa potreby.
+The directory '%s' does not contain any image files!	Priečinok '%s' neobsahuje žiadne súbory s obrázkami!
+The file '%s' could not be copied!	Súbor '%s' nebolo možné skopírovať!
+The file '%s' could not be read!	Súbor '%s' nebolo možné prečítať!
+The file '%s' could not be renamed!	Súbor '%s' nebolo možné premenovať!
+The file '%s' does not contain a list of file names!	Súbor '%s' neobsahuje zoznam názvov súborov!
+The file is read-only!	Súbor je len na čítanie!
+The following file extensions cannot be unregistered because they have been registered in the 'local machine' registry area.	Registráciu nasledujúcich koncoviek súborov nie je možné zrušiť, pretože sú zaregistrované v oblasti registrov 'local machine'.
+The following image extensions are protected by the operating system.	Nasledujúce koncovky obrázkov sú chránené operačným systémom.
+The imported param DB contains entries already present in active param DB.	Importovaná DB s parametrami obsahuje záznamy, ktoré sú už prítomné v aktívnej DB parametrov.
+The new size is too large - width or height is larger than 65535 or total number of pixels is too large!	Nová veľkosť je príliš veľká - šírka alebo výška je väčšia ako 65535 alebo celkový počet pixelov je príliš veľký!
+The old parameter DB file '%s' could not be renamed during conversion to new format!	Pôvodný súbor DB s parametrami '%s' nebolo možné premenovať počas konverzie do nového formátu!
+The operation failed because not enough memory is available!	Operácia bola neúspešná, pretože nie je dostupný dostatok pamäte!
+The parameter DB file '%s' has been created by a newer version of JPEGView!	Súbor DB s parametrami '%s' bol vytvorený novšou verziou programu JPEGView!
+The transformation can be applied if the image is cropped to the next matching size but this will remove some border pixels.	Transformáciu je možné aplikovať, ak je obrázok orezaný na najbližšiu zodpovedajúcu veľkosť, ale týmto úkonom sa odstránia niektoré pixely z okrajov.
+These values will override the values from the INI file located in the program folder of JPEGView!	Tieto hodnoty prepíšu hodnoty prevzaté zo súboru INI umiestneného v priečinku programu JPEGView!
+Threshold	Hranica
+Title:	Názov:
+Toggle between screens (only for multi-monitor systems)	Prepnúť medzi obrazovkami (len pre systémy s viacerými monitormi)
+Toggle window always on top mode	Prepnúť režim okna vždy navrchu
+Toggle window title bar hidden mode	Prepnúť režim skrytia záhlavia okna
+Top	Hore
+Transition Effect	Efekt prechodu
+Unregistering not possible	Odstránenie registrácie nie je možné
+Unsharp mask...	Maska rozostrenia...
+Update user settings with new settings from settings template file?	Aktualizovať používateľské nastavenia na nové nastavenia zo súboru šablóny nastavení?
+Use the 'Default Programs' configuration dialog from the operating system instead.	Namiesto toho použite dialóg operačného systému určený na nastavenie 'Predvolených programov'.
+Use the mouse to draw a line that shall be horizontal or vertical.	Nakreslite myšou líniu, ktorá by mala byť horizontálna alebo vertikálna.
+Warning	Výstraha
+Width	Šírka
+Window mode	Režim okna
+Windows 8 (and above) blocks JPEGView from changing the default program for these file extensions.	Windows 8 (a novší) bráni programu JPEGView v zmene predvoleného programu pre tieto koncovky súborov.
+Writing the resulting JPEG file to disk failed	Zápis výsledného súboru JPEG na disk bol neúspešný
+Y - B	Žltá - Modrá
+Year short form (2 digits)	Rok v krátkej forme (2 číslice)
+Yellow-Blue	Žltá-modrá
+Zoom 1:1 (100 %)	Priblíženie 1:1 (100 %)
+Zoom in (%s)/Zoom out (%s)	Priblížiť (%s)/Oddialiť (%s)
+Zoom in/out image	Priblížiť/oddialiť obrázok
+Zoom mode (drag mouse to zoom)	Režim priblíženia (priblíženie vykonáte ťahaním myšou)
+and image processing (brightness/contrast/sharpen) parameters between images	a parametre spracovania obrázka (jas/kontrast/zaostriť) medzi viacerými obrázkami
+cm	cm
+in	palec
+new menu entry	nová položka menu
+no	nie
+off	vyp.
+on	zap.
+user-defined	definované používateľom
+yes	áno
+
+// ::: Popup Menu Strings ::: (unsorted to preserve context) //
+Stop slide show/movie	Zastaviť prezentáciu/film
+Open image...	Otvoriť obrázok...
+Open image with	Otvoriť obrázok pomocou
+Save processed image...	Uložiť spracovaný obrázok...
+Reload image	Znovu načítať obrázok
+Open containing folder in Explorer	Otvoriť nadradený priečinok v Prieskumníkovi
+Print image...	Vytlačiť obrázok...
+Batch rename/copy...	Dávkové premenovanie/kopírovanie
+Set modification date	Nastaviť dátum úpravy
+to current date	na aktuálny dátum
+to EXIF date	na dátum v EXIF
+to EXIF date (all files in folder)	na dátum v EXIF (všetky súbory v priečinku)
+Set as desktop wallpaper	Nastaviť ako pozadie pracovnej plochy
+Use original image	Použiť pôvodný obrázok
+Use processed image as displayed	Použiť upravený obrázok ako zobrazený
+Copy to clipboard	Kopírovať do schránky
+Copy original size image	Kopírovať obrázok v pôvodnej veľkosti
+Copy file path	Kopírovať cestu k súboru
+Display order	Poradie zobrazovania
+Modification date	Dátum úpravy
+Creation date	Dátum vytvorenia
+Play folder as slideshow/movie	Prehrávať obsah priečinka ako prezentáciu/film
+Waiting time	Čas čakania
+1 sec	1 sek.
+2 sec	2 sek.
+3 sec	3 sek.
+4 sec	4 sek.
+5 sec	5 sek.
+7 sec	7 sek.
+10 sec	10 sek.
+20 sec	20 sek.
+Transition Speed	Rýchlosť prechodu
+Very fast	Veľmi rýchlo
+Fast	Rýchlo
+Normal	Normálne
+Slow	Pomaly
+Very slow	Veľmi pomaly
+Movie	Film
+Playback speed	Rýchlosť prehrávania
+5 fps	5 snímok/sekundu
+10 fps	10 snímok/sekundu
+25 fps	25 snímok/sekundu
+30 fps	30 snímok/sekundu
+50 fps	50 snímok/sekundu
+100 fps	100 snímok/sekundu
+Transform image	Transformovať obrázok
+Rotate +90	Otočiť o +90
+Rotate -90	Otočiť o -90
+Rotate...	Otočenie...
+Change size...	Zmeniť veľkosť...
+Perspective correction...	Korekcia perspektívy...
+Mirror horizontally	Zrkadliť horizontálne
+Mirror vertically	Zrkadliť vertikálne
+Rotate 180	Otočiť o 180
+Auto correction	Automatická korekcia
+Save parameters to DB	Uložiť parametre do DB
+Clear parameters from DB	Vyčistiť parametre z DB
+Zoom	Priblíženie
+Span all screens	Rozdeliť - všetky obrazovky
+Fit window to image	Prispôsobiť okno obrázku
+Hide window title bar	Skryť panel s názvom okna
+Set window always on top	Nastaviť okno vždy navrchu
+Settings/Admin	Nastavenia/Admin
+Edit global settings...	Upraviť všeobecné nastavenia...
+Edit user settings...	Upraviť používateľské nastavenia...
+Update user settings...	Aktualizovať používateľské nastavenia
+Set current parameters as default values...	Nastaviť aktuálne parametre ako predvolené hodnoty...
+Set as default viewer...	Nastaviť ako predvolený prehliadač...
+Backup parameter DB...	Zálohovať DB s parametrami...
+Restore parameter DB...	Obnoviť DB s parametrami...
+User commands	Používateľské príkazy
+About JPEGView...	O programe JPEGView...
+Exit	Ukončiť
+Crop Selection	Orezať výber
+Crop Selection Lossless...	Orezať výber bezstratovo...
+Copy Selection to Clipboard	Kopírovať výber do schránky
+Crop Mode	Režim orezania
+Free	Voľné
+Fixed size...	Fixná veľkosť...
+Zoom to Selection	Priblížiť na výber
+
+// ::: STATUS: Last Checked/Updated by Script ::: 2023-03-20T22:21:54.104218+00:00 //
+//! Translation Progress: 100%
+//! * Total (Strings + Menu) = 427
+//! * Done = 427
+//! * Missing = 0 (0%)
