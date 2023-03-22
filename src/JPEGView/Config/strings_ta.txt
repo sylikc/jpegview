@@ -1,0 +1,478 @@
+﻿//! This file must be encoded with UTF-8 (e.g. with Windows Notepad)
+//! LICENSE: This localization file is part of JPEGView <https://github.com/sylikc/jpegview> and distributed under the same license.  See <https://github.com/sylikc/jpegview/blob/master/LICENSE.txt> for more info.
+
+//! Standard  Filename Convention: 'strings_%languagecode%.txt' where %languagecode% is the ISO 639-1 language code e.g. 'en' for English (See <https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes>)
+//! Alternate Filename Convention: 'strings_%languagecode%-%countrycode%.txt' where %countrycode% is the ISO 3166-1 country code e.g. 'US' for United States (See <https://en.wikipedia.org/wiki/List_of_ISO_3166_country_codes>)
+//!    Use the alternate filename convention only when the standard filename already exist (e.g. specifying a country-specific dialect for an existing language)
+
+////////////////////
+// ::: Translation Info ::: //
+//: ISO 639-1 code: ta
+//: ISO 3166-1 code:
+//: Language: Tamil
+//: Translator(s) - Name <Contact Info/URL>: Nirmal G. <gnirmalin@gmail.com>
+//: Last Updated: 22-Mar-2023
+//: Additional Notes:
+////////////////////
+
+////////////////////
+// ::: Instructions / Help ::: (help for translators only, does not need to be translated) //
+
+//? Line Format:    English string<tab>Translated string<newline>
+//? * Lines beginning with "//" (comments) are ignored
+//? * Blank lines are ignored
+//? * Lines without a <tab> are ignored
+//? * Lines with no text after the <tab> are ignored
+//? * Multiple tabs are permitted between English and Translated string, e.g. this is valid:    English string<tab><tab><tab>Translated string<newline>
+
+//? NOTE: %s %d have special meanings in the strings, so make sure they appear somewhere in the translated string!
+
+//? For the strings below which are short and have no context:
+//?   "in"        in context: is shorthand for "inch"
+//?   "cm"        in context: is shorthand for "centimeter"
+//?   "C - R"     in context: is "Cyan Red" colors
+//?   "M - G"     in context: is "Magenta Green" colors
+//?   "Y - B"     in context: is "Yellow Blue" colors
+//?   "yes"/"no"  in context: is for showing EXIF flags
+//?   "on"/"off"  in context: is for showing a setting active or not
+//?   "Filter"    in context: is used in Resize image, "sampling filter"
+//?   "Box"       in context: is used in Resize image sampling filter "Box filter"
+////////////////////
+
+
+// ::: Program Strings ::: (sorted alphabetically) //
+%d file(s) renamed, %d file(s) copied, %d folder(s) created		%d கோப்பு(கள்) மறுபெயரிடப்பட்டது, %d கோப்பு(கள்) நகலெடுக்கப்பட்டது, %d கோப்புறை(கள்) உருவாக்கப்பட்டது
+%s camera raw images (embedded JPEGs only)		%s கேமரா மூலப் படங்கள் (உட்பொதிக்கப்பட்ட JPEGகள் மட்டும்)
+%s images		%s படங்கள்
+%s images (processed by Window Imaging Component - WIC)		%s படங்கள் (சாளர இமேஜிங் உபகரணத்தால் செயலாக்கப்பட்டது - WIC)
+'My Pictures' folder		'எனது படங்கள்' கோப்புறை
+About JPEGView (32-bit version)...		JPEGView (32-பிட் பதிப்பு) பற்றி...
+About JPEGView (64-bit version)...		JPEGView (64-பிட் பதிப்பு) பற்றி...
+Acquisition date:		கையகப்படுத்தும் தேதி:
+Actual size of image		படத்தின் உண்மையான அளவு
+Align image to horizontal or vertical line		படத்தை கிடைமட்ட அல்லது செங்குத்து கோட்டிற்கு சீரமைக்கவும்
+Alignment:		சீரமைப்பு:
+All Files		அனைத்து கோப்புகள்
+All existing user settings will be preserved.		ஏற்கனவே உள்ள அனைத்து பயனர் அமைப்புகளும் பாதுகாக்கப்படும்.
+Alternatively, right-click an image file of the given type in Windows Explorer and select 'Open with... > Choose default program'		மாற்றாக, Windows Explorer இல் கொடுக்கப்பட்ட வகையின் படக் கோப்பை வலது கிளிக் செய்து, 'இதனுடன் திற... > இயல்புநிலை நிரலைத் தேர்ந்தெடு' என்பதைத் தேர்ந்தெடுக்கவும்.
+Altitude (m):		உயரம் (மீ):
+Amount		தொகை
+Application:		விண்ணப்பம்:
+Applications		விண்ணப்பங்கள்
+Apply		விண்ணப்பிக்கவும்
+Apply Unsharp Mask		Unsharp முகமூடியைப் பயன்படுத்துங்கள்
+Apply auto contrast correction using only visible section of image		படத்தின் தெரியும் பகுதியை மட்டும் பயன்படுத்தி தானியங்கு மாறுபாடு திருத்தத்தைப் பயன்படுத்தவும்
+Ascending		ஏறுமுகம்
+Auto contrast and color correction		தானியங்கு மாறுபாடு மற்றும் வண்ண திருத்தம்
+Auto crop corrected image (avoids black border)		தானாக செதுக்கப்பட்ட படம் (கருப்பு எல்லையைத் தவிர்க்கிறது)
+Auto crop rotated image (avoids black border)		தானாக செதுக்கும் சுழலும் படம் (கருப்பு கரையை தவிர்க்கிறது)
+Auto zoom mode		ஆட்டோ ஜூம் பயன்முறை
+Back mouse button		பின் சுட்டி பொத்தான்
+Batch rename/copy of files		தொகுதி மறுபெயரிடுதல்/கோப்புகளின் நகல்
+Blend		கலவை
+Bottom		கீழே
+Box		பெட்டி
+Brightness		பிரகாசம்
+Browse...		உலாவுக...
+C - R		சி - ஆர்
+Camera model:		கேமரா மாடல்:
+Can't rename file		கோப்பை மறுபெயரிட முடியாது
+Cancel		ரத்து செய்
+Cannot read from parameter DB file '%s'!		'%s' அளவுரு DB கோப்பிலிருந்து படிக்க முடியாது!
+Cannot read parameter DB file '%s' because it is too large!		அளவுரு DB கோப்பு '%s' மிகவும் பெரியதாக இருப்பதால் படிக்க முடியவில்லை!
+Cannot write to parameter DB file '%s'!		'%s' அளவுரு DB கோப்பில் எழுத முடியாது!
+Click and drag the mouse vertically to correct image tilt.		படத்தின் சாய்வை சரிசெய்ய, சுட்டியை செங்குத்தாக கிளிக் செய்து இழுக்கவும்.
+Clipboard Image		கிளிப்போர்டு படம்
+Close		நெருக்கமான
+Close help text display / Close JPEGView		உதவி உரை காட்சியை மூடவும் / JPEGView ஐ மூடவும்
+Color Correction		வண்ண திருத்தம்
+Combine keys with '+'		விசைகளை '+' உடன் இணைக்கவும்
+Confirm		உறுதிப்படுத்தவும்
+Confirm save default parameters		இயல்புநிலை அளவுருக்களை சேமிப்பதை உறுதிப்படுத்தவும்
+Conflicting entries in Param DB		பரம் டிபியில் முரண்பாடான உள்ளீடுகள்
+Continue rename/copy?		மறுபெயரிடுவதைத் தொடரவா?
+Contrast		மாறுபாடு
+Contrast Correction		மாறுபாடு திருத்தம்
+Copy file path of the image to clipboard		படத்தின் கோப்பு பாதையை கிளிப்போர்டுக்கு நகலெடுக்கவும்
+Copy screen to clipboard / Copy processed full size image to clipboard		திரையை கிளிப்போர்டுக்கு நகலெடு / செயலாக்கப்பட்ட முழு அளவு படத்தை கிளிப்போர்டுக்கு நகலெடுக்கவும்
+Copying parameter DB to file '%s' failed. Reason: %s		'%s' கோப்பிற்கு DB அளவுருவை நகலெடுக்க முடியவில்லை. காரணம்: %s
+Correct converging lines (perspective correction)		ஒருங்கிணைக்கும் கோடுகளை சரிசெய்யவும் (முன்னோக்கு திருத்தம்)
+Creation date/time		உருவாக்கிய தேதி/நேரம்
+Crop image		படத்தை வெட்டு
+Crop the image and apply transformation? Cropping cannot be undone!		படத்தை செதுக்கி, மாற்றத்தைப் பயன்படுத்தவா? செதுக்குதலை செயல்தவிர்க்க முடியாது!
+Ctrl + Left mouse		Ctrl + இடது சுட்டி
+Current image		தற்போதைய படம்
+Cyan-Red		சியான்-சிவப்பு
+Darken Highlights		இருண்ட சிறப்பம்சங்கள்
+Date		தேதி
+Date placeholders use the modification date of the image.		தேதி ஒதுக்கிடங்கள் படத்தின் மாற்ற தேதியைப் பயன்படுத்துகின்றன.
+Day / Month / Year (as numbers)		நாள் / மாதம் / ஆண்டு (எண்களாக)
+Decoding this format requires the Microsoft Visual C++ Redistributable.		இந்த வடிவமைப்பை டிகோட் செய்ய மைக்ரோசாஃப்ட் விஷுவல் சி++ மறுபகிர்வு செய்ய வேண்டும்.
+Deep Shadows		ஆழமான நிழல்கள்
+Delete		அழி
+Delete current file on disk permanently		வட்டில் உள்ள தற்போதைய கோப்பை நிரந்தரமாக நீக்கவும்
+Delete image file		படக் கோப்பை நீக்கு
+Descending		இறங்குதல்
+Display image (EXIF) information		காட்சி படத்தை (EXIF) தகவல்
+Do you really want to delete the current image file on disk?		வட்டில் உள்ள தற்போதைய படக் கோப்பை நீக்க விரும்புகிறீர்களா?
+Do you really want to permanently delete the file %filename%?		%filename% கோப்பை நிரந்தரமாக நீக்க விரும்புகிறீர்களா?
+Do you really want to save the following parameters as default to the INI file		INI கோப்பில் பின்வரும் அளவுருக்களை இயல்புநிலையாகச் சேமிக்க விரும்புகிறீர்களா
+Drag at the left or right border for asymmetric correction.		சமச்சீரற்ற திருத்தத்திற்கு இடது அல்லது வலது எல்லையில் இழுக்கவும்.
+EXIF date successfully set on %d images, failed on %d images		%d படங்களில் EXIF தேதி வெற்றிகரமாக அமைக்கப்பட்டது, %d படங்களில் தோல்வியடைந்தது
+Edit		தொகு
+Enable/disable automatic contrast correction (histogram equalization)		தானியங்கி மாறுபாடு திருத்தத்தை இயக்கு/முடக்கு (ஹிஸ்டோகிராம் சமப்படுத்தல்)
+Enable/disable automatic density correction (local brightness correction)		தானியங்கி அடர்த்தி திருத்தத்தை இயக்கு/முடக்கு (உள்ளூர் பிரகாச திருத்தம்)
+Enable/disable full screen mode		முழுத்திரை பயன்முறையை இயக்கு/முடக்கு
+Enable/disable high quality resampling		உயர்தர மறு மாதிரியை இயக்கு/முடக்கு
+Enable/disable keeping of geometry related (zoom/pan/rotation)		வடிவியல் தொடர்பானவற்றை (ஜூம்/பான்/சுழற்சி) வைத்திருப்பதை இயக்கு/முடக்கு
+Enable/disable landscape picture enhancement mode		நிலப்பரப்பு படத்தை மேம்படுத்தும் பயன்முறையை இயக்கு/முடக்கு
+Error		பிழை
+Error during rename/copy		மறுபெயரிடும்போது/நகலின் போது பிழை
+Error saving file		கோப்பை சேமிப்பதில் பிழை
+Error while writing the following registry key		பின்வரும் ரெஜிஸ்ட்ரி கீயை எழுதும் போது பிழை
+Error writing file to disk!		கோப்பை வட்டுக்கு எழுதுவதில் பிழை!
+Example:		உதாரணமாக:
+Exposure bias (EV):		வெளிப்பாடு சார்பு (EV):
+Exposure time (s):		வெளிப்பாடு நேரம் (கள்):
+Extension		நீட்டிப்பு
+Extracted number from original file name		அசல் கோப்பு பெயரிலிருந்து எண் பிரித்தெடுக்கப்பட்டது
+F-Number:		F-எண்:
+File name		கோப்பு பெயர்
+File size		கோப்பின் அளவு
+File type		கோப்பு வகை
+Fill page with crop		செதுக்கப்பட்ட பக்கத்தை நிரப்பவும்
+Fill with crop		பயிர் நிரப்பவும்
+Fill with crop (no zoom)		செதுக்கினால் நிரப்பவும் (ஜூம் இல்லை)
+Filter:		வடிகட்டி:
+Fit image to screen		படத்தை திரையில் பொருத்தவும்
+Fit to page		பக்கத்துக்குள் முடக்கு
+Fit to screen		திரைக்கு பொருந்தும்
+Fit to screen (no zoom)		திரைக்கு பொருத்தம் (ஜூம் இல்லை)
+Flash fired:		ஃபிளாஷ் எரிந்தது:
+Focal length (mm):		குவிய நீளம் (மிமீ):
+Forward mouse button		முன்னோக்கி சுட்டி பொத்தான்
+Full screen mode		முழு திரையில் முறையில்
+Goto first/last image of current folder (using sort order as defined)		தற்போதைய கோப்புறையின் முதல்/கடைசி படத்தைப் பயன்படுத்தவும் (வரையறுக்கப்பட்ட வரிசை வரிசையைப் பயன்படுத்தி)
+Goto next image		அடுத்த படத்திற்கு செல்க
+Goto previous image		முந்தைய படத்திற்கு செல்க
+Height		உயரம்
+Hide histogram		ஹிஸ்டோகிராமை மறை
+High quality resampling		உயர்தர மறு மாதிரி
+Hour / Minute (as numbers)		மணிநேரம் / நிமிடம் (எண்களாக)
+ISO Speed:		ISO வேகம்:
+Image Pixels		பட பிக்சல்கள்
+Image files in folder		கோப்புறையில் படக் கோப்புகள்
+Image height:		படத்தின் உயரம்:
+Image width and height must be dividable by the JPEG block size (8 or 16) for lossless transformations!		இழப்பற்ற மாற்றங்களுக்கு படத்தின் அகலம் மற்றும் உயரம் JPEG தொகுதி அளவு (8 அல்லது 16) மூலம் வகுக்கப்பட வேண்டும்!
+Image width:		படத்தின் அகலம்:
+Images		படங்கள்
+Increase/decrease auto color cast correction amount		தானியங்கு வண்ண வார்ப்பு திருத்தத்தின் அளவை அதிகரிக்கவும்/குறைக்கவும்
+Increase/decrease auto contrast correction amount		தானியங்கு மாறுபாடு திருத்தத்தின் அளவை அதிகரிக்கவும்/குறைக்கவும்
+Increase/decrease brightness		பிரகாசத்தை அதிகரிக்கவும்/குறைக்கவும்
+Increase/decrease contrast		மாறுபாட்டை அதிகரிக்கவும்/குறைக்கவும்
+Increase/decrease darkening of highlights (LDC must be on)		சிறப்பம்சங்களின் கருமையை அதிகரிக்கவும்/குறைக்கவும் (எல்.டி.சி இயக்கத்தில் இருக்க வேண்டும்)
+Increase/decrease lightening of shadows (LDC must be on)		நிழல்களின் மின்னலை அதிகரிக்கவும்/குறைக்கவும் (எல்.டி.சி இயக்கத்தில் இருக்க வேண்டும்)
+Increase/decrease sharpness		கூர்மையை அதிகரிக்கவும்/குறைக்கவும்
+Insufficient rights to change the privilege (DACL) on the registry entry. Continue?		பதிவேட்டில் உள்ள சிறப்புரிமையை (DACL) மாற்ற போதுமான உரிமைகள் இல்லை. தொடரவா?
+JPEGView Help		JPEGView உதவி
+JPEGView is a lean, fast and highly configurable viewer/editor for JPEG, BMP, PNG, WEBP, TGA, GIF and TIFF images with a minimal GUI.		JPEGView என்பது குறைந்த GUI உடன் JPEG, BMP, PNG, WEBP, TGA, GIF மற்றும் TIFF படங்களுக்கான மெலிந்த, வேகமான மற்றும் மிகவும் உள்ளமைக்கக்கூடிய பார்வையாளர்/எடிட்டர் ஆகும்.
+JPEGView is registered as default viewer for the selected file formats.		தேர்ந்தெடுக்கப்பட்ட கோப்பு வடிவங்களுக்கான இயல்புநிலை பார்வையாளராக JPEGView பதிவுசெய்யப்பட்டுள்ளது.
+Keep aspect ratio on crop		பயிர் மீது விகிதத்தை வைத்திருங்கள்
+Keep parameters		அளவுருக்களை வைத்திருங்கள்
+Keep processing parameters between images		படங்களுக்கிடையில் அளவுருக்களை செயலாக்கவும்
+Known keys:		தெரிந்த விசைகள்:
+Lanczos/Bicubic		லான்சோஸ்/பிகுபிக்
+Landscape		நிலப்பரப்பு
+Landscape picture enhancement mode		நிலப்பரப்பு படத்தை மேம்படுத்தும் முறை
+Last modification date/time		கடைசி மாற்றம் தேதி/நேரம்
+Left		விட்டு
+Left mouse & drag		இடது சுட்டி & இழுக்கவும்
+Licensed under the GNU general public license (GPL), see readme file for details		GNU பொது பொது உரிமத்தின் (GPL) கீழ் உரிமம் பெற்றது, விவரங்களுக்கு readme கோப்பைப் பார்க்கவும்
+Lighten Shadows		நிழல்களை ஒளிரச் செய்யுங்கள்
+Local density correction		உள்ளூர் அடர்த்தி திருத்தம்
+Location:		இடம்:
+Loop folder		லூப் கோப்புறை
+Loop recursively		சுழல் சுழற்சி
+Loop siblings		லூப் உடன்பிறப்புகள்
+Loop through files in current directory and all sibling folders (folders on same level)		தற்போதைய கோப்பகத்தில் உள்ள கோப்புகள் மற்றும் அனைத்து உடன்பிறப்பு கோப்புறைகள் (அதே மட்டத்தில் உள்ள கோப்புறைகள்)
+Loop through files in current directory and all subfolders		தற்போதைய கோப்பகம் மற்றும் அனைத்து துணை கோப்புறைகளிலும் உள்ள கோப்புகளை லூப் செய்யவும்
+Loop through files in current folder		தற்போதைய கோப்புறையில் உள்ள கோப்புகளை லூப் செய்யவும்
+Lossless JPEG transformations		இழப்பற்ற JPEG மாற்றங்கள்
+M - G		எம் - ஜி
+Magenta-Green		மெஜந்தா-பச்சை
+Manage 'Open image with' menu...		'படத்துடன் திற' மெனுவை நிர்வகி...
+Margins:		விளிம்புகள்:
+Mark image for toggling. Use %s to toggle between marked and current image		மாறுவதற்கு படத்தைக் குறிக்கவும். குறிக்கப்பட்ட மற்றும் தற்போதைய படத்திற்கு இடையில் மாறுவதற்கு %s ஐப் பயன்படுத்தவும்
+Maximize/restore to/from virtual desktop (only for multi-monitor systems)		மெய்நிகர் டெஸ்க்டாப்பில் இருந்து/அதிகப்படுத்துதல்/மீட்டமைத்தல் (பல கண்காணிப்பு அமைப்புகளுக்கு மட்டும்)
+Menu entries:		மெனு உள்ளீடுகள்:
+Modification date:		மாற்றம் தேதி:
+Modifier keys:		மாற்றி விசைகள்:
+Month / Short form (text)		மாதம் / குறுகிய வடிவம் (உரை)
+Mouse wheel		சுட்டி சக்கரம்
+Navigation		வழிசெலுத்தல்
+New		புதியது
+New height:		புதிய உயரம்:
+New name (>> : file gets copied)		புதிய பெயர் (>> : கோப்பு நகலெடுக்கப்படும்)
+New name contains backslash character!		புதிய பெயரில் பின்சாய்வு எழுத்து உள்ளது!
+New size:		புதிய அளவு:
+New width:		புதிய அகலம்:
+Next image		அடுத்த படம்
+No image loaded!		படம் ஏற்றப்படவில்லை!
+No user INI file exists yet. Create user INI file from INI file template?		பயனர் INI கோப்பு எதுவும் இதுவரை இல்லை. INI கோப்பு டெம்ப்ளேட்டிலிருந்து பயனர் INI கோப்பை உருவாக்கவா?
+None		இல்லை
+Not enough memory available		போதுமான நினைவகம் இல்லை
+Note: Set the key 'CropWithoutPromptLosslessJPEG=true' in the INI file to always crop without showing this message.		குறிப்பு: INI கோப்பில் உள்ள 'CropWithoutPromptLosslessJPEG=true' விசையை இந்தச் செய்தியைக் காட்டாமல் எப்போதும் செதுக்கும்படி அமைக்கவும்.
+Number (consecutively numbered)		எண் (தொடர்ச்சியாக எண்ணப்பட்டது)
+Number of CPU cores used		பயன்படுத்தப்பட்ட CPU கோர்களின் எண்ணிக்கை
+Number of JPEG files in folder: %d		கோப்புறையில் உள்ள JPEG கோப்புகளின் எண்ணிக்கை: %d
+Number with N digits		N இலக்கங்களைக் கொண்ட எண்
+OK		சரி
+Old name		பழைய பெயர்
+Open folder containing image and select in Windows Explorer		படத்தைக் கொண்ட கோப்புறையைத் திறந்து விண்டோஸ் எக்ஸ்ப்ளோரரில் தேர்ந்தெடுக்கவும்
+Open new image or slideshow file		புதிய படம் அல்லது ஸ்லைடுஷோ கோப்பைத் திறக்கவும்
+Order files by		கோப்புகளை ஆர்டர் செய்யவும்
+Orientation:		நோக்குநிலை:
+Original file extension		அசல் கோப்பு நீட்டிப்பு
+Original file name (with extension)		அசல் கோப்பு பெயர் (நீட்டிப்புடன்)
+Original file name (without extension)		அசல் கோப்பு பெயர் (நீட்டிப்பு இல்லாமல்)
+Pan image		பான் படம்
+Paper size:		காகித அளவு:
+Parameter DB		அளவுரு DB
+Parameter DB error		அளவுரு DB பிழை
+Parameter DB file '%s' could not be opened!		அளவுரு DB கோப்பை '%s' திறக்க முடியவில்லை!
+Parameter DB file '%s' is not valid (invalid header)!		அளவுரு DB கோப்பு '%s' செல்லாது (தவறான தலைப்பு)!
+Paste from clipboard		கிளிப்போர்டில் இருந்து ஒட்டவும்
+Pasting image from clipboard failed!		கிளிப்போர்டிலிருந்து படத்தை ஒட்டுவதில் தோல்வி!
+Performing the lossless transformation failed!		இழப்பற்ற மாற்றத்தை நிகழ்த்துவது தோல்வியடைந்தது!
+Performing the transformation failed		மாற்றத்தைச் செயல்படுத்துவது தோல்வியடைந்தது
+Perspective Correction		முன்னோக்கு திருத்தம்
+Pixels		பிக்சல்கள்
+Placeholders:		ப்ளாஸ்ஹோல்டர்கள்:
+Portrait		உருவப்படம்
+Press 'OK' to continue with registration or 'Cancel' to abort all registrations.		பதிவைத் தொடர 'சரி' அல்லது அனைத்து பதிவுகளையும் நிறுத்த 'ரத்துசெய்' என்பதை அழுத்தவும்.
+Press ESC to exit...		வெளியேற ESC ஐ அழுத்தவும்...
+Press any key to search the subdirectories for image files.		படக் கோப்புகளுக்கான துணை அடைவுகளைத் தேட எந்த விசையையும் அழுத்தவும்.
+Preview		முன்னோட்ட
+Previous image		முந்தைய படம்
+Print		அச்சிடவும்
+Print Image		படத்தை அச்சிடுங்கள்
+Printer driver		பிரிண்டர் டிரைவர்
+Printer:		பிரிண்டர்:
+Project home page		திட்டத்தின் முகப்புப் பக்கம்
+Radius		ஆரம்
+Random		சீரற்ற
+Reading the JPEG file from disk failed		JPEG கோப்பை வட்டில் இருந்து படிக்க முடியவில்லை
+Reason:		காரணம்:
+Registering or unregistering file extensions in this registry area requires administrator privileges and cannot be done in JPEGView.		இந்த ரெஜிஸ்ட்ரி பகுதியில் கோப்பு நீட்டிப்புகளைப் பதிவுசெய்வதற்கு அல்லது பதிவுநீக்குவதற்கு நிர்வாகி உரிமைகள் தேவை மற்றும் JPEGView இல் செய்ய முடியாது.
+Registration applies to the current user only.		தற்போதைய பயனருக்கு மட்டுமே பதிவு பொருந்தும்.
+Remove from		இருந்து அகற்று
+Rename		மறுபெயரிடவும்
+Rename/copy images to:		படங்களை மறுபெயரிடு/நகலெடு:
+Renaming file failed!		கோப்பை மறுபெயரிடுவதில் தோல்வி!
+Reset		மீட்டமை
+Resize Image		படத்தை மறுஅளவாக்கு
+Right		சரி
+Right mouse button: Context menu		வலது சுட்டி பொத்தான்: சூழல் மெனு
+Roll from bottom		கீழே இருந்து உருட்டவும்
+Roll from left		இடமிருந்து உருட்டவும்
+Roll from right		வலமிருந்து உருட்டவும்
+Roll from top		மேலே இருந்து உருட்டவும்
+Rotate Image		படத்தை சுழற்று
+Rotate current file on disk lossless by 270 deg (W/H must be multiple of 16)		வட்டில் உள்ள தற்போதைய கோப்பை இழப்பின்றி 270 டிகிரி சுழற்று (W/H 16 இன் பல மடங்கு இருக்க வேண்டும்)
+Rotate current file on disk lossless by 90 deg (W/H must be multiple of 16)		தற்போதைய கோப்பை வட்டில் இழப்பில்லாமல் 90 டிகிரி சுழற்று (W/H 16 இன் பல மடங்கு இருக்க வேண்டும்)
+Rotate image 90 deg clockwise		படத்தை 90 டிகிரி கடிகார திசையில் சுழற்று
+Rotate image 90 deg counter-clockwise		படத்தை 90 டிகிரிக்கு எதிரெதிர் திசையில் சுழற்று
+Rotate image and fit to screen		படத்தை சுழற்றி திரையில் பொருத்தவும்
+Rotate image by user-defined angle		பயனர் வரையறுக்கப்பட்ட கோணத்தில் படத்தைச் சுழற்று
+Rotate the image by dragging with the mouse.		சுட்டியை இழுத்து படத்தை சுழற்றவும்.
+SIMD mode used		SIMD பயன்முறை பயன்படுத்தப்பட்டது
+Same as Image		படத்தைப் போலவே
+Saturation		செறிவூட்டல்
+Save		சேமிக்கவும்
+Save (%s) / delete (%s) image processing parameters into/from parameter DB		DB அளவுருவில்/இலிருந்து பட செயலாக்க அளவுருக்களை சேமிக்கவும் (%s) / நீக்கவும் (%s).
+Save as (in screen size/resolution)		இவ்வாறு சேமி (திரை அளவு/தெளிவுத்திறனில்)
+Save as template		டெம்ப்ளேட்டாக சேமிக்கவும்
+Save cropped image		செதுக்கப்பட்ட படத்தைச் சேமிக்கவும்
+Save processed image to JPEG file (original size)		செயலாக்கப்பட்ட படத்தை JPEG கோப்பில் சேமிக்கவும் (அசல் அளவு)
+Save processed image to JPEG file (screen size)		செயலாக்கப்பட்ட படத்தை JPEG கோப்பில் சேமிக்கவும் (திரை அளவு)
+Save to		சேமி
+Scaling mode:		அளவிடுதல் முறை:
+Screen Pixels		திரை பிக்சல்கள்
+Scroll from bottom		கீழே இருந்து உருட்டவும்
+Scroll from left		இடமிருந்து உருட்டவும்
+Scroll from right		வலமிருந்து உருட்டவும்
+Scroll from top		மேலே இருந்து உருட்டவும்
+Select Printer...		அச்சுப்பொறியைத் தேர்ந்தெடுக்கவும்...
+Select all		அனைத்தையும் தெரிவுசெய்
+Select application		பயன்பாட்டைத் தேர்ந்தெடுக்கவும்
+Select file to display in 'File Open' dialog		'கோப்பு திற' உரையாடலில் காண்பிக்க கோப்பைத் தேர்ந்தெடுக்கவும்
+Select none		எதையும் தேர்ந்தெடுக்கவும்
+Select parameter DB to restore		மீட்டமைக்க DB அளவுருவைத் தேர்ந்தெடுக்கவும்
+Set Fixed Crop Size		நிலையான பயிர் அளவை அமைக்கவும்
+Set JPEGView as default image viewer		JPEGView ஐ இயல்புநிலை பட பார்வையாளராக அமைக்கவும்
+Set timeout to n/10 sec, respectively n/100 sec (Ctrl+Shift)		காலக்கெடுவை முறையே n/10 நொடி என அமைக்கவும், முறையே n/100 நொடி (Ctrl+Shift)
+Shall existing entries be preserved (Yes) or be overwritten by the imported entries (No)?		ஏற்கனவே உள்ள பதிவுகள் பாதுகாக்கப்படுமா (ஆம்) அல்லது இறக்குமதி செய்யப்பட்ட உள்ளீடுகளால் (இல்லை) மேலெழுதப்படுமா?
+Sharpen		கூர்மைப்படுத்து
+Sharpen low		குறைந்த கூர்மை
+Sharpen medium		கூர்மையான நடுத்தர
+Shortcut Help		குறுக்குவழி உதவி
+Shortcut key:		ஷார்ட்கட் கீ:
+Show filename		கோப்பு பெயரைக் காட்டு
+Show first image in folder		கோப்புறையில் முதல் படத்தைக் காட்டு
+Show grid lines		கட்டக் கோடுகளைக் காட்டு
+Show histogram		ஹிஸ்டோகிராம் காட்டு
+Show last image in folder		கோப்புறையில் கடைசி படத்தைக் காட்டு
+Show navigation panel		வழிசெலுத்தல் பேனலைக் காட்டு
+Show next image		அடுத்த படத்தைக் காட்டு
+Show picture info (EXIF)		படத் தகவலைக் காட்டு (EXIF)
+Show previous image		முந்தைய படத்தைக் காட்டு
+Show/hide file name		கோப்பு பெயரைக் காட்டு/மறை
+Show/hide navigation panel		வழிசெலுத்தல் பேனலைக் காட்டு/மறை
+Show/hide picture information (EXIF data)		படத் தகவலைக் காட்டு/மறை (EXIF தரவு)
+Show/hide this help text		இந்த உதவி உரையைக் காட்டு/மறை
+Size:		அளவு:
+Slide from bottom		கீழே இருந்து ஸ்லைடு
+Slide from left		இடமிருந்து ஸ்லைடு
+Slide from right		வலமிருந்து ஸ்லைடு
+Slide from top		மேலே இருந்து ஸ்லைடு
+Slideshow		ஸ்லைடுஷோ
+Slideshow with timeout of 'n' seconds (ESC to stop)		'n' வினாடிகள் காலாவதியான ஸ்லைடுஷோ (நிறுத்த ESC)
+Sort images by creation date, resp. modification date, resp. file name		படங்களை உருவாக்கிய தேதி, பதிவின்படி வரிசைப்படுத்தவும். மாற்றம் தேதி, ஓய்வு. கோப்பு பெயர்
+Source:		ஆதாரம்:
+Target folders that do not yet exist are created as needed.		இதுவரை இல்லாத இலக்கு கோப்புறைகள் தேவைக்கேற்ப உருவாக்கப்படுகின்றன.
+The directory '%s' does not contain any image files!		'%s' கோப்பகத்தில் படக் கோப்புகள் எதுவும் இல்லை!
+The file '%s' could not be copied!		'%s' கோப்பை நகலெடுக்க முடியவில்லை!
+The file '%s' could not be read!		'%s' கோப்பைப் படிக்க முடியவில்லை!
+The file '%s' could not be renamed!		'%s' கோப்பை மறுபெயரிட முடியவில்லை!
+The file '%s' does not contain a list of file names!		'%s' கோப்பில் கோப்பு பெயர்களின் பட்டியல் இல்லை!
+The file is read-only!		கோப்பு படிக்க மட்டுமே!
+The following file extensions cannot be unregistered because they have been registered in the 'local machine' registry area.		பின்வரும் கோப்பு நீட்டிப்புகள் 'உள்ளூர் இயந்திரம்' பதிவுப் பகுதியில் பதிவு செய்யப்பட்டுள்ளதால் அவற்றைப் பதிவு செய்ய முடியாது.
+The following image extensions are protected by the operating system.		பின்வரும் பட நீட்டிப்புகள் இயக்க முறைமையால் பாதுகாக்கப்படுகின்றன.
+The imported param DB contains entries already present in active param DB.		இறக்குமதி செய்யப்பட்ட param DB ஆனது செயலில் உள்ள param DB இல் ஏற்கனவே உள்ளீடுகளைக் கொண்டுள்ளது.
+The new size is too large - width or height is larger than 65535 or total number of pixels is too large!		புதிய அளவு மிகவும் பெரியது - அகலம் அல்லது உயரம் 65535 ஐ விட பெரியது அல்லது மொத்த பிக்சல்களின் எண்ணிக்கை மிகப் பெரியது!
+The old parameter DB file '%s' could not be renamed during conversion to new format!		பழைய அளவுரு DB கோப்பு '%s' புதிய வடிவத்திற்கு மாற்றும் போது மறுபெயரிட முடியாது!
+The operation failed because not enough memory is available!		போதிய நினைவகம் இல்லாததால் அறுவை சிகிச்சை தோல்வியடைந்தது!
+The parameter DB file '%s' has been created by a newer version of JPEGView!		அளவுரு DB கோப்பு '%s' JPEGView இன் புதிய பதிப்பால் உருவாக்கப்பட்டது!
+The transformation can be applied if the image is cropped to the next matching size but this will remove some border pixels.		படத்தை அடுத்த பொருந்தும் அளவுக்கு செதுக்கினால் மாற்றம் பயன்படுத்தப்படலாம் ஆனால் இது சில பார்டர் பிக்சல்களை அகற்றும்.
+These values will override the values from the INI file located in the program folder of JPEGView!		இந்த மதிப்புகள் JPEGView இன் நிரல் கோப்புறையில் உள்ள INI கோப்பிலிருந்து மதிப்புகளை மீறும்!
+Threshold		வாசல்
+Title:		தலைப்பு:
+Toggle between screens (only for multi-monitor systems)		திரைகளுக்கு இடையில் மாறு (பல கண்காணிப்பு அமைப்புகளுக்கு மட்டும்)
+Toggle window always on top mode		சாளரத்தை எப்போதும் மேல் பயன்முறையில் மாற்றவும்
+Toggle window title bar hidden mode		சாளர தலைப்புப் பட்டி மறைக்கப்பட்ட பயன்முறையை நிலைமாற்று
+Top		மேல்
+Transition Effect		மாற்றம் விளைவு
+Unregistering not possible		பதிவை நீக்குவது சாத்தியமில்லை
+Unsharp mask...		முகமூடியை அவிழ்த்து விடுங்கள்...
+Update user settings with new settings from settings template file?		அமைப்புகள் டெம்ப்ளேட் கோப்பிலிருந்து புதிய அமைப்புகளுடன் பயனர் அமைப்புகளைப் புதுப்பிக்கவா?
+Use the 'Default Programs' configuration dialog from the operating system instead.		அதற்குப் பதிலாக இயக்க முறைமையிலிருந்து 'Default Programs' உள்ளமைவு உரையாடலைப் பயன்படுத்தவும்.
+Use the mouse to draw a line that shall be horizontal or vertical.		கிடைமட்டமாக அல்லது செங்குத்தாக இருக்கும் ஒரு கோட்டை வரைய சுட்டியைப் பயன்படுத்தவும்.
+Warning		எச்சரிக்கை
+Width		அகலம்
+Window mode		சாளர முறை
+Windows 8 (and above) blocks JPEGView from changing the default program for these file extensions.		இந்த கோப்பு நீட்டிப்புகளுக்கான இயல்புநிலை நிரலை மாற்றுவதிலிருந்து Windows 8 (மற்றும் மேலே) JPEGViewஐத் தடுக்கிறது.
+Writing the resulting JPEG file to disk failed		இதன் விளைவாக வரும் JPEG கோப்பை வட்டில் எழுதுவது தோல்வியடைந்தது
+Y - B		ஒய் - பி
+Year short form (2 digits)		ஆண்டு குறுகிய வடிவம் (2 இலக்கங்கள்)
+Yellow-Blue		மஞ்சள்-நீலம்
+Zoom 1:1 (100 %)		பெரிதாக்கு 1:1 (100 %)
+Zoom in (%s)/Zoom out (%s)		பெரிதாக்கு (%s)/ஜூம் அவுட் (%s)
+Zoom in/out image		படத்தை பெரிதாக்கவும் / வெளியேறவும்
+Zoom mode (drag mouse to zoom)		பெரிதாக்கு பயன்முறை (பெரிதாக்க சுட்டியை இழுக்கவும்)
+and image processing (brightness/contrast/sharpen) parameters between images		மற்றும் படங்களுக்கு இடையே பட செயலாக்கம் (பிரகாசம்/மாறுபாடு/கூர்மை) அளவுருக்கள்
+cm		செ.மீ
+in		உள்ளே
+new menu entry		புதிய மெனு உள்ளீடு
+no		இல்லை
+off		ஆஃப்
+on		அன்று
+user-defined		பயனர் வரையறுத்த
+yes		ஆம்
+
+// ::: Popup Menu Strings ::: (unsorted to preserve context) //
+Stop slide show/movie		ஸ்லைடு ஷோ/திரைப்படத்தை நிறுத்து
+Open image...		படத்தை திற...
+Open image with		உடன் படத்தைத் திறக்கவும்
+Save processed image...		செயலாக்கப்பட்ட படத்தை சேமிக்கவும்...
+Reload image		படத்தை மீண்டும் ஏற்றவும்
+Open containing folder in Explorer		எக்ஸ்ப்ளோரரில் உள்ள கோப்புறையைத் திறக்கவும்
+Print image...		படத்தை அச்சிடுக...
+Batch rename/copy...		தொகுதி மறுபெயர்/நகல்...
+Set modification date		மாற்றும் தேதியை அமைக்கவும்
+to current date		தற்போதைய தேதி வரை
+to EXIF date		EXIF தேதிக்கு
+to EXIF date (all files in folder)		EXIF தேதி வரை (கோப்புறையில் உள்ள அனைத்து கோப்புகளும்)
+Set as desktop wallpaper		டெஸ்க்டாப் வால்பேப்பராக அமைக்கவும்
+Use original image		அசல் படத்தைப் பயன்படுத்தவும்
+Use processed image as displayed		காட்டப்படும்படி செயலாக்கப்பட்ட படத்தைப் பயன்படுத்தவும்
+Copy to clipboard		கிளிப்போர்டுக்கு நகலெடுக்கவும்
+Copy original size image		அசல் அளவு படத்தை நகலெடுக்கவும்
+Copy file path		கோப்பு பாதையை நகலெடுக்கவும்
+Display order		காட்சி வரிசை
+Modification date		மாற்றம் தேதி
+Creation date		உருவாக்கிய தேதி
+Play folder as slideshow/movie		கோப்புறையை ஸ்லைடுஷோ/திரைப்படமாக இயக்கவும்
+Waiting time		காத்திருக்கும் நேரம்
+1 sec		1 நொடி
+2 sec		2 நொடி
+3 sec		3 நொடி
+4 sec		4 நொடி
+5 sec		5 நொடி
+7 sec		7 நொடி
+10 sec		10 நொடி
+20 sec		20 நொடி
+Transition Speed		மாற்றம் வேகம்
+Very fast		மிகவும் வேகமாக
+Fast		வேகமாக
+Normal		இயல்பானது
+Slow		மெதுவாக
+Very slow		மிகவும் மெதுவாக
+Movie		திரைப்படம்
+Playback speed		பின்னணி வேகம்
+5 fps		5 fps
+10 fps		10 fps
+25 fps		25 fps
+30 fps		30 fps
+50 fps		50 fps
+100 fps		100 fps
+Transform image		படத்தை மாற்றவும்
+Rotate +90		சுழற்று +90
+Rotate -90		சுழற்று -90
+Rotate...		சுழற்று...
+Change size...		அளவை மாற்று...
+Perspective correction...		முன்னோக்கு திருத்தம்...
+Mirror horizontally		கிடைமட்டமாக கண்ணாடி
+Mirror vertically		செங்குத்தாக கண்ணாடி
+Rotate 180		180 சுழற்று
+Auto correction		தானியங்கு திருத்தம்
+Save parameters to DB		அளவுருக்களை DB இல் சேமிக்கவும்
+Clear parameters from DB		DB இலிருந்து அளவுருக்களை அழிக்கவும்
+Zoom		பெரிதாக்கு
+Span all screens		அனைத்து திரைகளையும் விரிக்கவும்
+Fit window to image		படத்திற்கு சாளரத்தை பொருத்தவும்
+Hide window title bar		சாளர தலைப்புப் பட்டியை மறை
+Set window always on top		சாளரத்தை எப்போதும் மேலே அமைக்கவும்
+Settings/Admin		அமைப்புகள்/நிர்வாகம்
+Edit global settings...		உலகளாவிய அமைப்புகளைத் திருத்து...
+Edit user settings...		பயனர் அமைப்புகளைத் திருத்து...
+Update user settings...		பயனர் அமைப்புகளைப் புதுப்பிக்கவும்...
+Set current parameters as default values...		தற்போதைய அளவுருக்களை இயல்புநிலை மதிப்புகளாக அமைக்கவும்...
+Set as default viewer...		இயல்பு பார்வையாளராக அமை...
+Backup parameter DB...		காப்பு அளவுரு DB...
+Restore parameter DB...		DB அளவுருவை மீட்டமை...
+User commands		பயனர் கட்டளைகள்
+About JPEGView...		JPEGView பற்றி...
+Exit		வெளியேறு
+Crop Selection		பயிர் தேர்வு
+Crop Selection Lossless...		பயிர் தேர்வு இழப்பற்றது...
+Copy Selection to Clipboard		தேர்வை கிளிப்போர்டுக்கு நகலெடுக்கவும்
+Crop Mode		பயிர் முறை
+Free		இலவசம்
+Fixed size...		நிலையான அளவு...
+Zoom to Selection		தேர்வுக்கு பெரிதாக்கு
+
+// ::: STATUS: Last Checked/Updated by Script ::: 2023-03-22T10:45:18.454485+00:00 //
+//! Translation Progress: 100%
+//! * Total (Strings + Menu) = 427
+//! * Done = 427
+//! * Missing = 0 (0%)

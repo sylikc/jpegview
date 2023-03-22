@@ -261,6 +261,7 @@
 				<ComponentRef Id="strings_sl.txt" />
 				<ComponentRef Id="strings_sr.txt" />
 				<ComponentRef Id="strings_sv.txt" />
+				<ComponentRef Id="strings_ta.txt" />
 				<ComponentRef Id="strings_tr.txt" />
 				<ComponentRef Id="strings_uk.txt" />
 				<ComponentRef Id="strings_zh.txt" />
@@ -626,6 +627,9 @@
 					</Component>
 					<Component Id="strings_sv.txt" Guid="*">
 						<File Id="strings_sv.txt" Name="strings_sv.txt" Source="$(var.JPEGView.TargetDir)strings_sv.txt" />
+					</Component>
+					<Component Id="strings_ta.txt" Guid="*">
+						<File Id="strings_ta.txt" Name="strings_ta.txt" Source="$(var.JPEGView.TargetDir)strings_ta.txt" />
 					</Component>
 					<Component Id="strings_tr.txt" Guid="*">
 						<File Id="strings_tr.txt" Name="strings_tr.txt" Source="$(var.JPEGView.TargetDir)strings_tr.txt" />
