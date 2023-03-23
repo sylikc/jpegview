@@ -10,8 +10,8 @@
 //: ISO 639-1 code: pl
 //: ISO 3166-1 code:
 //: Language: Polish
-//: Translator(s) - Name <Contact Info/URL>:
-//: Last Updated:
+//: Translator(s) - Name <Contact Info/URL>: Marcin Czerwien <bromden@poczta.fm>
+//: Last Updated: 2023-03-22
 //: Additional Notes:
 ////////////////////
 
@@ -41,85 +41,85 @@
 
 
 // ::: Program Strings ::: (sorted alphabetically) //
-%d file(s) renamed, %d file(s) copied, %d folder(s) created	%d Plik(ów) przemianowano, %d Plik(ów) skopiowano, %d Folder(ów) utworzono
-%s camera raw images (embedded JPEGs only)	%s obrazy RAW z kamery (JPEG tylko osadzony)
-%s images	%s Obrazy
-%s images (processed by Window Imaging Component - WIC)	%s obrazy (otwarte przez Windows Imaging Component - WIC)
+%d file(s) renamed, %d file(s) copied, %d folder(s) created	%d Plikom (owi) zmieniono nazwę, %d Plik(ów) skopiowano, %d Folder(ów) utworzono
+%s camera raw images (embedded JPEGs only)	%s obrazy RAW z aparatu (tylko osadzony JPEG)
+%s images	%s obrazy(ów)
+%s images (processed by Window Imaging Component - WIC)	%s obrazy (ów) (przetworzone przez Windows Imaging Component - WIC)
 'My Pictures' folder	Folder 'Moje obrazy'
-About JPEGView (32-bit version)...	O JPEGView (wersja 32 bit)...
-About JPEGView (64-bit version)...	O JPEGView (wersja 64 bit)...
+About JPEGView (32-bit version)...	O JPEGView (wersja 32-bitowa)...
+About JPEGView (64-bit version)...	O JPEGView (wersja 64-bitowa)...
 Acquisition date:	Data wykonania:
-Actual size of image	Bieżąca wielkość obrazu
-Align image to horizontal or vertical line	Wyrównaj obraz do poziomej lub pionowej linii
+Actual size of image	Rzeczywisty rozmiar obrazu
+Align image to horizontal or vertical line	Wyrównaj obraz do linii poziomej lub pionowej
 Alignment:	Wyrównanie:
 All Files	Wszystkie pliki
-All existing user settings will be preserved.	
-Alternatively, right-click an image file of the given type in Windows Explorer and select 'Open with... > Choose default program'	Alternatywnie możesz użyć prawego klawisza myszki na pliku w Windows Explorer i wybrać "Otwórz za pomocą...-> Wybierz program domyślny".
-Altitude (m):	
+All existing user settings will be preserved.	Wszystkie bieżące ustawienia użytkownika będą zachowane.
+Alternatively, right-click an image file of the given type in Windows Explorer and select 'Open with... > Choose default program'	Alternatywnie możesz użyć prawego klawisza myszki na pliku w Eksploratorze Windows i wybrać "Otwórz za pomocą...-> Wybierz program domyślny".
+Altitude (m):	 Wysokość n.p.m (m)
 Amount	Siła
 Application:	Aplikacja:
-Applications	Aplikacja
+Applications	Aplikacje
 Apply	Zastosuj
-Apply Unsharp Mask	Zastosuj wyostrzanie
-Apply auto contrast correction using only visible section of image	Automatyczna korekcja kontrastu z użyciem tylko widocznej części obrazu
+Apply Unsharp Mask	Zastosuj maskę wyostrzającą
+Apply auto contrast correction using only visible section of image	Zastosuj automatycznę korekcja kontrastu, używając tylko widocznej części obrazu
 Ascending	Rosnąco
 Auto contrast and color correction	Automatyczna korekcja kontrastu i koloru
-Auto crop corrected image (avoids black border)	Automatycznie kadruj po korekcji (zapobiega czarnemu obramowaniu)
-Auto crop rotated image (avoids black border)	Auto kadrowanie obracanego obrazu (zapobiega czarnemu obramowaniu)
-Auto zoom mode	Tryb Auto-zoom
-Back mouse button	Klawisz myszy - Poprzedni
-Batch rename/copy of files	Wsadowa zmiana nazwy/kopiowanie
+Auto crop corrected image (avoids black border)	Automatycznie kadruj po korekcji (usuwa czarne krawędzie)
+Auto crop rotated image (avoids black border)	Automatycznie kadruj obracany obraz (usuwa czarne krawędzie)
+Auto zoom mode	Tryb auto-zoom
+Back mouse button	Klawisz myszy - Wstecz
+Batch rename/copy of files	Hurtowa zmiana nazwy/kopiowanie
 Blend	Przenikanie
 Bottom	Dolny
-Box	
+Box	Ramka
 Brightness	Jasność
 Browse...	Przeglądaj...
-C - R	
-Camera model:	Model kamery:
+C - R	cyjan-czerwony
+Camera model:	Model aparatu:
 Can't rename file	Nie można zmienić nazwy pliku
 Cancel	Anuluj
 Cannot read from parameter DB file '%s'!	Nie można odczytać z pliku parametrów '%s'!
-Cannot read parameter DB file '%s' because it is too large!	Nie można odczytać z pliku parametrów, ponieważ jest zbyt duży '%s'!
+Cannot read parameter DB file '%s' because it is too large!	Nie można odczytać z pliku parametrów '%s', ponieważ jest zbyt duży!
 Cannot write to parameter DB file '%s'!	Nie można zapisać do pliku parametrów '%s'!
 Click and drag the mouse vertically to correct image tilt.	Chwyć i przesuń myszką w pionie aby skorygować pochylenie.
-Clipboard Image	
+Clipboard Image	Obraz ze schowka
 Close	Zamknij
-Close help text display / Close JPEGView	Zamknij Pomoc / Zakończ JPEGView
+Close help text display / Close JPEGView	Zamknij Pomoc / Zamknij JPEGView
 Color Correction	Korekcja kolorów
-Combine keys with '+'	Połącz klucze znakiem '+'
+Combine keys with '+'	Połącz klawisze znakiem '+'
 Confirm	Potwierdź
 Confirm save default parameters	Potwierdź zapis parametrów domyślnych
 Conflicting entries in Param DB	Konflikt wpisów parametrów DB
 Continue rename/copy?	Kontynuować zmianę nazwy/kopiowanie?
 Contrast	Kontrast
 Contrast Correction	Korekcja kontrastu
-Copy file path of the image to clipboard	
-Copy screen to clipboard / Copy processed full size image to clipboard	Kopiuj ekran do schowka/ Kopiuj cały przetworzony obraz do schowka
+Copy file path of the image to clipboard	Kopiuj do schowka ścieżkę dostępu do pliku
+Copy screen to clipboard / Copy processed full size image to clipboard	Kopiuj ekran do schowka/ Kopiuj cały zmieniony obraz do schowka
 Copying parameter DB to file '%s' failed. Reason: %s	Kopiowanie parametru z DB do pliku %s nie powiodło się! Powód: %s
 Correct converging lines (perspective correction)	Korekcja linii zbieżności (Korekcja perspektywy)
 Creation date/time	Data utworzenia
-Crop image	Kadrowanie (Crop)
+Crop image	Kadruj
 Crop the image and apply transformation? Cropping cannot be undone!	Czy mam przyciąć obrazek i przeprowadzić transformację? Przycięcie jest nieodwracalne!
 Ctrl + Left mouse	Ctrl + Lewy klawisz myszy
 Current image	Aktualny obraz
 Cyan-Red	Cyjan-Czerwony
 Darken Highlights	Przyciemnij rozjaśnienia
 Date	Data
-Date placeholders use the modification date of the image.	Ciągi zastępcze używane do modyfikacji daty obrazu.
-Day / Month / Year (as numbers)	Dzień / Miesiąc / Rok (jako numery)
-Decoding this format requires the Microsoft Visual C++ Redistributable.	
+Date placeholders use the modification date of the image.	Znaczniki daty używają daty modyfikacji obrazu.
+Day / Month / Year (as numbers)	Dzień / Miesiąc / Rok (jako liczby)
+Decoding this format requires the Microsoft Visual C++ Redistributable.	Dekodowanie tego formatu wymaga bibliotek Microsoft Visual C++ Redistributable
 Deep Shadows	Głębokie cienie
-Delete	Kasuj
-Delete current file on disk permanently	Kasuj bieżący plik z dysku
-Delete image file	Kasuj plik obrazu
+Delete	Usuń
+Delete current file on disk permanently	Usuń bieżący plik z dysku
+Delete image file	Usuń plik obrazu
 Descending	Malejąco
 Display image (EXIF) information	Pokaż info o obrazie (EXIF)
-Do you really want to delete the current image file on disk?	Rzeczywiście chcesz skasować bieżący plik z dysku?
-Do you really want to permanently delete the file %filename%?	Czy na pewno chcesz trwale skasować plik %filename%?
-Do you really want to save the following parameters as default to the INI file	Rzeczywiście chcesz zapisać parametry jako domyślne do pliku INI?
+Do you really want to delete the current image file on disk?	Czy na pewno usunąć bieżący plik z dysku?
+Do you really want to permanently delete the file %filename%?	Czy na pewno trwale skasować plik %filename%?
+Do you really want to save the following parameters as default to the INI file	Czy na pewno zapisać parametry jako domyślne do pliku INI?
 Drag at the left or right border for asymmetric correction.	Przesuń przy lewym lub prawym brzegu przy korekcji asymetrycznej.
-EXIF date successfully set on %d images, failed on %d images	Data z EXIF ustawiona w %d obrazachn, niepowoodzenie w %d obrazach
-Edit	Eytuj
+EXIF date successfully set on %d images, failed on %d images	Data z EXIF ustawiona w %d obrazach, niepowodzenie w %d obrazach
+Edit	Edytuj
 Enable/disable automatic contrast correction (histogram equalization)	Włącz/wyłącz automatyczną korekcję kontrastu (wyrównanie histogramu)
 Enable/disable automatic density correction (local brightness correction)	Włącz/wyłącz automatyczną korekcję gęstości (lokalna korekcja jasności)
 Enable/disable full screen mode	Włącz/wyłącz tryb pełnoekranowy
@@ -135,19 +135,19 @@ Example:	Przykład:
 Exposure bias (EV):	Kompensacja ekspozycji (EV):
 Exposure time (s):	Czas ekspozycji (s):
 Extension	Rozszerzenie
-Extracted number from original file name	Numer wyciągnięty z oryginalnej nazwy
+Extracted number from original file name	Liczba z oryginalnej nazwy pliku
 F-Number:	Przesłona:
 File name	Nazwa pliku
-File size	Wielkość pliku
+File size	Rozmiar pliku
 File type	Typ pliku
-Fill page with crop	
+Fill page with crop	Wypełnij papier kadrem
 Fill with crop	Wypełnij kadrem
-Fill with crop (no zoom)	Wypełnij kadrem (bez zoom)
+Fill with crop (no zoom)	Wypełnij kadrem (do 100%)
 Filter:	Filtr:
 Fit image to screen	Dopasuj do ekranu
 Fit to page	Dopasuj do papieru
 Fit to screen	Dopasuj do ekranu
-Fit to screen (no zoom)	Dopasuj do ekranu (bez zoom)
+Fit to screen (no zoom)	Dopasuj do ekranu (do 100%)
 Flash fired:	Lampa błysk.:
 Focal length (mm):	Ogniskowa (mm):
 Forward mouse button	Klawisz myszy - Następny
@@ -157,7 +157,7 @@ Goto next image	Pokaż następny obraz
 Goto previous image	Wróć do poprzedniego obrazu
 Height	Wysokość
 Hide histogram	Ukryj histogram
-High quality resampling	
+High quality resampling	Resampling wysokiej jakości
 Hour / Minute (as numbers)	Godzina / Minuta (jako numery)
 ISO Speed:	Wartość ISO:
 Image Pixels	Piksele obrazu
@@ -181,38 +181,38 @@ Keep aspect ratio on crop	Utrzymuj proporcje przy kadrowaniu
 Keep parameters	Pamiętaj parametry
 Keep processing parameters between images	Zachowuj parametry przetwarzania pomiędzy obrazami
 Known keys:	Znane klucze:
-Lanczos/Bicubic	
+Lanczos/Bicubic	Lanczos/Dwusześcienna
 Landscape	Pozioma
 Landscape picture enhancement mode	Tryb ulepszania obrazu
-Last modification date/time	Data ostatnie modyfikacji
+Last modification date/time	Data ostatniej modyfikacji
 Left	Lewy
 Left mouse & drag	Lewy klawisz myszy i przesuń
 Licensed under the GNU general public license (GPL), see readme file for details	Licencja: GNU General Public License (GPL), szczegóły - patrz plik 'readme'
 Lighten Shadows	Rozjaśnij cienie
 Local density correction	Lokalna korekcja gęstości
-Location:	
-Loop folder	Folder w pętli
-Loop recursively	Folder i podfoldery w pętli
-Loop siblings	Foldery równorzędne w pętli
+Location:	Lokalizacja
+Loop folder	Bieżący folder w pętli
+Loop recursively	Bieżący folder i jego podfoldery w pętli
+Loop siblings	Wszystkie foldery równorzędne wobec bieżącego w pętli
 Loop through files in current directory and all sibling folders (folders on same level)	Pokaz w pętli w bieżącym folderze i folderach równorzędnych (na tym samym poziomie)
 Loop through files in current directory and all subfolders	Pokaz w pętli w bieżącym folderze i podfolderach
 Loop through files in current folder	Pokaz w pętli w bieżącym folderze
 Lossless JPEG transformations	Bezstratna transformacja JPEG
-M - G	
+M - G	Magenta-Zielony
 Magenta-Green	Magenta-Zielony
-Manage 'Open image with' menu...	Zarządzaj pozycjami menu 'Otwórz za pomocą'...
+Manage 'Open image with' menu...	Zarządzaj menu 'Otwórz za pomocą'...
 Margins:	Marginesy:
 Mark image for toggling. Use %s to toggle between marked and current image	Zaznacz obraz do przełączania. Użyj %s aby przełączać pomiędzy obrazem zaznaczonym, a bieżącym
 Maximize/restore to/from virtual desktop (only for multi-monitor systems)	Maksymalizuj/przywróć na/z wirtualny(ego) pulpit(u) (tylko dla systemów wielomonitorowych)
 Menu entries:	Pozycje menu:
 Modification date:	Data modyfikacji:
-Modifier keys:	Klucze:
+Modifier keys:	Klawisze specjalne:
 Month / Short form (text)	Miesiąc skrótowo (tekst)
 Mouse wheel	Kółko myszy
 Navigation	Nawigacja
 New	Nowy
 New height:	Nowa wysokość
-New name (>> : file gets copied)	Nowa nazwa (>> : plik będzie kopiowany)
+New name (>> : file gets copied)	Nowa nazwa (>> : plik będzie skopiowany)
 New name contains backslash character!	Nazwa zawiera ukośnik (\)!
 New size:	Nowy rozmiar:
 New width:	Nowa szerokość:
@@ -220,15 +220,15 @@ Next image	Następny obraz
 No image loaded!	Nie załadowano żadnego obrazu!
 No user INI file exists yet. Create user INI file from INI file template?	Brak pliku INI użytkownika. Utworzyć plik z wzorca?
 None	Brak
-Not enough memory available	zbyt mała ilość dostępnej pamięci
+Not enough memory available	Za mało dostępnej pamięci
 Note: Set the key 'CropWithoutPromptLosslessJPEG=true' in the INI file to always crop without showing this message.	Uwaga: Ustaw klucz 'CropWithoutPromptLosslessJPEG=true' w pliku INI, aby zawsze przycinać bez wyświetlania tego komunikatu.
 Number (consecutively numbered)	Numer (ciągła numeracja)
 Number of CPU cores used	Liczba używanych rdzeni CPU
 Number of JPEG files in folder: %d	Liczba plików JPEG w folderze: %d
-Number with N digits	Numer N-cyfrowy
-OK	
+Number with N digits	Liczba N-cyfrowa
+OK	OK
 Old name	Stara nazwa
-Open folder containing image and select in Windows Explorer	
+Open folder containing image and select in Windows Explorer	Otwórz w Eksploratorze Windows folder nadrzędny i podświetl w nim bieżący plik
 Open new image or slideshow file	Otwórz nowy obraz lub plik pokazu
 Order files by	Sortuj pliki wg
 Orientation:	Orientacja:
@@ -242,20 +242,20 @@ Parameter DB error	Błąd pliku parametetrów DB
 Parameter DB file '%s' could not be opened!	Parametr pliku DB '%s' nie może być otwarty!
 Parameter DB file '%s' is not valid (invalid header)!	Parametr pliku DB '%s' jest niewłaściwy (zły nagłówek)!
 Paste from clipboard	Wklej ze schowka
-Pasting image from clipboard failed!	Wklejanie obrazu ze schowka nie powidło się!
+Pasting image from clipboard failed!	Nieudane wklejanie obrazu ze schowka!
 Performing the lossless transformation failed!	Niepowodzenie bezstratnej transformacji!
 Performing the transformation failed	Niepowodzenie wykonania transformacji
 Perspective Correction	Korekcja perspektywy
 Pixels	Pikseli
-Placeholders:	Ciągi zastępcze:
+Placeholders:	Znaczniki:
 Portrait	Pionowa
 Press 'OK' to continue with registration or 'Cancel' to abort all registrations.	Wybierz 'OK' aby kontynuować rejestrację lub 'Anuluj' aby nie dokonywać żadnych zmian.
 Press ESC to exit...	Wciśnij ESC aby zakończyć...
 Press any key to search the subdirectories for image files.	Wciśnij dowolny klawisz aby szukać plików obrazów w podfolderach.
-Preview	Pokaż
+Preview	Podgląd
 Previous image	Poprzedni obraz
-Print	Drukowanie
-Print Image	Drukowanie obrazu
+Print	Drukuj
+Print Image	Drukuj obraz
 Printer driver	Sterownik drukarki
 Printer:	Drukarka:
 Project home page	Strona domowa projektu
@@ -265,7 +265,7 @@ Reading the JPEG file from disk failed	Niepowodzenie odczytu pliku z dysku
 Reason:	Powód:
 Registering or unregistering file extensions in this registry area requires administrator privileges and cannot be done in JPEGView.	Zarejestrowanie/wyrejestrowanie rozszerzeń plików w tej sekcji rejestru wymaga uprawnień administratora i nie może być teraz wykonane.
 Registration applies to the current user only.	To ustawienie stosuje się tylko dla bieżącego użytkownika!
-Remove from	Usuń
+Remove from	Usuń z
 Rename	Zmień nazwę
 Rename/copy images to:	Zmień nazwę/kopiuj obrazy do:
 Renaming file failed!	Niepowodzenie zmiany nazwy!
@@ -274,27 +274,27 @@ Resize Image	Zmiana rozmiaru
 Right	Prawy
 Right mouse button: Context menu	Prawy klawisz myszki: Menu kontekstowe
 Roll from bottom	Odwijanie z dołu
-Roll from left	
+Roll from left	Odwijanie z lewej
 Roll from right	Odwijanie z prawej
 Roll from top	Odwijanie z góry
 Rotate Image	Obrót
-Rotate current file on disk lossless by 270 deg (W/H must be multiple of 16)	Obróć bezstratnie w pliku o 270 stopni (W/H musi być podzielne przez 16)
-Rotate current file on disk lossless by 90 deg (W/H must be multiple of 16)	Obróć bezstratnie w pliku o 90 stopni (W/H musi być podzielne przez 16)
+Rotate current file on disk lossless by 270 deg (W/H must be multiple of 16)	Obróć bezstratnie o 270 stopni i zapisz plik(wys./szer. musi być podzielne przez 16)
+Rotate current file on disk lossless by 90 deg (W/H must be multiple of 16)	Obróć bezstratnie o 90 stopni i zapisz plik(wys./szer. musi być podzielne przez 16)
 Rotate image 90 deg clockwise	Obrót o 90 stopni w prawo
 Rotate image 90 deg counter-clockwise	Obrót o 90 stopni w lewo
 Rotate image and fit to screen	Obrót obrazu z dopasowaniem do ekranu
-Rotate image by user-defined angle	Obrót o zadany kąt
+Rotate image by user-defined angle	Obrót o wybrany kąt
 Rotate the image by dragging with the mouse.	Obróć obraz przeciągając myszką.
 SIMD mode used	Tryb SIMD użyty
-Same as Image	
+Same as Image	Jak w obrazie
 Saturation	Nasycenie
 Save	Zapisz
-Save (%s) / delete (%s) image processing parameters into/from parameter DB	Zapisz (%s)/ kasuj (%s) parametry przetwarzania
+Save (%s) / delete (%s) image processing parameters into/from parameter DB	Zapisz (%s) / kasuj (%s) parametry przetwarzania
 Save as (in screen size/resolution)	Zapisz jako (rozmiar/rozdzielczość ekranowa)
 Save as template	Zapisz jako wzorzec
 Save cropped image	Zachowaj wykadrowany obraz
-Save processed image to JPEG file (original size)	Zapisz przetworzony obraz do pliku JPEG (originalna wielkość)
-Save processed image to JPEG file (screen size)	Zapisz przetworzony obraz jako plik JPEG (wielkość ekranu)
+Save processed image to JPEG file (original size)	Zapisz zmieniony obraz do pliku JPEG (oryginalny rozmiar)
+Save processed image to JPEG file (screen size)	Zapisz zmieniony obraz jako plik JPEG (rozmiar ekranu)
 Save to	Zapisz
 Scaling mode:	Tryb skalowania:
 Screen Pixels	Piksele ekranu
@@ -313,8 +313,8 @@ Set JPEGView as default image viewer	Ustaw JPEGView jako domyślną przeglądark
 Set timeout to n/10 sec, respectively n/100 sec (Ctrl+Shift)	Ustaw czas na n/10 sekund, lub n/100 sekund (Ctrl+Shift)
 Shall existing entries be preserved (Yes) or be overwritten by the imported entries (No)?	Zachować istniejące wpisy (Tak) Czy zastąpić je importowanymi (Nie)?
 Sharpen	Ostrość
-Sharpen low	Wyostrz (mniej)
-Sharpen medium	Wyostrz (więcej)
+Sharpen low	Wyostrz lekko
+Sharpen medium	Wyostrz średnio
 Shortcut Help	Pomoc dla skrótów
 Shortcut key:	Skrót klawiszowy:
 Show filename	Pokaż nazwę pliku
@@ -330,7 +330,7 @@ Show/hide file name	Pokaż/Ukryj nazwę pliku
 Show/hide navigation panel	Pokaż/ukryj panel nawigacji
 Show/hide picture information (EXIF data)	Pokaż/Ukryj informacje EXIF z pliku
 Show/hide this help text	Pokaż/Ukryj ten plik pomocy
-Size:	Wielkość:
+Size:	Rozmiar:
 Slide from bottom	Nasuwanie z dołu
 Slide from left	Nasuwanie z lewej
 Slide from right	Nasuwanie z prawej
@@ -341,9 +341,9 @@ Sort images by creation date, resp. modification date, resp. file name	Sortuj pl
 Source:	Źródło:
 Target folders that do not yet exist are created as needed.	Nieistniejące docelowe foldery zostaną utworzone.
 The directory '%s' does not contain any image files!	Folder '%s' nie zawiera żadnych plików obrazów!
-The file '%s' could not be copied!	
+The file '%s' could not be copied!	Pliku '%s' nie można skopiować!
 The file '%s' could not be read!	Pliku '%s' nie można odczytać!
-The file '%s' could not be renamed!	
+The file '%s' could not be renamed!	Nie można zmianić nazwy pliku '%s'!
 The file '%s' does not contain a list of file names!	Plik '%s' nie zawiera listy nazw plików!
 The file is read-only!	Ten plik jest tylko do odczytu!
 The following file extensions cannot be unregistered because they have been registered in the 'local machine' registry area.	Następujące rozszerzenia plików nie mogą być zarejestrowane ponieważ zarejestrowano je już w sekcji 'local machine' rejestru.
@@ -358,21 +358,21 @@ These values will override the values from the INI file located in the program f
 Threshold	Próg
 Title:	Tytuł:
 Toggle between screens (only for multi-monitor systems)	Przełącz między ekranami (tylko systemy wielo-monitorowe)
-Toggle window always on top mode	
-Toggle window title bar hidden mode	
+Toggle window always on top mode	Okno programu zawsze na wierzchu
+Toggle window title bar hidden mode	Ukryj pasek tytułu
 Top	Górny
 Transition Effect	Efekt przejścia
 Unregistering not possible	Wyrejestrowanie jest niemożliwe
 Unsharp mask...	Wyostrzanie...
-Update user settings with new settings from settings template file?	
+Update user settings with new settings from settings template file?	Zaktualizować ustawienia użytkownika na podstawie ustawień z pliku wzorcowego?
 Use the 'Default Programs' configuration dialog from the operating system instead.	Zamiast tego użyj systemowej konfiguracji "Programów domyślnych".
-Use the mouse to draw a line that shall be horizontal or vertical.	Użyj myszki do narysowania poziomej lub pionowej linii.
+Use the mouse to draw a line that shall be horizontal or vertical.	Użyj myszki do narysowania linii poziomej lub pionowej.
 Warning	Ostrzeżenie
 Width	Szerokość
 Window mode	Tryb okienkowy
-Windows 8 (and above) blocks JPEGView from changing the default program for these file extensions.	
+Windows 8 (and above) blocks JPEGView from changing the default program for these file extensions.	Windows 8 (i nowsze) nie pozwala ustawić JPEGView jako domyślnego programu dla danych typów plików.
 Writing the resulting JPEG file to disk failed	Niepowodzenie zapisu pliku na dysk
-Y - B	
+Y - B	Żółty-Niebieski
 Year short form (2 digits)	Rok skrótowo (2 cyfry)
 Yellow-Blue	Żółty-Niebieski
 Zoom 1:1 (100 %)	Powiększenie 1:1 (100 %)
@@ -380,22 +380,22 @@ Zoom in (%s)/Zoom out (%s)	Powiększenie (%s)/Zmniejszenie (%s)
 Zoom in/out image	Powiększanie/Zmniejszanie (Zoom)
 Zoom mode (drag mouse to zoom)	Tryb zoom (przeciągnij myszką aby powiększyć)
 and image processing (brightness/contrast/sharpen) parameters between images	oraz parametrów przetwarzania (jasność/kontrast/ostrość) pomiędzy obrazami.
-cm	
-in	
-new menu entry	
+cm	cm
+in	cali
+new menu entry	nowy wpis menu
 no	nie
 off	wył.
 on	wł.
-user-defined	
+user-defined	użytkownika
 yes	tak
 
 // ::: Popup Menu Strings ::: (unsorted to preserve context) //
 Stop slide show/movie	Zatrzymaj prezentację/film
 Open image...	Otwórz obraz...
 Open image with	Otwórz za pomocą
-Save processed image...	Zapisz przetworzony obraz...
+Save processed image...	Zapisz zmieniony obraz...
 Reload image	Załaduj obraz ponownie
-Open containing folder in Explorer	
+Open containing folder in Explorer	Otwórz folder nadrzędny w Eksploratorze
 Print image...	Drukuj obraz...
 Batch rename/copy...	Wsadowa zmiana nazwy/kopiowanie...
 Set modification date	Ustaw datę modyfikacji
@@ -404,38 +404,38 @@ to EXIF date	na datę z EXIF
 to EXIF date (all files in folder)	data z EXIF (wszystkie pliki w folderze)
 Set as desktop wallpaper	Ustaw jako tapetę pulpitu
 Use original image	Użyj oryginalnego obrazu
-Use processed image as displayed	Użyj przetworzonego obrazu jak wyświetlony
+Use processed image as displayed	Użyj przetworzonego obrazu (jak wyświetlony)
 Copy to clipboard	Kopiuj obraz do schowka
-Copy original size image	Kopiuj obraz w oryginalnej wielkości
-Copy file path	
+Copy original size image	Kopiuj obraz w oryginalnym rozmiarze
+Copy file path	Kopiuj ścieżkę dostępu
 Display order	Porządek wyświetlania wg
 Modification date	Data modyfikacji
 Creation date	Data utworzenia
 Play folder as slideshow/movie	Odtwórz folder jako prezentację/film
 Waiting time	Czas slajdu
-1 sec	
-2 sec	
-3 sec	
-4 sec	
-5 sec	
-7 sec	
-10 sec	
-20 sec	
-Transition Speed	Szybkość przenikania
+1 sec	1 s
+2 sec	2 s
+3 sec	3 s
+4 sec	4 s
+5 sec	5 s
+7 sec	7 s
+10 sec	10 s
+20 sec	20 s
+Transition Speed	Szybkość przełączania
 Very fast	Bardzo szybko
 Fast	Szybko
 Normal	Normalnie
 Slow	Wolno
 Very slow	Bardzo wolno
 Movie	Film
-Playback speed	
-5 fps	
-10 fps	
-25 fps	
-30 fps	
-50 fps	
-100 fps	
-Transform image	Transormacja obrazu
+Playback speed	Szybkość odtwarzania
+5 fps	5 fps
+10 fps	10 fps
+25 fps	25 fps
+30 fps	30 fps
+50 fps	50 fps
+100 fps	100 fps
+Transform image	Transformuj obraz
 Rotate +90	Obrót +90
 Rotate -90	Obrót -90
 Rotate...	Obrót...
@@ -445,21 +445,21 @@ Mirror horizontally	Odbicie lustrzane - poziomo
 Mirror vertically	Odbicie lustrzane - pionowo
 Rotate 180	Obrót 180
 Auto correction	Automatyczna korekcja
-Save parameters to DB	Zapisz parametry w DB
-Clear parameters from DB	Usuń parametry z DB
+Save parameters to DB	Zapisz parametry w bazie danych
+Clear parameters from DB	Usuń parametry z bazie danych
 Zoom	Powiększenie (zoom)
 Span all screens	Rozciągnij na wszystkie ekrany
 Fit window to image	Dopasuj okno do obrazka
-Hide window title bar	
-Set window always on top	
+Hide window title bar	Ukryj pasek tytułu
+Set window always on top	Zawsze na wierzchu
 Settings/Admin	Ustawienia/Admin
 Edit global settings...	Edytuj ustawienia globalne...
 Edit user settings...	Edytuj ustawienia użytkownika...
-Update user settings...	
+Update user settings...	Aktualizuj ustawienia użytkownika...
 Set current parameters as default values...	Ustaw bieżące parametry jako domyślne...
 Set as default viewer...	Ustaw jako domyślną przeglądarkę...
-Backup parameter DB...	Zapisz parametry do DB...
-Restore parameter DB...	Odtworz parametry z DB...
+Backup parameter DB...	Zapisz parametry w bazie danych...
+Restore parameter DB...	Odtwórz parametry z bazie danych...
 User commands	Komendy użytkownika
 About JPEGView...	O JPEGView...
 Exit	Zakończ
@@ -471,72 +471,18 @@ Free	Dowolne
 Fixed size...	Stały rozmiar...
 Zoom to Selection	Powiększ do zaznaczenia
 
-// ::: INFO: Out-of-date Translations [13] ::: (Not in use anymore, safe to delete) //
-//No file or folder name was provided as command line parameter!	Nie podano nazwy pliku ani folderu jako parametru linii komand!
-//PgDn or Right	PgDn lub Prawo Następny
-//PgUp or Left	PgUp lub Lewo Poprzedni
-//Rename:	Zmień nazwę:
-//Rotate the following file lossless by 270 deg?\n%filename%	Obrócić następujący plik bezstratnie o 270 stopni?\n%filename%
-//Rotate the following file lossless by 90 deg?\n%filename%	Obrócić następujący plik bezstratnie o 90 stopni?\n%filename%
-//The file '%s' could not be %s.	Plik '%s' nie może być %s .
-//To use JPEGView, associate JPG, JPEG and BMP files with JPEGView.	Przypisz pliki JPG, JPEG i BMP do JPGView.
-//Windows 8 blocks JPEGView from changing the default program for these file endings.	Windows 8 blokuje JPEGView przed zmianą programu domyślnego dla tych rozszerzeń plików.
-//[new entry]	[nowy wpis]
-//copied	skopiowany
-//renamed	przemianowany
-//up/down	W górę/dół
-
-// ::: INFO: Missing Translations [47] ::: (Summary of all missing strings to assist translators - Auto-generated by script) //
-//! All existing user settings will be preserved.
-//! Altitude (m):
-//! Box
-//! C - R
-//! Clipboard Image
-//! Copy file path of the image to clipboard
-//! Decoding this format requires the Microsoft Visual C++ Redistributable.
-//! Fill page with crop
-//! High quality resampling
-//! Lanczos/Bicubic
-//! Location:
-//! M - G
+// ::: INFO: Same Translations [8] ::: (Summary to assist translators: All strings which are known not to need translation [String == Translation]) - Auto-generated by script //
 //! OK
-//! Open folder containing image and select in Windows Explorer
-//! Roll from left
-//! Same as Image
-//! The file '%s' could not be copied!
-//! The file '%s' could not be renamed!
-//! Toggle window always on top mode
-//! Toggle window title bar hidden mode
-//! Update user settings with new settings from settings template file?
-//! Windows 8 (and above) blocks JPEGView from changing the default program for these file extensions.
-//! Y - B
 //! cm
-//! in
-//! new menu entry
-//! user-defined
-//! Open containing folder in Explorer
-//! Copy file path
-//! 1 sec
-//! 2 sec
-//! 3 sec
-//! 4 sec
-//! 5 sec
-//! 7 sec
-//! 10 sec
-//! 20 sec
-//! Playback speed
 //! 5 fps
 //! 10 fps
 //! 25 fps
 //! 30 fps
 //! 50 fps
 //! 100 fps
-//! Hide window title bar
-//! Set window always on top
-//! Update user settings...
 
-// ::: STATUS: Last Checked/Updated by Script ::: 2023-03-14T00:34:40.458655+00:00 //
-//! Translation Progress: 89%
+// ::: STATUS: Last Checked/Updated by Script ::: 2023-03-23T07:31:05.182233+00:00 //
+//! Translation Progress: 100%
 //! * Total (Strings + Menu) = 427
-//! * Done = 380
-//! * Missing = 47 (11%)
+//! * Done = 427
+//! * Missing = 0 (0%)
