@@ -353,7 +353,7 @@ void CImageLoadThread::ProcessRequest(CRequestBase& request) {
 			DeleteCachedWebpDecoder();
 			DeleteCachedJxlDecoder();
 			DeleteCachedAvifDecoder();
-			if (CSettingsProvider::This().ForceGDIPlus() || CSettingsProvider::This().UseEmbeddedColorProfiles()) {
+			if (CSettingsProvider::This().ForceGDIPlus()) {
 				DeleteCachedPngDecoder();
 				ProcessReadGDIPlusRequest(&rq);
 			} else {
@@ -709,7 +709,12 @@ void CImageLoadThread::ProcessReadPNGRequest(CRequest* request) {
 		if (bUseCachedDecoder || (::ReadFile(hFile, pBuffer, nFileSize, (LPDWORD)&nNumBytesRead, NULL) && nNumBytesRead == nFileSize)) {
 			int nWidth, nHeight, nBPP, nFrameCount, nFrameTimeMs;
 			bool bHasAnimation;
-			uint8* pPixelData = (uint8*)PngReader::ReadImage(nWidth, nHeight, nBPP, bHasAnimation, nFrameCount, nFrameTimeMs, request->OutOfMemory, pBuffer, nFileSize);
+			uint8* pPixelData = NULL;
+
+			// If UseEmbeddedColorProfiles is true and the image isn't animated, we should use GDI+ for better color management
+			if (bUseCachedDecoder || !CSettingsProvider::This().UseEmbeddedColorProfiles() || PngReader::IsAnimated(pBuffer, nFileSize))
+				pPixelData = (uint8*)PngReader::ReadImage(nWidth, nHeight, nBPP, bHasAnimation, nFrameCount, nFrameTimeMs, request->OutOfMemory, pBuffer, nFileSize);
+
 			if (pPixelData != NULL) {
 				if (bHasAnimation)
 					m_sLastPngFileName = sFileName;
@@ -719,12 +724,12 @@ void CImageLoadThread::ProcessReadPNGRequest(CRequest* request) {
 					*pImage32++ = WebpAlphaBlendBackground(*pImage32, CSettingsProvider::This().ColorTransparency());
 
 				request->Image = new CJPEGImage(nWidth, nHeight, pPixelData, NULL, 4, 0, IF_PNG, bHasAnimation, request->FrameIndex, nFrameCount, nFrameTimeMs);
+				bSuccess = true;
 			}
 			else {
 				DeleteCachedPngDecoder();
 			}
 		}
-		bSuccess = true;
 	}
 	catch (...) {
 		// delete request->Image;
