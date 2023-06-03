@@ -361,3 +361,19 @@ void PngReader::DeleteCacheInternal(bool free_buffer)
 void PngReader::DeleteCache() {
 	DeleteCacheInternal(true);
 }
+
+bool PngReader::IsAnimated(void* buffer, size_t sizebytes) {
+	// Valid APNGs must have an acTL chunk before the first IDAT chunk, this lets us quickly determine if a PNG is animated
+	size_t offset = 0;
+	while (offset + 7 < sizebytes) {
+		if (memcmp((char*)buffer + offset + 4, "acTL", 4))
+			return true;
+		if (memcmp((char*)buffer + offset + 4, "IDAT", 4))
+			return false;
+		unsigned int chunksize = *(unsigned int*)((char*)buffer + offset);
+
+		// PNG chunk sizes are big-endian and must be converted to little-endian
+		offset += _byteswap_ulong(chunksize);
+	}
+	return false;
+}
