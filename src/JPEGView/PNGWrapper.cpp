@@ -374,8 +374,13 @@ bool PngReader::IsAnimated(void* buffer, size_t sizebytes) {
 		unsigned int chunksize = *(unsigned int*)((char*)buffer + offset);
 
 		// PNG chunk sizes are big-endian and must be converted to little-endian
+		chunksize = _byteswap_ulong(chunksize);
+
+		// Prevent infinite loop
+		if (chunksize > PNG_UINT_31_MAX) return false;
+
 		// 12 comes from 4 bytes for chunk size, 4 for chunk name, and 4 for CRC32
-		offset += _byteswap_ulong(chunksize) + 12;
+		offset += chunksize + 12;
 	}
 	return false;
 }
