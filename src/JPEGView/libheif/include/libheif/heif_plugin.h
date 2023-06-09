@@ -41,6 +41,7 @@ extern "C" {
 //  1.4          1         1          2
 //  1.8          1         2          2
 //  1.13         2         3          2
+//  1.15         3         3          2
 
 
 // ====================================================================================================
@@ -68,7 +69,7 @@ struct heif_decoder_plugin
 
   // Query whether the plugin supports decoding of the given format
   // Result is a priority value. The plugin with the largest value wins.
-  // Default priority is 100.
+  // Default priority is 100. Returning 0 indicates that the plugin cannot decode this format.
   int (* does_support_format)(enum heif_compression_format format);
 
   // Create a new decoder context for decoding an image
@@ -102,6 +103,12 @@ struct heif_decoder_plugin
 
   // Reset decoder, such that we can feed in new data for another image.
   // void (*reset_image)(void* decoder);
+
+  // --- version 3 functions will follow below ... ---
+
+  const char* id_name;
+
+  // --- version 4 functions will follow below ... ---
 };
 
 
