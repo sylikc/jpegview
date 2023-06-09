@@ -257,6 +257,8 @@ CMainDlg::CMainDlg(bool bForceFullScreen) {
 	m_bMouseOn = false;
 	m_bKeepParametersBeforeAnimation = false;
 	m_bIsAnimationPlaying = false;
+	m_nLastAnimationOffset = 0;
+	m_nExpectedNextAnimationTickCount = 0;
 	m_bUseLosslessWEBP = false;
 	m_isBeforeFileSelected = true;
 	m_dLastImageDisplayTime = 0.0;
@@ -3470,15 +3472,21 @@ void CMainDlg::StartAnimation() {
 	m_bLDC = false;
 	m_bLandscapeMode = false;
 	m_bIsAnimationPlaying = true;
-	::SetTimer(this->m_hWnd, ANIMATION_TIMER_EVENT_ID, max(10, m_pCurrentImage->FrameTimeMs()), NULL);
+	int nNewFrameTime = max(10, m_pCurrentImage->FrameTimeMs());
+	::SetTimer(this->m_hWnd, ANIMATION_TIMER_EVENT_ID, nNewFrameTime, NULL);
 	m_pNavPanelCtl->EndNavPanelAnimation();
 	m_nLastSlideShowImageTickCount = ::GetTickCount();
+	m_nLastAnimationOffset = 0;
+	m_nExpectedNextAnimationTickCount = ::GetTickCount() + nNewFrameTime;
 }
 
 void CMainDlg::AdjustAnimationFrameTime() {
 	// restart timer with new frame time
 	::KillTimer(this->m_hWnd, ANIMATION_TIMER_EVENT_ID);
-	::SetTimer(this->m_hWnd, ANIMATION_TIMER_EVENT_ID, max(10, m_pCurrentImage->FrameTimeMs()), NULL);
+	m_nLastAnimationOffset += ::GetTickCount() - m_nExpectedNextAnimationTickCount;
+	int nNewFrameTime = max(10, m_pCurrentImage->FrameTimeMs() - max(0, m_nLastAnimationOffset));
+	m_nExpectedNextAnimationTickCount = ::GetTickCount() + max(10, m_pCurrentImage->FrameTimeMs());
+	::SetTimer(this->m_hWnd, ANIMATION_TIMER_EVENT_ID, nNewFrameTime, NULL);
 }
 
 void CMainDlg::StopAnimation() {
