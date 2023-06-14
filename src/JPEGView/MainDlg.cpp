@@ -3484,6 +3484,7 @@ void CMainDlg::AdjustAnimationFrameTime() {
 	// restart timer with new frame time
 	::KillTimer(this->m_hWnd, ANIMATION_TIMER_EVENT_ID);
 	m_nLastAnimationOffset += ::GetTickCount() - m_nExpectedNextAnimationTickCount;
+	m_nLastAnimationOffset = min(m_nLastAnimationOffset, max(100, m_pCurrentImage->FrameTimeMs())); // prevent offset from getting too big
 	int nNewFrameTime = max(10, m_pCurrentImage->FrameTimeMs() - max(0, m_nLastAnimationOffset));
 	m_nExpectedNextAnimationTickCount = ::GetTickCount() + max(10, m_pCurrentImage->FrameTimeMs());
 	::SetTimer(this->m_hWnd, ANIMATION_TIMER_EVENT_ID, nNewFrameTime, NULL);
