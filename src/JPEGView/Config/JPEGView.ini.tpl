@@ -259,7 +259,6 @@ ForceGDIPlus=false
 
 ; If true, embedded ICC color profiles are used for JPEG, PNG and TIFF. This forces using GDI+ and therefore
 ; results in much slower loading of JPEGs! Only set to true if you really need this.
-; (Setting to true automatically disables Animated PNG support)
 UseEmbeddedColorProfiles=false
 
 ; -----------------------------------------------

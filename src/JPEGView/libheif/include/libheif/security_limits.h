@@ -17,8 +17,8 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with libheif.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef LIBHEIF_HEIF_LIMITS_H
-#define LIBHEIF_HEIF_LIMITS_H
+#ifndef LIBHEIF_SECURITY_LIMITS_H
+#define LIBHEIF_SECURITY_LIMITS_H
 
 #if defined(HAVE_CONFIG_H)
 #include "config.h"
@@ -46,4 +46,4 @@ static const int64_t MAX_LARGE_BOX_SIZE = 0x0FFFFFFFFFFFFFFF;
 static const int64_t MAX_FILE_POS = 0x007FFFFFFFFFFFFFLL; // maximum file position
 static const int MAX_FRACTION_VALUE = 0x10000;
 
-#endif  // LIBHEIF_HEIF_LIMITS_H
+#endif  // LIBHEIF_SECURITY_LIMITS_H
