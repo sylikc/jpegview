@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+ï»¿#include "StdAfx.h"
 #include "resource.h"
 #include "MainDlg.h"
 #include "JPEGImage.h"
@@ -19,7 +19,7 @@ static int GetFileNameHeight(HDC dc) {
 static CString CreateGPSString(GPSCoordinate* latitude, GPSCoordinate* longitude) {
 	const int BUFF_SIZE = 96;
 	TCHAR buff[BUFF_SIZE];
-	_stprintf_s(buff, BUFF_SIZE, _T("%.0f° %.0f' %.0f'' %s / %.0f° %.0f' %.0f'' %s"),
+	_stprintf_s(buff, BUFF_SIZE, _T("%.0fÂ° %.0f' %.0f'' %s / %.0fÂ° %.0f' %.0f'' %s"),
 		latitude->Degrees, latitude->Minutes, latitude->Seconds, latitude->GetReference(),
 		longitude->Degrees, longitude->Minutes, longitude->Seconds, longitude->GetReference());
 	return CString(buff);

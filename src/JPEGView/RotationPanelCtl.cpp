@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+﻿#include "StdAfx.h"
 #include "resource.h"
 #include "MainDlg.h"
 #include "JPEGImage.h"
@@ -141,7 +141,7 @@ void CRotationPanelCtl::UpdatePanelTitle() {
 	const int BUFF_SIZE = 24;
 	double dAngleDeg = CurrentImage()->GetRotationParams().FreeRotation + 360 * m_dRotationLQ / (2 * 3.141592653);
 	TCHAR buff[BUFF_SIZE];
-	_stprintf_s(buff, BUFF_SIZE, _T("  %.1f �"), dAngleDeg);
+	_stprintf_s(buff, BUFF_SIZE, _T("  %.1f °"), dAngleDeg);
 	m_pTransformPanel->GetTextTitle()->SetText(CString(CNLS::GetString(_T("Rotate Image"))) + buff);
 }
 
