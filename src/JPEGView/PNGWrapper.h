@@ -17,6 +17,9 @@ public:
 
 	static void DeleteCache();
 
+	// Returns true if PNG is animated, false otherwise
+	static bool IsAnimated(void* buffer, size_t sizebytes);
+
 private:
 	struct png_cache;
 	static png_cache cache;
