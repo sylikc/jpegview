@@ -1,6 +1,6 @@
 /*
  * HEIF codec.
- * Copyright (c) 2017 struktur AG, Dirk Farin <farin@struktur.de>
+ * Copyright (c) 2023 Dirk Farin <dirk.farin@gmail.com>
  *
  * This file is part of libheif.
  *
@@ -18,50 +18,37 @@
  * along with libheif.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef LIBHEIF_LOGGING_H
-#define LIBHEIF_LOGGING_H
 
-#if defined(HAVE_CONFIG_H)
-#include "config.h"
-#endif
-
-#include <cinttypes>
-#include <cstddef>
+#ifndef LIBHEIF_PLUGINS_WINDOWS_H
+#define LIBHEIF_PLUGINS_WINDOWS_H
 
 #include <vector>
 #include <string>
-#include <memory>
-#include <limits>
-#include <istream>
+#include "init.h"
+#include <windows.h>
 
+std::vector<std::string> get_plugin_directories_from_environment_variable_windows();
 
-class Indent
+std::vector<std::string> list_all_potential_plugins_in_directory_windows(const char*);
+
+class PluginLibrary_Windows : public PluginLibrary
 {
 public:
-  Indent() = default;
+  heif_error load_from_file(const char* filename) override;
 
-  int get_indent() const { return m_indent; }
+  void release() override;
 
-  void operator++(int) { m_indent++; }
+  heif_plugin_info* get_plugin_info() override { return m_plugin_info; }
 
-  void operator--(int)
+  bool operator==(const PluginLibrary_Windows& b) const
   {
-    m_indent--;
-    if (m_indent < 0) m_indent = 0;
+    return m_filename == b.m_filename;
   }
 
 private:
-  int m_indent = 0;
+  std::string m_filename;
+  HMODULE m_library_handle = nullptr;
+  heif_plugin_info* m_plugin_info = nullptr;
 };
 
-
-inline std::ostream& operator<<(std::ostream& ostr, const Indent& indent)
-{
-  for (int i = 0; i < indent.get_indent(); i++) {
-    ostr << "| ";
-  }
-
-  return ostr;
-}
-
-#endif
+#endif //LIBHEIF_PLUGINS_WINDOWS_H

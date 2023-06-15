@@ -32,7 +32,7 @@ static void strided_copy(void* dest, const void* src, int width, int height,
     const uint8_t* _src = static_cast<const uint8_t*>(src);
     uint8_t* _dest = static_cast<uint8_t*>(dest);
     for (int y = 0; y < height; y++, _dest += width, _src += stride) {
-      memcpy(_dest, _src, stride);
+      memcpy(_dest, _src, width);
     }
   }
 }
@@ -203,6 +203,10 @@ EMSCRIPTEN_BINDINGS(libheif) {
     emscripten::enum_<heif_suberror_code>("heif_suberror_code")
     .value("heif_suberror_Unspecified", heif_suberror_Unspecified)
     .value("heif_suberror_Cannot_write_output_data", heif_suberror_Cannot_write_output_data)
+    .value("heif_suberror_Encoder_initialization", heif_suberror_Encoder_initialization)
+    .value("heif_suberror_Encoder_encoding", heif_suberror_Encoder_encoding)
+    .value("heif_suberror_Encoder_cleanup", heif_suberror_Encoder_cleanup)
+    .value("heif_suberror_Too_many_regions", heif_suberror_Too_many_regions)
     .value("heif_suberror_End_of_data", heif_suberror_End_of_data)
     .value("heif_suberror_Invalid_box_size", heif_suberror_Invalid_box_size)
     .value("heif_suberror_No_ftyp_box", heif_suberror_No_ftyp_box)
@@ -245,7 +249,10 @@ EMSCRIPTEN_BINDINGS(libheif) {
     .value("heif_suberror_Unsupported_writer_version", heif_suberror_Unsupported_writer_version)
     .value("heif_suberror_Unsupported_parameter", heif_suberror_Unsupported_parameter)
     .value("heif_suberror_Invalid_parameter_value", heif_suberror_Invalid_parameter_value)
+    .value("heif_suberror_Invalid_property", heif_suberror_Invalid_property)
+    .value("heif_suberror_Item_reference_cycle", heif_suberror_Item_reference_cycle)
     .value("heif_suberror_Invalid_pixi_box", heif_suberror_Invalid_pixi_box)
+    .value("heif_suberror_Invalid_region_data", heif_suberror_Invalid_region_data)
     .value("heif_suberror_Unsupported_codec", heif_suberror_Unsupported_codec)
     .value("heif_suberror_Unsupported_image_type", heif_suberror_Unsupported_image_type)
     .value("heif_suberror_Unsupported_data_version", heif_suberror_Unsupported_data_version)
@@ -262,7 +269,11 @@ EMSCRIPTEN_BINDINGS(libheif) {
     .value("heif_compression_HEVC", heif_compression_HEVC)
     .value("heif_compression_AVC", heif_compression_AVC)
     .value("heif_compression_JPEG", heif_compression_JPEG)
-    .value("heif_compression_AV1", heif_compression_AV1);
+    .value("heif_compression_AV1", heif_compression_AV1)
+    .value("heif_compression_VVC", heif_compression_VVC)
+    .value("heif_compression_EVC", heif_compression_EVC)
+    .value("heif_compression_JPEG2000", heif_compression_JPEG2000)
+    .value("heif_compression_uncompressed", heif_compression_uncompressed);
     emscripten::enum_<heif_chroma>("heif_chroma")
     .value("heif_chroma_undefined", heif_chroma_undefined)
     .value("heif_chroma_monochrome", heif_chroma_monochrome)
@@ -278,6 +289,13 @@ EMSCRIPTEN_BINDINGS(libheif) {
     // Aliases
     .value("heif_chroma_interleaved_24bit", heif_chroma_interleaved_24bit)
     .value("heif_chroma_interleaved_32bit", heif_chroma_interleaved_32bit);
+    emscripten::enum_<heif_chroma_downsampling_algorithm>("heif_chroma_downsampling_algorithm")
+    .value("heif_chroma_downsampling_average", heif_chroma_downsampling_average)
+    .value("heif_chroma_downsampling_nearest_neighbor", heif_chroma_downsampling_nearest_neighbor)
+    .value("heif_chroma_downsampling_sharp_yuv", heif_chroma_downsampling_sharp_yuv);
+    emscripten::enum_<heif_chroma_upsampling_algorithm>("heif_chroma_upsampling_algorithm")
+    .value("heif_chroma_upsampling_bilinear", heif_chroma_upsampling_bilinear)
+    .value("heif_chroma_upsampling_nearest_neighbor", heif_chroma_upsampling_nearest_neighbor);
     emscripten::enum_<heif_colorspace>("heif_colorspace")
     .value("heif_colorspace_undefined", heif_colorspace_undefined)
     .value("heif_colorspace_YCbCr", heif_colorspace_YCbCr)

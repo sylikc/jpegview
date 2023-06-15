@@ -18,26 +18,37 @@
  * along with libheif.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef HEIF_AVIF_H
-#define HEIF_AVIF_H
-
-#include <cassert>
-#include <cmath>
-#include <memory>
+#ifndef HEIF_HEVC_H
+#define HEIF_HEVC_H
 
 #include "heif.h"
 #include "box.h"
 #include "error.h"
 
+#include <memory>
+#include <vector>
 
-namespace heif {
 
-  class HeifPixelImage;
+  class SEIMessage
+  {
+  public:
+    virtual ~SEIMessage() = default;
+  };
 
-  Error fill_av1C_configuration(Box_av1C::configuration* inout_config, const std::shared_ptr<HeifPixelImage>& image);
 
-  bool fill_av1C_configuration_from_stream(Box_av1C::configuration* out_config, const uint8_t* data, int dataSize);
+  class SEIMessage_depth_representation_info : public SEIMessage,
+                                               public heif_depth_representation_info
+  {
+  public:
+  };
 
-}
+
+  Error decode_hevc_aux_sei_messages(const std::vector<uint8_t>& data,
+                                     std::vector<std::shared_ptr<SEIMessage>>& msgs);
+
+
+  Error parse_sps_for_hvcC_configuration(const uint8_t* sps, size_t size,
+                                         Box_hvcC::configuration* inout_config,
+                                         int* width, int* height);
 
 #endif
