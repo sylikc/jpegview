@@ -1,0 +1,486 @@
+﻿//! This file must be encoded with UTF-8 (e.g. with Windows Notepad)
+//! LICENSE: This localization file is part of JPEGView <https://github.com/sylikc/jpegview> and distributed under the same license.  See <https://github.com/sylikc/jpegview/blob/master/LICENSE.txt> for more info.
+
+//! Standard  Filename Convention: 'strings_%languagecode%.txt' where %languagecode% is the ISO 639-1 language code e.g. 'en' for English (See <https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes>)
+//! Alternate Filename Convention: 'strings_%languagecode%-%countrycode%.txt' where %countrycode% is the ISO 3166-1 country code e.g. 'US' for United States (See <https://en.wikipedia.org/wiki/List_of_ISO_3166_country_codes>)
+//!    Use the alternate filename convention only when the standard filename already exist (e.g. specifying a country-specific dialect for an existing language)
+
+////////////////////
+// ::: Translation Info ::: //
+//: ISO 639-1 code: bg
+//: ISO 3166-1 code:
+//: Language: Bulgarian
+//: Translator(s) - Name <Contact Info/URL>: Ivan Georgiev <IVG_18@yahoo.com>
+//: Last Updated: 11 March 2023
+//: Additional Notes:
+////////////////////
+
+////////////////////
+// ::: Instructions / Help ::: (help for translators only, does not need to be translated) //
+
+//? Line Format:    English string<tab>Translated string<newline>
+//? * Lines beginning with "//" (comments) are ignored
+//? * Blank lines are ignored
+//? * Lines without a <tab> are ignored
+//? * Lines with no text after the <tab> are ignored
+//? * Multiple tabs are permitted between English and Translated string, e.g. this is valid:    English string<tab><tab><tab>Translated string<newline>
+
+//? NOTE: %s %d have special meanings in the strings, so make sure they appear somewhere in the translated string!
+
+//? For the strings below which are short and have no context:
+//?   "in"        in context: is shorthand for "inch"
+//?   "cm"        in context: is shorthand for "centimeter"
+//?   "C - R"     in context: is "Cyan Red" colors
+//?   "M - G"     in context: is "Magenta Green" colors
+//?   "Y - B"     in context: is "Yellow Blue" colors
+//?   "yes"/"no"  in context: is for showing EXIF flags
+//?   "on"/"off"  in context: is for showing a setting active or not
+//?   "Filter"    in context: is used in Resize image, "sampling filter"
+//?   "Box"       in context: is used in Resize image sampling filter "Box filter"
+////////////////////
+
+
+// ::: Program Strings ::: (sorted alphabetically) //
+%d file(s) renamed, %d file(s) copied, %d folder(s) created	%d файл(а) са преименувани, %d файл(а) са копирани, %d папка(и) са създадени
+%s camera raw images (embedded JPEGs only)	%s необработени изображения от камера (само вградени JPEG файлове)
+%s images	%s изображения
+%s images (processed by Window Imaging Component - WIC)	%s изображения (обработени от Window Imaging Component - WIC)
+'My Pictures' folder	Папка 'Моите Снимки'
+About JPEGView (32-bit version)...	За JPEGView (32-битова версия)...
+About JPEGView (64-bit version)...	За JPEGView (64-битова версия)...
+Acquisition date:	Дата на заснемане:
+Actual size of image	Действителен размер на изображението
+Align image to horizontal or vertical line	Подравни изображението към хоризонтална или вертикална линия
+Alignment:	Подравняване:
+All Files	Всички файлове
+All existing user settings will be preserved.	Всички съществуващи потребителски настройки ще бъдат запазени.
+Alternatively, right-click an image file of the given type in Windows Explorer and select 'Open with... > Choose default program'	Друга възможност е да натиснете с десния бутон върху файл с изображение от даден тип в Windows Explorer и да изберете "Отваряне с... > Избор на програма по подразбиране"
+Altitude (m):	Надморска височина (m):
+Amount	Размер
+Application:	Приложение:
+Applications	Приложения
+Apply	Приложи
+Apply Unsharp Mask	Приложи маска за неяснота
+Apply auto contrast correction using only visible section of image	Приложи автоматична корекция на контраста, използвайки само видимата част от изображението
+Ascending	Възходящо
+Auto contrast and color correction	Автоматичен контраст и корекция на цветовете
+Auto crop corrected image (avoids black border)	Автоматично изрязване на коригираното изображение (избягва се черна рамка)
+Auto crop rotated image (avoids black border)	Автоматично изрязване на завъртяното изображение (избягва се черна рамка)
+Auto zoom mode	Режим на автоматично мащабиране
+Back mouse button	Бутон на мишката "Назад"
+Batch rename/copy of files	Групово преименуване/копиране на файлове
+Blend	Бленда
+Bottom	Отдолу
+Box	Кутия
+Brightness	Яркост
+Browse...	Преглед...
+C - R	Ц - Ч
+Camera model:	Модел на камерата:
+Can't rename file	Не може да се преименува файл
+Cancel	Отмени
+Cannot read from parameter DB file '%s'!	Не може да се прочете от базата с параметри '%s'!
+Cannot read parameter DB file '%s' because it is too large!	Не може да се прочете базата с параметри '%s', защото е твърде голяма!
+Cannot write to parameter DB file '%s'!	Не може да се запише в базата с параметри '%s'!
+Click and drag the mouse vertically to correct image tilt.	Натиснете и плъзнете мишката вертикално, за да коригирате наклона на изображението.
+Clipboard Image	Изображение в клипборда
+Close	Затвори
+Close help text display / Close JPEGView	Затвори показания помощен текст / Затвори JPEGView
+Color Correction	Корекция на цветовете
+Combine keys with '+'	Комбинирай клавишите с '+'
+Confirm	Потвърди
+Confirm save default parameters	Потвърди запазване на параметрите по подразбиране
+Conflicting entries in Param DB	Конфликтни записи в базата с параметри
+Continue rename/copy?	Продължаване на преименуване/копиране?
+Contrast	Контраст
+Contrast Correction	Корекция на контраста
+Copy file path of the image to clipboard	Копирай пътя до файла с изображението в клипборда
+Copy screen to clipboard / Copy processed full size image to clipboard	Копирай екрана в клипборда/ Копирай обработеното изображение в пълен размер в клипборда
+Copying parameter DB to file '%s' failed. Reason: %s	Неуспешно копиране на базата с параметри във файла '%s'. Причина: %s
+Correct converging lines (perspective correction)	Правилни сближаващи се линии (корекция на перспектива)
+Creation date/time	Дата/час на създаване
+Crop image	Изрежи изображението
+Crop the image and apply transformation? Cropping cannot be undone!	Изрязване на изображението и прилагане на трансформацията? Изрязването не може да бъде отменено!
+Ctrl + Left mouse	Ctrl + Ляв бутон на мишката
+Current image	Текущо изображение
+Cyan-Red	Синьо-Червено
+Darken Highlights	Затъмни акцентите
+Date	Дата
+Date placeholders use the modification date of the image.	Заместителите за дата използват датата на промяна на изображението.
+Day / Month / Year (as numbers)	Ден / Месец / Година (като числа)
+Decoding this format requires the Microsoft Visual C++ Redistributable.	Декодирането на този формат изисква Microsoft Visual C++ Redistributable.
+Deep Shadows	Дълбоки сенки
+Delete	Изтриване
+Delete current file on disk permanently	Изтриване на текущия файл на диска безвъзвратно
+Delete image file	Изтриване на файла с изображение
+Descending	Низходящо
+Display image (EXIF) information	Показване на (EXIF) информация за изображението
+Do you really want to delete the current image file on disk?	Искате ли да изтриете текущия файл с изображение на диска?
+Do you really want to permanently delete the file %filename%?	Искате ли да изтриете безвъзвратно файла %filename%?
+Do you really want to save the following parameters as default to the INI file	Искате ли да запазите следните параметри по подразбиране в INI файла
+Drag at the left or right border for asymmetric correction.	Плъзнете лявата или дясната граница за асиметрична корекция.
+EXIF date successfully set on %d images, failed on %d images	EXIF датата е зададена успешно на %d изображения и неуспешно на %d изображения
+Edit	Редактирай
+Enable/disable automatic contrast correction (histogram equalization)	Включи/изключи автоматична корекция на контраста (изравняване на хистограмата)
+Enable/disable automatic density correction (local brightness correction)	Включи/изключи автоматична корекция на плътността (локална корекция на яркостта)
+Enable/disable full screen mode	Включи/изключи режим на цял екран
+Enable/disable high quality resampling	Включи/изключи висококачествено изглаждане
+Enable/disable keeping of geometry related (zoom/pan/rotation)	Включи/изключи запазването на геометрията (мащабиране/панорама/завъртане)
+Enable/disable landscape picture enhancement mode	Включи/изключи режима за подобряване на пейзажната картина
+Error	Грешка
+Error during rename/copy	Грешка при преименуване/копиране
+Error saving file	Грешка при запазване на файла
+Error while writing the following registry key	Грешка при запис на следния ключ на системния регистър
+Error writing file to disk!	Грешка при запис на файла на диска!
+Example:	Пример
+Exposure bias (EV):	Отклонение на експозицията (EV):
+Exposure time (s):	Време на експозиция (s):
+Extension	Разширение
+Extracted number from original file name	Номерът е извлечен от името на оригиналния файл
+F-Number:	F-номер:
+File name	Име на файла
+File size	Размер на файла
+File type	Тип на файла
+Fill page with crop	Запълни хартията с изрязване
+Fill with crop	Запълни с изрязване
+Fill with crop (no zoom)	Запълни с изрязване (без мащабиране)
+Filter:	Филтър:
+Fit image to screen	Побиране на изображението в екрана
+Fit to page	Побиране в листа
+Fit to screen	Побиране в екрана
+Fit to screen (no zoom)	Побиране в екрана (без мащабиране)
+Flash fired:	Светкавица:
+Focal length (mm):	Фокусно разстояние (mm):
+Forward mouse button	Бутон на мишката напред
+Full screen mode	Режим на цял екран
+Goto first/last image of current folder (using sort order as defined)	Отиди до първото/последното изображение на текущата папка (използвайки реда на сортиране, както е дефиниран)
+Goto next image	Към следващото изображение
+Goto previous image	Към предишното изображение
+Height	Височина
+Hide histogram	Скриване на хистограмата
+High quality resampling	Висококачествено изглаждане
+Hour / Minute (as numbers)	Час / Минута (като числа)
+ISO Speed:	ISO скорост:
+Image Pixels	Пиксели на изображението
+Image files in folder	Файлове с изображения в папката
+Image height:	Височина на изображението:
+Image width and height must be dividable by the JPEG block size (8 or 16) for lossless transformations!	Широчината и височината на изображението трябва да се делят на размера на JPEG блока (8 или 16) за трансформации без загуби!
+Image width:	Ширина на изображението:
+Images	Изображения
+Increase/decrease auto color cast correction amount	Регулиране стойността на автоматичната корекция на цвета
+Increase/decrease auto contrast correction amount	Регулиране стойността на автоматичната корекция на контраста
+Increase/decrease brightness	Регулиране на яркостта
+Increase/decrease contrast	Регулиране на контраста
+Increase/decrease darkening of highlights (LDC must be on)	Регулиране затъмняването на светлините (LDC трябва да е включен)
+Increase/decrease lightening of shadows (LDC must be on)	Регулиране изсветляването на сенките (LDC трябва да е включен)
+Increase/decrease sharpness	Регулиране на остротата
+Insufficient rights to change the privilege (DACL) on the registry entry. Continue?	Недостатъчни права за промяна на привилегията (DACL) на записа в системния регистър. Продължаване?
+JPEGView Help	Помощ за JPEGView
+JPEGView is a lean, fast and highly configurable viewer/editor for JPEG, BMP, PNG, WEBP, TGA, GIF and TIFF images with a minimal GUI.	JPEGView е елегантна и бърза програма с много настройки за преглед и редактиране на JPEG, BMP, PNG, WEBP, TGA, GIF и TIFF изображения с минимален GUI.
+JPEGView is registered as default viewer for the selected file formats.	JPEGView е регистрирана като основна програма за преглед на избраните файлови формати.
+Keep aspect ratio on crop	Запазване на пропорциите при изрязване
+Keep parameters	Запазване на параметрите
+Keep processing parameters between images	Запазване на параметрите за обработка между изображенията
+Known keys:	Известни ключове:
+Lanczos/Bicubic	Lanczos/Бикубичен
+Landscape	Пейзаж
+Landscape picture enhancement mode	Режим за подобряване на пейзажната картина
+Last modification date/time	Дата/час на последна промяна
+Left	Наляво
+Left mouse & drag	Ляв бутон на мишката и влачене
+Licensed under the GNU general public license (GPL), see readme file for details	Лицензирана под общия публичен лиценз на GNU (GPL), вижте файла readme за подробности
+Lighten Shadows	Изсветляване на сенки
+Local density correction	Локална корекция на плътността
+Location:	Местоположение
+Loop folder	Текущата папка
+Loop recursively	Рекурсивно (всички подпапки)
+Loop siblings	Сродни папки (на същото ниво)
+Loop through files in current directory and all sibling folders (folders on same level)	Преминаване през файлове в текущата директория и всички сродни папки (папки на същото ниво)
+Loop through files in current directory and all subfolders	Преминаване през файлове в текущата директория и всички подпапки
+Loop through files in current folder	Преминаване през файлове в текущата директория
+Lossless JPEG transformations	JPEG трансформации без загуба
+M - G	П - З
+Magenta-Green	Пурпурно-Зелено
+Manage 'Open image with' menu...	Управление на менюто "Отваряне на изображение с"...
+Margins:	Полета:
+Mark image for toggling. Use %s to toggle between marked and current image	Маркиране на изображение за превключване. Използване на %s за превключване между маркирано и текущо изображение
+Maximize/restore to/from virtual desktop (only for multi-monitor systems)	Увеличаване/възстановяване към/от виртуален работен плот (само за системи с няколко монитора)
+Menu entries:	Записи в менюто:
+Modification date:	Дата на промяна:
+Modifier keys:	Модификатори:
+Month / Short form (text)	Месец / Кратка форма (текст)
+Mouse wheel	Колело на мишката
+Navigation	Навигация
+New	Нов
+New height:	Нова височина:
+New name (>> : file gets copied)	Ново име (>>: файлът се копира)
+New name contains backslash character!	Новото име съдържа обратна наклонена черта!
+New size:	Нов размер:
+New width:	Нова ширина:
+Next image	Следващо изображение
+No image loaded!	Няма заредено изображение!
+No user INI file exists yet. Create user INI file from INI file template?	Все още не съществува потребителски INI файл. Създаване на потребителски INI файл от шаблон на INI файл?
+None	Няма
+Not enough memory available	Няма достатъчно налична памет
+Note: Set the key 'CropWithoutPromptLosslessJPEG=true' in the INI file to always crop without showing this message.	Забележка: Задайте ключа "CropWithoutPromptLosslessJPEG=true" в INI файла, за да се изрязва винаги, без да се показва това съобщение.
+Number (consecutively numbered)	Номер (последователно номериран)
+Number of CPU cores used	Брой използвани процесорни ядра
+Number of JPEG files in folder: %d	Брой JPEG файлове в папка: %d
+Number with N digits	Число с N цифри
+OK	Добре
+Old name	Старо име
+Open folder containing image and select in Windows Explorer	Отваряне на папка, съдържаща изображение и избиране в Windows Explorer
+Open new image or slideshow file	Отваряне на ново изображение или файл със слайдшоу
+Order files by	Подреждане на файлове по
+Orientation:	Ориентация
+Original file extension	Оригинално разширение на файла
+Original file name (with extension)	Оригинално име на файл (с разширение)
+Original file name (without extension)	Оригинално име на файл (без разширение)
+Pan image	Панорамно изображение
+Paper size:	Хартия:
+Parameter DB	БД на параметъра
+Parameter DB error	Грешка в базата данни на параметъра
+Parameter DB file '%s' could not be opened!	Файлът с базата данни на параметъра '%s' не може да бъде отворен!
+Parameter DB file '%s' is not valid (invalid header)!	Файлът с базата данни на параметъра '%s' не е валиден (невалидна заглавна част)!
+Paste from clipboard	Поставяне от клипборда
+Pasting image from clipboard failed!	Неуспешно поставяне на изображение от клипборда!
+Performing the lossless transformation failed!	Неуспешно извършване на трансформация без загуби!
+Performing the transformation failed	Неуспешно извършване на трансформация
+Perspective Correction	Корекция на перспективата
+Pixels	Пиксели
+Placeholders:	Заместители:
+Portrait	Портрет
+Press 'OK' to continue with registration or 'Cancel' to abort all registrations.	Натиснете „OK“, за да продължите с регистрацията, или „Отказ“, за да прекратите всички регистрации.
+Press ESC to exit...	Натиснете ESC за изход...
+Press any key to search the subdirectories for image files.	Натиснете произволен клавиш, за да търсите в поддиректориите за файлове с изображения.
+Preview	Преглед
+Previous image	Предишно изображение
+Print	Печат
+Print Image	Печат на изображение
+Printer driver	Драйвер за принтер
+Printer:	Принтер:
+Project home page	Страница на проекта
+Radius	Радиус
+Random	Случайно
+Reading the JPEG file from disk failed	Неуспешно прочитане на JPEG файла от диска
+Reason:	Причина:
+Registering or unregistering file extensions in this registry area requires administrator privileges and cannot be done in JPEGView.	Регистрирането или дерегистрирането на файлови разширения в тази област на регистъра изисква администраторски права и не може да се извърши в JPEGView.
+Registration applies to the current user only.	Регистрацията важи само за текущия потребител.
+Remove from	Премахване от
+Rename	Преименуване
+Rename/copy images to:	Преименуване/копиране на изображения в:
+Renaming file failed!	Неуспешно преименуване на файла!
+Reset	Нулиране
+Resize Image	Преоразмеряване на изображението
+Right	Отдясно
+Right mouse button: Context menu	Десен бутон на мишката: Контекстно меню
+Roll from bottom	Разгръщане отдолу нагоре
+Roll from left	Разгръщане от ляво
+Roll from right	Разгръщане от дясно
+Roll from top	Разгръщане отгоре надолу
+Rotate Image	Завъртане на изображението
+Rotate current file on disk lossless by 270 deg (W/H must be multiple of 16)	Завъртане на текущия файл на диск без загуби на 270 градуса (Ш/В трябва да са кратни на 16)
+Rotate current file on disk lossless by 90 deg (W/H must be multiple of 16)	Завъртане на текущия файл на диск без загуби на 90 градуса (Ш/В трябва да са кратни на 16)
+Rotate image 90 deg clockwise	Завъртане на изображението на 90 градуса по часовниковата стрелка
+Rotate image 90 deg counter-clockwise	Завъртане на изображението на 90 градуса обратно на часовниковата стрелка
+Rotate image and fit to screen	Завъртане и побиране на изображението на екрана
+Rotate image by user-defined angle	Завъртане на изображението под ъгъл, зададен от потребителя
+Rotate the image by dragging with the mouse.	Завъртане на изображението чрез плъзгане с мишката.
+SIMD mode used	Използван SIMD режим
+Same as Image	Също като изображението
+Saturation	Насищане
+Save	Запазване
+Save (%s) / delete (%s) image processing parameters into/from parameter DB	Запазване (%s)/ изтриване (%s) на параметрите за обработка на изображения в/от БД с параметри
+Save as (in screen size/resolution)	Запазване като (в размер на екрана/разделителна способност)
+Save as template	Запазване като шаблон
+Save cropped image	Запазване на изрязаното изображение
+Save processed image to JPEG file (original size)	Запазване на обработеното изображение в JPEG файл (оригинален размер)
+Save processed image to JPEG file (screen size)	Запазване на обработеното изображение в JPEG файл (размер на екрана)
+Save to	Запазване в
+Scaling mode:	Режим на мащабиране:
+Screen Pixels	Пиксели на екрана
+Scroll from bottom	Превъртане отдолу нагоре
+Scroll from left	Превъртане от ляво
+Scroll from right	Превъртане от дясно
+Scroll from top	Превъртане отгоре надолу
+Select Printer...	Избор на принтер...
+Select all	Избиране на всички
+Select application	Избиране на приложение
+Select file to display in 'File Open' dialog	Избор на файл за показване в диалоговия прозорец "Отваряне на файл"
+Select none	Не избирай нищо
+Select parameter DB to restore	Избор на параметрова БД за възстановяване
+Set Fixed Crop Size	Задаване на фиксиран размер на изрязване
+Set JPEGView as default image viewer	Задаване на JPEGView като програма за преглед на изображения по подразбиране
+Set timeout to n/10 sec, respectively n/100 sec (Ctrl+Shift)	Задаване на изчакване на n/10 сек, съответно n/100 сек (Ctrl+Shift)
+Shall existing entries be preserved (Yes) or be overwritten by the imported entries (No)?	Трябва ли съществуващите записи да бъдат запазени (Да) или да бъдат заменени от импортираните записи (Не)?
+Sharpen	Острота
+Sharpen low	Ниска острота
+Sharpen medium	Средна острота
+Shortcut Help	Помощ за бърз достъп
+Shortcut key:	Клавиш за бърз достъп:
+Show filename	Показване на името на файла
+Show first image in folder	Показване на първото изображение в папката
+Show grid lines	Показване на решетъчни линии
+Show histogram	Показване на хистограма
+Show last image in folder	Показване на последното изображение в папката
+Show navigation panel	Показване на панела за навигация
+Show next image	Показване на следващото изображение
+Show picture info (EXIF)	Показване на информация за снимката (EXIF)
+Show previous image	Показване на предишното изображение
+Show/hide file name	Показване/скриване на името на файла
+Show/hide navigation panel	Показване/скриване на панела за навигация
+Show/hide picture information (EXIF data)	Показване/скриване на информация за снимката (EXIF)
+Show/hide this help text	Показване/скриване на този помощен текст
+Size:	Размер:
+Slide from bottom	Плъзгане отдолу нагоре
+Slide from left	Плъзгане от ляво
+Slide from right	Плъзгане от дясно
+Slide from top	Плъзгане отгоре надолу
+Slideshow	Слайдшоу
+Slideshow with timeout of 'n' seconds (ESC to stop)	Слайдшоу с изчакване от 'n' секунди (ESC за спиране)
+Sort images by creation date, resp. modification date, resp. file name	Сортиране на изображенията по дата на създаване, респ. дата на изменение, респ. име на файл
+Source:	Източник:
+Target folders that do not yet exist are created as needed.	При необходимост се създават целеви папки, които все още не съществуват.
+The directory '%s' does not contain any image files!	Директорията '%s' не съдържа файлове с изображения!
+The file '%s' could not be copied!	Файлът '%s' не можа да бъде копиран!
+The file '%s' could not be read!	Файлът '%s' не можа да бъде прочетен!
+The file '%s' could not be renamed!	Файлът '%s' не можа да бъде преименуван!
+The file '%s' does not contain a list of file names!	Файлът '%s' не съдържа списък с имена на файлове!
+The file is read-only!	Файлът е само за четене!
+The following file extensions cannot be unregistered because they have been registered in the 'local machine' registry area.	Следните файлови разширения не могат да бъдат дерегистрирани, тъй като са били регистрирани в областта на регистъра "локална машина".
+The following image extensions are protected by the operating system.	Следните разширения на изображения са защитени от операционната система.
+The imported param DB contains entries already present in active param DB.	Импортираната БД с параметри съдържа записи, които вече присъстват в активната БД с параметри.
+The new size is too large - width or height is larger than 65535 or total number of pixels is too large!	Новият размер е твърде голям - ширината или височината е по-голяма от 65535 или общият брой пиксели е твърде голям!
+The old parameter DB file '%s' could not be renamed during conversion to new format!	Старият БД файл с параметър '%s' не можа да бъде преименуван по време на конвертирането в нов формат!
+The operation failed because not enough memory is available!	Операцията е неуспешна, защото няма достатъчно памет!
+The parameter DB file '%s' has been created by a newer version of JPEGView!	БД файл с параметър '%s' е създаден от по-нова версия на JPEGView!
+The transformation can be applied if the image is cropped to the next matching size but this will remove some border pixels.	Трансформацията може да се приложи, ако изображението бъде подрязано до следващия съответстващ размер, но това ще премахне някои гранични пиксели.
+These values will override the values from the INI file located in the program folder of JPEGView!	Тези стойности ще заменят стойностите от INI файла, намиращ се в програмната папка на JPEGView!
+Threshold	Праг
+Title:	Заглавие:
+Toggle between screens (only for multi-monitor systems)	Превключване между екрани (само за системи с няколко монитора)
+Toggle window always on top mode	Превключване на прозореца в режим винаги отгоре
+Toggle window title bar hidden mode	Превключване на скрития режим на заглавната лента на прозореца
+Top	Отгоре
+Transition Effect	Преходен ефект
+Unregistering not possible	Дерегистрацията е невъзможна
+Unsharp mask...	Неостра маска...
+Update user settings with new settings from settings template file?	Актуализиране на потребителските настройки с нови настройки от шаблонен файл за настройки?
+Use the 'Default Programs' configuration dialog from the operating system instead.	Вместо това използвайте диалоговия прозорец за конфигуриране на "Програми по подразбиране" от операционната система.
+Use the mouse to draw a line that shall be horizontal or vertical.	Използвайте мишката, за да начертаете линия, която трябва да бъде хоризонтална или вертикална.
+Warning	Внимание
+Width	Ширина
+Window mode	Прозоречен режим
+Windows 8 (and above) blocks JPEGView from changing the default program for these file extensions.	Windows 8 (и по-нова версия) блокира JPEGView от промяна на програмата по подразбиране за тези файлови разширения.
+Writing the resulting JPEG file to disk failed	Записването на получения JPEG файл на диска е неуспешно
+Y - B	Ж - С
+Year short form (2 digits)	Кратка форма за година (2 цифри)
+Yellow-Blue	Жълто-Синьо
+Zoom 1:1 (100 %)	Мащабиране 1:1 (100%)
+Zoom in (%s)/Zoom out (%s)	Увеличаване (%s)/Намаляване (%s)
+Zoom in/out image	Увеличаване/Намаляване на изображението
+Zoom mode (drag mouse to zoom)	Режим на мащабиране (скролиране на мишката за мащабиране)
+and image processing (brightness/contrast/sharpen) parameters between images	и параметри за обработка на изображения (яркост/контраст/рязкост) между изображенията
+cm	см
+in	инч
+new menu entry	нов запис в менюто
+no	не
+off	изключено
+on	включено
+user-defined	дефинирано от потребителя
+yes	да
+
+// ::: Popup Menu Strings ::: (unsorted to preserve context) //
+Stop slide show/movie	Спиране на слайдшоу/филм
+Open image...	Отваряне на изображение...
+Open image with	Отваряне на изображението с
+Save processed image...	Запазване на обработеното изображение...
+Reload image	Презареждане на изображението
+Open containing folder in Explorer	Отваряне на съдържащата папка в Explorer
+Print image...	Печат на изображение...
+Batch rename/copy...	Пакетно преименуване/копиране...
+Set modification date	Задаване на дата на промяна
+to current date	текуща дата
+to EXIF date	EXIF дата
+to EXIF date (all files in folder)	EXIF дата (всички файлове в папката)
+Set as desktop wallpaper	Задаване като тапет на работния плот
+Use original image	Използване на оригинално изображение
+Use processed image as displayed	Използване на обработеното изображение, както е показано
+Copy to clipboard	Копиране в клипборда
+Copy original size image	Копиране на изображението в оригинален размер
+Copy file path	Копиране пътя на файла
+Display order	Ред на показване
+Modification date	Дата на промяна
+Creation date	Дата на създаване
+Play folder as slideshow/movie	Възпроизвеждане на папка като слайдшоу/филм
+Waiting time	Време за изчакване
+1 sec	1 сек
+2 sec	2 сек
+3 sec	3 сек
+4 sec	4 сек
+5 sec	5 сек
+7 sec	7 сек
+10 sec	10 сек
+20 sec	20 сек
+Transition Speed	Скорост на прехода
+Very fast	Много бърза
+Fast	Бърза
+Normal	Нормална
+Slow	Бавна
+Very slow	Много бавна
+Movie	Филм
+Playback speed	Скорост на възпроизвеждане
+5 fps	5 fps
+10 fps	10 fps
+25 fps	25 fps
+30 fps	30 fps
+50 fps	50 fps
+100 fps	100 fps
+Transform image	Трансформиране на изображението
+Rotate +90	Завъртане +90
+Rotate -90	Завъртане -90
+Rotate...	Завъртане...
+Change size...	Промяна на размера...
+Perspective correction...	Корекция на перспективата...
+Mirror horizontally	Огледално по хоризонтала
+Mirror vertically	Огледално по вертикала
+Rotate 180	Завъртане на 180
+Auto correction	Автоматична корекция
+Save parameters to DB	Запазване на параметрите в БД
+Clear parameters from DB	Изчистване на параметрите от БД
+Zoom	Мащабиране
+Span all screens	Обхващане на всички екрани
+Fit window to image	Напасване на прозореца към изображението
+Hide window title bar	Скриване на заглавната лента на прозореца
+Set window always on top	Поставяне на прозореца винаги отгоре
+Settings/Admin	Настройки/Админ
+Edit global settings...	Редактиране на глобалните настройки...
+Edit user settings...	Редактиране на настройките на потребителя...
+Update user settings...	Актуализиране на настройките на потребителя...
+Set current parameters as default values...	Задаване на текущите параметри като стойности по подразбиране...
+Set as default viewer...	Задаване като програма за преглед по подразбиране...
+Backup parameter DB...	Архивиране на БД за параметри
+Restore parameter DB...	Възстановяване на БД за параметри
+User commands	Команди на потребителя
+About JPEGView...	За JPEGView...
+Exit	Изход
+Crop Selection	Изрязване на избраното
+Crop Selection Lossless...	Изрязване на избраното без загуба...
+Copy Selection to Clipboard	Копиране на избраното в клипборда
+Crop Mode	Режим на изрязване
+Free	Свободен
+Fixed size...	Фиксиран размер...
+Zoom to Selection	Мащабиране до избраното
+
+// ::: INFO: Same Translations [6] ::: (Summary to assist translators: All strings which are known not to need translation [String == Translation]) - Auto-generated by script //
+//! 5 fps
+//! 10 fps
+//! 25 fps
+//! 30 fps
+//! 50 fps
+//! 100 fps
+
+// ::: STATUS: Last Checked/Updated by Script ::: 2023-06-15T18:16:57.716306+00:00 //
+//! Translation Progress: 100%
+//! * Total (Strings + Menu) = 427
+//! * Done = 427
+//! * Missing = 0 (0%)
