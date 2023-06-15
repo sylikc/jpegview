@@ -33,6 +33,7 @@ void* AvifReader::ReadImage(int& width,
 	unsigned char* pPixelData = NULL;
 
 	avifResult result;
+	int nthreads = 256; // sets maximum number of active threads allowed for libavif, default is 1
 
 	// Cache animations
 	if (cache.decoder == NULL) {
@@ -43,6 +44,7 @@ void* AvifReader::ReadImage(int& width,
 		}
 		memcpy(cache.data, buffer, sizebytes);
 		cache.decoder = avifDecoderCreate();
+		cache.decoder->maxThreads = nthreads;
 		result = avifDecoderSetIOMemory(cache.decoder, cache.data, sizebytes);
 		if (result != AVIF_RESULT_OK) {
 			DeleteCache();
@@ -67,6 +69,7 @@ void* AvifReader::ReadImage(int& width,
 	avifRGBImageSetDefaults(&cache.rgb, cache.decoder->image);
 	cache.rgb.depth = 8;
 	cache.rgb.format = AVIF_RGB_FORMAT_BGRA;
+	cache.rgb.maxThreads = nthreads;
 	avifRGBImageAllocatePixels(&cache.rgb);
 	result = avifImageYUVToRGB(cache.decoder->image, &cache.rgb);
 	if (result != AVIF_RESULT_OK) {

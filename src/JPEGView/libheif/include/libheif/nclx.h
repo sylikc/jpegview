@@ -23,61 +23,62 @@
 
 #include <cinttypes>
 
-namespace heif {
+struct primaries
+{
+  primaries() = default;
 
-  struct primaries
-  {
-    primaries() = default;
+  primaries(float gx, float gy, float bx, float by, float rx, float ry, float wx, float wy);
 
-    primaries(float gx, float gy, float bx, float by, float rx, float ry, float wx, float wy);
+  bool defined = false;
 
-    bool defined = false;
+  float greenX = 0, greenY = 0;
+  float blueX = 0, blueY = 0;
+  float redX = 0, redY = 0;
+  float whiteX = 0, whiteY = 0;
+};
 
-    float greenX=0, greenY=0;
-    float blueX=0, blueY=0;
-    float redX=0, redY=0;
-    float whiteX=0, whiteY=0;
-  };
-
-  primaries get_colour_primaries(uint16_t primaries_idx);
+primaries get_colour_primaries(uint16_t primaries_idx);
 
 
-  struct Kr_Kb
-  {
-    float Kr = 0, Kb = 0;
-  };
+struct Kr_Kb
+{
+  float Kr = 0, Kb = 0;
 
-  Kr_Kb get_Kr_Kb(uint16_t matrix_coefficients_idx, uint16_t primaries_idx);
+  static Kr_Kb defaults();
+};
 
-  struct YCbCr_to_RGB_coefficients
-  {
-    bool defined = false;
+Kr_Kb get_Kr_Kb(uint16_t matrix_coefficients_idx, uint16_t primaries_idx);
 
-    float r_cr = 0;
-    float g_cb = 0;
-    float g_cr = 0;
-    float b_cb = 0;
+struct YCbCr_to_RGB_coefficients
+{
+  bool defined = false;
 
-    static YCbCr_to_RGB_coefficients defaults();
-  };
+  float r_cr = 0;
+  float g_cb = 0;
+  float g_cr = 0;
+  float b_cb = 0;
 
-  YCbCr_to_RGB_coefficients get_YCbCr_to_RGB_coefficients(uint16_t matrix_coefficients_idx, uint16_t primaries_idx);
+  static YCbCr_to_RGB_coefficients defaults();
+};
 
-  struct RGB_to_YCbCr_coefficients
-  {
-    bool defined = false;
+YCbCr_to_RGB_coefficients get_YCbCr_to_RGB_coefficients(uint16_t matrix_coefficients_idx, uint16_t primaries_idx);
 
-    float c[3][3] = {{0,0,0},{0,0,0},{0,0,0}};   // e.g. y = c[0][0]*r + c[0][1]*g + c[0][2]*b
+struct RGB_to_YCbCr_coefficients
+{
+  bool defined = false;
 
-    static RGB_to_YCbCr_coefficients defaults();
-  };
+  float c[3][3] = {{0, 0, 0},
+                   {0, 0, 0},
+                   {0, 0, 0}};   // e.g. y = c[0][0]*r + c[0][1]*g + c[0][2]*b
 
-  RGB_to_YCbCr_coefficients get_RGB_to_YCbCr_coefficients(uint16_t matrix_coefficients_idx, uint16_t primaries_idx);
+  static RGB_to_YCbCr_coefficients defaults();
+};
+
+RGB_to_YCbCr_coefficients get_RGB_to_YCbCr_coefficients(uint16_t matrix_coefficients_idx, uint16_t primaries_idx);
 
 //  uint16_t get_transfer_characteristics() const {return m_transfer_characteristics;}
 // uint16_t get_matrix_coefficients() const {return m_matrix_coefficients;}
 //  bool get_full_range_flag() const {return m_full_range_flag;}
-}
 
 
 #endif //LIBHEIF_NCLX_H

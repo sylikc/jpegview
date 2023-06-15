@@ -18,49 +18,23 @@
  * along with libheif.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef HEIF_API_STRUCTS_H
-#define HEIF_API_STRUCTS_H
+#ifndef HEIF_AVIF_H
+#define HEIF_AVIF_H
 
-#include "heif_image.h"
-#include "heif_context.h"
-
+#include <cassert>
+#include <cmath>
 #include <memory>
 
-struct heif_image_handle
-{
-  std::shared_ptr<heif::HeifContext::Image> image;
-
-  // store reference to keep the context alive while we are using the handle (issue #147)
-  std::shared_ptr<heif::HeifContext> context;
-};
+#include "heif.h"
+#include "box.h"
+#include "error.h"
 
 
-struct heif_image
-{
-  std::shared_ptr<heif::HeifPixelImage> image;
-};
+class HeifPixelImage;
 
+Error fill_av1C_configuration(Box_av1C::configuration* inout_config, const std::shared_ptr<HeifPixelImage>& image);
 
-struct heif_context
-{
-  std::shared_ptr<heif::HeifContext> context;
-};
-
-
-struct heif_encoder
-{
-  heif_encoder(const struct heif_encoder_plugin* plugin);
-
-  ~heif_encoder();
-
-  struct heif_error alloc();
-
-  void release();
-
-
-  const struct heif_encoder_plugin* plugin;
-  void* encoder = nullptr;
-};
+bool fill_av1C_configuration_from_stream(Box_av1C::configuration* out_config, const uint8_t* data, int dataSize);
 
 
 #endif
