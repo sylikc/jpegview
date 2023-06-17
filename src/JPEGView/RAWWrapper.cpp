@@ -4,36 +4,68 @@
 #include "RAWWrapper.h"
 #include "Helpers.h"
 #include "ICCProfileTransform.h"
+#include "TJPEGWrapper.h"
+#include "RawMetadata.h"
 
 CJPEGImage* RawReader::ReadImage(LPCTSTR strFileName, bool& bOutOfMemory)
 {
+	unsigned char* pPixelData = NULL;
+
 	LibRaw RawProcessor;
 	int ret = RawProcessor.open_file(strFileName);
 	int width, height, colors, bps;
-	RawProcessor.get_mem_image_format(&width, &height, &colors, &bps);
-	if (bps != 8) {
-		int j = 2;
-		j = j + 7;
-		j = 5;
-	}
 	
-	ret = RawProcessor.unpack();
-	
-	RawProcessor.imgdata.params.output_bps = 8;
-	ret = RawProcessor.dcraw_process();
-	
-	int stride = Helpers::DoPadding(width * colors, 4);
-	unsigned char* pPixelData = NULL;
-	pPixelData = new(std::nothrow) unsigned char[stride * height];
-	if (pPixelData == NULL) {
-		bOutOfMemory = true;
+	CJPEGImage* Image = NULL;
+	bool get_thumb = true;
+	if (!get_thumb || !RawProcessor.is_jpeg_thumb()) {
+		RawProcessor.get_mem_image_format(&width, &height, &colors, &bps);
+		if (bps != 8) {
+			int j = 2;
+			j = j + 7;
+			j = 5;
+		}
+		ret = RawProcessor.unpack();
+
+		RawProcessor.imgdata.params.output_bps = 8;
+		ret = RawProcessor.dcraw_process();
+
+		int stride = Helpers::DoPadding(width * colors, 4);
+		
+		pPixelData = new(std::nothrow) unsigned char[stride * height];
+		if (pPixelData == NULL) {
+			bOutOfMemory = true;
+			RawProcessor.free_image();
+			return NULL;
+		}
+		ret = RawProcessor.copy_mem_image(pPixelData, stride, 1);
+		void* transform = ICCProfileTransform::CreateTransform(RawProcessor.imgdata.color.profile, RawProcessor.imgdata.color.profile_length, ICCProfileTransform::FORMAT_BGR);
+		ICCProfileTransform::DoTransform(transform, pPixelData, pPixelData, width, height, stride);
+		ICCProfileTransform::DeleteTransform(transform);
 		RawProcessor.free_image();
-		return NULL;
+		CRawMetadata* metadata = new CRawMetadata(RawProcessor.imgdata.idata.make, RawProcessor.imgdata.idata.model, RawProcessor.imgdata.other.timestamp,
+			RawProcessor.imgdata.color.flash_used != 0.0f, RawProcessor.imgdata.other.iso_speed, RawProcessor.imgdata.other.shutter,
+			RawProcessor.imgdata.other.focal_len, RawProcessor.imgdata.other.aperture, RawProcessor.imgdata.sizes.flip, width, height);
+		if (pPixelData)
+			Image = new CJPEGImage(width, height, pPixelData, NULL, colors, 0, IF_CameraRAW, false, 0, 1, 0, NULL, false, metadata);
+	} else {
+		TJSAMP eChromoSubSampling;
+		ret = RawProcessor.unpack_thumb();
+		libraw_processed_image_t* thumb = RawProcessor.dcraw_make_mem_thumb();
+		pPixelData = (unsigned char*)TurboJpeg::ReadImage(width, height, colors, eChromoSubSampling, bOutOfMemory, thumb->data, thumb->data_size);
+		if (pPixelData != NULL && (colors == 3 || colors == 1))
+		{
+			CRawMetadata* metadata = new CRawMetadata(RawProcessor.imgdata.idata.make, RawProcessor.imgdata.idata.model, RawProcessor.imgdata.other.timestamp,
+				RawProcessor.imgdata.color.flash_used != 0.0f, RawProcessor.imgdata.other.iso_speed, RawProcessor.imgdata.other.shutter,
+				RawProcessor.imgdata.other.focal_len, RawProcessor.imgdata.other.aperture, RawProcessor.imgdata.sizes.flip, width, height);
+
+			Image = new CJPEGImage(width, height, pPixelData, Helpers::FindEXIFBlock(thumb->data, thumb->data_size), colors,
+				Helpers::CalculateJPEGFileHash(thumb->data, thumb->data_size), IF_JPEG_Embedded, false, 0, 1, 0, NULL, false, metadata);
+
+			Image->SetJPEGComment(Helpers::GetJPEGComment(thumb->data, thumb->data_size));
+			Image->SetJPEGChromoSampling(eChromoSubSampling);
+		}
+		RawProcessor.dcraw_clear_mem(thumb);
 	}
-	ret = RawProcessor.copy_mem_image(pPixelData, stride, 1);
-	void* transform = ICCProfileTransform::CreateTransform(RawProcessor.imgdata.color.profile, RawProcessor.imgdata.color.profile_length, ICCProfileTransform::FORMAT_BGR);
-	ICCProfileTransform::DoTransform(transform, pPixelData, pPixelData, width, height, stride);
-	ICCProfileTransform::DeleteTransform(transform);
-	RawProcessor.free_image();
-	return new CJPEGImage(width, height, pPixelData, NULL, colors, 0, IF_CameraRAW, false, 0, 1, 0);
+
+	return Image;
 }
