@@ -16,6 +16,7 @@
 #include "JXLWrapper.h"
 #include "HEIFWrapper.h"
 #include "AVIFWrapper.h"
+#include "RAWWrapper.h"
 #endif
 #include "WEBPWrapper.h"
 #include "QOIWrapper.h"
@@ -989,7 +990,11 @@ void CImageLoadThread::ProcessReadQOIRequest(CRequest* request) {
 void CImageLoadThread::ProcessReadRAWRequest(CRequest * request) {
 	bool bOutOfMemory = false;
 	try {
-		request->Image = CReaderRAW::ReadRawImage(request->FileName, bOutOfMemory);
+		if (true) {
+			request->Image = RawReader::ReadImage(request->FileName, bOutOfMemory);
+		} else {
+			request->Image = CReaderRAW::ReadRawImage(request->FileName, bOutOfMemory);
+		}
 	} catch (...) {
 		delete request->Image;
 		request->Image = NULL;
