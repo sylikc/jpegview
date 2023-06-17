@@ -1,5 +1,7 @@
 #pragma once
 
+
+
 // Metadata read from camera RAW images
 class CRawMetadata
 {
@@ -16,10 +18,17 @@ public:
 	int GetOrientation() { return m_orientatation; }
 	int GetWidth() { return m_width; }
 	int GetHeight() { return m_height; }
+	double GetGPSLatitude() { return m_latitude; }
+	double GetGPSLongitude() { return m_longitude; }
+	double GetGPSAltitude() { return m_altitude; }
+	bool IsGPSInformationPresent() { return m_latitude != UNKNOWN_DOUBLE_VALUE && m_longitude != UNKNOWN_DOUBLE_VALUE; }
+	bool IsGPSAltitudePresent() { return m_altitude != UNKNOWN_DOUBLE_VALUE; }
+
+	constexpr static double UNKNOWN_DOUBLE_VALUE = 283740261.192864;
 
 	// Note: Orientation is in cdraw format ('flip' global variable in cdraw_mod.cpp)
 	CRawMetadata(char* manufacturer, char* model, time_t acquisitionTime, bool flashFired, double isoSpeed, double exposureTime, double focalLength,
-		double aperture, int orientation, int width, int height)
+		double aperture, int orientation, int width, int height, double latitude = UNKNOWN_DOUBLE_VALUE, double longitude = UNKNOWN_DOUBLE_VALUE, double altitude = UNKNOWN_DOUBLE_VALUE)
 	{
 		m_manufacturer = CString(manufacturer);
 		m_model = CString(model);
@@ -31,6 +40,9 @@ public:
 		m_orientatation = orientation;
 		m_width = width;
 		m_height = height;
+		m_latitude = latitude;
+		m_longitude = longitude;
+		m_altitude = altitude;
 
 		LONGLONG time = (LONGLONG)acquisitionTime * 10000000 + 116444736000000000;
 		FILETIME fileTime;
@@ -50,4 +62,6 @@ private:
 	int m_orientatation;
 	int m_width, m_height;
 	SYSTEMTIME m_acquisitionTime;
+	double m_latitude, m_longitude, m_altitude;
 };
+

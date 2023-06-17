@@ -16,6 +16,13 @@ static int GetFileNameHeight(HDC dc) {
 	return size.cy;
 }
 
+static GPSCoordinate* GetGPSCoordinate(double coord) {
+	double degrees = (int)coord;
+	double minutes = (int)abs(60 * (coord - degrees));
+	double seconds = 3600 * abs(coord - degrees) - 60 * minutes;
+	return new GPSCoordinate(NULL, degrees, minutes, seconds);
+}
+
 static CString CreateGPSString(GPSCoordinate* latitude, GPSCoordinate* longitude) {
 	const int BUFF_SIZE = 96;
 	TCHAR buff[BUFF_SIZE];
@@ -23,6 +30,15 @@ static CString CreateGPSString(GPSCoordinate* latitude, GPSCoordinate* longitude
 		latitude->Degrees, latitude->Minutes, latitude->Seconds, latitude->GetReference(),
 		longitude->Degrees, longitude->Minutes, longitude->Seconds, longitude->GetReference());
 	return CString(buff);
+}
+
+static CString CreateGPSString(double latitude, double longitude) {
+	GPSCoordinate* lat = GetGPSCoordinate(latitude);
+	GPSCoordinate* lon = GetGPSCoordinate(longitude);
+	CString ret = CreateGPSString(lat, lon);
+	delete lat;
+	delete lon;
+	return ret;
 }
 
 static CString CreateGPSURL(GPSCoordinate* latitude, GPSCoordinate* longitude) {
@@ -46,6 +62,15 @@ static CString CreateGPSURL(GPSCoordinate* latitude, GPSCoordinate* longitude) {
 	mapProvider.Replace(_T("{lng}"), buffLng);
 
 	return mapProvider;
+}
+
+static CString CreateGPSURL(double latitude, double longitude) {
+	GPSCoordinate* lat = GetGPSCoordinate(latitude);
+	GPSCoordinate* lon = GetGPSCoordinate(longitude);
+	CString ret = CreateGPSURL(lat, lon);
+	delete lat;
+	delete lon;
+	return ret;
 }
 
 CEXIFDisplayCtl::CEXIFDisplayCtl(CMainDlg* pMainDlg, CPanel* pImageProcPanel) : CPanelController(pMainDlg, false) {
@@ -170,6 +195,14 @@ void CEXIFDisplayCtl::FillEXIFDataDisplay() {
 				const FILETIME* pFileTime = pFileList->CurrentModificationTime();
 				if (pFileTime != NULL) {
 					m_pEXIFDisplay->AddLine(CNLS::GetString(_T("Modification date:")), *pFileTime);
+				}
+			}
+			if (pRawMetaData->IsGPSInformationPresent()) {
+				CString sGPSLocation = CreateGPSString(pRawMetaData->GetGPSLatitude(), pRawMetaData->GetGPSLongitude());
+				m_pEXIFDisplay->SetGPSLocation(sGPSLocation, CreateGPSURL(pRawMetaData->GetGPSLatitude(), pRawMetaData->GetGPSLongitude()));
+				m_pEXIFDisplay->AddLine(CNLS::GetString(_T("Location:")), sGPSLocation, true);
+				if (pRawMetaData->IsGPSAltitudePresent()) {
+					m_pEXIFDisplay->AddLine(CNLS::GetString(_T("Altitude (m):")), pRawMetaData->GetGPSAltitude(), 0);
 				}
 			}
 			if (pRawMetaData->GetManufacturer()[0] != 0) {
