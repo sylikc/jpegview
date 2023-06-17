@@ -44,7 +44,9 @@ CJPEGImage* RawReader::ReadImage(LPCTSTR strFileName, bool& bOutOfMemory)
 		RawProcessor.free_image();
 		CRawMetadata* metadata = new CRawMetadata(RawProcessor.imgdata.idata.make, RawProcessor.imgdata.idata.model, RawProcessor.imgdata.other.timestamp,
 			RawProcessor.imgdata.color.flash_used != 0.0f, RawProcessor.imgdata.other.iso_speed, RawProcessor.imgdata.other.shutter,
-			RawProcessor.imgdata.other.focal_len, RawProcessor.imgdata.other.aperture, RawProcessor.imgdata.sizes.flip, width, height);
+			RawProcessor.imgdata.other.focal_len, RawProcessor.imgdata.other.aperture, RawProcessor.imgdata.sizes.flip, width, height,
+			RawProcessor.imgdata.other.parsed_gps.latitude, RawProcessor.imgdata.other.parsed_gps.latref, RawProcessor.imgdata.other.parsed_gps.longitude,
+			RawProcessor.imgdata.other.parsed_gps.longref, RawProcessor.imgdata.other.parsed_gps.altitude, RawProcessor.imgdata.other.parsed_gps.altref);
 		if (pPixelData)
 			Image = new CJPEGImage(width, height, pPixelData, NULL, colors, 0, IF_CameraRAW, false, 0, 1, 0, NULL, false, metadata);
 	} else {
@@ -56,9 +58,11 @@ CJPEGImage* RawReader::ReadImage(LPCTSTR strFileName, bool& bOutOfMemory)
 		{
 			CRawMetadata* metadata = new CRawMetadata(RawProcessor.imgdata.idata.make, RawProcessor.imgdata.idata.model, RawProcessor.imgdata.other.timestamp,
 				RawProcessor.imgdata.color.flash_used != 0.0f, RawProcessor.imgdata.other.iso_speed, RawProcessor.imgdata.other.shutter,
-				RawProcessor.imgdata.other.focal_len, RawProcessor.imgdata.other.aperture, RawProcessor.imgdata.sizes.flip, width, height);
+				RawProcessor.imgdata.other.focal_len, RawProcessor.imgdata.other.aperture, RawProcessor.imgdata.sizes.flip, width, height,
+				RawProcessor.imgdata.other.parsed_gps.latitude, RawProcessor.imgdata.other.parsed_gps.latref, RawProcessor.imgdata.other.parsed_gps.longitude,
+				RawProcessor.imgdata.other.parsed_gps.longref, RawProcessor.imgdata.other.parsed_gps.altitude, RawProcessor.imgdata.other.parsed_gps.altref);
 
-			Image = new CJPEGImage(width, height, pPixelData, Helpers::FindEXIFBlock(thumb->data, thumb->data_size), colors,
+			Image = new CJPEGImage(width, height, pPixelData, NULL /* Helpers::FindEXIFBlock(thumb->data, thumb->data_size) */, colors,
 				Helpers::CalculateJPEGFileHash(thumb->data, thumb->data_size), IF_JPEG_Embedded, false, 0, 1, 0, NULL, false, metadata);
 
 			Image->SetJPEGComment(Helpers::GetJPEGComment(thumb->data, thumb->data_size));
@@ -66,6 +70,7 @@ CJPEGImage* RawReader::ReadImage(LPCTSTR strFileName, bool& bOutOfMemory)
 		}
 		RawProcessor.dcraw_clear_mem(thumb);
 	}
+	// RawProcessor.recycle();
 
 	return Image;
 }
