@@ -6,6 +6,8 @@ public:
 	enum PixelFormat {
 		FORMAT_BGRA,
 		FORMAT_RGBA,
+		FORMAT_BGR,
+		FORMAT_RGB,
 	};
 
 	// Create a transform from given ICC Profile to standard sRGB color space.
