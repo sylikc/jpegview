@@ -42,8 +42,11 @@ public:
 		m_height = height;
 		char zeros[3 * sizeof(float)] = { 0 };
 		if (latitude != NULL && longitude != NULL && !(memcmp(latitude, zeros, 3 * sizeof(float)) == 0 && memcmp(longitude, zeros, 3 * sizeof(float)) == 0)) {
-			m_pLatitude = new GPSCoordinate((LPCTSTR)latref, latitude[0], latitude[1], latitude[2]);
-			m_pLongitude = new GPSCoordinate((LPCTSTR)longref, longitude[0], longitude[1], longitude[2]);
+			wchar_t c[2] = { 0 };
+			c[0] = btowc(latref);
+			m_pLatitude = new GPSCoordinate(c, latitude[0], latitude[1], latitude[2]);
+			c[0] = btowc(longref);
+			m_pLongitude = new GPSCoordinate(c, longitude[0], longitude[1], longitude[2]);
 		} else {
 			m_pLatitude = m_pLongitude = NULL;
 		}
