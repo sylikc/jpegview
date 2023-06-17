@@ -31,8 +31,9 @@ CJPEGImage* RawReader::ReadImage(LPCTSTR strFileName, bool& bOutOfMemory)
 		return NULL;
 	}
 	ret = RawProcessor.copy_mem_image(pPixelData, stride, 1);
-	//void* transform = ICCProfileTransform::CreateTransform(RawProcessor.imgdata.color.profile, RawProcessor.imgdata.color.profile_length, ICCProfileTransform::FORMAT_BGRA);
-	//ICCProfileTransform::DoTransform(transform, pPixelData, pPixelData, width, height, stride);
+	void* transform = ICCProfileTransform::CreateTransform(RawProcessor.imgdata.color.profile, RawProcessor.imgdata.color.profile_length, ICCProfileTransform::FORMAT_BGR);
+	ICCProfileTransform::DoTransform(transform, pPixelData, pPixelData, width, height, stride);
+	ICCProfileTransform::DeleteTransform(transform);
 	RawProcessor.free_image();
 	return new CJPEGImage(width, height, pPixelData, NULL, colors, 0, IF_CameraRAW, false, 0, 1, 0);
 }
