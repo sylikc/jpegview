@@ -59,9 +59,9 @@ void* ICCProfileTransform::CreateTransform(const void* profile, unsigned int siz
 
 bool ICCProfileTransform::DoTransform(void* transform, const void* inputBuffer, void* outputBuffer, unsigned int width, unsigned int height, unsigned int stride)
 {
-	cmsUInt32Number outFormat = cmsGetTransformInputFormat(transform);
+	cmsUInt32Number inFormat = cmsGetTransformInputFormat(transform);
 	int nchannels;
-	if (outFormat == TYPE_BGRA_8) {
+	if (inFormat == TYPE_BGRA_8 || inFormat == TYPE_RGBA_8) {
 		nchannels = 4;
 	} else {
 		nchannels = 3;
