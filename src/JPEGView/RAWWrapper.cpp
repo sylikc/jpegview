@@ -33,7 +33,6 @@ CJPEGImage* RawReader::ReadImage(LPCTSTR strFileName, bool& bOutOfMemory, bool b
 		}
 
 		if (RawProcessor.unpack() != LIBRAW_SUCCESS || RawProcessor.dcraw_process() != LIBRAW_SUCCESS) {
-			RawProcessor.free_image();
 			return NULL;
 		}
 
@@ -42,11 +41,9 @@ CJPEGImage* RawReader::ReadImage(LPCTSTR strFileName, bool& bOutOfMemory, bool b
 		pPixelData = new(std::nothrow) unsigned char[stride * height];
 		if (pPixelData == NULL) {
 			bOutOfMemory = true;
-			RawProcessor.free_image();
 			return NULL;
 		}
 		if (RawProcessor.copy_mem_image(pPixelData, stride, 1) != LIBRAW_SUCCESS) {
-			RawProcessor.free_image();
 			delete[] pPixelData;
 			return NULL;
 		}
@@ -66,12 +63,10 @@ CJPEGImage* RawReader::ReadImage(LPCTSTR strFileName, bool& bOutOfMemory, bool b
 	} else if (RawProcessor.is_jpeg_thumb()) {
 		TJSAMP eChromoSubSampling;
 		if (RawProcessor.unpack_thumb() != LIBRAW_SUCCESS) {
-			RawProcessor.free_image();
 			return NULL;
 		}
 		libraw_processed_image_t* thumb = RawProcessor.dcraw_make_mem_thumb();
 		if (thumb == NULL) {
-			RawProcessor.free_image();
 			return NULL;
 		}
 		pPixelData = (unsigned char*)TurboJpeg::ReadImage(width, height, colors, eChromoSubSampling, bOutOfMemory, thumb->data, thumb->data_size);
@@ -91,7 +86,6 @@ CJPEGImage* RawReader::ReadImage(LPCTSTR strFileName, bool& bOutOfMemory, bool b
 		}
 		RawProcessor.dcraw_clear_mem(thumb);
 	}
-	RawProcessor.free_image();
 	// RawProcessor.recycle();
 
 	return Image;
