@@ -992,6 +992,7 @@ void CImageLoadThread::ProcessReadRAWRequest(CRequest * request) {
 	try {
 		int fullsize = CSettingsProvider::This().GetFullsizeRAW();
 
+#ifndef WINXP
 		// Try with libraw
 		UINT nPrevErrorMode = SetErrorMode(SEM_FAILCRITICALERRORS);
 		try {
@@ -1005,6 +1006,7 @@ void CImageLoadThread::ProcessReadRAWRequest(CRequest * request) {
 			// libraw.dll not found or VC++ Runtime not installed
 		}
 		SetErrorMode(nPrevErrorMode);
+#endif
 
 		// Try with dcraw_mod
 		if (request->Image == NULL && fullsize != 1) {
