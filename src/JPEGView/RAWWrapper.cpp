@@ -12,7 +12,9 @@ CJPEGImage* RawReader::ReadImage(LPCTSTR strFileName, bool& bOutOfMemory)
 	unsigned char* pPixelData = NULL;
 
 	LibRaw RawProcessor;
-	int ret = RawProcessor.open_file(strFileName);
+	if (RawProcessor.open_file(strFileName) != LIBRAW_SUCCESS) {
+		return NULL;
+	}
 	int width, height, colors, bps;
 	
 	CJPEGImage* Image = NULL;
@@ -24,10 +26,11 @@ CJPEGImage* RawReader::ReadImage(LPCTSTR strFileName, bool& bOutOfMemory)
 			j = j + 7;
 			j = 5;
 		}
-		ret = RawProcessor.unpack();
-
 		RawProcessor.imgdata.params.output_bps = 8;
-		ret = RawProcessor.dcraw_process();
+		if (RawProcessor.unpack() != LIBRAW_SUCCESS || RawProcessor.dcraw_process() != LIBRAW_SUCCESS) {
+			RawProcessor.free_image();
+			return NULL;
+		}
 
 		int stride = Helpers::DoPadding(width * colors, 4);
 		
@@ -37,22 +40,35 @@ CJPEGImage* RawReader::ReadImage(LPCTSTR strFileName, bool& bOutOfMemory)
 			RawProcessor.free_image();
 			return NULL;
 		}
-		ret = RawProcessor.copy_mem_image(pPixelData, stride, 1);
+		if (RawProcessor.copy_mem_image(pPixelData, stride, 1) != LIBRAW_SUCCESS) {
+			RawProcessor.free_image();
+			delete[] pPixelData;
+			return NULL;
+		}
+
 		void* transform = ICCProfileTransform::CreateTransform(RawProcessor.imgdata.color.profile, RawProcessor.imgdata.color.profile_length, ICCProfileTransform::FORMAT_BGR);
 		ICCProfileTransform::DoTransform(transform, pPixelData, pPixelData, width, height, stride);
 		ICCProfileTransform::DeleteTransform(transform);
-		RawProcessor.free_image();
+
 		CRawMetadata* metadata = new CRawMetadata(RawProcessor.imgdata.idata.make, RawProcessor.imgdata.idata.model, RawProcessor.imgdata.other.timestamp,
 			RawProcessor.imgdata.color.flash_used != 0.0f, RawProcessor.imgdata.other.iso_speed, RawProcessor.imgdata.other.shutter,
 			RawProcessor.imgdata.other.focal_len, RawProcessor.imgdata.other.aperture, RawProcessor.imgdata.sizes.flip, width, height,
 			RawProcessor.imgdata.other.parsed_gps.latitude, RawProcessor.imgdata.other.parsed_gps.latref, RawProcessor.imgdata.other.parsed_gps.longitude,
 			RawProcessor.imgdata.other.parsed_gps.longref, RawProcessor.imgdata.other.parsed_gps.altitude, RawProcessor.imgdata.other.parsed_gps.altref);
+
 		if (pPixelData)
 			Image = new CJPEGImage(width, height, pPixelData, NULL, colors, 0, IF_CameraRAW, false, 0, 1, 0, NULL, false, metadata);
 	} else {
 		TJSAMP eChromoSubSampling;
-		ret = RawProcessor.unpack_thumb();
+		if (RawProcessor.unpack_thumb() != LIBRAW_SUCCESS) {
+			RawProcessor.free_image();
+			return NULL;
+		}
 		libraw_processed_image_t* thumb = RawProcessor.dcraw_make_mem_thumb();
+		if (thumb == NULL) {
+			RawProcessor.free_image();
+			return NULL;
+		}
 		pPixelData = (unsigned char*)TurboJpeg::ReadImage(width, height, colors, eChromoSubSampling, bOutOfMemory, thumb->data, thumb->data_size);
 		if (pPixelData != NULL && (colors == 3 || colors == 1))
 		{
@@ -70,6 +86,7 @@ CJPEGImage* RawReader::ReadImage(LPCTSTR strFileName, bool& bOutOfMemory)
 		}
 		RawProcessor.dcraw_clear_mem(thumb);
 	}
+	RawProcessor.free_image();
 	// RawProcessor.recycle();
 
 	return Image;
