@@ -18,7 +18,7 @@ CJPEGImage* RawReader::ReadImage(LPCTSTR strFileName, bool& bOutOfMemory, bool b
 	int width, height, colors, bps;
 	
 	CJPEGImage* Image = NULL;
-	if (!bGetThumb || !RawProcessor.is_jpeg_thumb()) {
+	if (!bGetThumb) {
 		RawProcessor.get_mem_image_format(&width, &height, &colors, &bps);
 		if (bps != 8) {
 			int j = 2;
@@ -57,7 +57,7 @@ CJPEGImage* RawReader::ReadImage(LPCTSTR strFileName, bool& bOutOfMemory, bool b
 
 		if (pPixelData)
 			Image = new CJPEGImage(width, height, pPixelData, NULL, colors, 0, IF_CameraRAW, false, 0, 1, 0, NULL, false, metadata);
-	} else {
+	} else if (RawProcessor.is_jpeg_thumb()) {
 		TJSAMP eChromoSubSampling;
 		if (RawProcessor.unpack_thumb() != LIBRAW_SUCCESS) {
 			RawProcessor.free_image();
