@@ -6,6 +6,7 @@
 #include "ICCProfileTransform.h"
 #include "TJPEGWrapper.h"
 #include "RawMetadata.h"
+#include "MaxImageDef.h"
 
 CJPEGImage* RawReader::ReadImage(LPCTSTR strFileName, bool& bOutOfMemory, bool bGetThumb)
 {
@@ -21,6 +22,15 @@ CJPEGImage* RawReader::ReadImage(LPCTSTR strFileName, bool& bOutOfMemory, bool b
 	if (!bGetThumb) {
 		RawProcessor.get_mem_image_format(&width, &height, &colors, &bps);
 		RawProcessor.imgdata.params.output_bps = 8;
+
+		if (width > MAX_IMAGE_DIMENSION || height > MAX_IMAGE_DIMENSION) {
+			return NULL;
+		}
+
+		if ((double)width * height > MAX_IMAGE_PIXELS) {
+			bOutOfMemory = true;
+			return NULL;
+		}
 
 		if (RawProcessor.unpack() != LIBRAW_SUCCESS || RawProcessor.dcraw_process() != LIBRAW_SUCCESS) {
 			RawProcessor.free_image();
