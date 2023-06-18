@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
-#include "libraw/libraw.h"
 #include "RAWWrapper.h"
+#include "libraw/libraw.h"
 #include "Helpers.h"
 #include "ICCProfileTransform.h"
 #include "TJPEGWrapper.h"
@@ -20,12 +20,8 @@ CJPEGImage* RawReader::ReadImage(LPCTSTR strFileName, bool& bOutOfMemory, bool b
 	CJPEGImage* Image = NULL;
 	if (!bGetThumb) {
 		RawProcessor.get_mem_image_format(&width, &height, &colors, &bps);
-		if (bps != 8) {
-			int j = 2;
-			j = j + 7;
-			j = 5;
-		}
 		RawProcessor.imgdata.params.output_bps = 8;
+
 		if (RawProcessor.unpack() != LIBRAW_SUCCESS || RawProcessor.dcraw_process() != LIBRAW_SUCCESS) {
 			RawProcessor.free_image();
 			return NULL;
