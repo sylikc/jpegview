@@ -7,7 +7,7 @@
 #include "TJPEGWrapper.h"
 #include "RawMetadata.h"
 
-CJPEGImage* RawReader::ReadImage(LPCTSTR strFileName, bool& bOutOfMemory)
+CJPEGImage* RawReader::ReadImage(LPCTSTR strFileName, bool& bOutOfMemory, bool bGetThumb)
 {
 	unsigned char* pPixelData = NULL;
 
@@ -18,8 +18,7 @@ CJPEGImage* RawReader::ReadImage(LPCTSTR strFileName, bool& bOutOfMemory)
 	int width, height, colors, bps;
 	
 	CJPEGImage* Image = NULL;
-	bool get_thumb = true;
-	if (!get_thumb || !RawProcessor.is_jpeg_thumb()) {
+	if (!bGetThumb || !RawProcessor.is_jpeg_thumb()) {
 		RawProcessor.get_mem_image_format(&width, &height, &colors, &bps);
 		if (bps != 8) {
 			int j = 2;

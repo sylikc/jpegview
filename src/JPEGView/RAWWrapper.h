@@ -6,7 +6,7 @@ class RawReader
 {
 public:
 	// Returns data in 4 byte BGRA
-	static CJPEGImage* ReadImage(LPCTSTR strFileName, bool& bOutOfMemory);
+	static CJPEGImage* ReadImage(LPCTSTR strFileName, bool& bOutOfMemory, bool bGetThumb);
 
 
 };

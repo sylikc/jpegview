@@ -990,9 +990,14 @@ void CImageLoadThread::ProcessReadQOIRequest(CRequest* request) {
 void CImageLoadThread::ProcessReadRAWRequest(CRequest * request) {
 	bool bOutOfMemory = false;
 	try {
-		if (true) {
-			request->Image = RawReader::ReadImage(request->FileName, bOutOfMemory);
-		} else {
+		int fullsize = CSettingsProvider::This().GetFullsizeRAW();
+		if (fullsize == 2 || fullsize == 3) {
+			request->Image = RawReader::ReadImage(request->FileName, bOutOfMemory, fullsize == 2);
+		}
+		if (request->Image == NULL) {
+			request->Image = RawReader::ReadImage(request->FileName, bOutOfMemory, fullsize == 0 || fullsize == 3);
+		}
+		if (request->Image == NULL && fullsize != 1) {
 			request->Image = CReaderRAW::ReadRawImage(request->FileName, bOutOfMemory);
 		}
 	} catch (...) {
