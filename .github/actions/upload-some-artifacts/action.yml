@@ -23,6 +23,14 @@ inputs:
 runs:
   using: composite
   steps:
+    - name: Clean up WICLoader files
+      shell: bash
+      if: inputs.build-config == 'Release'
+      run: |
+        cd src/JPEGView/bin
+        rm */*/WICLoader.exp
+        rm */*/WICLoader.lib
+        rm */*/WICLoader.pdb
     - name: Upload No-Install Outputs Only
       # if not master branch, only upload the extract-and-run artifact
       if: github.ref_name != inputs.branch-match
