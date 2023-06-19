@@ -23,8 +23,9 @@ struct JxlReader::jxl_cache {
 JxlReader::jxl_cache JxlReader::cache = { 0 };
 
 // based on https://github.com/libjxl/libjxl/blob/main/examples/decode_oneshot.cc
-bool JxlReader::DecodeJpegXlOneShot(const uint8_t* jxl, size_t size, std::vector<uint8_t>* pixels, int& xsize,
-	int& ysize, bool& have_animation, int& frame_count, int& frame_time, std::vector<uint8_t>* icc_profile, bool& outOfMemory) {
+// and https://github.com/libjxl/libjxl/blob/main/examples/decode_exif_metadata.cc
+bool JxlReader::DecodeJpegXlOneShot(const uint8_t* jxl, size_t size, std::vector<uint8_t>* pixels, int& xsize, int& ysize,
+	bool& have_animation, int& frame_count, int& frame_time, std::vector<uint8_t>* icc_profile, std::vector<uint8_t>* exif, bool& outOfMemory) {
 
 	if (cache.decoder.get() == NULL) {
 		cache.runner = JxlResizableParallelRunnerMake(nullptr);
@@ -33,11 +34,15 @@ bool JxlReader::DecodeJpegXlOneShot(const uint8_t* jxl, size_t size, std::vector
 		if (JXL_DEC_SUCCESS !=
 			JxlDecoderSubscribeEvents(cache.decoder.get(), JXL_DEC_BASIC_INFO |
 				JXL_DEC_COLOR_ENCODING |
+				JXL_DEC_BOX |
 				JXL_DEC_FRAME |
 				JXL_DEC_FULL_IMAGE)) {
 			return false;
 		}
 
+		if (JXL_DEC_SUCCESS != JxlDecoderSetDecompressBoxes(cache.decoder.get(), JXL_TRUE)) {
+			return false;
+		}
 
 		if (JXL_DEC_SUCCESS != JxlDecoderSetParallelRunner(cache.decoder.get(),
 			JxlResizableParallelRunner,
@@ -53,6 +58,8 @@ bool JxlReader::DecodeJpegXlOneShot(const uint8_t* jxl, size_t size, std::vector
 
 	JxlBasicInfo info;
 	JxlPixelFormat format = { 4, JXL_TYPE_UINT8, JXL_NATIVE_ENDIAN, 0 };
+	const constexpr size_t kChunkSize = 65536;
+	size_t output_pos = 0;
 
 	bool loop_check = false;
 	for (;;) {
@@ -139,6 +146,26 @@ bool JxlReader::DecodeJpegXlOneShot(const uint8_t* jxl, size_t size, std::vector
 			JxlDecoderSubscribeEvents(cache.decoder.get(), JXL_DEC_FRAME | JXL_DEC_FULL_IMAGE);
 			JxlDecoderSetInput(cache.decoder.get(), cache.data, cache.data_size);
 			JxlDecoderCloseInput(cache.decoder.get());
+		} else if (status == JXL_DEC_BOX) {
+			if (!exif->empty()) {
+				size_t remaining = JxlDecoderReleaseBoxBuffer(cache.decoder.get());
+				exif->resize(exif->size() - remaining);
+			} else {
+				JxlBoxType type;
+				if (JXL_DEC_SUCCESS !=
+					JxlDecoderGetBoxType(cache.decoder.get(), type, true)) {
+					return false;
+				}
+				if (!memcmp(type, "Exif", 4)) {
+					exif->resize(kChunkSize);
+					JxlDecoderSetBoxBuffer(cache.decoder.get(), exif->data(), exif->size());
+				}
+			}
+		} else if (status == JXL_DEC_BOX_NEED_MORE_OUTPUT) {
+			size_t remaining = JxlDecoderReleaseBoxBuffer(cache.decoder.get());
+			output_pos += kChunkSize - remaining;
+			exif->resize(exif->size() + kChunkSize);
+			JxlDecoderSetBoxBuffer(cache.decoder.get(), exif->data() + output_pos, exif->size() - output_pos);
 		} else {
 			return false;
 		}
@@ -151,6 +178,7 @@ void* JxlReader::ReadImage(int& width,
 	bool& has_animation,
 	int& frame_count,
 	int& frame_time,
+	void*& exif_chunk,
 	bool& outOfMemory,
 	const void* buffer,
 	int sizebytes)
@@ -160,12 +188,14 @@ void* JxlReader::ReadImage(int& width,
 	nchannels = 4;
 	has_animation = false;
 	unsigned char* pPixelData = NULL;
+	exif_chunk = NULL;
 
 
 	std::vector<uint8_t> pixels;
 	std::vector<uint8_t> icc_profile;
+	std::vector<uint8_t> exif;
 	if (!DecodeJpegXlOneShot((const uint8_t*)buffer, sizebytes, &pixels, width, height,
-		has_animation, frame_count, frame_time, &icc_profile, outOfMemory)) {
+		has_animation, frame_count, frame_time, &icc_profile, &exif, outOfMemory)) {
 		return NULL;
 	}
 	int size = width * height * nchannels;
@@ -184,6 +214,16 @@ void* JxlReader::ReadImage(int& width,
 	}
 	if (!has_animation)
 		DeleteCache();
+
+	// Copy Exif data into the format understood by CEXIFReader
+	if (!exif.empty() && exif.size() > 8 && exif.size() < 65532) {
+		exif_chunk = malloc(exif.size() + 6);
+		if (exif_chunk != NULL) {
+			memcpy(exif_chunk, "\xFF\xE1\0\0Exif\0\0", 10);
+			*((unsigned short*)exif_chunk + 1) = _byteswap_ushort(exif.size() + 4);
+			memcpy((uint8_t*)exif_chunk + 10, exif.data() + 4, exif.size() - 4);
+		}
+	}
 	return pPixelData;
 }
 
