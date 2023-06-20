@@ -241,7 +241,7 @@ bool CEXIFReader::ParseDateString(SYSTEMTIME & date, const CString& str) {
 	return false;
 }
 
-CEXIFReader::CEXIFReader(void* pApp1Block) 
+CEXIFReader::CEXIFReader(void* pApp1Block, EImageFormat eImageFormat)
 : m_exposureTime(0, 0) {
 
 	memset(&m_acqDate, 0, sizeof(SYSTEMTIME));
@@ -297,7 +297,11 @@ CEXIFReader::CEXIFReader(void* pApp1Block)
 	m_pLastIFD0 = pLastIFD0;
 
 	// image orientation
-	uint8* pTagOrientation = FindTag(pIFD0, pLastIFD0, 0x112, bLittleEndian);
+	uint8* pTagOrientation = NULL;
+	// orientation tags must be ignored for JXL, they are taken care of by the decoder
+	if (eImageFormat != IF_JXL) {
+		pTagOrientation = FindTag(pIFD0, pLastIFD0, 0x112, bLittleEndian);
+	}
 	if (pTagOrientation != NULL) {
 		m_nImageOrientation = ReadShortTag(pTagOrientation, bLittleEndian);
 	}

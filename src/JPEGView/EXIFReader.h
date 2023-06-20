@@ -38,7 +38,7 @@ public:
 	// The pApp1Block must point to the APP1 block of the EXIF data, including the APP1 block marker
 	// The class does not take ownership of the memory (no copy made), thus the APP1 block must not be deleted
 	// while the EXIF reader class is deleted.
-	CEXIFReader(void* pApp1Block);
+	CEXIFReader(void* pApp1Block, EImageFormat eImageFormat);
 	~CEXIFReader(void);
 
 	// Parse date string in the EXIF date/time format
