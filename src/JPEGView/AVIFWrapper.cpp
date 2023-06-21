@@ -22,6 +22,7 @@ void* AvifReader::ReadImage(int& width,
 	int frame_index,
 	int& frame_count,
 	int& frame_time,
+	void*& exif_chunk,
 	bool& outOfMemory,
 	const void* buffer,
 	int sizebytes)
@@ -30,6 +31,7 @@ void* AvifReader::ReadImage(int& width,
 	width = height = 0;
 	nchannels = 4;
 	has_animation = false;
+	exif_chunk = NULL;
 
 	avifResult result;
 	int nthreads = 256; // sets maximum number of active threads allowed for libavif, default is 1
@@ -93,9 +95,22 @@ void* AvifReader::ReadImage(int& width,
 	if (cache.transform == NULL)
 		cache.transform = ICCProfileTransform::CreateTransform(icc.data, icc.size, ICCProfileTransform::FORMAT_BGRA);
 	ICCProfileTransform::DoTransform(cache.transform, cache.rgb.pixels, cache.rgb.pixels, width, height);
+
+	avifRWData exif = cache.decoder->image->exif;
+	if (exif.size > 8 && exif.size < 65528 && exif.data != NULL) {
+		exif_chunk = malloc(exif.size + 10);
+		if (exif_chunk != NULL) {
+			memcpy(exif_chunk, "\xFF\xE1\0\0Exif\0\0", 10);
+			*((unsigned short*)exif_chunk + 1) = _byteswap_ushort(exif.size + 8);
+			memcpy((uint8_t*)exif_chunk + 10, exif.data, exif.size);
+		}
+	}
+
+	void* pPixelData = cache.rgb.pixels;
 	if (!has_animation)
 		DeleteCache();
-	return cache.rgb.pixels;
+
+	return pPixelData;
 }
 
 void AvifReader::DeleteCache() {

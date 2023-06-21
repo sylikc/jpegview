@@ -14,6 +14,7 @@ public:
 		int frame_index, // index of frame
 		int& frame_count, // number of frames
 		int& frame_time, // frame duration in milliseconds
+		void*& exif_chunk, // Pointer to Exif data (must be freed by caller)
 		bool& outOfMemory, // set to true when no memory to read image
 		const void* buffer, // memory address containing jxl compressed data.
 		int sizebytes); // size of jxl compressed data
