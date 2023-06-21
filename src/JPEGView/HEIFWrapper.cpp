@@ -75,11 +75,13 @@ void * HeifReader::ReadImage(int &width,
 
 	if (!exif_blocks.empty()) {
 		std::vector<uint8_t> exif = handle.get_metadata(exif_blocks[0]);
-		exif_chunk = exif.size() > 8 ? (uint8_t*)malloc(exif.size()) : NULL;
-		if (exif_chunk != NULL) {
-			memcpy(exif_chunk, exif.data(), exif.size());
-			*((unsigned short*)exif_chunk) = _byteswap_ushort(0xFFE1);
-			*((unsigned short*)exif_chunk + 1) = _byteswap_ushort(exif.size() - 2);
+		if (exif.size() > 8 && exif.size() < 65538) {
+			exif_chunk = malloc(exif.size());
+			if (exif_chunk != NULL) {
+				memcpy(exif_chunk, exif.data(), exif.size());
+				*((unsigned short*)exif_chunk) = _byteswap_ushort(0xFFE1);
+				*((unsigned short*)exif_chunk + 1) = _byteswap_ushort(exif.size() - 2);
+			}
 		}
 	}
 
