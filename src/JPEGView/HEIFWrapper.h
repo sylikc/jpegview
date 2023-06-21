@@ -10,6 +10,7 @@ public:
 						 int &height,  // height of the image loaded.
 						 int &bpp,     // BYTES (not bits) PER PIXEL.
 						 int &frame_count, // number of top-level images
+					     void* &exif_chunk, // Pointer to Exif data (must be freed by caller)
 						 bool &outOfMemory, // set to true when no memory to read image
 						 int frame_index, // index of requested frame
 						 const void *buffer, // memory address containing heic compressed data.
