@@ -638,7 +638,8 @@ void CImageLoadThread::ProcessReadWEBPRequest(CRequest * request) {
 			int nFrameCount = 1;
 			int nFrameTimeMs = 0;
 			int nBPP;
-			uint8* pPixelData = (uint8*)WebpReaderWriter::ReadImage(nWidth, nHeight, nBPP, bHasAnimation, nFrameCount, nFrameTimeMs, request->OutOfMemory, pBuffer, nFileSize);
+			void* pEXIFData;
+			uint8* pPixelData = (uint8*)WebpReaderWriter::ReadImage(nWidth, nHeight, nBPP, bHasAnimation, nFrameCount, nFrameTimeMs, pEXIFData, request->OutOfMemory, pBuffer, nFileSize);
 			if (pPixelData && nBPP == 4) {
 				// Multiply alpha value into each AABBGGRR pixel
 				uint32* pImage32 = (uint32*)pPixelData;
@@ -648,7 +649,8 @@ void CImageLoadThread::ProcessReadWEBPRequest(CRequest * request) {
 				if (bHasAnimation) {
 					m_sLastWebpFileName = sFileName;
 				}
-				request->Image = new CJPEGImage(nWidth, nHeight, pPixelData, NULL, nBPP, 0, IF_WEBP, bHasAnimation, request->FrameIndex, nFrameCount, nFrameTimeMs);
+				request->Image = new CJPEGImage(nWidth, nHeight, pPixelData, pEXIFData, nBPP, 0, IF_WEBP, bHasAnimation, request->FrameIndex, nFrameCount, nFrameTimeMs);
+				free(pEXIFData);
 			}
 			else {
 				delete[] pPixelData;
