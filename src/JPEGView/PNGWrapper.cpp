@@ -107,9 +107,12 @@ void BlendOver(unsigned char** rows_dst, unsigned char** rows_src, unsigned int 
 }
 #endif
 
-void* PngReader::ReadNextFrame()
+void* PngReader::ReadNextFrame(void** exif_chunk, png_uint_32* exif_size)
 {
 	unsigned int j;
+	if (exif_chunk != NULL && exif_size != NULL) {
+		png_get_eXIf_1(cache.png_ptr, cache.info_ptr, exif_size, (png_bytep*)exif_chunk);
+	}
 #ifdef PNG_APNG_SUPPORTED
 	if (png_get_valid(cache.png_ptr, cache.info_ptr, PNG_INFO_acTL))
 	{
@@ -292,10 +295,12 @@ void* PngReader::ReadImage(int& width,
 	bool& has_animation,
 	int& frame_count,
 	int& frame_time,
+	void*& exif_chunk,
 	bool& outOfMemory,
 	void* buffer,
 	size_t sizebytes)
 {
+	exif_chunk = NULL;
 	if (!cache.buffer) {
 		if (sizebytes < 8)
 			return NULL;
@@ -316,10 +321,12 @@ void* PngReader::ReadImage(int& width,
 
 	}
 
+	void* exif = NULL;
+	unsigned int exif_size = 0;
 	bool read_two = cache.frame_index < cache.first;
-	void* pixels = ReadNextFrame();
+	void* pixels = ReadNextFrame(&exif, &exif_size);
 	if (pixels && read_two)
-		pixels = ReadNextFrame();
+		pixels = ReadNextFrame(&exif, &exif_size);
 	
 	width = cache.width;
 	height = cache.height;
@@ -333,6 +340,15 @@ void* PngReader::ReadImage(int& width,
 		cache.delay_den = 100;
 	frame_time = (int)(1000.0 * cache.delay_num / cache.delay_den);
 
+	if (exif_size > 8 && exif_size < 65528 && exif != NULL) {
+		exif_chunk = malloc(exif_size + 10);
+		if (exif_chunk != NULL) {
+			memcpy(exif_chunk, "\xFF\xE1\0\0Exif\0\0", 10);
+			*((unsigned short*)exif_chunk + 1) = _byteswap_ushort(exif_size + 8);
+			memcpy((uint8_t*)exif_chunk + 10, exif, exif_size);
+		}
+		
+	}
 	if (!has_animation)
 		DeleteCache();
 	return pixels;

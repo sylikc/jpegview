@@ -11,6 +11,7 @@ public:
 		bool& has_animation,     // if the image is animated
 		int& frame_count, // number of frames
 		int& frame_time, // frame duration in milliseconds
+		void*& exif_chunk, // Pointer to Exif data (must be freed by caller)
 		bool& outOfMemory, // set to true when no memory to read image
 		void* buffer, // memory address containing png compressed data.
 		size_t sizebytes); // size of png compressed data
@@ -24,6 +25,6 @@ private:
 	struct png_cache;
 	static png_cache cache;
 	static bool BeginReading(void* buffer, size_t sizebytes, bool& outOfMemory);
-	static void* ReadNextFrame();
+	static void* ReadNextFrame(void** exif_chunk, unsigned int* exif_size);
 	static void DeleteCacheInternal(bool free_buffer);
 };

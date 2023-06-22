@@ -712,10 +712,11 @@ void CImageLoadThread::ProcessReadPNGRequest(CRequest* request) {
 			int nWidth, nHeight, nBPP, nFrameCount, nFrameTimeMs;
 			bool bHasAnimation;
 			uint8* pPixelData = NULL;
+			void* pEXIFData;
 
 			// If UseEmbeddedColorProfiles is true and the image isn't animated, we should use GDI+ for better color management
 			if (bUseCachedDecoder || !CSettingsProvider::This().UseEmbeddedColorProfiles() || PngReader::IsAnimated(pBuffer, nFileSize))
-				pPixelData = (uint8*)PngReader::ReadImage(nWidth, nHeight, nBPP, bHasAnimation, nFrameCount, nFrameTimeMs, request->OutOfMemory, pBuffer, nFileSize);
+				pPixelData = (uint8*)PngReader::ReadImage(nWidth, nHeight, nBPP, bHasAnimation, nFrameCount, nFrameTimeMs, pEXIFData, request->OutOfMemory, pBuffer, nFileSize);
 
 			if (pPixelData != NULL) {
 				if (bHasAnimation)
@@ -725,7 +726,8 @@ void CImageLoadThread::ProcessReadPNGRequest(CRequest* request) {
 				for (int i = 0; i < nWidth * nHeight; i++)
 					*pImage32++ = WebpAlphaBlendBackground(*pImage32, CSettingsProvider::This().ColorTransparency());
 
-				request->Image = new CJPEGImage(nWidth, nHeight, pPixelData, NULL, 4, 0, IF_PNG, bHasAnimation, request->FrameIndex, nFrameCount, nFrameTimeMs);
+				request->Image = new CJPEGImage(nWidth, nHeight, pPixelData, pEXIFData, 4, 0, IF_PNG, bHasAnimation, request->FrameIndex, nFrameCount, nFrameTimeMs);
+				free(pEXIFData);
 				bSuccess = true;
 			}
 			else {
