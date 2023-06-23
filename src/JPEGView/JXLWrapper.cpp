@@ -18,14 +18,15 @@ struct JxlReader::jxl_cache {
 	int width;
 	int height;
 	void* transform;
+	std::vector<uint8_t> exif;
 };
 
 JxlReader::jxl_cache JxlReader::cache = { 0 };
 
 // based on https://github.com/libjxl/libjxl/blob/main/examples/decode_oneshot.cc
 // and https://github.com/libjxl/libjxl/blob/main/examples/decode_exif_metadata.cc
-bool JxlReader::DecodeJpegXlOneShot(const uint8_t* jxl, size_t size, std::vector<uint8_t>* pixels, int& xsize, int& ysize,
-	bool& have_animation, int& frame_count, int& frame_time, std::vector<uint8_t>* icc_profile, std::vector<uint8_t>* exif, bool& outOfMemory) {
+bool JxlReader::DecodeJpegXlOneShot(const uint8_t* jxl, size_t size, std::vector<uint8_t>* pixels, int& xsize,
+	int& ysize, bool& have_animation, int& frame_count, int& frame_time, std::vector<uint8_t>* icc_profile, bool& outOfMemory) {
 
 	if (cache.decoder.get() == NULL) {
 		cache.runner = JxlResizableParallelRunnerMake(nullptr);
@@ -147,9 +148,9 @@ bool JxlReader::DecodeJpegXlOneShot(const uint8_t* jxl, size_t size, std::vector
 			JxlDecoderSetInput(cache.decoder.get(), cache.data, cache.data_size);
 			JxlDecoderCloseInput(cache.decoder.get());
 		} else if (status == JXL_DEC_BOX) {
-			if (!exif->empty()) {
+			if (!cache.exif.empty()) {
 				size_t remaining = JxlDecoderReleaseBoxBuffer(cache.decoder.get());
-				exif->resize(exif->size() - remaining);
+				cache.exif.resize(cache.exif.size() - remaining);
 			} else {
 				JxlBoxType type;
 				if (JXL_DEC_SUCCESS !=
@@ -157,15 +158,15 @@ bool JxlReader::DecodeJpegXlOneShot(const uint8_t* jxl, size_t size, std::vector
 					return false;
 				}
 				if (!memcmp(type, "Exif", 4)) {
-					exif->resize(kChunkSize);
-					JxlDecoderSetBoxBuffer(cache.decoder.get(), exif->data(), exif->size());
+					cache.exif.resize(kChunkSize);
+					JxlDecoderSetBoxBuffer(cache.decoder.get(), cache.exif.data(), cache.exif.size());
 				}
 			}
 		} else if (status == JXL_DEC_BOX_NEED_MORE_OUTPUT) {
 			size_t remaining = JxlDecoderReleaseBoxBuffer(cache.decoder.get());
 			output_pos += kChunkSize - remaining;
-			exif->resize(exif->size() + kChunkSize);
-			JxlDecoderSetBoxBuffer(cache.decoder.get(), exif->data() + output_pos, exif->size() - output_pos);
+			cache.exif.resize(cache.exif.size() + kChunkSize);
+			JxlDecoderSetBoxBuffer(cache.decoder.get(), cache.exif.data() + output_pos, cache.exif.size() - output_pos);
 		} else {
 			return false;
 		}
@@ -193,9 +194,8 @@ void* JxlReader::ReadImage(int& width,
 
 	std::vector<uint8_t> pixels;
 	std::vector<uint8_t> icc_profile;
-	std::vector<uint8_t> exif;
 	if (!DecodeJpegXlOneShot((const uint8_t*)buffer, sizebytes, &pixels, width, height,
-		has_animation, frame_count, frame_time, &icc_profile, &exif, outOfMemory)) {
+		has_animation, frame_count, frame_time, &icc_profile, outOfMemory)) {
 		return NULL;
 	}
 	int size = width * height * nchannels;
@@ -212,18 +212,20 @@ void* JxlReader::ReadImage(int& width,
 		for (uint32_t* i = (uint32_t*)pPixelData; (uint8_t*)i < pPixelData + size; i++)
 			*i = ((*i & 0x00FF0000) >> 16) | ((*i & 0x0000FF00)) | ((*i & 0x000000FF) << 16) | ((*i & 0xFF000000));
 	}
+
+	// Copy Exif data into the format understood by CEXIFReader
+	if (!cache.exif.empty() && cache.exif.size() > 8 && cache.exif.size() < 65532) {
+		exif_chunk = malloc(cache.exif.size() + 6);
+		if (exif_chunk != NULL) {
+			memcpy(exif_chunk, "\xFF\xE1\0\0Exif\0\0", 10);
+			*((unsigned short*)exif_chunk + 1) = _byteswap_ushort(cache.exif.size() + 4);
+			memcpy((uint8_t*)exif_chunk + 10, cache.exif.data() + 4, cache.exif.size() - 4);
+		}
+	}
+
 	if (!has_animation)
 		DeleteCache();
 
-	// Copy Exif data into the format understood by CEXIFReader
-	if (!exif.empty() && exif.size() > 8 && exif.size() < 65532) {
-		exif_chunk = malloc(exif.size() + 6);
-		if (exif_chunk != NULL) {
-			memcpy(exif_chunk, "\xFF\xE1\0\0Exif\0\0", 10);
-			*((unsigned short*)exif_chunk + 1) = _byteswap_ushort(exif.size() + 4);
-			memcpy((uint8_t*)exif_chunk + 10, exif.data() + 4, exif.size() - 4);
-		}
-	}
 	return pPixelData;
 }
 
