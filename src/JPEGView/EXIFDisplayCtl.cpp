@@ -121,7 +121,7 @@ void CEXIFDisplayCtl::FillEXIFDataDisplay() {
 		CRawMetadata* pRawMetaData = CurrentImage()->GetRawMetadata();
 		if (pEXIFReader != NULL) {
 			sComment = pEXIFReader->GetUserComment();
-			if (sComment == NULL || sComment[0] == 0) {
+			if (sComment == NULL || sComment[0] == 0 || ((std::wstring) sComment).find_first_not_of(L" \t\n\r\f\v", 0) == std::wstring::npos) {
 				sComment = pEXIFReader->GetImageDescription();
 			}
 			if (pEXIFReader->GetAcquisitionTimePresent()) {
@@ -201,7 +201,7 @@ void CEXIFDisplayCtl::FillEXIFDataDisplay() {
 		}
 	}
 
-	if (sComment == NULL || sComment[0] == 0) {
+	if (sComment == NULL || sComment[0] == 0 || ((std::wstring)sComment).find_first_not_of(L" \t\n\r\f\v", 0) == std::wstring::npos) {
 		sComment = CurrentImage()->GetJPEGComment();
 	}
 	if (CSettingsProvider::This().ShowJPEGComments() && sComment != NULL && sComment[0] != 0) {

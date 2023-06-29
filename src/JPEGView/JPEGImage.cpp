@@ -83,7 +83,7 @@ CJPEGImage::CJPEGImage(int nWidth, int nHeight, void* pPixels, void* pEXIFData, 
 		m_nEXIFSize = pEXIF[2]*256 + pEXIF[3] + 2;
 		m_pEXIFData = new char[m_nEXIFSize];
 		memcpy(m_pEXIFData, pEXIFData, m_nEXIFSize);
-		m_pEXIFReader = new CEXIFReader(m_pEXIFData);
+		m_pEXIFReader = new CEXIFReader(m_pEXIFData, eImageFormat);
 	} else {
 		m_nEXIFSize = 0;
 		m_pEXIFData = NULL;

@@ -11,6 +11,7 @@ public:
 		bool& has_animation,     // if the image is animated
 		int& frame_count, // number of frames
 		int& frame_time, // frame duration in milliseconds
+		void*& exif, // Pointer to Exif data (must be freed by caller)
 		bool& outOfMemory, // set to true when no memory to read image
 		const void* buffer, // memory address containing webp compressed data.
 		int sizebytes); // size of webp compressed data

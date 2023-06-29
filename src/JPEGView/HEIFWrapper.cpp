@@ -8,6 +8,7 @@ void * HeifReader::ReadImage(int &width,
 					   int &height,
 					   int &nchannels,
 					   int &frame_count,
+					   void* &exif_chunk,
 					   bool &outOfMemory,
 					   int frame_index,
 					   const void *buffer,
@@ -18,6 +19,7 @@ void * HeifReader::ReadImage(int &width,
 	nchannels = 4;
 
 	unsigned char* pPixelData = NULL;
+	exif_chunk = NULL;
 
 	heif::Context context;
 	context.read_from_memory_without_copy(buffer, sizebytes);
@@ -68,6 +70,20 @@ void * HeifReader::ReadImage(int &width,
 		}
 	}
 	ICCProfileTransform::DeleteTransform(transform);
+
+	std::vector<heif_item_id> exif_blocks = handle.get_list_of_metadata_block_IDs("Exif");
+
+	if (!exif_blocks.empty()) {
+		std::vector<uint8_t> exif = handle.get_metadata(exif_blocks[0]);
+		if (exif.size() > 8 && exif.size() < 65538) {
+			exif_chunk = malloc(exif.size());
+			if (exif_chunk != NULL) {
+				memcpy(exif_chunk, exif.data(), exif.size());
+				*((unsigned short*)exif_chunk) = _byteswap_ushort(0xFFE1);
+				*((unsigned short*)exif_chunk + 1) = _byteswap_ushort(exif.size() - 2);
+			}
+		}
+	}
 
 	return (void*)pPixelData;
 }

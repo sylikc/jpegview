@@ -25,6 +25,7 @@ void* WebpReaderWriter::ReadImage(int& width,
 	bool& has_animation,
 	int& frame_count,
 	int& frame_time,
+	void*& exif_chunk,
 	bool& outOfMemory,
 	const void* buffer,
 	int sizebytes)
@@ -34,6 +35,8 @@ void* WebpReaderWriter::ReadImage(int& width,
 	width = height = 0;
 	nchannels = 4;
 	outOfMemory = false;
+	exif_chunk = NULL;
+
 	if (!cache.decoder || !cache.data.bytes) {
 		if (!WebPGetInfo((const uint8_t*)buffer, sizebytes, &width, &height))
 			return NULL;
@@ -53,8 +56,21 @@ void* WebpReaderWriter::ReadImage(int& width,
 		WebPDemuxer* demuxer = WebPDemux(&data);
 		WebPChunkIterator chunk_iter;
 		void* transform = NULL;
+		
 		if (WebPDemuxGetChunk(demuxer, "ICCP", 1, &chunk_iter))
 			transform = ICCProfileTransform::CreateTransform(chunk_iter.chunk.bytes, chunk_iter.chunk.size, ICCProfileTransform::FORMAT_BGRA);
+		WebPDemuxReleaseChunkIterator(&chunk_iter);
+		if (WebPDemuxGetChunk(demuxer, "EXIF", 1, &chunk_iter)) {
+			WebPData exif = chunk_iter.chunk;
+			if (exif.size > 8 && exif.size < 65528 && exif.bytes != NULL) {
+				exif_chunk = malloc(exif.size + 10);
+				if (exif_chunk != NULL) {
+					memcpy(exif_chunk, "\xFF\xE1\0\0Exif\0\0", 10);
+					*((unsigned short*)exif_chunk + 1) = _byteswap_ushort(exif.size + 8);
+					memcpy((uint8_t*)exif_chunk + 10, exif.bytes, exif.size);
+				}
+			}
+		}
 		WebPDemuxReleaseChunkIterator(&chunk_iter);
 		WebPDemuxDelete(demuxer);
 

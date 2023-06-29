@@ -163,7 +163,7 @@ static void* CompressAndSave(LPCTSTR sFileName, CJPEGImage * pImage,
 		memcpy(pNewStream + 2, pImage->GetEXIFData(), pImage->GetEXIFDataLength()); // copy EXIF block
 		
 		// Set image orientation back to normal orientation, we save the pixels as displayed
-		CEXIFReader exifReader(pNewStream + 2);
+		CEXIFReader exifReader(pNewStream + 2, IF_JPEG);
 		exifReader.WriteImageOrientation(1); // 1 means default orientation (unrotated)
 		if (bDeleteThumbnail) {
 			exifReader.DeleteThumbnail();

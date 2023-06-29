@@ -638,7 +638,8 @@ void CImageLoadThread::ProcessReadWEBPRequest(CRequest * request) {
 			int nFrameCount = 1;
 			int nFrameTimeMs = 0;
 			int nBPP;
-			uint8* pPixelData = (uint8*)WebpReaderWriter::ReadImage(nWidth, nHeight, nBPP, bHasAnimation, nFrameCount, nFrameTimeMs, request->OutOfMemory, pBuffer, nFileSize);
+			void* pEXIFData;
+			uint8* pPixelData = (uint8*)WebpReaderWriter::ReadImage(nWidth, nHeight, nBPP, bHasAnimation, nFrameCount, nFrameTimeMs, pEXIFData, request->OutOfMemory, pBuffer, nFileSize);
 			if (pPixelData && nBPP == 4) {
 				// Multiply alpha value into each AABBGGRR pixel
 				uint32* pImage32 = (uint32*)pPixelData;
@@ -648,7 +649,8 @@ void CImageLoadThread::ProcessReadWEBPRequest(CRequest * request) {
 				if (bHasAnimation) {
 					m_sLastWebpFileName = sFileName;
 				}
-				request->Image = new CJPEGImage(nWidth, nHeight, pPixelData, NULL, nBPP, 0, IF_WEBP, bHasAnimation, request->FrameIndex, nFrameCount, nFrameTimeMs);
+				request->Image = new CJPEGImage(nWidth, nHeight, pPixelData, pEXIFData, nBPP, 0, IF_WEBP, bHasAnimation, request->FrameIndex, nFrameCount, nFrameTimeMs);
+				free(pEXIFData);
 			}
 			else {
 				delete[] pPixelData;
@@ -710,10 +712,11 @@ void CImageLoadThread::ProcessReadPNGRequest(CRequest* request) {
 			int nWidth, nHeight, nBPP, nFrameCount, nFrameTimeMs;
 			bool bHasAnimation;
 			uint8* pPixelData = NULL;
+			void* pEXIFData;
 
 			// If UseEmbeddedColorProfiles is true and the image isn't animated, we should use GDI+ for better color management
 			if (bUseCachedDecoder || !CSettingsProvider::This().UseEmbeddedColorProfiles() || PngReader::IsAnimated(pBuffer, nFileSize))
-				pPixelData = (uint8*)PngReader::ReadImage(nWidth, nHeight, nBPP, bHasAnimation, nFrameCount, nFrameTimeMs, request->OutOfMemory, pBuffer, nFileSize);
+				pPixelData = (uint8*)PngReader::ReadImage(nWidth, nHeight, nBPP, bHasAnimation, nFrameCount, nFrameTimeMs, pEXIFData, request->OutOfMemory, pBuffer, nFileSize);
 
 			if (pPixelData != NULL) {
 				if (bHasAnimation)
@@ -723,7 +726,8 @@ void CImageLoadThread::ProcessReadPNGRequest(CRequest* request) {
 				for (int i = 0; i < nWidth * nHeight; i++)
 					*pImage32++ = WebpAlphaBlendBackground(*pImage32, CSettingsProvider::This().ColorTransparency());
 
-				request->Image = new CJPEGImage(nWidth, nHeight, pPixelData, NULL, 4, 0, IF_PNG, bHasAnimation, request->FrameIndex, nFrameCount, nFrameTimeMs);
+				request->Image = new CJPEGImage(nWidth, nHeight, pPixelData, pEXIFData, 4, 0, IF_PNG, bHasAnimation, request->FrameIndex, nFrameCount, nFrameTimeMs);
+				free(pEXIFData);
 				bSuccess = true;
 			}
 			else {
@@ -787,7 +791,8 @@ void CImageLoadThread::ProcessReadJXLRequest(CRequest* request) {
 		if (bUseCachedDecoder || (::ReadFile(hFile, pBuffer, nFileSize, (LPDWORD)&nNumBytesRead, NULL) && nNumBytesRead == nFileSize)) {
 			int nWidth, nHeight, nBPP, nFrameCount, nFrameTimeMs;
 			bool bHasAnimation;
-			uint8* pPixelData = (uint8*)JxlReader::ReadImage(nWidth, nHeight, nBPP, bHasAnimation, nFrameCount, nFrameTimeMs, request->OutOfMemory, pBuffer, nFileSize);
+			void* pEXIFData;
+			uint8* pPixelData = (uint8*)JxlReader::ReadImage(nWidth, nHeight, nBPP, bHasAnimation, nFrameCount, nFrameTimeMs, pEXIFData, request->OutOfMemory, pBuffer, nFileSize);
 			if (pPixelData != NULL) {
 				if (bHasAnimation)
 					m_sLastJxlFileName = sFileName;
@@ -796,7 +801,8 @@ void CImageLoadThread::ProcessReadJXLRequest(CRequest* request) {
 				for (int i = 0; i < nWidth * nHeight; i++)
 					*pImage32++ = WebpAlphaBlendBackground(*pImage32, CSettingsProvider::This().ColorTransparency());
 
-				request->Image = new CJPEGImage(nWidth, nHeight, pPixelData, NULL, 4, 0, IF_JXL, bHasAnimation, request->FrameIndex, nFrameCount, nFrameTimeMs);
+				request->Image = new CJPEGImage(nWidth, nHeight, pPixelData, pEXIFData, 4, 0, IF_JXL, bHasAnimation, request->FrameIndex, nFrameCount, nFrameTimeMs);
+				free(pEXIFData);
 			} else {
 				DeleteCachedJxlDecoder();
 			}
@@ -858,8 +864,9 @@ void CImageLoadThread::ProcessReadAVIFRequest(CRequest* request) {
 		if (bUseCachedDecoder || (::ReadFile(hFile, pBuffer, nFileSize, (LPDWORD)&nNumBytesRead, NULL) && nNumBytesRead == nFileSize)) {
 			int nWidth, nHeight, nBPP, nFrameCount, nFrameTimeMs;
 			bool bHasAnimation;
+			void* pEXIFData;
 			uint8* pPixelData = (uint8*)AvifReader::ReadImage(nWidth, nHeight, nBPP, bHasAnimation, request->FrameIndex, 
-				nFrameCount, nFrameTimeMs, request->OutOfMemory, pBuffer, nFileSize);
+				nFrameCount, nFrameTimeMs, pEXIFData, request->OutOfMemory, pBuffer, nFileSize);
 			if (pPixelData != NULL) {
 				if (bHasAnimation)
 					m_sLastAvifFileName = sFileName;
@@ -868,7 +875,8 @@ void CImageLoadThread::ProcessReadAVIFRequest(CRequest* request) {
 				for (int i = 0; i < nWidth * nHeight; i++)
 					*pImage32++ = WebpAlphaBlendBackground(*pImage32, CSettingsProvider::This().ColorTransparency());
 
-				request->Image = new CJPEGImage(nWidth, nHeight, pPixelData, NULL, 4, 0, IF_AVIF, bHasAnimation, request->FrameIndex, nFrameCount, nFrameTimeMs);
+				request->Image = new CJPEGImage(nWidth, nHeight, pPixelData, pEXIFData, 4, 0, IF_AVIF, bHasAnimation, request->FrameIndex, nFrameCount, nFrameTimeMs);
+				free(pEXIFData);
 				bSuccess = true;
 			} else {
 				DeleteCachedAvifDecoder();
@@ -920,14 +928,16 @@ void CImageLoadThread::ProcessReadHEIFRequest(CRequest* request) {
 			int nWidth, nHeight, nBPP, nFrameCount, nFrameTimeMs;
 			nFrameCount = 1;
 			nFrameTimeMs = 0;
-			uint8* pPixelData = (uint8*)HeifReader::ReadImage(nWidth, nHeight, nBPP, nFrameCount, request->OutOfMemory, request->FrameIndex, pBuffer, nFileSize);
+			void* pEXIFData;
+			uint8* pPixelData = (uint8*)HeifReader::ReadImage(nWidth, nHeight, nBPP, nFrameCount, pEXIFData, request->OutOfMemory, request->FrameIndex, pBuffer, nFileSize);
 			if (pPixelData != NULL) {
 				// Multiply alpha value into each AABBGGRR pixel
 				uint32* pImage32 = (uint32*)pPixelData;
 				for (int i = 0; i < nWidth * nHeight; i++)
 					*pImage32++ = WebpAlphaBlendBackground(*pImage32, CSettingsProvider::This().ColorTransparency());
 
-				request->Image = new CJPEGImage(nWidth, nHeight, pPixelData, NULL, nBPP, 0, IF_HEIF, false, request->FrameIndex, nFrameCount, nFrameTimeMs);
+				request->Image = new CJPEGImage(nWidth, nHeight, pPixelData, pEXIFData, nBPP, 0, IF_HEIF, false, request->FrameIndex, nFrameCount, nFrameTimeMs);
+				free(pEXIFData);
 			}
 		}
 	} catch(heif::Error he) {
