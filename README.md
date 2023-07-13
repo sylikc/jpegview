@@ -36,7 +36,7 @@ Basic on-the-fly image processing is provided - allowing adjusting typical param
 * contrast
 * local under-exposure/over-exposure
 
-### Other Features:
+### Other Features
 
 * Small and fast, uses AVX2/SSE2 and up to 4 CPU cores
 * High quality resampling filter, preserving sharpness of images
@@ -92,6 +92,19 @@ Successfully installed
 
 Another option is to use the official [JPEGView on PortableApps](https://portableapps.com/apps/graphics_pictures/jpegview_portable) package.  The PortableApps launcher preserves user settings in a separate directory from the extracted application directory.  This release is signed.
 
+## Scoop
+
+[Scoop](https://scoop.sh/) is a Windows command-line installer and manager for portable applications.
+
+To install with Scoop, run the following commands:
+
+```shell
+scoop bucket add extras
+scoop install extras/jpegview-fork
+```
+
+After installation, the configuration file is located at `%UserProfile%\scoop\persist\JPEGView-fork\JPEGView.ini`.
+
 ## System Requirements
 
 * 64-bit version: Windows 7/8/10/11 64-bit or later
@@ -146,7 +159,6 @@ See the [Localization wiki page](https://github.com/sylikc/jpegview/wiki/Localiz
 The JPEGView documentation is a little out of the date at the moment, but should still give a good summary of the features.
 
 This [readme.html](https://htmlpreview.github.io/?https://github.com/sylikc/jpegview/blob/master/src/JPEGView/Config/readme.html) is part of the JPEGView package.
-
 
 # Brief History
 
