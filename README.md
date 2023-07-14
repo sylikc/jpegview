@@ -88,7 +88,11 @@ Starting package install...
 Successfully installed
 ```
 
-### Scoop
+## PortableApps
+
+Another option is to use the official [JPEGView on PortableApps](https://portableapps.com/apps/graphics_pictures/jpegview_portable) package.  The PortableApps launcher preserves user settings in a separate directory from the extracted application directory.  This release is signed.
+
+## Scoop
 
 [Scoop](https://scoop.sh/) is a Windows command-line installer and manager for portable applications.
 
@@ -100,10 +104,6 @@ scoop install extras/jpegview-fork
 ```
 
 After installation, the configuration file is located at `%HOMEPATH%\scoop\persist\JPEGView-fork\JPEGView.ini`.
-
-## PortableApps
-
-Another option is to use the official [JPEGView on PortableApps](https://portableapps.com/apps/graphics_pictures/jpegview_portable) package.  The PortableApps launcher preserves user settings in a separate directory from the extracted application directory.  This release is signed.
 
 ## System Requirements
 
