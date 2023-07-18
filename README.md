@@ -103,7 +103,7 @@ scoop bucket add extras
 scoop install extras/jpegview-fork
 ```
 
-After installation, the configuration file is located at `%HOMEPATH%\scoop\persist\JPEGView-fork\JPEGView.ini`.
+After installation, the configuration file is located at `%UserProfile%\scoop\persist\JPEGView-fork\JPEGView.ini`.
 
 ## System Requirements
 
