@@ -119,6 +119,8 @@ static EImageFormat GetImageFormat(LPCTSTR sFileName) {
 		}
 	} else if (header[0] == 'q' && header[1] == 'o' && header[2] == 'i' && header[3] == 'f') {
 		return IF_QOI;
+	} else if (header[0] == '8' && header[1] == 'B' && header[2] == 'P' && header[3] == 'S') {
+		return IF_PSD;
 	}
 
 	// default fallback if no matches based on magic bytes
@@ -390,6 +392,14 @@ void CImageLoadThread::ProcessRequest(CRequestBase& request) {
 			DeleteCachedJxlDecoder();
 			DeleteCachedAvifDecoder();
 			ProcessReadQOIRequest(&rq);
+			break;
+		case IF_PSD:
+			DeleteCachedGDIBitmap();
+			DeleteCachedWebpDecoder();
+			DeleteCachedPngDecoder();
+			DeleteCachedJxlDecoder();
+			DeleteCachedAvifDecoder();
+			ProcessReadPSDRequest(&rq);
 			break;
 		case IF_CameraRAW:
 			DeleteCachedGDIBitmap();
@@ -993,6 +1003,122 @@ void CImageLoadThread::ProcessReadQOIRequest(CRequest* request) {
 			}
 		}
 	} catch (...) {
+		delete request->Image;
+		request->Image = NULL;
+		request->ExceptionError = true;
+	}
+	::CloseHandle(hFile);
+	delete[] pBuffer;
+}
+
+void CImageLoadThread::ProcessReadPSDRequest(CRequest* request) {
+	HANDLE hFile;
+	hFile = ::CreateFile(request->FileName, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, 0, NULL);
+	if (hFile == INVALID_HANDLE_VALUE) {
+		return;
+	}
+	char* pBuffer = NULL;
+	try {
+		unsigned int nNumBytesRead;
+
+		// Skip file header
+		if (::SetFilePointer(hFile, 26, NULL, 0) == INVALID_SET_FILE_POINTER) {
+			throw 1;
+		};
+
+		// Skip color mode data
+		unsigned int nColorDataSize;
+		if (!(::ReadFile(hFile, &nColorDataSize, 4, (LPDWORD)&nNumBytesRead, NULL) && nNumBytesRead == 4)) {
+			throw 1;
+		}
+		nColorDataSize = _byteswap_ulong(nColorDataSize);
+		if (::SetFilePointer(hFile, nColorDataSize, NULL, 1) == INVALID_SET_FILE_POINTER) {
+			throw 1;
+		};
+
+		// Skip resource section size
+		unsigned int nResourceSectionSize;
+		if (!(::ReadFile(hFile, &nResourceSectionSize, 4, (LPDWORD)&nNumBytesRead, NULL) && nNumBytesRead == 4)) {
+			throw 1;
+		}
+		nResourceSectionSize = _byteswap_ulong(nResourceSectionSize);
+
+		unsigned int nResourceSize;
+		for (;;) {
+			// Resource block signature
+			byte pSig[4];
+			if (!(::ReadFile(hFile, &pSig, 4, (LPDWORD)&nNumBytesRead, NULL) && nNumBytesRead == 4 && memcmp(pSig, "8BIM", 4) == 0)) {
+				throw 1;
+			}
+
+			// Resource ID
+			unsigned short nResourceID;
+			if (!(::ReadFile(hFile, &nResourceID, 2, (LPDWORD)&nNumBytesRead, NULL) && nNumBytesRead == 2)) {
+				throw 1;
+			}
+			nResourceID = _byteswap_ushort(nResourceID);
+			bool bIsThumbnail = nResourceID == 0x0409 || nResourceID == 0x040C;
+
+			// Skip Pascal string (padded to be even length)
+			for (;;) {
+				byte pStrEnd[2];
+				if (!(::ReadFile(hFile, &pStrEnd, 2, (LPDWORD)&nNumBytesRead, NULL) && nNumBytesRead == 2)) {
+					throw 1;
+				}
+				if (pStrEnd[1] == NULL) {
+					break;
+				}
+			}
+
+			// Resource size
+			if (!(::ReadFile(hFile, &nResourceSize, 4, (LPDWORD)&nNumBytesRead, NULL) && nNumBytesRead == 4)) {
+				throw 1;
+			}
+			nResourceSize = _byteswap_ulong(nResourceSize);
+
+			// Found thumbnail
+			if (bIsThumbnail) {
+				break;
+			}
+
+			// Skip resource data (padded to be even length)
+			if (::SetFilePointer(hFile, (nResourceSize + 1) & -2, NULL, 1) == INVALID_SET_FILE_POINTER) {
+				throw 1;
+			};
+		}
+
+		// Skip thumbnail resource header
+		if (::SetFilePointer(hFile, 28, NULL, 1) == INVALID_SET_FILE_POINTER) {
+			throw 1;
+		};
+
+		// Read embedded JPEG thumbnail
+		int nJpegSize = nResourceSize - 28;
+		if (nJpegSize > MAX_JPEG_FILE_SIZE) {
+			request->OutOfMemory = true;
+			throw 1;
+		}
+
+		pBuffer = new(std::nothrow) char[nJpegSize];
+		if (pBuffer == NULL) {
+			request->OutOfMemory = true;
+			throw 1;
+		}
+
+		if (::ReadFile(hFile, pBuffer, nJpegSize, (LPDWORD)&nNumBytesRead, NULL) && nNumBytesRead == nJpegSize) {
+			int nWidth, nHeight, nBPP;
+			TJSAMP eChromoSubSampling;
+			bool bOutOfMemory;
+			void* pPixelData = TurboJpeg::ReadImage(nWidth, nHeight, nBPP, eChromoSubSampling, bOutOfMemory, pBuffer, nJpegSize);
+			if (pPixelData != NULL) {
+				request->Image = new CJPEGImage(nWidth, nHeight, pPixelData, Helpers::FindEXIFBlock(pBuffer, nJpegSize),
+					nBPP, Helpers::CalculateJPEGFileHash(pBuffer, nJpegSize), IF_JPEG_Embedded, false, 0, 1, 0);
+			} else {
+				request->OutOfMemory = bOutOfMemory;
+			}
+		}
+	}
+	catch (...) {
 		delete request->Image;
 		request->Image = NULL;
 		request->ExceptionError = true;
