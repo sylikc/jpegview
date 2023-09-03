@@ -51,21 +51,16 @@ void * HeifReader::ReadImage(int &width,
 	}
 	std::vector<uint8_t> iccp = image.get_raw_color_profile();
 	void* transform = ICCProfileTransform::CreateTransform(iccp.data(), iccp.size(), ICCProfileTransform::FORMAT_RGBA);
-	uint8_t* p;
 	size_t i, j;
 	if (!ICCProfileTransform::DoTransform(transform, data, pPixelData, width, height, stride=stride)) {
-		memcpy(pPixelData, data, size);
-		unsigned char* o = pPixelData;
+		unsigned int* o = (unsigned int*)pPixelData;
 		for (i = 0; i < height; i++) {
-			p = data + i * stride;
+			unsigned int* p = (unsigned int*)(data + i * stride);
 			for (j = 0; j < width; j++) {
 				// RGBA -> BGRA conversion
-				o[0] = p[2];
-				o[1] = p[1];
-				o[2] = p[0];
-				o[3] = p[3];
-				p += nchannels;
-				o += nchannels;
+				*o = _rotr(_byteswap_ulong(*p), 8);
+				p++;
+				o++;
 			}
 		}
 	}
