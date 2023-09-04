@@ -153,7 +153,7 @@ msbuild.exe /p:Platform=%2 /p:configuration="Release" libde265.sln /t:de265
 IF ERRORLEVEL 1 exit /b 1
 
 
-copy /y "%XBUILD_DIR%\libde265\Release\de265.dll" "%XSRC_DIR%\bin%~3\"
+copy /y "%XBUILD_DIR%\libde265\Release\libde265.dll" "%XSRC_DIR%\bin%~3\"
 IF ERRORLEVEL 1 exit /b 1
 
 
