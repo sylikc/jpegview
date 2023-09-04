@@ -209,7 +209,7 @@
 			</Feature>
 			<Feature Id="FeatureHEIF" Title="HEIF/HEIC/AVIF Support">
 				<ComponentRef Id="dav1dDLL"/>
-				<ComponentRef Id="de265DLL"/>
+				<ComponentRef Id="libde265DLL"/>
 				<ComponentRef Id="heifDLL"/>
 				<ComponentRef Id="avifDLL"/>
 			</Feature>
@@ -487,8 +487,8 @@
 					<Component Id="dav1dDLL" Guid="ef9a6d34-487d-4edf-b8fb-58e3e16452e4">
 						<File Id="dav1d.dll" Name="dav1d.dll" Source="$(var.AvifDllFolder)\dav1d.dll" />
 					</Component>
-					<Component Id="de265DLL" Guid="c6d43557-f20f-478a-b9e7-a213fca72648">
-						<File Id="de265.dll" Name="de265.dll" Source="$(var.HeifDllFolder)\de265.dll" />
+					<Component Id="libde265DLL" Guid="c6d43557-f20f-478a-b9e7-a213fca72648">
+						<File Id="libde265.dll" Name="libde265.dll" Source="$(var.HeifDllFolder)\libde265.dll" />
 					</Component>
 					<Component Id="heifDLL" Guid="46c300a1-229a-45ad-a861-edf53cc97c46">
 						<File Id="heif.dll" Name="heif.dll" Source="$(var.HeifDllFolder)\heif.dll" />
