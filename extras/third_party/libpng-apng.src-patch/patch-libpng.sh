@@ -4,7 +4,7 @@
 
 # apng support
 echo "--- Patching libpng with apng support ---"
-patch -d libpng -p1 --forward < libpng-apng/libpng-1.6.39-apng.patch
+patch -d libpng -p0 --forward < libpng-apng/libpng-1.6.40-apng.patch
 # error check, fail and return error if failed
 if [ $? -ne 0 ]; then
 	echo apng patch failed
