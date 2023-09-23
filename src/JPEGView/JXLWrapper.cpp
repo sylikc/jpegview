@@ -89,12 +89,12 @@ bool JxlReader::DecodeJpegXlOneShot(const uint8_t* jxl, size_t size, std::vector
 			size_t icc_size;
 			if (JXL_DEC_SUCCESS !=
 				JxlDecoderGetICCProfileSize(
-					cache.decoder.get(), &format, JXL_COLOR_PROFILE_TARGET_DATA, &icc_size)) {
+					cache.decoder.get(), JXL_COLOR_PROFILE_TARGET_DATA, &icc_size)) {
 				return false;
 			}
 			icc_profile->resize(icc_size);
 			if (JXL_DEC_SUCCESS != JxlDecoderGetColorAsICCProfile(
-				cache.decoder.get(), &format,
+				cache.decoder.get(),
 				JXL_COLOR_PROFILE_TARGET_DATA,
 				icc_profile->data(), icc_profile->size())) {
 				return false;
