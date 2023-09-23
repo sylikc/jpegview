@@ -285,6 +285,9 @@
     <ClCompile Include="ICCProfileTransform.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="PSDWrapper.cpp">
+      <Filter>Source Files\Image Types</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BasicProcessing.h">
@@ -550,6 +553,9 @@
     </ClInclude>
     <ClInclude Include="ICCProfileTransform.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PSDWrapper.h">
+      <Filter>Header Files\Image Types</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

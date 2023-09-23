@@ -32,34 +32,6 @@ static bool IsAlphaChannelValid(int width, int height, uint32* pImageData)
 	return pixel != 0;
 }
 
-// pixel is ARGB, backgroundColor is BGR. Returns ARGB
-static inline uint32 AlphaBlendBackground(uint32 pixel, COLORREF backgroundColor)
-{
-	uint32 alpha = pixel & ALPHA_OPAQUE;
-	if (alpha == ALPHA_OPAQUE)
-		return pixel;
-
-	uint8 bg_r = GetRValue(backgroundColor);
-	uint8 bg_g = GetGValue(backgroundColor);
-	uint8 bg_b = GetBValue(backgroundColor);
-
-	if (alpha == 0) {
-		return (bg_r << 16) + (bg_g << 8) + (bg_b);
-	} else {
-		uint8 r = (pixel >> 16) & 0xFF;
-		uint8 g = (pixel >>  8) & 0xFF;
-		uint8 b = (pixel      ) & 0xFF;
-		uint8 a = alpha >> 24;
-		uint8 one_minus_a = 255 - a;
-
-		return
-			ALPHA_OPAQUE +
-			(  (uint8)(((r * a + bg_r * one_minus_a) / 255.0) + 0.5) << 16) +
-			(  (uint8)(((g * a + bg_g * one_minus_a) / 255.0) + 0.5) <<  8) +
-			(  (uint8)(((b * a + bg_b * one_minus_a) / 255.0) + 0.5)      );
-	}
-}
-
 
 CJPEGImage* CReaderTGA::ReadTgaImage(LPCTSTR strFileName, COLORREF backgroundColor, bool& bOutOfMemory) {
 
@@ -378,7 +350,7 @@ CJPEGImage* CReaderTGA::ReadTgaImage(LPCTSTR strFileName, COLORREF backgroundCol
 		{
 			for (int i = 0; i < width*height; i++)
 			{
-				*pImage32++ = AlphaBlendBackground(*pImage32, backgroundColor | ALPHA_OPAQUE);
+				*pImage32++ = Helpers::AlphaBlendBackground(*pImage32, backgroundColor | ALPHA_OPAQUE);
 			}
 		}
 		else

@@ -124,8 +124,13 @@ void CEXIFDisplayCtl::FillEXIFDataDisplay() {
 			if (sComment == NULL || sComment[0] == 0 || ((std::wstring) sComment).find_first_not_of(L" \t\n\r\f\v", 0) == std::wstring::npos) {
 				sComment = pEXIFReader->GetImageDescription();
 			}
+			if (pEXIFReader->GetSoftwarePresent()) {
+				m_pEXIFDisplay->AddLine(CNLS::GetString(_T("Software:")), pEXIFReader->GetSoftware());
+			}
 			if (pEXIFReader->GetAcquisitionTimePresent()) {
 				m_pEXIFDisplay->AddLine(CNLS::GetString(_T("Acquisition date:")), pEXIFReader->GetAcquisitionTime());
+			} else if (pEXIFReader->GetModTimePresent()) {
+				m_pEXIFDisplay->AddLine(CNLS::GetString(_T("Date Time:")), pEXIFReader->GetModTime());
 			} else {
 				const FILETIME* pFileTime = pFileList->CurrentModificationTime();
 				if (pFileTime != NULL) {
