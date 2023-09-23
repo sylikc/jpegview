@@ -246,7 +246,7 @@ namespace Helpers {
 
 	// Conversion class that replaces the | by null character in a string.
 	// Caution: Uses a static buffer and therefore only one string can be replaced concurrently
-	const int MAX_SIZE_REPLACE_PIPE = 512;
+	const int MAX_SIZE_REPLACE_PIPE = 1024;
 
 	class CReplacePipe {
 	public:
