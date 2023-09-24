@@ -89,12 +89,12 @@ bool JxlReader::DecodeJpegXlOneShot(const uint8_t* jxl, size_t size, std::vector
 			size_t icc_size;
 			if (JXL_DEC_SUCCESS !=
 				JxlDecoderGetICCProfileSize(
-					cache.decoder.get(), &format, JXL_COLOR_PROFILE_TARGET_DATA, &icc_size)) {
+					cache.decoder.get(), JXL_COLOR_PROFILE_TARGET_DATA, &icc_size)) {
 				return false;
 			}
 			icc_profile->resize(icc_size);
 			if (JXL_DEC_SUCCESS != JxlDecoderGetColorAsICCProfile(
-				cache.decoder.get(), &format,
+				cache.decoder.get(),
 				JXL_COLOR_PROFILE_TARGET_DATA,
 				icc_profile->data(), icc_profile->size())) {
 				return false;
@@ -207,10 +207,11 @@ void* JxlReader::ReadImage(int& width,
 	if (cache.transform == NULL)
 		cache.transform = ICCProfileTransform::CreateTransform(icc_profile.data(), icc_profile.size(), ICCProfileTransform::FORMAT_RGBA);
 	if (!ICCProfileTransform::DoTransform(cache.transform, pixels.data(), pPixelData, width, height)) {
-		memcpy(pPixelData, pixels.data(), size);
 		// RGBA -> BGRA conversion (with little-endian integers)
-		for (uint32_t* i = (uint32_t*)pPixelData; (uint8_t*)i < pPixelData + size; i++)
-			*i = ((*i & 0x00FF0000) >> 16) | ((*i & 0x0000FF00)) | ((*i & 0x000000FF) << 16) | ((*i & 0xFF000000));
+		uint32_t* data = (uint32_t*)pixels.data();
+		for (int i = 0; i * sizeof(uint32_t) < size; i++) {
+			((uint32_t*)pPixelData)[i] = _rotr(_byteswap_ulong(data[i]), 8);
+		}
 	}
 
 	// Copy Exif data into the format understood by CEXIFReader

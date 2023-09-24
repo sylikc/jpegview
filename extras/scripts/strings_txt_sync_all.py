@@ -352,10 +352,13 @@ def dump_strings_txt_summary_markdown():
     it's just as readable on the console, but this is designed for the wiki page
     """
 
+    header_line = ("*" * 30) + " GH WIKI " + ("*" * 30)
+    print(f"{header_line}\n")
+
     # dump out the progress in a neat summary
 
-    print("| File        | Code | Language | Total | Missing | Done | % Done |")
-    print("| ----------- | ---- | -------- | -----:| -------:| ----:| ------:|")
+    print("| File        | [Code](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) | [Country](https://en.wikipedia.org/wiki/List_of_ISO_3166_country_codes) | Language | Total | Missing | Done | % Done |")
+    print("| ----------- | ---- | ------- | -------- | -----:| -------:| ----:| ------:|")
 
     running_total = 0
     running_done = 0
@@ -365,6 +368,7 @@ def dump_strings_txt_summary_markdown():
         #code = filepath.stem[len("strings_"):]
 
         code = None
+        country = None
         lang = None
 
         percentage = None
@@ -382,6 +386,8 @@ def dump_strings_txt_summary_markdown():
                     # read from file, so we know we got the right stuff in the file
                     if "ISO 639" in x:
                         code = x[4:].split(":")[1].strip()
+                    elif "ISO 3166" in x:
+                        country = x[4:].split(":")[1].strip().lower()  # JPEGView uses the lowercase, even though ISO 3166-1 is typically specified UPPERCASE
                     elif "Language" in x:
                         lang = x[4:].split(":")[1].strip()
 
@@ -401,7 +407,7 @@ def dump_strings_txt_summary_markdown():
                         done = int(x.split("=")[1].strip())
 
         #print(f"{desc:<6}:  {percentage:>4} => {total-done:4}")
-        print(f"| [{filepath.name}](https://github.com/sylikc/jpegview/blob/master/src/JPEGView/Config/{filepath.name}) | {code} | {lang} | {total} | {total-done:4} | {done} | {percentage:>4} |")
+        print(f"| [{filepath.name}](https://github.com/sylikc/jpegview/blob/master/src/JPEGView/Config/{filepath.name}) | {code} | {country:2} | {lang} | {total} | {total-done:4} | {done} | {percentage:>4} |")
 
         running_total += total
         running_done += done
@@ -415,6 +421,61 @@ def dump_strings_txt_summary_markdown():
 
     print(f"Last Updated: {datetime.now(timezone.utc).isoformat()}")
 
+    print(f"\n{header_line}\n")
+
+
+
+
+
+def dump_strings_txt_readme_summary_markdown():
+    """
+    Routine that prints out the supported language list in GitHub markdown
+
+    this is designed for the README.md
+    """
+    header_line = ("*" * 30) + " GH README.MD " + ("*" * 30)
+    print(f"{header_line}\n")
+
+    # dump out the supported languages for the README.md
+
+    print("| INI Option | Language |")
+    print("| ---------- | -------- |")
+
+    file_count = 0
+
+    for filepath in CONFIG_DIR.glob("strings_*.txt"):
+        ini_code = filepath.stem[len("strings_"):]
+        code = None
+        country = None
+        lang = None
+
+        with open(filepath, 'rt', encoding=UTF8) as f:
+            while True:
+                x = f.readline()
+                if not x:
+                    break
+
+                if x.startswith("//: "):
+                    # read from file, so we know we got the right stuff in the file
+                    if "ISO 639" in x:
+                        code = x[4:].split(":")[1].strip()
+                    elif "ISO 3166" in x:
+                        country = x[4:].split(":")[1].strip().lower()  # JPEGView uses the lowercase, even though ISO 3166-1 is typically specified UPPERCASE
+                    elif "Language" in x:
+                        lang = x[4:].split(":")[1].strip()
+
+                if code is not None and country is not None and lang is not None:
+                    # don't need to read any more of the file if we have the 3 items
+                    break
+
+        #ini_opt = code if country == "" else f"{code}-{country}"
+        print(f"| {ini_code} | {lang} |")  # use the ini code for the strings_<code>.txt naming instead of the stuff detected from file
+
+        file_count += 1
+
+    print(f"\nJPEGView is currently translated/localized to {file_count} languages:\n")
+
+    print(f"\n{header_line}\n")
 
 
 
@@ -459,7 +520,7 @@ if __name__ == "__main__":
 
     print()
     dump_strings_txt_summary_markdown()
-
+    dump_strings_txt_readme_summary_markdown()
 
 
     #(missing, outdated) = sync_strings_to_reference(ref_file, CONFIG_DIR / "strings_fr_test.txt")
