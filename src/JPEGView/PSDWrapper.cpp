@@ -25,6 +25,7 @@
 */
 
 /* Documentation of the PSD file format can be found here: https://www.adobe.com/devnet-apps/photoshop/fileformatashtml/
+	Tags can also be found here: https://exiftool.org/TagNames/Photoshop.html
 
 	Useful image resources:
 	0x0409 1033 (Photoshop 4.0) Thumbnail resource for Photoshop 4.0 only.See See Thumbnail resource format.
@@ -36,6 +37,9 @@
 	0x041D 1053 (Photoshop 6.0) Alpha Identifiers. 4 bytes of length, followed by 4 bytes each for every alpha identifier.
 	Get alpha identifier and look at its index number, if not 0 abort
 	0x0421 1057 (Photoshop 6.0) Version Info. 4 bytes version, 1 byte hasRealMergedData, Unicode string : writer name, Unicode string : reader name, 4 bytes file version.
+	0x0422 1058 (Photoshop 7.0) EXIF data 1. See http://www.kodak.com/global/plugins/acrobat/en/service/digCam/exifStandard2.pdf
+	0x0423 1059 (Photoshop 7.0) EXIF data 3. See http://www.kodak.com/global/plugins/acrobat/en/service/digCam/exifStandard2.pdf
+	Not sure what 0x0423 is.
 */
 
 #include "stdafx.h"
@@ -101,6 +105,8 @@ CJPEGImage* PsdReader::ReadImage(LPCTSTR strFileName, bool& bOutOfMemory)
 	char* pBuffer = NULL;
 	void* pPixelData = NULL;
 	void* pEXIFData = NULL;
+	char* pICCProfile = NULL;
+	unsigned int nICCProfileSize = 0;
 	void* transform = NULL;
 	CJPEGImage* Image = NULL;
 	try {
@@ -192,6 +198,16 @@ CJPEGImage* PsdReader::ReadImage(LPCTSTR strFileName, bool& bOutOfMemory)
 
 			// Parse image resources
 			switch (nResourceID) {
+				case 0x040F: // ICC Profile
+					if (nColorMode == MODE_RGB) {
+						pICCProfile = new(std::nothrow) char[nResourceSize];
+					}
+					if (pICCProfile != NULL) {
+						ReadFromFile(pICCProfile, hFile, nResourceSize);
+						SeekFile(hFile, -nResourceSize);
+						nICCProfileSize = nResourceSize;
+					}
+					break;
 				case 0x041D: // 0x041D 1053 (Photoshop 6.0) Alpha Identifiers. 4 bytes of length, followed by 4 bytes each for every alpha identifier.
 					if (nChannels == 4) {
 						int i = 0;
@@ -256,11 +272,17 @@ CJPEGImage* PsdReader::ReadImage(LPCTSTR strFileName, bool& bOutOfMemory)
 		if (!bUseAlpha && nColorMode != MODE_CMYK) {
 			nChannels = min(nChannels, 3);
 		}
-		if (nColorMode == MODE_Lab && nChannels >= 3) {
-			transform = ICCProfileTransform::CreateLabTransform(nChannels == 4 ? ICCProfileTransform::FORMAT_ALab : ICCProfileTransform::FORMAT_Lab);
-			if (transform == NULL) {
-				// If we can't convert Lab to sRGB then just use the Lightness channel as grayscale
-				nChannels = min(nChannels, 1);
+
+		// Apply ICC Profile
+		if (nChannels >= 3) {
+			if (nColorMode == MODE_Lab) {
+				transform = ICCProfileTransform::CreateLabTransform(nChannels == 4 ? ICCProfileTransform::FORMAT_ALab : ICCProfileTransform::FORMAT_Lab);
+				if (transform == NULL) {
+					// If we can't convert Lab to sRGB then just use the Lightness channel as grayscale
+					nChannels = min(nChannels, 1);
+				}
+			} else if (nColorMode == MODE_RGB) {
+				transform = ICCProfileTransform::CreateTransform(pICCProfile, nICCProfileSize, nChannels == 4 ? ICCProfileTransform::FORMAT_BGRA : ICCProfileTransform::FORMAT_BGR);
 			}
 		}
 
@@ -368,6 +390,7 @@ CJPEGImage* PsdReader::ReadImage(LPCTSTR strFileName, bool& bOutOfMemory)
 	}
 	delete[] pBuffer;
 	delete[] pEXIFData;
+	delete[] pICCProfile;
 	ICCProfileTransform::DeleteTransform(transform);
 	return Image;
 };
