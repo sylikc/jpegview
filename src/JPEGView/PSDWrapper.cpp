@@ -43,6 +43,7 @@
 #include "MaxImageDef.h"
 #include "Helpers.h"
 #include "TJPEGWrapper.h"
+#include "ICCProfileTransform.h"
 #include "SettingsProvider.h"
 
 
@@ -91,6 +92,7 @@ CJPEGImage* PsdReader::ReadImage(LPCTSTR strFileName, bool& bOutOfMemory)
 	char* pBuffer = NULL;
 	void* pPixelData = NULL;
 	void* pEXIFData = NULL;
+	void* transform = NULL;
 	CJPEGImage* Image = NULL;
 	try {
 		unsigned int nFileSize = 0;
@@ -133,8 +135,13 @@ CJPEGImage* PsdReader::ReadImage(LPCTSTR strFileName, bool& bOutOfMemory)
 		unsigned short nColorMode = ReadUShortFromFile(hFile);
 		switch (nColorMode) {
 			case 1:
+			case 7:
 			case 8:
 				nChannels = min(nRealChannels, 1);
+				break;
+			case 9:
+				// I couldn't get the conversion from LabA to BGRA to work properly
+				nChannels = min(nRealChannels, 3);
 				break;
 			case 3:
 			case 4:
@@ -217,7 +224,10 @@ CJPEGImage* PsdReader::ReadImage(LPCTSTR strFileName, bool& bOutOfMemory)
 
 		// Skip Layer and Mask Info section
 		unsigned int nLayerSize = ReadUIntFromFile(hFile);
-		SeekFile(hFile, nLayerSize);
+		ReadUIntFromFile(hFile);
+		unsigned short nLayerCount = ReadUShortFromFile(hFile);
+		bUseAlpha = bUseAlpha && (nLayerCount <= 0);
+		SeekFile(hFile, nLayerSize - 6);
 
 		// Compression. 0 = Raw Data, 1 = RLE compressed, 2 = ZIP without prediction, 3 = ZIP with prediction.
 		unsigned short nCompressionMethod = ReadUShortFromFile(hFile);
@@ -231,9 +241,16 @@ CJPEGImage* PsdReader::ReadImage(LPCTSTR strFileName, bool& bOutOfMemory)
 		}
 		ReadFromFile(pBuffer, hFile, nImageDataSize);
 
-		if (!bUseAlpha) {
+		if (!bUseAlpha && nColorMode != 4) {
 			nChannels = min(nChannels, 3);
 		}
+		if (nColorMode == 9 && nChannels >= 3) {
+			transform = ICCProfileTransform::CreateLabTransform(nChannels == 4 ? ICCProfileTransform::FORMAT_ALab : ICCProfileTransform::FORMAT_Lab);
+			if (transform == NULL) {
+				nChannels = min(nChannels, 1);
+			}
+		}
+
 		int nRowSize = Helpers::DoPadding(nWidth * nChannels, 4);
 		pPixelData = new(std::nothrow) char[nRowSize * nHeight];
 		if (pPixelData == NULL) {
@@ -249,7 +266,12 @@ CJPEGImage* PsdReader::ReadImage(LPCTSTR strFileName, bool& bOutOfMemory)
 			// Skip byte counts for scanlines
 			p += nHeight * nRealChannels * 2;
 			for (unsigned channel = 0; channel < nChannels; channel++) {
-				unsigned rchannel = (-channel - 2) % nChannels;
+				unsigned rchannel;
+				if (nColorMode == 9) {
+					rchannel = channel;
+				} else {
+					rchannel = (-channel - 2) % nChannels;
+				}
 				for (unsigned row = 0; row < nHeight; row++) {
 					for (unsigned count = 0; count < nWidth; ) {
 						unsigned char c;
@@ -292,12 +314,16 @@ CJPEGImage* PsdReader::ReadImage(LPCTSTR strFileName, bool& bOutOfMemory)
 				}
 			}
 		}
-			
+
+		ICCProfileTransform::DoTransform(transform, pPixelData, pPixelData, nWidth, nHeight, nRowSize);
+
 		if (nChannels == 4) {
 			// Multiply alpha value into each AABBGGRR pixel
 			uint32* pImage32 = (uint32*)pPixelData;
+			// Blend K channel for CMYK images, alpha channel for RGBA images
+			COLORREF backgroundColor = nColorMode == 4 ? 0 : CSettingsProvider::This().ColorTransparency();
 			for (int i = 0; i < nWidth * nHeight; i++)
-				*pImage32++ = Helpers::AlphaBlendBackground(*pImage32, CSettingsProvider::This().ColorTransparency());
+				*pImage32++ = Helpers::AlphaBlendBackground(*pImage32, backgroundColor);
 		}
 
 		Image = new CJPEGImage(nWidth, nHeight, pPixelData, pEXIFData, nChannels, 0, IF_PSD, false, 0, 1, 0);
@@ -311,6 +337,7 @@ CJPEGImage* PsdReader::ReadImage(LPCTSTR strFileName, bool& bOutOfMemory)
 	}
 	delete[] pBuffer;
 	delete[] pEXIFData;
+	ICCProfileTransform::DeleteTransform(transform);
 	return Image;
 };
 
