@@ -47,8 +47,12 @@
 #include "SettingsProvider.h"
 
 
-// Throw exception if expr is true
-#define THROW_IF(expr) {if (expr) throw 1;}
+// Throw exception if expr is true. Setting a breakpoint in here is useful for debugging
+static inline void THROW_IF(bool b) {
+	if (b) {
+		throw 1;
+	}
+}
 
 // Read exactly sz bytes of the file into p
 static inline void ReadFromFile(void* dst, HANDLE file, DWORD sz) {
@@ -134,19 +138,22 @@ CJPEGImage* PsdReader::ReadImage(LPCTSTR strFileName, bool& bOutOfMemory)
 		unsigned short nChannels = 0;
 		unsigned short nColorMode = ReadUShortFromFile(hFile);
 		switch (nColorMode) {
-			case 1:
-			case 7:
-			case 8:
+			case MODE_Grayscale:
+			case MODE_Duotone:
 				nChannels = min(nRealChannels, 1);
 				break;
-			case 9:
+			case MODE_Multichannel:
+			case MODE_Lab:
 				// I couldn't get the conversion from LabA to BGRA to work properly
 				nChannels = min(nRealChannels, 3);
 				break;
-			case 3:
-			case 4:
+			case MODE_RGB:
+			case MODE_CMYK:
 				nChannels = min(nRealChannels, 4);
 				break;
+		}
+		if (nChannels == 2) {
+			nChannels = 1;
 		}
 		THROW_IF(nChannels != 1 && nChannels != 3 && nChannels != 4);
 
@@ -225,13 +232,13 @@ CJPEGImage* PsdReader::ReadImage(LPCTSTR strFileName, bool& bOutOfMemory)
 		// Skip Layer and Mask Info section
 		unsigned int nLayerSize = ReadUIntFromFile(hFile);
 		ReadUIntFromFile(hFile);
-		unsigned short nLayerCount = ReadUShortFromFile(hFile);
+		short nLayerCount = ReadUShortFromFile(hFile);
 		bUseAlpha = bUseAlpha && (nLayerCount <= 0);
 		SeekFile(hFile, nLayerSize - 6);
 
 		// Compression. 0 = Raw Data, 1 = RLE compressed, 2 = ZIP without prediction, 3 = ZIP with prediction.
 		unsigned short nCompressionMethod = ReadUShortFromFile(hFile);
-		THROW_IF(nCompressionMethod != 1);
+		THROW_IF(nCompressionMethod != 0 && nCompressionMethod != 1);
 
 		unsigned int nImageDataSize = nFileSize - (26 + 4 + nColorDataSize + 4 + nResourceSectionSize + 4 + nLayerSize + 2);
 		pBuffer = new(std::nothrow) char[nImageDataSize];
@@ -241,12 +248,13 @@ CJPEGImage* PsdReader::ReadImage(LPCTSTR strFileName, bool& bOutOfMemory)
 		}
 		ReadFromFile(pBuffer, hFile, nImageDataSize);
 
-		if (!bUseAlpha && nColorMode != 4) {
+		if (!bUseAlpha && nColorMode != MODE_CMYK) {
 			nChannels = min(nChannels, 3);
 		}
-		if (nColorMode == 9 && nChannels >= 3) {
+		if (nColorMode == MODE_Lab && nChannels >= 3) {
 			transform = ICCProfileTransform::CreateLabTransform(nChannels == 4 ? ICCProfileTransform::FORMAT_ALab : ICCProfileTransform::FORMAT_Lab);
 			if (transform == NULL) {
+				// If we can't convert Lab to sRGB then just use the Lightness channel as grayscale
 				nChannels = min(nChannels, 1);
 			}
 		}
@@ -267,7 +275,7 @@ CJPEGImage* PsdReader::ReadImage(LPCTSTR strFileName, bool& bOutOfMemory)
 			p += nHeight * nRealChannels * 2;
 			for (unsigned channel = 0; channel < nChannels; channel++) {
 				unsigned rchannel;
-				if (nColorMode == 9) {
+				if (nColorMode == MODE_Lab) {
 					rchannel = channel;
 				} else {
 					rchannel = (-channel - 2) % nChannels;
@@ -313,6 +321,28 @@ CJPEGImage* PsdReader::ReadImage(LPCTSTR strFileName, bool& bOutOfMemory)
 					}
 				}
 			}
+		} else {
+			for (unsigned channel = 0; channel < nChannels; channel++) {
+				unsigned rchannel;
+				if (nColorMode == MODE_Lab) {
+					rchannel = channel;
+				} else {
+					rchannel = (-channel - 2) % nChannels;
+				}
+				for (unsigned row = 0; row < nHeight; row++) {
+					for (unsigned count = 0; count < nWidth; count++) {
+						THROW_IF(p >= (unsigned char*)pBuffer + nImageDataSize);
+						unsigned char value;
+						value = *p;
+						p += 1;
+
+						unsigned char* scan = (unsigned char*)pPixelData + row * nRowSize + count * nChannels;
+						unsigned char* pixel = scan + rchannel;
+						THROW_IF(pixel >= (unsigned char*)pPixelData + nRowSize * nHeight);
+						*pixel = value;
+					}
+				}
+			}
 		}
 
 		ICCProfileTransform::DoTransform(transform, pPixelData, pPixelData, nWidth, nHeight, nRowSize);
@@ -321,7 +351,7 @@ CJPEGImage* PsdReader::ReadImage(LPCTSTR strFileName, bool& bOutOfMemory)
 			// Multiply alpha value into each AABBGGRR pixel
 			uint32* pImage32 = (uint32*)pPixelData;
 			// Blend K channel for CMYK images, alpha channel for RGBA images
-			COLORREF backgroundColor = nColorMode == 4 ? 0 : CSettingsProvider::This().ColorTransparency();
+			COLORREF backgroundColor = nColorMode == MODE_CMYK ? 0 : CSettingsProvider::This().ColorTransparency();
 			for (int i = 0; i < nWidth * nHeight; i++)
 				*pImage32++ = Helpers::AlphaBlendBackground(*pImage32, backgroundColor);
 		}
