@@ -21,4 +21,11 @@ private:
 		MODE_Duotone = 8,
 		MODE_Lab = 9,
 	};
+
+	enum CompressionMode {
+		COMPRESSION_None = 0,
+		COMPRESSION_RLE = 1,
+		COMPRESSION_ZipWithoutPrediction = 2,
+		COMPRESSION_ZipWithPrediction = 3,
+	};
 };

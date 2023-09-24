@@ -47,9 +47,9 @@
 #include "SettingsProvider.h"
 
 
-// Throw exception if expr is true. Setting a breakpoint in here is useful for debugging
-static inline void THROW_IF(bool b) {
-	if (b) {
+// Throw exception if bShouldThrow is true. Setting a breakpoint in here is useful for debugging
+static inline void ThrowIf(bool bShouldThrow) {
+	if (bShouldThrow) {
 		throw 1;
 	}
 }
@@ -57,7 +57,7 @@ static inline void THROW_IF(bool b) {
 // Read exactly sz bytes of the file into p
 static inline void ReadFromFile(void* dst, HANDLE file, DWORD sz) {
 	unsigned int nNumBytesRead;
-	THROW_IF(!(::ReadFile(file, dst, sz, (LPDWORD)&nNumBytesRead, NULL) && nNumBytesRead == sz));
+	ThrowIf(!(::ReadFile(file, dst, sz, (LPDWORD)&nNumBytesRead, NULL) && nNumBytesRead == sz));
 }
 
 // Read and return an unsigned int from file
@@ -83,7 +83,12 @@ static inline unsigned short ReadUCharFromFile(HANDLE file) {
 
 // Move file pointer by offset from current position
 static inline void SeekFile(HANDLE file, LONG offset) {
-	THROW_IF(::SetFilePointer(file, offset, NULL, 1) == INVALID_SET_FILE_POINTER);
+	ThrowIf(::SetFilePointer(file, offset, NULL, 1) == INVALID_SET_FILE_POINTER);
+}
+
+// Move file pointer to offset from beginning of file
+static inline void SeekFileFromStart(HANDLE file, LONG offset) {
+	ThrowIf(::SetFilePointer(file, offset, NULL, 0) == INVALID_SET_FILE_POINTER);
 }
 
 CJPEGImage* PsdReader::ReadImage(LPCTSTR strFileName, bool& bOutOfMemory)
@@ -101,19 +106,19 @@ CJPEGImage* PsdReader::ReadImage(LPCTSTR strFileName, bool& bOutOfMemory)
 	try {
 		unsigned int nFileSize = 0;
 		nFileSize = ::GetFileSize(hFile, NULL);
-		THROW_IF(nFileSize > MAX_PSD_FILE_SIZE);
+		ThrowIf(nFileSize > MAX_PSD_FILE_SIZE);
 
 		// Skip file signature
 		SeekFile(hFile, 4);
 
 		// Read version: 1 for PSD, 2 for PSB
 		unsigned short nVersion = ReadUShortFromFile(hFile);
-		THROW_IF(nVersion != 1);
+		ThrowIf(nVersion != 1);
 
 		// Check reserved bytes
 		char pReserved[6];
 		ReadFromFile(pReserved, hFile, 6);
-		THROW_IF(memcmp(pReserved, "\0\0\0\0\0\0", 6));
+		ThrowIf(memcmp(pReserved, "\0\0\0\0\0\0", 6));
 
 		// Read number of channels
 		unsigned short nRealChannels = ReadUShortFromFile(hFile);
@@ -124,12 +129,12 @@ CJPEGImage* PsdReader::ReadImage(LPCTSTR strFileName, bool& bOutOfMemory)
 		if ((double)nHeight * nWidth > MAX_IMAGE_PIXELS) {
 			bOutOfMemory = true;
 		}
-		THROW_IF(bOutOfMemory || nHeight > MAX_IMAGE_DIMENSION || nWidth > MAX_IMAGE_DIMENSION);
+		ThrowIf(bOutOfMemory || nHeight > MAX_IMAGE_DIMENSION || nWidth > MAX_IMAGE_DIMENSION);
 
 		// PSD can have bit depths of 1, 2, 4, 8, 16, 32
 		unsigned short nBitDepth = ReadUShortFromFile(hFile);
 		// Only 8-bit is supported for now
-		THROW_IF(nBitDepth != 8);
+		ThrowIf(nBitDepth != 8);
 
 		
 		// Read color mode
@@ -155,7 +160,7 @@ CJPEGImage* PsdReader::ReadImage(LPCTSTR strFileName, bool& bOutOfMemory)
 		if (nChannels == 2) {
 			nChannels = 1;
 		}
-		THROW_IF(nChannels != 1 && nChannels != 3 && nChannels != 4);
+		ThrowIf(nChannels != 1 && nChannels != 3 && nChannels != 4);
 
 		// Skip color mode data
 		unsigned int nColorDataSize = ReadUIntFromFile(hFile);
@@ -204,7 +209,7 @@ CJPEGImage* PsdReader::ReadImage(LPCTSTR strFileName, bool& bOutOfMemory)
 					if (nResourceSize >= 5) {
 						ReadUIntFromFile(hFile);
 						// See https://exiftool.org/forum/index.php?topic=12897.0
-						THROW_IF(!ReadUCharFromFile(hFile));
+						ThrowIf(!ReadUCharFromFile(hFile));
 						SeekFile(hFile, -5);
 					}
 					break;
@@ -227,7 +232,7 @@ CJPEGImage* PsdReader::ReadImage(LPCTSTR strFileName, bool& bOutOfMemory)
 		}
 		
 		// Go back to start of file
-		THROW_IF(::SetFilePointer(hFile, 26 + 4 + nColorDataSize + 4 + nResourceSectionSize, NULL, 0) == INVALID_SET_FILE_POINTER);
+		SeekFileFromStart(hFile, 26 + 4 + nColorDataSize + 4 + nResourceSectionSize);
 
 		// Skip Layer and Mask Info section
 		unsigned int nLayerSize = ReadUIntFromFile(hFile);
@@ -238,13 +243,13 @@ CJPEGImage* PsdReader::ReadImage(LPCTSTR strFileName, bool& bOutOfMemory)
 
 		// Compression. 0 = Raw Data, 1 = RLE compressed, 2 = ZIP without prediction, 3 = ZIP with prediction.
 		unsigned short nCompressionMethod = ReadUShortFromFile(hFile);
-		THROW_IF(nCompressionMethod != 0 && nCompressionMethod != 1);
+		ThrowIf(nCompressionMethod != COMPRESSION_RLE && nCompressionMethod != COMPRESSION_None);
 
 		unsigned int nImageDataSize = nFileSize - (26 + 4 + nColorDataSize + 4 + nResourceSectionSize + 4 + nLayerSize + 2);
 		pBuffer = new(std::nothrow) char[nImageDataSize];
 		if (pBuffer == NULL) {
 			bOutOfMemory = true;
-			THROW_IF(true);
+			ThrowIf(true);
 		}
 		ReadFromFile(pBuffer, hFile, nImageDataSize);
 
@@ -263,14 +268,13 @@ CJPEGImage* PsdReader::ReadImage(LPCTSTR strFileName, bool& bOutOfMemory)
 		pPixelData = new(std::nothrow) char[nRowSize * nHeight];
 		if (pPixelData == NULL) {
 			bOutOfMemory = true;
-			THROW_IF(true);
+			ThrowIf(true);
 		}
-		// TODO: non-8bit, non-RGB
+		// TODO: non-8bit, better non-RGB support
 		// non-8bit must first be decompressed as arbitrary data
 		// TODO: continue next row at end of row bytes (to support corrupt images)
-		// TODO: uncompressed decoding
 		unsigned char* p = (unsigned char*)pBuffer;
-		if (nCompressionMethod == 1) {
+		if (nCompressionMethod == COMPRESSION_RLE) {
 			// Skip byte counts for scanlines
 			p += nHeight * nRealChannels * 2;
 			for (unsigned channel = 0; channel < nChannels; channel++) {
@@ -283,36 +287,34 @@ CJPEGImage* PsdReader::ReadImage(LPCTSTR strFileName, bool& bOutOfMemory)
 				for (unsigned row = 0; row < nHeight; row++) {
 					for (unsigned count = 0; count < nWidth; ) {
 						unsigned char c;
-						THROW_IF(p >= (unsigned char*)pBuffer + nImageDataSize);
+						ThrowIf(p >= (unsigned char*)pBuffer + nImageDataSize);
 						c = *p;
 						p += 1;
 
 						if (c > 128) {
 							c = ~c + 2;
 
-							THROW_IF(p >= (unsigned char*)pBuffer + nImageDataSize);
-							unsigned char value;
-							value = *p;
+							ThrowIf(p >= (unsigned char*)pBuffer + nImageDataSize);
+							unsigned char value = *p;
 							p += 1;
 
 							for (unsigned i = count; i < count + c; i++) {
 								unsigned char* scan = (unsigned char*)pPixelData + row * nRowSize + i * nChannels;
 								unsigned char* pixel = scan + rchannel;
-								THROW_IF(pixel >= (unsigned char*)pPixelData + nRowSize * nHeight);
+								ThrowIf(pixel >= (unsigned char*)pPixelData + nRowSize * nHeight);
 								*pixel = value;
 							}
 						} else if (c < 128) {
 							c++;
 
 							for (unsigned i = count; i < count + c; i++) {
-								unsigned char value;
-								THROW_IF(p >= (unsigned char*)pBuffer + nImageDataSize);
-								value = *p;
+								ThrowIf(p >= (unsigned char*)pBuffer + nImageDataSize);
+								unsigned char value = *p;
 								p += 1;
 
 								unsigned char* scan = (unsigned char*)pPixelData + row * nRowSize + i * nChannels;
 								unsigned char* pixel = scan + rchannel;
-								THROW_IF(pixel >= (unsigned char*)pPixelData + nRowSize * nHeight);
+								ThrowIf(pixel >= (unsigned char*)pPixelData + nRowSize * nHeight);
 								*pixel = value;
 							}
 						}
@@ -331,14 +333,13 @@ CJPEGImage* PsdReader::ReadImage(LPCTSTR strFileName, bool& bOutOfMemory)
 				}
 				for (unsigned row = 0; row < nHeight; row++) {
 					for (unsigned count = 0; count < nWidth; count++) {
-						THROW_IF(p >= (unsigned char*)pBuffer + nImageDataSize);
-						unsigned char value;
-						value = *p;
+						ThrowIf(p >= (unsigned char*)pBuffer + nImageDataSize);
+						unsigned char value = *p;
 						p += 1;
 
 						unsigned char* scan = (unsigned char*)pPixelData + row * nRowSize + count * nChannels;
 						unsigned char* pixel = scan + rchannel;
-						THROW_IF(pixel >= (unsigned char*)pPixelData + nRowSize * nHeight);
+						ThrowIf(pixel >= (unsigned char*)pPixelData + nRowSize * nHeight);
 						*pixel = value;
 					}
 				}
@@ -428,13 +429,13 @@ CJPEGImage* PsdReader::ReadThumb(LPCTSTR strFileName, bool& bOutOfMemory)
 					nJpegSize = nResourceSize - 28;
 					if (nJpegSize > MAX_JPEG_FILE_SIZE) {
 						bOutOfMemory = true;
-						THROW_IF(true);
+						ThrowIf(true);
 					}
 
 					pBuffer = new(std::nothrow) char[nJpegSize];
 					if (pBuffer == NULL) {
 						bOutOfMemory = true;
-						THROW_IF(true);
+						ThrowIf(true);
 					}
 
 					ReadFromFile(pBuffer, hFile, nJpegSize);
