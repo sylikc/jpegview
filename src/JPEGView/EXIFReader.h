@@ -56,8 +56,8 @@ public:
 	const SYSTEMTIME& GetAcquisitionTime() { return m_acqDate; }
 	bool GetAcquisitionTimePresent() { return m_acqDate.wYear > 1600; }
 	// Date-time the picture was modified
-	const SYSTEMTIME& GetModTime() { return m_modDate; }
-	bool GetModTimePresent() { return m_modDate.wYear > 1600; }
+	const SYSTEMTIME& GetDateTime() { return m_dateTime; }
+	bool GetDateTimePresent() { return m_dateTime.wYear > 1600; }
 	// Exposure time
 	const Rational& GetExposureTime() { return m_exposureTime; }
 	bool GetExposureTimePresent() { return m_exposureTime.Denominator != 0; }
@@ -113,7 +113,7 @@ private:
 	CString m_sImageDescription;
 	CString m_sSoftware;
 	SYSTEMTIME m_acqDate;
-	SYSTEMTIME m_modDate;
+	SYSTEMTIME m_dateTime;
 	Rational m_exposureTime;
 	double m_dExposureBias;
 	bool m_bFlashFired;
