@@ -345,7 +345,7 @@ CJPEGImage* PsdReader::ReadImage(LPCTSTR strFileName, bool& bOutOfMemory)
 					}
 				}
 			}
-		} else {
+		} else { // No compression
 			for (unsigned channel = 0; channel < nChannels; channel++) {
 				unsigned rchannel;
 				if (nColorMode == MODE_Lab) {

@@ -55,7 +55,7 @@ public:
 	// Date-time the picture was taken
 	const SYSTEMTIME& GetAcquisitionTime() { return m_acqDate; }
 	bool GetAcquisitionTimePresent() { return m_acqDate.wYear > 1600; }
-	// Date-time the picture was modified
+	// Date-time the picture was saved/modified (used by editing software)
 	const SYSTEMTIME& GetDateTime() { return m_dateTime; }
 	bool GetDateTimePresent() { return m_dateTime.wYear > 1600; }
 	// Exposure time

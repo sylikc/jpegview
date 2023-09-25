@@ -100,8 +100,8 @@ void* ICCProfileTransform::CreateLabTransform(PixelFormat format) {
 		}
 	} catch (...) {}
 
-	if (hLabProfile == NULL)
-		return NULL; // Invalid profile
+	if (hLabProfile == NULL || sRGBProfile == NULL)
+		return NULL; // Could not create profile
 
 	// Create transform from CIELAB D50 (Photoshop "Lab mode") to sRGB
 	cmsUInt32Number flags = cmsFLAGS_BLACKPOINTCOMPENSATION | cmsFLAGS_COPY_ALPHA;

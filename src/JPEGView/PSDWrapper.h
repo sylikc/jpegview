@@ -5,9 +5,10 @@
 class PsdReader
 {
 public:
-	// Returns data in the form 4-byte BGRA
+	// Returns image from PSD file
 	static CJPEGImage* ReadImage(LPCTSTR strFileName, bool& bOutOfMemory);
 
+	// Returns embedded JPEG thumbnail from PSD file
 	static CJPEGImage* ReadThumb(LPCTSTR strFileName, bool& bOutOfMemory);
 
 private:
