@@ -15,7 +15,7 @@ JPEGView is a lean, fast and highly configurable image viewer/editor with a mini
 JPEGView has built-in support the following formats:
 
 * Popular: JPEG, GIF
-* Lossless: BMP, PNG, TIFF
+* Lossless: BMP, PNG, TIFF, PSD
 * Web: WEBP, JXL, HEIF/HEIC, AVIF
 * Legacy: TGA, WDP, HDP, JXR
 * Camera RAW formats:
