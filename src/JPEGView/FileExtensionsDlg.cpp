@@ -4,6 +4,7 @@
 #include "HelpersGUI.h"
 #include "SettingsProvider.h"
 #include "FileExtensionsRegistry.h"
+#include "LepLoader.h"
 
 ///////////////////////////////////////////////////////////////////////////////////
 // Helpers
@@ -293,18 +294,19 @@ void CFileExtensionsDlg::FillFileExtensionsList() {
 	InsertExtension(_T("*.qoi"), FormatHint(CNLS::GetString(_T("%s images")), _T("Quite OK Image")));
 	InsertExtensions(CSettingsProvider::This().FilesProcessedByWIC(), CNLS::GetString(_T("%s images (processed by Window Imaging Component - WIC)")));
 	InsertExtensions(CSettingsProvider::This().FileEndingsRAW(), CNLS::GetString(_T("%s camera raw images (embedded JPEGs only)")));
+	if (LepLoader::LeptonToolPresent())
+		InsertExtensions(CSettingsProvider::This().FilesProcessedByLepton(), CNLS::GetString(_T("%s images")), _T("Dropbox's Lepton"));
 }
 
-void CFileExtensionsDlg::InsertExtensions(LPCTSTR sExtensionList, LPCTSTR sHint) {
+void CFileExtensionsDlg::InsertExtensions(LPCTSTR sExtensionList, LPCTSTR sHint, LPCTSTR param) {
 	int nNumChars = (int)_tcslen(sExtensionList);
 	int nStart = 0;
 	for (int i = 0; i <= nNumChars; i++) {
 		if (sExtensionList[i] == _T(';') || sExtensionList[i] == 0) {
 			CString sExtension(&sExtensionList[nStart], i - nStart);
 			if (sExtension.GetLength() >= 3) {
-				CString sExtensionUpper(&((LPCTSTR)sExtension)[2]);
-				sExtensionUpper.MakeUpper();
-				InsertExtension(sExtension, FormatHint(sHint, sExtensionUpper));
+				CString sExtensionUpper(param ? param : &((LPCTSTR)sExtension)[2]);
+				InsertExtension(sExtension, FormatHint(sHint, param ? sExtensionUpper : sExtensionUpper.MakeUpper()));
 			}
 			nStart = i + 1;
 		}

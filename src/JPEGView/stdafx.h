@@ -61,6 +61,10 @@ extern CAppModule _Module;
 #error _UNICODE symbol must be defined
 #endif
 
+#ifndef STARTF_UNTRUSTEDSOURCE
+#define STARTF_UNTRUSTEDSOURCE     0x00008000
+#endif
+
 #if defined _M_IX86
   #pragma comment(linker, "/manifestdependency:\"type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='x86' publicKeyToken='6595b64144ccf1df' language='*'\"")
 #elif defined _M_IA64
