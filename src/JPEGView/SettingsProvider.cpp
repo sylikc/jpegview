@@ -3,7 +3,7 @@
 #include "NLS.h"
 #include <float.h>
 #include <shlobj.h>
-#include <algorithm>
+#include <sstream>
 
 static const TCHAR* DEFAULT_INI_FILE_NAME = _T("JPEGView.ini");
 static const TCHAR* SECTION_NAME = _T("JPEGView");
@@ -120,7 +120,6 @@ CSettingsProvider::CSettingsProvider(void) {
 	m_bShowZoomNavigator = GetBool(_T("ShowZoomNavigator"), true);
 	m_fBlendFactorNavPanel = (float)GetDouble(_T("BlendFactorNavPanel"), 0.5, 0.0, 1.0);
 	m_fScaleFactorNavPanel = (float)GetDouble(_T("ScaleFactorNavPanel"), 1.0, 0.8, 2.5);
-
 	CString sCPU = GetString(_T("CPUType"), _T("AutoDetect"));
 	if (sCPU.CompareNoCase(_T("Generic")) == 0) {
 		m_eCPUAlgorithm = Helpers::CPU_Generic;
@@ -218,6 +217,8 @@ CSettingsProvider::CSettingsProvider(void) {
 		m_bExplicitWindowRect = true;
 	}
 
+	m_bUseZoomSteps = GetBool(_T("UseZoomSteps"), false);
+	m_sCustomZoomSteps = ParseCustomZoomSteps(GetString(_T("CustomZoomSteps"), _T("3, 5, 10, 14, 16, 20, 25, 33, 50, 75, 100, 125, 150, 175, 200, 250, 300, 400, 600, 800, 1000, 1200, 1600, 2400, 3200, 6400")));
 	m_colorBackground = GetColor(_T("BackgroundColor"), 0);
 	m_colorGUI = GetColor(_T("GUIColor"), RGB(243, 242, 231));
 	m_colorHighlight = GetColor(_T("HighlightColor"), RGB(255, 205, 0));
@@ -405,7 +406,7 @@ void CSettingsProvider::ReadWriteableINISettings() {
 	m_dBrightenShadows = GetDouble(_T("LDCBrightenShadows"), 0.5, 0.0, 1.0);
 	m_dDarkenHighlights = GetDouble(_T("LDCDarkenHighlights"), 0.25, 0.0, 1.0);
 	m_dBrightenShadowsSteepness = GetDouble(_T("LDCBrightenShadowsSteepness"), 0.5, 0.0, 1.0);
-	CString sNavigation = GetString(_T("FolderNavigation"), _T("LoopFolder"));
+    CString sNavigation = GetString(_T("FolderNavigation"), _T("LoopFolder"));
 	if (sNavigation.CompareNoCase(_T("LoopSameFolderLevel")) == 0) {
 		m_eNavigation = Helpers::NM_LoopSameDirectoryLevel;
 	}
@@ -501,7 +502,6 @@ void CSettingsProvider::SaveSettings(const CImageProcessingParams& procParams,
 	WriteBool(_T("ShowFileInfo"), bShowFileInfo);
 
 	WriteString(_T("SlideShowTransitionEffect"), Helpers::ConvertTransitionEffectToString(eSlideShowTransitionEffect));
-
 	m_bUserINIExists = true;
 	ReadWriteableINISettings();
 }
@@ -698,6 +698,28 @@ LPCTSTR CSettingsProvider::ReadIniString(LPCTSTR key, LPCTSTR fileName, IniHashM
 	}
 }
 
+std::vector<double> CSettingsProvider::ParseCustomZoomSteps(LPCTSTR data) {
+	std::vector<double> numbers;
+	std::string sData = CT2A(data);
+	std::string part;
+
+	for (char it : sData) {
+		if (it == ',') {
+			numbers.push_back(stod(part) / 100.0);
+			part = "";
+			continue;
+		}
+		else if (it == ' ') {
+			continue;
+		}
+
+		part += it;
+	}
+
+	numbers.push_back(stod(part) / 100.0);
+	return numbers;
+}
+
 void CSettingsProvider::ReadIniFile(LPCTSTR fileName, IniHashMap* keyMap, TCHAR*& pBuffer) {
 	int bufferSize = 1024 * 2;
 
@@ -729,6 +751,7 @@ void CSettingsProvider::ReadIniFile(LPCTSTR fileName, IniHashMap* keyMap, TCHAR*
 		current += _tcslen(value) + 1;
 	}
 }
+
 
 CString CSettingsProvider::GetString(LPCTSTR sKey, LPCTSTR sDefault) {
 	if (m_bUserINIExists) {

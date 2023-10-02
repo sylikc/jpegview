@@ -2605,8 +2605,25 @@ bool CMainDlg::PerformZoom(double dValue, bool bExponent, bool bZoomToMouse, boo
 	double dOldZoom = m_dZoom;
 	m_bUserZoom = true;
 	m_isUserFitToScreen = false;
+
 	if (bExponent) {
 		m_dZoom = m_dZoom * pow(m_dZoomMult, dValue);
+
+		bool useZoomSteps = CSettingsProvider::This().UseZoomSteps();
+
+		if (useZoomSteps) {
+			std::vector<double> zoomLevels = CSettingsProvider::This().CustomZoomSteps();
+
+			if (dOldZoom > zoomLevels[0] && dOldZoom < zoomLevels.back()) {
+				if (dValue > 0) {
+					m_dZoom = zoomLevels[distance(zoomLevels.begin(), std::lower_bound(zoomLevels.begin(), zoomLevels.end(), dOldZoom + 0.01))];
+				}
+				else {
+					m_dZoom = zoomLevels[distance(zoomLevels.begin(), std::lower_bound(zoomLevels.begin(), zoomLevels.end(), dOldZoom)) - 1];
+				}
+			}
+		}
+
 	} else {
 		m_dZoom = dValue;
 	}
