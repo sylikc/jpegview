@@ -30,8 +30,29 @@ void* ICCProfileTransform::CreateTransform(const void* profile, unsigned int siz
 
 	// Create transform from embedded profile to sRGB
 	cmsUInt32Number flags = cmsFLAGS_BLACKPOINTCOMPENSATION | cmsFLAGS_COPY_ALPHA;
-	cmsUInt32Number inFormat = (format == FORMAT_BGRA) ? TYPE_BGRA_8 : TYPE_RGBA_8;
-	cmsHTRANSFORM transform = cmsCreateTransform(hInProfile, inFormat, sRGBProfile, TYPE_BGRA_8, INTENT_RELATIVE_COLORIMETRIC, flags);
+	cmsUInt32Number inFormat, outFormat;
+	switch (format) {
+		case FORMAT_BGRA:
+			inFormat = TYPE_BGRA_8;
+			outFormat = TYPE_BGRA_8;
+			break;
+		case FORMAT_RGBA:
+			inFormat = TYPE_RGBA_8;
+			outFormat = TYPE_BGRA_8;
+			break;
+		case FORMAT_BGR:
+			inFormat = TYPE_BGR_8;
+			outFormat = TYPE_BGR_8;
+			break;
+		case FORMAT_RGB:
+			inFormat = TYPE_RGB_8;
+			outFormat = TYPE_BGR_8;
+			break;
+		default:
+			cmsCloseProfile(hInProfile);
+			return NULL;
+	}
+	cmsHTRANSFORM transform = cmsCreateTransform(hInProfile, inFormat, sRGBProfile, outFormat, INTENT_RELATIVE_COLORIMETRIC, flags);
 	cmsCloseProfile(hInProfile);
 	return transform;
 }
@@ -41,10 +62,16 @@ bool ICCProfileTransform::DoTransform(void* transform, const void* inputBuffer, 
 	unsigned int numPixels = width * height;
 	if (transform == NULL || inputBuffer == NULL || outputBuffer == NULL || numPixels == 0 || !CSettingsProvider::This().UseEmbeddedColorProfiles())
 		return false;
+	cmsUInt32Number inFormat = cmsGetTransformInputFormat(transform);
+	int nchannels;
+	if (inFormat == TYPE_BGRA_8 || inFormat == TYPE_RGBA_8) {
+		nchannels = 4;
+	} else {
+		nchannels = 3;
+	}
 	if (stride == 0)
-		cmsDoTransform(transform, inputBuffer, outputBuffer, numPixels);
-	else
-		cmsDoTransformLineStride(transform, inputBuffer, outputBuffer, width, height, stride, width * 4, stride * height, numPixels * 4);
+		stride = width * nchannels;
+	cmsDoTransformLineStride(transform, inputBuffer, outputBuffer, width, height, stride, Helpers::DoPadding(width * nchannels, 4), stride * height, Helpers::DoPadding(width * nchannels, 4) * height);
 	return true;
 }
 
