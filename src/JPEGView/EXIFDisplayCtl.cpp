@@ -177,6 +177,14 @@ void CEXIFDisplayCtl::FillEXIFDataDisplay() {
 					m_pEXIFDisplay->AddLine(CNLS::GetString(_T("Modification date:")), *pFileTime);
 				}
 			}
+			if (pRawMetaData->IsGPSInformationPresent()) {
+				CString sGPSLocation = CreateGPSString(pRawMetaData->GetGPSLatitude(), pRawMetaData->GetGPSLongitude());
+				m_pEXIFDisplay->SetGPSLocation(sGPSLocation, CreateGPSURL(pRawMetaData->GetGPSLatitude(), pRawMetaData->GetGPSLongitude()));
+				m_pEXIFDisplay->AddLine(CNLS::GetString(_T("Location:")), sGPSLocation, true);
+				if (pRawMetaData->IsGPSAltitudePresent()) {
+					m_pEXIFDisplay->AddLine(CNLS::GetString(_T("Altitude (m):")), pRawMetaData->GetGPSAltitude(), 0);
+				}
+			}
 			if (pRawMetaData->GetManufacturer()[0] != 0) {
 				m_pEXIFDisplay->AddLine(CNLS::GetString(_T("Camera model:")), CString(pRawMetaData->GetManufacturer()) + _T(" ") + pRawMetaData->GetModel());
 			}

@@ -516,6 +516,10 @@ void CEXIFReader::ReadGPSData(uint8* pTIFFHeader, uint8* pTagGPSIFD, int nApp1Si
 	uint8* pTagAltitude = FindTag(pGPSIFD, pLastGPS, 0x6, bLittleEndian);
 	if (pTagAltitude != NULL) {
 		m_dAltitude = ReadDoubleTag(pTagAltitude, pTIFFHeader, bLittleEndian);
+		uint8* pTagAltitudeRef = FindTag(pGPSIFD, pLastGPS, 0x5, bLittleEndian);
+		if (pTagAltitudeRef != NULL && *(pTagAltitudeRef + 8) == 1) {
+			m_dAltitude *= -1;
+		}
 	}
 }
 

@@ -35,3 +35,6 @@
 [submodule "extras/third_party/Little-CMS"]
 	path = extras/third_party/Little-CMS
 	url = https://github.com/mm2/Little-CMS
+[submodule "extras/third_party/LibRaw"]
+	path = extras/third_party/LibRaw
+	url = https://github.com/LibRaw/LibRaw/

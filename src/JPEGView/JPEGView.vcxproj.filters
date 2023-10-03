@@ -288,6 +288,9 @@
     <ClCompile Include="PSDWrapper.cpp">
       <Filter>Source Files\Image Types</Filter>
     </ClCompile>
+    <ClCompile Include="RAWWrapper.cpp">
+      <Filter>Source Files\Image Types</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BasicProcessing.h">
@@ -555,6 +558,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="PSDWrapper.h">
+      <Filter>Header Files\Image Types</Filter>
+    </ClInclude>
+    <ClInclude Include="RAWWrapper.h">
       <Filter>Header Files\Image Types</Filter>
     </ClInclude>
   </ItemGroup>
