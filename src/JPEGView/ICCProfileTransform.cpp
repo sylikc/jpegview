@@ -59,6 +59,9 @@ void* ICCProfileTransform::CreateTransform(const void* profile, unsigned int siz
 
 bool ICCProfileTransform::DoTransform(void* transform, const void* inputBuffer, void* outputBuffer, unsigned int width, unsigned int height, unsigned int stride)
 {
+	unsigned int numPixels = width * height;
+	if (transform == NULL || inputBuffer == NULL || outputBuffer == NULL || numPixels == 0 || !CSettingsProvider::This().UseEmbeddedColorProfiles())
+		return false;
 	cmsUInt32Number inFormat = cmsGetTransformInputFormat(transform);
 	int nchannels;
 	if (inFormat == TYPE_BGRA_8 || inFormat == TYPE_RGBA_8) {
@@ -66,9 +69,6 @@ bool ICCProfileTransform::DoTransform(void* transform, const void* inputBuffer, 
 	} else {
 		nchannels = 3;
 	}
-	unsigned int numPixels = width * height;
-	if (transform == NULL || inputBuffer == NULL || outputBuffer == NULL || numPixels == 0 || !CSettingsProvider::This().UseEmbeddedColorProfiles())
-		return false;
 	if (stride == 0)
 		stride = width * nchannels;
 	cmsDoTransformLineStride(transform, inputBuffer, outputBuffer, width, height, stride, Helpers::DoPadding(width * nchannels, 4), stride * height, Helpers::DoPadding(width * nchannels, 4) * height);
