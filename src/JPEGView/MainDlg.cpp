@@ -34,6 +34,7 @@
 #include "ResizeFilter.h"
 #include "EXIFReader.h"
 #include "EXIFHelpers.h"
+#include "RawMetadata.h"
 #include "ProcessingThreadPool.h"
 #include "PaintMemDCMgr.h"
 #include "PanelMgr.h"
@@ -3233,8 +3234,11 @@ void CMainDlg::UpdateWindowTitle() {
 		sWindowText += Helpers::GetMultiframeIndex(m_pCurrentImage);
 		if (CSettingsProvider::This().ShowEXIFDateInTitle()) {
 			CEXIFReader* pEXIF = m_pCurrentImage->GetEXIFReader();
+			CRawMetadata* pRawMetadata = m_pCurrentImage->GetRawMetadata();
 			if (pEXIF != NULL && pEXIF->GetAcquisitionTime().wYear > 1600) {
 				sWindowText += " - " + Helpers::SystemTimeToString(pEXIF->GetAcquisitionTime());
+			} else if (pRawMetadata != NULL && pRawMetadata->GetAcquisitionTime().wYear > 1985) {
+				sWindowText += " - " + Helpers::SystemTimeToString(pRawMetadata->GetAcquisitionTime());
 			}
 		}
 		sWindowText += " - " + CString(JPEGVIEW_TITLE);
