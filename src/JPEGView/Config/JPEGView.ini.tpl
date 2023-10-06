@@ -32,7 +32,7 @@ FileEndingsRAW=*.pef;*.dng;*.crw;*.nef;*.cr2;*.mrw;*.rw2;*.orf;*.x3f;*.arw;*.kdc
 ; 1: open full size
 ; 2: open thumbnail, fallback to full size
 ; 3: open full size, fallback to thumbnail
-GetFullsizeRAW=0
+DisplayFullSizeRAW=0
 
 ; Set to true to keep the zoom, pan, contrast, gamma, sharpen and rotation setting between the images
 KeepParameters=false

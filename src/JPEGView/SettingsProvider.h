@@ -79,7 +79,7 @@ public:
 	LPCTSTR FilesProcessedByWIC() { return m_sFilesProcessedByWIC; }
 	LPCTSTR FileEndingsRAW() { return m_sFileEndingsRAW; }
 	void AddTemporaryRAWFileEnding(LPCTSTR sEnding) { m_sFileEndingsRAW += CString(_T(";*.")) + sEnding; }
-	int GetFullsizeRAW() { return m_nGetFullsizeRAW; }
+	int DisplayFullSizeRAW() { return m_nDisplayFullSizeRAW; }
 	bool CreateParamDBEntryOnSave() { return m_bCreateParamDBEntryOnSave; }
 	bool SaveWithoutPrompt() { return m_bSaveWithoutPrompt; }
 	bool CropWithoutPromptLosslessJPEG() { return m_bCropWithoutPromptLosslessJPEG; }
@@ -246,7 +246,7 @@ private:
 	CString m_sDefaultSaveFormat;
 	CString m_sFilesProcessedByWIC;
 	CString m_sFileEndingsRAW;
-	int m_nGetFullsizeRAW;
+	int m_nDisplayFullSizeRAW;
 	bool m_bCreateParamDBEntryOnSave;
 	bool m_bWrapAroundFolder;
 	bool m_bSaveWithoutPrompt;
