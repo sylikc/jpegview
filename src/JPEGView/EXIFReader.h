@@ -57,10 +57,15 @@ public:
 	LPCTSTR GetCameraModel() { return m_sModel; }
 	LPCTSTR GetUserComment() { return m_sUserComment; }
 	LPCTSTR GetImageDescription() { return m_sImageDescription; }
+	LPCTSTR GetSoftware() { return m_sSoftware; }
 	bool GetCameraModelPresent() { return !m_sModel.IsEmpty(); }
+	bool GetSoftwarePresent() { return !m_sSoftware.IsEmpty(); }
 	// Date-time the picture was taken
 	const SYSTEMTIME& GetAcquisitionTime() { return m_acqDate; }
 	bool GetAcquisitionTimePresent() { return m_acqDate.wYear > 1600; }
+	// Date-time the picture was saved/modified (used by editing software)
+	const SYSTEMTIME& GetDateTime() { return m_dateTime; }
+	bool GetDateTimePresent() { return m_dateTime.wYear > 1600; }
 	// Exposure time
 	const Rational& GetExposureTime() { return m_exposureTime; }
 	bool GetExposureTimePresent() { return m_exposureTime.Denominator != 0; }
@@ -114,7 +119,9 @@ private:
 	CString m_sModel;
 	CString m_sUserComment;
 	CString m_sImageDescription;
+	CString m_sSoftware;
 	SYSTEMTIME m_acqDate;
+	SYSTEMTIME m_dateTime;
 	Rational m_exposureTime;
 	double m_dExposureBias;
 	bool m_bFlashFired;

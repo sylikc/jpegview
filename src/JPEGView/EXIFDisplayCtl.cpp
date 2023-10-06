@@ -126,6 +126,8 @@ void CEXIFDisplayCtl::FillEXIFDataDisplay() {
 			}
 			if (pEXIFReader->GetAcquisitionTimePresent()) {
 				m_pEXIFDisplay->AddLine(CNLS::GetString(_T("Acquisition date:")), pEXIFReader->GetAcquisitionTime());
+			} else if (pEXIFReader->GetDateTimePresent()) {
+				m_pEXIFDisplay->AddLine(CNLS::GetString(_T("Date Time:")), pEXIFReader->GetDateTime());
 			} else {
 				const FILETIME* pFileTime = pFileList->CurrentModificationTime();
 				if (pFileTime != NULL) {
@@ -160,6 +162,9 @@ void CEXIFDisplayCtl::FillEXIFDataDisplay() {
 			}
 			if (pEXIFReader->GetISOSpeedPresent()) {
 				m_pEXIFDisplay->AddLine(CNLS::GetString(_T("ISO Speed:")), (int)pEXIFReader->GetISOSpeed());
+			}
+			if (pEXIFReader->GetSoftwarePresent()) {
+				m_pEXIFDisplay->AddLine(CNLS::GetString(_T("Software:")), pEXIFReader->GetSoftware());
 			}
 		}
 		else if (pRawMetaData != NULL) {

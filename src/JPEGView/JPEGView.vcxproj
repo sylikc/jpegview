@@ -336,6 +336,7 @@
     <ClCompile Include="PrintDlg.cpp" />
     <ClCompile Include="PrintImage.cpp" />
     <ClCompile Include="ProcessingThreadPool.cpp" />
+    <ClCompile Include="PSDWrapper.cpp" />
     <ClCompile Include="QOIWrapper.cpp" />
     <ClCompile Include="RAWWrapper.cpp" />
     <ClCompile Include="ReaderBMP.cpp" />
@@ -430,6 +431,7 @@
     <ClInclude Include="PrintParameters.h" />
     <ClInclude Include="ProcessingThreadPool.h" />
     <ClInclude Include="ProcessParams.h" />
+    <ClInclude Include="PSDWrapper.h" />
     <ClInclude Include="QOIWrapper.h" />
     <ClInclude Include="RawMetadata.h" />
     <ClInclude Include="RAWWrapper.h" />

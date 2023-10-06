@@ -245,6 +245,7 @@ CEXIFReader::CEXIFReader(void* pApp1Block, EImageFormat eImageFormat)
 : m_exposureTime(0, 0) {
 
 	memset(&m_acqDate, 0, sizeof(SYSTEMTIME));
+	memset(&m_dateTime, 0, sizeof(SYSTEMTIME));
 	m_bFlashFired = false;
 	m_bFlashFlagPresent = false;
 	m_dFocalLength = m_dExposureBias = m_dFNumber = UNKNOWN_DOUBLE_VALUE;
@@ -326,6 +327,14 @@ CEXIFReader::CEXIFReader(void* pApp1Block, EImageFormat eImageFormat)
 			}
 		}
 	}
+
+	uint8* pTagSoftware = FindTag(pIFD0, pLastIFD0, 0x0131, bLittleEndian);
+	ReadStringTag(m_sSoftware, pTagSoftware, pTIFFHeader, bLittleEndian);
+
+	uint8* pTagModDate = FindTag(pIFD0, pLastIFD0, 0x0132, bLittleEndian);
+	CString sModDate;
+	ReadStringTag(sModDate, pTagModDate, pTIFFHeader, bLittleEndian);
+	ParseDateString(m_dateTime, sModDate);
 
 	uint8* pTagEXIFIFD = FindTag(pIFD0, pLastIFD0, 0x8769, bLittleEndian);
 	if (pTagEXIFIFD == NULL) {
