@@ -176,6 +176,14 @@ StickyWindowRect=
 ; Минимальный размер окна в оконном режиме (в пикселах).
 MinimalWindowSize=320 240
 
+; If set to 'true', window starts in borderless mode (title bar hidden, cannot be manually resized)
+; The window mode can be changed after startup
+WindowBorderlessOnStartup=false
+
+; If set to 'true', window starts in always-on-top mode (window will always be visible on top of other windows)
+; The window mode can be changed after startup
+WindowAlwaysOnTopOnStartup=false
+
 ; -----------------------------------------------
 ; - ПАНЕЛИ УПРАВЛЕНИЯ ИЗОБРАЖЕНИЕМ
 ; -----------------------------------------------

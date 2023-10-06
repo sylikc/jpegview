@@ -265,8 +265,8 @@ CMainDlg::CMainDlg(bool bForceFullScreen) {
 	m_dLastImageDisplayTime = 0.0;
 	m_isUserFitToScreen = false;
 	m_autoZoomFitToScreen = Helpers::ZM_FillScreen;
-	m_bWindowBorderless = false;  // default real window with border
-	m_bAlwaysOnTop = false;  // default normal
+	m_bWindowBorderless = sp.WindowBorderlessOnStartup();
+	m_bAlwaysOnTop = false;  // default normal window.  this will be set to true when AlwaysOnTop is actually set using SetWindowPos()
 	m_bSelectZoom = false;  // this value is set when LButtonDown happens, to be read by LButtonUp
 
 	m_pPanelMgr = new CPanelMgr();
@@ -410,6 +410,15 @@ LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam
 		SetWindowLong(GWL_STYLE, WS_VISIBLE);
 		SetWindowPos(HWND_TOP, &m_monitorRect, SWP_NOZORDER);
 		SetWindowPos(NULL, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_NOCOPYBITS | SWP_FRAMECHANGED);
+	}
+
+	if (CSettingsProvider::This().WindowAlwaysOnTopOnStartup()) {
+		// if set by default for startup
+		this->SetWindowPos(HWND_TOPMOST,
+			0, 0, 0, 0,
+			SWP_NOMOVE | SWP_NOSIZE
+		);
+		m_bAlwaysOnTop = true;  // make sure it's explicitly set here when changing
 	}
 
 	m_bLockPaint = false;
