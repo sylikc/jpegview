@@ -8,6 +8,8 @@ public:
 		FORMAT_RGBA,
 		FORMAT_BGR,
 		FORMAT_RGB,
+		FORMAT_Lab,
+		FORMAT_ALab,
 	};
 
 	// Create a transform from given ICC Profile to standard sRGB color space.
@@ -29,6 +31,8 @@ public:
 
 	// Free memory associated with the given transform
 	static void DeleteTransform(void* transform);
+
+	static void* CreateLabTransform(PixelFormat format);
 
 private:
 	static void* sRGBProfile;

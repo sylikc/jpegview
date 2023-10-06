@@ -64,10 +64,19 @@ bool ICCProfileTransform::DoTransform(void* transform, const void* inputBuffer, 
 		return false;
 	cmsUInt32Number inFormat = cmsGetTransformInputFormat(transform);
 	int nchannels;
-	if (inFormat == TYPE_BGRA_8 || inFormat == TYPE_RGBA_8) {
-		nchannels = 4;
-	} else {
-		nchannels = 3;
+	switch (inFormat) {
+		case TYPE_BGRA_8:
+		case TYPE_RGBA_8:
+		case TYPE_ALab_8:
+			nchannels = 4;
+			break;
+		case TYPE_BGR_8:
+		case TYPE_RGB_8:
+		case TYPE_Lab_8:
+			nchannels = 3;
+			break;
+		default:
+			return false;
 	}
 	if (stride == 0)
 		stride = width * nchannels;
@@ -81,6 +90,39 @@ void ICCProfileTransform::DeleteTransform(void* transform)
 		cmsDeleteTransform(transform);
 }
 
+void* ICCProfileTransform::CreateLabTransform(PixelFormat format) {
+	cmsHTRANSFORM transform = NULL;
+	cmsHPROFILE hLabProfile = NULL;
+	try {
+		hLabProfile = cmsCreateLab4Profile(cmsD50_xyY());
+		if (sRGBProfile == NULL) {
+			sRGBProfile = cmsCreate_sRGBProfile();
+		}
+	} catch (...) {}
+
+	if (hLabProfile == NULL || sRGBProfile == NULL)
+		return NULL; // Could not create profile
+
+	// Create transform from CIELAB D50 (Photoshop "Lab mode") to sRGB
+	cmsUInt32Number flags = cmsFLAGS_BLACKPOINTCOMPENSATION | cmsFLAGS_COPY_ALPHA;
+	cmsUInt32Number inFormat, outFormat;
+	switch (format) {
+		case FORMAT_Lab:
+			inFormat = TYPE_Lab_8;
+			outFormat = TYPE_BGR_8;
+			break;
+		case FORMAT_ALab:
+			inFormat = TYPE_ALab_8;
+			outFormat = TYPE_ABGR_8;
+			break;
+		default:
+			cmsCloseProfile(hLabProfile);
+			return NULL;
+	}
+	transform = cmsCreateTransform(hLabProfile, inFormat, sRGBProfile, outFormat, INTENT_RELATIVE_COLORIMETRIC, flags);
+	cmsCloseProfile(hLabProfile);
+	return transform;
+}
 
 #else
 
@@ -95,5 +137,9 @@ bool ICCProfileTransform::DoTransform(void* /* transform */, const void* /* inpu
 }
 
 void ICCProfileTransform::DeleteTransform(void* /* transform */) { }
+
+void* ICCProfileTransform::CreateLabTransform() {
+	return NULL;
+}
 
 #endif
