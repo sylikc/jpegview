@@ -265,8 +265,8 @@ CMainDlg::CMainDlg(bool bForceFullScreen) {
 	m_dLastImageDisplayTime = 0.0;
 	m_isUserFitToScreen = false;
 	m_autoZoomFitToScreen = Helpers::ZM_FillScreen;
-	m_bWindowBorderless = sp.WindowBorderlessOnStartup();
-	m_bAlwaysOnTop = false;  // default normal window.  this will be set to true when AlwaysOnTop is actually set using SetWindowPos()
+	m_bWindowBorderless = sp.WindowBorderlessOnStartup();  // unlike AlwaysOnTop, this is set early on initialize as it affects calculations of the window size, position, etc
+	m_bAlwaysOnTop = false;  // default normal window.  this will be set to true when AlwaysOnTop is toggled if set to startup in INI
 	m_bSelectZoom = false;  // this value is set when LButtonDown happens, to be read by LButtonUp
 
 	m_pPanelMgr = new CPanelMgr();
@@ -413,12 +413,8 @@ LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam
 	}
 
 	if (CSettingsProvider::This().WindowAlwaysOnTopOnStartup()) {
-		// if set by default for startup
-		this->SetWindowPos(HWND_TOPMOST,
-			0, 0, 0, 0,
-			SWP_NOMOVE | SWP_NOSIZE
-		);
-		m_bAlwaysOnTop = true;  // make sure it's explicitly set here when changing
+		// if set by default for startup ... it is false by default, toggle = true
+		ToggleAlwaysOnTop();
 	}
 
 	m_bLockPaint = false;
@@ -1833,14 +1829,7 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 
 			break;
 		case IDM_ALWAYS_ON_TOP:
-			m_bAlwaysOnTop = !m_bAlwaysOnTop;
-
-			// SetWindowPos - https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setwindowpos
-			this->SetWindowPos(
-				m_bAlwaysOnTop ? HWND_TOPMOST : HWND_NOTOPMOST,
-				0, 0, 0, 0,
-				SWP_NOMOVE | SWP_NOSIZE  // causes SetWindowPos to ignore the parameters for top/left/width/height
-			);
+			ToggleAlwaysOnTop();
 
 			break;
 		case IDM_FIT_WINDOW_TO_IMAGE:
@@ -3521,4 +3510,17 @@ void CMainDlg::StopAnimation() {
 	}
 	::KillTimer(this->m_hWnd, ANIMATION_TIMER_EVENT_ID);
 	m_bIsAnimationPlaying = false;
+}
+
+void CMainDlg::ToggleAlwaysOnTop() {
+	// toggle the member variable and call the SetWindowPos to set
+	m_bAlwaysOnTop = !m_bAlwaysOnTop;
+
+	// SetWindowPos - https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setwindowpos
+	this->SetWindowPos(
+		m_bAlwaysOnTop ? HWND_TOPMOST : HWND_NOTOPMOST,
+		0, 0, 0, 0,
+		SWP_NOMOVE | SWP_NOSIZE  // causes SetWindowPos to ignore the parameters for top/left/width/height
+	);
+
 }
