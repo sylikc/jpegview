@@ -29,13 +29,4 @@ Legacy Solution files
 NOTE: after the tag "last-cpp14-code", there is code that requires C++17.  This code will not work on previous versions of Visual Studio.
       An #ifdef is used to disable that feature when compiling for standard below C++17
 
-Older solution files are no longer maintained.  They have been preserved for other devs who may be using older build environments.
-
-- Visual Studio 2013 professional (JPEGView 32 and 64 bit versions supported)
-- Visual Studio 2010 (JPEGView 32 bit version supported)
-
-To build on these older solutions, you must point to the WTL directory:
-
-The include directories of WTL must be added to the include directories for VC++:
-In Visual Studio: Properties of JPEGView project > VC++-Directories-Include Directories and Library Directories
-                  Include Directories: $(VCInstallDir)WTL\Include;$(IncludePath)
+Older solution files have been removed from the source tree.  If you still need them, clone the tag v1.2.45
