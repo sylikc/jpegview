@@ -24,21 +24,24 @@
 	<!-- 32-bit / 64-bit variables -->
 	<?if $(var.Platform) = x64 ?>
 		<?define Win64 = "yes" ?>
+		<?define DllBinFolder = "bin64" ?>
+
 		<?define PlatformProgramFilesFolder = "ProgramFiles64Folder" ?>
 		<?define JPEGViewExeSourcePath = "$(var.JPEGView.ProjectDir)\x64\Release\JPEGView.exe" ?>
-		<?define JxlDllFolder = "$(var.JPEGView.ProjectDir)\libjxl\bin64" ?>
-		<?define HeifDllFolder = "$(var.JPEGView.ProjectDir)\libheif\bin64" ?>
-		<?define AvifDllFolder = "$(var.JPEGView.ProjectDir)\libavif\bin64" ?>
-		<?define LcmsDllFolder = "$(var.JPEGView.ProjectDir)\lcms2\bin64" ?>
 	<?else ?>
 		<?define Win64 = "no" ?>
+		<?define DllBinFolder = "bin" ?>
+
 		<?define PlatformProgramFilesFolder = "ProgramFilesFolder" ?>
 		<?define JPEGViewExeSourcePath = "$(var.JPEGView.ProjectDir)\x86\Release\JPEGView.exe" ?>
-		<?define JxlDllFolder = "$(var.JPEGView.ProjectDir)\libjxl\bin" ?>
-		<?define HeifDllFolder = "$(var.JPEGView.ProjectDir)\libheif\bin" ?>
-		<?define AvifDllFolder = "$(var.JPEGView.ProjectDir)\libavif\bin" ?>
-		<?define LcmsDllFolder = "$(var.JPEGView.ProjectDir)\lcms2\bin" ?>
 	<?endif ?>
+
+	<!-- the bin/bin64 folders are consistently named/used in the source, so it's a predictable pattern -->
+	<?define JxlDllFolder = "$(var.JPEGView.ProjectDir)\libjxl\$(var.DllBinFolder)" ?>
+	<?define HeifDllFolder = "$(var.JPEGView.ProjectDir)\libheif\$(var.DllBinFolder)" ?>
+	<?define AvifDllFolder = "$(var.JPEGView.ProjectDir)\libavif\$(var.DllBinFolder)" ?>
+	<?define LcmsDllFolder = "$(var.JPEGView.ProjectDir)\lcms2\$(var.DllBinFolder)" ?>
+	<?define RawDllFolder = "$(var.JPEGView.ProjectDir)\libraw\$(var.DllBinFolder)" ?>
 
 	<!--
 		====================================================================================
@@ -196,11 +199,18 @@
 
 		<Feature Id="ProductFeature" Title="JPEGView" Level="1" Display="expand">
 			<!-- <ComponentGroupRef Id="ProductComponents" /> -->
+			<!-- required JPEGView main component -->
 			<Feature Id="JPEGViewMain" Title="JPEGView" Absent="disallow">
 				<ComponentRef Id="APPLICATIONFOLDER_comp"/>
 				<ComponentRef Id="JPEGViewExe"/>
 				<ComponentRef Id="NavPanel.png"/>
 			</Feature>
+
+			<!-- "optional" DLLs which add support for dynamically linked formats -->
+			<!-- while JPEGView runs fine without the DLLs,
+				it has code which assumes these DLLs exist,
+				so strange behaviors may occur if they're not installed
+			-->
 			<Feature Id="FeatureJXL" Title="JPEG XL Support">
 				<ComponentRef Id="brotlicommonDLL"/>
 				<ComponentRef Id="brotlidecDLL"/>
@@ -213,6 +223,10 @@
 				<ComponentRef Id="heifDLL"/>
 				<ComponentRef Id="avifDLL"/>
 			</Feature>
+			<!-- dcraw is compiled into JPEGView, but doesn't support the latest (newer) camera formats -->
+			<Feature Id="FeatureRAW" Title="Camera RAW Files Support (newer cameras)">
+				<ComponentRef Id="rawDLL"/>
+			</Feature>
 			<Feature Id="FeatureLCMS" Title="ICC Profile Support (WebP, JPEG XL, HEIF/HEIC/AVIF)">
 				<ComponentRef Id="lcmsDLL"/>
 			</Feature>
@@ -220,6 +234,8 @@
 			<Feature Id="FeatureWIC" Title="WIC Support">
 				<ComponentRef Id="WICLoaderDLL"/>
 			</Feature>
+
+			<!-- config files which are required to operate -->
 			<Feature Id="ConfigFiles" Title="Config Files" Absent="disallow">
 				<ComponentRef Id="JPEGView.ini"/>
 				<ComponentRef Id="JPEGView.ini.tpl"/>
@@ -499,9 +515,15 @@
 					</Component>
 
 
-					<!-- DLLs required for ICC Profile support (WebP, JXL, HEIF/HEIC/AVIF) -->
+					<!-- DLL required for ICC Profile support (WebP, JXL, HEIF/HEIC/AVIF) -->
 					<Component Id="lcmsDLL" Guid="2a7a5f9a-4100-4eee-8706-a6b9a2a8cf5c">
 						<File Id="lcms2.dll" Name="lcms2.dll" Source="$(var.LcmsDllFolder)\lcms2.dll" />
+					</Component>
+
+
+					<!-- DLL required for RAW Files support (newer cameras using LibRaw) -->
+					<Component Id="rawDLL" Guid="e469088b-ab00-43cd-a5eb-57f09a6cc3b2">
+						<File Id="libraw.dll" Name="libraw.dll" Source="$(var.RawDllFolder)\libraw.dll" />
 					</Component>
 
 
