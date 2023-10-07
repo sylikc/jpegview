@@ -127,7 +127,7 @@ void CEXIFDisplayCtl::FillEXIFDataDisplay() {
 			if (pEXIFReader->GetAcquisitionTimePresent()) {
 				m_pEXIFDisplay->AddLine(CNLS::GetString(_T("Acquisition date:")), pEXIFReader->GetAcquisitionTime());
 			} else if (pEXIFReader->GetDateTimePresent()) {
-				m_pEXIFDisplay->AddLine(CNLS::GetString(_T("Date Time:")), pEXIFReader->GetDateTime());
+				m_pEXIFDisplay->AddLine(CNLS::GetString(_T("Exif Date Time:")), pEXIFReader->GetDateTime());
 			} else {
 				const FILETIME* pFileTime = pFileList->CurrentModificationTime();
 				if (pFileTime != NULL) {
