@@ -70,6 +70,11 @@ runs:
           src/JPEGView/libjxl/lib/*.lib
           src/JPEGView/libjxl/lib64/*.lib
 
+          src/JPEGView/libraw/bin/*.dll
+          src/JPEGView/libraw/bin64/*.dll
+          src/JPEGView/libraw/lib/*.lib
+          src/JPEGView/libraw/lib64/*.lib
+
     # cache prevents the rebuild-all to happen twice, since each invocation of the workflow (once for x86, once for x64) causes a rebuild
 
     # the cache-hit based on documentation is a string, not a boolean, hence why it looks so funky below
@@ -110,6 +115,11 @@ runs:
       if: ${{ steps.cache-bin.outputs.cache-hit != 'true' }}
       shell: cmd
       run: call extras\scripts\build-libheif_libavif.bat
+
+    - name: libraw
+      if: ${{ steps.cache-bin.outputs.cache-hit != 'true' }}
+      shell: cmd
+      run: call extras\scripts\build-libraw.bat
 
     # put this last since it takes the longest to build
     - name: libjxl
