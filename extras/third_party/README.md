@@ -7,7 +7,7 @@ The compiled binaries to these sources are included in JPEGView source, so these
 To clone all the versions specified, use the following command:
 `git submodule update --init --recursive`
 
-_FYI: Each submodule depedency has a build script located in `extras\scripts`.  The build instructions below may possibly be outdated._
+_FYI: Each submodule depedency has a build script located in `extras\scripts`.  Any build instructions below are likely to be outdated._
 
 A brief description along with the licenses for each are included below.  Some have their own submodules or linked libraries.
 

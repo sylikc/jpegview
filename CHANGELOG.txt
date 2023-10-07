@@ -1,19 +1,91 @@
 JPEGView Changelog
 ******************
 
+[1.3.46] 2023-10-07
+New features:
+- Add support for more RAW image formats with LibRaw, ex: CR3 (ICC profiles are supported)
+  PR #211, thanks qbnu (GH https://github.com/qbnu)
+- Add basic support for PSD (Adobe Photoshop Document)
+  Color modes supported: Grayscale, RGB, CMYK, Multichannel, Duotone, Lab
+  8-bit depth PSDs only
+  Compression modes supported: Raw/Uncompressed, RLE
+  (See PR for detailed supported/unsupported breakdown)
+  PR #233, thanks qbnu (GH https://github.com/qbnu)
+- Add support for reading EXIF data from JXL, HEIF, AVIF, WebP and PNG files
+  PR #213, thanks qbnu (GH https://github.com/qbnu)
+- Misc EXIF Metadata fixes:
+  * GPS info parsed from RAW metadata
+  * GPS coordinates in degrees+decimal minutes will now be converted to degrees+minutes+seconds
+  * Altitudes below sea level will now show negative
+  * Metadata will be shown for either RAW or JPEG, with RAW taking precedence
+  PR #211, thanks qbnu (GH https://github.com/qbnu)
+- RAW metadata's acquisition date shown in window title
+  PR #242, thanks qbnu (GH https://github.com/qbnu)
+- Add multithreading when decoding with libavif and reduced memory usage
+  Up to ~20% decoding speed improvement
+  PR #204, thanks qbnu (GH https://github.com/qbnu)
+- Optimize JXL and HEIF RGBA -> BGRA conversion
+  Speed up ~25% for JXL and ~150% for HEIF
+  PR #234, thanks qbnu (GH https://github.com/qbnu)
+- New INI file setting: "WindowBorderlessOnStartup"
+  On startup, set JPEGView window to borderless mode (title bar hidden)
+- New INI file setting: "WindowAlwaysOnTopOnStartup"
+  On startup, set JPEGView window to be always on top
+Bugs fixed:
+- Adjust animation frame times to appear closer to their actual values
+  Accounts for time spent processing frame.  (Minimum frame time is 10ms due to technical limitations)
+  PR #205, thanks qbnu (GH https://github.com/qbnu)
+Changed behavior:
+- INI Option: "UseEmbeddedColorProfiles"=true can be used without losing aPNG support
+  ICC profiles are not supported for Animated PNG
+  PR #202, thanks qbnu (GH https://github.com/qbnu)
+- Renamed INI Option: "OverrideOriginalFileWithoutSaveDialog" -> "OverwriteOriginalFileWithoutSaveDialog"
+  (`overwrite`, not `override` the file)
+- Renamed INI Option: "TrimWithoutPromptLosslessJPEG" -> "CropWithoutPromptLosslessJPEG"
+  (`crop` is the common image term, even if `trim` is used internally in some libraries)
+Other changes:
+- Updated to library versions:
+  * libavif 1.0.1
+  * libde265 1.0.12
+  * libjxl 5d20fbe
+  * libpng 1.6.40
+  * libwebp 1.3.2 (Fixes CVE-2023-4863)
+  * zlib 1.3
+  PR #235, thanks qbnu (GH https://github.com/qbnu)
+- Official scoop.sh support in bucket `extras/jpegview-fork`
+  PR #223, thanks Tim Martin (GH https://github.com/t-mart)
+Localization updates:
+- New language: "sl" Slovenian, thanks Jadran Rudec
+- New language: "tr" Turkish, thanks Kaya Zeren
+- New language: "bg" Bulgarian, thanks Ivan Georgiev
+- New translation: "sr" Serbian, thanks Ljuba Cirovic
+- New translation: "hu" Hungarian, thanks József Ujvári
+- New translation: "fi" Finnish, thanks Kari Eveli
+- New translation: "sk" Slovak, thanks Marián Hikaník
+- New translation: "ta" Tamil, thanks Nirmal G.
+- Updated Japanese translation, thanks maboroshin (GH https://github.com/maboroshin)
+- Updated Korean translation, thanks VenusGirl (GH https://github.com/VenusGirl)
+- Updated Russian translation, thanks Dmitry Yerokhin
+- Updated Chinese (Taiwan) translation, by converting chs -> cht
+- Updated French translation, thanks Ronan Plantec
+- Updated Greek translation, thanks Michalis
+- Updated Polish translation, thanks Marcin Czerwien
+- Rename INI option: "bel" -> "be" (official ISO 639-1 naming)
+- Rename language: "Belorussian" to "Belarusian" (officially renamed in 1991)
+
 [1.2.45] 2023-03-04
 New features:
 - Add support for ICC Profiles embedded in WebP, JPEG XL, HEIF/HEIC and AVIF images.
-  Set option UseEmbeddedColorProfiles=true to enable.
-  NOTE: Currently, this option will disable Animated PNG due to usage of GDI+ (see 1.1.44 release notes)
+  Set INI option UseEmbeddedColorProfiles=true to enable.
+  NOTE: Currently, this option will disable Animated PNG support due to usage of GDI+ (see 1.1.44 release notes)
   PR #156, thanks qbnu (GH https://github.com/qbnu)
 Bugs fixed:
-- Fixed: Freeze in JPEGView when CPUType set/auto-detected as AVX2, HighQualityResampling=true, and window width is > 3200 pixels (either spanned over multi-monitor or on a single monitor).
+- Fixed: Freeze in JPEGView when "CPUType" set/auto-detected as AVX2, HighQualityResampling=true, and window width is > 3200 pixels (either spanned over multi-monitor or on a single monitor).
   (This outstanding bug had been extensively reported since v1.0.35+.  Thanks to everyone who provided samples, videos, and system configurations to help identify the specific conditions necessary to trigger this bug!)
 - Fixed: Regression introduced in 1.1.44 which caused "Fit Image to Screen" to create a tiny window
   instead of a window which filled the screen.
 - Fixed: In certain cases with certain image, after zooming out to 0% (as far as allowed), zooming in did not work and got stuck at 0%
-- Fixed: FileNameFormat option %filesize% substitution now shows MB when exceeding 1 MB, not 100 MB
+- Fixed: "FileNameFormat" INI option "%filesize%" substitution now shows MB when exceeding 1 MB, not 100 MB
 Other changes:
 - Updated French translation, thanks LaurentGrenet (GH https://github.com/LaurentGrenet)
 
@@ -37,10 +109,11 @@ New features:
   (Effectively doubles the aspect ratios natively supported into portrait orientations)
 Bugs fixed:
 - Fixed: Transparency color for some image types was reversed BGR
+  PR #145, thanks qbnu (GH https://github.com/qbnu)
 - Fixed: TGA used background color for transparency instead of transparency color
 - When viewing the last frame of a multi-frame image, at the end of the file list, with option WrapAroundFolder=false, attempting to navigate to the next frame will no longer loop back to frame 0
 Changed behavior:
-- Restores ICC Profile support for PNGs by using GDI+ when ForceGDIPlus=true or UseEmbeddedColorProfiles=true options set.  NOTE: Disables animation.
+- Restores ICC Profile support for PNGs by using GDI+ when ForceGDIPlus=true or UseEmbeddedColorProfiles=true options set.  NOTE: Disables animated PNG support.
   PR #149, thanks qbnu (GH https://github.com/qbnu)
 - When cursor is visible (not in full screen) always zoom to cursor when executing command IDM_TOGGLE_FIT_TO_SCREEN_100_PERCENTS (Spacebar by default)
   Previous behavior: Always zoomed to center when a new image was loaded
@@ -65,7 +138,7 @@ Other changes:
 - Second part of movie/slideshow menus now translatable
 - Updated to Turbo JPEG library version 2.1.91 (2023-02-08)
 - Updated to JPEG XL library version 0.8.1 (2023-02-03)
-- Devs: Translation scripts to sync with code, regenerate at any time, and added some features to make translating easier, like missing and historic text
+- Devs: Translation scripts to sync with code, regenerate at any time, and added some features to make translating easier, like missing and unused text
 Installer Changes:
 - Add all built-in supported file extensions to Window's "Open With >" submenu
 - Add "Edit with JPEGView" option to Windows Explorer for all extensions JPEGView can save to
