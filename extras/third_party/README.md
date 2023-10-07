@@ -155,3 +155,11 @@ Quite OK Image Format
 License: [MIT License](https://github.com/phoboslab/qoi/blob/master/LICENSE)
 
 QOI source is directly compiled into JPEGView with no binary dependencies.  This submodule indicates the version that is included in JPEGView.
+
+## LibRaw
+
+LibRaw - Library for reading and processing of RAW digicam images
+
+It is built and included in `src\JPEGView\libraw`
+
+License: Either [GNU Lesser General Public License v2.1](https://github.com/LibRaw/LibRaw/blob/master/LICENSE.LGPL) or [Common Development and Distribution License (CDDL) v1.0](https://github.com/LibRaw/LibRaw/blob/master/LICENSE.CDDL)
