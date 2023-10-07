@@ -1760,7 +1760,13 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 				SetIcon(hIconSmall, FALSE);
 				CRect defaultWindowRect = CMultiMonitorSupport::GetDefaultWindowRect();
 				double dZoom = -1;
-				windowRect = sp.ExplicitWindowRect() ? defaultWindowRect : Helpers::GetWindowRectMatchingImageSize(m_hWnd, CSize(MIN_WND_WIDTH, MIN_WND_HEIGHT), defaultWindowRect.Size(), dZoom, m_pCurrentImage, false, true, m_bWindowBorderless);
+				windowRect = sp.ExplicitWindowRect() ?
+					defaultWindowRect :
+					Helpers::GetWindowRectMatchingImageSize(
+						m_hWnd,
+						CSize(MIN_WND_WIDTH, MIN_WND_HEIGHT),
+						defaultWindowRect.Size(),
+						dZoom, m_pCurrentImage, false, true, m_bWindowBorderless);
 				this->SetWindowPos(HWND_TOP, windowRect.left, windowRect.top, windowRect.Width(), windowRect.Height(), SWP_NOZORDER | SWP_NOCOPYBITS);
 				this->MouseOn();
 				m_bSpanVirtualDesktop = false;
@@ -1795,7 +1801,8 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 				// get the size of the border to shift the window pos downwards
 				int windowCaptionHeight = Helpers::GetWindowCaptionSize();
 				double dZoom = -1;
-				CRect windowRect = Helpers::GetWindowRectMatchingImageSize(m_hWnd, CSize(MIN_WND_WIDTH, MIN_WND_HEIGHT), HUGE_SIZE, dZoom, m_pCurrentImage, false, true, m_bWindowBorderless);
+				CRect windowRect = Helpers::GetWindowRectMatchingImageSize(
+					m_hWnd, CSize(MIN_WND_WIDTH, MIN_WND_HEIGHT), HUGE_SIZE, dZoom, m_pCurrentImage, false, true, m_bWindowBorderless);
 
 				// don't try to adjust for an image that isn't loaded!
 				if (m_pCurrentImage != NULL)
@@ -1809,9 +1816,13 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 					// it causes the window to shift up one pixel at a time when going between borderless and not borderless repeatedly
 					// in other cases, it shifts downwards depending on rounding errors resizing the window and image... hard to hunt down but it's as good as it can get right now
 					if (windowCaptionHeight % 2 == 0) {
-						newTop = m_bWindowBorderless ? windowRect.top + (windowCaptionHeight / 2) : windowRect.top - (windowCaptionHeight / 2);
+						newTop = m_bWindowBorderless ?
+							windowRect.top + (windowCaptionHeight / 2) :
+							windowRect.top - (windowCaptionHeight / 2);
 					} else {
-						newTop = m_bWindowBorderless ? windowRect.top + (windowCaptionHeight / 2) : windowRect.top - (windowCaptionHeight / 2) + 1;
+						newTop = m_bWindowBorderless ?
+							windowRect.top + (windowCaptionHeight / 2) :
+							windowRect.top - (windowCaptionHeight / 2) + 1;
 					}
 
 					// tell the window the Frame has changed, not sure if it makes a difference
