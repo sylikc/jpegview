@@ -381,4 +381,5 @@ private:
 	void StartAnimation();
 	void AdjustAnimationFrameTime();
 	void StopAnimation();
+	void ToggleAlwaysOnTop();
 };

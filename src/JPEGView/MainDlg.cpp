@@ -265,8 +265,8 @@ CMainDlg::CMainDlg(bool bForceFullScreen) {
 	m_dLastImageDisplayTime = 0.0;
 	m_isUserFitToScreen = false;
 	m_autoZoomFitToScreen = Helpers::ZM_FillScreen;
-	m_bWindowBorderless = false;  // default real window with border
-	m_bAlwaysOnTop = false;  // default normal
+	m_bWindowBorderless = sp.WindowBorderlessOnStartup();  // unlike AlwaysOnTop, this is set early on initialize as it affects calculations of the window size, position, etc
+	m_bAlwaysOnTop = false;  // default normal window.  this will be set to true when AlwaysOnTop is toggled if set to startup in INI
 	m_bSelectZoom = false;  // this value is set when LButtonDown happens, to be read by LButtonUp
 
 	m_pPanelMgr = new CPanelMgr();
@@ -410,6 +410,11 @@ LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam
 		SetWindowLong(GWL_STYLE, WS_VISIBLE);
 		SetWindowPos(HWND_TOP, &m_monitorRect, SWP_NOZORDER);
 		SetWindowPos(NULL, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_NOCOPYBITS | SWP_FRAMECHANGED);
+	}
+
+	if (CSettingsProvider::This().WindowAlwaysOnTopOnStartup()) {
+		// if set by default for startup ... it is false by default, toggle = true
+		ToggleAlwaysOnTop();
 	}
 
 	m_bLockPaint = false;
@@ -1755,7 +1760,13 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 				SetIcon(hIconSmall, FALSE);
 				CRect defaultWindowRect = CMultiMonitorSupport::GetDefaultWindowRect();
 				double dZoom = -1;
-				windowRect = sp.ExplicitWindowRect() ? defaultWindowRect : Helpers::GetWindowRectMatchingImageSize(m_hWnd, CSize(MIN_WND_WIDTH, MIN_WND_HEIGHT), defaultWindowRect.Size(), dZoom, m_pCurrentImage, false, true, m_bWindowBorderless);
+				windowRect = sp.ExplicitWindowRect() ?
+					defaultWindowRect :
+					Helpers::GetWindowRectMatchingImageSize(
+						m_hWnd,
+						CSize(MIN_WND_WIDTH, MIN_WND_HEIGHT),
+						defaultWindowRect.Size(),
+						dZoom, m_pCurrentImage, false, true, m_bWindowBorderless);
 				this->SetWindowPos(HWND_TOP, windowRect.left, windowRect.top, windowRect.Width(), windowRect.Height(), SWP_NOZORDER | SWP_NOCOPYBITS);
 				this->MouseOn();
 				m_bSpanVirtualDesktop = false;
@@ -1790,7 +1801,8 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 				// get the size of the border to shift the window pos downwards
 				int windowCaptionHeight = Helpers::GetWindowCaptionSize();
 				double dZoom = -1;
-				CRect windowRect = Helpers::GetWindowRectMatchingImageSize(m_hWnd, CSize(MIN_WND_WIDTH, MIN_WND_HEIGHT), HUGE_SIZE, dZoom, m_pCurrentImage, false, true, m_bWindowBorderless);
+				CRect windowRect = Helpers::GetWindowRectMatchingImageSize(
+					m_hWnd, CSize(MIN_WND_WIDTH, MIN_WND_HEIGHT), HUGE_SIZE, dZoom, m_pCurrentImage, false, true, m_bWindowBorderless);
 
 				// don't try to adjust for an image that isn't loaded!
 				if (m_pCurrentImage != NULL)
@@ -1804,9 +1816,13 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 					// it causes the window to shift up one pixel at a time when going between borderless and not borderless repeatedly
 					// in other cases, it shifts downwards depending on rounding errors resizing the window and image... hard to hunt down but it's as good as it can get right now
 					if (windowCaptionHeight % 2 == 0) {
-						newTop = m_bWindowBorderless ? windowRect.top + (windowCaptionHeight / 2) : windowRect.top - (windowCaptionHeight / 2);
+						newTop = m_bWindowBorderless ?
+							windowRect.top + (windowCaptionHeight / 2) :
+							windowRect.top - (windowCaptionHeight / 2);
 					} else {
-						newTop = m_bWindowBorderless ? windowRect.top + (windowCaptionHeight / 2) : windowRect.top - (windowCaptionHeight / 2) + 1;
+						newTop = m_bWindowBorderless ?
+							windowRect.top + (windowCaptionHeight / 2) :
+							windowRect.top - (windowCaptionHeight / 2) + 1;
 					}
 
 					// tell the window the Frame has changed, not sure if it makes a difference
@@ -1824,14 +1840,7 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 
 			break;
 		case IDM_ALWAYS_ON_TOP:
-			m_bAlwaysOnTop = !m_bAlwaysOnTop;
-
-			// SetWindowPos - https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setwindowpos
-			this->SetWindowPos(
-				m_bAlwaysOnTop ? HWND_TOPMOST : HWND_NOTOPMOST,
-				0, 0, 0, 0,
-				SWP_NOMOVE | SWP_NOSIZE  // causes SetWindowPos to ignore the parameters for top/left/width/height
-			);
+			ToggleAlwaysOnTop();
 
 			break;
 		case IDM_FIT_WINDOW_TO_IMAGE:
@@ -3512,4 +3521,17 @@ void CMainDlg::StopAnimation() {
 	}
 	::KillTimer(this->m_hWnd, ANIMATION_TIMER_EVENT_ID);
 	m_bIsAnimationPlaying = false;
+}
+
+void CMainDlg::ToggleAlwaysOnTop() {
+	// toggle the member variable and call the SetWindowPos to set
+	m_bAlwaysOnTop = !m_bAlwaysOnTop;
+
+	// SetWindowPos - https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setwindowpos
+	this->SetWindowPos(
+		m_bAlwaysOnTop ? HWND_TOPMOST : HWND_NOTOPMOST,
+		0, 0, 0, 0,
+		SWP_NOMOVE | SWP_NOSIZE  // causes SetWindowPos to ignore the parameters for top/left/width/height
+	);
+
 }

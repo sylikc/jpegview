@@ -995,7 +995,7 @@ void CImageLoadThread::ProcessReadPSDRequest(CRequest* request) {
 void CImageLoadThread::ProcessReadRAWRequest(CRequest * request) {
 	bool bOutOfMemory = false;
 	try {
-		int fullsize = CSettingsProvider::This().GetFullsizeRAW();
+		int fullsize = CSettingsProvider::This().DisplayFullSizeRAW();
 
 #ifndef WINXP
 		// Try with libraw

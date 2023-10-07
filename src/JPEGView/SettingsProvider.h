@@ -79,7 +79,7 @@ public:
 	LPCTSTR FilesProcessedByWIC() { return m_sFilesProcessedByWIC; }
 	LPCTSTR FileEndingsRAW() { return m_sFileEndingsRAW; }
 	void AddTemporaryRAWFileEnding(LPCTSTR sEnding) { m_sFileEndingsRAW += CString(_T(";*.")) + sEnding; }
-	int GetFullsizeRAW() { return m_nGetFullsizeRAW; }
+	int DisplayFullSizeRAW() { return m_nDisplayFullSizeRAW; }
 	bool CreateParamDBEntryOnSave() { return m_bCreateParamDBEntryOnSave; }
 	bool SaveWithoutPrompt() { return m_bSaveWithoutPrompt; }
 	bool CropWithoutPromptLosslessJPEG() { return m_bCropWithoutPromptLosslessJPEG; }
@@ -130,6 +130,9 @@ public:
 	LPCTSTR GPSMapProvider() { return m_sGPSMapProvider; }
 	bool FlashWindowAlert() { return m_bFlashWindowAlert; }
 	bool BeepSoundAlert() { return m_bBeepSoundAlert; }
+	bool WindowBorderlessOnStartup() { return m_bWindowBorderlessOnStartup; }
+	bool WindowAlwaysOnTopOnStartup() { return m_bWindowAlwaysOnTopOnStartup; }
+
 	double ZoomPauseFactor() { return m_zoomPauseFactor; }  // while internally this is represented in doubles, using a whole number percent simplifies it for the user... configuring doubles is not user friendly at all
 
 	// Returns if a user INI file exists
@@ -246,7 +249,7 @@ private:
 	CString m_sDefaultSaveFormat;
 	CString m_sFilesProcessedByWIC;
 	CString m_sFileEndingsRAW;
-	int m_nGetFullsizeRAW;
+	int m_nDisplayFullSizeRAW;
 	bool m_bCreateParamDBEntryOnSave;
 	bool m_bWrapAroundFolder;
 	bool m_bSaveWithoutPrompt;
@@ -298,6 +301,8 @@ private:
 	bool m_bFlashWindowAlert;
 	bool m_bBeepSoundAlert;
 	int m_zoomPauseFactor;
+	bool m_bWindowBorderlessOnStartup;
+	bool m_bWindowAlwaysOnTopOnStartup;
 
 	std::list<CUserCommand*> m_userCommands;
 	std::list<CUserCommand*> m_openWithCommands;
