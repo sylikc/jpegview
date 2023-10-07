@@ -1,6 +1,6 @@
 [JPEGView]
-; Пользовательский файл конфигурации программы JPEGView версии 1.2.45
-; Перевод (230305): Дмитрий Ерохин (erodim@mail.ru)
+; Глобальный файл конфигурации программы JPEGView версии 1.3.46
+; Перевод (231007): Дмитрий Ерохин (erodim@mail.ru)
 
 ; Этот пользовательский INI-файл создан из шаблона JPEGView.ini.tpl.
 ; Параметры в этом файле имеют более высокий приоритет, чем аналогичные
@@ -176,12 +176,12 @@ StickyWindowRect=
 ; Минимальный размер окна в оконном режиме (в пикселах).
 MinimalWindowSize=320 240
 
-; If set to 'true', window starts in borderless mode (title bar hidden, cannot be manually resized)
-; The window mode can be changed after startup
+; Если "true", то окно запускается в режиме без полей (строка заголовка скрыта, размер невозможно изменить вручную)
+; Режим окна можно изменить после запуска
 WindowBorderlessOnStartup=false
 
-; If set to 'true', window starts in always-on-top mode (window will always be visible on top of other windows)
-; The window mode can be changed after startup
+; Если "true", то окно запускается в режиме "всегда поверх других окон" (окно всегда будет отображаться поверх других окон)
+; Режим окна можно изменить после запуска
 WindowAlwaysOnTopOnStartup=false
 
 ; -----------------------------------------------
