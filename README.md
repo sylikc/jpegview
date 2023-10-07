@@ -120,11 +120,12 @@ After installation, the configuration file is located at `%UserProfile%\scoop\pe
 
 By default, the language is auto-detected to match your Windows Locale.  All the text in the menus and user interface should show in your language.  To override the auto-detection, manually set `Language` option in `JPEGView.ini`
 
-JPEGView is currently translated/localized to 27 languages:
+JPEGView is currently translated/localized to 28 languages:
 
 | INI Option | Language |
 | ---------- | -------- |
 | be | Belarusian |
+| bg | Bulgarian |
 | cs | Czech |
 | de | German |
 | el | Greek, Modern |
