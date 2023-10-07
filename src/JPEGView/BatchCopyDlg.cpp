@@ -317,7 +317,7 @@ int CBatchCopyDlg::CreateItemList() {
 	int nIndex = 0;
 	for (iter = fileList.begin( ); iter != fileList.end( ); iter++ ) {
 		m_lvFiles.InsertItem(nIndex, iter->GetTitle());
-		SYSTEMTIME systemTime;
+		SYSTEMTIME systemTime{ 0 };
 		FileTimeToLocalSystemTime(iter->GetLastModTime(), systemTime);
 		TCHAR dateBuff[64];
 		::GetDateFormat(LOCALE_USER_DEFAULT, DATE_SHORTDATE, &systemTime, NULL, dateBuff, 64);
@@ -385,7 +385,7 @@ CString CBatchCopyDlg::ReplacePlaceholders(LPCTSTR strPattern, int nIndex, const
 		CString sExtension(pStartExt + 1);
 		strNewName.Replace(_T("%e"), sExtension);
 	}
-	SYSTEMTIME systemTime;
+	SYSTEMTIME systemTime{ 0 };
 	FileTimeToLocalSystemTime(fileDesc.GetLastModTime(), systemTime);
 	if (strNewName.Find(_T("%h")) != -1) {
 		CString sHour;

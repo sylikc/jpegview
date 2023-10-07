@@ -478,9 +478,9 @@ void CParameterDB::RestoreParamDB(HWND hWnd) {
 // Private
 /////////////////////////////////////////////////////////////////////////////////////////////
 
-CParameterDB::CParameterDB(void) {
-
-	memset(&m_csDBLock, 0, sizeof(CRITICAL_SECTION));
+CParameterDB::CParameterDB(void)
+	: m_csDBLock{ 0 }
+{
 	::InitializeCriticalSection(&m_csDBLock);
 
 	m_LRUHash = 0;
@@ -630,8 +630,7 @@ bool CParameterDB::SaveToFile(int nIndex, const CParameterDBEntry & dbEntry) {
 		}
 	} else if (nFileSize == 0) {
 		// new file created, write the header
-		ParameterDBHeader header;
-		memset(&header, 0, sizeof(ParameterDBHeader));
+		ParameterDBHeader header{ 0 };
 		header.nMagic1 = MAGIC_HEADER_1;
 		header.nMagic2 = MAGIC_HEADER_2;
 		header.nVersion = DB_FILE_VERSION;

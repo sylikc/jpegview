@@ -82,8 +82,7 @@ void CZoomNavigator::PaintZoomNavigator(CJPEGImage* pImage, const CRectF& visRec
 		int yDest = navigatorRect.top;
 		int xSize = navigatorRect.Width();
 		int ySize = navigatorRect.Height();
-		BITMAPINFO bmInfo;
-		memset(&bmInfo, 0, sizeof(BITMAPINFO));
+		BITMAPINFO bmInfo{ 0 };
 		bmInfo.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
 		bmInfo.bmiHeader.biWidth = xSize;
 		bmInfo.bmiHeader.biHeight = -ySize;

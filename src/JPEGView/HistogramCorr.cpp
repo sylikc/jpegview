@@ -21,13 +21,14 @@ static __int64 CalculateSum(const int* pHistogram) {
 // CHistogram class
 ///////////////////////////////////////////////////////////////////////////////////
 
-CHistogram::CHistogram(const CJPEGImage & image, bool bUseOrigPixels) {
+CHistogram::CHistogram(const CJPEGImage & image, bool bUseOrigPixels)
+	: m_ChannelR{ 0 },
+	m_ChannelG{ 0 },
+	m_ChannelB{ 0 },
+	m_ChannelGrey{ 0 }
+{
 	const int NUM_VALUES = 50000;
 
-	memset(m_ChannelB, 0, sizeof(int)*256);
-	memset(m_ChannelG, 0, sizeof(int)*256);
-	memset(m_ChannelR, 0, sizeof(int)*256);
-	memset(m_ChannelGrey, 0, sizeof(int)*256);
 	m_nBMean = m_nGMean = m_nRMean = 0;
 	m_bUseOrigPixels = bUseOrigPixels;
 	m_fNightshot = -1.0f;
@@ -77,11 +78,12 @@ CHistogram::CHistogram(const CJPEGImage & image, bool bUseOrigPixels) {
 	m_nRMean /= m_nTotalValues;
 }
 
-CHistogram::CHistogram(const void* pPixels, const CSize& size) {
-	memset(m_ChannelB, 0, sizeof(int)*256);
-	memset(m_ChannelG, 0, sizeof(int)*256);
-	memset(m_ChannelR, 0, sizeof(int)*256);
-	memset(m_ChannelGrey, 0, sizeof(int)*256);
+CHistogram::CHistogram(const void* pPixels, const CSize& size)
+	: m_ChannelR{ 0 },
+	m_ChannelG{ 0 },
+	m_ChannelB{ 0 },
+	m_ChannelGrey{ 0 }
+{
 	m_nBMean = m_nGMean = m_nRMean = 0;
 	m_fNightshot = -1.0f;
 

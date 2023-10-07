@@ -299,11 +299,9 @@ bool CUserCommand::Execute(HWND hWnd, LPCTSTR sFileName, const CRect& selectionR
 		__int64 nRetVal = (__int64)::ShellExecute(hWnd, _T("open"), sEXE, sParameters, sStartupPath, SW_SHOW);
 		bSuccess = nRetVal > 32;
 	} else {
-		STARTUPINFO startupInfo;
-		memset(&startupInfo, 0, sizeof(STARTUPINFO));
+		STARTUPINFO startupInfo{ 0 };
 		startupInfo.cb = sizeof(STARTUPINFO);
-		PROCESS_INFORMATION processInfo;
-		memset(&processInfo, 0, sizeof(PROCESS_INFORMATION));
+		PROCESS_INFORMATION processInfo{ 0 };
 
 		bool bIsCmdProcess = (_tcsnicmp(m_sCommand, _T("cmd "), 4) == 0) || (_tcsnicmp(m_sCommand, _T("cmd.exe"), 7) == 0); 
 		if (::CreateProcess(NULL, sCommandLine.GetBuffer(512), NULL, NULL, FALSE, (bIsCmdProcess || m_bNoWindow) ? CREATE_NO_WINDOW : 0, NULL,

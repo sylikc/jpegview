@@ -71,8 +71,7 @@ void CPaintMemDCMgr::BitBltBlended(CDC & dc, CDC & paintDC, const CSize& dcSize,
 	dc.SetDIBitsToDevice(dibStart.x, dibStart.y, 
 		dibSize.cx, dibSize.cy, 0, 0, 0, dibSize.cy, pDIBData, pbmInfo, DIB_RGB_COLORS);
 	
-	BLENDFUNCTION blendFunc;
-	memset(&blendFunc, 0, sizeof(blendFunc));
+	BLENDFUNCTION blendFunc{ 0 };
 	blendFunc.BlendOp = AC_SRC_OVER;
 	blendFunc.SourceConstantAlpha = (unsigned char)(fDimFactor*255 + 0.5f);
 	blendFunc.AlphaFormat = 0;
@@ -97,8 +96,7 @@ void CPaintMemDCMgr::BitBltBlended(CDC & dc, CDC & paintDC, const CSize& dcSize,
 	memDCPanel.BitBlt(0, 0, nW, nH, dc, 0, 0, SRCCOPY);
 	panel.OnPaint(memDCPanel, offsetPanel);
 	
-	BLENDFUNCTION blendFunc;
-	memset(&blendFunc, 0, sizeof(blendFunc));
+	BLENDFUNCTION blendFunc{ 0 };
 	blendFunc.BlendOp = AC_SRC_OVER;
 	blendFunc.SourceConstantAlpha = (unsigned char)(fBlendFactor*255 + 0.5f);
 	blendFunc.AlphaFormat = 0;

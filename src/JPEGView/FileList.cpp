@@ -319,8 +319,7 @@ bool CFileList::DeleteFile(LPCTSTR fileNameWithPath) const {
 		_tcscpy(fileName, fileNameWithPath);
 		fileName[_tcslen(fileName) + 1] = 0;
 
-		SHFILEOPSTRUCT fileOp;
-		memset(&fileOp, 0, sizeof(SHFILEOPSTRUCT));
+		SHFILEOPSTRUCT fileOp{ 0 };
 		fileOp.hwnd = NULL;
 		fileOp.wFunc = FO_DELETE;
 		fileOp.pFrom = fileName;

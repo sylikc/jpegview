@@ -218,8 +218,7 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR lp
 		::EnumWindows((WNDENUMPROC)EnumWindowsProc, 0);
 		if (_HWNDOtherInstance != NULL) {
 			// Other instance found, send the filename to be loaded to this instance
-			COPYDATASTRUCT copyData;
-			memset(&copyData, 0, sizeof(COPYDATASTRUCT));
+			COPYDATASTRUCT copyData{ 0 };
 			copyData.dwData = KEY_MAGIC;
 			copyData.cbData = (sStartupFile.GetLength() + 1) * sizeof(TCHAR);
 			copyData.lpData = (LPVOID)(LPCTSTR)sStartupFile;

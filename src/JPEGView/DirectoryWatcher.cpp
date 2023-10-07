@@ -23,9 +23,10 @@ static BOOL GetLastModificationTime(LPCTSTR fileName, FILETIME & lastModificatio
 // Public
 /////////////////////////////////////////////////////////////////////////////////////////////
 
-CDirectoryWatcher::CDirectoryWatcher(HWND hTargetWindow) {
+CDirectoryWatcher::CDirectoryWatcher(HWND hTargetWindow)
+	: m_lock{ 0 }
+{
 	m_hTargetWindow = hTargetWindow;
-	memset(&m_lock, 0, sizeof(CRITICAL_SECTION));
 	::InitializeCriticalSection(&m_lock);
 	m_terminateEvent = ::CreateEvent(0, TRUE, FALSE, NULL);
 	m_newDirectoryEvent = ::CreateEvent(0, TRUE, FALSE, NULL);
@@ -75,8 +76,7 @@ void CDirectoryWatcher::SetCurrentFile(LPCTSTR fileName)
 
 void CDirectoryWatcher::SetCurrentDirectory(LPCTSTR directoryName)
 {
-	TCHAR fullName[MAX_PATH];
-	memset(fullName, 0, sizeof(TCHAR) * MAX_PATH);
+	TCHAR fullName[MAX_PATH]{ 0 };
 	GetFullPathName(directoryName, MAX_PATH, (LPTSTR)fullName, NULL);
 
 	::EnterCriticalSection(&m_lock);
@@ -98,8 +98,7 @@ void CDirectoryWatcher::ThreadFunc(void* arg) {
 	CDirectoryWatcher* thisPtr = (CDirectoryWatcher*) arg;
 	bool bTerminate = false;
 	bool bSetupNewDirectory = true;
-	HANDLE waitHandles[4];
-	memset(waitHandles, 0, sizeof(HANDLE) * 4);
+	HANDLE waitHandles[4]{ 0 };
 	do {
 		waitHandles[0] = thisPtr->m_terminateEvent;
 		waitHandles[1] = thisPtr->m_newDirectoryEvent;

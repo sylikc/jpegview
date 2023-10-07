@@ -102,8 +102,7 @@ static EImageFormat GetImageFormat(LPCTSTR sFileName) {
 }
 
 static EImageFormat GetBitmapFormat(Gdiplus::Bitmap * pBitmap) {
-	GUID guid;
-	memset(&guid, 0, sizeof(GUID));
+	GUID guid{ 0 };
 	pBitmap->GetRawFormat(&guid);
 	if (guid == Gdiplus::ImageFormatBMP) {
 		return IF_WindowsBMP;

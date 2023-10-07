@@ -250,8 +250,7 @@ LRESULT CPrintDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, 
 		int yDest = clippedRect.top;
 		int xSize = clippedRect.Width();
 		int ySize = clippedRect.Height();
-		BITMAPINFO bmInfo;
-		memset(&bmInfo, 0, sizeof(BITMAPINFO));
+		BITMAPINFO bmInfo{ 0 };
 		bmInfo.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
 		bmInfo.bmiHeader.biWidth = xSize;
 		bmInfo.bmiHeader.biHeight = -ySize;

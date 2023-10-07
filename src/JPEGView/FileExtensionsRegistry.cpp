@@ -394,8 +394,7 @@ static RegResult ResetPermissionsForRegistryKey(LPCTSTR subKeyRelativeToHKCU)
 	}
 
 	// Obtain DACL information.
-	ACL_SIZE_INFORMATION asi;
-	memset(&asi, 0, sizeof(ACL_SIZE_INFORMATION));
+	ACL_SIZE_INFORMATION asi{ 0 };
 	if (pACL != NULL && !::GetAclInformation(pACL, (LPVOID)&asi, (DWORD)sizeof(ACL_SIZE_INFORMATION), AclSizeInformation)) {
 		return Reg_ErrorChangeDACL;
 	}

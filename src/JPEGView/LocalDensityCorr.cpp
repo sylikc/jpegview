@@ -75,12 +75,8 @@ CLocalDensityCorr::CLocalDensityCorr(const CJPEGImage & image, bool bFullConstru
 	m_fIsSunset = m_fMiddleGrey = m_fSunsetPixels = -1.0f;
 
 	// LDC also needs the histogram of the image
-	int channelR[256], channelG[256], channelB[256];
-	int channelGrey[256];
-	memset(channelR, 0, sizeof(int)*256);
-	memset(channelG, 0, sizeof(int)*256);
-	memset(channelB, 0, sizeof(int)*256);
-	memset(channelGrey, 0, sizeof(int)*256);
+	int channelR[256]{ 0 }, channelG[256]{ 0 }, channelB[256]{ 0 };
+	int channelGrey[256]{ 0 };
 
 	int nWidth = image.OrigWidth();
 	int nHeight = image.OrigHeight();

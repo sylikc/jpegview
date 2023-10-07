@@ -527,7 +527,7 @@ LRESULT CMainDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 
 		// Paint the DIB
 		if (pDIBData != NULL) {
-			BITMAPINFO bmInfo;
+			BITMAPINFO bmInfo{ 0 };
 			CPoint ptDIBStart = HelpersGUI::DrawDIB32bppWithBlackBorders(dc, bmInfo, pDIBData, backBrush, m_clientRect, clippedSize, m_DIBOffsets);
 			// The DIB is also blitted into the memory DCs of the panels
 			memDCMgr.BlitImageToMemDC(pDIBData, &bmInfo, ptDIBStart, m_pNavPanelCtl->CurrentBlendingFactor());
@@ -609,10 +609,10 @@ void CMainDlg::PaintToDC(CDC& dc) {
 		CPoint offsetsInImage = pCurrentImage->ConvertOffset(newSize, clippedSize, offsets);
 
 		void* pDIBData = pCurrentImage->GetDIB(newSize, clippedSize, offsetsInImage, 
-				*GetImageProcessingParams(), 
+				*GetImageProcessingParams(),
 				CreateDefaultProcessingFlags());
 		if (pDIBData != NULL) {
-			BITMAPINFO bmInfo;
+			BITMAPINFO bmInfo{ 0 };
 			CPoint ptDIBStart = HelpersGUI::DrawDIB32bppWithBlackBorders(dc, bmInfo, pDIBData, backBrush, m_clientRect, clippedSize, CPoint(0, 0));
 		}
 
@@ -638,8 +638,7 @@ void CMainDlg::BlendBlackRect(CDC & targetDC, CPanel& panel, float fBlendFactor)
 	memDCPanel.SelectBitmap(bitmapPanel);
 	memDCPanel.FillSolidRect(0, 0, nW, nH, RGB(0, 0, 1)); // nVidia workaround: blending pure black has a bug
 	
-	BLENDFUNCTION blendFunc;
-	memset(&blendFunc, 0, sizeof(blendFunc));
+	BLENDFUNCTION blendFunc{ 0 };
 	blendFunc.BlendOp = AC_SRC_OVER;
 	blendFunc.SourceConstantAlpha = (unsigned char)(fBlendFactor*255 + 0.5f);
 	blendFunc.AlphaFormat = 0;
@@ -3346,8 +3345,7 @@ void CMainDlg::AnimateTransition() {
 
 	int nSteps = max(1, (m_nTransitionTime + 20) / nFrameTimeMs);
 
-	BLENDFUNCTION blendFunc;
-	memset(&blendFunc, 0, sizeof(blendFunc));
+	BLENDFUNCTION blendFunc{ 0 };
 	blendFunc.BlendOp = AC_SRC_OVER;
 	blendFunc.AlphaFormat = 0;
 	float fAlphaStep = 255.0f / nSteps;

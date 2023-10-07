@@ -248,8 +248,7 @@ void CNavigationPanelCtl::DoNavPanelAnimation() {
 			backBrush.CreateSolidBrush(CSettingsProvider::This().ColorBackground());
 			m_pMemDCAnimation->FillRect(CRect(0, 0, rectNavPanel.Width(), rectNavPanel.Height()), backBrush);
 
-			BITMAPINFO bmInfo;
-			memset(&bmInfo, 0, sizeof(BITMAPINFO));
+			BITMAPINFO bmInfo{ 0 };
 			bmInfo.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
 			bmInfo.bmiHeader.biWidth = pCurrentImage->DIBWidth();
 			bmInfo.bmiHeader.biHeight = -pCurrentImage->DIBHeight();

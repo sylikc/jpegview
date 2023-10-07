@@ -11,8 +11,7 @@ int _TransformationEnumToOpCode(CJPEGLosslessTransform::ETransformation transfor
 // Input and output file can be identical, then the input file is overwritten by the resulting output file.
 CJPEGLosslessTransform::EResult CJPEGLosslessTransform::PerformTransformation(LPCTSTR sInputFile, LPCTSTR sOutputFile, 
 	CJPEGLosslessTransform::ETransformation transformation, bool bAllowTrim) {
-	tjtransform transform;
-	memset(&transform, 0, sizeof(tjtransform));
+	tjtransform transform{ 0 };
 	transform.op = _TransformationEnumToOpCode(transformation);
 	transform.options = bAllowTrim ? TJXOPT_TRIM : TJXOPT_PERFECT;
 
@@ -22,8 +21,7 @@ CJPEGLosslessTransform::EResult CJPEGLosslessTransform::PerformTransformation(LP
 // Performs a lossless JPEG crop, using the input file and writing the result to the output file.
 // Input and output file can be identical, then the input file is overwritten by the resulting output file.
 CJPEGLosslessTransform::EResult CJPEGLosslessTransform::PerformCrop(LPCTSTR sInputFile, LPCTSTR sOutputFile, const CRect& cropRect) {
-	tjtransform transform;
-	memset(&transform, 0, sizeof(tjtransform));
+	tjtransform transform{ 0 };
 	transform.op = TJXOP_NONE;
 	transform.options = TJXOPT_PERFECT | TJXOPT_CROP;
 	transform.r.x = cropRect.left;

@@ -112,8 +112,7 @@ namespace HelpersGUI {
 		if (::GetTextFace(dc, LF_FACESIZE, buff) != 0) {
 			TEXTMETRIC textMetrics;
 			::GetTextMetrics(dc, &textMetrics);
-			LOGFONT logFont;
-			memset(&logFont, 0, sizeof(LOGFONT));
+			LOGFONT logFont{ 0 };
 			logFont.lfHeight = textMetrics.tmHeight;
 			logFont.lfWeight = FW_BOLD;
 			_tcsncpy_s(logFont.lfFaceName, LF_FACESIZE, buff, LF_FACESIZE);  
@@ -191,8 +190,7 @@ namespace HelpersGUI {
 					sNewMenuText += _T('\t');
 					sNewMenuText += sKeyDesc;
 				}
-				MENUITEMINFO menuInfo;
-				memset(&menuInfo , 0, sizeof(MENUITEMINFO));
+				MENUITEMINFO menuInfo{ 0 };
 				menuInfo.cbSize = sizeof(MENUITEMINFO);
 				menuInfo.fMask = MIIM_STRING;
 				menuInfo.dwTypeData = (LPTSTR)(LPCTSTR)sNewMenuText;
@@ -498,8 +496,7 @@ namespace HelpersGUI {
 		// https://stackoverflow.com/questions/6834541/problems-with-cmenumodifymenu
 		// ::ModifyMenu(hMenuCropMode, IDM_CROPMODE_5_4, MF_CHECKED | MF_STRING, 0, _T("Test AR")) ... you would have to re-set all the previous properties
 
-		MENUITEMINFO itemInfo;
-		memset(&itemInfo, 0, sizeof(MENUITEMINFO));
+		MENUITEMINFO itemInfo{ 0 };
 		itemInfo.cbSize = sizeof(MENUITEMINFO);
 		itemInfo.fMask = MIIM_STRING;
 		itemInfo.dwTypeData = (LPTSTR)(LPCTSTR)sText;

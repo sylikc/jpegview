@@ -183,16 +183,17 @@ static void GetBicubicFilter(uint16 nFrac, int16* pFilterOut) {
 // Public
 //////////////////////////////////////////////////////////////////////////////////////
 
-CResizeFilter::CResizeFilter(int nSourceSize, int nTargetSize, double dSharpen, EFilterType eFilter, FilterSIMDType filterSIMDType) {
+CResizeFilter::CResizeFilter(int nSourceSize, int nTargetSize, double dSharpen, EFilterType eFilter, FilterSIMDType filterSIMDType)
+	: m_kernels{ 0 },
+	m_kernelsXMM{ 0 },
+	m_kernelsAVX{ 0 },
+	m_nRefCnt{ 0 }
+{
 	m_nSourceSize = nSourceSize;
 	m_nTargetSize = nTargetSize;
 	m_dSharpen = min(0.5, max(0.0, dSharpen));
 	m_eFilter = eFilter;
 	m_filterSIMDType = filterSIMDType;
-	m_nRefCnt = 0;
-	memset(&m_kernels, 0, sizeof(m_kernels));
-	memset(&m_kernelsXMM, 0, sizeof(m_kernelsXMM));
-	memset(&m_kernelsAVX, 0, sizeof(m_kernelsAVX));
 
 	if (filterSIMDType == FilterSIMDType_AVX) {
 		CalculateAVXFilterKernels();
@@ -487,8 +488,9 @@ CResizeFilterCache& CResizeFilterCache::This() {
 	return *sm_instance;
 }
 
-CResizeFilterCache::CResizeFilterCache() {
-	memset(&m_csList, 0, sizeof(CRITICAL_SECTION));
+CResizeFilterCache::CResizeFilterCache()
+	: m_csList{ 0 }
+{
 	::InitializeCriticalSection(&m_csList);
 }
 
@@ -555,10 +557,11 @@ void CResizeFilterCache::ReleaseFilter(const CResizeFilter& filter) {
 // CGaussFilter
 //////////////////////////////////////////////////////////////////////////////////////
 
-CGaussFilter::CGaussFilter(int nSourceSize, double dRadius) {
+CGaussFilter::CGaussFilter(int nSourceSize, double dRadius)
+	: m_kernels{ 0 }
+{
 	m_nSourceSize = nSourceSize;
 	m_dRadius = dRadius;
-	memset(&m_kernels, 0, sizeof(m_kernels));
 
 	CalculateKernels();
 }

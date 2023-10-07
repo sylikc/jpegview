@@ -54,8 +54,7 @@ bool CPrintImage::Print(HWND hWnd, CJPEGImage * pImage, const CImageProcessingPa
 bool CPrintImage::DoPrint(HDC hPrinterDC, CPrintParameters* pPrintParameters, CJPEGImage * pImage, const CImageProcessingParams& procParams,
 	EProcessingFlags eFlags, LPCTSTR fileName) {
 	bool bSuccess = false;
-	DOCINFO docInfo;
-	memset(&docInfo, 0, sizeof(DOCINFO));
+	DOCINFO docInfo{ 0 };
 	docInfo.cbSize = sizeof(DOCINFO);
 	docInfo.lpszDocName = fileName;
 
@@ -117,8 +116,7 @@ bool CPrintImage::DoPrint(HDC hPrinterDC, CPrintParameters* pPrintParameters, CJ
 			pImage->EnableDimming(true);
 
 			if (pDIBData != NULL) {
-				BITMAPINFO bmInfo;
-				memset(&bmInfo, 0, sizeof(BITMAPINFO));
+				BITMAPINFO bmInfo{ 0 };
 				bmInfo.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
 				bmInfo.bmiHeader.biWidth = dibSize.cx;
 				bmInfo.bmiHeader.biHeight = -dibSize.cy;

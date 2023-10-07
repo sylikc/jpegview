@@ -242,10 +242,10 @@ bool CEXIFReader::ParseDateString(SYSTEMTIME & date, const CString& str) {
 }
 
 CEXIFReader::CEXIFReader(void* pApp1Block, EImageFormat eImageFormat)
-: m_exposureTime(0, 0) {
-
-	memset(&m_acqDate, 0, sizeof(SYSTEMTIME));
-	memset(&m_dateTime, 0, sizeof(SYSTEMTIME));
+	: m_exposureTime{ 0, 0 },
+	m_acqDate{ 0 },
+	m_dateTime{ 0 }
+{
 	m_bFlashFired = false;
 	m_bFlashFlagPresent = false;
 	m_dFocalLength = m_dExposureBias = m_dFNumber = UNKNOWN_DOUBLE_VALUE;

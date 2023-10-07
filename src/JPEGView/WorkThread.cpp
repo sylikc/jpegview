@@ -7,10 +7,11 @@
 // Public
 /////////////////////////////////////////////////////////////////////////////////////////////
 
-CWorkThread::CWorkThread(bool bCoInitialize) {
+CWorkThread::CWorkThread(bool bCoInitialize)
+	: m_csList{ 0 }
+{
 	m_bTerminate = false;
 	m_bCoInitialize = bCoInitialize;
-	memset(&m_csList, 0, sizeof(CRITICAL_SECTION));
 	::InitializeCriticalSection(&m_csList);
 	m_wakeUp = ::CreateEvent(0, TRUE, FALSE, NULL);
 
