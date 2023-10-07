@@ -223,8 +223,8 @@
 				<ComponentRef Id="heifDLL"/>
 				<ComponentRef Id="avifDLL"/>
 			</Feature>
-			<!-- dcraw is compiled into JPEGView, but doesn't support the latest (newer) camera formats -->
-			<Feature Id="FeatureRAW" Title="Camera RAW Files Support (newer cameras)">
+			<!-- dcraw is compiled into JPEGView, but doesn't support the latest (modern) camera formats -->
+			<Feature Id="FeatureRAW" Title="Camera RAW Files Support (modern cameras)">
 				<ComponentRef Id="rawDLL"/>
 			</Feature>
 			<Feature Id="FeatureLCMS" Title="ICC Profile Support (WebP, JPEG XL, HEIF/HEIC/AVIF)">
@@ -521,7 +521,7 @@
 					</Component>
 
 
-					<!-- DLL required for RAW Files support (newer cameras using LibRaw) -->
+					<!-- DLL required for RAW Files support (modern cameras using LibRaw) -->
 					<Component Id="rawDLL" Guid="e469088b-ab00-43cd-a5eb-57f09a6cc3b2">
 						<File Id="libraw.dll" Name="libraw.dll" Source="$(var.RawDllFolder)\libraw.dll" />
 					</Component>
