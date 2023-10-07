@@ -358,15 +358,6 @@ void CImageLoadThread::ProcessRequest(CRequestBase& request) {
 			DeleteCachedAvifDecoder();
 			ProcessReadHEIFRequest(&rq);
 			break;
-#endif
-		case IF_QOI:
-			DeleteCachedGDIBitmap();
-			DeleteCachedWebpDecoder();
-			DeleteCachedPngDecoder();
-			DeleteCachedJxlDecoder();
-			DeleteCachedAvifDecoder();
-			ProcessReadQOIRequest(&rq);
-			break;
 		case IF_PSD:
 			DeleteCachedGDIBitmap();
 			DeleteCachedWebpDecoder();
@@ -382,6 +373,15 @@ void CImageLoadThread::ProcessRequest(CRequestBase& request) {
 			DeleteCachedJxlDecoder();
 			DeleteCachedAvifDecoder();
 			ProcessReadRAWRequest(&rq);
+			break;
+#endif
+		case IF_QOI:
+			DeleteCachedGDIBitmap();
+			DeleteCachedWebpDecoder();
+			DeleteCachedPngDecoder();
+			DeleteCachedJxlDecoder();
+			DeleteCachedAvifDecoder();
+			ProcessReadQOIRequest(&rq);
 			break;
 		case IF_WIC:
 			DeleteCachedGDIBitmap();
@@ -937,6 +937,14 @@ void CImageLoadThread::ProcessReadHEIFRequest(CRequest* request) {
 	::CloseHandle(hFile);
 	delete[] pBuffer;
 }
+
+void CImageLoadThread::ProcessReadPSDRequest(CRequest* request) {
+	request->Image = PsdReader::ReadImage(request->FileName, request->OutOfMemory);
+	if (request->Image == NULL && !request->OutOfMemory) {
+		request->Image = PsdReader::ReadThumb(request->FileName, request->OutOfMemory);
+	}
+}
+
 #endif
 
 void CImageLoadThread::ProcessReadQOIRequest(CRequest* request) {
@@ -983,13 +991,6 @@ void CImageLoadThread::ProcessReadQOIRequest(CRequest* request) {
 	}
 	::CloseHandle(hFile);
 	delete[] pBuffer;
-}
-
-void CImageLoadThread::ProcessReadPSDRequest(CRequest* request) {
-	request->Image = PsdReader::ReadImage(request->FileName, request->OutOfMemory);
-	if (request->Image == NULL && !request->OutOfMemory) {
-		request->Image = PsdReader::ReadThumb(request->FileName, request->OutOfMemory);
-	}
 }
 
 void CImageLoadThread::ProcessReadRAWRequest(CRequest * request) {

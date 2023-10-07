@@ -138,7 +138,7 @@ bool ICCProfileTransform::DoTransform(void* /* transform */, const void* /* inpu
 
 void ICCProfileTransform::DeleteTransform(void* /* transform */) { }
 
-void* ICCProfileTransform::CreateLabTransform() {
+void* ICCProfileTransform::CreateLabTransform(PixelFormat /* format */) {
 	return NULL;
 }
 
