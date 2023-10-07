@@ -177,5 +177,7 @@ Special thanks to [qbnu](https://github.com/qbnu) for adding additional codec su
 * HEIF/HEIC/AVIF support
 * QOI support
 * ICC Profile support for WebP, JPEG XL, HEIF/HEIC, AVIF
+* LibRaw support (all updated RAW formats, such as CR3)
+* Photoshop PSD support
 
-Thanks to all the translators which keep JPEGView strings up-to-date in different languages!  See [CHANGELOG.txt](https://github.com/sylikc/jpegview/blob/master/CHANGELOG.txt) to find credits for translators at each release!
+Thanks to all the _translators_ which keep JPEGView strings up-to-date in different languages!  See [CHANGELOG.txt](https://github.com/sylikc/jpegview/blob/master/CHANGELOG.txt) to find credits for translators at each release!
