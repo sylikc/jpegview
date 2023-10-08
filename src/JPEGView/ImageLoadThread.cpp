@@ -221,11 +221,7 @@ CImageLoadThread::CImageLoadThread(void) : CWorkThread(true) {
 }
 
 CImageLoadThread::~CImageLoadThread(void) {
-	DeleteCachedGDIBitmap();
-	DeleteCachedWebpDecoder();
-	DeleteCachedPngDecoder();
-	DeleteCachedJxlDecoder();
-	DeleteCachedAvifDecoder();
+	DeleteOtherCaches(IF_Unknown);
 }
 
 int CImageLoadThread::AsyncLoad(LPCTSTR strFileName, int nFrameIndex, const CProcessParams & processParams, HWND targetWnd, HANDLE eventFinished) {
@@ -290,44 +286,23 @@ void CImageLoadThread::ProcessRequest(CRequestBase& request) {
 	CRequest& rq = (CRequest&)request;
 	double dStartTime = Helpers::GetExactTickCount(); 
 	// Get image format and read the image
-	switch (GetImageFormat(rq.FileName)) {
+	EImageFormat nFormat = GetImageFormat(rq.FileName);
+	DeleteOtherCaches(nFormat);
+	switch (nFormat) {
 		case IF_JPEG :
-			DeleteCachedGDIBitmap();
-			DeleteCachedWebpDecoder();
-			DeleteCachedPngDecoder();
-			DeleteCachedJxlDecoder();
-			DeleteCachedAvifDecoder();
 			ProcessReadJPEGRequest(&rq);
 			break;
 		case IF_WindowsBMP :
-			DeleteCachedGDIBitmap();
-			DeleteCachedWebpDecoder();
-			DeleteCachedPngDecoder();
-			DeleteCachedJxlDecoder();
-			DeleteCachedAvifDecoder();
 			ProcessReadBMPRequest(&rq);
 			break;
 		case IF_TGA :
-			DeleteCachedGDIBitmap();
-			DeleteCachedWebpDecoder();
-			DeleteCachedPngDecoder();
-			DeleteCachedJxlDecoder();
-			DeleteCachedAvifDecoder();
 			ProcessReadTGARequest(&rq);
 			break;
 		case IF_WEBP:
-			DeleteCachedGDIBitmap();
-			DeleteCachedPngDecoder();
-			DeleteCachedJxlDecoder();
-			DeleteCachedAvifDecoder();
 			ProcessReadWEBPRequest(&rq);
 			break;
 #ifndef WINXP
 		case IF_PNG:
-			DeleteCachedGDIBitmap();
-			DeleteCachedWebpDecoder();
-			DeleteCachedJxlDecoder();
-			DeleteCachedAvifDecoder();
 			if (CSettingsProvider::This().ForceGDIPlus()) {
 				DeleteCachedPngDecoder();
 				ProcessReadGDIPlusRequest(&rq);
@@ -336,66 +311,31 @@ void CImageLoadThread::ProcessRequest(CRequestBase& request) {
 			}
 			break;
 		case IF_JXL:
-			DeleteCachedGDIBitmap();
-			DeleteCachedWebpDecoder();
-			DeleteCachedPngDecoder();
-			DeleteCachedAvifDecoder();
 			ProcessReadJXLRequest(&rq);
 			break;
 		case IF_AVIF:
-			DeleteCachedGDIBitmap();
-			DeleteCachedWebpDecoder();
-			DeleteCachedPngDecoder();
-			DeleteCachedJxlDecoder();
 			ProcessReadAVIFRequest(&rq);
 			break;
 		case IF_HEIF:
-			DeleteCachedGDIBitmap();
-			DeleteCachedWebpDecoder();
-			DeleteCachedPngDecoder();
-			DeleteCachedJxlDecoder();
-			DeleteCachedAvifDecoder();
 			ProcessReadHEIFRequest(&rq);
 			break;
 		case IF_PSD:
-			DeleteCachedGDIBitmap();
-			DeleteCachedWebpDecoder();
-			DeleteCachedPngDecoder();
-			DeleteCachedJxlDecoder();
-			DeleteCachedAvifDecoder();
 			ProcessReadPSDRequest(&rq);
 			break;
 		case IF_CameraRAW:
-			DeleteCachedGDIBitmap();
-			DeleteCachedWebpDecoder();
-			DeleteCachedPngDecoder();
-			DeleteCachedJxlDecoder();
-			DeleteCachedAvifDecoder();
 			ProcessReadRAWRequest(&rq);
 			break;
 #endif
 		case IF_QOI:
-			DeleteCachedGDIBitmap();
-			DeleteCachedWebpDecoder();
-			DeleteCachedPngDecoder();
-			DeleteCachedJxlDecoder();
-			DeleteCachedAvifDecoder();
 			ProcessReadQOIRequest(&rq);
 			break;
 		case IF_WIC:
-			DeleteCachedGDIBitmap();
-			DeleteCachedWebpDecoder();
-			DeleteCachedPngDecoder();
-			DeleteCachedJxlDecoder();
-			DeleteCachedAvifDecoder();
 			ProcessReadWICRequest(&rq);
 			break;
+		case IF_GIF:
+		case IF_TIFF:
 		default:
 			// try with GDI+
-			DeleteCachedWebpDecoder();
-			DeleteCachedPngDecoder();
-			DeleteCachedJxlDecoder();
-			DeleteCachedAvifDecoder();
 			ProcessReadGDIPlusRequest(&rq);
 			break;
 	}
@@ -434,6 +374,24 @@ static void LimitOffsets(CPoint& offsets, CSize clippingSize, const CSize & imag
 	nMaxOffsetY = max(0, nMaxOffsetY);
 	offsets.x = max(-nMaxOffsetX, min(+nMaxOffsetX, offsets.x));
 	offsets.y = max(-nMaxOffsetY, min(+nMaxOffsetY, offsets.y));
+}
+
+void CImageLoadThread::DeleteOtherCaches(EImageFormat nFormat) {
+	if (nFormat != IF_GIF) {
+		DeleteCachedGDIBitmap();
+	}
+	if (nFormat != IF_WEBP) {
+		DeleteCachedWebpDecoder();
+	}
+	if (nFormat != IF_PNG) {
+		DeleteCachedPngDecoder();
+	}
+	if (nFormat != IF_JXL) {
+		DeleteCachedJxlDecoder();
+	}
+	if (nFormat != IF_AVIF) {
+		DeleteCachedAvifDecoder();
+	}
 }
 
 void CImageLoadThread::DeleteCachedGDIBitmap() {
