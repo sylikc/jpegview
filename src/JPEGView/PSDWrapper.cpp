@@ -175,7 +175,8 @@ CJPEGImage* PsdReader::ReadImage(LPCTSTR strFileName, bool& bOutOfMemory)
 		// Read resource section size
 		unsigned int nResourceSectionSize = ReadUIntFromFile(hFile);
 
-		bool bUseAlpha = false;
+		// This default value should detect alpha channels for PSDs created by programs which don't save alpha identifiers (e.g. Krita, GIMP)
+		bool bUseAlpha = nChannels == 4;
 
 		for (;;) {
 			// Resource block signature
@@ -209,7 +210,8 @@ CJPEGImage* PsdReader::ReadImage(LPCTSTR strFileName, bool& bOutOfMemory)
 					}
 					break;
 				case 0x041D: // 0x041D 1053 (Photoshop 6.0) Alpha Identifiers. 4 bytes of length, followed by 4 bytes each for every alpha identifier.
-					if (nChannels == 4) {
+					if (bUseAlpha) {
+						bUseAlpha = false;
 						int i = 0;
 						while (i < nResourceSize / 4) {
 							i++;
@@ -274,7 +276,7 @@ CJPEGImage* PsdReader::ReadImage(LPCTSTR strFileName, bool& bOutOfMemory)
 		}
 
 		// Apply ICC Profile
-		if (nChannels >= 3) {
+		if (nChannels == 3 || nChannels == 4) {
 			if (nColorMode == MODE_Lab) {
 				transform = ICCProfileTransform::CreateLabTransform(nChannels == 4 ? ICCProfileTransform::FORMAT_ALab : ICCProfileTransform::FORMAT_Lab);
 				if (transform == NULL) {
