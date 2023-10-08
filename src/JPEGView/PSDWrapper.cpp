@@ -154,10 +154,9 @@ CJPEGImage* PsdReader::ReadImage(LPCTSTR strFileName, bool& bOutOfMemory)
 				nChannels = min(nRealChannels, 1);
 				break;
 			case MODE_Multichannel:
-			case MODE_Lab:
-				// I couldn't get the conversion from LabA to BGRA to work properly
 				nChannels = min(nRealChannels, 3);
 				break;
+			case MODE_Lab:
 			case MODE_RGB:
 			case MODE_CMYK:
 				nChannels = min(nRealChannels, 4);
@@ -278,7 +277,7 @@ CJPEGImage* PsdReader::ReadImage(LPCTSTR strFileName, bool& bOutOfMemory)
 		// Apply ICC Profile
 		if (nChannels == 3 || nChannels == 4) {
 			if (nColorMode == MODE_Lab) {
-				transform = ICCProfileTransform::CreateLabTransform(nChannels == 4 ? ICCProfileTransform::FORMAT_ALab : ICCProfileTransform::FORMAT_Lab);
+				transform = ICCProfileTransform::CreateLabTransform(nChannels == 4 ? ICCProfileTransform::FORMAT_LabA : ICCProfileTransform::FORMAT_Lab);
 				if (transform == NULL) {
 					// If we can't convert Lab to sRGB then just use the Lightness channel as grayscale
 					nChannels = min(nChannels, 1);

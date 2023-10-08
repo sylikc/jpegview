@@ -9,7 +9,7 @@ public:
 		FORMAT_BGR,
 		FORMAT_RGB,
 		FORMAT_Lab,
-		FORMAT_ALab,
+		FORMAT_LabA,
 	};
 
 	// Create a transform from given ICC Profile to standard sRGB color space.
