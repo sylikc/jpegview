@@ -9,6 +9,7 @@
 // This define is necessary for 32-bit builds to work, for some reason
 #define CMS_DLL
 #include "lcms2.h"
+#define TYPE_LabA_8 (COLORSPACE_SH(PT_Lab)|EXTRA_SH(1)|CHANNELS_SH(3)|BYTES_SH(1))
 
 
 void* ICCProfileTransform::sRGBProfile = NULL;
@@ -67,7 +68,7 @@ bool ICCProfileTransform::DoTransform(void* transform, const void* inputBuffer, 
 	switch (inFormat) {
 		case TYPE_BGRA_8:
 		case TYPE_RGBA_8:
-		case TYPE_ALab_8:
+		case TYPE_LabA_8:
 			nchannels = 4;
 			break;
 		case TYPE_BGR_8:
@@ -111,9 +112,9 @@ void* ICCProfileTransform::CreateLabTransform(PixelFormat format) {
 			inFormat = TYPE_Lab_8;
 			outFormat = TYPE_BGR_8;
 			break;
-		case FORMAT_ALab:
-			inFormat = TYPE_ALab_8;
-			outFormat = TYPE_ABGR_8;
+		case FORMAT_LabA:
+			inFormat = TYPE_LabA_8;
+			outFormat = TYPE_BGRA_8;
 			break;
 		default:
 			cmsCloseProfile(hLabProfile);
