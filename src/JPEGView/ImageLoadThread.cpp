@@ -75,22 +75,15 @@ static EImageFormat GetImageFormat(LPCTSTR sFileName) {
 	//	return IF_TIFF;
 
 	} else if (header[0] == 0x00 && header[1] == 0x00 && header[2] == 0x00 && memcmp(header+4, "ftyp", 4) == 0) {
-		if (memcmp(header + 8, "avif", 4) == 0 || memcmp(header + 8, "avis", 4) == 0)
-			return IF_AVIF;
-
 		// https://github.com/strukturag/libheif/issues/83
-		if (memcmp(header + 8, "heic", 4) == 0 ||
-			memcmp(header + 8, "heix", 4) == 0 ||
-			memcmp(header + 8, "hevc", 4) == 0 ||
-			memcmp(header + 8, "hevx", 4) == 0 ||
-			memcmp(header + 8, "heim", 4) == 0 ||
-			memcmp(header + 8, "heis", 4) == 0 ||
-			memcmp(header + 8, "hevm", 4) == 0 ||
-			memcmp(header + 8, "hevs", 4) == 0 ||
-			memcmp(header + 8, "mif1", 4) == 0 ||
-			memcmp(header + 8, "msf1", 4) == 0) {
+		// https://github.com/strukturag/libheif/blob/ce1e4586b6222588c5afcd60c7ba9caa86bcc58c/libheif/heif.h#L602-L805
+
+		// H265: heic, heix, hevc, hevx, heim, heis, hevm, hevs
+		if (header[8] == 'h' && header[9] == 'e')
 			return IF_HEIF;
-		}
+		// AV1: avif, avis
+		// Unspecified encoding: mif1, mif2, msf1, miaf, 1pic
+		return IF_AVIF; // try libavif, fallback to libheif
 	} else if (header[0] == 'q' && header[1] == 'o' && header[2] == 'i' && header[3] == 'f') {
 		return IF_QOI;
 	} else if (header[0] == '8' && header[1] == 'B' && header[2] == 'P' && header[3] == 'S') {
