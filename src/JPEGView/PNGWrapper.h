@@ -21,6 +21,9 @@ public:
 	// Returns true if PNG is animated, false otherwise
 	static bool IsAnimated(void* buffer, size_t sizebytes);
 
+	// Get EXIF Block
+	static void* GetEXIFBlock(void* buffer, size_t sizebytes);
+
 private:
 	struct png_cache;
 	static png_cache cache;
