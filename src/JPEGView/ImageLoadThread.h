@@ -101,6 +101,7 @@ private:
 
 	virtual void ProcessRequest(CRequestBase& request);
 	virtual void AfterFinishProcess(CRequestBase& request);
+	void DeleteOtherCaches(EImageFormat nFormat);
 	void DeleteCachedGDIBitmap();
 	void DeleteCachedWebpDecoder();
 	void DeleteCachedPngDecoder();
