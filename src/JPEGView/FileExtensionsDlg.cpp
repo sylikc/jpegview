@@ -279,7 +279,7 @@ LRESULT CFileExtensionsDlg::OnListViewKeyDown(WPARAM /*wParam*/, LPNMHDR lpnmhdr
 }
 
 void CFileExtensionsDlg::FillFileExtensionsList() {
-	InsertExtension(_T("*.jpg;*.jpeg"), FormatHint(CNLS::GetString(_T("%s images")), _T("JPEG")));
+	InsertExtension(_T("*.jpg;*.jpeg;*.jfif"), FormatHint(CNLS::GetString(_T("%s images")), _T("JPEG")));
 	InsertExtension(_T("*.png"), FormatHint(CNLS::GetString(_T("%s images")), _T("PNG")));
 	InsertExtension(_T("*.tif;*.tiff"), FormatHint(CNLS::GetString(_T("%s images")), _T("TIFF")));
 	InsertExtension(_T("*.bmp"), FormatHint(CNLS::GetString(_T("%s images")), _T("Windows bitmap")));
