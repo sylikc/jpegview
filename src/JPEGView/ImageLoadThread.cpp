@@ -11,8 +11,8 @@
 #include "BasicProcessing.h"
 #include "dcraw_mod.h"
 #include "TJPEGWrapper.h"
-#ifndef WINXP
 #include "PNGWrapper.h"
+#ifndef WINXP
 #include "JXLWrapper.h"
 #include "HEIFWrapper.h"
 #include "AVIFWrapper.h"

@@ -1,10 +1,11 @@
 #include "stdafx.h"
 
 #include "PNGWrapper.h"
+
+#ifndef WINXP
 #include "png.h"
 #include "MaxImageDef.h"
 #include <stdexcept>
-#include <stdlib.h>
 
 // Uncomment to build without APNG support
 //#undef PNG_APNG_SUPPORTED
@@ -400,6 +401,9 @@ bool PngReader::IsAnimated(void* buffer, size_t sizebytes) {
 	}
 	return false;
 }
+#else
+#define PNG_UINT_31_MAX (0x7fffffff)
+#endif
 
 void* PngReader::GetEXIFBlock(void* buffer, size_t sizebytes) {
 	size_t offset = 8; // skip PNG signature
