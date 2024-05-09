@@ -526,7 +526,7 @@ SlideShowEffectTime=250
 ; If set to true, Ctrl-S overrides the original file on disk, applying the current processings without
 ; showing a dialog or prompting the user to confirm.
 ; CAUTION: Use at your own risk! Be aware that the original image file is overridden and cannot be restored anymore!
-OverrideOriginalFileWithoutSaveDialog=false
+OverwriteOriginalFileWithoutSaveDialog=false
 
 ; If set to true, lossless JPEG transformations will trim the image as needed without prompting the user.
 ; This will remove 15 pixel rows/columns at the image borders in worst case.
