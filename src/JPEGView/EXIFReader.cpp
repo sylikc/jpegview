@@ -299,8 +299,8 @@ CEXIFReader::CEXIFReader(void* pApp1Block, EImageFormat eImageFormat)
 
 	// image orientation
 	uint8* pTagOrientation = NULL;
-	// orientation tags must be ignored for JXL, they are taken care of by the decoder
-	if (eImageFormat != IF_JXL) {
+	// orientation tags must be ignored for JXL and HEIF/AVIF
+	if (eImageFormat != IF_JXL && eImageFormat != IF_HEIF && eImageFormat != IF_AVIF) {
 		pTagOrientation = FindTag(pIFD0, pLastIFD0, 0x112, bLittleEndian);
 	}
 	if (pTagOrientation != NULL) {
