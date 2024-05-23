@@ -2,6 +2,7 @@
 
 #include "AVIFWrapper.h"
 #include "avif/avif.h"
+#include "BasicProcessing.h"
 #include "MaxImageDef.h"
 #include "ICCProfileTransform.h"
 
@@ -103,6 +104,45 @@ void* AvifReader::ReadImage(int& width,
 			memcpy(exif_chunk, "\xFF\xE1\0\0Exif\0\0", 10);
 			*((unsigned short*)exif_chunk + 1) = _byteswap_ushort(exif.size + 8);
 			memcpy((uint8_t*)exif_chunk + 10, exif.data, exif.size);
+		}
+	}
+
+	// Handle clap, irot and imir boxes
+	avifTransformFlags flags = cache.decoder->image->transformFlags;
+	if (flags & AVIF_TRANSFORM_CLAP) {
+		avifCleanApertureBox* clap = &cache.decoder->image->clap;
+		avifCropRect crop;
+		avifDiagnostics diag;
+		if (avifCropRectConvertCleanApertureBox(&crop, clap, width, height, cache.decoder->image->yuvFormat, &diag)) {
+			POINT point = { crop.x, crop.y };
+			SIZE sz = { crop.width, crop.height };
+			void* pixels = CBasicProcessing::Crop32bpp(width, height, cache.rgb.pixels, CRect(point, sz));
+			if (pixels != NULL) {
+				delete[] cache.rgb.pixels;
+				cache.rgb.pixels = (uint8_t*)pixels;
+				width = crop.width;
+				height = crop.height;
+			}
+		}
+	}
+	if (flags & AVIF_TRANSFORM_IROT) {
+		int angle = 360 - cache.decoder->image->irot.angle * 90;
+		void* pixels = CBasicProcessing::Rotate32bpp(width, height, cache.rgb.pixels, angle);
+		if (pixels != NULL) {
+			delete[] cache.rgb.pixels;
+			cache.rgb.pixels = (uint8_t*)pixels;
+			if (angle != 180) {
+				int temp = width;
+				width = height;
+				height = temp;
+			}
+		}
+	}
+	if (flags & AVIF_TRANSFORM_IMIR) {
+		void* pixels = CBasicProcessing::Mirror32bpp(width, height, cache.rgb.pixels, cache.decoder->image->imir.axis);
+		if (pixels != NULL) {
+			delete[] cache.rgb.pixels;
+			cache.rgb.pixels = (uint8_t*)pixels;
 		}
 	}
 

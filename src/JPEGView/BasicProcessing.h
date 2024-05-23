@@ -56,6 +56,9 @@ public:
 	// cases the return value is NULL
 	static void* Rotate32bpp(int nWidth, int nHeight, const void* pDIBPixels, int nRotationAngleCW);
 
+	// Mirror 32 bit DIB
+	static void* Mirror32bpp(int nWidth, int nHeight, const void* pDIBPixels, bool bHorizontally);
+
 	// Mirror 32 bit DIB horizontally
 	static void* MirrorH32bpp(int nWidth, int nHeight, const void* pDIBPixels);
 
