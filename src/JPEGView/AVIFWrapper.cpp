@@ -92,20 +92,6 @@ void* AvifReader::ReadImage(int& width,
 		DeleteCache();
 		return NULL;
 	}
-	avifRWData icc = cache.decoder->image->icc;
-	if (cache.transform == NULL)
-		cache.transform = ICCProfileTransform::CreateTransform(icc.data, icc.size, ICCProfileTransform::FORMAT_BGRA);
-	ICCProfileTransform::DoTransform(cache.transform, cache.rgb.pixels, cache.rgb.pixels, width, height);
-
-	avifRWData exif = cache.decoder->image->exif;
-	if (exif.size > 8 && exif.size < 65528 && exif.data != NULL) {
-		exif_chunk = malloc(exif.size + 10);
-		if (exif_chunk != NULL) {
-			memcpy(exif_chunk, "\xFF\xE1\0\0Exif\0\0", 10);
-			*((unsigned short*)exif_chunk + 1) = _byteswap_ushort(exif.size + 8);
-			memcpy((uint8_t*)exif_chunk + 10, exif.data, exif.size);
-		}
-	}
 
 	// Handle clap, irot and imir boxes
 	avifTransformFlags flags = cache.decoder->image->transformFlags;
@@ -143,6 +129,21 @@ void* AvifReader::ReadImage(int& width,
 		if (pixels != NULL) {
 			delete[] cache.rgb.pixels;
 			cache.rgb.pixels = (uint8_t*)pixels;
+		}
+	}
+
+	avifRWData icc = cache.decoder->image->icc;
+	if (cache.transform == NULL)
+		cache.transform = ICCProfileTransform::CreateTransform(icc.data, icc.size, ICCProfileTransform::FORMAT_BGRA);
+	ICCProfileTransform::DoTransform(cache.transform, cache.rgb.pixels, cache.rgb.pixels, width, height);
+
+	avifRWData exif = cache.decoder->image->exif;
+	if (exif.size > 8 && exif.size < 65528 && exif.data != NULL) {
+		exif_chunk = malloc(exif.size + 10);
+		if (exif_chunk != NULL) {
+			memcpy(exif_chunk, "\xFF\xE1\0\0Exif\0\0", 10);
+			*((unsigned short*)exif_chunk + 1) = _byteswap_ushort(exif.size + 8);
+			memcpy((uint8_t*)exif_chunk + 10, exif.data, exif.size);
 		}
 	}
 
