@@ -655,7 +655,6 @@ void* CBasicProcessing::Rotate32bpp(int nWidth, int nHeight, const void* pDIBPix
 }
 
 void* CBasicProcessing::Mirror32bpp(int nWidth, int nHeight, const void* pDIBPixels, bool bHorizontally) {
-	if (pDIBPixels == NULL) return NULL;
 	return bHorizontally ? CBasicProcessing::MirrorH32bpp(nWidth, nHeight, pDIBPixels) :
 		CBasicProcessing::MirrorV32bpp(nWidth, nHeight, pDIBPixels);
 }
