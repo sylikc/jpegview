@@ -42,8 +42,8 @@ static CJPEGLosslessTransform::EResult _DoTransformation(LPCTSTR sInputFile, LPC
 	unsigned char* pInputJPEGBytes = _ReadFile(sInputFile, nNumBytesInput);
 	if (pInputJPEGBytes != NULL) {
 		unsigned char* pOutputJPEGBytes = NULL;
-		unsigned long nNumBytesOutput = 0;
-		if (0 == tjTransform(hTransform, pInputJPEGBytes, nNumBytesInput, 1, &pOutputJPEGBytes, &nNumBytesOutput, &transform, 0) && pOutputJPEGBytes != NULL) {
+		size_t nNumBytesOutput = 0;
+		if (0 == tj3Transform(hTransform, pInputJPEGBytes, nNumBytesInput, 1, &pOutputJPEGBytes, &nNumBytesOutput, &transform) && pOutputJPEGBytes != NULL) {
 			if (!_WriteFile(sOutputFile, pOutputJPEGBytes, nNumBytesOutput)) {
 				eResult = CJPEGLosslessTransform::WriteFileFailed;
 			}
