@@ -47,6 +47,7 @@ void* AvifReader::ReadImage(int& width,
 		memcpy(cache.data, buffer, sizebytes);
 		cache.decoder = avifDecoderCreate();
 		cache.decoder->maxThreads = nthreads;
+		cache.decoder->strictFlags = AVIF_STRICT_DISABLED;
 		result = avifDecoderSetIOMemory(cache.decoder, cache.data, sizebytes);
 		if (result != AVIF_RESULT_OK) {
 			DeleteCache();
