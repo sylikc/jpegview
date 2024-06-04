@@ -191,7 +191,8 @@ CJPEGImage* PsdReader::ReadImage(LPCTSTR strFileName, bool& bOutOfMemory)
 			unsigned short nResourceID = ReadUShortFromFile(hFile);
 
 			// Skip Pascal string (padded to be even length)
-			while (ReadUShortFromFile(hFile));
+			unsigned char nStringSize = ReadUCharFromFile(hFile) | 1;
+			SeekFile(hFile, nStringSize);
 
 			// Resource size
 			unsigned int nResourceSize = ReadUIntFromFile(hFile);
