@@ -997,6 +997,9 @@ void CImageLoadThread::ProcessReadRAWRequest(CRequest * request) {
 			if (fullsize == 2 || fullsize == 3) {
 				request->Image = RawReader::ReadImage(request->FileName, bOutOfMemory, fullsize == 2);
 			}
+			if (request->Image == NULL && fullsize == 2) {
+				request->Image = CReaderRAW::ReadRawImage(request->FileName, bOutOfMemory);
+			}
 			if (request->Image == NULL) {
 				request->Image = RawReader::ReadImage(request->FileName, bOutOfMemory, fullsize == 0 || fullsize == 3);
 			}
@@ -1004,10 +1007,12 @@ void CImageLoadThread::ProcessReadRAWRequest(CRequest * request) {
 			// libraw.dll not found or VC++ Runtime not installed
 		}
 		SetErrorMode(nPrevErrorMode);
+#else
+		fullsize = fullsize == 1;
 #endif
 
 		// Try with dcraw_mod
-		if (request->Image == NULL && fullsize != 1) {
+		if (request->Image == NULL && fullsize != 1 && fullsize != 2) {
 			request->Image = CReaderRAW::ReadRawImage(request->FileName, bOutOfMemory);
 		}
 	} catch (...) {
