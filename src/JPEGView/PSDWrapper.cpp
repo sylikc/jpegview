@@ -191,8 +191,8 @@ CJPEGImage* PsdReader::ReadImage(LPCTSTR strFileName, bool& bOutOfMemory)
 			unsigned short nResourceID = ReadUShortFromFile(hFile);
 
 			// Skip Pascal string (padded to be even length)
-			unsigned char nStringSize = ReadUCharFromFile(hFile) | 1;
-			SeekFile(hFile, nStringSize);
+			unsigned char nStringSize = ReadUCharFromFile(hFile);
+			SeekFile(hFile, nStringSize | 1);
 
 			// Resource size
 			unsigned int nResourceSize = ReadUIntFromFile(hFile);
@@ -438,7 +438,8 @@ CJPEGImage* PsdReader::ReadThumb(LPCTSTR strFileName, bool& bOutOfMemory)
 			unsigned short nResourceID = ReadUShortFromFile(hFile);
 
 			// Skip Pascal string (padded to be even length)
-			while (ReadUShortFromFile(hFile));
+			unsigned char nStringSize = ReadUCharFromFile(hFile);
+			SeekFile(hFile, nStringSize | 1);
 
 			// Resource size
 			unsigned int nResourceSize = ReadUIntFromFile(hFile);
