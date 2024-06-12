@@ -300,6 +300,8 @@ CJPEGImage* PsdReader::ReadImage(LPCTSTR strFileName, bool& bOutOfMemory)
 		if (nCompressionMethod == COMPRESSION_RLE) {
 			// Skip byte counts for scanlines
 			p += nHeight * nRealChannels * 2;
+			ThrowIf(p >= (unsigned char*)pBuffer + nImageDataSize);
+			unsigned char* pOffset = p;
 			for (unsigned channel = 0; channel < nChannels; channel++) {
 				unsigned rchannel;
 				if (nColorMode == MODE_Lab) {
@@ -308,9 +310,14 @@ CJPEGImage* PsdReader::ReadImage(LPCTSTR strFileName, bool& bOutOfMemory)
 					rchannel = (-channel - 2) % nChannels;
 				}
 				for (unsigned row = 0; row < nHeight; row++) {
+					pOffset += _byteswap_ushort(*(unsigned short *)(pBuffer + (channel * nHeight + row) * 2));
+					p = pOffset;
+
 					for (unsigned count = 0; count < nWidth; ) {
 						unsigned char c;
-						ThrowIf(p >= (unsigned char*)pBuffer + nImageDataSize);
+						if (p >= (unsigned char*)pBuffer + nImageDataSize) {
+							break;
+						};
 						c = *p;
 						p += 1;
 
