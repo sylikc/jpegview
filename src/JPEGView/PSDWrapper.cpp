@@ -135,7 +135,7 @@ CJPEGImage* PsdReader::ReadImage(LPCTSTR strFileName, bool& bOutOfMemory)
 		if ((double)nHeight * nWidth > MAX_IMAGE_PIXELS) {
 			bOutOfMemory = true;
 		}
-		ThrowIf(bOutOfMemory || nHeight > MAX_IMAGE_DIMENSION || nWidth > MAX_IMAGE_DIMENSION);
+		ThrowIf(bOutOfMemory || max(nHeight, nWidth) > MAX_IMAGE_DIMENSION || !min(nHeight, nWidth));
 
 		// PSD can have bit depths of 1, 2, 4, 8, 16, 32
 		unsigned short nBitDepth = ReadUShortFromFile(hFile);
