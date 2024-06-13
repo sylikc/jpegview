@@ -79,7 +79,7 @@ static inline unsigned short ReadUShortFromFile(HANDLE file) {
 }
 
 // Read and return an unsigned char from file
-static inline unsigned short ReadUCharFromFile(HANDLE file) {
+static inline unsigned char ReadUCharFromFile(HANDLE file) {
 	unsigned char val;
 	ReadFromFile(&val, file, 1);
 	return val;
