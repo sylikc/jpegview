@@ -349,6 +349,13 @@ CJPEGImage* PsdReader::ReadImage(LPCTSTR strFileName, bool& bOutOfMemory)
 					}
 
 					pOffset += _byteswap_ushort(*(unsigned short*)(pBuffer + (channel * nHeight + row) * 2));
+#ifdef DEBUG
+					if (p != pOffset) {
+						WCHAR buf[100];
+						swprintf(buf, _T("Misaligned scan line bytes (%+d) for channel %d row %d\n"), p - pOffset, channel, row);
+						::OutputDebugString(buf);
+					}
+#endif
 				}
 			}
 		} else { // No compression
