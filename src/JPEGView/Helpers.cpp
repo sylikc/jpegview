@@ -767,7 +767,7 @@ EImageFormat GetImageFormat(LPCTSTR sFileName) {
 			return IF_JXL;
 		} else if (_tcsicmp(sEnding, _T("AVIF")) == 0) {
 			return IF_AVIF;
-		} else if (_tcsicmp(sEnding, _T("HEIF")) == 0 || _tcsicmp(sEnding, _T("HEIC")) == 0) {
+		} else if (_tcsicmp(sEnding, _T("HEIF")) == 0 || _tcsicmp(sEnding, _T("HEIC")) == 0 || _tcsicmp(sEnding, _T("HIF")) == 0) {
 			return IF_HEIF;
 		} else if (_tcsicmp(sEnding, _T("TGA")) == 0) {
 			return IF_TGA;

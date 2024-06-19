@@ -62,28 +62,19 @@ static EImageFormat GetImageFormat(LPCTSTR sFileName) {
 	} else if ((header[0] == 0xff && header[1] == 0x0a) ||
 		memcmp(header, "\x00\x00\x00\x0cJXL\x20\x0d\x0a\x87\x0a", 12) == 0) {
 		return IF_JXL;
-
-	// Unfortunately, TIFF detection by header bytes is not reliable
-	// A few RAW image formats use TIFF as the container
-	// ex: CR2 - http://lclevy.free.fr/cr2/#key_info
-	// ex: DNG - https://www.adobe.com/creativecloud/file-types/image/raw/dng-file.html#dng
-	//
-	// JPEGView will fail to open these files if the following code is used
-	//
-	//} else if ((header[0] == 0x49 && header[1] == 0x49 && header[2] == 0x2a && header[3] == 0x00) ||
-	//	(header[0] == 0x4d && header[1] == 0x4d && header[2] == 0x00 && header[3] == 0x2a)) {
-	//	return IF_TIFF;
-
-	} else if (header[0] == 0x00 && header[1] == 0x00 && header[2] == 0x00 && memcmp(header+4, "ftyp", 4) == 0) {
+	} else if (!memcmp(header+4, "ftyp", 4)) {
 		// https://github.com/strukturag/libheif/issues/83
 		// https://github.com/strukturag/libheif/blob/ce1e4586b6222588c5afcd60c7ba9caa86bcc58c/libheif/heif.h#L602-L805
 
-		// H265: heic, heix, hevc, hevx, heim, heis, hevm, hevs
-		if (header[8] == 'h' && header[9] == 'e')
-			return IF_HEIF;
 		// AV1: avif, avis
-		// Unspecified encoding: mif1, mif2, msf1, miaf, 1pic
-		return IF_AVIF; // try libavif, fallback to libheif
+		if (!memcmp(header+8, "avi", 3))
+			return IF_AVIF;
+		// H265: heic, heix, hevc, hevx, heim, heis, hevm, hevs
+		if (!memcmp(header+8, "hei", 3) || !memcmp(header+8, "hev", 3))
+			return IF_HEIF;
+		// Canon CR3
+		if (!memcmp(header+8, "crx ", 4))
+			return IF_CameraRAW;
 	} else if (header[0] == 'q' && header[1] == 'o' && header[2] == 'i' && header[3] == 'f') {
 		return IF_QOI;
 	} else if (header[0] == '8' && header[1] == 'B' && header[2] == 'P' && header[3] == 'S') {
@@ -91,7 +82,21 @@ static EImageFormat GetImageFormat(LPCTSTR sFileName) {
 	}
 
 	// default fallback if no matches based on magic bytes
-	return Helpers::GetImageFormat(sFileName);
+	EImageFormat eImageFormat = Helpers::GetImageFormat(sFileName);
+
+	if (eImageFormat != IF_Unknown) {
+		return eImageFormat;
+	} else if (!memcmp(header+4, "ftyp", 4)) {
+		// Unspecified encoding (possibly AVIF or HEIF): mif1, mif2, msf1, miaf, 1pic
+		return IF_AVIF;
+	} else if (!memcmp(header, "II*\0", 4) || !memcmp(header, "MM\0*", 4)) {
+		// Must be checked after file extension to avoid classifying RAW as TIFF
+		// A few RAW image formats use TIFF as the container
+		// ex: CR2 - http://lclevy.free.fr/cr2/#key_info
+		// ex: DNG - https://www.adobe.com/creativecloud/file-types/image/raw/dng-file.html#dng
+		return IF_TIFF;
+	}
+	return IF_Unknown;
 }
 
 static EImageFormat GetBitmapFormat(Gdiplus::Bitmap * pBitmap) {
