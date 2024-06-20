@@ -58,27 +58,28 @@ void * TurboJpeg::Compress(const void *source,
 {
 	outOfMemory = false;
 	len = 0;
-	tjhandle hEncoder = tjInitCompress();
+	tjhandle hEncoder = tj3Init(TJINIT_COMPRESS);
 	if (hEncoder == NULL) {
 		return NULL;
 	}
 
 	unsigned char* pJPEGCompressed = NULL;
-	unsigned long nCompressedLen = 0;
-	int nResult = tjCompress2(hEncoder, (unsigned char*)source, width, TJPAD(width * 3), height, TJPF_BGR,
-		&pJPEGCompressed, &nCompressedLen, TJSAMP_420, quality, 0);
-	if (nResult != 0) {
-		if (pJPEGCompressed != NULL) {
-			tjFree(pJPEGCompressed);
-			pJPEGCompressed = NULL;
-		} else {
+	size_t nCompressedLen = 0;
+	tj3Set(hEncoder, TJPARAM_SUBSAMP, TJSAMP_420);
+	tj3Set(hEncoder, TJPARAM_QUALITY, quality);
+	int nResult = tj3Compress8(hEncoder, (unsigned char*)source, width, TJPAD(width * 3), height, TJPF_BGR,
+		&pJPEGCompressed, &nCompressedLen);
+	if (nResult != 0 || nCompressedLen > INT_MAX) {
+		if (pJPEGCompressed == NULL) {
 			outOfMemory = true;
 		}
+		tj3Free(pJPEGCompressed);
+		pJPEGCompressed = NULL;
 	}
 
 	len = nCompressedLen;
 
-	tjDestroy(hEncoder);
+	tj3Destroy(hEncoder);
 
 	return pJPEGCompressed;
 }
