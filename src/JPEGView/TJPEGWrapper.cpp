@@ -73,7 +73,7 @@ void * TurboJpeg::Compress(const void *source,
 		if (pJPEGCompressed == NULL) {
 			outOfMemory = true;
 		}
-		tj3Free(pJPEGCompressed);
+		Free(pJPEGCompressed);
 		pJPEGCompressed = NULL;
 	}
 
@@ -82,4 +82,8 @@ void * TurboJpeg::Compress(const void *source,
 	tj3Destroy(hEncoder);
 
 	return pJPEGCompressed;
+}
+
+void TurboJpeg::Free(void* buffer) {
+	tj3Free(buffer);
 }
