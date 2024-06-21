@@ -46,7 +46,7 @@ const unsigned int MAX_BMP_FILE_SIZE = 1024 * 1024 * 100;
 
 // this may be an artificial limitation and might make configurable, or ignore custom setting only for win32
 #ifdef _WIN64
-const unsigned int MAX_IMAGE_PIXELS = 1024 * 1024 * 500;
+const unsigned int MAX_IMAGE_PIXELS = 65535 * 65535;
 #else
 const unsigned int MAX_IMAGE_PIXELS = 1024 * 1024 * 100;
 #endif
