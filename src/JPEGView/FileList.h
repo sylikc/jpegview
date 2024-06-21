@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Helpers.h"
+#include <future>
 
 class CDirectoryWatcher;
 
@@ -120,7 +121,10 @@ public:
 	void ToggleBetweenMarkedAndCurrentFile();
 
 	// Sets a checkpoint on the current image
-	void SetCheckpoint() { m_iterCheckPoint = m_iter; }
+	void SetCheckpoint() {
+		WaitIfNotReady();
+		m_iterCheckPoint = m_iter;
+	}
 	// Check if we are now on another image since the last checkpoint was set
 	bool ChangedSinceCheckpoint() { return m_iterCheckPoint != m_iter; }
 
@@ -145,6 +149,11 @@ public:
 	// delete the chain of CFileLists forward and backward and only leave the current node alive
 	void DeleteHistory(bool onlyForward = false);
 
+	inline void CFileList::WaitIfNotReady() {
+		if (m_isProcessing)
+			m_future_fileList.wait();
+	}
+
 private:
 	static Helpers::ENavigationMode sm_eMode;
 
@@ -161,6 +170,10 @@ private:
 	std::list<CFileDesc>::iterator m_iter; // current position in m_fileList
 	std::list<CFileDesc>::iterator m_iterStart; // start of iteration in m_fileList
 	std::list<CFileDesc>::iterator m_iterCheckPoint;
+
+	// Async
+	std::future<void> m_future_fileList;
+	bool m_isProcessing;
 
 	CString m_sMarkedFile;
 	CString m_sMarkedFileCurrent;

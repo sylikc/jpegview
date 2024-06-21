@@ -190,7 +190,7 @@ static LPCTSTR* GetSupportedFileEndingList() {
 CFileList::CFileList(const CString & sInitialFile, CDirectoryWatcher & directoryWatcher, 
 	Helpers::ESorting eInitialSorting, bool isSortedAscending, bool bWrapAroundFolder, int nLevel, bool forceSorting)
 	: m_directoryWatcher(directoryWatcher) {
-
+	m_isProcessing = false;
 	CFileDesc::SetSorting(eInitialSorting, isSortedAscending);
 	m_bDeleteHistory = true;
 	m_bWrapAroundFolder = bWrapAroundFolder;
@@ -217,9 +217,14 @@ CFileList::CFileList(const CString & sInitialFile, CDirectoryWatcher & directory
 
 	if (!m_bIsSlideShowList) {
 		if (bImageFile || bIsDirectory) {
-			FindFiles();
-			m_iter = FindFile(sInitialFile);
-			m_iterStart = bWrapAroundFolder ? m_iter : m_fileList.begin();
+			// Expensive operation, it will be run asynchronously to avoid blocking the main thread.
+			m_isProcessing = true;
+			m_future_fileList = std::async(std::launch::async, [this, &sInitialFile, &bWrapAroundFolder]() {
+				FindFiles();
+				m_iter = FindFile(sInitialFile);
+				m_iterStart = bWrapAroundFolder ? m_iter : m_fileList.begin();
+				m_isProcessing = false;
+				});
 		} else {
 			// neither image file nor directory nor list of file names - try to read anyway but normally will fail
 			CFindFile fileFind;
@@ -256,6 +261,7 @@ CString CFileList::GetSupportedFileEndings() {
 void CFileList::Reload(LPCTSTR sFileName, bool clearForwardHistory) {
 	LPCTSTR sCurrent = sFileName;
 	if (sCurrent == NULL) {
+		WaitIfNotReady(); // If async is still processing, then wait.
 		sCurrent = Current();
 		if (sCurrent == NULL) {
 			m_fileList.clear();
@@ -338,6 +344,9 @@ void CFileList::FileHasRenamed(LPCTSTR sOldFileName, LPCTSTR sNewFileName) {
 		m_sInitialFile = sNewFileName;
 	}
 	std::list<CFileDesc>::iterator iter;
+
+	WaitIfNotReady(); // If async is still processing, then wait.
+
 	for (iter = m_fileList.begin( ); iter != m_fileList.end( ); iter++ ) {
 		if (_tcsicmp(sOldFileName, iter->GetName()) == 0) {
 			iter->SetName(sNewFileName);
@@ -346,6 +355,8 @@ void CFileList::FileHasRenamed(LPCTSTR sOldFileName, LPCTSTR sNewFileName) {
 }
 
 void CFileList::ModificationTimeChanged() {
+	WaitIfNotReady(); // If async is still processing, then wait.
+
 	if (m_iter != m_fileList.end()) {
 		LPCTSTR sName = m_iter->GetName();
 		HANDLE hFile = ::CreateFile(sName, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, 0, NULL);
@@ -439,6 +450,8 @@ void CFileList::Last() {
 }
 
 CFileList* CFileList::AwayFromCurrent() {
+	WaitIfNotReady(); // If async is still processing, then wait.
+
 	LPCTSTR sCurrentFile = Current();
 	LPCTSTR sNextFile = PeekNextPrev(1, true, false);
 	if (sCurrentFile == NULL || sNextFile == NULL || _tcscmp(sCurrentFile, sNextFile) == 0) {
@@ -454,7 +467,10 @@ CFileList* CFileList::AwayFromCurrent() {
 }
 
 LPCTSTR CFileList::Current() const {
-	if (m_iter != m_fileList.end()) {
+	if (m_isProcessing) { // Most likely CFileList is being inialized, thus it's probably the initial file being requested.
+		return m_sInitialFile;
+	}
+	else if (m_iter != m_fileList.end()) {
 		return m_iter->GetName();
 	} else {
 		return NULL;
@@ -504,6 +520,7 @@ LPCTSTR CFileList::PeekNextPrev(int nIndex, bool bForward, bool bToggle) {
 	if (bToggle) {
 		return (m_nMarkedIndexShow == 0) ? m_sMarkedFile : m_sMarkedFileCurrent;
 	} else {
+
 		std::list<CFileDesc>::iterator thisIter = m_iter;
 		LPCTSTR sFileName;
 		if (nIndex != 0) {
