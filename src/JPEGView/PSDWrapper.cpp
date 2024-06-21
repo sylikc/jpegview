@@ -135,7 +135,7 @@ CJPEGImage* PsdReader::ReadImage(LPCTSTR strFileName, bool& bOutOfMemory)
 		if ((double)nHeight * nWidth > MAX_IMAGE_PIXELS) {
 			bOutOfMemory = true;
 		}
-		ThrowIf(bOutOfMemory || nHeight > MAX_IMAGE_DIMENSION || nWidth > MAX_IMAGE_DIMENSION);
+		ThrowIf(bOutOfMemory || max(nHeight, nWidth) > MAX_IMAGE_DIMENSION || !min(nHeight, nWidth));
 
 		// PSD can have bit depths of 1, 2, 4, 8, 16, 32
 		unsigned short nBitDepth = ReadUShortFromFile(hFile);
@@ -301,6 +301,7 @@ CJPEGImage* PsdReader::ReadImage(LPCTSTR strFileName, bool& bOutOfMemory)
 		if (nCompressionMethod == COMPRESSION_RLE) {
 			// Skip byte counts for scanlines
 			p += nHeight * nRealChannels * 2;
+			unsigned char* pOffset = p;
 			for (unsigned channel = 0; channel < nChannels; channel++) {
 				unsigned rchannel;
 				if (nColorMode == MODE_Lab) {
@@ -309,6 +310,8 @@ CJPEGImage* PsdReader::ReadImage(LPCTSTR strFileName, bool& bOutOfMemory)
 					rchannel = (-channel - 2) % nChannels;
 				}
 				for (unsigned row = 0; row < nHeight; row++) {
+					p = pOffset;
+
 					for (unsigned count = 0; count < nWidth; ) {
 						unsigned char c;
 						ThrowIf(p >= (unsigned char*)pBuffer + nImageDataSize);
@@ -345,6 +348,15 @@ CJPEGImage* PsdReader::ReadImage(LPCTSTR strFileName, bool& bOutOfMemory)
 
 						count += c;
 					}
+
+					pOffset += _byteswap_ushort(*(unsigned short*)(pBuffer + (channel * nHeight + row) * 2));
+#ifdef DEBUG
+					if (p != pOffset) {
+						WCHAR buf[100];
+						swprintf(buf, _T("Misaligned scan line bytes (%+d) for channel %d row %d\n"), p - pOffset, channel, row);
+						::OutputDebugString(buf);
+					}
+#endif
 				}
 			}
 		} else { // No compression
