@@ -11,8 +11,8 @@
 #include "BasicProcessing.h"
 #include "dcraw_mod.h"
 #include "TJPEGWrapper.h"
-#ifndef WINXP
 #include "PNGWrapper.h"
+#ifndef WINXP
 #include "JXLWrapper.h"
 #include "HEIFWrapper.h"
 #include "AVIFWrapper.h"
@@ -320,19 +320,14 @@ void CImageLoadThread::ProcessRequest(CRequestBase& request) {
 			DeleteCachedAvifDecoder();
 			ProcessReadWEBPRequest(&rq);
 			break;
-#ifndef WINXP
 		case IF_PNG:
 			DeleteCachedGDIBitmap();
 			DeleteCachedWebpDecoder();
 			DeleteCachedJxlDecoder();
 			DeleteCachedAvifDecoder();
-			if (CSettingsProvider::This().ForceGDIPlus()) {
-				DeleteCachedPngDecoder();
-				ProcessReadGDIPlusRequest(&rq);
-			} else {
-				ProcessReadPNGRequest(&rq);
-			}
+			ProcessReadPNGRequest(&rq);
 			break;
+#ifndef WINXP
 		case IF_JXL:
 			DeleteCachedGDIBitmap();
 			DeleteCachedWebpDecoder();
@@ -650,7 +645,6 @@ void CImageLoadThread::ProcessReadWEBPRequest(CRequest * request) {
 
 #ifndef WINXP
 void CImageLoadThread::ProcessReadPNGRequest(CRequest* request) {
-	bool bSuccess = false;
 	bool bUseCachedDecoder = false;
 	const wchar_t* sFileName;
 	sFileName = (const wchar_t*)request->FileName;
@@ -668,7 +662,8 @@ void CImageLoadThread::ProcessReadPNGRequest(CRequest* request) {
 			return;
 		}
 	}
-	char* pBuffer = NULL;
+	HGLOBAL hFileBuffer = NULL;
+	void* pBuffer = NULL;
 	try {
 		unsigned int nFileSize;
 		unsigned int nNumBytesRead;
@@ -676,28 +671,33 @@ void CImageLoadThread::ProcessReadPNGRequest(CRequest* request) {
 			// Don't read too huge files
 			nFileSize = ::GetFileSize(hFile, NULL);
 			if (nFileSize > MAX_PNG_FILE_SIZE) {
+				request->OutOfMemory = true;
 				::CloseHandle(hFile);
-				return ProcessReadGDIPlusRequest(request);
+				return;
 			}
-
-			pBuffer = new(std::nothrow) char[nFileSize];
+			hFileBuffer = ::GlobalAlloc(GMEM_MOVEABLE, nFileSize);
+			pBuffer = (hFileBuffer == NULL) ? NULL : ::GlobalLock(hFileBuffer);
 			if (pBuffer == NULL) {
+				if (hFileBuffer) ::GlobalFree(hFileBuffer);
+				request->OutOfMemory = true;
 				::CloseHandle(hFile);
-				return ProcessReadGDIPlusRequest(request);
+				return;
 			}
-		}
-		else {
+		} else {
 			nFileSize = 0; // to avoid compiler warnings, not used
 		}
 		if (bUseCachedDecoder || (::ReadFile(hFile, pBuffer, nFileSize, (LPDWORD)&nNumBytesRead, NULL) && nNumBytesRead == nFileSize)) {
 			int nWidth, nHeight, nBPP, nFrameCount, nFrameTimeMs;
 			bool bHasAnimation;
 			uint8* pPixelData = NULL;
-			void* pEXIFData;
+			void* pEXIFData = NULL;
 
+#ifndef WINXP
 			// If UseEmbeddedColorProfiles is true and the image isn't animated, we should use GDI+ for better color management
-			if (bUseCachedDecoder || !CSettingsProvider::This().UseEmbeddedColorProfiles() || PngReader::IsAnimated(pBuffer, nFileSize))
+			bool bUseGDIPlus = CSettingsProvider::This().ForceGDIPlus() || CSettingsProvider::This().UseEmbeddedColorProfiles();
+			if (bUseCachedDecoder || !bUseGDIPlus || PngReader::IsAnimated(pBuffer, nFileSize))
 				pPixelData = (uint8*)PngReader::ReadImage(nWidth, nHeight, nBPP, bHasAnimation, nFrameCount, nFrameTimeMs, pEXIFData, request->OutOfMemory, pBuffer, nFileSize);
+#endif
 
 			if (pPixelData != NULL) {
 				if (bHasAnimation)
@@ -708,25 +708,35 @@ void CImageLoadThread::ProcessReadPNGRequest(CRequest* request) {
 					*pImage32++ = Helpers::AlphaBlendBackground(*pImage32, CSettingsProvider::This().ColorTransparency());
 
 				request->Image = new CJPEGImage(nWidth, nHeight, pPixelData, pEXIFData, 4, 0, IF_PNG, bHasAnimation, request->FrameIndex, nFrameCount, nFrameTimeMs);
-				free(pEXIFData);
-				bSuccess = true;
-			}
-			else {
+			} else {
 				DeleteCachedPngDecoder();
+				
+				IStream* pStream = NULL;
+				if (::CreateStreamOnHGlobal(hFileBuffer, FALSE, &pStream) == S_OK) {
+					Gdiplus::Bitmap* pBitmap = Gdiplus::Bitmap::FromStream(pStream, CSettingsProvider::This().UseEmbeddedColorProfiles());
+					bool isOutOfMemory, isAnimatedGIF;
+					pEXIFData = PngReader::GetEXIFBlock(pBuffer, nFileSize);
+					request->Image = ConvertGDIPlusBitmapToJPEGImage(pBitmap, 0, pEXIFData, 0, isOutOfMemory, isAnimatedGIF);
+					request->OutOfMemory = request->Image == NULL && isOutOfMemory;
+					pStream->Release();
+					delete pBitmap;
+				} else {
+					request->OutOfMemory = true;
+				}
 			}
+			free(pEXIFData);
 		}
 	}
 	catch (...) {
-		// delete request->Image;
-		// request->Image = NULL;
+		delete request->Image;
+		request->Image = NULL;
 		request->ExceptionError = true;
 	}
 	if (!bUseCachedDecoder) {
 		::CloseHandle(hFile);
-		delete[] pBuffer;
+		if (pBuffer) ::GlobalUnlock(hFileBuffer);
+		if (hFileBuffer) ::GlobalFree(hFileBuffer);
 	}
-	if (!bSuccess)
-		return ProcessReadGDIPlusRequest(request);
 }
 #endif
 
