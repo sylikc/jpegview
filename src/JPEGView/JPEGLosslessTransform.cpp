@@ -36,14 +36,14 @@ CJPEGLosslessTransform::EResult CJPEGLosslessTransform::PerformCrop(LPCTSTR sInp
 static CJPEGLosslessTransform::EResult _DoTransformation(LPCTSTR sInputFile, LPCTSTR sOutputFile, tjtransform &transform) {
 	CJPEGLosslessTransform::EResult eResult = CJPEGLosslessTransform::Success;
 
-	tjhandle hTransform = tjInitTransform();
+	tjhandle hTransform = tj3Init(TJINIT_TRANSFORM);
 
 	unsigned int nNumBytesInput;
 	unsigned char* pInputJPEGBytes = _ReadFile(sInputFile, nNumBytesInput);
 	if (pInputJPEGBytes != NULL) {
 		unsigned char* pOutputJPEGBytes = NULL;
-		unsigned long nNumBytesOutput = 0;
-		if (0 == tjTransform(hTransform, pInputJPEGBytes, nNumBytesInput, 1, &pOutputJPEGBytes, &nNumBytesOutput, &transform, 0) && pOutputJPEGBytes != NULL) {
+		size_t nNumBytesOutput = 0;
+		if (0 == tj3Transform(hTransform, pInputJPEGBytes, nNumBytesInput, 1, &pOutputJPEGBytes, &nNumBytesOutput, &transform) && pOutputJPEGBytes != NULL) {
 			if (!_WriteFile(sOutputFile, pOutputJPEGBytes, nNumBytesOutput)) {
 				eResult = CJPEGLosslessTransform::WriteFileFailed;
 			}
@@ -51,7 +51,7 @@ static CJPEGLosslessTransform::EResult _DoTransformation(LPCTSTR sInputFile, LPC
 			eResult = CJPEGLosslessTransform::TransformationFailed;
 		}
 		if (pOutputJPEGBytes != NULL) {
-			tjFree(pOutputJPEGBytes);
+			tj3Free(pOutputJPEGBytes);
 		}
 	} else {
 		eResult = CJPEGLosslessTransform::ReadFileFailed;
@@ -59,7 +59,7 @@ static CJPEGLosslessTransform::EResult _DoTransformation(LPCTSTR sInputFile, LPC
 
 	delete[] pInputJPEGBytes;
 
-	tjDestroy(hTransform);
+	tj3Destroy(hTransform);
 
 	return eResult;
 }
