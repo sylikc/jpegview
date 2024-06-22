@@ -715,8 +715,7 @@ bool CJPEGImage::Mirror(bool bHorizontally) {
 	}
 
 	InvalidateAllCachedPixelData();
-	void* pNewOriginalPixels = bHorizontally ? CBasicProcessing::MirrorH32bpp(m_nOrigWidth, m_nOrigHeight, m_pOrigPixels) :
-		CBasicProcessing::MirrorV32bpp(m_nOrigWidth, m_nOrigHeight, m_pOrigPixels);
+	void* pNewOriginalPixels = CBasicProcessing::Mirror32bpp(m_nOrigWidth, m_nOrigHeight, m_pOrigPixels, bHorizontally);
 	if (pNewOriginalPixels == NULL) return false;
 	delete[] m_pOrigPixels;
 	m_pOrigPixels = pNewOriginalPixels;

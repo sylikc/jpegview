@@ -7,7 +7,6 @@
 #include "ParameterDB.h"
 #include "EXIFReader.h"
 #include "TJPEGWrapper.h"
-#include "libjpeg-turbo\include\turbojpeg.h"
 #include "WEBPWrapper.h"
 #include "QOIWrapper.h"
 #include <gdiplus.h>
@@ -150,7 +149,7 @@ static void* CompressAndSave(LPCTSTR sFileName, CJPEGImage * pImage,
 
 	FILE *fptr = _tfopen(sFileName, _T("wb"));
 	if (fptr == NULL) {
-		tjFree(pTargetStream);
+		TurboJpeg::Free(pTargetStream);
 		return NULL;
 	}
 
@@ -190,7 +189,7 @@ static void* CompressAndSave(LPCTSTR sFileName, CJPEGImage * pImage,
 
 		int nJFIFLength = GetJFIFBlockLength(pTargetStream);
 		memcpy(pNewStream + 2 + pImage->GetEXIFDataLength() + nEXIFBlockLenCorrection, pTargetStream + 2 + nJFIFLength, nJPEGStreamLen - 2 - nJFIFLength);
-		tjFree(pTargetStream);
+		TurboJpeg::Free(pTargetStream);
 		pTargetStream = pNewStream;
 		tjFreeNeeded = false;
 		nJPEGStreamLen = nJPEGStreamLen - nJFIFLength + pImage->GetEXIFDataLength() + nEXIFBlockLenCorrection;
@@ -201,13 +200,13 @@ static void* CompressAndSave(LPCTSTR sFileName, CJPEGImage * pImage,
 	if (sComment != NULL && sComment[0] != 0) {
 		uint8* pNewStream = RemoveExistingCommentSegment(pTargetStream, nJPEGStreamLen);
 		if (pNewStream != NULL) {
-			if (tjFreeNeeded) tjFree(pTargetStream); else delete[] pTargetStream;
+			if (tjFreeNeeded) TurboJpeg::Free(pTargetStream); else delete[] pTargetStream;
 			pTargetStream = pNewStream;
 			tjFreeNeeded = false;
 		}
 		pNewStream = InsertCommentBlock(pTargetStream, nJPEGStreamLen, sComment);
 		if (pNewStream != NULL) {
-			if (tjFreeNeeded) tjFree(pTargetStream); else delete[] pTargetStream;
+			if (tjFreeNeeded) TurboJpeg::Free(pTargetStream); else delete[] pTargetStream;
 			pTargetStream = pNewStream;
 			tjFreeNeeded = false;
 		}
@@ -218,7 +217,7 @@ static void* CompressAndSave(LPCTSTR sFileName, CJPEGImage * pImage,
 
 	// delete partial file if no success
 	if (!bSuccess) {
-		if (tjFreeNeeded) tjFree(pTargetStream); else delete[] pTargetStream;
+		if (tjFreeNeeded) TurboJpeg::Free(pTargetStream); else delete[] pTargetStream;
 		_tunlink(sFileName);
 		return NULL;
 	}
@@ -389,7 +388,7 @@ bool CSaveImage::SaveImage(LPCTSTR sFileName, CJPEGImage * pImage, const CImageP
 		if (bSuccess) {
 			nPixelHash = Helpers::CalculateJPEGFileHash(pCompressedJPEG, nJPEGStreamLen);
 			if (tjFreeNeeded) {
-				tjFree((unsigned char*)pCompressedJPEG);
+				TurboJpeg::Free((unsigned char*)pCompressedJPEG);
 			} else {
 				delete[] pCompressedJPEG;
 			}

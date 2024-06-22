@@ -20,8 +20,14 @@ CJPEGImage* RawReader::ReadImage(LPCTSTR strFileName, bool& bOutOfMemory, bool b
 	
 	CJPEGImage* Image = NULL;
 	if (!bGetThumb) {
-		RawProcessor.get_mem_image_format(&width, &height, &colors, &bps);
 		RawProcessor.imgdata.params.output_bps = 8;
+
+		// Must unpack and process first to get accurate info
+		if (RawProcessor.unpack() != LIBRAW_SUCCESS || RawProcessor.dcraw_process() != LIBRAW_SUCCESS) {
+			return NULL;
+		}
+
+		RawProcessor.get_mem_image_format(&width, &height, &colors, &bps);
 
 		if (width > MAX_IMAGE_DIMENSION || height > MAX_IMAGE_DIMENSION) {
 			return NULL;
@@ -29,10 +35,6 @@ CJPEGImage* RawReader::ReadImage(LPCTSTR strFileName, bool& bOutOfMemory, bool b
 
 		if ((double)width * height > MAX_IMAGE_PIXELS) {
 			bOutOfMemory = true;
-			return NULL;
-		}
-
-		if (RawProcessor.unpack() != LIBRAW_SUCCESS || RawProcessor.dcraw_process() != LIBRAW_SUCCESS) {
 			return NULL;
 		}
 

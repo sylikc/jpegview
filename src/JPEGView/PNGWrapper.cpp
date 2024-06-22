@@ -1,10 +1,11 @@
 #include "stdafx.h"
 
 #include "PNGWrapper.h"
+
+#ifndef WINXP
 #include "png.h"
 #include "MaxImageDef.h"
 #include <stdexcept>
-#include <stdlib.h>
 
 // Uncomment to build without APNG support
 //#undef PNG_APNG_SUPPORTED
@@ -399,4 +400,33 @@ bool PngReader::IsAnimated(void* buffer, size_t sizebytes) {
 		offset += chunksize + 12;
 	}
 	return false;
+}
+#else
+#define PNG_UINT_31_MAX (0x7fffffff)
+#endif
+
+void* PngReader::GetEXIFBlock(void* buffer, size_t sizebytes) {
+	size_t offset = 8; // skip PNG signature
+	while (offset + 7 < sizebytes) {
+		unsigned int chunksize = *(unsigned int*)((char*)buffer + offset);
+		// PNG chunk sizes are big-endian and must be converted to little-endian
+		chunksize = _byteswap_ulong(chunksize);
+
+		if (memcmp((char*)buffer + offset + 4, "eXIf", 4) == 0 && chunksize < 65528 && offset + chunksize + 7 < sizebytes) {
+			void* exif_chunk = malloc(chunksize + 10);
+			if (exif_chunk != NULL) {
+				memcpy(exif_chunk, "\xFF\xE1\0\0Exif\0\0", 10);
+				*((unsigned short*)exif_chunk + 1) = _byteswap_ushort(chunksize + 8);
+				memcpy((char*)exif_chunk + 10, (char*)buffer + offset + 8, chunksize);
+			}
+			return exif_chunk;
+		}
+
+		// Prevent infinite loop
+		if (chunksize > PNG_UINT_31_MAX) return NULL;
+
+		// 12 comes from 4 bytes for chunk size, 4 for chunk name, and 4 for CRC32
+		offset += chunksize + 12;
+	}
+	return NULL;
 }

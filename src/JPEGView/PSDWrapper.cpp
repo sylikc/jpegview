@@ -86,7 +86,7 @@ static inline unsigned short ReadUShortFromFile(HANDLE file) {
 }
 
 // Read and return an unsigned char from file
-static inline unsigned short ReadUCharFromFile(HANDLE file) {
+static inline unsigned char ReadUCharFromFile(HANDLE file) {
 	unsigned char val;
 	ReadFromFile(&val, file, 1);
 	return val;
@@ -198,7 +198,8 @@ CJPEGImage* PsdReader::ReadImage(LPCTSTR strFileName, bool& bOutOfMemory)
 			unsigned short nResourceID = ReadUShortFromFile(hFile);
 
 			// Skip Pascal string (padded to be even length)
-			while (ReadUShortFromFile(hFile));
+			unsigned char nStringSize = ReadUCharFromFile(hFile);
+			SeekFile(hFile, nStringSize | 1);
 
 			// Resource size
 			unsigned int nResourceSize = ReadUIntFromFile(hFile);
@@ -466,7 +467,8 @@ CJPEGImage* PsdReader::ReadThumb(LPCTSTR strFileName, bool& bOutOfMemory)
 			unsigned short nResourceID = ReadUShortFromFile(hFile);
 
 			// Skip Pascal string (padded to be even length)
-			while (ReadUShortFromFile(hFile));
+			unsigned char nStringSize = ReadUCharFromFile(hFile);
+			SeekFile(hFile, nStringSize | 1);
 
 			// Resource size
 			unsigned int nResourceSize = ReadUIntFromFile(hFile);

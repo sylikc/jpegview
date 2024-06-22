@@ -18,7 +18,7 @@ CXMMImage::CXMMImage(int nWidth, int nHeight, int nFirstX, int nLastX, int nFirs
 
 	if (m_pMemory != NULL) {
 		int nSrcLineWidthPadded = Helpers::DoPadding(nWidth * nChannels, 4);
-		const uint8* pSrc = (uint8*)pDIB + nFirstY*nSrcLineWidthPadded + nFirstX*nChannels;
+		const uint8* pSrc = (uint8*)pDIB + (long long)nFirstY*(long long)nSrcLineWidthPadded + (long long)nFirstX*(long long)nChannels;
 		uint16* pDst = (unsigned short*) m_pMemory;
 		for (int j = 0; j < nSectionHeight; j++) {
 			if (nChannels == 4) {
