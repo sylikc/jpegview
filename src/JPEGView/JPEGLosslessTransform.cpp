@@ -1,5 +1,6 @@
 #include "StdAfx.h"
 #include "JPEGLosslessTransform.h"
+#include "Helpers.h"
 #include "libjpeg-turbo\include\turbojpeg.h"
 
 CJPEGLosslessTransform::EResult _DoTransformation(LPCTSTR sInputFile, LPCTSTR sOutputFile, tjtransform &transform);
@@ -73,7 +74,7 @@ static unsigned char* _ReadFile(LPCTSTR sFileName, unsigned int & nLengthBytes) 
 		return NULL;
 	}
 
-	unsigned int nFileSize = ::GetFileSize(hFile, NULL);
+	long long nFileSize = Helpers::GetFileSize(hFile);
 	if (nFileSize > MAX_JPEG_FILE_SIZE) {
 		::CloseHandle(hFile);
 		return NULL;

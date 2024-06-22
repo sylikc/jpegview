@@ -478,7 +478,7 @@ void CImageLoadThread::ProcessReadJPEGRequest(CRequest * request) {
 	void* pBuffer = NULL;
 	try {
 		// Don't read too huge files
-		unsigned int nFileSize = ::GetFileSize(hFile, NULL);
+		long long nFileSize = Helpers::GetFileSize(hFile);
 		if (nFileSize > MAX_JPEG_FILE_SIZE) {
 			request->OutOfMemory = true;
 			::CloseHandle(hFile);
@@ -590,11 +590,11 @@ void CImageLoadThread::ProcessReadWEBPRequest(CRequest * request) {
 	}
 	char* pBuffer = NULL;
 	try {
-		unsigned int nFileSize = 0;
+		long long nFileSize = 0;
 		unsigned int nNumBytesRead;
 		if (!bUseCachedDecoder) {
 			// Don't read too huge files
-			nFileSize = ::GetFileSize(hFile, NULL);
+			nFileSize = Helpers::GetFileSize(hFile);
 			if (nFileSize > MAX_WEBP_FILE_SIZE) {
 				request->OutOfMemory = true;
 				::CloseHandle(hFile);
@@ -665,11 +665,11 @@ void CImageLoadThread::ProcessReadPNGRequest(CRequest* request) {
 	HGLOBAL hFileBuffer = NULL;
 	void* pBuffer = NULL;
 	try {
-		unsigned int nFileSize;
+		long long nFileSize;
 		unsigned int nNumBytesRead;
 		if (!bUseCachedDecoder) {
 			// Don't read too huge files
-			nFileSize = ::GetFileSize(hFile, NULL);
+			nFileSize = Helpers::GetFileSize(hFile);
 			if (nFileSize > MAX_PNG_FILE_SIZE) {
 				request->OutOfMemory = true;
 				::CloseHandle(hFile);
@@ -761,11 +761,11 @@ void CImageLoadThread::ProcessReadJXLRequest(CRequest* request) {
 	char* pBuffer = NULL;
 	UINT nPrevErrorMode = SetErrorMode(SEM_FAILCRITICALERRORS);
 	try {
-		unsigned int nFileSize = 0;
+		long long nFileSize = 0;
 		unsigned int nNumBytesRead;
 		if (!bUseCachedDecoder) {
 			// Don't read too huge files
-			nFileSize = ::GetFileSize(hFile, NULL);
+			nFileSize = Helpers::GetFileSize(hFile);
 			if (nFileSize > MAX_JXL_FILE_SIZE) {
 				request->OutOfMemory = true;
 				::CloseHandle(hFile);
@@ -834,11 +834,11 @@ void CImageLoadThread::ProcessReadAVIFRequest(CRequest* request) {
 	char* pBuffer = NULL;
 	UINT nPrevErrorMode = SetErrorMode(SEM_FAILCRITICALERRORS);
 	try {
-		unsigned int nFileSize = 0;
+		long long nFileSize = 0;
 		unsigned int nNumBytesRead;
 		if (!bUseCachedDecoder) {
 			// Don't read too huge files
-			nFileSize = ::GetFileSize(hFile, NULL);
+			nFileSize = Helpers::GetFileSize(hFile);
 			if (nFileSize > MAX_HEIF_FILE_SIZE) {
 				request->OutOfMemory = true;
 				::CloseHandle(hFile);
@@ -899,10 +899,9 @@ void CImageLoadThread::ProcessReadHEIFRequest(CRequest* request) {
 	char* pBuffer = NULL;
 	UINT nPrevErrorMode = SetErrorMode(SEM_FAILCRITICALERRORS);
 	try {
-		unsigned int nFileSize = 0;
 		unsigned int nNumBytesRead;
 		// Don't read too huge files
-		nFileSize = ::GetFileSize(hFile, NULL);
+		long long nFileSize = Helpers::GetFileSize(hFile);
 		if (nFileSize > MAX_HEIF_FILE_SIZE) {
 			request->OutOfMemory = true;
 			::CloseHandle(hFile);
@@ -962,10 +961,9 @@ void CImageLoadThread::ProcessReadQOIRequest(CRequest* request) {
 	}
 	char* pBuffer = NULL;
 	try {
-		unsigned int nFileSize = 0;
 		unsigned int nNumBytesRead;
 		// Don't read too huge files
-		nFileSize = ::GetFileSize(hFile, NULL);
+		long long nFileSize = Helpers::GetFileSize(hFile);
 		if (nFileSize > MAX_PNG_FILE_SIZE) {
 			request->OutOfMemory = true;
 			::CloseHandle(hFile);

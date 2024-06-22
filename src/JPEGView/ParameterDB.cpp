@@ -575,8 +575,7 @@ CParameterDB::DBBlock* CParameterDB::LoadFromFile(const CString& sParamDBName, b
 	}
 
 	// Check if file is too large
-	__int64 nFileSize;
-	::GetFileSizeEx(hFile, (PLARGE_INTEGER)&nFileSize);
+	__int64 nFileSize = Helpers::GetFileSize(hFile);
 	if (nFileSize > MAX_DB_FILE_SIZE) {
 		HandleErrorAndCloseHandle(errorTooLarge, sParamDBName, hFile);
 		return NULL;
@@ -619,8 +618,7 @@ bool CParameterDB::SaveToFile(int nIndex, const CParameterDBEntry & dbEntry) {
 	}
 
 	// Check header, do not overwrite unknown files or versions
-	__int64 nFileSize;
-	::GetFileSizeEx(hFile, (PLARGE_INTEGER)&nFileSize);
+	__int64 nFileSize = Helpers::GetFileSize(hFile);
 	if (nFileSize >= sizeof(ParameterDBHeader)) {
 		// check the header
 		int nVersion = 0;
@@ -684,8 +682,7 @@ bool CParameterDB::SaveToFile(int nIndex, const CParameterDBEntry & dbEntry) {
 }
 
 bool CParameterDB::ConvertVersion1To2(HANDLE hFile, const CString& sFileName) {
-	__int64 nFileSize;
-	::GetFileSizeEx(hFile, (PLARGE_INTEGER)&nFileSize);
+	__int64 nFileSize = Helpers::GetFileSize(hFile);
 	if (nFileSize > MAX_DB_FILE_SIZE) {
 		HandleErrorAndCloseHandle(errorTooLarge, sFileName, hFile);
 		return false;
