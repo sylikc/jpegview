@@ -51,6 +51,8 @@
 #include "SettingsProvider.h"
 
 
+#define PSD_HEADER_SIZE 26
+
 // Throw exception if bShouldThrow is true. Setting a breakpoint in here is useful for debugging
 static inline void ThrowIf(bool bShouldThrow) {
 	if (bShouldThrow) {
@@ -94,12 +96,19 @@ static inline unsigned char ReadUCharFromFile(HANDLE file) {
 
 // Move file pointer by offset from current position
 static inline void SeekFile(HANDLE file, LONG offset) {
-	ThrowIf(::SetFilePointer(file, offset, NULL, 1) == INVALID_SET_FILE_POINTER);
+	ThrowIf(::SetFilePointer(file, offset, NULL, FILE_CURRENT) == INVALID_SET_FILE_POINTER);
 }
 
 // Move file pointer to offset from beginning of file
 static inline void SeekFileFromStart(HANDLE file, LONG offset) {
-	ThrowIf(::SetFilePointer(file, offset, NULL, 0) == INVALID_SET_FILE_POINTER);
+	ThrowIf(::SetFilePointer(file, offset, NULL, FILE_BEGIN) == INVALID_SET_FILE_POINTER);
+}
+
+// Get current position in the file
+static inline unsigned int TellFile(HANDLE file) {
+	unsigned int ret = ::SetFilePointer(file, 0, NULL, FILE_CURRENT);
+	ThrowIf(ret == INVALID_SET_FILE_POINTER);
+	return ret;
 }
 
 CJPEGImage* PsdReader::ReadImage(LPCTSTR strFileName, bool& bOutOfMemory)
@@ -257,7 +266,7 @@ CJPEGImage* PsdReader::ReadImage(LPCTSTR strFileName, bool& bOutOfMemory)
 		}
 		
 		// Go back to start of file
-		SeekFileFromStart(hFile, 26 + 4 + nColorDataSize + 4 + nResourceSectionSize);
+		SeekFileFromStart(hFile, PSD_HEADER_SIZE + 4 + nColorDataSize + 4 + nResourceSectionSize);
 
 		// Skip Layer and Mask Info section
 		unsigned long long nLayerSize;
@@ -276,7 +285,7 @@ CJPEGImage* PsdReader::ReadImage(LPCTSTR strFileName, bool& bOutOfMemory)
 		unsigned short nCompressionMethod = ReadUShortFromFile(hFile);
 		ThrowIf(nCompressionMethod != COMPRESSION_RLE && nCompressionMethod != COMPRESSION_None);
 
-		unsigned int nImageDataSize = nFileSize - (26 + 4 + nColorDataSize + 4 + nResourceSectionSize + nLayerSizeBytes + nLayerSize + 2);
+		unsigned int nImageDataSize = nFileSize - TellFile(hFile);
 		pBuffer = new(std::nothrow) char[nImageDataSize];
 		if (pBuffer == NULL) {
 			bOutOfMemory = true;
@@ -443,8 +452,8 @@ CJPEGImage* PsdReader::ReadThumb(LPCTSTR strFileName, bool& bOutOfMemory)
 	TJSAMP eChromoSubSampling;
 
 	try {
-		// Skip file signature
-		SeekFile(hFile, 26);
+		// Skip file header
+		SeekFile(hFile, PSD_HEADER_SIZE);
 
 		// Skip color mode data
 		unsigned int nColorDataSize = ReadUIntFromFile(hFile);
