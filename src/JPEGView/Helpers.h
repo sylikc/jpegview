@@ -260,6 +260,9 @@ namespace Helpers {
 	// file size for file with path
 	__int64 GetFileSize(LPCTSTR sPath);
 
+	// file size for file with handle
+	__int64 GetFileSize(HANDLE hFile);
+
 	// Gets the frame index of the next frame, depending on the index of the last image (relevant if the image is a multiframe image)
 	int GetFrameIndex(CJPEGImage* pImage, bool bNext, bool bPlayAnimation, bool & switchImage);
 

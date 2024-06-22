@@ -110,8 +110,7 @@ CJPEGImage* PsdReader::ReadImage(LPCTSTR strFileName, bool& bOutOfMemory)
 	void* transform = NULL;
 	CJPEGImage* Image = NULL;
 	try {
-		unsigned int nFileSize = 0;
-		nFileSize = ::GetFileSize(hFile, NULL);
+		long long nFileSize = Helpers::GetFileSize(hFile);
 		ThrowIf(nFileSize > MAX_PSD_FILE_SIZE);
 
 		// Skip file signature
