@@ -190,7 +190,8 @@ static CJPEGImage* ConvertGDIPlusBitmapToJPEGImage(Gdiplus::Bitmap* pBitmap, int
 
 	Gdiplus::Rect bmRect(0, 0, pBitmap->GetWidth(), pBitmap->GetHeight());
 	Gdiplus::BitmapData bmData;
-	if (pBitmapToUse->LockBits(&bmRect, Gdiplus::ImageLockModeRead, PixelFormat32bppRGB, &bmData) == Gdiplus::Ok) {
+	lastStatus = pBitmapToUse->LockBits(&bmRect, Gdiplus::ImageLockModeRead, PixelFormat32bppRGB, &bmData);
+	if (lastStatus == Gdiplus::Ok) {
 		assert(bmData.PixelFormat == PixelFormat32bppRGB);
 		void* pDIB = CBasicProcessing::ConvertGdiplus32bppRGB(bmRect.Width, bmRect.Height, bmData.Stride, bmData.Scan0);
 		if (pDIB != NULL) {
@@ -198,6 +199,8 @@ static CJPEGImage* ConvertGDIPlusBitmapToJPEGImage(Gdiplus::Bitmap* pBitmap, int
 				eImageFormat == IF_GIF && nFrameCount > 1, nFrameIndex, nFrameCount, nFrameTimeMs);
 		}
 		pBitmapToUse->UnlockBits(&bmData);
+	} else if (lastStatus == Gdiplus::ValueOverflow) {
+		isOutOfMemory = true;
 	}
 
 	if (pBmGraphics != NULL && pBmTarget != NULL) {
@@ -695,7 +698,7 @@ void CImageLoadThread::ProcessReadPNGRequest(CRequest* request) {
 #ifndef WINXP
 			// If UseEmbeddedColorProfiles is true and the image isn't animated, we should use GDI+ for better color management
 			bool bUseGDIPlus = CSettingsProvider::This().ForceGDIPlus() || CSettingsProvider::This().UseEmbeddedColorProfiles();
-			if (bUseCachedDecoder || !bUseGDIPlus || PngReader::IsAnimated(pBuffer, nFileSize))
+			if (bUseCachedDecoder || !bUseGDIPlus || PngReader::MustUseLibpng(pBuffer, nFileSize))
 				pPixelData = (uint8*)PngReader::ReadImage(nWidth, nHeight, nBPP, bHasAnimation, nFrameCount, nFrameTimeMs, pEXIFData, request->OutOfMemory, pBuffer, nFileSize);
 #endif
 
