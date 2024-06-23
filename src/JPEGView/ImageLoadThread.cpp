@@ -498,12 +498,11 @@ void CImageLoadThread::ProcessReadJPEGRequest(CRequest * request) {
 		unsigned int nNumBytesRead;
 		if (::ReadFile(hFile, pBuffer, nFileSize, (LPDWORD) &nNumBytesRead, NULL) && nNumBytesRead == nFileSize) {
 			bool bUseGDIPlus = CSettingsProvider::This().ForceGDIPlus() || CSettingsProvider::This().UseEmbeddedColorProfiles();
-			bool isOutOfMemory = false;
 			if (bUseGDIPlus) {
 				IStream* pStream = NULL;
 				if (::CreateStreamOnHGlobal(hFileBuffer, FALSE, &pStream) == S_OK) {
 					Gdiplus::Bitmap* pBitmap = Gdiplus::Bitmap::FromStream(pStream, CSettingsProvider::This().UseEmbeddedColorProfiles());
-					bool isAnimatedGIF;
+					bool isOutOfMemory, isAnimatedGIF;
 					request->Image = ConvertGDIPlusBitmapToJPEGImage(pBitmap, 0, Helpers::FindEXIFBlock(pBuffer, nFileSize),
 						Helpers::CalculateJPEGFileHash(pBuffer, nFileSize), isOutOfMemory, isAnimatedGIF);
 					request->OutOfMemory = request->Image == NULL && isOutOfMemory;
@@ -516,7 +515,7 @@ void CImageLoadThread::ProcessReadJPEGRequest(CRequest * request) {
 					request->OutOfMemory = true;
 				}
 			}
-			if (!bUseGDIPlus || isOutOfMemory) {
+			if (!bUseGDIPlus || request->OutOfMemory) {
 				int nWidth, nHeight, nBPP;
 				TJSAMP eChromoSubSampling;
 				bool bOutOfMemory;
