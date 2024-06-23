@@ -379,16 +379,28 @@ void PngReader::DeleteCache() {
 	DeleteCacheInternal(true);
 }
 
-bool PngReader::IsAnimated(void* buffer, size_t sizebytes) {
-	// Valid APNGs must have an acTL chunk before the first IDAT chunk, this lets us quickly determine if a PNG is animated
+bool PngReader::MustUseLibpng(const void* bufferIn, size_t sizebytes) {
+	const char* buffer = (const char*)bufferIn;
 
+	// GDI+ fails if the uncompressed image size is over INT_MAX
+	if (sizebytes < 24) {
+		return false;
+	}
+	unsigned int width = _byteswap_ulong(*(unsigned int*)(buffer + 16));
+	unsigned int height = _byteswap_ulong(*(unsigned int*)(buffer + 20));
+	if (4.0 * width * height > INT_MAX) {
+		return true;
+	}
+
+	// GDI+ does not support APNG
+	// Valid APNGs must have an acTL chunk before the first IDAT chunk, this lets us quickly determine if a PNG is animated
 	size_t offset = 8; // skip PNG signature
 	while (offset + 7 < sizebytes) {
-		if (memcmp((char*)buffer + offset + 4, "acTL", 4) == 0)
+		if (memcmp(buffer + offset + 4, "acTL", 4) == 0)
 			return true;
-		if (memcmp((char*)buffer + offset + 4, "IDAT", 4) == 0)
+		if (memcmp(buffer + offset + 4, "IDAT", 4) == 0)
 			return false;
-		unsigned int chunksize = *(unsigned int*)((char*)buffer + offset);
+		unsigned int chunksize = *(unsigned int*)(buffer + offset);
 
 		// PNG chunk sizes are big-endian and must be converted to little-endian
 		chunksize = _byteswap_ulong(chunksize);
