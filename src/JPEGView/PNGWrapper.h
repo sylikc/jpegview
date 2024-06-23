@@ -19,7 +19,7 @@ public:
 
 	static void DeleteCache();
 
-	// Returns true if PNG is animated, false otherwise
+	// Returns true if PNG is unsupported by GDI+
 	static bool MustUseLibpng(const void* buffer, size_t sizebytes);
 #endif
 	// Get EXIF Block
