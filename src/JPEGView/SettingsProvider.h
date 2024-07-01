@@ -75,6 +75,7 @@ public:
 	bool SingleFullScreenInstance() { return m_bSingleFullScreenInstance; }
 	int JPEGSaveQuality() { return m_nJPEGSaveQuality; }
 	int WEBPSaveQuality() { return m_nWEBPSaveQuality; }
+	int JXLSaveQuality() { return m_nJXLSaveQuality; }
 	LPCTSTR DefaultSaveFormat() { return m_sDefaultSaveFormat; }
 	LPCTSTR FilesProcessedByWIC() { return m_sFilesProcessedByWIC; }
 	LPCTSTR FileEndingsRAW() { return m_sFileEndingsRAW; }
@@ -246,6 +247,7 @@ private:
 	bool m_bSingleFullScreenInstance;
 	int m_nJPEGSaveQuality;
 	int m_nWEBPSaveQuality;
+	int m_nJXLSaveQuality;
 	CString m_sDefaultSaveFormat;
 	CString m_sFilesProcessedByWIC;
 	CString m_sFileEndingsRAW;

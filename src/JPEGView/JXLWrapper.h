@@ -20,6 +20,14 @@ public:
 
 	static void DeleteCache();
 
+	static void* Compress(const void* buffer, // address of image in memory, format must be 3 bytes per pixel BRGBGR with padding to 4 byte boundary
+		int width, // width of image in pixels
+		int height, // height of image in pixels.
+		size_t& len, // returns length of compressed data
+		int quality); // image quality as a percentage
+
+	static void Free(void* buffer);
+
 private:
 	struct jxl_cache;
 	static jxl_cache cache;

@@ -3,8 +3,13 @@
 #include "JXLWrapper.h"
 #include "jxl/decode.h"
 #include "jxl/decode_cxx.h"
+#include "jxl/encode.h"
+#include "jxl/encode_cxx.h"
+#include <jxl/thread_parallel_runner.h>
+#include <jxl/thread_parallel_runner_cxx.h>
 #include "jxl/resizable_parallel_runner.h"
 #include "jxl/resizable_parallel_runner_cxx.h"
+#include "Helpers.h"
 #include "MaxImageDef.h"
 #include "ICCProfileTransform.h"
 
@@ -236,3 +241,103 @@ void JxlReader::DeleteCache() {
 	// Setting the decoder and runner to 0 (NULL) will automatically destroy them
 	cache = { 0 };
 }
+
+void* JxlReader::Compress(const void* buffer,
+	int width,
+	int height,
+	size_t& len,
+	int quality) {
+
+	auto enc = JxlEncoderMake(/*memory_manager=*/nullptr);
+	auto runner = JxlThreadParallelRunnerMake(
+		/*memory_manager=*/nullptr,
+		JxlThreadParallelRunnerDefaultNumWorkerThreads());
+	if (JXL_ENC_SUCCESS != JxlEncoderSetParallelRunner(enc.get(),
+		JxlThreadParallelRunner,
+		runner.get())) {
+		return NULL;
+	}
+
+	JxlPixelFormat pixel_format = { 3, JXL_TYPE_UINT8, JXL_NATIVE_ENDIAN, 4 };
+
+	JxlBasicInfo basic_info;
+	JxlEncoderInitBasicInfo(&basic_info);
+	basic_info.xsize = width;
+	basic_info.ysize = height;
+	basic_info.bits_per_sample = 8;
+	// basic_info.exponent_bits_per_sample = 8;
+	basic_info.uses_original_profile = JXL_FALSE;
+	if (JXL_ENC_SUCCESS != JxlEncoderSetBasicInfo(enc.get(), &basic_info)) {
+		return NULL;
+	}
+
+	JxlColorEncoding color_encoding = {};
+	JXL_BOOL is_gray = TO_JXL_BOOL(pixel_format.num_channels < 3);
+	JxlColorEncodingSetToSRGB(&color_encoding, is_gray);
+	if (JXL_ENC_SUCCESS !=
+		JxlEncoderSetColorEncoding(enc.get(), &color_encoding)) {
+		return NULL;
+	}
+
+	JxlEncoderFrameSettings* frame_settings =
+		JxlEncoderFrameSettingsCreate(enc.get(), NULL);
+	float distance = JxlEncoderDistanceFromQuality(quality);
+	JxlEncoderSetFrameDistance(frame_settings, distance);
+
+	// TODO: remove rgb_buffer once libjxl adds channel order support
+	int padded_width = Helpers::DoPadding(width * 3, 4);
+	size_t buffer_size = (size_t)height * padded_width;
+	uint8_t* rgb_buffer = (uint8_t*)malloc(buffer_size);
+	if (rgb_buffer == NULL) {
+		return NULL;
+	}
+	memcpy(rgb_buffer, buffer, buffer_size);
+	for (int i = 0; i < height; i++) {
+		for (int j = 0; j < width; j++) {
+			size_t offset = (size_t)i * padded_width + j * 3;
+			rgb_buffer[offset] = ((const uint8_t*)buffer)[offset+2];
+			rgb_buffer[offset+2] = ((const uint8_t*)buffer)[offset];
+		}
+	}
+	if (JXL_ENC_SUCCESS !=
+		JxlEncoderAddImageFrame(frame_settings, &pixel_format,
+			rgb_buffer,
+			buffer_size)) {
+		free(rgb_buffer);
+		return NULL;
+	}
+	JxlEncoderCloseInput(enc.get());
+	free(rgb_buffer);
+
+	std::vector<uint8_t> compressed;
+	compressed.resize(64);
+	uint8_t* next_out = compressed.data();
+	size_t avail_out = compressed.size() - (next_out - compressed.data());
+	JxlEncoderStatus process_result = JXL_ENC_NEED_MORE_OUTPUT;
+	while (process_result == JXL_ENC_NEED_MORE_OUTPUT) {
+		process_result = JxlEncoderProcessOutput(enc.get(), &next_out, &avail_out);
+		if (process_result == JXL_ENC_NEED_MORE_OUTPUT) {
+			size_t offset = next_out - compressed.data();
+			compressed.resize(compressed.size() * 2);
+			next_out = compressed.data() + offset;
+			avail_out = compressed.size() - offset;
+		}
+	}
+	compressed.resize(next_out - compressed.data());
+	if (JXL_ENC_SUCCESS != process_result) {
+		return NULL;
+	}
+
+	len = compressed.size();
+	void* pOutput = malloc(len);
+	if (pOutput != NULL) {
+		memcpy(pOutput, compressed.data(), len);
+	}
+
+	return pOutput;
+}
+
+void JxlReader::Free(void* buffer) {
+	free(buffer);
+}
+
