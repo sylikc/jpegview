@@ -24,7 +24,8 @@ public:
 		int width, // width of image in pixels
 		int height, // height of image in pixels.
 		size_t& len, // returns length of compressed data
-		int quality); // image quality as a percentage
+		int quality, // image quality as a percentage
+		bool lossless); // use lossless compression if true
 
 	static void Free(void* buffer);
 

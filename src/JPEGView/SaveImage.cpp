@@ -268,7 +268,7 @@ static bool SaveJXL(LPCTSTR sFileName, void* pData, int nWidth, int nHeight, boo
 		uint8* pOutput;
 		size_t nSize;
 		int nQuality = CSettingsProvider::This().JXLSaveQuality();
-		pOutput = (uint8*)JxlReader::Compress((uint8*)pData, nWidth, nHeight, nSize, bUseLosslessJXL ? 100 : nQuality);
+		pOutput = (uint8*)JxlReader::Compress((uint8*)pData, nWidth, nHeight, nSize, nQuality, bUseLosslessJXL);
 		bSuccess = fwrite(pOutput, 1, nSize, fptr) == nSize;
 		fclose(fptr);
 		JxlReader::Free(pOutput);

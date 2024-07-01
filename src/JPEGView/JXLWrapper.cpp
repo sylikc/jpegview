@@ -246,12 +246,16 @@ void* JxlReader::Compress(const void* buffer,
 	int width,
 	int height,
 	size_t& len,
-	int quality) {
+	int quality,
+	bool lossless) {
 
-	auto enc = JxlEncoderMake(/*memory_manager=*/nullptr);
+	auto enc = JxlEncoderMake(nullptr);
 	auto runner = JxlThreadParallelRunnerMake(
-		/*memory_manager=*/nullptr,
+		nullptr,
 		JxlThreadParallelRunnerDefaultNumWorkerThreads());
+	if (!enc.get() || !runner.get()) {
+		return NULL;
+	}
 	if (JXL_ENC_SUCCESS != JxlEncoderSetParallelRunner(enc.get(),
 		JxlThreadParallelRunner,
 		runner.get())) {
@@ -265,24 +269,26 @@ void* JxlReader::Compress(const void* buffer,
 	basic_info.xsize = width;
 	basic_info.ysize = height;
 	basic_info.bits_per_sample = 8;
-	// basic_info.exponent_bits_per_sample = 8;
-	basic_info.uses_original_profile = JXL_FALSE;
+	basic_info.uses_original_profile = lossless;
 	if (JXL_ENC_SUCCESS != JxlEncoderSetBasicInfo(enc.get(), &basic_info)) {
 		return NULL;
 	}
 
-	JxlColorEncoding color_encoding = {};
-	JXL_BOOL is_gray = TO_JXL_BOOL(pixel_format.num_channels < 3);
-	JxlColorEncodingSetToSRGB(&color_encoding, is_gray);
-	if (JXL_ENC_SUCCESS !=
-		JxlEncoderSetColorEncoding(enc.get(), &color_encoding)) {
+	JxlEncoderFrameSettings* frame_settings = JxlEncoderFrameSettingsCreate(enc.get(), NULL);
+	if (frame_settings == NULL) {
 		return NULL;
 	}
-
-	JxlEncoderFrameSettings* frame_settings =
-		JxlEncoderFrameSettingsCreate(enc.get(), NULL);
-	float distance = JxlEncoderDistanceFromQuality(quality);
-	JxlEncoderSetFrameDistance(frame_settings, distance);
+	if (lossless) {
+		if (JXL_ENC_SUCCESS != JxlEncoderSetFrameLossless(frame_settings, JXL_TRUE)) {
+			return NULL;
+		};
+	} else {
+		float distance = JxlEncoderDistanceFromQuality(quality);
+		distance = max(distance, .1f); // prevent huge file size
+		if (JXL_ENC_SUCCESS != JxlEncoderSetFrameDistance(frame_settings, distance)) {
+			return NULL;
+		};
+	}
 
 	// TODO: remove rgb_buffer once libjxl adds channel order support
 	int padded_width = Helpers::DoPadding(width * 3, 4);
@@ -310,7 +316,7 @@ void* JxlReader::Compress(const void* buffer,
 	free(rgb_buffer);
 
 	std::vector<uint8_t> compressed;
-	compressed.resize(64);
+	compressed.resize(4096);
 	uint8_t* next_out = compressed.data();
 	size_t avail_out = compressed.size() - (next_out - compressed.data());
 	JxlEncoderStatus process_result = JXL_ENC_NEED_MORE_OUTPUT;
@@ -340,4 +346,3 @@ void* JxlReader::Compress(const void* buffer,
 void JxlReader::Free(void* buffer) {
 	free(buffer);
 }
-
