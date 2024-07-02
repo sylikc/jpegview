@@ -482,6 +482,8 @@
 						<RegistryValue Root="HKLM" Key="SOFTWARE\Classes\SystemFileAssociations\.tif\shell\edit.JPEGView.exe\command" Value="&quot;[APPLICATIONFOLDER]JPEGView.exe&quot; &quot;%1&quot;" Type="string" />
 						<RegistryValue Root="HKLM" Key="SOFTWARE\Classes\SystemFileAssociations\.webp\shell\edit.JPEGView.exe" Value="!(loc.ExplorerMenuEditREG)" Type="string" />
 						<RegistryValue Root="HKLM" Key="SOFTWARE\Classes\SystemFileAssociations\.webp\shell\edit.JPEGView.exe\command" Value="&quot;[APPLICATIONFOLDER]JPEGView.exe&quot; &quot;%1&quot;" Type="string" />
+						<RegistryValue Root="HKLM" Key="SOFTWARE\Classes\SystemFileAssociations\.jxl\shell\edit.JPEGView.exe" Value="!(loc.ExplorerMenuEditREG)" Type="string" />
+						<RegistryValue Root="HKLM" Key="SOFTWARE\Classes\SystemFileAssociations\.jxl\shell\edit.JPEGView.exe\command" Value="&quot;[APPLICATIONFOLDER]JPEGView.exe&quot; &quot;%1&quot;" Type="string" />
 						<RegistryValue Root="HKLM" Key="SOFTWARE\Classes\SystemFileAssociations\.qoi\shell\edit.JPEGView.exe" Value="!(loc.ExplorerMenuEditREG)" Type="string" />
 						<RegistryValue Root="HKLM" Key="SOFTWARE\Classes\SystemFileAssociations\.qoi\shell\edit.JPEGView.exe\command" Value="&quot;[APPLICATIONFOLDER]JPEGView.exe&quot; &quot;%1&quot;" Type="string" />
 					</Component>

@@ -547,7 +547,7 @@ DeleteConfirmation=OnlyWhenNoRecycleBin
 ; * These options control file saving parameters
 ; *****************************************************************************
 
-; Default format for saving files. Supported formats: jpg, bmp, png, tif, webp
+; Default format for saving files. Supported formats: jpg, bmp, png, tif, webp, jxl, qoi
 DefaultSaveFormat=jpg
 
 ; Quality when saving JPEG files (in 0..100 where 100 is the highest quality)
@@ -555,6 +555,9 @@ JPEGSaveQuality=85
 
 ; Quality when saving WEBP files with lossy compression (in 0..100 where 100 is the highest quality)
 WEBPSaveQuality=85
+
+; Quality when saving JXL files with lossy compression (in 0..100 where 100 is the highest quality)
+JXLSaveQuality=85
 
 ; Set to true to create a parameter DB entry when saving an image with JPEGView to avoid processing it again
 CreateParamDBEntryOnSave=true
