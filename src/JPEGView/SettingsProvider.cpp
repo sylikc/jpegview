@@ -175,6 +175,7 @@ CSettingsProvider::CSettingsProvider(void) {
 	m_bSingleFullScreenInstance = GetBool(_T("SingleFullScreenInstance"), true);
 	m_nJPEGSaveQuality = GetInt(_T("JPEGSaveQuality"), 85, 0, 100);
 	m_nWEBPSaveQuality = GetInt(_T("WEBPSaveQuality"), 85, 0, 100);
+	m_nJXLSaveQuality = GetInt(_T("JXLSaveQuality"), 85, 0, 100);
 	m_sDefaultSaveFormat = GetString(_T("DefaultSaveFormat"), _T("jpg"));
 	m_sFilesProcessedByWIC = GetString(_T("FilesProcessedByWIC"), _T("*.wdp;*.mdp;*.hdp"));
 	m_sFileEndingsRAW = GetString(_T("FileEndingsRAW"), _T("*.pef;*.dng;*.crw;*.nef;*.cr2;*.mrw;*.rw2;*.orf;*.x3f;*.arw;*.kdc;*.nrw;*.dcr;*.sr2;*.raf"));

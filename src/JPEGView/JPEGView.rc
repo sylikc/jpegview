@@ -396,6 +396,8 @@ BEGIN
             MENUITEM SEPARATOR
             MENUITEM "Mirror horizontally",         IDM_MIRROR_H_LOSSLESS
             MENUITEM "Mirror vertically",           IDM_MIRROR_V_LOSSLESS
+            MENUITEM SEPARATOR
+            MENUITEM "Convert to JXL..."            IDM_CONVERT_JXL
         END
         MENUITEM "Auto correction",             IDM_AUTO_CORRECTION
         MENUITEM "Local density correction",    IDM_LDC
