@@ -214,8 +214,10 @@
 			<Feature Id="FeatureJXL" Title="JPEG XL Support">
 				<ComponentRef Id="brotlicommonDLL"/>
 				<ComponentRef Id="brotlidecDLL"/>
-				<ComponentRef Id="jxl_decDLL"/>
+				<ComponentRef Id="brotliencDLL"/>
+				<ComponentRef Id="jxlDLL"/>
 				<ComponentRef Id="jxl_threadsDLL"/>
+				<ComponentRef Id="jxl_cmsDLL"/>
 			</Feature>
 			<Feature Id="FeatureHEIF" Title="HEIF/HEIC/AVIF Support">
 				<ComponentRef Id="dav1dDLL"/>
@@ -495,11 +497,17 @@
 					<Component Id="brotlidecDLL" Guid="dc648a37-d726-40f9-9098-dfde491dbb44">
 						<File Id="brotlidec.dll" Name="brotlidec.dll" Source="$(var.JxlDllFolder)\brotlidec.dll" />
 					</Component>
-					<Component Id="jxl_decDLL" Guid="a65bca95-9ddf-476c-88b5-5048a3a9bde6">
-						<File Id="jxl_dec.dll" Name="jxl_dec.dll" Source="$(var.JxlDllFolder)\jxl_dec.dll" />
+					<Component Id="brotliencDLL" Guid="86874037-d2c4-4d18-ac08-82442006a60e">
+						<File Id="brotlienc.dll" Name="brotlienc.dll" Source="$(var.JxlDllFolder)\brotlienc.dll" />
+					</Component>
+					<Component Id="jxlDLL" Guid="2444593c-141e-4a66-b61e-9f25eb1a9a78">
+						<File Id="jxl.dll" Name="jxl.dll" Source="$(var.JxlDllFolder)\jxl.dll" />
 					</Component>
 					<Component Id="jxl_threadsDLL" Guid="964ed16e-138a-4419-9c4c-8eb45a04d0f6">
 						<File Id="jxl_threads.dll" Name="jxl_threads.dll" Source="$(var.JxlDllFolder)\jxl_threads.dll" />
+					</Component>
+					<Component Id="jxl_cmsDLL" Guid="4c0c5600-5418-4e27-9185-18b926bc91ec">
+						<File Id="jxl_cms.dll" Name="jxl_cms.dll" Source="$(var.JxlDllFolder)\jxl_cms.dll" />
 					</Component>
 
 
