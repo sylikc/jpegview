@@ -1665,6 +1665,9 @@ void CMainDlg::ExecuteCommand(int nCommand) {
 				}
 			}
 			break;
+		case IDM_CONVERT_JXL:
+			SaveImage(true, true);
+			break;
 		case IDM_AUTO_CORRECTION:
 			m_bAutoContrastSection = false;
 			m_bAutoContrast = !m_bAutoContrast;
@@ -2174,7 +2177,7 @@ void CMainDlg::OpenFile(LPCTSTR sFileName, bool bAfterStartup) {
 	this->Invalidate(FALSE);
 }
 
-bool CMainDlg::SaveImage(bool bFullSize) {
+bool CMainDlg::SaveImage(bool bFullSize, bool bJxlTranscode) {
 	if (m_bMovieMode) {
 		return false;
 	}
@@ -2190,7 +2193,9 @@ bool CMainDlg::SaveImage(bool bFullSize) {
 	int nIndexPoint = sCurrentFile.ReverseFind(_T('.'));
 	if (nIndexPoint > 0) {
 		sCurrentFile = sCurrentFile.Left(nIndexPoint);
-		sCurrentFile += _T("_proc");
+		if (!bJxlTranscode) {
+			sCurrentFile += _T("_proc");
+		}
 	}
 
 	CString sExtension = m_sSaveExtension;
@@ -2198,11 +2203,20 @@ bool CMainDlg::SaveImage(bool bFullSize) {
 		sExtension = CSettingsProvider::This().DefaultSaveFormat();
 	}
 	// NOTE: this list is used in the "Edit with" registry entry in JPEGView.Setup, update that when this updates
+	LPCWSTR sFileTypes;
+	if (!bJxlTranscode) {
+		sFileTypes = _T("JPEG (*.jpg;*.jpeg)|*.jpg;*.jpeg|BMP (*.bmp)|*.bmp|PNG (*.png)|*.png|TIFF (*.tiff;*.tif)|*.tiff;*.tif|WEBP (*.webp)|*.webp|WEBP lossless (*.webp)|*.webp|JPEG XL (*.jxl)|*.jxl|JPEG XL lossless (*.jxl)|*.jxl|QOI (*.qoi)|*.qoi|");
+	} else {
+		sFileTypes = _T("JPEG XL lossless transcode (*.jxl)|*.jxl|");
+	}
+
 	CFileDialog fileDlg(FALSE, sExtension, sCurrentFile, 
 			OFN_EXPLORER | OFN_ENABLESIZING | OFN_HIDEREADONLY | OFN_NOREADONLYRETURN | OFN_OVERWRITEPROMPT,
-			Helpers::CReplacePipe(CString(_T("JPEG (*.jpg;*.jpeg)|*.jpg;*.jpeg|BMP (*.bmp)|*.bmp|PNG (*.png)|*.png|TIFF (*.tiff;*.tif)|*.tiff;*.tif|WEBP (*.webp)|*.webp|WEBP lossless (*.webp)|*.webp|JPEG XL (*.jxl)|*.jxl|JPEG XL lossless (*.jxl)|*.jxl|QOI (*.qoi)|*.qoi|")) +
+			Helpers::CReplacePipe(CString(sFileTypes) +
 			CNLS::GetString(_T("All Files")) + _T("|*.*|")), m_hWnd);
-	if (sExtension.CompareNoCase(_T("bmp")) == 0) {
+	if (bJxlTranscode) {
+		// skip check
+	} else if (sExtension.CompareNoCase(_T("bmp")) == 0) {
 		fileDlg.m_ofn.nFilterIndex = 2;
 	} else if (sExtension.CompareNoCase(_T("png")) == 0) {
 		fileDlg.m_ofn.nFilterIndex = 3;
@@ -2223,12 +2237,12 @@ bool CMainDlg::SaveImage(bool bFullSize) {
 		m_bUseLosslessWEBP = fileDlg.m_ofn.nFilterIndex == 6 || fileDlg.m_ofn.nFilterIndex == 8;
 		m_sSaveExtension = m_sSaveDirectory.Right(m_sSaveDirectory.GetLength() - m_sSaveDirectory.ReverseFind(_T('.')) - 1);
 		m_sSaveDirectory = m_sSaveDirectory.Left(m_sSaveDirectory.ReverseFind(_T('\\')) + 1);
-		return SaveImageNoPrompt(fileDlg.m_szFileName, bFullSize);
+		return SaveImageNoPrompt(fileDlg.m_szFileName, bFullSize, bJxlTranscode);
 	}
 	return false;
 }
 
-bool CMainDlg::SaveImageNoPrompt(LPCTSTR sFileName, bool bFullSize) {
+bool CMainDlg::SaveImageNoPrompt(LPCTSTR sFileName, bool bFullSize, bool bJxlTranscode) {
 	if (m_bMovieMode) {
 		return false;
 	}
@@ -2237,8 +2251,14 @@ bool CMainDlg::SaveImageNoPrompt(LPCTSTR sFileName, bool bFullSize) {
 
 	HCURSOR hOldCursor = ::SetCursor(::LoadCursor(NULL, IDC_WAIT));	
 
-	if (CSaveImage::SaveImage(sFileName, m_pCurrentImage, *m_pImageProcParams, 
-		CreateDefaultProcessingFlags(), bFullSize, m_bUseLosslessWEBP)) {
+	bool result;
+	if (!bJxlTranscode) {
+		result = CSaveImage::SaveImage(sFileName, m_pCurrentImage, *m_pImageProcParams,
+			CreateDefaultProcessingFlags(), bFullSize, m_bUseLosslessWEBP);
+	} else {
+		result = CSaveImage::ConvertToJXL(sFileName, CurrentFileName(true));
+	}
+	if (result) {
 		m_pFileList->Reload(); // maybe image is stored to current directory - needs reload
 		::SetCursor(hOldCursor);
 		Invalidate();

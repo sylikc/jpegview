@@ -13,6 +13,8 @@
 #include "MaxImageDef.h"
 #include "ICCProfileTransform.h"
 
+static void* DoCompress(JxlEncoder* enc, size_t& len);
+
 struct JxlReader::jxl_cache {
 	JxlDecoderPtr decoder;
 	JxlResizableParallelRunnerPtr runner;
@@ -315,13 +317,45 @@ void* JxlReader::Compress(const void* buffer,
 	JxlEncoderCloseInput(enc.get());
 	free(rgb_buffer);
 
+	return DoCompress(enc.get(), len);
+}
+
+void* JxlReader::CompressJPEG(const void* buffer, size_t input_len, size_t& output_len) {
+	auto enc = JxlEncoderMake(nullptr);
+	auto runner = JxlThreadParallelRunnerMake(
+		nullptr,
+		JxlThreadParallelRunnerDefaultNumWorkerThreads());
+	if (!enc.get() || !runner.get()) {
+		return NULL;
+	}
+	if (JXL_ENC_SUCCESS != JxlEncoderSetParallelRunner(enc.get(),
+		JxlThreadParallelRunner,
+		runner.get())) {
+		return NULL;
+	}
+	JxlEncoderFrameSettings* frame_settings = JxlEncoderFrameSettingsCreate(enc.get(), NULL);
+	if (frame_settings == NULL) {
+		return NULL;
+	}
+	if (JXL_ENC_SUCCESS != JxlEncoderStoreJPEGMetadata(enc.get(), JXL_TRUE)) {
+		return NULL;
+	};
+	if (JXL_ENC_SUCCESS != JxlEncoderAddJPEGFrame(frame_settings, (const uint8_t*)buffer, input_len)) {
+		return NULL;
+	}
+	JxlEncoderCloseInput(enc.get());
+
+	return DoCompress(enc.get(), output_len);
+}
+
+static void* DoCompress(JxlEncoder* enc, size_t& len) {
 	std::vector<uint8_t> compressed;
 	compressed.resize(4096);
 	uint8_t* next_out = compressed.data();
 	size_t avail_out = compressed.size() - (next_out - compressed.data());
 	JxlEncoderStatus process_result = JXL_ENC_NEED_MORE_OUTPUT;
 	while (process_result == JXL_ENC_NEED_MORE_OUTPUT) {
-		process_result = JxlEncoderProcessOutput(enc.get(), &next_out, &avail_out);
+		process_result = JxlEncoderProcessOutput(enc, &next_out, &avail_out);
 		if (process_result == JXL_ENC_NEED_MORE_OUTPUT) {
 			size_t offset = next_out - compressed.data();
 			compressed.resize(compressed.size() * 2);

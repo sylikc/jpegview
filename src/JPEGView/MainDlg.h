@@ -337,8 +337,8 @@ private:
 	void ExploreFile();
 	bool OpenFileWithDialog(bool bFullScreen, bool bAfterStartup);
 	void OpenFile(LPCTSTR sFileName, bool bAfterStartup);
-	bool SaveImage(bool bFullSize);
-	bool SaveImageNoPrompt(LPCTSTR sFileName, bool bFullSize);
+	bool SaveImage(bool bFullSize, bool bJxlTranscode = false);
+	bool SaveImageNoPrompt(LPCTSTR sFileName, bool bFullSize, bool bJxlTranscode = false);
 	void BatchCopy();
 	void SetAsDefaultViewer();
 	void HandleUserCommands(uint32 virtualKeyCode);

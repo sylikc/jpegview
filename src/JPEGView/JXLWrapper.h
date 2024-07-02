@@ -27,6 +27,10 @@ public:
 		int quality, // image quality as a percentage
 		bool lossless); // use lossless compression if true
 
+	static void* CompressJPEG(const void* buffer, // address of JPEG-encoded image in memory
+		size_t input_len, // Length of input JPEG image
+		size_t& output_len); // returns length of compressed data
+
 	static void Free(void* buffer);
 
 private:

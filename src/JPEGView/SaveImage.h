@@ -20,6 +20,9 @@ public:
 	// The file format is derived from the file ending of the specified file name.
 	static bool SaveImage(LPCTSTR sFileName, CJPEGImage * pImage, bool bUseLosslessWEBP);
 
+	// Losslessy transcode a JPEG file into a JXL
+	static bool ConvertToJXL(LPCTSTR sJxlFile, LPCTSTR sJpegFile);
+
 private:
 	CSaveImage(void);
 };
