@@ -8,7 +8,9 @@
 #include "EXIFReader.h"
 #include "TJPEGWrapper.h"
 #include "WEBPWrapper.h"
+#include "JXLWrapper.h"
 #include "QOIWrapper.h"
+#include "MaxImageDef.h"
 #include <gdiplus.h>
 
 //////////////////////////////////////////////////////////////////////////////////////////////
@@ -256,6 +258,36 @@ static bool SaveWebP(LPCTSTR sFileName, void* pData, int nWidth, int nHeight, bo
 }
 
 // pData must point to 24 bit BGR DIB
+static bool SaveJXL(LPCTSTR sFileName, void* pData, int nWidth, int nHeight, bool bUseLosslessJXL) {
+	FILE* fptr = _tfopen(sFileName, _T("wb"));
+	if (fptr == NULL) {
+		return false;
+	}
+
+	bool bSuccess = false;
+	try {
+		uint8* pOutput;
+		size_t nSize;
+		int nQuality = CSettingsProvider::This().JXLSaveQuality();
+		pOutput = (uint8*)JxlReader::Compress((uint8*)pData, nWidth, nHeight, nSize, nQuality, bUseLosslessJXL);
+		bSuccess = fwrite(pOutput, 1, nSize, fptr) == nSize;
+		fclose(fptr);
+		JxlReader::Free(pOutput);
+	}
+	catch (...) {
+		fclose(fptr);
+	}
+
+	// delete partial file if no success
+	if (!bSuccess) {
+		_tunlink(sFileName);
+		return false;
+	}
+
+	return true;
+}
+
+// pData must point to 24 bit BGR DIB
 static bool SaveQOI(LPCTSTR sFileName, void* pData, int nWidth, int nHeight) {
 	FILE* fptr = _tfopen(sFileName, _T("wb"));
 	if (fptr == NULL) {
@@ -398,6 +430,8 @@ bool CSaveImage::SaveImage(LPCTSTR sFileName, CJPEGImage * pImage, const CImageP
 			bSuccess = SaveWebP(sFileName, pDIB24bpp, imageSize.cx, imageSize.cy, bUseLosslessWEBP);
 		} else if (eFileFormat == IF_QOI) {
 			bSuccess = SaveQOI(sFileName, pDIB24bpp, imageSize.cx, imageSize.cy);
+		} else if (eFileFormat == IF_JXL) {
+			bSuccess = SaveJXL(sFileName, pDIB24bpp, imageSize.cx, imageSize.cy, bUseLosslessWEBP);
 		} else {
 			bSuccess = SaveGDIPlus(sFileName, eFileFormat, pDIB24bpp, imageSize.cx, imageSize.cy);
 		}
@@ -431,4 +465,64 @@ bool CSaveImage::SaveImage(LPCTSTR sFileName, CJPEGImage * pImage, bool bUseLoss
 {
 	CImageProcessingParams paramsNotUsed;
 	return SaveImage(sFileName, pImage, paramsNotUsed, PFLAG_None, false, bUseLosslessWEBP, false);
+}
+
+bool CSaveImage::ConvertToJXL(LPCTSTR sJxlFile, LPCTSTR sJpegFile) {
+	FILE* fptr = _tfopen(sJxlFile, _T("wb"));
+	if (fptr == NULL) {
+		return false;
+	}
+	bool bSuccess = false;
+	HANDLE hFile = INVALID_HANDLE_VALUE;
+	unsigned char* pBuffer = NULL;
+
+	try {
+		size_t nLengthBytes = 0;
+		hFile = ::CreateFile(sJpegFile, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, 0, NULL);
+		if (hFile == INVALID_HANDLE_VALUE) {
+			throw 1;
+		}
+
+		size_t nFileSize = Helpers::GetFileSize(sJpegFile);
+		if (nFileSize > MAX_JPEG_FILE_SIZE) {
+			throw 1;
+		}
+
+		unsigned char* pBuffer = new(std::nothrow) unsigned char[nFileSize];
+		if (pBuffer == NULL) {
+			throw 1;
+		}
+
+		unsigned int nNumBytesRead;
+		if (::ReadFile(hFile, pBuffer, nFileSize, (LPDWORD)&nNumBytesRead, NULL) && nNumBytesRead == nFileSize) {
+			::CloseHandle(hFile);
+			hFile = INVALID_HANDLE_VALUE;
+			nLengthBytes = nFileSize;
+		} else {
+			throw 1;
+		}
+
+		size_t nSize;
+		uint8* pOutput = (uint8*)JxlReader::CompressJPEG(pBuffer, nLengthBytes, nSize);
+		delete[] pBuffer;
+		pBuffer = NULL;
+		bSuccess = fwrite(pOutput, 1, nSize, fptr) == nSize;
+		fclose(fptr);
+		JxlReader::Free(pOutput);
+	}
+	catch (...) {
+		if (hFile != INVALID_HANDLE_VALUE) {
+			::CloseHandle(hFile);
+		}
+		delete[] pBuffer;
+		fclose(fptr);
+	}
+
+	// delete partial file if no success
+	if (!bSuccess) {
+		_tunlink(sJxlFile);
+		return false;
+	}
+
+	return true;
 }
