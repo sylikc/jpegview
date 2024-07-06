@@ -51,6 +51,8 @@
 #include "SettingsProvider.h"
 
 
+#define PSD_HEADER_SIZE 26
+
 // Throw exception if bShouldThrow is true. Setting a breakpoint in here is useful for debugging
 static inline void ThrowIf(bool bShouldThrow) {
 	if (bShouldThrow) {
@@ -62,6 +64,13 @@ static inline void ThrowIf(bool bShouldThrow) {
 static inline void ReadFromFile(void* dst, HANDLE file, DWORD sz) {
 	unsigned int nNumBytesRead;
 	ThrowIf(!(::ReadFile(file, dst, sz, (LPDWORD)&nNumBytesRead, NULL) && nNumBytesRead == sz));
+}
+
+// Read and return an unsigned 64-bit int from file
+static inline unsigned long long ReadUInt64FromFile(HANDLE file) {
+	unsigned long long val;
+	ReadFromFile(&val, file, 8);
+	return _byteswap_uint64(val);
 }
 
 // Read and return an unsigned int from file
@@ -87,12 +96,19 @@ static inline unsigned char ReadUCharFromFile(HANDLE file) {
 
 // Move file pointer by offset from current position
 static inline void SeekFile(HANDLE file, LONG offset) {
-	ThrowIf(::SetFilePointer(file, offset, NULL, 1) == INVALID_SET_FILE_POINTER);
+	ThrowIf(::SetFilePointer(file, offset, NULL, FILE_CURRENT) == INVALID_SET_FILE_POINTER);
 }
 
 // Move file pointer to offset from beginning of file
 static inline void SeekFileFromStart(HANDLE file, LONG offset) {
-	ThrowIf(::SetFilePointer(file, offset, NULL, 0) == INVALID_SET_FILE_POINTER);
+	ThrowIf(::SetFilePointer(file, offset, NULL, FILE_BEGIN) == INVALID_SET_FILE_POINTER);
+}
+
+// Get current position in the file
+static inline unsigned int TellFile(HANDLE file) {
+	unsigned int ret = ::SetFilePointer(file, 0, NULL, FILE_CURRENT);
+	ThrowIf(ret == INVALID_SET_FILE_POINTER);
+	return ret;
 }
 
 CJPEGImage* PsdReader::ReadImage(LPCTSTR strFileName, bool& bOutOfMemory)
@@ -118,7 +134,7 @@ CJPEGImage* PsdReader::ReadImage(LPCTSTR strFileName, bool& bOutOfMemory)
 
 		// Read version: 1 for PSD, 2 for PSB
 		unsigned short nVersion = ReadUShortFromFile(hFile);
-		ThrowIf(nVersion != 1);
+		ThrowIf(nVersion != 1 && nVersion != 2);
 
 		// Check reserved bytes
 		char pReserved[6];
@@ -249,20 +265,26 @@ CJPEGImage* PsdReader::ReadImage(LPCTSTR strFileName, bool& bOutOfMemory)
 		}
 		
 		// Go back to start of file
-		SeekFileFromStart(hFile, 26 + 4 + nColorDataSize + 4 + nResourceSectionSize);
+		SeekFileFromStart(hFile, PSD_HEADER_SIZE + 4 + nColorDataSize + 4 + nResourceSectionSize);
 
 		// Skip Layer and Mask Info section
-		unsigned int nLayerSize = ReadUIntFromFile(hFile);
-		ReadUIntFromFile(hFile);
+		unsigned long long nLayerSize;
+		if (nVersion == 2) {
+			nLayerSize = ReadUInt64FromFile(hFile);
+		} else {
+			nLayerSize = ReadUIntFromFile(hFile);
+		}
+		unsigned char nLayerSizeBytes = 4 * nVersion;
+		SeekFile(hFile, nLayerSizeBytes);
 		short nLayerCount = ReadUShortFromFile(hFile);
 		bUseAlpha = bUseAlpha && (nLayerCount <= 0);
-		SeekFile(hFile, nLayerSize - 6);
+		SeekFile(hFile, nLayerSize - 2 - nLayerSizeBytes);
 
 		// Compression. 0 = Raw Data, 1 = RLE compressed, 2 = ZIP without prediction, 3 = ZIP with prediction.
 		unsigned short nCompressionMethod = ReadUShortFromFile(hFile);
 		ThrowIf(nCompressionMethod != COMPRESSION_RLE && nCompressionMethod != COMPRESSION_None);
 
-		unsigned int nImageDataSize = nFileSize - (26 + 4 + nColorDataSize + 4 + nResourceSectionSize + 4 + nLayerSize + 2);
+		unsigned int nImageDataSize = nFileSize - TellFile(hFile);
 		pBuffer = new(std::nothrow) char[nImageDataSize];
 		if (pBuffer == NULL) {
 			bOutOfMemory = true;
@@ -299,7 +321,7 @@ CJPEGImage* PsdReader::ReadImage(LPCTSTR strFileName, bool& bOutOfMemory)
 		unsigned char* p = (unsigned char*)pBuffer;
 		if (nCompressionMethod == COMPRESSION_RLE) {
 			// Skip byte counts for scanlines
-			p += nHeight * nRealChannels * 2;
+			p += nHeight * nRealChannels * 2 * nVersion;
 			unsigned char* pOffset = p;
 			for (unsigned channel = 0; channel < nChannels; channel++) {
 				unsigned rchannel;
@@ -348,7 +370,11 @@ CJPEGImage* PsdReader::ReadImage(LPCTSTR strFileName, bool& bOutOfMemory)
 						count += c;
 					}
 
-					pOffset += _byteswap_ushort(*(unsigned short*)(pBuffer + (channel * nHeight + row) * 2));
+					if (nVersion == 2) {
+						pOffset += _byteswap_ulong(*(unsigned int*)(pBuffer + (channel * nHeight + row) * 4));
+					} else {
+						pOffset += _byteswap_ushort(*(unsigned short*)(pBuffer + (channel * nHeight + row) * 2));
+					}
 #ifdef DEBUG
 					if (p != pOffset) {
 						WCHAR buf[100];
@@ -425,8 +451,8 @@ CJPEGImage* PsdReader::ReadThumb(LPCTSTR strFileName, bool& bOutOfMemory)
 	TJSAMP eChromoSubSampling;
 
 	try {
-		// Skip file signature
-		SeekFile(hFile, 26);
+		// Skip file header
+		SeekFile(hFile, PSD_HEADER_SIZE);
 
 		// Skip color mode data
 		unsigned int nColorDataSize = ReadUIntFromFile(hFile);
