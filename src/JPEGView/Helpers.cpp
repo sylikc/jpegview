@@ -855,6 +855,12 @@ __int64 GetFileSize(LPCTSTR sPath) {
 	return fileSize;
 }
 
+__int64 GetFileSize(HANDLE hFile) {
+	__int64 fileSize = 0;
+	::GetFileSizeEx(hFile, (PLARGE_INTEGER)&fileSize);
+	return fileSize;
+}
+
 // Gets the frame index of the next frame, depending on the index of the last image (relevant if the image is a multiframe image)
 int GetFrameIndex(CJPEGImage* pImage, bool bNext, bool bPlayAnimation, bool & switchImage) {
 	bool isMultiFrame = pImage != NULL && pImage->NumberOfFrames() > 1;
