@@ -558,19 +558,19 @@ struct avifCodecInternal;
 
 typedef enum avifEncoderChange
 {
-    AVIF_ENCODER_CHANGE_MIN_QUANTIZER = (1u << 0),
-    AVIF_ENCODER_CHANGE_MAX_QUANTIZER = (1u << 1),
-    AVIF_ENCODER_CHANGE_MIN_QUANTIZER_ALPHA = (1u << 2),
-    AVIF_ENCODER_CHANGE_MAX_QUANTIZER_ALPHA = (1u << 3),
-    AVIF_ENCODER_CHANGE_TILE_ROWS_LOG2 = (1u << 4),
-    AVIF_ENCODER_CHANGE_TILE_COLS_LOG2 = (1u << 5),
-    AVIF_ENCODER_CHANGE_QUANTIZER = (1u << 6),
-    AVIF_ENCODER_CHANGE_QUANTIZER_ALPHA = (1u << 7),
-    AVIF_ENCODER_CHANGE_SCALING_MODE = (1u << 8),
+    AVIF_ENCODER_CHANGE_MIN_QUANTIZER = (1 << 0),
+    AVIF_ENCODER_CHANGE_MAX_QUANTIZER = (1 << 1),
+    AVIF_ENCODER_CHANGE_MIN_QUANTIZER_ALPHA = (1 << 2),
+    AVIF_ENCODER_CHANGE_MAX_QUANTIZER_ALPHA = (1 << 3),
+    AVIF_ENCODER_CHANGE_TILE_ROWS_LOG2 = (1 << 4),
+    AVIF_ENCODER_CHANGE_TILE_COLS_LOG2 = (1 << 5),
+    AVIF_ENCODER_CHANGE_QUANTIZER = (1 << 6),
+    AVIF_ENCODER_CHANGE_QUANTIZER_ALPHA = (1 << 7),
+    AVIF_ENCODER_CHANGE_SCALING_MODE = (1 << 8),
 
-    AVIF_ENCODER_CHANGE_CODEC_SPECIFIC = (1u << 31)
+    AVIF_ENCODER_CHANGE_CODEC_SPECIFIC = (1 << 30)
 } avifEncoderChange;
-typedef uint32_t avifEncoderChanges;
+typedef int avifEncoderChanges;
 
 typedef avifBool (*avifCodecGetNextImageFunc)(struct avifCodec * codec,
                                               struct avifDecoder * decoder,
