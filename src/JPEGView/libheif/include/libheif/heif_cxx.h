@@ -1,6 +1,6 @@
 /*
  * C++ interface to libheif
- * Copyright (c) 2018 struktur AG, Dirk Farin <farin@struktur.de>
+ * Copyright (c) 2018 Dirk Farin <dirk.farin@gmail.com>
  *
  * This file is part of libheif.
  *
@@ -24,6 +24,7 @@
 #include <memory>
 #include <string>
 #include <vector>
+#include <cassert>
 
 extern "C" {
 #include <libheif/heif.h>
@@ -44,6 +45,8 @@ namespace heif {
 
     Error(const heif_error& err)
     {
+      assert(err.message);
+
       m_code = err.code;
       m_subcode = err.subcode;
       m_message = err.message;
