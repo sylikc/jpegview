@@ -198,7 +198,7 @@ void* JxlReader::ReadImage(int& width,
 		has_animation, frame_count, frame_time, &icc_profile, outOfMemory)) {
 		return NULL;
 	}
-	int size = width * height * nchannels;
+	size_t size = (size_t)width * height * nchannels;
 	pPixelData = new(std::nothrow) unsigned char[size];
 	if (pPixelData == NULL) {
 		outOfMemory = true;
@@ -209,7 +209,7 @@ void* JxlReader::ReadImage(int& width,
 	if (!ICCProfileTransform::DoTransform(cache.transform, pixels.data(), pPixelData, width, height)) {
 		// RGBA -> BGRA conversion (with little-endian integers)
 		uint32_t* data = (uint32_t*)pixels.data();
-		for (int i = 0; i * sizeof(uint32_t) < size; i++) {
+		for (size_t i = 0; i * sizeof(uint32_t) < size; i++) {
 			((uint32_t*)pPixelData)[i] = _rotr(_byteswap_ulong(data[i]), 8);
 		}
 	}
