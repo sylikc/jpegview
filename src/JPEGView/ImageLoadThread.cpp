@@ -1057,12 +1057,16 @@ void CImageLoadThread::ProcessReadGDIPlusRequest(CRequest * request) {
 	bool isOutOfMemory, isAnimatedGIF;
 	request->Image = ConvertGDIPlusBitmapToJPEGImage(pBitmap, request->FrameIndex, NULL, 0, isOutOfMemory, isAnimatedGIF);
 	request->OutOfMemory = request->Image == NULL && isOutOfMemory;
+	if (request->OutOfMemory && GetBitmapFormat(pBitmap) == IF_TIFF) {
+		DeleteCachedGDIBitmap();
+		return ProcessReadWICRequest(request);
+	}
 	if (!isAnimatedGIF) {
 		DeleteCachedGDIBitmap();
 	}
 }
 
-static unsigned char* alloc(int sizeInBytes) {
+static unsigned char* alloc(size_t sizeInBytes) {
 	return new(std::nothrow) unsigned char[sizeInBytes];
 }
 
@@ -1070,7 +1074,7 @@ static void dealloc(unsigned char* buffer) {
 	delete[] buffer;
 }
 
-typedef unsigned char* Allocator(int sizeInBytes);
+typedef unsigned char* Allocator(size_t sizeInBytes);
 typedef void Deallocator(unsigned char* buffer);
 
 __declspec(dllimport) unsigned char* __stdcall LoadImageWithWIC(LPCWSTR fileName, Allocator* allocator, Deallocator* deallocator,

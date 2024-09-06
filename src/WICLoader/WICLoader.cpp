@@ -25,7 +25,7 @@
 // forward declaration
 static HRESULT CopyWICBitmapToBuffer(IWICBitmapSource *piBitmapSource, byte* pBuffer);
 
-typedef byte* Allocator(int sizeInBytes);
+typedef byte* Allocator(size_t sizeInBytes);
 typedef void Deallocator(byte* buffer);
 
 // Checks if WIC is installed by asking for the WIC imaging factory.
@@ -65,7 +65,7 @@ __declspec(dllexport) byte* __stdcall LoadImageWithWIC(LPCWSTR fileName, Allocat
 			piBitmapFrame->GetSize(width, height);
 			if (*width <= MAX_IMAGE_DIMENSION && *height <= MAX_IMAGE_DIMENSION) {
 				if ((double)*width * *height <= MAX_IMAGE_PIXELS) {
-					bitmapBuffer = allocator(*width * *height * 4);
+					bitmapBuffer = allocator((size_t)*width * *height * 4);
 					if (bitmapBuffer != NULL) {
 						hr = CopyWICBitmapToBuffer(piBitmapFrame, bitmapBuffer);
 						if (!SUCCEEDED(hr)) {

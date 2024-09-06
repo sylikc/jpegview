@@ -1,7 +1,7 @@
 #pragma once
 
 #ifdef _WIN64
-const unsigned int MAX_IMAGE_PIXELS = 1024 * 1024 * 300;
+const unsigned int MAX_IMAGE_PIXELS = 65535 * 65535;
 #else
 const unsigned int MAX_IMAGE_PIXELS = 1024 * 1024 * 100;
 #endif
