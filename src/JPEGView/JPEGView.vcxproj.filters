@@ -37,6 +37,12 @@
     <Filter Include="Source Files\Image Types">
       <UniqueIdentifier>{099a201d-61b0-4380-a60c-5081af3bbe23}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Image Types\DDS">
+      <UniqueIdentifier>{301733e2-8c67-4146-b2bd-b6b2e276a7af}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Image Types\DDS">
+      <UniqueIdentifier>{c06ca9bd-bedf-4469-ac5f-ec9aa9ddc9c1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BasicProcessing.cpp">
@@ -290,6 +296,12 @@
     </ClCompile>
     <ClCompile Include="RAWWrapper.cpp">
       <Filter>Source Files\Image Types</Filter>
+    </ClCompile>
+    <ClCompile Include="BcnDecode.cpp">
+      <Filter>Source Files\Image Types\DDS</Filter>
+    </ClCompile>
+    <ClCompile Include="DDSWrapper.cpp">
+      <Filter>Source Files\Image Types\DDS</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -562,6 +574,12 @@
     </ClInclude>
     <ClInclude Include="RAWWrapper.h">
       <Filter>Header Files\Image Types</Filter>
+    </ClInclude>
+    <ClInclude Include="DDSWrapper.h">
+      <Filter>Header Files\Image Types\DDS</Filter>
+    </ClInclude>
+    <ClInclude Include="BcnDecode.h">
+      <Filter>Header Files\Image Types\DDS</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
