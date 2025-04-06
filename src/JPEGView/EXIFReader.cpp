@@ -284,14 +284,14 @@ CEXIFReader::CEXIFReader(void* pApp1Block, EImageFormat eImageFormat)
 	m_bLittleEndian = bLittleEndian;
 
 	uint8* pIFD0 = pTIFFHeader + ReadUInt(pTIFFHeader + 4, bLittleEndian);
-	if (pIFD0 - m_pApp1 >= nApp1Size) {
+	if (pIFD0 - m_pApp1 > nApp1Size) {
 		return;
 	}
 	// Read IFD0
 	uint16 nNumTags = ReadUShort(pIFD0, bLittleEndian);
 	pIFD0 += 2;
 	uint8* pLastIFD0 = pIFD0 + nNumTags*12;
-	if (pLastIFD0 - m_pApp1 + 4 >= nApp1Size) {
+	if (pLastIFD0 - m_pApp1 + 4 > nApp1Size) {
 		return;
 	}
 	uint32 nOffsetIFD1 = ReadUInt(pLastIFD0, bLittleEndian);
@@ -352,13 +352,13 @@ CEXIFReader::CEXIFReader(void* pApp1Block, EImageFormat eImageFormat)
 		return;
 	}
 	uint8* pEXIFIFD = pTIFFHeader + nOffsetEXIF;
-	if (pEXIFIFD - m_pApp1 >= nApp1Size) {
+	if (pEXIFIFD - m_pApp1 > nApp1Size) {
 		return;
 	}
 	nNumTags = ReadUShort(pEXIFIFD, bLittleEndian);
 	pEXIFIFD += 2;
 	uint8* pLastEXIF = pEXIFIFD + nNumTags*12;
-	if (pLastEXIF - m_pApp1 >= nApp1Size) {
+	if (pLastEXIF - m_pApp1 > nApp1Size) {
 		return;
 	}
 	uint8* pTagAcquisitionDate = FindTag(pEXIFIFD, pLastEXIF, 0x9003, bLittleEndian);
@@ -403,13 +403,13 @@ CEXIFReader::CEXIFReader(void* pApp1Block, EImageFormat eImageFormat)
 
 	if (nOffsetIFD1 != 0) {
 		m_pIFD1 = pTIFFHeader + nOffsetIFD1;
-		if (m_pIFD1 - m_pApp1 >= nApp1Size || m_pIFD1 - m_pApp1 < 0) {
+		if (m_pIFD1 - m_pApp1 > nApp1Size || m_pIFD1 - m_pApp1 < 0) {
 			return;
 		}
 		nNumTags = ReadUShort(m_pIFD1, bLittleEndian);
 		m_pIFD1 += 2;
 		uint8* pLastIFD1 = m_pIFD1 + nNumTags*12;
-		if (pLastIFD1 - m_pApp1 >= nApp1Size) {
+		if (pLastIFD1 - m_pApp1 > nApp1Size) {
 			return;
 		}
 		m_pLastIFD1 = pLastIFD1;
@@ -485,13 +485,13 @@ void CEXIFReader::ReadGPSData(uint8* pTIFFHeader, uint8* pTagGPSIFD, int nApp1Si
 		return;
 	}
 	uint8* pGPSIFD = pTIFFHeader + nOffsetGPS;
-	if (pGPSIFD - m_pApp1 >= nApp1Size) {
+	if (pGPSIFD - m_pApp1 > nApp1Size) {
 		return;
 	}
 	int nNumTags = ReadUShort(pGPSIFD, bLittleEndian);
 	pGPSIFD += 2;
 	uint8* pLastGPS = pGPSIFD + nNumTags * 12;
-	if (pLastGPS - m_pApp1 >= nApp1Size) {
+	if (pLastGPS - m_pApp1 > nApp1Size) {
 		return;
 	}
 
