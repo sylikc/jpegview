@@ -34,7 +34,7 @@ runs:
     - name: Upload No-Install Outputs Only
       # if not master branch, only upload the extract-and-run artifact
       if: github.ref_name != inputs.branch-match
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: JPEGView-GH_${{ github.repository_owner }}-${{ inputs.build-config }}_${{ inputs.platform-arch }}-${{ env.short_sha }}
         path: |
@@ -44,7 +44,7 @@ runs:
       # reduce the ambiguous versions of installers in the wild
       # by only including the installer for master branch
       if: github.ref_name == inputs.branch-match
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         # short_sha comes from the build step
         name: JPEGView-GH_${{ github.repository_owner }}-${{ inputs.build-config }}_${{ inputs.platform-arch }}-${{ env.short_sha }}
