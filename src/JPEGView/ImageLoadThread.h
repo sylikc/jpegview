@@ -107,6 +107,9 @@ private:
 	void DeleteCachedJxlDecoder();
 	void DeleteCachedAvifDecoder();
 
+	// Special overload for Lepton files, where actual JPEG file loads in memory buffer.
+	// This function is using by both encoders, the original JPEG encoder and Lepton.
+	void ProcessReadJPEGRequest(CRequest* request, const uint8_t* buffer, UINT size);
 	void ProcessReadJPEGRequest(CRequest * request);
 	void ProcessReadPNGRequest(CRequest * request);
 	void ProcessReadBMPRequest(CRequest * request);
@@ -120,6 +123,7 @@ private:
 	void ProcessReadRAWRequest(CRequest * request);
 	void ProcessReadGDIPlusRequest(CRequest * request);
 	void ProcessReadWICRequest(CRequest* request);
+	void ProcessReadLeptonRequest(CRequest* request);
 
 	static void SetFileDependentProcessParams(CRequest * request);
 	static bool ProcessImageAfterLoad(CRequest * request);

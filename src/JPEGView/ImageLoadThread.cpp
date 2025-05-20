@@ -1,4 +1,3 @@
-
 #include "StdAfx.h"
 #include "ImageLoadThread.h"
 #include <gdiplus.h>
@@ -22,7 +21,7 @@
 #include "QOIWrapper.h"
 #include "PSDWrapper.h"
 #include "MaxImageDef.h"
-
+#include "lepton_wrapper.h"
 
 using namespace Gdiplus;
 
@@ -62,6 +61,8 @@ static EImageFormat GetImageFormat(LPCTSTR sFileName) {
 	} else if ((header[0] == 0xff && header[1] == 0x0a) ||
 		memcmp(header, "\x00\x00\x00\x0cJXL\x20\x0d\x0a\x87\x0a", 12) == 0) {
 		return IF_JXL;
+	} else if (header[0] == 0xcf && header[1] == 0x84) {
+		return IF_Lepton;
 	} else if (!memcmp(header+4, "ftyp", 4)) {
 		// https://github.com/strukturag/libheif/issues/83
 		// https://github.com/strukturag/libheif/blob/ce1e4586b6222588c5afcd60c7ba9caa86bcc58c/libheif/heif.h#L602-L805
@@ -117,7 +118,7 @@ static EImageFormat GetBitmapFormat(Gdiplus::Bitmap * pBitmap) {
 	}
 }
 
-static CJPEGImage* ConvertGDIPlusBitmapToJPEGImage(Gdiplus::Bitmap* pBitmap, int nFrameIndex, void* pEXIFData, 
+static CJPEGImage* ConvertGDIPlusBitmapToJPEGImage(Gdiplus::Bitmap* pBitmap, int nFrameIndex, void* pEXIFData,
 	__int64 nJPEGHash, bool &isOutOfMemory, bool &isAnimatedGIF) {
 
 	isOutOfMemory = false;
@@ -289,7 +290,7 @@ void CImageLoadThread::ProcessRequest(CRequestBase& request) {
 	}
 
 	CRequest& rq = (CRequest&)request;
-	double dStartTime = Helpers::GetExactTickCount(); 
+	double dStartTime = Helpers::GetExactTickCount();
 	// Get image format and read the image
 	switch (GetImageFormat(rq.FileName)) {
 		case IF_JPEG :
@@ -370,6 +371,10 @@ void CImageLoadThread::ProcessRequest(CRequestBase& request) {
 			ProcessReadRAWRequest(&rq);
 			break;
 #endif
+		case IF_Lepton:
+			DeleteCachedGDIBitmap();
+			ProcessReadLeptonRequest(&rq);
+			break;
 		case IF_QOI:
 			DeleteCachedGDIBitmap();
 			DeleteCachedWebpDecoder();
@@ -397,7 +402,7 @@ void CImageLoadThread::ProcessRequest(CRequestBase& request) {
 	}
 	// then process the image if read was successful
 	if (rq.Image != NULL) {
-		rq.Image->SetLoadTickCount(Helpers::GetExactTickCount() - dStartTime); 
+		rq.Image->SetLoadTickCount(Helpers::GetExactTickCount() - dStartTime);
 		if (!ProcessImageAfterLoad(&rq)) {
 			delete rq.Image;
 			rq.Image = NULL;
@@ -471,88 +476,78 @@ void CImageLoadThread::DeleteCachedAvifDecoder() {
 #endif
 }
 
-void CImageLoadThread::ProcessReadJPEGRequest(CRequest * request) {
-	HANDLE hFile = ::CreateFile(request->FileName, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, 0, NULL);
-	if (hFile == INVALID_HANDLE_VALUE) {
-		return;
-	}
-
-	HGLOBAL hFileBuffer = NULL;
-	void* pBuffer = NULL;
+void CImageLoadThread::ProcessReadJPEGRequest(CRequest* request, const uint8_t* buffer, UINT size) {
 	try {
-		// Don't read too huge files
-		long long nFileSize = Helpers::GetFileSize(hFile);
-		if (nFileSize > MAX_JPEG_FILE_SIZE) {
-			request->OutOfMemory = true;
-			::CloseHandle(hFile);
-			return;
-		}
-		hFileBuffer  = ::GlobalAlloc(GMEM_MOVEABLE, nFileSize);
-		pBuffer = (hFileBuffer == NULL) ? NULL : ::GlobalLock(hFileBuffer);
-		if (pBuffer == NULL) {
-			if (hFileBuffer) ::GlobalFree(hFileBuffer);
-			request->OutOfMemory = true;
-			::CloseHandle(hFile);
-			return;
-		}
-		unsigned int nNumBytesRead;
-		if (::ReadFile(hFile, pBuffer, nFileSize, (LPDWORD) &nNumBytesRead, NULL) && nNumBytesRead == nFileSize) {
-			bool bUseGDIPlus = CSettingsProvider::This().ForceGDIPlus() || CSettingsProvider::This().UseEmbeddedColorProfiles();
-			if (bUseGDIPlus) {
-				IStream* pStream = NULL;
-				if (::CreateStreamOnHGlobal(hFileBuffer, FALSE, &pStream) == S_OK) {
-					Gdiplus::Bitmap* pBitmap = Gdiplus::Bitmap::FromStream(pStream, CSettingsProvider::This().UseEmbeddedColorProfiles());
-					bool isOutOfMemory, isAnimatedGIF;
-					request->Image = ConvertGDIPlusBitmapToJPEGImage(pBitmap, 0, Helpers::FindEXIFBlock(pBuffer, nFileSize),
-						Helpers::CalculateJPEGFileHash(pBuffer, nFileSize), isOutOfMemory, isAnimatedGIF);
-					request->OutOfMemory = request->Image == NULL && isOutOfMemory;
-					if (request->Image != NULL) {
-						request->Image->SetJPEGComment(Helpers::GetJPEGComment(pBuffer, nFileSize));
-					}
-					pStream->Release();
-					delete pBitmap;
-				} else {
-					request->OutOfMemory = true;
+		bool bUseGDIPlus = CSettingsProvider::This().ForceGDIPlus() || CSettingsProvider::This().UseEmbeddedColorProfiles();
+		if (bUseGDIPlus) {
+			CComPtr<IStream> pStream(::SHCreateMemStream(buffer, size));
+			if (pStream) {
+				std::shared_ptr<Gdiplus::Bitmap> pBitmap(Gdiplus::Bitmap::FromStream(pStream, CSettingsProvider::This().UseEmbeddedColorProfiles()));
+				bool isOutOfMemory, isAnimatedGIF;
+				request->Image = ConvertGDIPlusBitmapToJPEGImage(pBitmap.get(), 0, Helpers::FindEXIFBlock((void*)buffer, size),
+					Helpers::CalculateJPEGFileHash((void*)buffer, size), isOutOfMemory, isAnimatedGIF);
+				request->OutOfMemory = request->Image == NULL && isOutOfMemory;
+				if (request->Image != NULL) {
+					request->Image->SetJPEGComment(Helpers::GetJPEGComment((void*)buffer, size));
 				}
 			}
-			if (!bUseGDIPlus || request->OutOfMemory) {
-				int nWidth, nHeight, nBPP;
-				TJSAMP eChromoSubSampling;
-				bool bOutOfMemory;
-				// int nTicks = ::GetTickCount();
-
-				void* pPixelData = TurboJpeg::ReadImage(nWidth, nHeight, nBPP, eChromoSubSampling, bOutOfMemory, pBuffer, nFileSize);
-				
-				/*
-				TCHAR buffer[20];
-				_stprintf_s(buffer, 20, _T("%d"), ::GetTickCount() - nTicks);
-				::MessageBox(NULL, CString(_T("Elapsed ticks: ")) + buffer, _T("Time"), MB_OK);
-				*/
-
-				// Color and b/w JPEG is supported
-				if (pPixelData != NULL && (nBPP == 3 || nBPP == 1)) {
-					request->Image = new CJPEGImage(nWidth, nHeight, pPixelData, 
-						Helpers::FindEXIFBlock(pBuffer, nFileSize), nBPP, 
-						Helpers::CalculateJPEGFileHash(pBuffer, nFileSize), IF_JPEG, false, 0, 1, 0);
-					request->Image->SetJPEGComment(Helpers::GetJPEGComment(pBuffer, nFileSize));
-					request->Image->SetJPEGChromoSampling(eChromoSubSampling);
-				} else if (bOutOfMemory) {
-					request->OutOfMemory = true;
-				} else {
-					// failed, try GDI+
-					delete[] pPixelData;
-					ProcessReadGDIPlusRequest(request);
-				}
+			else {
+				request->OutOfMemory = true;
 			}
 		}
-	} catch (...) {
-		delete request->Image;
+		if (!bUseGDIPlus || request->OutOfMemory) {
+			int nWidth, nHeight, nBPP;
+			TJSAMP eChromoSubSampling;
+			bool bOutOfMemory;
+
+			void* pPixelData = TurboJpeg::ReadImage(nWidth, nHeight, nBPP, eChromoSubSampling, bOutOfMemory, (const void*)buffer, size);
+
+			// Color and b/w JPEG is supported
+			if (pPixelData != NULL && (nBPP == 3 || nBPP == 1)) {
+				request->Image = new CJPEGImage(nWidth, nHeight, pPixelData,
+					Helpers::FindEXIFBlock((void*)buffer, size), nBPP,
+					Helpers::CalculateJPEGFileHash((void*)buffer, size), IF_JPEG, false, 0, 1, 0);
+				request->Image->SetJPEGComment(Helpers::GetJPEGComment((void*)buffer, size));
+				request->Image->SetJPEGChromoSampling(eChromoSubSampling);
+			}
+			else if (bOutOfMemory) {
+				request->OutOfMemory = true;
+			}
+			else {
+				// failed, try GDI+
+				delete[] pPixelData;
+				ProcessReadGDIPlusRequest(request);
+			}
+		}
+	}
+	catch (...) {
 		request->Image = NULL;
 		request->ExceptionError = true;
 	}
-	::CloseHandle(hFile);
-	if (pBuffer) ::GlobalUnlock(hFileBuffer);
-	if (hFileBuffer) ::GlobalFree(hFileBuffer);
+}
+
+void CImageLoadThread::ProcessReadJPEGRequest(CRequest* request) {
+	ATL::CAtlFile file;
+	if (FAILED(file.Create(request->FileName, GENERIC_READ, FILE_SHARE_READ, OPEN_EXISTING))) {
+		return;
+	}
+
+	ULONGLONG size = 0;
+	if (FAILED(file.GetSize(size))) {
+		return;
+	}
+
+	if (size > MAX_JPEG_FILE_SIZE) {
+		request->OutOfMemory = true;
+		return;
+	}
+
+	CAtlFileMapping<uint8_t> file_map;
+	if (FAILED(file_map.MapFile(file, 0, 0, PAGE_READONLY, FILE_MAP_READ))) {
+		return;
+	}
+
+	ProcessReadJPEGRequest(request, file_map, (UINT)size);
 }
 
 
@@ -715,7 +710,7 @@ void CImageLoadThread::ProcessReadPNGRequest(CRequest* request) {
 				request->Image = new CJPEGImage(nWidth, nHeight, pPixelData, pEXIFData, 4, 0, IF_PNG, bHasAnimation, request->FrameIndex, nFrameCount, nFrameTimeMs);
 			} else {
 				DeleteCachedPngDecoder();
-				
+
 				IStream* pStream = NULL;
 				if (::CreateStreamOnHGlobal(hFileBuffer, FALSE, &pStream) == S_OK) {
 					Gdiplus::Bitmap* pBitmap = Gdiplus::Bitmap::FromStream(pStream, CSettingsProvider::This().UseEmbeddedColorProfiles());
@@ -861,7 +856,7 @@ void CImageLoadThread::ProcessReadAVIFRequest(CRequest* request) {
 			int nWidth, nHeight, nBPP, nFrameCount, nFrameTimeMs;
 			bool bHasAnimation;
 			void* pEXIFData;
-			uint8* pPixelData = (uint8*)AvifReader::ReadImage(nWidth, nHeight, nBPP, bHasAnimation, request->FrameIndex, 
+			uint8* pPixelData = (uint8*)AvifReader::ReadImage(nWidth, nHeight, nBPP, bHasAnimation, request->FrameIndex,
 				nFrameCount, nFrameTimeMs, pEXIFData, request->OutOfMemory, pBuffer, nFileSize);
 			if (pPixelData != NULL) {
 				if (bHasAnimation)
@@ -1062,6 +1057,41 @@ void CImageLoadThread::ProcessReadGDIPlusRequest(CRequest * request) {
 	}
 }
 
+void CImageLoadThread::ProcessReadLeptonRequest(CRequest* request) {
+	ATL::CAtlFile file;
+	if (FAILED(file.Create(request->FileName, GENERIC_READ, FILE_SHARE_READ, OPEN_EXISTING))) {
+		return;
+	}
+
+	ULONGLONG size = 0;
+	if (FAILED(file.GetSize(size)))
+	{
+		return;
+	}
+
+	CAtlFileMapping<uint8_t> file_map;
+	if (FAILED(file_map.MapFile(file, 0, 0, PAGE_READONLY, FILE_MAP_READ)))
+	{
+		return;
+	}
+
+	// Get the lepton library.
+	auto& lib = lepton_wrapper::lib_lepton::get();
+
+	// As we don't know how big the buffer should be for storing a resulting JPEG image,
+	// allocating it twice bigger than the input LEPTON file size.
+	// It should be enough for most cases.
+	auto buffer_size = size * 2;
+
+	// Extract a JPEG data from the lepton file and pass it to JPEG handler for further decoding.
+	std::vector<uint8_t> buffer(buffer_size);
+	uint8_t* pBuffer = &buffer[0];
+	uint64_t jpeg_size = {};
+	if (0 == lib.WrapperDecompressImage(file_map, size, pBuffer, buffer_size, 1, &jpeg_size) && jpeg_size > 0) {
+		ProcessReadJPEGRequest(request, pBuffer, (UINT)jpeg_size);
+	}
+}
+
 static unsigned char* alloc(int sizeInBytes) {
 	return new(std::nothrow) unsigned char[sizeInBytes];
 }
@@ -1111,7 +1141,7 @@ bool CImageLoadThread::ProcessImageAfterLoad(CRequest * request) {
 	double dZoom = request->ProcessParams.Zoom;
 	CSize newSize;
 	if (dZoom < 0.0) {
-		newSize = Helpers::GetImageRect(nWidth, nHeight, 
+		newSize = Helpers::GetImageRect(nWidth, nHeight,
 			request->ProcessParams.TargetWidth, request->ProcessParams.TargetHeight, request->ProcessParams.AutoZoomMode, dZoom);
 	} else {
 		newSize = CSize((int)(nWidth*dZoom + 0.5), (int)(nHeight*dZoom + 0.5));
@@ -1121,7 +1151,7 @@ bool CImageLoadThread::ProcessImageAfterLoad(CRequest * request) {
 	newSize.cy = max(1, min(65535, newSize.cy)); // max size must not be bigger than this after zoom
 
 	// clip to target rectangle
-	CSize clippedSize(min(request->ProcessParams.TargetWidth, newSize.cx), 
+	CSize clippedSize(min(request->ProcessParams.TargetWidth, newSize.cx),
 		min(request->ProcessParams.TargetHeight, newSize.cy));
 
 	LimitOffsets(request->ProcessParams.Offsets, CSize(request->ProcessParams.TargetWidth, request->ProcessParams.TargetHeight), newSize);

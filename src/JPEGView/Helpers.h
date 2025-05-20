@@ -275,6 +275,9 @@ namespace Helpers {
 	// Returns the windows version in the format Major * 100 + Minor, e.g. 602 for Windows 8
 	int GetWindowsVersion();
 
+	// Returns the system's temporary directory.
+	CString GetTempPath();
+
 	// Conversion class that replaces the | by null character in a string.
 	// Caution: Uses a static buffer and therefore only one string can be replaced concurrently
 	const int MAX_SIZE_REPLACE_PIPE = 1024;

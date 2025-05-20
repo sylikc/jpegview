@@ -77,6 +77,8 @@ public:
 	int WEBPSaveQuality() { return m_nWEBPSaveQuality; }
 	LPCTSTR DefaultSaveFormat() { return m_sDefaultSaveFormat; }
 	LPCTSTR FilesProcessedByWIC() { return m_sFilesProcessedByWIC; }
+	LPCTSTR FilesProcessedByLepton() { return m_sFilesProcessedByLepton; }
+	const CString& LeptonLibName() const { return m_sLeptonLibName; }
 	LPCTSTR FileEndingsRAW() { return m_sFileEndingsRAW; }
 	void AddTemporaryRAWFileEnding(LPCTSTR sEnding) { m_sFileEndingsRAW += CString(_T(";*.")) + sEnding; }
 	int DisplayFullSizeRAW() { return m_nDisplayFullSizeRAW; }
@@ -248,6 +250,8 @@ private:
 	int m_nWEBPSaveQuality;
 	CString m_sDefaultSaveFormat;
 	CString m_sFilesProcessedByWIC;
+	CString m_sFilesProcessedByLepton;
+	CString m_sLeptonLibName;
 	CString m_sFileEndingsRAW;
 	int m_nDisplayFullSizeRAW;
 	bool m_bCreateParamDBEntryOnSave;

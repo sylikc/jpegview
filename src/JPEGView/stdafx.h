@@ -34,6 +34,7 @@ extern CAppModule _Module;
 #include <atldlgs.h>
 #include <atlmisc.h>
 #include <atlscrl.h>
+#include <atlfile.h>
 
 #pragma warning(pop)
 

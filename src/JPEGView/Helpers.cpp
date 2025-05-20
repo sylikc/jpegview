@@ -779,6 +779,8 @@ EImageFormat GetImageFormat(LPCTSTR sFileName) {
 			return IF_WIC;
 		} else if (IsInFileEndingList(CSettingsProvider::This().FileEndingsRAW(), sEnding)) {
 			return IF_CameraRAW;
+		} else if (IsInFileEndingList(CSettingsProvider::This().FilesProcessedByLepton(), sEnding)) {
+			return IF_Lepton;
 		}
 	}
 	return IF_Unknown;
@@ -971,4 +973,10 @@ int GetWindowsVersion() {
 	return osvi.dwMajorVersion * 100 + osvi.dwMinorVersion;
 }
 
+CString GetTempPath() {
+	TCHAR tempPath[MAX_PATH];
+	tempPath[0] = 0;
+	::GetTempPath(MAX_PATH, tempPath);
+	return tempPath;
+}
 }

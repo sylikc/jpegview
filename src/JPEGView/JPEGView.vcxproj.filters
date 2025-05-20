@@ -285,6 +285,9 @@
     <ClCompile Include="ICCProfileTransform.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="lepton_wrapper.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="PSDWrapper.cpp">
       <Filter>Source Files\Image Types</Filter>
     </ClCompile>
@@ -555,6 +558,9 @@
       <Filter>Header Files\Image Types</Filter>
     </ClInclude>
     <ClInclude Include="ICCProfileTransform.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="lepton_wrapper.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="PSDWrapper.h">

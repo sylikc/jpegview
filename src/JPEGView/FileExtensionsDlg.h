@@ -44,5 +44,5 @@ private:
 
 	void FillFileExtensionsList();
 	void InsertExtension(LPCTSTR sExtension, LPCTSTR sHint);
-	void InsertExtensions(LPCTSTR sExtensionList, LPCTSTR sHint);
+	void InsertExtensions(LPCTSTR sExtensionList, LPCTSTR sHint, LPCTSTR param = NULL);
 };
