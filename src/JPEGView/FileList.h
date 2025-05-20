@@ -179,6 +179,6 @@ private:
 	CFileList* WrapToPrevImage();
 	void FindFiles();
 	void VerifyFiles();
-	bool IsImageFile(const CString & sEnding);
+	bool IsImageFile(const CString & sEnding) const;
 	bool TryReadingSlideShowList(const CString & sSlideShowFile);
 };

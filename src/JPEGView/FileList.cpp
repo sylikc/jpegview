@@ -4,6 +4,7 @@
 #include "Helpers.h"
 #include "DirectoryWatcher.h"
 #include "Shlwapi.h"
+#include <sstream>
 
 ///////////////////////////////////////////////////////////////////////////////////
 // Helpers
@@ -60,7 +61,7 @@ static bool IsNoLogicalStrCmpSetInRegistryHive(HKEY hKeyRoot) {
 static bool UseLogicalStringCompare() {
 	if (!s_bUseLogicalStringCompareValid) {
 		s_bUseLogicalStringCompareValid = true;
-		s_bUseLogicalStringCompare = !(IsNoLogicalStrCmpSetInRegistryHive(HKEY_LOCAL_MACHINE) || 
+		s_bUseLogicalStringCompare = !(IsNoLogicalStrCmpSetInRegistryHive(HKEY_LOCAL_MACHINE) ||
 			IsNoLogicalStrCmpSetInRegistryHive(HKEY_CURRENT_USER));
 	}
 	return s_bUseLogicalStringCompare;
@@ -123,18 +124,11 @@ void CFileDesc::SetModificationDate(const FILETIME& lastModDate) {
 // Public interface
 ///////////////////////////////////////////////////////////////////////////////////
 
-// image file types supported internally (there are additional endings for RAW and WIC - these come from INI file)
-// NOTE: when adding more supported filetypes, update installer to add another extension for "SupportedTypes"
-static const int cnNumEndingsInternal = 17;
-static const TCHAR* csFileEndingsInternal[cnNumEndingsInternal] = {_T("jpg"), _T("jpeg"), _T("jfif"), _T("bmp"), _T("png"),
-	_T("tif"), _T("tiff"), _T("gif"), _T("webp"), _T("jxl"), _T("avif"), _T("heif"), _T("heic"), _T("tga"), _T("qoi"), _T("psd"), _T("psb") };
+// Image file types supported internally and come from INI file.
+typedef std::set<std::wstring> file_endings_type;
+
 // supported camera RAW formats
 static const TCHAR* csFileEndingsRAW = _T("*.pef;*.dng;*.crw;*.nef;*.cr2;*.mrw;*.rw2;*.orf;*.x3f;*.arw;*.kdc;*.nrw;*.dcr;*.sr2;*.raf");
-
-
-static const int MAX_ENDINGS = 48;
-static int nNumEndings;
-static LPCTSTR* sFileEndings;
 
 __declspec(dllimport) bool __stdcall WICPresent(void);
 
@@ -148,46 +142,58 @@ static bool WICPresentGuarded(void) {
 }
 
 // Parses a semicolon separated list of file endings of the form "*.nef;*.cr2;*.dng"
-static void ParseAndAddFileEndings(LPCTSTR sEndings) {
-	if (_tcslen(sEndings) > 2) {
-		LPTSTR buffer = new TCHAR[_tcslen(sEndings) + 1]; // this buffer will not be freed deliberately!
-		_tcscpy(buffer, sEndings);
-		LPTSTR sStart = buffer, sCurrent = buffer;
-		while (*sCurrent != 0 && nNumEndings < MAX_ENDINGS) {
-			while (*sCurrent != 0 && *sCurrent != _T(';')) {
-				sCurrent++;
-			}
-			if (*sCurrent == _T(';')) {
-				*sCurrent = 0;
-				sCurrent++;
-			}
-			if (_tcslen(sStart) > 2) {
-				sFileEndings[nNumEndings++] = sStart + 2;
-			}
-			sStart = sCurrent;
-		}
+template<typename OUT_ITER>
+static void ParseAndAddFileEndings(const std::wstring& input, OUT_ITER output) {
+	if (input.size() > 2)
+	{
+		std::wstringstream ss(input);
+		std::wstring item;
+		while (std::getline(ss, item, L';'))
+			output = item.substr(2);
 	}
 }
 
 // Gets all supported file endings, including the ones from WIC.
 // The length of the returned list is nNumEndings
-static LPCTSTR* GetSupportedFileEndingList() {
-	if (sFileEndings == NULL) {
-		sFileEndings = new LPCTSTR[MAX_ENDINGS];
-		for (nNumEndings = 0; nNumEndings < cnNumEndingsInternal; nNumEndings++) {
-			sFileEndings[nNumEndings] = csFileEndingsInternal[nNumEndings];
-		}
+static file_endings_type& GetSupportedFileEndingList()
+{
+	static file_endings_type file_endings;
+	if (!file_endings.empty())
+		return file_endings;
 
-		LPCTSTR sFileEndingsWIC = CSettingsProvider::This().FilesProcessedByWIC();
-		if (_tcslen(sFileEndingsWIC) > 2 && WICPresentGuarded()) {
-			ParseAndAddFileEndings(sFileEndingsWIC);
-		}
-		ParseAndAddFileEndings(CSettingsProvider::This().FileEndingsRAW());
+	// Gets all supported file endings, including the ones from WIC.
+	// Please, keep it ordered when adding a new extension.
+	file_endings =
+	{
+		_T("avif"),
+		_T("bmp"),
+		_T("gif"),
+		_T("heic"),
+		_T("heif"),
+		_T("jfif"),
+		_T("jpeg"),
+		_T("jpg"),
+		_T("jxl"),
+		_T("png"),
+		_T("psb"),
+		_T("psd"),
+		_T("qoi"),
+		_T("tga"),
+		_T("tif"),
+		_T("tiff"),
+		_T("webp")
+	};
+
+	LPCTSTR sFileEndingsWIC = CSettingsProvider::This().FilesProcessedByWIC();
+	if (_tcslen(sFileEndingsWIC) > 2 && WICPresentGuarded()) {
+		ParseAndAddFileEndings(sFileEndingsWIC, std::inserter(file_endings, file_endings.end()));
 	}
-	return sFileEndings;
+	ParseAndAddFileEndings(CSettingsProvider::This().FileEndingsRAW(), std::inserter(file_endings, file_endings.end()));
+
+	return file_endings;
 }
 
-CFileList::CFileList(const CString & sInitialFile, CDirectoryWatcher & directoryWatcher, 
+CFileList::CFileList(const CString & sInitialFile, CDirectoryWatcher & directoryWatcher,
 	Helpers::ESorting eInitialSorting, bool isSortedAscending, bool bWrapAroundFolder, int nLevel, bool forceSorting)
 	: m_directoryWatcher(directoryWatcher) {
 
@@ -206,7 +212,7 @@ CFileList::CFileList(const CString & sInitialFile, CDirectoryWatcher & directory
 	bool bImageFile = !bIsDirectory && IsImageFile(sExtensionInitialFile);
 	if (!bIsDirectory && !bImageFile && !sExtensionInitialFile.IsEmpty() && _tcsstr(csFileEndingsRAW, _T("*.") + sExtensionInitialFile) != NULL) {
 		// initial file is a supported camera raw file but was excluded in INI file - add temporarily to file ending list
-		ParseAndAddFileEndings(_T("*.") + sExtensionInitialFile);
+		ParseAndAddFileEndings((LPCWSTR)(_T("*.") + sExtensionInitialFile), std::inserter(GetSupportedFileEndingList(), GetSupportedFileEndingList().end()));
 		CSettingsProvider::This().AddTemporaryRAWFileEnding(sExtensionInitialFile);
 		bImageFile = true;
 	}
@@ -242,15 +248,22 @@ CFileList::~CFileList() {
 	m_fileList.clear();
 }
 
-CString CFileList::GetSupportedFileEndings() {
-	LPCTSTR* allFileEndings = GetSupportedFileEndingList();
-	CString sList;
-	for (int i = 0; i < nNumEndings; i++) {
-		sList += _T("*.");
-		sList += allFileEndings[i];
-		if (i+1 < nNumEndings) sList += _T(";");
+CString CFileList::GetSupportedFileEndings()
+{
+	const auto& extensions = GetSupportedFileEndingList();
+	std::wostringstream str;
+	bool first = true;
+	for (const auto& extension : extensions)
+	{
+		if (!first)
+			str << L";";
+		else
+			first = false;
+
+		str << L"*." << extension;
 	}
-	return sList;
+
+	return CString(str.str().c_str());
 }
 
 void CFileList::Reload(LPCTSTR sFileName, bool clearForwardHistory) {
@@ -614,7 +627,7 @@ void CFileList::DeleteHistory(bool onlyForward) {
 		m_prev = NULL;
 	}
 	m_next = NULL;
-	
+
 }
 
 ///////////////////////////////////////////////////////////////////////////////////
@@ -815,12 +828,14 @@ void CFileList::FindFiles() {
 	m_fileList.clear();
 	if (!m_sDirectory.IsEmpty()) {
 		CFindFile fileFind;
-		LPCTSTR* allFileEndings = GetSupportedFileEndingList();
-		for (int i = 0; i < nNumEndings; i++) {
-			if (fileFind.FindFile(m_sDirectory + _T("\\*.") + allFileEndings[i])) {
-				AddToFileList(m_fileList, fileFind, allFileEndings[i]);
+		const auto& extensions = GetSupportedFileEndingList();
+		for (const auto& extension : extensions)
+		{
+			const auto c_extension = extension.c_str();
+			if (fileFind.FindFile(m_sDirectory + _T("\\*.") + c_extension)) {
+				AddToFileList(m_fileList, fileFind, c_extension);
 				while (fileFind.FindNextFile()) {
-					AddToFileList(m_fileList, fileFind, allFileEndings[i]);
+					AddToFileList(m_fileList, fileFind, c_extension);
 				}
 			}
 		}
@@ -841,16 +856,11 @@ void CFileList::VerifyFiles() {
 	}
 }
 
-bool CFileList::IsImageFile(const CString & sEnding) {
+bool CFileList::IsImageFile(const CString & sEnding) const {
 	CString sEndingLC = sEnding;
 	sEndingLC.MakeLower();
-	LPCTSTR* allFileEndings = GetSupportedFileEndingList();
-	for (int i = 0; i < nNumEndings; i++) {
-		if (allFileEndings[i] == sEndingLC) {
-			return true;
-		}
-	}
-	return false;
+	const auto& allFileEndings = GetSupportedFileEndingList();
+	return allFileEndings.find((LPCWSTR)sEndingLC) != allFileEndings.end();
 }
 
 bool CFileList::TryReadingSlideShowList(const CString & sSlideShowFile) {
@@ -965,9 +975,10 @@ bool CFileList::TryReadingSlideShowList(const CString & sSlideShowFile) {
 				pStart--;
 			} else {
 				// try to find file name with relative path
-				LPCTSTR* allFileEndings = GetSupportedFileEndingList();
-				for (int i = 0; i < nNumEndings; i++) {
-					pStart = Helpers::stristr(lineBuff, (LPCTSTR)(CString(_T(".")) + allFileEndings[i]));
+				const auto& extensions = GetSupportedFileEndingList();
+				for (const auto& extension : extensions)
+				{
+					pStart = Helpers::stristr(lineBuff, (LPCTSTR)(CString(_T(".")) + extension.c_str()));
 					if (pStart != NULL) {
 						while (pStart >= lineBuff && *pStart != _T('"') && *pStart != _T('>')) pStart--;
 						pStart++;
@@ -976,7 +987,7 @@ bool CFileList::TryReadingSlideShowList(const CString & sSlideShowFile) {
 					}
 				}
 			}
-			
+
 		}
 		if (pStart != NULL) {
 			// extract file name and add to list of files to show
