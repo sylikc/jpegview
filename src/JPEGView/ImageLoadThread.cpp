@@ -79,6 +79,8 @@ static EImageFormat GetImageFormat(LPCTSTR sFileName) {
 		return IF_QOI;
 	} else if (header[0] == '8' && header[1] == 'B' && header[2] == 'P' && header[3] == 'S') {
 		return IF_PSD;
+	} else if (header[0] == 0xd7 && header[1] == 0xcd && header[2] == 0xc6 && header[3] == 0x9a) {
+		return IF_WMF;
 	}
 
 	// default fallback if no matches based on magic bytes
@@ -95,6 +97,10 @@ static EImageFormat GetImageFormat(LPCTSTR sFileName) {
 		// ex: CR2 - http://lclevy.free.fr/cr2/#key_info
 		// ex: DNG - https://www.adobe.com/creativecloud/file-types/image/raw/dng-file.html#dng
 		return IF_TIFF;
+	} else if (header[0] == 0x00 && header[1] == 0x00 && header[2] == 0x01 && header[3] == 0x00) {
+		return IF_ICO;
+	} else if (header[0] == 0x01 && header[1] == 0x00 && header[2] == 0x00 && header[3] == 0x00) {
+		return IF_EMF;
 	}
 	return IF_Unknown;
 }
